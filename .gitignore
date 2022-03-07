@@ -79,3 +79,4 @@ out
 # common ide's
 .vscode
 .idea
+.devcontainer
