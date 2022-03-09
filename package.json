@@ -26,6 +26,7 @@
         "lint-staged": "lint-staged --config tools/lint-staged.js",
         "prettier": "prettier src -check",
         "husky-install": "husky install",
+        "typescript": "tsc --project tsconfig.json --noEmit",
         "eject": "react-scripts eject"
     },
     "browserslist": {
