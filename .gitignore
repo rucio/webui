@@ -30,6 +30,9 @@ node_modules/
 # TypeScript cache
 *.tsbuildinfo
 
+# Coverage reports
+coverage
+
 # Optional npm cache directory
 .npm
 
