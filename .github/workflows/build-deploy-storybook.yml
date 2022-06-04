@@ -2,7 +2,7 @@ name: Build and Deploy Rucio WebUI
 on:
     push:
         branches:
-            - main
+            - master
 permissions:
     contents: write
 jobs:
