@@ -6,7 +6,7 @@ In the project directory, you can run:
 
 #### `npm i --legacy-peer-deps`
 
-This step will install all the dependencies required to run both, our [Storybook]() & [React App]().
+This step will install all the dependencies required to run both, our [Storybook](https://storybook.js.org/) & [React App](https://reactjs.org/).
 
 ## Getting Started with Storybook
 
