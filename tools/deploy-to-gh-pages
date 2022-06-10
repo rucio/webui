@@ -5,6 +5,14 @@
 # assumes 'docs' to be present in the master branch
 # assumes 'gh-pages' branch is present
 
+# set GitHub config credentials
+
+git config user.email "rucio@cern.ch"
+git config user.name "Rucio"
+
+# remove any changes by stashing
+# checkout to master (nake sure)
+
 git stash
 git checkout master
 
