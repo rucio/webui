@@ -5,7 +5,7 @@
 # assumes 'docs' to be present in the master branch
 # assumes 'gh-pages' branch is present
 
-git stash .
+git stash
 git checkout master
 
 # checkout to the gh-pages, reset
