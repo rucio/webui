@@ -2,6 +2,9 @@ name: Rucio WebUI Autotests
 
 on:
     push:
+        branches:
+            - '**'
+            - '!gh-pages'
     pull_request:
 
 jobs:
