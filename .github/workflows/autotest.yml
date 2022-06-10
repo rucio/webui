@@ -1,7 +1,6 @@
 name: Rucio WebUI Autotests
 
 on:
-    push:
     pull_request:
 
 jobs:
