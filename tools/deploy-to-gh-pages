@@ -7,8 +7,8 @@
 
 # set GitHub config credentials
 
-git config user.email "rucio@cern.ch"
-git config user.name "Rucio"
+git config user.email "rucio-dev@cern.ch"
+git config user.name "rucio"
 
 # remove any changes by stashing
 # checkout to master (nake sure)
