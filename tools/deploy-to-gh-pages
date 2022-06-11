@@ -7,11 +7,11 @@
 
 # set GitHub config credentials
 
-git config user.email "rucio@cern.ch"
-git config user.name "Rucio"
+git config user.email "rucio-dev@cern.ch"
+git config user.name "rucio-bot"
 
 # remove any changes by stashing
-# checkout to master (nake sure)
+# checkout to master
 
 git stash
 git checkout master
@@ -26,6 +26,10 @@ git reset --hard origin/master
 # ignore the docs folder
 
 find * -maxdepth 0 -name 'docs' -prune -o -exec rm -rf '{}' ';'
+
+# remove some folders additionally
+
+rm -rf .husky .storybook
 
 # move the docs folder content
 # explode in the repository root
