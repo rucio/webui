@@ -1,4 +1,4 @@
-name: Build and Deploy Rucio WebUI
+name: Build and Deploy Rucio WebUI Component Library
 on:
     push:
         branches:
@@ -11,6 +11,8 @@ jobs:
         steps:
             - name: Checkout 🛎️
               uses: actions/checkout@v3
+              with:
+                    fetch-depth: 0
 
             - name: Install and Build 🔧
               run: |
@@ -18,7 +20,6 @@ jobs:
                   npm run build-storybook
 
             - name: Deploy 🚀
-              uses: JamesIves/github-pages-deploy-action@v4.3.3
-              with:
-                  branch: gh-pages
-                  folder: docs
+              run: |
+                  chmod +x tools/deploy-to-gh-pages
+                  tools/deploy-to-gh-pages

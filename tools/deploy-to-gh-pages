@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# install deps & project build done
+# control comes here only if install and build goes fine
+# assumes 'docs' to be present in the master branch
+# assumes 'gh-pages' branch is present
+
+# set GitHub config credentials
+
+git config user.email "rucio-dev@cern.ch"
+git config user.name "rucio-bot"
+
+# remove any changes by stashing
+# checkout to master
+
+git stash
+git checkout master
+
+# checkout to the gh-pages, reset
+# sync the branch with our main
+
+git checkout gh-pages
+git reset --hard origin/master
+
+# delete everything on the directory
+# ignore the docs folder
+
+find * -maxdepth 0 -name 'docs' -prune -o -exec rm -rf '{}' ';'
+
+# remove some folders additionally
+
+rm -rf .husky .storybook
+
+# move the docs folder content
+# explode in the repository root
+
+mv ./docs/* .
+
+# deletes the git cache
+# push the new content to gh-pages
+
+git rm -rf --cache .
+git add .
+git commit -m "Deploy Storybook to GitHub pages"
+
+# force push to origin/gh-pages
+git push origin gh-pages --force
