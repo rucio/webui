@@ -1,0 +1,45 @@
+name: 🐛 Bug Report
+description: Submit a bug report to help us improve
+labels: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing your issue, ask yourself:
+        - Do I have basic ideas about where it goes wrong? (E.g. front or back-end)
+        - Could it be because of my own mistakes?
+        - Does an issue about the bug already exist?
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Write down the steps to reproduce the bug. You should start with a fresh installation, or your git repository linked above. If it's in production, point out the page with the context.
+      placeholder: |
+        1. Step 1...
+        2. Step 2...
+        3. Step 3...
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: Rucio WebUI Version
+      description: The used Rucio WebUI Version.
+      placeholder: "e.g. 1.28.4, master"
+
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: Include other relevant details, e.g. about your environment or setup.
+      placeholder: |
+        - Browser with version
+        - Operating System
+        - ...
