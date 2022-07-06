@@ -1,29 +1,40 @@
-import React from 'react'
-import './button.css'
+import './button.scss'
 
 interface ButtonProps {
-    primary?: boolean
-    backgroundColor?: string
+    kind?: 'primary' | 'secondary' | 'outline'
+    show?: 'danger' | 'block' | 'invisible'
+    background?: string
     size?: 'small' | 'medium' | 'large'
     label: string
-    onClick?: () => void
+    type?: 'button' | 'submit' | 'reset' | undefined
+    selected?: boolean
+    disabled?: boolean
+    onClick?: (args: any) => void | undefined
 }
 
 export const Button = ({
-    primary = false,
+    kind = 'secondary',
     size = 'medium',
-    backgroundColor,
+    show,
+    background,
     label,
+    type = 'button',
+    selected = false,
+    disabled = false,
+    onClick = undefined,
     ...props
 }: ButtonProps) => {
-    const mode = primary ? 'rucio-button--primary' : 'rucio-button--secondary'
+    const handleOnClick = disabled ? undefined : onClick
     return (
         <button
-            type="button"
-            className={['rucio-button', `rucio-button--${size}`, mode].join(
-                ' ',
-            )}
-            style={{ backgroundColor }}
+            type={disabled ? 'button' : type}
+            tabIndex={0}
+            className={['rucio-btn', kind, size, show].join(' ')}
+            style={{ background }}
+            aria-selected={selected}
+            aria-disabled={disabled}
+            aria-pressed="false"
+            onClick={handleOnClick}
             {...props}
         >
             {label}

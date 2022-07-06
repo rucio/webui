@@ -1,0 +1,36 @@
+@import '@primer/css/color-modes/index.scss';
+@import '@primer/css/buttons/index.scss';
+
+.rucio-btn {
+    @extend .btn;
+    &.primary {
+        @extend .btn-primary;
+    }
+    &.outline {
+        @extend .btn-outline;
+        background-color: #f8f9fd;
+    }
+    &.danger {
+        @extend .btn-danger;
+    }
+    &.large {
+        @extend .btn-large;
+    }
+    &.small {
+        @extend .btn-sm;
+    }
+    &.block {
+        @extend .btn-block;
+    }
+    &.invisible {
+        @extend .btn-invisible;
+    }
+    &.item {
+        @extend .BtnGroup-item;
+    }
+}
+
+.rucio-btn-grp {
+    @extend .BtnGroup
+}
+

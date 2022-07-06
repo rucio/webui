@@ -1,7 +1,5 @@
-import React from 'react'
-
 import { Button } from '../Button/Button'
-import './header.css'
+import './header.scss'
 
 type User = {
     name: string
@@ -31,17 +29,29 @@ export const Header = ({
                         </span>
                         <Button
                             size="small"
-                            onClick={onLogout}
+                            onClick={() => {
+                                alert('User logged out!')
+                                onLogout()
+                            }}
                             label="Log out"
                         />
                     </>
                 ) : (
                     <>
-                        <Button size="small" onClick={onLogin} label="Log in" />
                         <Button
-                            primary
                             size="small"
-                            onClick={onCreateAccount}
+                            onClick={() => {
+                                alert('User logged in!')
+                                onLogin()
+                            }}
+                            label="Log in"
+                        />
+                        <Button
+                            size="small"
+                            onClick={() => {
+                                alert('User sccount created!')
+                                onCreateAccount()
+                            }}
                             label="Sign up"
                         />
                     </>
