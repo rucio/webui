@@ -1,47 +1,40 @@
-import React from 'react'
-import './textinput.css'
+import './textinput.scss'
 
 interface TextInputProps {
-    primary?: boolean
-    size?: 'small' | 'medium' | 'large'
-    label: string
-    placeholder: string
-    onChange?: () => void
+    type?: string
+    label?: string
+    name?: string
+    placeholder?: string
+    kind?: 'primary' | 'info' | 'link'
+    show?: 'danger' | 'warning' | 'success' | 'rounded'
+    size?: 'small' | 'medium' | 'large' | 'normal'
+    value?: string
+    onChange?: (args: any) => void
 }
 
 export const TextInput = ({
-    primary = false,
-    size = 'medium',
-    label,
-    placeholder,
+    type = 'text',
+    label = 'Sample label',
+    name = 'sample',
+    placeholder = 'Sample placeholder',
+    size = 'normal',
+    kind = 'primary',
+    show,
+    value,
     onChange,
     ...props
 }: TextInputProps) => {
-    const mode = primary
-        ? 'rucio-textinput--primary'
-        : 'rucio-textinput--secondary'
     return (
-        <div>
-            <div className="p-t-31 p-b-9">
-                <span className="txt1">{label}</span>
-            </div>
-            <div
-                className="wrap-input100 validate-input"
-                data-validate="Username is required"
-            >
-                <input
-                    type="text"
-                    name="username"
-                    placeholder={placeholder}
-                    className={[
-                        'rucio-textinput',
-                        `rucio-textinput--${size}`,
-                        mode,
-                        { ...props },
-                    ].join(' ')}
-                    onChange={onChange}
-                />
-            </div>
-        </div>
+        <label>
+            {label}
+            <input
+                type={type}
+                name={name}
+                placeholder={placeholder}
+                className={`rucio-textinput ${kind} ${size} ${show}`}
+                onChange={onChange}
+                value={value}
+            />
+        </label>
     )
 }

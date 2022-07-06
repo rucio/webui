@@ -6,4 +6,11 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  docs: {
+    source: {
+        type: 'auto',
+        format: true,
+        language: 'typescript'
+    },
+},
 }
