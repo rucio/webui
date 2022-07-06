@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 function Login() {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
+    const [userpassEnabled, setUserpassEnabled] = useState(false)
 
     const navigate = useNavigate()
 
@@ -42,7 +43,7 @@ function Login() {
                                 size="large"
                                 kind="outline"
                                 show="block"
-                                label="X509 Certificate"
+                                label="x509 Certificate"
                             />
 
                             <Button
@@ -51,43 +52,58 @@ function Login() {
                                 show="block"
                                 label="OIDC OAuth"
                             />
+                            {userpassEnabled ? (
+                                <>
+                                    <TextInput
+                                        label="Username"
+                                        placeholder="Enter Username"
+                                        kind="info"
+                                        size="medium"
+                                        onChange={(event: any) => {
+                                            setUserNameEntered(
+                                                event.target.value,
+                                            )
+                                        }}
+                                    />
 
-                            <TextInput
-                                label="Username"
-                                placeholder="Enter Username"
-                                kind="info"
-                                size="medium"
-                                onChange={(event: any) => {
-                                    setUserNameEntered(event.target.value)
-                                }}
-                            />
+                                    <TextInput
+                                        label="Password"
+                                        placeholder="Enter Password"
+                                        kind="info"
+                                        size="medium"
+                                        type="password"
+                                        onChange={(event: any) => {
+                                            setPasswordEntered(
+                                                event.target.value.length,
+                                            )
+                                        }}
+                                    />
 
-                            <TextInput
-                                label="Password"
-                                placeholder="Enter Password"
-                                kind="info"
-                                size="medium"
-                                type="password"
-                                onChange={(event: any) => {
-                                    setPasswordEntered(
-                                        event.target.value.length,
-                                    )
-                                }}
-                            />
-
-                            <div className="container-login100-form-btn m-t-17">
+                                    <div className="container-login100-form-btn m-t-17">
+                                        <Button
+                                            size="large"
+                                            kind="primary"
+                                            show="block"
+                                            label="Sign In"
+                                            type="submit"
+                                            disabled={
+                                                passwordEntered.length == 0 ||
+                                                userNameEntered.length == 0
+                                            }
+                                        />
+                                    </div>
+                                </>
+                            ) : (
                                 <Button
                                     size="large"
-                                    kind="primary"
+                                    kind="outline"
                                     show="block"
-                                    label="Sign In"
-                                    type="submit"
-                                    disabled={
-                                        passwordEntered.length == 0 ||
-                                        userNameEntered.length == 0
-                                    }
+                                    label="Username/Password"
+                                    onClick={() => {
+                                        setUserpassEnabled(true)
+                                    }}
                                 />
-                            </div>
+                            )}
                         </Form>
                     </div>
                 </div>
