@@ -34,6 +34,10 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Getting Started with Create React App
 
+#### Environment variables
+
+React picks up any environment variable prefixes with `REACT_APP_` specified in a `.env` file. If you wish to have/add environment variables of your own, you can copy the contents of the `.env.template` file and paste it in the blank `.env` file. Please be sure to re-run the react app before examining your environment variables. A helper function `env(<KEY>)` has also been added in `tools/utils.ts` which accepts the non-prefixed key as an argument and returns the value of the environment variable.
+
 In the project directory, you can run:
 
 #### `npm start`
