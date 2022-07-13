@@ -381,3 +381,8 @@ iframe {
         }
     }
 }
+
+.rucio-row-flex {
+    display: flex;
+    flex-direction: row;
+}

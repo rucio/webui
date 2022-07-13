@@ -4,15 +4,34 @@ import { TextInput } from './stories/TextInput/TextInput'
 import { Image } from './stories/Image/Image'
 import { Form } from './stories/Form/Form'
 
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
+
+import { env } from './util'
 
 function Login() {
-    const [userNameEntered, setUserNameEntered] = useState('')
-    const [passwordEntered, setPasswordEntered] = useState('')
-    const [userpassEnabled, setUserpassEnabled] = useState(false)
+    const [userNameEntered, setUserNameEntered] = useState('' as string)
+    const [passwordEntered, setPasswordEntered] = useState('' as string)
+    const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
+    const [imagesList, setImagesList] = useState([] as string[])
+    useEffect(() => {
+        let imageCount = 1
+        const finalImagesList: string[] = []
+        while (imageCount < 5) {
+            const imagePath: string | undefined = env(
+                'login_page_org_image_' + imageCount,
+            )
+            if (imagePath) {
+                finalImagesList.push(imagePath)
+                imageCount++
+            } else {
+                break
+            }
+        }
+        setImagesList(finalImagesList)
+    }, [])
 
-    const navigate = useNavigate()
+    const navigate: NavigateFunction = useNavigate()
 
     async function handleSubmit(event: any) {
         event.preventDefault()
@@ -32,6 +51,20 @@ function Login() {
                             height={150}
                             width={150}
                         ></Image>
+                        <br />
+                        <div className="rucio-row-flex">
+                            {imagesList.map(
+                                (imagePath: string, index: number) => (
+                                    <Image
+                                        key={index}
+                                        src={require(`${imagePath}`)}
+                                        height={75}
+                                        width={75}
+                                    ></Image>
+                                ),
+                            )}
+                        </div>
+                        <br />
                         <span className="login100-form-title p-b-27">
                             <strong>Rucio Login</strong>
                             <br></br>
