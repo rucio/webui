@@ -1,7 +1,7 @@
 export async function postData(
-    url: string = '',
-    headers: {} = {},
-    data: {} = {},
+    url = '',
+    headers = {},
+    data = {},
 ): Promise<any> {
     const response = await fetch(url, {
         method: 'POST',
@@ -15,10 +15,7 @@ export async function postData(
     return response
 }
 
-export async function getData(
-    url: string = '',
-    headers: {} = {},
-): Promise<any> {
+export async function getData(url = '', headers = {}): Promise<any> {
     const response = await fetch(url, {
         method: 'GET',
         mode: 'no-cors',
@@ -30,11 +27,7 @@ export async function getData(
     return response
 }
 
-export async function putData(
-    url: string = '',
-    headers: {} = {},
-    data: {} = {},
-): Promise<any> {
+export async function putData(url = '', headers = {}, data = {}): Promise<any> {
     const response = await fetch(url, {
         method: 'PUT',
         mode: 'no-cors',
@@ -48,9 +41,9 @@ export async function putData(
 }
 
 export async function deleteData(
-    url: string = '',
-    headers: {} = {},
-    data: {} = {},
+    url = '',
+    headers = {},
+    data = {},
 ): Promise<any> {
     const response = await fetch(url, {
         method: 'DELETE',
