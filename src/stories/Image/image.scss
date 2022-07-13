@@ -1,3 +1,8 @@
 @import 'bulma/sass/utilities/_all.sass';
 @import 'bulma/sass/base/_all.sass';
 @import 'bulma/sass/elements/_all.sass';
+
+.rucio-image {
+    @extend .image;
+    margin: auto;
+}
