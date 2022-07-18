@@ -3,11 +3,16 @@ import { env } from '../util'
 const defaultHostEndpoint: string | undefined = env('RUCIO_HOST')
 
 export async function postData(
-    endpoint = '/',
-    queryParams = {},
-    headers = {},
-    data = {},
-    host = defaultHostEndpoint,
+    endpoint: string | undefined = '/',
+    queryParams:
+        | string
+        | string[][]
+        | Record<string, string>
+        | URLSearchParams
+        | undefined = {},
+    headers: HeadersInit | undefined = {},
+    data: unknown = {},
+    host: string | undefined = defaultHostEndpoint,
 ): Promise<any> {
     const response = await fetch(
         host + endpoint + '?' + new URLSearchParams(queryParams),
@@ -25,10 +30,15 @@ export async function postData(
 }
 
 export async function getData(
-    endpoint = '/',
-    queryParams = {},
-    headers = {},
-    host = defaultHostEndpoint,
+    endpoint: string | undefined = '/',
+    queryParams:
+        | string
+        | string[][]
+        | Record<string, string>
+        | URLSearchParams
+        | undefined = {},
+    headers: HeadersInit | undefined = {},
+    host: string | undefined = defaultHostEndpoint,
 ): Promise<any> {
     const response = await fetch(
         host + endpoint + '?' + new URLSearchParams(queryParams),
@@ -45,11 +55,16 @@ export async function getData(
 }
 
 export async function putData(
-    endpoint = '/',
-    queryParams = {},
-    headers = {},
-    data = {},
-    host = defaultHostEndpoint,
+    endpoint: string | undefined = '/',
+    queryParams:
+        | string
+        | string[][]
+        | Record<string, string>
+        | URLSearchParams
+        | undefined = {},
+    headers: HeadersInit | undefined = {},
+    data: unknown = {},
+    host: string | undefined = defaultHostEndpoint,
 ): Promise<any> {
     const response = await fetch(
         host + endpoint + '?' + new URLSearchParams(queryParams),
@@ -67,11 +82,16 @@ export async function putData(
 }
 
 export async function deleteData(
-    endpoint = '/',
-    queryParams = {},
-    headers = {},
-    data = {},
-    host = defaultHostEndpoint,
+    endpoint: string | undefined = '/',
+    queryParams:
+        | string
+        | string[][]
+        | Record<string, string>
+        | URLSearchParams
+        | undefined = {},
+    headers: HeadersInit | undefined = {},
+    data: unknown = {},
+    host: string | undefined = defaultHostEndpoint,
 ): Promise<any> {
     const response = await fetch(
         host + endpoint + '?' + new URLSearchParams(queryParams),
