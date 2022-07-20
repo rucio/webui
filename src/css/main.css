@@ -382,7 +382,12 @@ iframe {
     }
 }
 
-.rucio-row-flex {
+.rucio-flex {
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.rucio-flex-item {
+    margin: auto 5px;
 }
