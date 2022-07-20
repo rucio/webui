@@ -13,23 +13,6 @@ function Login() {
     const [userNameEntered, setUserNameEntered] = useState('' as string)
     const [passwordEntered, setPasswordEntered] = useState('' as string)
     const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
-    const [imagesList, setImagesList] = useState([] as string[])
-    useEffect(() => {
-        let imageCount = 1
-        const finalImagesList: string[] = []
-        while (imageCount < 5) {
-            const imagePath: string | undefined = env(
-                'login_page_org_image_' + imageCount,
-            )
-            if (imagePath) {
-                finalImagesList.push(imagePath)
-                imageCount++
-            } else {
-                break
-            }
-        }
-        setImagesList(finalImagesList)
-    }, [])
 
     const navigate: NavigateFunction = useNavigate()
 
@@ -46,25 +29,40 @@ function Login() {
                     style={{ backgroundColor: 'black' }}
                 >
                     <div className="wrap-login100 p-l-50 p-r-50 p-t-62 p-b-33">
-                        <Image
-                            src={require('./images/favicon.png')}
-                            height={150}
-                            width={150}
-                        ></Image>
-                        <br />
-                        <div className="rucio-row-flex">
-                            {imagesList.map(
-                                (imagePath: string, index: number) => (
+                        <div className="rucio-flex">
+                            {env('login_page_image_primary') ? (
+                                <div className="rucio-flex-item">
                                     <Image
-                                        key={index}
-                                        src={require(`${imagePath}`)}
-                                        height={75}
-                                        width={75}
+                                        src={require(`${env(
+                                            'login_page_image_primary',
+                                        )}`)}
+                                        height={150}
+                                        width={150}
                                     ></Image>
-                                ),
-                            )}
+                                </div>
+                            ) : null}
+
+                            <div className="rucio-flex-item">
+                                <Image
+                                    src={require('./images/favicon.png')}
+                                    height={150}
+                                    width={150}
+                                ></Image>
+                            </div>
+
+                            {env('login_page_image_secondary') ? (
+                                <div className="rucio-flex-item">
+                                    <Image
+                                        src={require(`${env(
+                                            'login_page_image_secondary',
+                                        )}`)}
+                                        height={150}
+                                        width={150}
+                                    ></Image>
+                                </div>
+                            ) : null}
                         </div>
-                        <br />
+                        <br></br>
                         <span className="login100-form-title p-b-27">
                             <strong>Rucio Login</strong>
                             <br></br>
