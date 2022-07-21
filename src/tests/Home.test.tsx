@@ -8,6 +8,6 @@ test('renders react app', () => {
             <Home />
         </BrowserRouter>,
     )
-    const linkElement = screen.getByText(/Rucio Login/i)
-    expect(linkElement).toBeInTheDocument()
+    const welcomeElement = screen.getByText(/Welcome/i)
+    expect(welcomeElement).toBeInTheDocument()
 })

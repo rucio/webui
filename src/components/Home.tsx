@@ -21,7 +21,7 @@ function Home() {
                 handleOnClick()
             }}
             user={{
-                name: location.state.name,
+                name: location?.state?.name,
             }}
         />
     )
