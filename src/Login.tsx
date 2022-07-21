@@ -4,7 +4,7 @@ import { TextInput } from './stories/TextInput/TextInput'
 import { Image } from './stories/Image/Image'
 import { Form } from './stories/Form/Form'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 
 import { env } from './util'
