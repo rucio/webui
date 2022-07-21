@@ -26,5 +26,8 @@
     "ignorePatterns": [
       "node_modules",
       "dist"
-    ]
+    ],
+    "rules": {
+      "@typescript-eslint/no-var-requires": 0
+    }
 }

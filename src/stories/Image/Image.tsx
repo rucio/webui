@@ -16,7 +16,7 @@ export const Image = ({
 }: ImageProps) => {
     return (
         <img
-            className={`image ${type}`}
+            className={`rucio-image ${type}`}
             src={src}
             height={height}
             width={width}

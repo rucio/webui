@@ -5,14 +5,16 @@ import { Image } from '../stories/Image/Image'
 import { Form } from '../stories/Form/Form'
 
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
+
+import { env } from '../util'
 
 function Login() {
-    const [userNameEntered, setUserNameEntered] = useState('')
-    const [passwordEntered, setPasswordEntered] = useState('')
-    const [userpassEnabled, setUserpassEnabled] = useState(false)
+    const [userNameEntered, setUserNameEntered] = useState('' as string)
+    const [passwordEntered, setPasswordEntered] = useState('' as string)
+    const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
 
-    const navigate = useNavigate()
+    const navigate: NavigateFunction = useNavigate()
 
     async function handleSubmit(event: any) {
         event.preventDefault()
@@ -27,11 +29,40 @@ function Login() {
                     style={{ backgroundColor: 'black' }}
                 >
                     <div className="wrap-login100 p-l-50 p-r-50 p-t-62 p-b-33">
-                        <Image
-                            src={require('./images/favicon.png')}
-                            height={150}
-                            width={150}
-                        ></Image>
+                        <div className="rucio-flex">
+                            {env('login_page_image_primary') ? (
+                                <div className="rucio-flex-item">
+                                    <Image
+                                        src={require(`${env(
+                                            'login_page_image_primary',
+                                        )}`)}
+                                        height={150}
+                                        width={150}
+                                    ></Image>
+                                </div>
+                            ) : null}
+
+                            <div className="rucio-flex-item">
+                                <Image
+                                    src={require('../images/favicon.png')}
+                                    height={150}
+                                    width={150}
+                                ></Image>
+                            </div>
+
+                            {env('login_page_image_secondary') ? (
+                                <div className="rucio-flex-item">
+                                    <Image
+                                        src={require(`${env(
+                                            'login_page_image_secondary',
+                                        )}`)}
+                                        height={150}
+                                        width={150}
+                                    ></Image>
+                                </div>
+                            ) : null}
+                        </div>
+                        <br></br>
                         <span className="login100-form-title p-b-27">
                             <strong>Rucio Login</strong>
                             <br></br>
