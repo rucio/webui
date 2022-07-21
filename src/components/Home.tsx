@@ -1,4 +1,4 @@
-import { Header } from './stories/Header/Header'
+import { Header } from '../stories/Header/Header'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 function Home() {

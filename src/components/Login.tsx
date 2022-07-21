@@ -1,8 +1,8 @@
 import './App.css'
-import { Button } from './stories/Button/Button'
-import { TextInput } from './stories/TextInput/TextInput'
-import { Image } from './stories/Image/Image'
-import { Form } from './stories/Form/Form'
+import { Button } from '../stories/Button/Button'
+import { TextInput } from '../stories/TextInput/TextInput'
+import { Image } from '../stories/Image/Image'
+import { Form } from '../stories/Form/Form'
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'

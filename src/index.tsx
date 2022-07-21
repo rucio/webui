@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
-import Login from './Login'
-import Home from './Home'
+import Login from './components/Login'
+import Home from './components/Home'
 import reportWebVitals from './reportWebVitals'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
