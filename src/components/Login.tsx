@@ -1,4 +1,4 @@
-import './App.css'
+import '../App.css'
 import { Button } from '../stories/Button/Button'
 import { TextInput } from '../stories/TextInput/TextInput'
 import { Image } from '../stories/Image/Image'
@@ -33,9 +33,8 @@ function Login() {
                             {env('login_page_image_primary') ? (
                                 <div className="rucio-flex-item">
                                     <Image
-                                        src={require(`${env(
-                                            'login_page_image_primary',
-                                        )}`)}
+                                        src={require('../' +
+                                            env('login_page_image_primary'))}
                                         height={150}
                                         width={150}
                                     ></Image>
@@ -53,9 +52,8 @@ function Login() {
                             {env('login_page_image_secondary') ? (
                                 <div className="rucio-flex-item">
                                     <Image
-                                        src={require(`${env(
-                                            'login_page_image_secondary',
-                                        )}`)}
+                                        src={require('../' +
+                                            env('login_page_image_secondary'))}
                                         height={150}
                                         width={150}
                                     ></Image>
@@ -75,6 +73,7 @@ function Login() {
                                 kind="outline"
                                 show="block"
                                 label="x509 Certificate"
+                                type="submit"
                             />
 
                             <Button
@@ -82,6 +81,7 @@ function Login() {
                                 kind="outline"
                                 show="block"
                                 label="OIDC OAuth"
+                                type="submit"
                             />
                             {userpassEnabled ? (
                                 <>
@@ -105,7 +105,7 @@ function Login() {
                                         type="password"
                                         onChange={(event: any) => {
                                             setPasswordEntered(
-                                                event.target.value.length,
+                                                event.target.value,
                                             )
                                         }}
                                     />
@@ -129,7 +129,7 @@ function Login() {
                                     size="large"
                                     kind="outline"
                                     show="block"
-                                    label="Username/Password"
+                                    label="Username / Password"
                                     onClick={() => {
                                         setUserpassEnabled(true)
                                     }}
