@@ -6,19 +6,84 @@ import { Form } from '../stories/Form/Form'
 
 import { useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
+import { getData } from '../utils/restApiWrapper'
 
 import { env } from '../util'
 
-export const Login: React.FC = () => {
-    const [userNameEntered, setUserNameEntered] = useState('' as string)
-    const [passwordEntered, setPasswordEntered] = useState('' as string)
-    const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
+const commonHeaders = {
+    'X-Rucio-VO': 'def',
+    'X-Rucio-Account': 'root',
+    'X-Rucio-AppID': 'test',
+}
+
+function Login() {
+    const [userNameEntered, setUserNameEntered] = useState('')
+    const [passwordEntered, setPasswordEntered] = useState('')
+    const [userpassEnabled, setUserpassEnabled] = useState(false)
+    const [authType, setAuthType] = useState('')
 
     const navigate: NavigateFunction = useNavigate()
 
-    const handleSubmit = (event: any) => {
+    const userPassAuth = () => {
+        getData('/auth/userpass', '', {
+            'X-Rucio-Username': userNameEntered,
+            'X-Rucio-Password': passwordEntered,
+            ...commonHeaders,
+        })
+            .then((data: any) => {
+                if (data?.ok) {
+                    const rucioAuthToken =
+                        data?.headers.get('X-Rucio-Auth-Token')
+                    sessionStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
+                    navigate('/home', { state: { name: userNameEntered } })
+                } else {
+                    navigate('/login')
+                }
+            })
+            .catch((error: any) => {
+                console.error(error)
+            })
+    }
+
+    const OAuth = () => {
+        getData('/auth/oidc')
+            .then((data: any) => {
+                sessionStorage.setItem(
+                    'X-Rucio-Auth-Token',
+                    'oidc_auth_sample_token',
+                )
+                navigate('/login')
+            })
+            .catch((error: any) => {
+                console.error(error)
+                navigate('/login')
+            })
+    }
+
+    const x509Auth = () => {
+        getData('/auth/x509')
+            .then((data: any) => {
+                sessionStorage.setItem(
+                    'X-Rucio-Auth-Token',
+                    'x509_sample_token',
+                )
+                navigate('/login')
+            })
+            .catch((error: any) => {
+                console.error(error)
+                navigate('/login')
+            })
+    }
+
+    async function handleSubmit(event: any) {
         event.preventDefault()
-        navigate('/home', { state: { name: userNameEntered } })
+        if (authType == 'x509') {
+            x509Auth()
+        } else if (authType == 'OAuth') {
+            OAuth()
+        } else {
+            userPassAuth()
+        }
     }
 
     return (
@@ -69,20 +134,27 @@ export const Login: React.FC = () => {
 
                         <Form title="" subtitle="" onSubmit={handleSubmit}>
                             <Button
+                                type="submit"
                                 size="large"
                                 kind="outline"
                                 show="block"
                                 label="x509 Certificate"
-                                type="submit"
+                                onClick={() => {
+                                    setAuthType('x509')
+                                }}
                             />
 
                             <Button
+                                type="submit"
                                 size="large"
                                 kind="outline"
                                 show="block"
-                                label="OIDC OAuth"
-                                type="submit"
+                                label="OIDC Auth"
+                                onClick={() => {
+                                    setAuthType('OAuth')
+                                }}
                             />
+
                             {userpassEnabled ? (
                                 <>
                                     <TextInput
@@ -110,6 +182,13 @@ export const Login: React.FC = () => {
                                         }}
                                     />
 
+                                    <TextInput
+                                        label="Account Name"
+                                        placeholder="Enter Account Name (optional)"
+                                        size="medium"
+                                        kind="primary"
+                                    />
+
                                     <div className="container-login100-form-btn m-t-17">
                                         <Button
                                             size="large"
@@ -121,19 +200,30 @@ export const Login: React.FC = () => {
                                                 passwordEntered.length == 0 ||
                                                 userNameEntered.length == 0
                                             }
+                                            onClick={() => {
+                                                setAuthType('userpass')
+                                            }}
                                         />
                                     </div>
                                 </>
                             ) : (
-                                <Button
-                                    size="large"
-                                    kind="outline"
-                                    show="block"
-                                    label="Username / Password"
-                                    onClick={() => {
-                                        setUserpassEnabled(true)
-                                    }}
-                                />
+                                <>
+                                    <Button
+                                        size="large"
+                                        kind="outline"
+                                        show="block"
+                                        label="Username / Password"
+                                        onClick={() => {
+                                            setUserpassEnabled(true)
+                                        }}
+                                    />
+                                    <TextInput
+                                        label="Account Name"
+                                        placeholder="Enter Account Name (optional)"
+                                        size="medium"
+                                        kind="normal"
+                                    />
+                                </>
                             )}
                         </Form>
                     </div>
