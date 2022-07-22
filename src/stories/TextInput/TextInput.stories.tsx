@@ -13,7 +13,7 @@ const Template: ComponentStory<typeof TextInput> = args => (
 
 export const Standard = Template.bind({})
 Standard.args = {
-    size: 'normal',
+    size: 'medium',
     kind: 'primary',
     label: 'TextInput',
 }
