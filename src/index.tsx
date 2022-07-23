@@ -4,15 +4,18 @@ import './index.css'
 import Login from './Login'
 import Home from './Home'
 import reportWebVitals from './reportWebVitals'
+import { AlertServiceProvider } from './components/GlobalAlert'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-    <BrowserRouter>
-        <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-        </Routes>
-    </BrowserRouter>,
+    <AlertServiceProvider>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/home" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </BrowserRouter>
+    </AlertServiceProvider>,
 )
 
 // If you want to start measuring performance in your app, pass a function
