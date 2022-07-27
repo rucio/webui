@@ -9,14 +9,14 @@ import { NavigateFunction, useNavigate } from 'react-router-dom'
 
 import { env } from './util'
 
-function Login() {
+export const Login: React.FC = () => {
     const [userNameEntered, setUserNameEntered] = useState('' as string)
     const [passwordEntered, setPasswordEntered] = useState('' as string)
     const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
 
     const navigate: NavigateFunction = useNavigate()
 
-    async function handleSubmit(event: any) {
+    const handleSubmit = (event: any) => {
         event.preventDefault()
         navigate('/home', { state: { name: userNameEntered } })
     }
