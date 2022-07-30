@@ -4,15 +4,17 @@ import { TextInput } from '../stories/TextInput/TextInput'
 import { Image } from '../stories/Image/Image'
 import { Form } from '../stories/Form/Form'
 
-import { useState } from 'react'
+import { MutableRefObject, ReactElement, useRef, useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { getData } from '../utils/restApiWrapper'
 
-import { env } from '../util'
+import { env } from './util'
+import { useAlert, useModal } from './components/GlobalHooks'
+import { AlertProps } from './stories/Alert/Alert'
+import { ModalProps } from './stories/Modal/Modal'
 
-const commonHeaders = {
+export const commonHeaders = {
     'X-Rucio-VO': 'def',
-    'X-Rucio-Account': 'root',
     'X-Rucio-AppID': 'test',
 }
 
@@ -20,27 +22,167 @@ function Login() {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
     const [userpassEnabled, setUserpassEnabled] = useState(false)
-    const [authType, setAuthType] = useState('')
+
+    const authType: MutableRefObject<string> = useRef('')
 
     const navigate: NavigateFunction = useNavigate()
+    const showAlert: (options: AlertProps) => Promise<void> = useAlert()
+    const showModal: (options: ModalProps) => Promise<void> = useModal()
 
-    const userPassAuth = () => {
-        getData('/auth/userpass', '', {
+    const accountName: MutableRefObject<string> = useRef('root')
+    const accountNameProvided: MutableRefObject<boolean> = useRef(false)
+
+    const AccountInput: ReactElement = (
+        <TextInput
+            label="Account Name"
+            placeholder="Enter Account Name (optional)"
+            size="medium"
+            kind="primary"
+            onChange={(event: any) => {
+                accountName.current = event.target.value
+                accountNameProvided.current = true
+            }}
+        />
+    )
+
+    const SignInButton: ReactElement = (
+        <div className="container-login100-form-btn m-t-17">
+            <Button
+                size="large"
+                kind="primary"
+                show="block"
+                label="Sign In"
+                type="submit"
+                disabled={
+                    passwordEntered.length == 0 || userNameEntered.length == 0
+                }
+                onClick={() => {
+                    authType.current = 'userpass'
+                }}
+            />
+        </div>
+    )
+
+    const makeUserPassAuthFetch = (): Promise<any> => {
+        return getData('/auth/userpass', '', {
+            ...commonHeaders,
             'X-Rucio-Username': userNameEntered,
             'X-Rucio-Password': passwordEntered,
-            ...commonHeaders,
+            'X-Rucio-Account': accountName.current,
         })
+    }
+
+    const fetchUserScopeToken = () => {
+        makeUserPassAuthFetch()
             .then((data: any) => {
                 if (data?.ok) {
                     const rucioAuthToken =
                         data?.headers.get('X-Rucio-Auth-Token')
-                    sessionStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
-                    navigate('/home', { state: { name: userNameEntered } })
-                } else {
-                    navigate('/login')
+                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
                 }
             })
             .catch((error: any) => {
+                showAlert({
+                    message: 'Something went wrong, please try again.',
+                    variant: 'warn',
+                })
+                console.error(error)
+            })
+    }
+
+    const loginNavigateHome = () => {
+        showAlert({
+            message: 'Login successful!',
+            variant: 'success',
+        })
+        navigate('/home', {
+            state: { name: accountName.current },
+        })
+        fetchUserScopeToken()
+    }
+
+    const getAccountsForIdentities = () => {
+        getData(`/identities/${userNameEntered}/userpass/accounts`, '', {
+            'X-Rucio-Auth-Token': localStorage.getItem(
+                'X-Rucio-Auth-Token',
+            ) as string,
+        })
+            .then((data: any) => data?.json())
+            .then((data: any) => {
+                if (data.length == 1) {
+                    accountName.current = data?.[0]
+                    loginNavigateHome()
+                } else {
+                    showModal({
+                        title: 'Multiple Accounts Select',
+                        body: (
+                            <Form
+                                title=""
+                                subtitle="We detected multiple accounts for
+                            this user, please select the desired
+                            one."
+                                onSubmit={(event: any) => {
+                                    event.preventDefault()
+                                    showModal({ active: false })
+                                    loginNavigateHome()
+                                }}
+                            >
+                                {data.map((element: any, index: number) => (
+                                    <label key={element}>
+                                        <input
+                                            type="radio"
+                                            id={element}
+                                            name="radio-group"
+                                            defaultChecked={
+                                                index == 0 ? true : false
+                                            }
+                                            onChange={(event: any) => {
+                                                accountName.current =
+                                                    event.target.value
+                                            }}
+                                        />
+                                        &nbsp;{element}
+                                    </label>
+                                ))}
+                                {SignInButton}
+                            </Form>
+                        ),
+                    })
+                }
+            })
+            .catch((error: any) => {
+                showAlert({
+                    message: 'Something went wrong, please try again.',
+                    variant: 'warn',
+                })
+                console.error(error)
+            })
+    }
+
+    const userPassAuth = () => {
+        makeUserPassAuthFetch()
+            .then((data: any) => {
+                if (data?.ok) {
+                    const rucioAuthToken =
+                        data?.headers.get('X-Rucio-Auth-Token')
+                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
+                    if (accountNameProvided.current === true) {
+                        loginNavigateHome()
+                    } else {
+                        getAccountsForIdentities()
+                    }
+                } else {
+                    showAlert({
+                        message: 'Unable to log in, please try again.',
+                        variant: 'error',
+                    })
+                }
+            })
+            .catch((error: any) => {
+                showAlert({
+                    message: 'Unable to log in, please try again.',
+                    variant: 'error',
+                })
                 console.error(error)
             })
     }
@@ -77,9 +219,10 @@ function Login() {
 
     async function handleSubmit(event: any) {
         event.preventDefault()
-        if (authType == 'x509') {
+        const currentAuthType: string = authType.current
+        if (currentAuthType == 'x509') {
             x509Auth()
-        } else if (authType == 'OAuth') {
+        } else if (currentAuthType == 'OAuth') {
             OAuth()
         } else {
             userPassAuth()
@@ -140,7 +283,7 @@ function Login() {
                                 show="block"
                                 label="x509 Certificate"
                                 onClick={() => {
-                                    setAuthType('x509')
+                                    authType.current = 'x509'
                                 }}
                             />
 
@@ -151,7 +294,7 @@ function Login() {
                                 show="block"
                                 label="OIDC Auth"
                                 onClick={() => {
-                                    setAuthType('OAuth')
+                                    authType.current = 'OAuth'
                                 }}
                             />
 
@@ -182,29 +325,8 @@ function Login() {
                                         }}
                                     />
 
-                                    <TextInput
-                                        label="Account Name"
-                                        placeholder="Enter Account Name (optional)"
-                                        size="medium"
-                                        kind="primary"
-                                    />
-
-                                    <div className="container-login100-form-btn m-t-17">
-                                        <Button
-                                            size="large"
-                                            kind="primary"
-                                            show="block"
-                                            label="Sign In"
-                                            type="submit"
-                                            disabled={
-                                                passwordEntered.length == 0 ||
-                                                userNameEntered.length == 0
-                                            }
-                                            onClick={() => {
-                                                setAuthType('userpass')
-                                            }}
-                                        />
-                                    </div>
+                                    {AccountInput}
+                                    {SignInButton}
                                 </>
                             ) : (
                                 <>
@@ -217,12 +339,7 @@ function Login() {
                                             setUserpassEnabled(true)
                                         }}
                                     />
-                                    <TextInput
-                                        label="Account Name"
-                                        placeholder="Enter Account Name (optional)"
-                                        size="medium"
-                                        kind="normal"
-                                    />
+                                    {AccountInput}
                                 </>
                             )}
                         </Form>
