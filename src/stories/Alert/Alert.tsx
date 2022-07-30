@@ -55,7 +55,6 @@ export const Alert = ({
     ),
     ...props
 }: AlertProps) => {
-    console.log(message)
     return (
         <>
             {open ? (
