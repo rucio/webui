@@ -1,13 +1,13 @@
-import './App.css'
-import { Button } from './stories/Button/Button'
-import { TextInput } from './stories/TextInput/TextInput'
-import { Image } from './stories/Image/Image'
-import { Form } from './stories/Form/Form'
+import '../App.css'
+import { Button } from '../stories/Button/Button'
+import { TextInput } from '../stories/TextInput/TextInput'
+import { Image } from '../stories/Image/Image'
+import { Form } from '../stories/Form/Form'
 
 import { useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 
-import { env } from './util'
+import { env } from '../util'
 
 export const Login: React.FC = () => {
     const [userNameEntered, setUserNameEntered] = useState('' as string)
@@ -33,9 +33,8 @@ export const Login: React.FC = () => {
                             {env('login_page_image_primary') ? (
                                 <div className="rucio-flex-item">
                                     <Image
-                                        src={require(`${env(
-                                            'login_page_image_primary',
-                                        )}`)}
+                                        src={require('../' +
+                                            env('login_page_image_primary'))}
                                         height={150}
                                         width={150}
                                     ></Image>
@@ -44,7 +43,7 @@ export const Login: React.FC = () => {
 
                             <div className="rucio-flex-item">
                                 <Image
-                                    src={require('./images/favicon.png')}
+                                    src={require('../images/favicon.png')}
                                     height={150}
                                     width={150}
                                 ></Image>
@@ -53,9 +52,8 @@ export const Login: React.FC = () => {
                             {env('login_page_image_secondary') ? (
                                 <div className="rucio-flex-item">
                                     <Image
-                                        src={require(`${env(
-                                            'login_page_image_secondary',
-                                        )}`)}
+                                        src={require('../' +
+                                            env('login_page_image_secondary'))}
                                         height={150}
                                         width={150}
                                     ></Image>
@@ -75,6 +73,7 @@ export const Login: React.FC = () => {
                                 kind="outline"
                                 show="block"
                                 label="x509 Certificate"
+                                type="submit"
                             />
 
                             <Button
@@ -82,6 +81,7 @@ export const Login: React.FC = () => {
                                 kind="outline"
                                 show="block"
                                 label="OIDC OAuth"
+                                type="submit"
                             />
                             {userpassEnabled ? (
                                 <>
@@ -105,7 +105,7 @@ export const Login: React.FC = () => {
                                         type="password"
                                         onChange={(event: any) => {
                                             setPasswordEntered(
-                                                event.target.value.length,
+                                                event.target.value,
                                             )
                                         }}
                                     />
@@ -129,7 +129,7 @@ export const Login: React.FC = () => {
                                     size="large"
                                     kind="outline"
                                     show="block"
-                                    label="Username/Password"
+                                    label="Username / Password"
                                     onClick={() => {
                                         setUserpassEnabled(true)
                                     }}
