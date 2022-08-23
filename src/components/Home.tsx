@@ -1,4 +1,4 @@
-import { Header } from './stories/Header/Header'
+import { Header } from '../stories/Header/Header'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 function Home() {
@@ -21,7 +21,7 @@ function Home() {
                 handleOnClick()
             }}
             user={{
-                name: location.state.name,
+                name: location?.state?.name,
             }}
         />
     )
