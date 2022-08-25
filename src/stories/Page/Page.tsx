@@ -8,9 +8,10 @@ import { Form } from '../Form/Form'
 
 type User = {
     name: string
+    children?: any
 }
 
-export const Page: React.VFC = () => {
+export const Page: React.VFC = (children: any) => {
     const [user, setUser] = React.useState<User>()
 
     return (

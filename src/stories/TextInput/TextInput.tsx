@@ -5,9 +5,9 @@ interface TextInputProps {
     label?: string
     name?: string
     placeholder?: string
-    kind?: 'primary' | 'info' | 'link'
+    kind?: 'primary' | 'info' | 'link' | 'normal'
     show?: 'danger' | 'warning' | 'success' | 'rounded'
-    size?: 'small' | 'medium' | 'large' | 'normal'
+    size?: 'small' | 'medium' | 'large'
     value?: string
     onChange?: (args: any) => void
 }
@@ -17,8 +17,8 @@ export const TextInput = ({
     label = 'Sample label',
     name = 'sample',
     placeholder = 'Sample placeholder',
-    size = 'normal',
-    kind = 'primary',
+    size = 'medium',
+    kind = 'normal',
     show,
     value,
     onChange,
