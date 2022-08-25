@@ -292,7 +292,7 @@ function Login() {
                                 size="large"
                                 kind="outline"
                                 show="block"
-                                label="OIDC Auth"
+                                label="OIDC OAuth"
                                 onClick={() => {
                                     authType.current = 'OAuth'
                                 }}
