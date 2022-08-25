@@ -8,10 +8,10 @@ import { MutableRefObject, ReactElement, useRef, useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { getData } from '../utils/restApiWrapper'
 
-import { env } from './util'
-import { useAlert, useModal } from './components/GlobalHooks'
-import { AlertProps } from './stories/Alert/Alert'
-import { ModalProps } from './stories/Modal/Modal'
+import { env } from '../util'
+import { useAlert, useModal } from '../components/GlobalHooks'
+import { AlertProps } from '../stories/Alert/Alert'
+import { ModalProps } from '../stories/Modal/Modal'
 
 export const commonHeaders = {
     'X-Rucio-VO': 'def',
