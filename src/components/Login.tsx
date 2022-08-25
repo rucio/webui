@@ -22,6 +22,7 @@ function Login() {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
     const [userpassEnabled, setUserpassEnabled] = useState(false)
+    const [accountName, setAccountName] = useState('')
 
     const authType: MutableRefObject<string> = useRef('')
 
@@ -29,18 +30,17 @@ function Login() {
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
     const showModal: (options: ModalProps) => Promise<void> = useModal()
 
-    const accountName: MutableRefObject<string> = useRef('root')
-    const accountNameProvided: MutableRefObject<boolean> = useRef(false)
+    // const accountName: MutableRefObject<string> = useRef('')
+    // const accountNameProvided: MutableRefObject<boolean> = useRef(false)
 
     const AccountInput: ReactElement = (
         <TextInput
-            label="Account Name"
-            placeholder="Enter Account Name (optional)"
+            label="Account Name (Optional)"
+            placeholder={accountName}
             size="medium"
             kind="primary"
             onChange={(event: any) => {
-                accountName.current = event.target.value
-                accountNameProvided.current = true
+                setAccountName(event.target.value)
             }}
         />
     )
@@ -64,12 +64,26 @@ function Login() {
     )
 
     const makeUserPassAuthFetch = (): Promise<any> => {
+        let headers
+        if (accountName.length === 0) {
+            headers = {
+                'X-Rucio-Username': userNameEntered,
+                'X-Rucio-Password': passwordEntered,
+            }
+        } else {
+            headers = {
+                'X-Rucio-Username': userNameEntered,
+                'X-Rucio-Password': passwordEntered,
+                'X-Rucio-Account': accountName,
+            }
+        }
+
         return getData('/auth/userpass', '', {
-            ...commonHeaders,
-            'X-Rucio-Username': userNameEntered,
-            'X-Rucio-Password': passwordEntered,
-            'X-Rucio-Account': accountName.current,
-        })
+                ...commonHeaders,
+                ...headers,
+                },
+            'https://rucio-devmaany.cern.ch:443'
+            )
     }
 
     const fetchUserScopeToken = () => {
@@ -96,7 +110,7 @@ function Login() {
             variant: 'success',
         })
         navigate('/home', {
-            state: { name: accountName.current },
+            state: { name: accountName },
         })
         fetchUserScopeToken()
     }
@@ -110,7 +124,7 @@ function Login() {
             .then((data: any) => data?.json())
             .then((data: any) => {
                 if (data.length == 1) {
-                    accountName.current = data?.[0]
+                    setAccountName(data[0])
                     loginNavigateHome()
                 } else {
                     showModal({
@@ -137,8 +151,7 @@ function Login() {
                                                 index == 0 ? true : false
                                             }
                                             onChange={(event: any) => {
-                                                accountName.current =
-                                                    event.target.value
+                                                setAccountName(event.target.value)
                                             }}
                                         />
                                         &nbsp;{element}
@@ -161,21 +174,70 @@ function Login() {
 
     const userPassAuth = () => {
         makeUserPassAuthFetch()
+            .then((response: any) => {
+                if (response.status === 200) {
+                    const rucioAuthToken =
+                        response?.headers.get('X-Rucio-Auth-Token')
+                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
+                }else if (response.status === 206){
+                    console.log("Multiple accounts detected")
+                    const has_accounts_header = response.headers.has('X-Rucio-Auth-Accounts')
+                    if (!has_accounts_header){
+                        console.log("No accounts header found in response")
+                        throw new Error("No accounts header found in response")
+                    }
+                    const accounts = response?.headers.get('X-Rucio-Auth-Accounts').split(',')
+                    showModal({
+                        title: 'Multiple Accounts Select',
+                        body: (
+                            <Form
+                                title=""
+                                subtitle="We detected multiple accounts for
+                            this user, please select the desired
+                            one."
+                                onSubmit={(event: any) => {
+                                    // event.preventDefault()
+                                    showModal({ active: false })
+                                    console.log(accountName)
+                                    // loginNavigateHome() TODO: send another request with the selected account
+                                }}
+                            >
+                                {accounts.map((element: any, index: number) => (
+                                    <label key={element}>
+                                        <input
+                                            type="radio"
+                                            id={element}
+                                            value={element}
+                                            name="radio-group"
+                                            defaultChecked={
+                                                index == 0 ? true : false
+                                            }
+                                            onChange={(event: any) => {
+                                                setAccountName(event.target.value)
+                                                console.log(event.target.value)
+                                            }}
+                                        />
+                                        &nbsp;{element}
+                                    </label>
+                                ))}
+                                {SignInButton}
+                            </Form>
+                        ),
+                    })
+                } else if (response.status === 401) {
+                    showAlert({
+                        message: 'Invalid credentials',
+                        variant: 'warn',
+                    })
+                } else {
+                    throw new Error('Login failed')
+                }
+                return response
+            })
+            .then(response => response.json())
             .then((data: any) => {
                 if (data?.ok) {
-                    const rucioAuthToken =
-                        data?.headers.get('X-Rucio-Auth-Token')
-                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
-                    if (accountNameProvided.current === true) {
-                        loginNavigateHome()
-                    } else {
-                        getAccountsForIdentities()
-                    }
-                } else {
-                    showAlert({
-                        message: 'Unable to log in, please try again.',
-                        variant: 'error',
-                    })
+                    console.log(data)
                 }
             })
             .catch((error: any) => {
