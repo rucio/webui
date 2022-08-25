@@ -63,6 +63,16 @@ function Login() {
         </div>
     )
 
+    const loginNavigateHome = (account: string) => {
+        showAlert({
+            message: 'Login successful!',
+            variant: 'success',
+        })
+        navigate('/home', {
+            state: { name: account },
+        })
+    }
+
     const makeUserPassAuthFetch = (): Promise<any> => {
         let headers
         if (accountName.length === 0) {
@@ -78,98 +88,15 @@ function Login() {
             }
         }
 
-        return getData('/auth/userpass', '', {
+        return getData(
+            '/auth/userpass',
+            '',
+            {
                 ...commonHeaders,
                 ...headers,
-                },
-            'https://rucio-devmaany.cern.ch:443'
-            )
-    }
-
-    const fetchUserScopeToken = () => {
-        makeUserPassAuthFetch()
-            .then((data: any) => {
-                if (data?.ok) {
-                    const rucioAuthToken =
-                        data?.headers.get('X-Rucio-Auth-Token')
-                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
-                }
-            })
-            .catch((error: any) => {
-                showAlert({
-                    message: 'Something went wrong, please try again.',
-                    variant: 'warn',
-                })
-                console.error(error)
-            })
-    }
-
-    const loginNavigateHome = () => {
-        showAlert({
-            message: 'Login successful!',
-            variant: 'success',
-        })
-        navigate('/home', {
-            state: { name: accountName },
-        })
-        fetchUserScopeToken()
-    }
-
-    const getAccountsForIdentities = () => {
-        getData(`/identities/${userNameEntered}/userpass/accounts`, '', {
-            'X-Rucio-Auth-Token': localStorage.getItem(
-                'X-Rucio-Auth-Token',
-            ) as string,
-        })
-            .then((data: any) => data?.json())
-            .then((data: any) => {
-                if (data.length == 1) {
-                    setAccountName(data[0])
-                    loginNavigateHome()
-                } else {
-                    showModal({
-                        title: 'Multiple Accounts Select',
-                        body: (
-                            <Form
-                                title=""
-                                subtitle="We detected multiple accounts for
-                            this user, please select the desired
-                            one."
-                                onSubmit={(event: any) => {
-                                    event.preventDefault()
-                                    showModal({ active: false })
-                                    loginNavigateHome()
-                                }}
-                            >
-                                {data.map((element: any, index: number) => (
-                                    <label key={element}>
-                                        <input
-                                            type="radio"
-                                            id={element}
-                                            name="radio-group"
-                                            defaultChecked={
-                                                index == 0 ? true : false
-                                            }
-                                            onChange={(event: any) => {
-                                                setAccountName(event.target.value)
-                                            }}
-                                        />
-                                        &nbsp;{element}
-                                    </label>
-                                ))}
-                                {SignInButton}
-                            </Form>
-                        ),
-                    })
-                }
-            })
-            .catch((error: any) => {
-                showAlert({
-                    message: 'Something went wrong, please try again.',
-                    variant: 'warn',
-                })
-                console.error(error)
-            })
+            },
+            'https://rucio-devmaany.cern.ch:443',
+        )
     }
 
     const userPassAuth = () => {
@@ -178,15 +105,22 @@ function Login() {
                 if (response.status === 200) {
                     const rucioAuthToken =
                         response?.headers.get('X-Rucio-Auth-Token')
+                    const rucioAccount = response?.headers.get(
+                        'X-Rucio-Auth-Account',
+                    )
+                    setAccountName(rucioAccount)
                     localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
-                }else if (response.status === 206){
-                    console.log("Multiple accounts detected")
-                    const has_accounts_header = response.headers.has('X-Rucio-Auth-Accounts')
-                    if (!has_accounts_header){
-                        console.log("No accounts header found in response")
-                        throw new Error("No accounts header found in response")
+                    loginNavigateHome(rucioAccount)
+                } else if (response.status === 206) {
+                    const has_accounts_header = response.headers.has(
+                        'X-Rucio-Auth-Accounts',
+                    )
+                    if (!has_accounts_header) {
+                        throw new Error('No accounts header found in response')
                     }
-                    const accounts = response?.headers.get('X-Rucio-Auth-Accounts').split(',')
+                    const accounts = response?.headers
+                        .get('X-Rucio-Auth-Accounts')
+                        .split(',')
                     showModal({
                         title: 'Multiple Accounts Select',
                         body: (
@@ -198,7 +132,6 @@ function Login() {
                                 onSubmit={(event: any) => {
                                     // event.preventDefault()
                                     showModal({ active: false })
-                                    console.log(accountName)
                                     // loginNavigateHome() TODO: send another request with the selected account
                                 }}
                             >
@@ -209,25 +142,30 @@ function Login() {
                                             id={element}
                                             value={element}
                                             name="radio-group"
-                                            defaultChecked={
-                                                index == 0 ? true : false
-                                            }
+                                            defaultChecked={false}
                                             onChange={(event: any) => {
-                                                setAccountName(event.target.value)
-                                                console.log(event.target.value)
+                                                setAccountName(
+                                                    event.target.value,
+                                                )
                                             }}
                                         />
                                         &nbsp;{element}
                                     </label>
                                 ))}
-                                {SignInButton}
+                                <Button
+                                    size="large"
+                                    kind="primary"
+                                    show="block"
+                                    label="Select Account"
+                                    type="submit"
+                                />
                             </Form>
                         ),
                     })
                 } else if (response.status === 401) {
                     showAlert({
                         message: 'Invalid credentials',
-                        variant: 'warn',
+                        variant: 'error',
                     })
                 } else {
                     throw new Error('Login failed')
@@ -282,9 +220,9 @@ function Login() {
     async function handleSubmit(event: any) {
         event.preventDefault()
         const currentAuthType: string = authType.current
-        if (currentAuthType == 'x509') {
+        if (currentAuthType === 'x509') {
             x509Auth()
-        } else if (currentAuthType == 'OAuth') {
+        } else if (currentAuthType === 'OAuth') {
             OAuth()
         } else {
             userPassAuth()
