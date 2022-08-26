@@ -16,6 +16,7 @@ import { ModalProps } from '../stories/Modal/Modal'
 export const commonHeaders = {
     'X-Rucio-VO': 'def',
     'X-Rucio-AppID': 'test',
+    'X-Rucio-Script': 'webui::login',
 }
 
 function Login() {
@@ -29,9 +30,6 @@ function Login() {
     const navigate: NavigateFunction = useNavigate()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
     const showModal: (options: ModalProps) => Promise<void> = useModal()
-
-    // const accountName: MutableRefObject<string> = useRef('')
-    // const accountNameProvided: MutableRefObject<boolean> = useRef(false)
 
     const AccountInput: ReactElement = (
         <TextInput
@@ -88,15 +86,10 @@ function Login() {
             }
         }
 
-        return getData(
-            '/auth/userpass',
-            '',
-            {
-                ...commonHeaders,
-                ...headers,
-            },
-            'https://rucio-devmaany.cern.ch:443',
-        )
+        return getData('/auth/userpass', '', {
+            ...commonHeaders,
+            ...headers,
+        })
     }
 
     const userPassAuth = () => {
@@ -116,13 +109,15 @@ function Login() {
                         'X-Rucio-Auth-Accounts',
                     )
                     if (!has_accounts_header) {
-                        throw new Error('No accounts header found in response')
+                        throw new Error(
+                            'No X-Rucio-Auth-Accounts header found in response',
+                        )
                     }
                     const accounts = response?.headers
                         .get('X-Rucio-Auth-Accounts')
                         .split(',')
                     showModal({
-                        title: 'Multiple Accounts Select',
+                        title: 'Select Rucio Account',
                         body: (
                             <Form
                                 title=""
@@ -130,9 +125,7 @@ function Login() {
                             this user, please select the desired
                             one."
                                 onSubmit={(event: any) => {
-                                    // event.preventDefault()
                                     showModal({ active: false })
-                                    // loginNavigateHome() TODO: send another request with the selected account
                                 }}
                             >
                                 {accounts.map((element: any, index: number) => (
@@ -171,12 +164,6 @@ function Login() {
                     throw new Error('Login failed')
                 }
                 return response
-            })
-            .then(response => response.json())
-            .then((data: any) => {
-                if (data?.ok) {
-                    console.log(data)
-                }
             })
             .catch((error: any) => {
                 showAlert({
