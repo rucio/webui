@@ -16,12 +16,14 @@ import { ModalProps } from '../stories/Modal/Modal'
 export const commonHeaders = {
     'X-Rucio-VO': 'def',
     'X-Rucio-AppID': 'test',
+    'X-Rucio-Script': 'webui::login',
 }
 
 function Login() {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
     const [userpassEnabled, setUserpassEnabled] = useState(false)
+    const [accountName, setAccountName] = useState('')
 
     const authType: MutableRefObject<string> = useRef('')
 
@@ -29,18 +31,14 @@ function Login() {
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
     const showModal: (options: ModalProps) => Promise<void> = useModal()
 
-    const accountName: MutableRefObject<string> = useRef('root')
-    const accountNameProvided: MutableRefObject<boolean> = useRef(false)
-
     const AccountInput: ReactElement = (
         <TextInput
-            label="Account Name"
-            placeholder="Enter Account Name (optional)"
+            label="Account Name (Optional)"
+            placeholder={accountName}
             size="medium"
             kind="primary"
             onChange={(event: any) => {
-                accountName.current = event.target.value
-                accountNameProvided.current = true
+                setAccountName(event.target.value)
             }}
         />
     )
@@ -63,58 +61,63 @@ function Login() {
         </div>
     )
 
-    const makeUserPassAuthFetch = (): Promise<any> => {
-        return getData('/auth/userpass', '', {
-            ...commonHeaders,
-            'X-Rucio-Username': userNameEntered,
-            'X-Rucio-Password': passwordEntered,
-            'X-Rucio-Account': accountName.current,
-        })
-    }
-
-    const fetchUserScopeToken = () => {
-        makeUserPassAuthFetch()
-            .then((data: any) => {
-                if (data?.ok) {
-                    const rucioAuthToken =
-                        data?.headers.get('X-Rucio-Auth-Token')
-                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
-                }
-            })
-            .catch((error: any) => {
-                showAlert({
-                    message: 'Something went wrong, please try again.',
-                    variant: 'warn',
-                })
-                console.error(error)
-            })
-    }
-
-    const loginNavigateHome = () => {
+    const loginNavigateHome = (account: string) => {
         showAlert({
             message: 'Login successful!',
             variant: 'success',
         })
         navigate('/home', {
-            state: { name: accountName.current },
+            state: { name: account },
         })
-        fetchUserScopeToken()
     }
 
-    const getAccountsForIdentities = () => {
-        getData(`/identities/${userNameEntered}/userpass/accounts`, '', {
-            'X-Rucio-Auth-Token': localStorage.getItem(
-                'X-Rucio-Auth-Token',
-            ) as string,
+    const makeUserPassAuthFetch = (): Promise<any> => {
+        let headers
+        if (accountName.length === 0) {
+            headers = {
+                'X-Rucio-Username': userNameEntered,
+                'X-Rucio-Password': passwordEntered,
+            }
+        } else {
+            headers = {
+                'X-Rucio-Username': userNameEntered,
+                'X-Rucio-Password': passwordEntered,
+                'X-Rucio-Account': accountName,
+            }
+        }
+
+        return getData('/auth/userpass', '', {
+            ...commonHeaders,
+            ...headers,
         })
-            .then((data: any) => data?.json())
-            .then((data: any) => {
-                if (data.length == 1) {
-                    accountName.current = data?.[0]
-                    loginNavigateHome()
-                } else {
+    }
+
+    const userPassAuth = () => {
+        makeUserPassAuthFetch()
+            .then((response: any) => {
+                if (response.status === 200) {
+                    const rucioAuthToken =
+                        response?.headers.get('X-Rucio-Auth-Token')
+                    const rucioAccount = response?.headers.get(
+                        'X-Rucio-Auth-Account',
+                    )
+                    setAccountName(rucioAccount)
+                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
+                    loginNavigateHome(rucioAccount)
+                } else if (response.status === 206) {
+                    const has_accounts_header = response.headers.has(
+                        'X-Rucio-Auth-Accounts',
+                    )
+                    if (!has_accounts_header) {
+                        throw new Error(
+                            'No X-Rucio-Auth-Accounts header found in response',
+                        )
+                    }
+                    const accounts = response?.headers
+                        .get('X-Rucio-Auth-Accounts')
+                        .split(',')
                     showModal({
-                        title: 'Multiple Accounts Select',
+                        title: 'Select Rucio Account',
                         body: (
                             <Form
                                 title=""
@@ -122,61 +125,45 @@ function Login() {
                             this user, please select the desired
                             one."
                                 onSubmit={(event: any) => {
-                                    event.preventDefault()
                                     showModal({ active: false })
-                                    loginNavigateHome()
                                 }}
                             >
-                                {data.map((element: any, index: number) => (
+                                {accounts.map((element: any, index: number) => (
                                     <label key={element}>
                                         <input
                                             type="radio"
                                             id={element}
+                                            value={element}
                                             name="radio-group"
-                                            defaultChecked={
-                                                index == 0 ? true : false
-                                            }
+                                            defaultChecked={false}
                                             onChange={(event: any) => {
-                                                accountName.current =
-                                                    event.target.value
+                                                setAccountName(
+                                                    event.target.value,
+                                                )
                                             }}
                                         />
                                         &nbsp;{element}
                                     </label>
                                 ))}
-                                {SignInButton}
+                                <Button
+                                    size="large"
+                                    kind="primary"
+                                    show="block"
+                                    label="Select Account"
+                                    type="submit"
+                                />
                             </Form>
                         ),
                     })
-                }
-            })
-            .catch((error: any) => {
-                showAlert({
-                    message: 'Something went wrong, please try again.',
-                    variant: 'warn',
-                })
-                console.error(error)
-            })
-    }
-
-    const userPassAuth = () => {
-        makeUserPassAuthFetch()
-            .then((data: any) => {
-                if (data?.ok) {
-                    const rucioAuthToken =
-                        data?.headers.get('X-Rucio-Auth-Token')
-                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
-                    if (accountNameProvided.current === true) {
-                        loginNavigateHome()
-                    } else {
-                        getAccountsForIdentities()
-                    }
-                } else {
+                } else if (response.status === 401) {
                     showAlert({
-                        message: 'Unable to log in, please try again.',
+                        message: 'Invalid credentials',
                         variant: 'error',
                     })
+                } else {
+                    throw new Error('Login failed')
                 }
+                return response
             })
             .catch((error: any) => {
                 showAlert({
@@ -220,9 +207,9 @@ function Login() {
     async function handleSubmit(event: any) {
         event.preventDefault()
         const currentAuthType: string = authType.current
-        if (currentAuthType == 'x509') {
+        if (currentAuthType === 'x509') {
             x509Auth()
-        } else if (currentAuthType == 'OAuth') {
+        } else if (currentAuthType === 'OAuth') {
             OAuth()
         } else {
             userPassAuth()
