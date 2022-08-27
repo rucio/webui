@@ -1,9 +1,9 @@
 import { Header } from '../stories/Header/Header'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Location } from 'react-router-dom'
 
 function Home() {
     const navigate = useNavigate()
-    const location: any = useLocation()
+    const location: Location | any = useLocation()
 
     async function handleOnClick() {
         navigate('/login')

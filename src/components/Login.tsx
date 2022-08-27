@@ -38,7 +38,7 @@ function Login() {
             size="medium"
             kind="primary"
             onChange={(event: any) => {
-                setAccountName(event.target.value)
+                setAccountName(event?.target?.value)
             }}
         />
     )
@@ -52,7 +52,7 @@ function Login() {
                 label="Sign In"
                 type="submit"
                 disabled={
-                    passwordEntered.length == 0 || userNameEntered.length == 0
+                    passwordEntered.length === 0 || userNameEntered.length === 0
                 }
                 onClick={() => {
                     authType.current = 'userpass'
@@ -71,7 +71,7 @@ function Login() {
         })
     }
 
-    const makeUserPassAuthFetch = (): Promise<any> => {
+    const makeUserPassAuthFetch = (): Promise<unknown> => {
         let headers
         if (accountName.length === 0) {
             headers = {
@@ -95,77 +95,91 @@ function Login() {
     const userPassAuth = () => {
         makeUserPassAuthFetch()
             .then((response: any) => {
-                if (response.status === 200) {
-                    const rucioAuthToken =
-                        response?.headers.get('X-Rucio-Auth-Token')
-                    const rucioAccount = response?.headers.get(
-                        'X-Rucio-Auth-Account',
-                    )
-                    setAccountName(rucioAccount)
-                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
-                    loginNavigateHome(rucioAccount)
-                } else if (response.status === 206) {
-                    const has_accounts_header = response.headers.has(
-                        'X-Rucio-Auth-Accounts',
-                    )
-                    if (!has_accounts_header) {
-                        throw new Error(
-                            'No X-Rucio-Auth-Accounts header found in response',
+                if (response) {
+                    if (response.status === 200) {
+                        const rucioAuthToken =
+                            response?.headers.get('X-Rucio-Auth-Token')
+                        const rucioAccount = response?.headers.get(
+                            'X-Rucio-Auth-Account',
                         )
-                    }
-                    const accounts = response?.headers
-                        .get('X-Rucio-Auth-Accounts')
-                        .split(',')
-                    showModal({
-                        title: 'Select Rucio Account',
-                        body: (
-                            <Form
-                                title=""
-                                subtitle="We detected multiple accounts for
+                        setAccountName(rucioAccount)
+                        localStorage.setItem(
+                            'X-Rucio-Auth-Token',
+                            rucioAuthToken,
+                        )
+                        loginNavigateHome(rucioAccount)
+                    } else if (response.status === 206) {
+                        const has_accounts_header = response.headers.has(
+                            'X-Rucio-Auth-Accounts',
+                        )
+                        if (!has_accounts_header) {
+                            throw new Error(
+                                'No X-Rucio-Auth-Accounts header found in response',
+                            )
+                        }
+                        const accounts = response?.headers
+                            .get('X-Rucio-Auth-Accounts')
+                            .split(',')
+                        showModal({
+                            title: 'Select Rucio Account',
+                            body: (
+                                <Form
+                                    title=""
+                                    subtitle="We detected multiple accounts for
                             this user, please select the desired
                             one."
-                                onSubmit={(event: any) => {
-                                    showModal({ active: false })
-                                }}
-                            >
-                                {accounts.map((element: any, index: number) => (
-                                    <label key={element}>
-                                        <input
-                                            type="radio"
-                                            id={element}
-                                            value={element}
-                                            name="radio-group"
-                                            defaultChecked={false}
-                                            onChange={(event: any) => {
-                                                setAccountName(
-                                                    event.target.value,
-                                                )
-                                            }}
-                                        />
-                                        &nbsp;{element}
-                                    </label>
-                                ))}
-                                <Button
-                                    size="large"
-                                    kind="primary"
-                                    show="block"
-                                    label="Select Account"
-                                    type="submit"
-                                />
-                            </Form>
-                        ),
-                    })
-                } else if (response.status === 401) {
+                                    onSubmit={() => {
+                                        showModal({ active: false })
+                                    }}
+                                >
+                                    {accounts.map((element: string) => (
+                                        <label key={element}>
+                                            <input
+                                                type="radio"
+                                                id={element}
+                                                value={element}
+                                                name="radio-group"
+                                                defaultChecked={false}
+                                                onChange={(event: any) => {
+                                                    setAccountName(
+                                                        event.target.value,
+                                                    )
+                                                }}
+                                            />
+                                            &nbsp;{element}
+                                        </label>
+                                    ))}
+                                    <Button
+                                        size="large"
+                                        kind="primary"
+                                        show="block"
+                                        label="Select Account"
+                                        type="submit"
+                                    />
+                                </Form>
+                            ),
+                        })
+                    } else if (response.status === 401) {
+                        showAlert({
+                            message: 'Invalid credentials',
+                            variant: 'error',
+                        })
+                    } else {
+                        showAlert({
+                            message: 'Login failed.',
+                            variant: 'error',
+                        })
+                        throw new Error('Login failed')
+                    }
+                } else {
                     showAlert({
-                        message: 'Invalid credentials',
+                        message: 'Unable to fetch response from server.',
                         variant: 'error',
                     })
-                } else {
-                    throw new Error('Login failed')
                 }
                 return response
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 showAlert({
                     message: 'Unable to log in, please try again.',
                     variant: 'error',
@@ -176,14 +190,14 @@ function Login() {
 
     const OAuth = () => {
         getData('/auth/oidc')
-            .then((data: any) => {
+            .then(() => {
                 sessionStorage.setItem(
                     'X-Rucio-Auth-Token',
                     'oidc_auth_sample_token',
                 )
                 navigate('/login')
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.error(error)
                 navigate('/login')
             })
@@ -191,14 +205,14 @@ function Login() {
 
     const x509Auth = () => {
         getData('/auth/x509')
-            .then((data: any) => {
+            .then(() => {
                 sessionStorage.setItem(
                     'X-Rucio-Auth-Token',
                     'x509_sample_token',
                 )
                 navigate('/login')
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.error(error)
                 navigate('/login')
             })
@@ -292,6 +306,7 @@ function Login() {
                                         placeholder="Enter Username"
                                         kind="info"
                                         size="medium"
+                                        focusByDefault
                                         onChange={(event: any) => {
                                             setUserNameEntered(
                                                 event.target.value,
@@ -315,21 +330,24 @@ function Login() {
                                     {AccountInput}
                                     {SignInButton}
                                 </>
-                            ) : (
-                                <>
-                                    <Button
-                                        size="large"
-                                        kind="outline"
-                                        show="block"
-                                        label="Username / Password"
-                                        onClick={() => {
-                                            setUserpassEnabled(true)
-                                        }}
-                                    />
-                                    {AccountInput}
-                                </>
-                            )}
+                            ) : null}
                         </Form>
+                        <br></br>
+                        {!userpassEnabled ? (
+                            <>
+                                <Button
+                                    size="large"
+                                    kind="outline"
+                                    show="block"
+                                    label="Username / Password"
+                                    onClick={(event: any) => {
+                                        event.preventDefault()
+                                        setUserpassEnabled(true)
+                                    }}
+                                />
+                                {AccountInput}
+                            </>
+                        ) : null}
                     </div>
                 </div>
             </div>

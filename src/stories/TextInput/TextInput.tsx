@@ -9,7 +9,8 @@ interface TextInputProps {
     show?: 'danger' | 'warning' | 'success' | 'rounded'
     size?: 'small' | 'medium' | 'large'
     value?: string
-    onChange?: (args: any) => void
+    focusByDefault?: boolean
+    onChange?: (args: unknown) => void
 }
 
 export const TextInput = ({
@@ -21,6 +22,7 @@ export const TextInput = ({
     kind = 'normal',
     show,
     value,
+    focusByDefault = false,
     onChange,
     ...props
 }: TextInputProps) => {
@@ -34,6 +36,7 @@ export const TextInput = ({
                 className={`rucio-textinput ${kind} ${size} ${show}`}
                 onChange={onChange}
                 value={value}
+                autoFocus={focusByDefault}
             />
         </label>
     )

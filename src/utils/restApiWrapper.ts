@@ -7,7 +7,7 @@ export async function postData(
     headers: HeadersInit | undefined = {},
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'POST',
         headers: {
@@ -15,6 +15,8 @@ export async function postData(
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+    }).catch((err: Error) => {
+        console.error(err)
     })
     return response
 }
@@ -29,7 +31,7 @@ export async function getData(
         | undefined = {},
     headers: HeadersInit | undefined = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(
         host + endpoint + '?' + new URLSearchParams(queryParams),
         {
@@ -39,7 +41,9 @@ export async function getData(
                 'Content-Type': 'application/json',
             },
         },
-    )
+    ).catch((err: Error) => {
+        console.error(err)
+    })
     return response
 }
 
@@ -48,7 +52,7 @@ export async function putData(
     headers: HeadersInit | undefined = {},
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'PUT',
         headers: {
@@ -56,6 +60,8 @@ export async function putData(
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+    }).catch((err: Error) => {
+        console.error(err)
     })
     return response
 }
@@ -65,7 +71,7 @@ export async function deleteData(
     headers: HeadersInit | undefined = {},
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'DELETE',
         headers: {
@@ -73,6 +79,8 @@ export async function deleteData(
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+    }).catch((err: Error) => {
+        console.error(err)
     })
     return response
 }

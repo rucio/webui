@@ -9,7 +9,7 @@ interface ButtonProps {
     type?: 'button' | 'submit' | 'reset' | undefined
     selected?: boolean
     disabled?: boolean
-    onClick?: (args: any) => void | undefined
+    onClick?: (args: unknown) => void | undefined
 }
 
 export const Button = ({
