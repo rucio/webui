@@ -6,6 +6,7 @@ import { Form } from '../stories/Form/Form'
 
 import { MutableRefObject, ReactElement, useRef, useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
+import { useAuth } from 'react-oidc-context'
 import { getData } from '../utils/restApiWrapper'
 
 import { env } from '../util'
@@ -18,12 +19,21 @@ export const commonHeaders = {
     'X-Rucio-AppID': 'test',
 }
 
+// move to environment variables, account for multiple OIDC providers
+export const oidcConfig = {
+    authority: 'authority_url',
+    client_id: 'client_id',
+    client_secret: 'client_secret',
+    redirect_uri: 'redirect_uri',
+}
+
 function Login() {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
     const [userpassEnabled, setUserpassEnabled] = useState(false)
 
     const authType: MutableRefObject<string> = useRef('')
+    const auth = useAuth()
 
     const navigate: NavigateFunction = useNavigate()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
@@ -188,18 +198,7 @@ function Login() {
     }
 
     const OAuth = () => {
-        getData('/auth/oidc')
-            .then((data: any) => {
-                sessionStorage.setItem(
-                    'X-Rucio-Auth-Token',
-                    'oidc_auth_sample_token',
-                )
-                navigate('/login')
-            })
-            .catch((error: any) => {
-                console.error(error)
-                navigate('/login')
-            })
+        auth.signinRedirect()
     }
 
     const x509Auth = () => {
