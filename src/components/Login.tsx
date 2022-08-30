@@ -33,7 +33,6 @@ function Login() {
     const [userpassEnabled, setUserpassEnabled] = useState(false)
 
     const authType: MutableRefObject<string> = useRef('')
-    const auth = useAuth()
 
     const navigate: NavigateFunction = useNavigate()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
@@ -198,6 +197,7 @@ function Login() {
     }
 
     const OAuth = () => {
+        const auth = useAuth()
         auth.signinRedirect()
     }
 
