@@ -83,14 +83,52 @@ export async function streamData(
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
 ): Promise<any> {
-    const response = await fetch(host + endpoint, {
+    fetch(host + endpoint, {
         method: 'GET',
         headers: {
             ...headers,
             'Content-Type': 'application/x-json-stream'
         },
-    })
+    }).then(response => { 
     const reader = response.body?.getReader()
+    return new ReadableStream({
+        start(controller) {
+          return pump();
+          function pump(): any {
+            return reader?.read().then(({ done, value }) => {
+              // When no more data needs to be consumed, close the stream
+              if (done) {
+                controller.close();
+                console.log('Stream complete');
+                return;
+              }
+              // Enqueue the next data chunk into our target stream
+              controller.enqueue(value);
+              return pump();
+            });
+          }
+        }
+      })
+    })
+    .then((stream) => new Response(stream))
+    .then((response) => {
+        return response.text()
+    })
+    .then(data => {
+        console.log(data)
+        const split_data = data.split('\n');
+        const ret_data = [];
+        for (let i = 0; i < split_data.length; i++) {
+            if (split_data[i].length <= 0) {
+                break;
+            }
+            ret_data.push(JSON.parse(split_data[i].replace(/Infinity/g, "-1")));
+        }
+        return ret_data;
+    })
+
+    
+    
     // reader?.read().then(function processResult(result): Promise<ReadableStream> | undefined {
     //     if (result.done) {
     //         console.log('Stream complete')
@@ -99,28 +137,27 @@ export async function streamData(
     //         return reader?.read().then(processResult)
     //     }
     // })
-    function processStreamResponse(result:any, ret_data: any[]): any[] | undefined {
-        if (result.done) {
-            console.log('Stream complete')
-            return undefined
-        } else {
-            if (result.value !== undefined){
-                const data = String.fromCharCode.apply(null, Array.from(result.value))
-                const split_data = data.split('\n');
+    // function processStreamResponse(result:any, ret_data: any[]): any[] | undefined {
+    //     if (result.done) {
+    //         console.log('Stream complete')
+    //         return undefined
+    //     } else {
+    //         if (result.value !== undefined){
+    //             const data = String.fromCharCode.apply(null, Array.from(result.value))
+    //             const split_data = data.split('\n');
                 
-                for (let i = 0; i < split_data.length; i++) {
-                    if (split_data[i].length <= 0) {
-                        break;
-                    }
-                    ret_data.push(JSON.parse(split_data[i].replace(/Infinity/g, "-1")));
-                }
-                console.log(ret_data);
-            }
-            return ret_data
-        }
-    }
-    const streamReader = reader?.read()
-    streamReader
+    //             for (let i = 0; i < split_data.length; i++) {
+    //                 if (split_data[i].length <= 0) {
+    //                     break;
+    //                 }
+    //                 ret_data.push(JSON.parse(split_data[i].replace(/Infinity/g, "-1")));
+    //             }
+    //             console.log(ret_data);
+    //         }
+    //         return ret_data
+    //     }
+    // }
+    
     // function processData(stream:any): Promise<ReadableStream> | undefined {
     //     const ret_data: any[] = [];
     //     const data = stream.read()
@@ -174,5 +211,5 @@ export async function streamData(
     //     const {value, done} = await reader.read()
     // })
 
-    return response
+    // return response
 }
