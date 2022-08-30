@@ -34,6 +34,7 @@ function Login() {
 
     const authType: MutableRefObject<string> = useRef('')
 
+    const auth = useAuth()
     const navigate: NavigateFunction = useNavigate()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
     const showModal: (options: ModalProps) => Promise<void> = useModal()
@@ -197,7 +198,6 @@ function Login() {
     }
 
     const OAuth = () => {
-        const auth = useAuth()
         auth.signinRedirect()
     }
 

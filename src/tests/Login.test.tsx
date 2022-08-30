@@ -1,13 +1,19 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import Login from '../components/Login'
 import { BrowserRouter } from 'react-router-dom'
+import { ServiceProvider } from '../components/GlobalHooks'
+import { ReactElement } from 'react'
 
-test('Login page render', () => {
-    render(
+const renderComponent: ReactElement = (
+    <ServiceProvider>
         <BrowserRouter>
             <Login />
-        </BrowserRouter>,
-    )
+        </BrowserRouter>
+    </ServiceProvider>
+)
+
+test('Login page render', () => {
+    render(renderComponent)
     const loginPrimaryText = screen.getByText('Rucio Login')
     expect(loginPrimaryText).toBeInTheDocument()
 
@@ -25,11 +31,7 @@ test('Login page render', () => {
 })
 
 test('x509 auth flow', () => {
-    render(
-        <BrowserRouter>
-            <Login />
-        </BrowserRouter>,
-    )
+    render(renderComponent)
     const x509Button = screen.getByText('x509 Certificate')
     expect(x509Button.getAttribute('type')).toEqual('submit')
 
@@ -41,11 +43,7 @@ test('x509 auth flow', () => {
 })
 
 test('OIDC auth flow', () => {
-    render(
-        <BrowserRouter>
-            <Login />
-        </BrowserRouter>,
-    )
+    render(renderComponent)
     const OIDCButton = screen.getByText('OIDC OAuth')
     expect(OIDCButton.getAttribute('type')).toEqual('submit')
 
@@ -57,11 +55,7 @@ test('OIDC auth flow', () => {
 })
 
 test('Userpass auth flow', () => {
-    render(
-        <BrowserRouter>
-            <Login />
-        </BrowserRouter>,
-    )
+    render(renderComponent)
     const userPassButton = screen.getByText('Username / Password')
 
     act(() => {
