@@ -12,17 +12,19 @@ function Home() {
     }
 
     function rules() {
-        const rucioToken: string =  localStorage.getItem("X-Rucio-Auth-Token") || ""
-        streamData('rules/', {
-            'X-Rucio-Auth-Token': rucioToken
-        }, {}, 'https://rucio-devmaany.cern.ch/')
-        .then((response: any) => {
+        const rucioToken: string =
+            localStorage.getItem('X-Rucio-Auth-Token') || ''
+        streamData(
+            'rules/',
+            {
+                'X-Rucio-Auth-Token': rucioToken,
+            },
+            '',
+        ).then((response: any) => {
             console.log(response)
-            console.log("YOOYOYOYOOo")
+            console.log('YOOYOYOYOOo')
         })
-        return (
-            <div>{rucioToken}</div>
-        )
+        return <div>{rucioToken}</div>
     }
     return (
         <div>
