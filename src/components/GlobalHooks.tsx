@@ -1,6 +1,8 @@
 import React from 'react'
 import { Alert, AlertProps } from '../stories/Alert/Alert'
 import { Modal, ModalProps } from '../stories/Modal/Modal'
+import { AuthProvider } from 'react-oidc-context'
+import { oidcConfig } from './Login'
 
 const AlertServiceContext = React.createContext<
     (options: AlertProps) => Promise<void>
@@ -49,7 +51,7 @@ export const ServiceProvider = ({ children }: any) => {
     }
 
     return (
-        <>
+        <AuthProvider {...oidcConfig}>
             <Alert
                 open={alertState}
                 onClose={handleAlertClose}
@@ -66,6 +68,6 @@ export const ServiceProvider = ({ children }: any) => {
                     children={children}
                 />
             </ModalServiceContext.Provider>
-        </>
+        </AuthProvider>
     )
 }
