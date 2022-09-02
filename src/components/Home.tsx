@@ -14,22 +14,15 @@ function Home() {
     const navigate = useNavigate()
     const location: any = useLocation()
     const [rulesArray, setRulesArray] = useState([] as Rule[])
-    
+
     useEffect(() => {
         rules()
     }, [])
 
-    function updateRulesArray(newRulesArray:Rule[]){
-         
-        setRulesArray((prevRulesArray) => [
-            ...prevRulesArray,
-            ...newRulesArray
-        ])
-    
+    function updateRulesArray(newRulesArray: Rule[]) {
+        setRulesArray(prevRulesArray => [...prevRulesArray, ...newRulesArray])
     }
 
-        
-    
     async function handleOnClick() {
         navigate('/login')
     }
@@ -37,15 +30,11 @@ function Home() {
     function rules() {
         const rucioToken: string =
             localStorage.getItem('X-Rucio-Auth-Token') || ''
-        streamData(
-            'rules/',
-            {
-                'X-Rucio-Auth-Token': rucioToken,
-            },
-            
-        ).then((data: any) => {
+        streamData('rules/', {
+            'X-Rucio-Auth-Token': rucioToken,
+        }).then((data: any) => {
             const rules = [] as Rule[]
-            for(const rule of data) {
+            for (const rule of data) {
                 const ruleObj = new Rule(rule['id'])
                 rules.push(ruleObj)
             }
@@ -69,11 +58,9 @@ function Home() {
                     name: location?.state?.name,
                 }}
             />
-            {
-                rulesArray.map((rule: Rule) => {
-                    return(<p>{rule.id}</p>)
-                })
-            }
+            {rulesArray.map((rule: Rule) => {
+                return <p>{rule.id}</p>
+            })}
         </>
     )
 }
