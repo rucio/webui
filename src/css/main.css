@@ -207,31 +207,31 @@ label {
 
 .wrap-card {
     border-radius: 1px;
-    height:40%;
-    width:60%;
+    height: 40%;
+    width: 60%;
     padding: 20px 20px 20px 20px;
     margin-left: 15%;
     margin-right: 15%;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 #notfound {
     position: relative;
-  }
-  
-  #notfound .notfound {
+}
+
+#notfound .notfound {
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-  }
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
 
 .notfound {
     width: 100%;
     text-align: center;
 }
-  
+
 .notfound .notfound-404 {
     height: 280px;
     position: relative;
@@ -244,8 +244,8 @@ label {
     position: absolute;
     left: 50%;
     -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-            transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
     background: url('../images/bg.jpg') no-repeat;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -261,9 +261,9 @@ label {
     font-weight: 700;
     text-transform: uppercase;
     margin-top: 0;
-  }
-  
-  .notfound p {
+}
+
+.notfound p {
     font-family: 'Montserrat', sans-serif;
     text-align: center;
     color: #000;
@@ -271,10 +271,10 @@ label {
     font-weight: 400;
     margin-bottom: 20px;
     margin-top: 0px;
-  }
+}
 
 @media only screen and (max-width: 767px) {
     .notfound .notfound-404 h1 {
-      font-size: 80px;;
+        font-size: 80px;
     }
 }

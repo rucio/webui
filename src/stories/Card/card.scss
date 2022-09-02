@@ -3,17 +3,16 @@
 @import 'bulma/sass/elements/_all.sass';
 @import 'bulma/sass/components/card.sass';
 
-
-.rucio-card{
-  @extend .card;
-  &.image{
-    @extend .card-image;
-  }
-  &.header{
-    @extend .card-header;
-  }
-  &.header-title{
-    @extend .card-header-title;
-  }
-  padding-bottom: 20px;
+.rucio-card {
+    @extend .card;
+    &.image {
+        @extend .card-image;
+    }
+    &.header {
+        @extend .card-header;
+    }
+    &.header-title {
+        @extend .card-header-title;
+    }
+    padding-bottom: 20px;
 }
