@@ -29,7 +29,7 @@ function Home() {
 
     function rules() {
         const rucioToken: string =
-            localStorage.getItem('X-Rucio-Auth-Token') || ''
+        sessionStorage.getItem('X-Rucio-Auth-Token') || '' 
         streamData('rules/', {
             'X-Rucio-Auth-Token': rucioToken,
         }).then((data: any) => {

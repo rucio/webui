@@ -11,7 +11,7 @@ type User = {
     children?: any
 }
 
-export const Page: React.VFC = (children: any) => {
+export const Page: React.VFC = () => {
     const [user, setUser] = React.useState<User>()
 
     return (

@@ -7,7 +7,7 @@ export async function postData(
     headers: HeadersInit | undefined = {},
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'POST',
         headers: {
@@ -29,7 +29,7 @@ export async function getData(
         | undefined = {},
     headers: HeadersInit | undefined = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(
         host + endpoint + '?' + new URLSearchParams(queryParams),
         {
@@ -48,7 +48,7 @@ export async function putData(
     headers: HeadersInit | undefined = {},
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'PUT',
         headers: {
@@ -65,7 +65,7 @@ export async function deleteData(
     headers: HeadersInit | undefined = {},
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'DELETE',
         headers: {

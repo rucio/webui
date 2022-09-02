@@ -9,7 +9,7 @@ interface TextInputProps {
     show?: 'danger' | 'warning' | 'success' | 'rounded'
     size?: 'small' | 'medium' | 'large'
     value?: string
-    onChange?: (args: any) => void
+    onChange?: (args: unknown) => void
 }
 
 export const TextInput = ({
