@@ -13,7 +13,7 @@ function Home() {
 
     function rules() {
         const rucioToken: string =
-            localStorage.getItem('X-Rucio-Auth-Token') || ''
+            sessionStorage.getItem('X-Rucio-Auth-Token') || ''
         streamData(
             'rules/',
             {

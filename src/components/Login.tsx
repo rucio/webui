@@ -62,7 +62,7 @@ function Login() {
                 label="Sign In"
                 type="submit"
                 disabled={
-                    passwordEntered.length == 0 || userNameEntered.length == 0
+                    passwordEntered.length === 0 || userNameEntered.length === 0
                 }
                 onClick={() => {
                     authType.current = 'userpass'
@@ -81,7 +81,7 @@ function Login() {
         })
     }
 
-    const makeUserPassAuthFetch = (): Promise<any> => {
+    const makeUserPassAuthFetch = (): Promise<unknown> => {
         let headers
         if (accountName.length === 0) {
             headers = {
@@ -112,7 +112,7 @@ function Login() {
                         'X-Rucio-Auth-Account',
                     )
                     setAccountName(rucioAccount)
-                    localStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
+                    sessionStorage.setItem('X-Rucio-Auth-Token', rucioAuthToken)
                     loginNavigateHome(rucioAccount)
                 } else if (response.status === 206) {
                     const has_accounts_header = response.headers.has(
@@ -134,11 +134,11 @@ function Login() {
                                 subtitle="We detected multiple accounts for
                             this user, please select the desired
                             one."
-                                onSubmit={(event: any) => {
+                                onSubmit={() => {
                                     showModal({ active: false })
                                 }}
                             >
-                                {accounts.map((element: any, index: number) => (
+                                {accounts.map((element: any) => (
                                     <label key={element}>
                                         <input
                                             type="radio"
@@ -175,7 +175,7 @@ function Login() {
                 }
                 return response
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 showAlert({
                     message: 'Unable to log in, please try again.',
                     variant: 'error',
@@ -190,20 +190,20 @@ function Login() {
 
     const x509Auth = () => {
         getData('/auth/x509')
-            .then((data: any) => {
+            .then(() => {
                 sessionStorage.setItem(
                     'X-Rucio-Auth-Token',
                     'x509_sample_token',
                 )
                 navigate('/login')
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.error(error)
                 navigate('/login')
             })
     }
 
-    async function handleSubmit(event: any) {
+    async function handleSubmit(event: KeyboardEvent) {
         event.preventDefault()
         const currentAuthType: string = authType.current
         if (currentAuthType === 'x509') {
