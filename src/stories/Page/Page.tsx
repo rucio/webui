@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { Header } from '../Header/Header'
-import { Card } from '../Card/Card'
-import { CardBody } from '../Card/components/CardBody'
-import { CardFooter } from '../Card/components/CardFooter'
+import { Box } from '../Box/Box'
+import { BoxBody } from '../Box/components/BoxBody'
+import { BoxFooter } from '../Box/components/BoxFooter'
 import { Form } from '../Form/Form'
 
 type User = {
@@ -22,12 +22,12 @@ export const Page: React.VFC = (children: any) => {
                 onLogout={() => setUser(undefined)}
                 onCreateAccount={() => setUser({ name: 'Rucio' })}
             />
-            <Card title="Welcome to Rucio">
-                <CardBody>
+            <Box title="Welcome to Rucio">
+                <BoxBody>
                     <Form></Form>
-                </CardBody>
-                <CardFooter />
-            </Card>
+                </BoxBody>
+                <BoxFooter />
+            </Box>
         </div>
     )
 }
