@@ -3,16 +3,14 @@ import { Image } from '../Image/Image'
 import { ReactElement } from 'react'
 
 interface CardProps {
-    img?: boolean
-    img_src?: any
+    img?: any
     header?: string
     content?: ReactElement
     footer?: Array<any>
 }
 
 export const Card = ({
-    img = false,
-    img_src,
+    img,
     header = '',
     content,
     footer = [],
@@ -20,13 +18,13 @@ export const Card = ({
 }: CardProps) => {
     return (
         <div className="rucio-card">
-            {img ? (
-                <div className={'image'}>
+            {img !==0 ? (
+                <div className={"image"}>
                     <figure className="image is-4by3">
-                        <Image src={img_src} height={960} width={1280} />
+                        <Image src={img} height={960} width={1280} />
                     </figure>
                 </div>
-            ) : null}
+            ):null}
             {header.length > 0 ? (
                 <header className={'header'}>
                     <p className={'header-title'}>{header}</p>
