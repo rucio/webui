@@ -1,0 +1,34 @@
+@import 'bulma/sass/utilities/_all.sass';
+@import 'bulma/sass/base/_all.sass';
+@import 'bulma/sass/elements/_all.sass';
+@import 'bulma/sass/components/tabs.sass';
+
+.rucio-tabs{
+    @extend .tabs;
+    &.right{
+        @extend .is-right;
+    }
+    &.centered{
+        @extend .is-centered;
+    }
+    &.small{
+        @extend .is-small;
+    }
+    &.medium{
+        @extend .is-medium;
+    }
+    &.large{
+        @extend .is-large;
+    }
+    &.boxed{
+        @extend .is-boxed;
+    }
+    &.toggle{
+        @extend .is-toggle;
+    }
+    &.toggle-rounded{
+        @extend .is-toggle;
+        @extend .is-toggle-rounded;
+    }
+
+}

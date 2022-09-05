@@ -1,0 +1,18 @@
+@import 'bulma/sass/utilities/_all.sass';
+@import 'bulma/sass/base/_all.sass';
+@import 'bulma/sass/elements/_all.sass';
+@import 'bulma/sass/form/_all.sass';
+@import "bulma-steps/src/sass/index.sass";
+
+.rucio-steps{
+  @extend .steps;
+  &.small{
+    @extend .is-small;
+  }
+  &.medium{
+    @extend .is-medium;
+  }
+  &.large{
+    @extend .is-large;
+  }
+}
