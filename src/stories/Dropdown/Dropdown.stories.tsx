@@ -1,4 +1,4 @@
-import {ComponentMeta, ComponentStory} from '@storybook/react'
+import { ComponentMeta, ComponentStory } from '@storybook/react'
 
 import { Dropdown } from './Dropdown'
 
@@ -7,10 +7,10 @@ export default {
     component: Dropdown,
 } as ComponentMeta<typeof Dropdown>
 
-const Template: ComponentStory<typeof Dropdown> = args => (<Dropdown {...args} />)
+const Template: ComponentStory<typeof Dropdown> = args => <Dropdown {...args} />
 
 export const Primary = Template.bind({})
 Primary.args = {
-    label:'Dropdown',
-    options:['option 1','option 2','option 3'],
+    label: 'Dropdown',
+    options: ['option 1', 'option 2', 'option 3'],
 }

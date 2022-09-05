@@ -2,41 +2,41 @@
 @import 'bulma/sass/base/_all.sass';
 @import 'bulma/sass/elements/_all.sass';
 @import 'bulma/sass/form/_all.sass';
-@import "bulma-checkradio/src/sass/index.sass";
+@import 'bulma-checkradio/src/sass/index.sass';
 
-.rucio-checkradio{
-  @extend .is-checkradio;
-  &.success{
-    @extend .is-success;
-  }
-  &.warning{
-    @extend .is-warning;
-  }
-  &.danger{
-    @extend .is-danger;
-  }
-  &.info{
-    @extend .is-info;
-  }
-  &.small{
-    @extend .is-small;
-  }
-  &.medium{
-    @extend .is-medium;
-  }
-  &.large{
-    @extend .is-large;
-  }
-  &.rounded_checkbox{
-    @extend .is-circle;
-  }
-  &.block{
-    @extend .is-block;
-  }
-  &.no_border{
-    @extend .has-no-border;
-  }
-  &.background-color{
-    @extend .has-background-color;
-  }
+.rucio-checkradio {
+    @extend .is-checkradio;
+    &.success {
+        @extend .is-success;
+    }
+    &.warning {
+        @extend .is-warning;
+    }
+    &.danger {
+        @extend .is-danger;
+    }
+    &.info {
+        @extend .is-info;
+    }
+    &.small {
+        @extend .is-small;
+    }
+    &.medium {
+        @extend .is-medium;
+    }
+    &.large {
+        @extend .is-large;
+    }
+    &.rounded_checkbox {
+        @extend .is-circle;
+    }
+    &.block {
+        @extend .is-block;
+    }
+    &.no_border {
+        @extend .has-no-border;
+    }
+    &.background-color {
+        @extend .has-background-color;
+    }
 }

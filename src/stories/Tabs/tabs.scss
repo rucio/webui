@@ -3,32 +3,31 @@
 @import 'bulma/sass/elements/_all.sass';
 @import 'bulma/sass/components/tabs.sass';
 
-.rucio-tabs{
+.rucio-tabs {
     @extend .tabs;
-    &.right{
+    &.right {
         @extend .is-right;
     }
-    &.centered{
+    &.centered {
         @extend .is-centered;
     }
-    &.small{
+    &.small {
         @extend .is-small;
     }
-    &.medium{
+    &.medium {
         @extend .is-medium;
     }
-    &.large{
+    &.large {
         @extend .is-large;
     }
-    &.boxed{
+    &.boxed {
         @extend .is-boxed;
     }
-    &.toggle{
+    &.toggle {
         @extend .is-toggle;
     }
-    &.toggle-rounded{
+    &.toggle-rounded {
         @extend .is-toggle;
         @extend .is-toggle-rounded;
     }
-
 }

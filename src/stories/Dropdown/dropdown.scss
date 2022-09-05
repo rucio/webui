@@ -3,17 +3,17 @@
 @import 'bulma/sass/elements/_all.sass';
 @import 'bulma/sass/components/dropdown.sass';
 
-.rucio-dropdown{
-  @extend .dropdown;
-  &.active{
-    @extend .is-active;
-  }
+.rucio-dropdown {
+    @extend .dropdown;
+    &.active {
+        @extend .is-active;
+    }
 }
-option{
-  text-align:left;
+option {
+    text-align: left;
 }
 
-option:hover{
-  background-color: #F5F5F5FF;
-  color: #0A0A0AFF;
+option:hover {
+    background-color: #f5f5f5ff;
+    color: #0a0a0aff;
 }
