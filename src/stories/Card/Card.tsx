@@ -18,13 +18,13 @@ export const Card = ({
 }: CardProps) => {
     return (
         <div className="rucio-card">
-            {img !==0 ? (
-                <div className={"image"}>
+            {img !== 0 ? (
+                <div className={'image'}>
                     <figure className="image is-4by3">
                         <Image src={img} height={960} width={1280} />
                     </figure>
                 </div>
-            ):null}
+            ) : null}
             {header.length > 0 ? (
                 <header className={'header'}>
                     <p className={'header-title'}>{header}</p>

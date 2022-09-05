@@ -2,8 +2,7 @@
 @import '@primer/css/box/index.scss';
 @import '@primer/css/utilities/index.scss';
 
-.rucio-box
- {
+.rucio-box {
     @extend .Box;
     &.condensed {
         @extend .Box--condensed;
