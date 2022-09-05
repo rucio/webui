@@ -1,20 +1,20 @@
 import './toggleswitch.scss'
 
 interface ToggleSwitchProps {
-    label?:string
-    kind?:'danger' | 'warning' | 'success' | 'info'
+    label?: string
+    kind?: 'danger' | 'warning' | 'success' | 'info'
     size?: 'small' | 'normal' | 'medium' | 'large'
     style?: 'rounded' | 'outlined'
-    checked:boolean;
-    handleChange: (event:any) => void;
+    checked: boolean
+    handleChange: (event: any) => void
 }
 
 export const ToggleSwitch = ({
-    label='',
+    label = '',
     kind,
-    size="normal",
+    size = 'normal',
     style,
-     ...props
+    ...props
 }: ToggleSwitchProps) => {
     return (
         <>
@@ -26,5 +26,5 @@ export const ToggleSwitch = ({
             />
             <label>{label}</label>
         </>
-    );
-};
+    )
+}

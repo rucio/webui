@@ -2,35 +2,35 @@
 @import 'bulma/sass/base/_all.sass';
 @import 'bulma/sass/elements/_all.sass';
 @import 'bulma/sass/form/_all.sass';
-@import "bulma-switch/src/sass/index.sass";
+@import 'bulma-switch/src/sass/index.sass';
 
-.rucio-switch{
+.rucio-switch {
     @extend .switch;
-    &.small{
+    &.small {
         @extend .is-small;
     }
-    &.medium{
+    &.medium {
         @extend .is-medium;
     }
-    &.large{
+    &.large {
         @extend .is-large;
     }
-    &.success{
+    &.success {
         @extend .is-success;
     }
-    &.warning{
+    &.warning {
         @extend .is-warning;
     }
-    &.danger{
+    &.danger {
         @extend .is-danger;
     }
-    &.info{
+    &.info {
         @extend .is-info;
     }
-    &.rounded{
+    &.rounded {
         @extend .is-rounded;
     }
-    &.outlined{
+    &.outlined {
         @extend .is-outlined;
     }
 }

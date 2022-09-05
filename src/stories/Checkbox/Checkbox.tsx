@@ -1,25 +1,24 @@
-import React, {ChangeEventHandler} from "react";
+import React, { ChangeEventHandler } from 'react'
 import './checkbox.scss'
 
-
 interface CheckboxProps {
-    isChecked: boolean;
+    isChecked: boolean
     handleChange: ChangeEventHandler
-    label: string;
-    kind?:'danger' | 'warning' | 'success' | 'info'
+    label: string
+    kind?: 'danger' | 'warning' | 'success' | 'info'
     size?: 'small' | 'normal' | 'medium' | 'large'
     style?: 'rounded_checkbox' | 'block' | 'no_border' | 'background-color'
-    type?:'checkbox' | 'radio'
+    type?: 'checkbox' | 'radio'
 }
 
 export const Checkbox = ({
-    label="",
-    type="checkbox",
+    label = '',
+    type = 'checkbox',
     size,
     kind,
     style,
     isChecked,
-     handleChange,
+    handleChange,
     ...props
 }: CheckboxProps) => {
     return (
@@ -32,5 +31,5 @@ export const Checkbox = ({
             />
             <label>{label}</label>
         </>
-    );
-};
+    )
+}
