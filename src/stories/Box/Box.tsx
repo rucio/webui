@@ -16,7 +16,7 @@ export const Box = ({
 }: BoxProps) => {
     return (
         <div
-            className={`rucio-card ${type}`}
+            className={`rucio-box ${type}`}
             style={{ backgroundColor: background }}
         >
             <div className="header">

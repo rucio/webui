@@ -1,10 +1,10 @@
-interface CardFooterProps {
+interface BoxFooterProps {
     children?: any
 }
 
 export const BoxFooter = ({
     children = <h5>footer</h5>,
     ...props
-}: CardFooterProps) => {
+}: BoxFooterProps) => {
     return <div className="footer">{children}</div>
 }

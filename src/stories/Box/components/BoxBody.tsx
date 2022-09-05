@@ -1,10 +1,10 @@
-interface CardBodyProps {
+interface BoxBodyProps {
     children?: any
 }
 
 export const BoxBody = ({
     children = <h5>body</h5>,
     ...props
-}: CardBodyProps) => {
+}: BoxBodyProps) => {
     return <div className="body">{children}</div>
 }
