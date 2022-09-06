@@ -3,7 +3,7 @@
 @import 'bulma/sass/elements/_all.sass';
 @import 'bulma/sass/form/_all.sass';
 
-.rucio-textinput {
+.rucio-input {
     @extend .input;
     &.small {
         @extend .is-small;

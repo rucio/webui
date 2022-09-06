@@ -1,6 +1,6 @@
-import './textinput.scss'
+import './input.scss'
 
-interface TextInputProps {
+interface InputProps {
     type?: string
     label?: string
     name?: string
@@ -8,12 +8,14 @@ interface TextInputProps {
     kind?: 'primary' | 'info' | 'link' | 'normal'
     show?: 'danger' | 'warning' | 'success' | 'rounded'
     size?: 'small' | 'medium' | 'large'
-    value?: string
+    value?: any
+    min?: number
+    max?: number
     focusByDefault?: boolean
-    onChange?: (args: unknown) => void
+    onChange?: (args: any) => void
 }
 
-export const TextInput = ({
+export const Input = ({
     type = 'text',
     label = 'Sample label',
     name = 'sample',
@@ -23,9 +25,11 @@ export const TextInput = ({
     show,
     value,
     focusByDefault = false,
+    min,
+    max,
     onChange,
     ...props
-}: TextInputProps) => {
+}: InputProps) => {
     return (
         <label>
             {label}
@@ -33,10 +37,12 @@ export const TextInput = ({
                 type={type}
                 name={name}
                 placeholder={placeholder}
-                className={`rucio-textinput ${kind} ${size} ${show}`}
+                className={`rucio-input ${kind} ${size} ${show}`}
                 onChange={onChange}
                 value={value}
                 autoFocus={focusByDefault}
+                min={min}
+                max={max}
             />
         </label>
     )
