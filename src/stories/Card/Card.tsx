@@ -18,7 +18,7 @@ export const Card = ({
 }: CardProps) => {
     return (
         <div className="rucio-card">
-            {img ? (
+            {img !== undefined ? (
                 <div className={'image'}>
                     <figure className="image is-4by3">
                         <Image src={img} height={960} width={1280} />
