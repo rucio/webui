@@ -1,6 +1,6 @@
 import '../App.css'
 import { Button } from '../stories/Button/Button'
-import { TextInput } from '../stories/TextInput/TextInput'
+import { Input } from '../stories/Input/Input'
 import { Image } from '../stories/Image/Image'
 import { Form } from '../stories/Form/Form'
 
@@ -36,7 +36,7 @@ function Login() {
         useAuthConfig()
 
     const AccountInput: ReactElement = (
-        <TextInput
+        <Input
             label="Account Name (Optional)"
             placeholder={accountName}
             size="medium"
@@ -396,7 +396,7 @@ function Login() {
 
                             {userpassEnabled ? (
                                 <>
-                                    <TextInput
+                                    <Input
                                         label="Username"
                                         placeholder="Enter Username"
                                         kind="info"
@@ -409,7 +409,7 @@ function Login() {
                                         }}
                                     />
 
-                                    <TextInput
+                                    <Input
                                         label="Password"
                                         placeholder="Enter Password"
                                         kind="info"
