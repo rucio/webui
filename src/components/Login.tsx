@@ -217,8 +217,8 @@ function Login() {
             })
     }
 
-    async function handleSubmit(event: KeyboardEvent) {
-        event.preventDefault()
+    async function handleSubmit(event: any) {
+        event?.preventDefault()
         const currentAuthType: string = authType.current
         if (currentAuthType === 'x509') {
             x509Auth()
