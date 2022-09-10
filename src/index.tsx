@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import Login from './components/Login'
 import Home from './components/Home'
+import NotFound from './components/NotFound'
 import reportWebVitals from './reportWebVitals'
 import { ServiceProvider } from './components/GlobalHooks'
 
@@ -13,6 +14,7 @@ root.render(
             <Routes>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
     </ServiceProvider>,

@@ -191,3 +191,90 @@ label {
 .rucio-flex-item {
     margin: auto 5px;
 }
+
+.container-card {
+    width: 100%;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px;
+}
+
+.wrap-card {
+    border-radius: 1px;
+    height: 40%;
+    width: 60%;
+    padding: 20px 20px 20px 20px;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 20px;
+}
+
+#notfound {
+    position: relative;
+}
+
+#notfound .notfound {
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.notfound {
+    width: 100%;
+    text-align: center;
+}
+
+.notfound .notfound-404 {
+    height: 280px;
+    position: relative;
+}
+
+.notfound .notfound-404 h1 {
+    font-size: 230px;
+    margin: 0px;
+    font-weight: 900;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    background: url('../images/bg.jpg') no-repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: cover;
+    background-position: center;
+}
+
+.notfound h2 {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    color: #000;
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+.notfound p {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    margin-top: 0px;
+}
+
+@media only screen and (max-width: 767px) {
+    .notfound .notfound-404 h1 {
+        font-size: 80px;
+    }
+}
