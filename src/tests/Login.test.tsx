@@ -23,35 +23,8 @@ test('Login page render', () => {
     const x509PassAuthText = screen.getByText('x509 Certificate')
     expect(x509PassAuthText).toBeInTheDocument()
 
-    const OAuthText = screen.getByText('OIDC OAuth')
-    expect(OAuthText).toBeInTheDocument()
-
     const userPassAuthText = screen.getByText('Username / Password')
     expect(userPassAuthText).toBeInTheDocument()
-})
-
-test('x509 auth flow', () => {
-    render(renderComponent)
-    const x509Button = screen.getByText('x509 Certificate')
-    expect(x509Button.getAttribute('type')).toEqual('submit')
-
-    act(() => {
-        x509Button.click()
-    })
-
-    expect(() => act(() => x509Button.click())).not.toThrow()
-})
-
-test('OIDC auth flow', () => {
-    render(renderComponent)
-    const OIDCButton = screen.getByText('OIDC OAuth')
-    expect(OIDCButton.getAttribute('type')).toEqual('submit')
-
-    act(() => {
-        OIDCButton.click()
-    })
-
-    expect(() => act(() => OIDCButton.click())).not.toThrow()
 })
 
 test('Userpass auth flow', () => {
