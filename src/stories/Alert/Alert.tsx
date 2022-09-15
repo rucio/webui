@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import './alert.scss'
 
 export interface AlertProps {
@@ -55,6 +55,12 @@ export const Alert = ({
     ),
     ...props
 }: AlertProps) => {
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        })
+    })
     return (
         <>
             {open ? (

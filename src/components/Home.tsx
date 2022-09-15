@@ -1,8 +1,7 @@
 import { Header } from '../stories/Header/Header'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Location } from 'react-router-dom'
 import { streamData } from '../utils/restApiWrapper'
 import { useState, useEffect } from 'react'
-import { Card } from '../stories/Card/Card'
 
 class Rule {
     id: string
@@ -12,7 +11,7 @@ class Rule {
 }
 function Home() {
     const navigate = useNavigate()
-    const location: any = useLocation()
+    const location: Location | any = useLocation()
     const [rulesArray, setRulesArray] = useState([] as Rule[])
 
     useEffect(() => {
