@@ -15,6 +15,8 @@ export async function postData(
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+    }).catch((err: Error) => {
+        console.error(err)
     })
     return response
 }
@@ -39,7 +41,9 @@ export async function getData(
                 'Content-Type': 'application/json',
             },
         },
-    )
+    ).catch((err: Error) => {
+        console.error(err)
+    })
     return response
 }
 
@@ -56,6 +60,8 @@ export async function putData(
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+    }).catch((err: Error) => {
+        console.error(err)
     })
     return response
 }
@@ -73,6 +79,8 @@ export async function deleteData(
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+    }).catch((err: Error) => {
+        console.error(err)
     })
     return response
 }
