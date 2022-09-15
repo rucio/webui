@@ -27,18 +27,6 @@ test('Login page render', () => {
     expect(userPassAuthText).toBeInTheDocument()
 })
 
-test('x509 auth flow', () => {
-    render(renderComponent)
-    const x509Button = screen.getByText('x509 Certificate')
-    expect(x509Button.getAttribute('type')).toEqual('submit')
-
-    act(() => {
-        x509Button.click()
-    })
-
-    expect(() => act(() => x509Button.click())).not.toThrow()
-})
-
 test('Userpass auth flow', () => {
     render(renderComponent)
     const userPassButton = screen.getByText('Username / Password')
