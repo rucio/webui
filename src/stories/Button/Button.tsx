@@ -1,6 +1,8 @@
+import { ReactNode } from 'react'
 import './button.scss'
 
 interface ButtonProps {
+    icon?: ReactNode | null
     kind?: 'primary' | 'secondary' | 'outline'
     show?: 'danger' | 'block' | 'invisible'
     background?: string
@@ -13,6 +15,7 @@ interface ButtonProps {
 }
 
 export const Button = ({
+    icon = null,
     kind = 'secondary',
     size = 'medium',
     show,
@@ -37,6 +40,8 @@ export const Button = ({
             onClick={handleOnClick}
             {...props}
         >
+            {icon}
+            &nbsp;
             {label}
         </button>
     )

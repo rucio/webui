@@ -2,7 +2,6 @@ import React from 'react'
 import { Alert, AlertProps } from '../stories/Alert/Alert'
 import { Modal, ModalProps } from '../stories/Modal/Modal'
 import { AuthProvider } from 'react-oidc-context'
-import { oidcConfig } from './Login'
 
 const AlertServiceContext = React.createContext<
     (options: AlertProps) => Promise<void>
@@ -12,12 +11,23 @@ const ModalServiceContext = React.createContext<
     (options: ModalProps) => Promise<void>
 >(Promise.resolve)
 
+const AuthServiceContext = React.createContext<
+    (oidcConfig: any) => Promise<void>
+>(Promise.resolve)
+
 export const useAlert = () => React.useContext(AlertServiceContext)
 export const useModal = () => React.useContext(ModalServiceContext)
+export const useAuthConfig = () => React.useContext(AuthServiceContext)
 
 export const ServiceProvider = ({ children }: any) => {
     const [alertState, setAlertState] = React.useState<AlertProps | any>(null)
     const [modalState, setModalState] = React.useState<ModalProps | any>(null)
+    const [authState, setAuthState] = React.useState<any>({
+        authority: 'authority_url',
+        client_id: 'client_id',
+        client_secret: 'client_secret',
+        redirect_uri: 'redirect_uri',
+    })
 
     const awaitingPromiseRef = React.useRef<{
         resolve: () => void
@@ -50,24 +60,33 @@ export const ServiceProvider = ({ children }: any) => {
         setModalState(null)
     }
 
+    const setNewAuthState = (oidcConfig: any) => {
+        setAuthState(oidcConfig)
+        return new Promise<void>(resolve => {
+            awaitingPromiseRef.current = { resolve }
+        })
+    }
+
     return (
-        <AuthProvider {...oidcConfig}>
-            <Alert
-                open={alertState}
-                onClose={handleAlertClose}
-                {...alertState}
-            />
-            <Modal
-                active={modalState}
-                onClose={handleModalClose}
-                {...modalState}
-            ></Modal>
-            <ModalServiceContext.Provider value={openModalConfirmation}>
-                <AlertServiceContext.Provider
-                    value={openAlertConfirmation}
-                    children={children}
+        <AuthServiceContext.Provider value={setNewAuthState}>
+            <AuthProvider {...authState}>
+                <Alert
+                    open={alertState}
+                    onClose={handleAlertClose}
+                    {...alertState}
                 />
-            </ModalServiceContext.Provider>
-        </AuthProvider>
+                <Modal
+                    active={modalState}
+                    onClose={handleModalClose}
+                    {...modalState}
+                ></Modal>
+                <ModalServiceContext.Provider value={openModalConfirmation}>
+                    <AlertServiceContext.Provider
+                        value={openAlertConfirmation}
+                        children={children}
+                    />
+                </ModalServiceContext.Provider>
+            </AuthProvider>
+        </AuthServiceContext.Provider>
     )
 }
