@@ -270,16 +270,6 @@ function Login() {
                         </span>
 
                         <Form title="" subtitle="" onSubmit={handleSubmit}>
-                            <Button
-                                type="submit"
-                                size="large"
-                                kind="outline"
-                                show="block"
-                                label="OIDC OAuth"
-                                onClick={() => {
-                                    authType.current = 'OAuth'
-                                }}
-                            />
                             <div className="rucio-flex">
                                 {env('oidc_provider_1') ? (
                                     <div className="rucio-flex-item">
