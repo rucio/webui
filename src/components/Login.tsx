@@ -187,7 +187,6 @@ function Login() {
                         variant: 'error',
                     })
                 }
-                return response
             })
             .catch((error: Error) => {
                 showAlert({
