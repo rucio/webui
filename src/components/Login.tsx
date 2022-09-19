@@ -13,6 +13,7 @@ import { env } from '../util'
 import { useAuthConfig, useAlert, useModal } from '../components/GlobalHooks'
 import { AlertProps } from '../stories/Alert/Alert'
 import { ModalProps } from '../stories/Modal/Modal'
+import { AuthError } from '../utils/exceptions'
 
 export const commonHeaders = {
     'X-Rucio-VO': 'def',
@@ -118,9 +119,7 @@ function Login() {
                             'X-Rucio-Auth-Accounts',
                         )
                         if (!has_accounts_header) {
-                            throw new Error(
-                                'No X-Rucio-Auth-Accounts header found in response',
-                            )
+                            throw AuthError.fromType('USERPASS_NO_HEADER')
                         }
                         const accounts = response?.headers
                             .get('X-Rucio-Auth-Accounts')
@@ -174,38 +173,53 @@ function Login() {
                             message: 'Login failed.',
                             variant: 'error',
                         })
-                        throw new Error('Login failed')
+                        throw AuthError.fromType('COMMON_LOGIN_FAILED')
                     }
                 } else {
                     showAlert({
                         message: 'Unable to fetch response from server.',
                         variant: 'error',
                     })
+                    throw AuthError.fromType('COMMON_LOGIN_FAILED')
                 }
             })
             .catch((error: Error) => {
-                showAlert({
-                    message: 'Unable to log in, please try again.',
-                    variant: 'error',
-                })
+                setTimeout(() => {
+                    showAlert({
+                        message: 'Unable to log in, please try again.',
+                        variant: 'error',
+                    })
+                }, 5000)
                 console.error(error)
             })
     }
 
     const OAuth = () => {
-        const oidcProviderId: string = 'oidc_provider_' + oidcProvider.current
-        if (env(oidcProviderId)) {
-            const newOidcConfig = {} as any
-            newOidcConfig.authority = env(oidcProviderId + '_authority')
-            newOidcConfig.client_id = env(oidcProviderId + '_client_id')
-            newOidcConfig.client_secret = env(oidcProviderId + '_client_secret')
-            newOidcConfig.redirect_uri = env(oidcProviderId + '_redirect_uri')
-            setOidcConfig(newOidcConfig)
-            setTimeout(() => {
-                auth.signinRedirect()
-            }, 2500)
-        } else {
-            throw new Error('OAuth provider not found')
+        try {
+            const oidcProviderId: string =
+                'oidc_provider_' + oidcProvider.current
+            if (env(oidcProviderId)) {
+                const newOidcConfig = {} as any
+                newOidcConfig.authority = env(oidcProviderId + '_authority')
+                newOidcConfig.client_id = env(oidcProviderId + '_client_id')
+                newOidcConfig.client_secret = env(
+                    oidcProviderId + '_client_secret',
+                )
+                newOidcConfig.redirect_uri = env(
+                    oidcProviderId + '_redirect_uri',
+                )
+                setOidcConfig(newOidcConfig)
+                setTimeout(() => {
+                    auth.signinRedirect()
+                }, 2500)
+            } else {
+                throw AuthError.fromType('OIDC_PROVIDER_NOT_FOUND')
+            }
+        } catch {
+            showAlert({
+                message: 'Something went wrong, please try again.',
+                variant: 'warn',
+            })
         }
     }
 
