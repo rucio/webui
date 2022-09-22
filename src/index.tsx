@@ -6,6 +6,7 @@ import Home from './components/Home'
 import NotFound from './components/NotFound'
 import reportWebVitals from './reportWebVitals'
 import { ServiceProvider } from './components/GlobalHooks'
+import { RuleDef } from './components/RuleDef'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -14,6 +15,7 @@ root.render(
             <Routes>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/ruledef" element={<RuleDef />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
@@ -24,3 +26,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()
+
