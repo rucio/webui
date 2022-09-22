@@ -95,11 +95,17 @@ export async function deleteData(
 
 export async function streamData(
     endpoint: string | undefined = '/',
+    queryParams:
+        | string
+        | string[][]
+        | Record<string, string>
+        | URLSearchParams
+        | undefined = {},
     headers: object | undefined = authorizationHeader,
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
     return new Promise((resolve, reject) => {
-        fetch(host + endpoint, {
+        fetch(host + endpoint  + '?' + new URLSearchParams(queryParams), {
             method: 'GET',
             headers: {
                 ...authorizationHeader,
