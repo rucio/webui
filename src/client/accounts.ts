@@ -80,10 +80,21 @@ class Account extends AccountModel {
     public static listRules(): object {
         return {}
     }
-    public static getUsageHistory(account:string, rse:string): object {
-        let url='/accounts/' + account + '/usage/'
-        if (rse.length>0) {url+=rse}    
-        return streamData(url)
+    public static getUsageHistory(
+        account:string, 
+        rse:string, 
+        onSuccess = (args?: unknown) => args,
+        onError = (args?: unknown) => args,)
+        : void {
+            let url='/accounts/' + account + '/usage/'
+            if (rse.length>0) {url+=rse}    
+            streamData(url)
+            .then((data: any) => {
+                onSuccess(data)
+            })
+            .catch((error: unknown) => {
+                onError(error)
+            })
     }
     public static getLocalUsage(): object {
         return {}
