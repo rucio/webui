@@ -12,6 +12,7 @@ import { Modal } from "../stories/Modal/Modal";
 import { search, get_did } from "../rucio_client/did"
 import { DIDModel, RSEModel } from "../models"
 import AlertStories from "../stories/Alert/Alert.stories";
+import { check } from "prettier";
 
 export function RuleDef(){
     const rucioToken: string =localStorage.getItem('X-Rucio-Auth-Token') || ''
@@ -24,14 +25,10 @@ export function RuleDef(){
     const [summaryAlertOpened, setSummaryAlertOpened] = useState(true as boolean)
     const [didSearchMethod, setDidSearchMethod]=useState(0 as number)
     // const [selectedDIDs, setSelectedDIDs]=useState<string[]>([])
-    const selectedDIDs=['dataset1','dataset2']
-    const entries:string[]=[]
-    const entriesDict:{[key:string]:boolean}={}
-    {entries.map(entry=>entriesDict[entry]=false)}
-    function handleListChange(entry:string){
-        const currentState=entriesDict[entry]
-        entriesDict[entry]=!currentState
-    }
+    // const selectedDIDs=['dataset1','dataset2']
+    // const entries:string[]=[]
+    // const entriesDict:{[key:string]:boolean}={}
+    // {entries.map(entry=>entriesDict[entry]=false)}
         
 
     function DID(){
@@ -40,8 +37,17 @@ export function RuleDef(){
         const [recordAmountEntered, setRecordAmountEntered] = useState('' as string)
         const [dataPatternEntered, setDataPatternEntered] = useState(false as boolean)
         // TODO Useeffect o keep selected DIDs if going back
+        const [checkedDIDs, setCheckedDIDs]=useState(new Array(10).fill(true))
         const [filterEntered, setFilterEntered] = useState('' as string)
         const [didInfoOpened,setDidInfoOpened]=useState (false as boolean)
+
+        const handleDIDListChange = function (position:number){
+            checkedDIDs[position]=false
+            // const updatedCheckedDIDs = checkedDIDs.map((item, index) => {
+            //     // index === position ? !item : item
+            //     console.log(item)
+            // })
+        }    
 
         const extract_scope = function(name: any): string[] {
             if (name.indexOf(':') > -1) {
@@ -84,6 +90,15 @@ export function RuleDef(){
             <Card
                 content={
                     <>
+                        <input
+                            type={"checkbox"}
+                            checked={checkbox}
+                            onChange={(event:any)=>{
+                                console.log('yo')
+                                setCheckbox(!checkbox)
+                                console.log(checkbox)
+                        }}
+                        />
                         <Tabs
                             tabs={['DID Search Pattern','List of DIDs']}
                             active={didSearchMethod}
@@ -129,6 +144,7 @@ export function RuleDef(){
                                         name={"pattern"}
                                         placeholder={"Data Pattern"}
                                         value={dataPatternValue}
+                                        focusByDefault
                                         show={"rounded"}
                                         type={"text"}
                                         onChange={(event: any) => {
@@ -185,15 +201,16 @@ export function RuleDef(){
                                 </table>
                                 { dataPatternEntered ? (
                                     <div className={"list_entries"}>
-                                        {didEntries.map(entry=>(
+                                        {didEntries.map((entry,index)=>(
                                             <>
                                                 <br/>
                                                 <Checkbox
+                                                    key={`custom-checkbox-${index}`}
                                                     style={"background-color"}
                                                     label={entry.id}
-                                                    isChecked={entriesDict[entry.id]}
-                                                    handleChange={()=>(
-                                                        handleListChange(entry.id)
+                                                    isChecked={checkedDIDs[index]}
+                                                    handleChange={(event:any)=>(
+                                                       handleDIDListChange(index)
                                                     )}
                                                 />
                                             </>
