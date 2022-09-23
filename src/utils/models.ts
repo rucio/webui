@@ -54,13 +54,9 @@ export class RSEModel {
     rse: string
     remaining_quota: string
     total_quota: string
-    constructor (
-        rse:string, 
-        remaining_quota: string, 
-        total_quota: string
-    ){
-        this.rse=rse
-        this.remaining_quota=remaining_quota
-        this.total_quota=total_quota
+    constructor(rse: string, remaining_quota: string, total_quota: string) {
+        this.rse = rse
+        this.remaining_quota = remaining_quota
+        this.total_quota = total_quota
     }
 }

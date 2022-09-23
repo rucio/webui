@@ -81,14 +81,16 @@ class Account extends AccountModel {
         return {}
     }
     public static getUsageHistory(
-        account:string, 
-        rse:string, 
+        account: string,
+        rse: string,
         onSuccess = (args?: unknown) => args,
-        onError = (args?: unknown) => args,)
-        : void {
-            let url='/accounts/' + account + '/usage/'
-            if (rse.length>0) {url+=rse}    
-            streamData(url)
+        onError = (args?: unknown) => args,
+    ): void {
+        let url = '/accounts/' + account + '/usage/'
+        if (rse.length > 0) {
+            url += rse
+        }
+        streamData(url)
             .then((data: any) => {
                 onSuccess(data)
             })
