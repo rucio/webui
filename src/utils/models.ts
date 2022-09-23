@@ -1,4 +1,4 @@
-export class AccountModel implements Account {
+export class AccountModel implements AccountType {
     account!: string
     scope!: string
     identities!: string[]
@@ -22,7 +22,7 @@ export class AccountModel implements Account {
     }
 }
 
-export class RuleModel implements Rule {
+export class RuleModel implements RuleType {
     rule_id!: string
     locks!: any[]
     history!: any[]
