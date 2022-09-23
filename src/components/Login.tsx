@@ -14,6 +14,7 @@ import { useAuthConfig, useAlert, useModal } from '../components/GlobalHooks'
 import { AlertProps } from '../stories/Alert/Alert'
 import { ModalProps } from '../stories/Modal/Modal'
 import { AuthError } from '../utils/exceptions'
+import { RucioClient } from '../client'
 
 export const commonHeaders = {
     'X-Rucio-VO': 'def',
@@ -78,7 +79,7 @@ function Login() {
     }
 
     const makeUserPassAuthFetch = (): Promise<unknown> => {
-        let headers
+        let headers = {}
         if (accountName.length === 0) {
             headers = {
                 'X-Rucio-Username': userNameEntered,
@@ -109,7 +110,7 @@ function Login() {
                             'X-Rucio-Auth-Account',
                         )
                         setAccountName(rucioAccount)
-                        localStorage.setItem(
+                        sessionStorage.setItem(
                             'X-Rucio-Auth-Token',
                             rucioAuthToken,
                         )

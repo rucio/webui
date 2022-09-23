@@ -1,16 +1,21 @@
 import { env } from '../util'
 
 const defaultHostEndpoint: string | undefined = env('RUCIO_HOST')
+const rucioToken: string = sessionStorage.getItem('X-Rucio-Auth-Token') ?? ''
+const authorizationHeader = {
+    'X-Rucio-Auth-Token': rucioToken,
+}
 
 export async function postData(
     endpoint: string | undefined = '/',
-    headers: HeadersInit | undefined = {},
+    headers: object | undefined = authorizationHeader,
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'POST',
         headers: {
+            ...authorizationHeader,
             ...headers,
             'Content-Type': 'application/json',
         },
@@ -29,7 +34,7 @@ export async function getData(
         | Record<string, string>
         | URLSearchParams
         | undefined = {},
-    headers: HeadersInit | undefined = {},
+    headers: object | undefined = authorizationHeader,
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
     const response = await fetch(
@@ -37,6 +42,7 @@ export async function getData(
         {
             method: 'GET',
             headers: {
+                ...authorizationHeader,
                 ...headers,
                 'Content-Type': 'application/json',
             },
@@ -49,13 +55,14 @@ export async function getData(
 
 export async function putData(
     endpoint: string | undefined = '/',
-    headers: HeadersInit | undefined = {},
+    headers: object | undefined = authorizationHeader,
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'PUT',
         headers: {
+            ...authorizationHeader,
             ...headers,
             'Content-Type': 'application/json',
         },
@@ -68,13 +75,14 @@ export async function putData(
 
 export async function deleteData(
     endpoint: string | undefined = '/',
-    headers: HeadersInit | undefined = {},
+    headers: object | undefined = authorizationHeader,
     data: unknown = {},
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
     const response = await fetch(host + endpoint, {
         method: 'DELETE',
         headers: {
+            ...authorizationHeader,
             ...headers,
             'Content-Type': 'application/json',
         },
@@ -87,13 +95,14 @@ export async function deleteData(
 
 export async function streamData(
     endpoint: string | undefined = '/',
-    headers: HeadersInit | undefined = {},
+    headers: object | undefined = authorizationHeader,
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
     return new Promise((resolve, reject) => {
         fetch(host + endpoint, {
             method: 'GET',
             headers: {
+                ...authorizationHeader,
                 ...headers,
                 'Content-Type': 'application/x-json-stream',
             },
