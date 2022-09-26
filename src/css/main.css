@@ -241,7 +241,7 @@ label {
     font-size: 230px;
     margin: 0px;
     font-weight: 900;
-    position: absolute;
+    position: relative;
     left: 50%;
     -webkit-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
@@ -278,3 +278,9 @@ label {
         font-size: 80px;
     }
 }
+
+/* @media only screen and (max-width: 2000px) {
+    .notfound .notfound-404 h1 {
+        font-size: 230px;
+    }
+} */
