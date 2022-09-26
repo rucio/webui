@@ -5,7 +5,7 @@ export interface AlertProps {
     open?: boolean
     leftIcon?: ReactElement | undefined
     rightIcon?: ReactElement | undefined
-    message?: string | undefined
+    message?: string | any
     variant?: 'primary' | 'warn' | 'success' | 'error' | undefined
     onClose?: () => void
 }
