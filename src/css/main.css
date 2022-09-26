@@ -238,7 +238,7 @@ label {
 }
 
 .notfound .notfound-404 h1 {
-    font-size: 230px;
+    font-size: 10vw;
     margin: 0px;
     font-weight: 900;
     position: relative;
@@ -273,8 +273,8 @@ label {
     margin-top: 0px;
 }
 
-@media only screen and (max-width: 1000px) {
+/* @media only screen and (max-width: 767px) {
     .notfound .notfound-404 h1 {
         font-size: 50px;
     }
-}
+} */
