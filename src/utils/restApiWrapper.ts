@@ -105,7 +105,7 @@ export async function streamData(
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
     return new Promise((resolve, reject) => {
-        fetch(host + endpoint  + '?' + new URLSearchParams(queryParams), {
+        fetch(host + endpoint + '?' + new URLSearchParams(queryParams), {
             method: 'GET',
             headers: {
                 ...authorizationHeader,

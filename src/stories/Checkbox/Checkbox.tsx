@@ -3,7 +3,7 @@ import './checkbox.scss'
 
 interface CheckboxProps {
     isChecked: boolean
-    handleChange: (args:any) => void
+    handleChange: (args: any) => void
     label: string
     kind?: 'danger' | 'warning' | 'success' | 'info'
     size?: 'small' | 'normal' | 'medium' | 'large'
@@ -25,7 +25,7 @@ export const Checkbox = ({
         <>
             <input
                 // className={`rucio-checkradio ${kind} ${size} ${style}`}
-                className='is-checkradio'
+                className="is-checkradio"
                 type={type}
                 checked={isChecked}
                 onChange={handleChange}
