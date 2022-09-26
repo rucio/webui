@@ -11,8 +11,6 @@ import {Tabs} from "../stories/Tabs/Tabs";
 import { Modal } from "../stories/Modal/Modal";
 import { search, get_did } from "../rucio_client/did"
 import { DIDModel, RSEModel } from "../models"
-import AlertStories from "../stories/Alert/Alert.stories";
-import { check } from "prettier";
 
 export function RuleDef(){
     const rucioToken: string =localStorage.getItem('X-Rucio-Auth-Token') || ''
@@ -24,41 +22,38 @@ export function RuleDef(){
     const [rseAlertOpened, setRseAlertOpened]=useState(true as boolean)
     const [summaryAlertOpened, setSummaryAlertOpened] = useState(true as boolean)
     const [didSearchMethod, setDidSearchMethod]=useState(0 as number)
-    // const [selectedDIDs, setSelectedDIDs]=useState<string[]>([])
-    // const selectedDIDs=['dataset1','dataset2']
-    // const entries:string[]=[]
-    // const entriesDict:{[key:string]:boolean}={}
-    // {entries.map(entry=>entriesDict[entry]=false)}
-        
+    const [isCheckedApproval, setIsChecked] = useState(false as boolean);
+    const [copiesAmountEntered, setCopiesAmountEntered] = useState(1 as number)        
+    const [DIDEntries, setDIDEntries] = useState <string[]>([])
+
 
     function DID(){
         const [didEntries, setdidEntries]=useState([] as DIDModel[])
         const [granularityLevel, setGranularityLevel]=useState('' as string)
         const [recordAmountEntered, setRecordAmountEntered] = useState('' as string)
         const [dataPatternEntered, setDataPatternEntered] = useState(false as boolean)
-        // TODO Useeffect o keep selected DIDs if going back
         const [checkedDIDs, setCheckedDIDs]=useState(new Array(10).fill(true))
         const [filterEntered, setFilterEntered] = useState('' as string)
         const [didInfoOpened,setDidInfoOpened]=useState (false as boolean)
+        const [errorMessage,setErrorMessage]=useState(true as boolean)
 
         const handleDIDListChange = function (position:number){
-            checkedDIDs[position]=false
-            // const updatedCheckedDIDs = checkedDIDs.map((item, index) => {
-            //     // index === position ? !item : item
-            //     console.log(item)
-            // })
-        }    
-
+            checkedDIDs[position]=!checkedDIDs[position]
+            setCheckedDIDs(checkedDIDs)
+        } 
+        
         const extract_scope = function(name: any): string[] {
             if (name.indexOf(':') > -1) {
                 return name.split(':');
             }
             const items = name.split('.')
             if (items.length <= 1) {
-                //asjvgnqergerg
-                throw Error(
-                    "Valenina will write a very beautiful error message here and also show an Alert"
-                )
+                <Alert
+                    open={errorMessage}
+                    message={"Someting went wrong!"}
+                    variant={"error"}
+                    onClose={()=>{setErrorMessage(false)}}                
+                />
             }
             let scope = items[0];
             if (name.indexOf('user') === 0 || name.indexOf('group') === 0) {
@@ -76,7 +71,7 @@ export function RuleDef(){
             if (!scope) {
                 return ("cannot determine scope. please provide the did with scope");
             }
-            search(scope, name, granularityLevel, rucioToken)
+            search(scope, name, granularityLevel)
             .then((data: any) => {
                 const dids = [] as DIDModel[]
                 for (const did of data){
@@ -90,15 +85,6 @@ export function RuleDef(){
             <Card
                 content={
                     <>
-                        <input
-                            type={"checkbox"}
-                            checked={checkbox}
-                            onChange={(event:any)=>{
-                                console.log('yo')
-                                setCheckbox(!checkbox)
-                                console.log(checkbox)
-                        }}
-                        />
                         <Tabs
                             tabs={['DID Search Pattern','List of DIDs']}
                             active={didSearchMethod}
@@ -160,13 +146,12 @@ export function RuleDef(){
                                         disabled={dataPatternValue.length === 0}
                                         onClick={(event: any) => {
                                             setDataPatternEntered(true)
-                                            console.log("Calling search DIDs")
                                             searchDids()
                                         }}
                                     />
                                 </div>
                                 <table className={"inline_alignment"}>
-                                    <td>
+                                    <td style={{width:"40%"}}>
                                         <Input
                                             name={"filter"}
                                             show={"rounded"}
@@ -179,7 +164,7 @@ export function RuleDef(){
                                                 )}}
                                         />
                                     </td>
-                                    <td style={{paddingLeft:"10%"}}>
+                                    <td style={{width:"20%"}}>
                                         <Dropdown
                                             label={"Show"}
                                             options={["10", "25","50","100"]}
@@ -188,7 +173,7 @@ export function RuleDef(){
                                             }
                                         />
                                     </td>
-                                    <td>
+                                    <td style={{width:"40%"}}>
                                         <Dropdown
                                             label={"Level of Granularity"}
                                             options={["dataset", "container", "collection", "file"]}
@@ -196,7 +181,6 @@ export function RuleDef(){
                                                 setGranularityLevel(event.target.value)}
                                             }
                                         />
-
                                     </td>
                                 </table>
                                 { dataPatternEntered ? (
@@ -204,15 +188,17 @@ export function RuleDef(){
                                         {didEntries.map((entry,index)=>(
                                             <>
                                                 <br/>
-                                                <Checkbox
-                                                    key={`custom-checkbox-${index}`}
-                                                    style={"background-color"}
-                                                    label={entry.id}
-                                                    isChecked={checkedDIDs[index]}
-                                                    handleChange={(event:any)=>(
-                                                       handleDIDListChange(index)
-                                                    )}
-                                                />
+                                                <label>
+                                                    <input
+                                                        key={`custom-checkbox-${index}`}
+                                                        type={"checkbox"}
+                                                        checked={checkedDIDs[index]}
+                                                        onChange={(event:any)=>{
+                                                            handleDIDListChange(index)
+                                                        }}
+                                                    />
+                                                    {' '}{entry.id}
+                                                </label>
                                             </>
                                         ))}
                                     </div>
@@ -235,10 +221,12 @@ export function RuleDef(){
                             </>
                         ):(
                             <>
+                            &nbsp;
                                 <textarea
                                     style={{borderRadius:"5px", padding:"0px 10px 10px 10px", width:"100%"}}
                                     cols={130}
                                     rows={12}
+                                    autoFocus={true}
                                     placeholder={"If you want to create a rule for several DIDs without a pattern, here you can enter them, one DID per line"}
                                     value={listEntered}
                                     onChange={(event: any) => {
@@ -268,32 +256,35 @@ export function RuleDef(){
 
     function RSE(){
         const [rseexpressionvalueEntered, setRseexpressionvalueEntered] = useState('' as string)
-        const [popoverOpened, setPopoverOpened]=useState(false as boolean)
-        const [isCheckedApproval, setIsChecked] = useState(false as boolean);
-        const [RSEList, setRSEList]=useState([] as RSEModel[])
-
-        // function getDids() {
-        //     selectedDIDs.forEach(function (did){
-
-        //     })
-
-        //     search(scope, name, granularityLevel, rucioToken)
-        //     .then((data: any) => {
-        //         const dids = [] as DIDModel[]
-        //         for (const did of data){
-        //             const didObj = new DIDModel(did)
-        //             dids.push(didObj)
-        //         }
-        //         updateDidEntries(dids)
-        //     })
-        // }
-
-
+        const [RSEInfoOpened, setRSEInfoOpened] = useState (false as boolean)
 
         return(
             <Card
                 content={
                     <>
+                        <Button
+                            label='RSE'
+                            onClick={()=>{setRSEInfoOpened(true)}}
+                        />
+                        {RSEInfoOpened?(
+                            <Modal
+                                active={RSEInfoOpened}
+                                title={"RSE"}
+                                body={
+                                    <>
+                                        <p>Rucio Storage Elements (RSEs) are storage endpoints at sites, where data is written to. They can have different types like DATADISK or LOCALGROUPDISK, which are subject to different permissions and policies.</p>
+                                        <p>RSEs have a set of attributes assigned to them so that they can be grouped in different ways, e.g., all UK RSEs or all Tier-1 RSEs. Those attributes can be used to compose RSE expressions, which can be applied if you don't explicitly want to have the data replicated to one specific RSE.</p>
+                                        <p>Accounts in Rucio have quota set per RSEs that specify where one account can write data and how much. A detailed explanation about permissions and quotas in Rucio can be found on this
+                                            <a href="https://twiki.cern.ch/twiki/bin/viewauth/AtlasComputing/RucioClientsHowTo#Permissions_and_quotas"> twiki</a> page.
+                                        </p><hr/>
+                                        <p>Examples:</p>
+                                        <p>Replicate to any LOCALGROUPDISK in the US cloud: <em>cloud=UStype=LOCALGROUPDISK</em></p>
+                                        <p>Replicate to any Tier-1 SCRATCHDISK but not RAL-LCG2: <em>tier=1type=SCRATCHDISK\site=RAL-LCG2</em></p>
+                                    </>
+                                }
+                                onClose={()=>{setRSEInfoOpened(false)}}
+                            />                             
+                        ) : null}
                         <div className="data_pattern">
                             <Input
                                 label={""}
@@ -339,64 +330,44 @@ export function RuleDef(){
                                     </tbody>
                                 </table>
                                 &nbsp;
-                                <Checkbox
-                                    kind={"warning"}
-                                    // value={"approval"}
-                                    style={"background-color"}
-                                    isChecked={isCheckedApproval}
-                                    handleChange={()=> {
-                                        setIsChecked(!isCheckedApproval)
-                                        console.log(isCheckedApproval)
-                                    }}
-                                    label={"I want to ask for approval"}
-                                />
+                                <label>                               
+                                    <input
+                                        type={"checkbox"}
+                                        checked={isCheckedApproval}
+                                        onChange={(event:any)=> {
+                                            setIsChecked(!isCheckedApproval)
+                                        }}
+                                    />
+                                    {" I want to ask for approval"}
+                                </label>
                             </>
                         ):null}
-                        <div style={{paddingTop:"20px"}}>
-                        <Button
-                            label={"Back"}
-                            kind={"primary"}
-                            type={"submit"}
-                            onClick={(event: any) => {
-                                setSelectedStep(0)
-                            }}
-                        />
-                        <div className={"next_button"}>
-                            <Button
-                                label={"Next"}
+                        <table>
+                            <td style={{float:"left"}}>
+                                <Button
+                                label={"Back"}
                                 kind={"primary"}
                                 type={"submit"}
-                                disabled={!rseexpressionEnabled}
                                 onClick={(event: any) => {
-                                    setSelectedStep(2)
+                                    setSelectedStep(0)
                                 }}
-                            />
-                        </div>
-                        </div>
+                                />
+                            </td>    
+                            <td style={{float:"right"}}>
+                                <Button
+                                    label={"Next"}
+                                    kind={"primary"}
+                                    type={"submit"}
+                                    disabled={!rseexpressionEnabled}
+                                    onClick={(event: any) => {
+                                        setSelectedStep(2)
+                                    }}
+                                />
+                            </td>
+                        </table>
                     </>
                 }
             />
-                // {/*<div className={"popup"}>*/}
-                // {/*    <PopOver*/}
-                // {/*        content={*/}
-                // {/*            <>*/}
-                // {/*                <p>Rucio Storage Elements (RSEs) are storage endpoints at sites, where data is written to. They can have different types like DATADISK or LOCALGROUPDISK, which are subject to different permissions and policies.</p>*/}
-                // {/*                <p>RSEs have a set of attributes assigned to them so that they can be grouped in different ways, e.g., all UK RSEs or all Tier-1 RSEs. Those attributes can be used to compose RSE expressions, which can be applied if you don't explicitly want to have the data replicated to one specific RSE.</p>*/}
-                // {/*                <p>Accounts in Rucio have quota set per RSEs that specify where one account can write data and how much. A detailed explanation about permissions and quotas in Rucio can be found on this*/}
-                // {/*                    <a href="https://twiki.cern.ch/twiki/bin/viewauth/AtlasComputing/RucioClientsHowTo#Permissions_and_quotas"> twiki</a> page.*/}
-                // {/*                </p><hr/>*/}
-                // {/*                <p>Examples:</p>*/}
-                // {/*                <p>Replicate to any LOCALGROUPDISK in the US cloud: <em>cloud=US&type=LOCALGROUPDISK</em></p>*/}
-                // {/*                <p>Replicate to any Tier-1 SCRATCHDISK but not RAL-LCG2: <em>tier=1&type=SCRATCHDISK\site=RAL-LCG2</em></p>*/}
-                // {/*            </>*/}
-                // {/*        }*/}
-                // {/*        isPopoverOpen={popoverOpened}*/}
-                // {/*        onCLick={() => {setPopoverOpened(true)}}*/}
-                // {/*        onClickOutisde={() => {setPopoverOpened(false)}}*/}
-                // {/*    />*/}
-                // {/*</div>*/}
-                // {/*&nbsp;*/}
-                // {/*<label>RSE Expression</label>*/}
         )
     }
 
@@ -422,10 +393,8 @@ export function RuleDef(){
         const [asynchModeEnabled, setAsynchModeEnabled] = useState(true as boolean)
         const [notificationsEnabled, setNotificationsEnabled] = useState(true as boolean)
         const [advancedEnabled, setAdvancedEnabled] = useState(false as boolean)
-        const [popoverOpened, setPopoverOpened]=useState(false as boolean)
-
+        const [optionsOpened, setOptionsOpened] = useState (false as boolean)
         const [groupingEntered, setGroupingEntered] = useState('' as string)
-        const [copiesAmountEntered, setCopiesAmountEntered] = useState(1 as number)
         const [commentEntered, setCommentEntered] = useState('' as string)
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -436,26 +405,29 @@ export function RuleDef(){
             <Card
                 content={
                     <>
-                        {/*<div className={"popup"}>*/}
-                            {/*<PopOver*/}
-                            {/*    content={*/}
-                            {/*        <>*/}
-                            {/*            <p><b>Lifetime: </b>The lifetime is specified in days and defines when a rule will be deleted again. For SCRATCHDISK the maximum lifetime is 15 days and for everything else you can choose any number of days or leave it empty to set no lifetime at all.</p><hr/>*/}
-                            {/*            <p><b>Samples: </b>Create a sample dataset with the given number of random files from the selected dataset.</p><hr/>*/}
-                            {/*            <p><b>Notifications: </b>Enable email notification. If set to <em>Yes</em> you will get an email when the rule has successfully replicated the requested DID.</p><hr/>*/}
-                            {/*            <p><b>ADVANCED OPTIONS</b></p><hr/>*/}
-                            {/*            <p><b>Grouping: </b>The grouping option defines how replicas are distributed, if the RSE Expression covers multiple RSEs. ALL means that all files are written to the same RSE (Picked from the RSE Expression). DATASET means that all files in the same dataset are written to the same RSE. NONE means that all files are spread over all possible RSEs of the RSE Expression. <em>A new one is essential picked for each file</em></p><hr/>*/}
-                            {/*            <p><b>Asynchronous Mode: </b>If you have a large requests with a lot of datasets/files you might check this box. In this mode you don't have to wait until the server has fully evaluated your request, but you will have to check after some time on your rule list if the request has been successful.</p><hr/>*/}
-                            {/*            <p><b>Copies: </b>The copies also only work with RSE expression and it defines the number of replicas that should be created.</p><hr/>*/}
-                            {/*            <p><b>Comment: </b>The comment is optional unless you want to ask for approval. Then you have to give a justification here.</p>*/}
-                            {/*        </>*/}
-                            {/*    }*/}
-                            {/*    isPopoverOpen={popoverOpened}*/}
-                            {/*    onCLick={() => {setPopoverOpened(true)}}*/}
-                            {/*    onClickOutisde={() => {setPopoverOpened(false)}}*/}
-                            {/*/>*/}
-                        {/*</div>*/}
-                        {/*&nbsp;*/}
+                        <Button
+                            label='Options'
+                            onClick={()=>{setOptionsOpened(true)}}
+                        />
+                        {optionsOpened?(
+                            <Modal
+                                active={optionsOpened}
+                                title={"RSE"}
+                                body={
+                                    <>
+                                       <p><b>Lifetime: </b>The lifetime is specified in days and defines when a rule will be deleted again. For SCRATCHDISK the maximum lifetime is 15 days and for everything else you can choose any number of days or leave it empty to set no lifetime at all.</p><hr/>
+                                       <p><b>Samples: </b>Create a sample dataset with the given number of random files from the selected dataset.</p><hr/>
+                                       <p><b>Notifications: </b>Enable email notification. If set to <em>Yes</em> you will get an email when the rule has successfully replicated the requested DID.</p><hr/>
+                                       <p><b>ADVANCED OPTIONS</b></p><hr/>
+                                       <p><b>Grouping: </b>The grouping option defines how replicas are distributed, if the RSE Expression covers multiple RSEs. ALL means that all files are written to the same RSE (Picked from the RSE Expression). DATASET means that all files in the same dataset are written to the same RSE. NONE means that all files are spread over all possible RSEs of the RSE Expression. <em>A new one is essential picked for each file</em></p><hr/>
+                                       <p><b>Asynchronous Mode: </b>If you have a large requests with a lot of datasets/files you might check this box. In this mode you don't have to wait until the server has fully evaluated your request, but you will have to check after some time on your rule list if the request has been successful.</p><hr/>
+                                       <p><b>Copies: </b>The copies also only work with RSE expression and it defines the number of replicas that should be created.</p><hr/>
+                                       <p><b>Comment: </b>The comment is optional unless you want to ask for approval. Then you have to give a justification here.</p>
+                                    </>
+                                }
+                                onClose={()=>{setOptionsOpened(false)}}
+                            />                             
+                        ) : null}
                         <table className={"inline_alignment"}>
                             <td>
                                 <label>Expiration date</label>
@@ -511,15 +483,14 @@ export function RuleDef(){
                         </div>
                         { advancedEnabled ? (
                             <div>
-                            <table>
-                                <tr style={{width:"60%"}}>
+                                <table className={"inline_alignment"}>
                                     <td style={{width:"30%"}}>
                                         <Dropdown
                                             label={"Grouping"}
                                             options={["All","Dataset","None"]}
                                             handleChange={(event: any) => {
                                                 setGroupingEntered(event.target.value)}
-                                        }
+                                            }
                                         />
                                     </td>
                                     <td style={{width:"30%"}}>
@@ -531,8 +502,8 @@ export function RuleDef(){
                                             }}
                                         />
                                     </td>
+                                    <label>Copies</label>
                                     <td style={{width:"30%"}}>
-                                        <label>Copies</label>
                                         <Input
                                             name={"copies"}
                                             show={"rounded"}
@@ -549,45 +520,44 @@ export function RuleDef(){
                                                 )}}
                                         />
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td style={{width:"100%"}}>
-                                        <textarea
-                                            style={{borderRadius:"10px",padding:"5px 5px 5px 5px"}}
-                                            rows={3}
-                                            cols={60}
-                                            placeholder={"Comment"}
-                                            onChange={(event: any) => {
-                                                setCommentEntered(
-                                                    event.target.value,
-                                                )}}
-                                        >
-                                        </textarea>
-                                    </td>
-                                </tr>
-                            </table> </div>
-                        ) : null}
-                        <Button
-                            label={"Back"}
-                            kind={"primary"}
-                            type={"submit"}
-                            onClick={(event: any) => {
-                                setSelectedStep(1)
-                            }}
-                        />
-                        <div className={"next_button"}>
-                            <Button
-                                label={"Next"}
-                                kind={"primary"}
-                                type={"submit"}
-                                // disabled={
-                                //     typeof lifetimeEntered === "number"
-                                // }
-                                onClick={(event: any) => {
-                                    setSelectedStep(3)
-                                }}
-                            />
-                        </div>
+                                </table>
+                                <textarea
+                                    style={{borderRadius:"10px",padding:"5px 5px 5px 5px", width:"100%"}}
+                                    rows={3}
+                                    placeholder={"Comment"}
+                                    onChange={(event: any) => {
+                                        setCommentEntered(
+                                            event.target.value,
+                                        )}}
+                                >
+                                </textarea>
+                            </div>
+                        ) : null}                       
+                        <table>
+                            <td style={{float:"left"}}>
+                                <Button
+                                    label={"Back"}
+                                    kind={"primary"}
+                                    type={"submit"}
+                                    onClick={(event: any) => {
+                                        setSelectedStep(1)
+                                    }}
+                                />
+                            </td>
+                            <td style={{float:"right"}}>
+                                <Button
+                                    label={"Next"}
+                                    kind={"primary"}
+                                    type={"submit"}
+                                    // disabled={
+                                    //     typeof lifetimeEntered === "number"
+                                    // }
+                                    onClick={(event: any) => {
+                                        setSelectedStep(3)
+                                    }}
+                                />
+                            </td>
+                        </table>
                     </>
                 }
             />
@@ -595,42 +565,44 @@ export function RuleDef(){
     }
 
     function Summary() {
-        // const navigate: NavigateFunction = useNavigate()
-        // const navigateTo2ndStep =() =>{
-        //     navigate('/ruledef/rse');
-        // }
         return(
             <Card
                 content={
                     <>
-                        <table style={{width:"100%"}}>
+                        <table>
                             <thead>
-                            <th>DID</th>
-                            <th>Copies</th>
-                            <th>Files</th>
-                            <th>Size</th>
-                            <th>Requested Size</th>
+                                <th>DID</th>
+                                <th>Copies</th>
+                                <th>Files</th>
+                                <th>Size</th>
+                                <th>Requested Size</th>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>data22_13p6TeV:data22_13p6TeV.00427394.physics_Main.daq.RAW</td>
-                                <td>1</td>
-                                <td>8342</td>
-                                <td>30.36 TB</td>
-                                <td>30.36 TB</td>
-                            </tr>
+                                {DIDEntries.map((entry,index)=>{
+                                    return(                                    
+                                        <tr>
+                                            <td>{entry}</td>
+                                            <td>{copiesAmountEntered}</td>
+                                            <td>8342</td>
+                                            <td>30.36 TB</td>
+                                            <td>30.36 TB</td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
-                        <div className={"back_next_buttons"}>
-                            <Button
-                                label={"Back"}
-                                kind={"primary"}
-                                type={"submit"}
-                                onClick={(event: any) => {
-                                    setSelectedStep(2)
-                                }}
-                            />
-                            <div className={"next_button"}>
+                        <table>
+                            <td style={{float:"left"}}>
+                                <Button
+                                    label={"Back"}
+                                    kind={"primary"}
+                                    type={"submit"}
+                                    onClick={(event: any) => {
+                                        setSelectedStep(2)
+                                    }}
+                                />
+                            </td>
+                            <td style={{float:"right"}}>
                                 <Button
                                     label={"Submit Request"}
                                     kind={"primary"}
@@ -638,11 +610,10 @@ export function RuleDef(){
                                     onClick={(event: any) => {
                                         // navigateToSubmit()
                                     }}
-                                />
-                            </div>
-                        </div>
+                                />         
+                            </td>
+                        </table>
                     </>
-
                 }
             />
         )
@@ -675,19 +646,15 @@ export function RuleDef(){
                 />
                 {
                     selectedStep===1 ? (<RSE_alert />)
-                        :selectedStep===3?(<Summary_alert />)
+                        :selectedStep===3 && isCheckedApproval===true ? (<Summary_alert />)
                         : null
                 }
-                <div className="container-rule_def">
-                    <div className="wrap-ruledef">
-                        {
-                            selectedStep===1 ? (<RSE />)
-                            : selectedStep===2 ? (<Options />)
-                            : selectedStep===3 ? (<Summary />)
-                            : (<DID />)
-                        }
-                    </div>
-                </div>
+                {
+                    selectedStep===1 ? (<RSE />)
+                    : selectedStep===2 ? (<Options />)
+                    : selectedStep===3 ? (<Summary />)
+                    : (<DID />)
+                }
             </div>
         </div>
     )
