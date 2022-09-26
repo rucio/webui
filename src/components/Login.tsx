@@ -6,7 +6,6 @@ import { Form } from '../stories/Form/Form'
 
 import { MutableRefObject, ReactElement, useRef, useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
-import { useAuth } from 'react-oidc-context'
 import { getData } from '../utils/restApiWrapper'
 
 import { env } from '../util'
@@ -14,7 +13,6 @@ import { useAuthConfig, useAlert, useModal } from '../components/GlobalHooks'
 import { AlertProps } from '../stories/Alert/Alert'
 import { ModalProps } from '../stories/Modal/Modal'
 import { AuthError } from '../utils/exceptions'
-import { RucioClient } from '../client'
 
 export const commonHeaders = {
     'X-Rucio-VO': 'def',
@@ -31,7 +29,6 @@ function Login() {
     const authType: MutableRefObject<string> = useRef('')
     const oidcProvider: MutableRefObject<string> = useRef('')
 
-    const auth = useAuth()
     const navigate: NavigateFunction = useNavigate()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
     const showModal: (options: ModalProps) => Promise<void> = useModal()
@@ -201,18 +198,16 @@ function Login() {
                 'oidc_provider_' + oidcProvider.current
             if (env(oidcProviderId)) {
                 const newOidcConfig = {} as any
-                newOidcConfig.authority = env(oidcProviderId + '_authority')
-                newOidcConfig.client_id = env(oidcProviderId + '_client_id')
-                newOidcConfig.client_secret = env(
-                    oidcProviderId + '_client_secret',
-                )
-                newOidcConfig.redirect_uri = env(
-                    oidcProviderId + '_redirect_uri',
-                )
+                newOidcConfig.authorizationEndpoint =
+                    env(oidcProviderId + '_authorization_endpoint') ?? ''
+                newOidcConfig.clientId =
+                    env(oidcProviderId + '_client_id') ?? ''
+                newOidcConfig.tokenEndpoint =
+                    env(oidcProviderId + '_token_endpoint') ?? ''
+                newOidcConfig.redirectUri =
+                    env(oidcProviderId + '_redirect_uri') ?? ''
+                newOidcConfig.scope = env(oidcProviderId + '_scope') ?? ''
                 setOidcConfig(newOidcConfig)
-                setTimeout(() => {
-                    auth.signinRedirect()
-                }, 2500)
             } else {
                 throw AuthError.fromType('OIDC_PROVIDER_NOT_FOUND')
             }
