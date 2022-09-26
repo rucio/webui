@@ -55,14 +55,7 @@ export function RuleDef() {
             }
             const items = name.split('.')
             if (items.length <= 1) {
-                ;<Alert
-                    open={errorMessage}
-                    message={'Someting went wrong!'}
-                    variant={'error'}
-                    onClose={() => {
-                        setErrorMessage(false)
-                    }}
-                />
+                throw Error('')
             }
             let scope = items[0]
             if (name.indexOf('user') === 0 || name.indexOf('group') === 0) {
@@ -194,9 +187,24 @@ export function RuleDef() {
                                         show={'invisible'}
                                         type={'button'}
                                         disabled={dataPatternValue.length === 0}
-                                        onClick={(event: any) => {
+                                        onClick={() => {
                                             setDataPatternEntered(true)
-                                            searchDids()
+                                            try {
+                                                searchDids()
+                                            } catch (error) {
+                                                return (
+                                                    <Alert
+                                                        open={errorMessage}
+                                                        message={error}
+                                                        variant={'error'}
+                                                        onClose={() => {
+                                                            setErrorMessage(
+                                                                false,
+                                                            )
+                                                        }}
+                                                    />
+                                                )
+                                            }
                                         }}
                                     />
                                 </div>
