@@ -55,7 +55,7 @@ export function RuleDef() {
             }
             const items = name.split('.')
             if (items.length <= 1) {
-                <Alert
+                ;<Alert
                     open={errorMessage}
                     message={'Someting went wrong!'}
                     variant={'error'}
