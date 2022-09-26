@@ -278,8 +278,3 @@ label {
         font-size: 50px;
     }
 }
-@media only screen and (max-width: 1500px) {
-    .notfound .notfound-404 h1 {
-        font-size: 100px;
-    }
-}
