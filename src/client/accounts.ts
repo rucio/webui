@@ -53,11 +53,11 @@ class Account extends AccountModel {
         onSuccess = (args?: unknown) => args,
         onError = (args?: unknown) => args,
     ): Promise<unknown> {
-        const createEndpoint: string = parsedEndpoint(
+        const deleteEndpoint: string = parsedEndpoint(
             AccountConfig?.endpoints?.account,
             deletePayload,
         )
-        return await deleteData(createEndpoint)
+        return await deleteData(deleteEndpoint)
     }
     public static listAll(): object {
         return {}
