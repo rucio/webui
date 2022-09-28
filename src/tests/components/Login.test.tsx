@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
-import Login from '../components/Login'
+import Login from '../../components/Login'
 import { BrowserRouter } from 'react-router-dom'
-import { ServiceProvider } from '../components/GlobalHooks'
+import { ServiceProvider } from '../../components/GlobalHooks'
 import { ReactElement } from 'react'
 
 const renderComponent: ReactElement = (

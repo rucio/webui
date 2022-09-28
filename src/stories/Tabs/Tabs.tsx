@@ -29,11 +29,15 @@ export const Tabs = ({
             <ul>
                 {tabs.map((element, index) => {
                     return index === active ? (
-                        <li onClick={props.handleClick} className="is-active">
+                        <li
+                            onClick={props.handleClick}
+                            className="is-active"
+                            key={index}
+                        >
                             <a>{element}</a>
                         </li>
                     ) : (
-                        <li onClick={props.handleClick}>
+                        <li onClick={props.handleClick} key={index}>
                             <a>{element}</a>
                         </li>
                     )
