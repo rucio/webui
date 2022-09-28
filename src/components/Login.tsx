@@ -35,7 +35,7 @@ function Login() {
     const setOidcConfig: (options: ModalProps) => Promise<void> =
         useAuthConfig()
 
-    const AccountInput: ReactElement = (
+    const AccountInput = (): ReactElement => (
         <Input
             label="Account Name (Optional)"
             placeholder={accountName}
@@ -47,7 +47,7 @@ function Login() {
         />
     )
 
-    const SignInButton: ReactElement = (
+    const SignInButton = (): ReactElement => (
         <div className="container-login100-form-btn m-t-17">
             <Button
                 size="large"
@@ -234,7 +234,7 @@ function Login() {
             })
     }
 
-    async function handleSubmit(event: any) {
+    function handleSubmit(event: any) {
         event?.preventDefault()
         const currentAuthType: string = authType.current
         if (currentAuthType === 'x509') {
@@ -422,8 +422,8 @@ function Login() {
                                         }}
                                     />
 
-                                    {AccountInput}
-                                    {SignInButton}
+                                    <AccountInput />
+                                    <SignInButton />
                                 </>
                             ) : null}
                         </Form>
@@ -440,7 +440,7 @@ function Login() {
                                         setUserpassEnabled(true)
                                     }}
                                 />
-                                {AccountInput}
+                                <AccountInput />
                             </>
                         ) : null}
                     </div>

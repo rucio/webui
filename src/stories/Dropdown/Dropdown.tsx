@@ -1,5 +1,4 @@
 import './dropdown.scss'
-import React from 'react'
 
 interface DropdownProps {
     label?: string
@@ -27,9 +26,9 @@ export const Dropdown = ({
                             <p aria-hidden="true"> &#8964;</p>
                         </span>
                     </option>
-                    {options.map(element => {
+                    {options.map((element: any, index: number) => {
                         return (
-                            <option className={'dropdown-item'}>
+                            <option className={'dropdown-item'} key={index}>
                                 {element}
                             </option>
                         )
