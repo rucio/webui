@@ -43,7 +43,7 @@ export const Input = ({
                 autoFocus={focusByDefault}
                 min={min}
                 max={max}
-            />
+            ></input>
         </label>
     )
 }

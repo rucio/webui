@@ -98,17 +98,6 @@ export function RuleDef() {
             <Card
                 content={
                     <>
-                        <Tabs
-                            tabs={['DID Search Pattern', 'List of DIDs']}
-                            active={didSearchMethod}
-                            handleClick={(event: any) => {
-                                {
-                                    didSearchMethod === 0
-                                        ? setDidSearchMethod(1)
-                                        : setDidSearchMethod(0)
-                                }
-                            }}
-                        />
                         <div className="search_method">
                             <Button
                                 label="DID"
@@ -175,6 +164,18 @@ export function RuleDef() {
                                 }}
                             />
                         </div>
+                        <Tabs
+                            tabs={['DID Search Pattern', 'List of DIDs']}
+                            active={didSearchMethod}
+                            handleClick={(event: any) => {
+                                {
+                                    didSearchMethod === 0
+                                        ? setDidSearchMethod(1)
+                                        : setDidSearchMethod(0)
+                                }
+                            }}
+                        />
+
                         {didSearchMethod === 0 ? (
                             <>
                                 <div className="data_pattern">
@@ -184,18 +185,18 @@ export function RuleDef() {
                                         placeholder={'Data Pattern'}
                                         value={dataPatternValue}
                                         focusByDefault
-                                        show={'rounded'}
                                         type={'text'}
                                         onChange={(event: any) => {
                                             setDataPatternValue(
                                                 event.target.value,
                                             )
                                         }}
-                                    />
+                                    ></Input>
+                                    <br></br>
                                     <Button
                                         label={'Search'}
-                                        kind={'outline'}
-                                        show={'invisible'}
+                                        kind={'primary'}
+                                        show={'block'}
                                         type={'button'}
                                         disabled={dataPatternValue.length === 0}
                                         onClick={() => {
@@ -217,7 +218,6 @@ export function RuleDef() {
                                             <td style={{ width: '40%' }}>
                                                 <Input
                                                     name={'filter'}
-                                                    show={'rounded'}
                                                     label={''}
                                                     type={'text'}
                                                     placeholder={'Filter'}
@@ -298,7 +298,7 @@ export function RuleDef() {
                                 <div className={'next_button'}>
                                     <Button
                                         label={'Next'}
-                                        kind={'primary'}
+                                        kind={'outline'}
                                         type={'submit'}
                                         disabled={
                                             granularityLevel.length === 0 &&
@@ -429,7 +429,6 @@ export function RuleDef() {
                                 placeholder={
                                     'Please enter an RSE or an RSE expression'
                                 }
-                                show={'rounded'}
                                 onChange={(event: any) => {
                                     setRseexpressionvalueEntered(
                                         event.target.value,
@@ -641,7 +640,6 @@ export function RuleDef() {
                                         <label>Expiration date</label>
                                         <Input
                                             name={'lifetime'}
-                                            show={'rounded'}
                                             label={''}
                                             value={lifetimeEntered}
                                             type={'date'}
@@ -657,7 +655,6 @@ export function RuleDef() {
                                         <label>Create Sample</label>
                                         <Input
                                             name={'sample'}
-                                            show={'rounded'}
                                             label={''}
                                             type={'number'}
                                             min={0}
@@ -734,7 +731,6 @@ export function RuleDef() {
                                             <td style={{ width: '30%' }}>
                                                 <Input
                                                     name={'copies'}
-                                                    show={'rounded'}
                                                     kind={'info'}
                                                     label={''}
                                                     value={copiesAmountEntered}
