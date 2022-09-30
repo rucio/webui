@@ -1,10 +1,10 @@
 @import 'bulma/sass/utilities/_all.sass';
 @import 'bulma/sass/base/_all.sass';
-@import 'bulma/sass/elements/_all.sass';
 @import 'bulma/sass/components/dropdown.sass';
 
 .rucio-dropdown {
     @extend .dropdown;
+    cursor: pointer;
     &.active {
         @extend .is-active;
     }
@@ -15,5 +15,4 @@ option {
 
 option:hover {
     background-color: #f5f5f5ff;
-    color: #0a0a0aff;
 }

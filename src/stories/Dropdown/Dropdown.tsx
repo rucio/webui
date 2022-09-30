@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './dropdown.scss'
 
 interface DropdownProps {
@@ -11,29 +12,42 @@ export const Dropdown = ({
     options = [],
     ...props
 }: DropdownProps) => {
+    const [isActive, setActive] = useState(false)
+    const [selectedlabel, setSelectedLabel] = useState(label)
     return (
-        <div className="rucio-dropdown active">
-            <div className="dropdown-trigger dropdown-menu">
-                <select
+        <div className={isActive ? 'rucio-dropdown active' : 'rucio-dropdown'}>
+            <div className="dropdown-trigger">
+                <button
                     className="button"
                     aria-haspopup="true"
                     aria-controls="dropdown-menu"
-                    onClick={props.handleChange}
+                    onClick={() => {
+                        setActive(!isActive)
+                    }}
                 >
-                    <option disabled={true} selected={true}>
-                        <span>{label}</span>
-                        <span className="icon is-small">
-                            <p aria-hidden="true"> &#8964;</p>
-                        </span>
-                    </option>
-                    {options.map((element: any, index: number) => {
-                        return (
-                            <option className={'dropdown-item'} key={index}>
-                                {element}
-                            </option>
-                        )
-                    })}
-                </select>
+                    <span>{selectedlabel}</span>
+                    <span className="icon is-small">
+                        <p>&#9660;</p>
+                    </span>
+                </button>
+            </div>
+            <div
+                className="dropdown-menu"
+                id="dropdown-menu"
+                role="menu"
+                onClick={(event: any) => {
+                    setActive(false)
+                    setSelectedLabel(event?.target?.value)
+                    props.handleChange(event)
+                }}
+            >
+                <div className="dropdown-content">
+                    {options.map(element => (
+                        <option className={'dropdown-item'} value={element}>
+                            {element}
+                        </option>
+                    ))}
+                </div>
             </div>
         </div>
     )

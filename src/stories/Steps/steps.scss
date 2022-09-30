@@ -6,6 +6,7 @@
 
 .rucio-steps {
     @extend .steps;
+    max-width: 100%;
     &.small {
         @extend .is-small;
     }

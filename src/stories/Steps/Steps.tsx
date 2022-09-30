@@ -1,5 +1,4 @@
 import './steps.scss'
-import { ReactElement } from 'react'
 
 interface StepsProps {
     steps: Array<any>
