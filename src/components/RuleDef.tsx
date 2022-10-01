@@ -8,9 +8,9 @@ import { AlertProps } from '../stories/Alert/Alert'
 import { Card } from '../stories/Card/Card'
 import { Tabs } from '../stories/Tabs/Tabs'
 import { ModalProps } from '../stories/Modal/Modal'
-import { search } from '../rucio_client/did'
-import { DIDModel } from '../models'
+import { DIDModel } from '../utils/models'
 import { useAlert, useModal } from './GlobalHooks'
+import { RucioClient } from '../client'
 
 export function RuleDef() {
     const showModal: (options: ModalProps) => Promise<void> = useModal()
@@ -85,14 +85,16 @@ export function RuleDef() {
             if (!scope) {
                 return 'cannot determine scope. please provide the did with scope'
             }
-            search(scope, name, granularityLevel).then((data: any) => {
-                const dids = [] as DIDModel[]
-                for (const did of data) {
-                    const didObj = new DIDModel(did)
-                    dids.push(didObj)
-                }
-                updateDidEntries(dids)
-            })
+            RucioClient.DID.search(scope, name, granularityLevel).then(
+                (data: any) => {
+                    const dids = [] as DIDModel[]
+                    for (const did of data) {
+                        const didObj = new DIDModel(did)
+                        dids.push(didObj)
+                    }
+                    updateDidEntries(dids)
+                },
+            )
         }
         return (
             <Card
