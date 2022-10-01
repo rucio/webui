@@ -1,6 +1,11 @@
+import { AccountLimitModel } from '../utils/models'
 import { streamData } from '../utils/restApiWrapper'
 
-export function get_account_limits(account: string) {
-    const url = '/accounts/' + account + '/limits'
-    return streamData(url)
+class AccountLimit extends AccountLimitModel {
+    public static getAccountLimits(account: AccountType): object {
+        const url = '/accounts/' + account + '/limits'
+        return streamData(url)
+    }
 }
+
+export { AccountLimit }

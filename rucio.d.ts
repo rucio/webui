@@ -7,6 +7,8 @@ type AccountType = {
     type?: 'USER' | 'GROUP' | 'SERVICE'
 }
 
+type AccountLimitType = {}
+
 type RuleType = {
     rule_id: string
     locks?: any[]

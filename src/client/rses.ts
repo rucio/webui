@@ -1,9 +1,14 @@
+import { RSEModel } from '../utils/models'
 import { streamData } from '../utils/restApiWrapper'
 
-export function list_rses(expression: boolean) {
-    let url = '/rses/'
-    if (expression === true) {
-        url += '?expression=' + encodeURIComponent(expression)
+class RSE extends RSEModel {
+    public static glistRses(expression: boolean): object {
+        let url = '/rses/'
+        if (expression === true) {
+            url += '?expression=' + encodeURIComponent(expression)
+        }
+        return streamData(url)
     }
-    return streamData(url)
 }
+
+export { RSE }
