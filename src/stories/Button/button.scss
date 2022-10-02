@@ -3,6 +3,7 @@
 
 .rucio-btn {
     @extend .btn;
+    margin: auto auto;
     &.primary {
         @extend .btn-primary;
     }
