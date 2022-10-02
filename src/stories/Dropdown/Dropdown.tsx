@@ -42,8 +42,12 @@ export const Dropdown = ({
                 }}
             >
                 <div className="dropdown-content">
-                    {options.map(element => (
-                        <option className={'dropdown-item'} value={element}>
+                    {options.map((element: any, index: number) => (
+                        <option
+                            className={'dropdown-item'}
+                            value={element}
+                            key={index}
+                        >
                             {element}
                         </option>
                     ))}

@@ -27,34 +27,35 @@ export function RuleDef() {
     const [copiesAmountEntered, setCopiesAmountEntered] = useState(1 as number)
     const [DIDEntries, setDIDEntries] = useState<string[]>([])
 
-    useEffect(() => {
-        if (selectedStep === 1) {
-            showAlert({
-                message:
-                    'You do not have enough quota left on the selected RSE. However, if you check to box below you can still submit the rule and ask for approval.',
-                variant: 'warn',
-            })
-        } else if (selectedStep === 3 && isCheckedApproval === true) {
-            showAlert({
-                message:
-                    'This request will ask for approval to create a rule for the following DID',
-                variant: 'primary',
-            })
-        }
-    }, [selectedStep, isCheckedApproval])
+    // useEffect(() => {
+    //     if (selectedStep === 1) {
+    //         showAlert({
+    //             message:
+    //                 'You do not have enough quota left on the selected RSE. However, if you check to box below you can still submit the rule and ask for approval.',
+    //             variant: 'warn',
+    //         })
+    //     } else if (selectedStep === 3 && isCheckedApproval === true) {
+    //         showAlert({
+    //             message:
+    //                 'This request will ask for approval to create a rule for the following DID',
+    //             variant: 'primary',
+    //         })
+    //     }
+    // }, [selectedStep, isCheckedApproval])
 
     function DID() {
         const [didEntries, setdidEntries] = useState([] as DIDModel[])
-        const [granularityLevel, setGranularityLevel] = useState('' as string)
+        const [granularityLevel, setGranularityLevel] = useState(
+            'collection' as string,
+        )
         const [recordAmountEntered, setRecordAmountEntered] = useState(
-            '' as string,
+            '10' as string,
         )
         const [dataPatternEntered, setDataPatternEntered] = useState(
             false as boolean,
         )
         const [checkedDIDs, setCheckedDIDs] = useState(new Array(10).fill(true))
         const [filterEntered, setFilterEntered] = useState('' as string)
-        const [errorMessage, setErrorMessage] = useState(true as boolean)
 
         const handleDIDListChange = function (position: number) {
             checkedDIDs[position] = !checkedDIDs[position]
@@ -100,9 +101,15 @@ export function RuleDef() {
             <Card
                 content={
                     <>
-                        <div className="search_method">
-                            <Button
-                                label="DID"
+                        <h6>
+                            &#9888;&nbsp;Please start by entering a DID or DID
+                            wildcard and search for either containers or
+                            datasets. Then select the requested DIDs. Do not use
+                            a trailing '/' for containers.
+                        </h6>
+                        <h6>
+                            &#9888;&nbsp;To learn more about DIDs,
+                            <a
                                 onClick={() => {
                                     showModal({
                                         title: 'DID',
@@ -125,7 +132,7 @@ export function RuleDef() {
                                                     separate sub spaces for
                                                     production and individual
                                                     users. User scope always
-                                                    start with <em>user.</em>{' '}
+                                                    start with <em>user.</em>" "
                                                     followed by the account
                                                     name.
                                                 </p>
@@ -143,11 +150,13 @@ export function RuleDef() {
                                                 <p>Examples:</p>
                                                 <strong>
                                                     Official dataset:
-                                                </strong>{' '}
+                                                </strong>
+                                                " "
                                                 <br />
                                                 <em>
                                                     data15_13TeV.00266904.physics_Main.
-                                                </em>{' '}
+                                                </em>
+                                                " "
                                                 <br />
                                                 <em>merge.DAOD_SUSY1.</em>
                                                 <br />
@@ -155,84 +164,88 @@ export function RuleDef() {
                                                     f594_m1435_p2361_tid05608871_00
                                                 </em>
                                                 <br />
-                                                <strong>
-                                                    User dataset:
-                                                </strong>{' '}
+                                                <strong>User dataset:</strong>"
+                                                "
                                                 <br />
                                                 <em>ser.jdoe:my.dataset.1</em>
                                             </>
                                         ),
                                     })
                                 }}
-                            />
-                        </div>
+                            >
+                                &nbsp;click here
+                            </a>
+                            .
+                        </h6>
+                        <hr></hr>
                         <Tabs
                             tabs={['DID Search Pattern', 'List of DIDs']}
                             active={didSearchMethod}
-                            handleClick={(event: any) => {
-                                {
-                                    didSearchMethod === 0
-                                        ? setDidSearchMethod(1)
-                                        : setDidSearchMethod(0)
-                                }
+                            handleClick={() => {
+                                didSearchMethod === 0
+                                    ? setDidSearchMethod(1)
+                                    : setDidSearchMethod(0)
                             }}
                         />
-
                         {didSearchMethod === 0 ? (
                             <>
-                                <div className="data_pattern">
+                                <div className="data_pattern rucio-flex">
                                     <Input
-                                        label={''}
-                                        name={'pattern'}
-                                        placeholder={'Data Pattern'}
+                                        label="Data Pattern"
+                                        name="pattern"
+                                        placeholder="scope:name"
                                         value={dataPatternValue}
                                         focusByDefault
-                                        type={'text'}
+                                        type="text"
                                         onChange={(event: any) => {
                                             setDataPatternValue(
                                                 event.target.value,
                                             )
                                         }}
                                     ></Input>
-                                    <br></br>
-                                    <Button
-                                        label={'Search'}
-                                        kind={'primary'}
-                                        show={'block'}
-                                        type={'button'}
-                                        disabled={dataPatternValue.length === 0}
-                                        onClick={() => {
-                                            setDataPatternEntered(true)
-                                            try {
-                                                searchDids()
-                                            } catch (error) {
-                                                showAlert({
-                                                    message: error,
-                                                    variant: 'error',
-                                                })
+                                    <div className="m-t-28">
+                                        <Button
+                                            label="Search"
+                                            kind="primary"
+                                            type="button"
+                                            size="large"
+                                            disabled={
+                                                dataPatternValue.length === 0
                                             }
-                                        }}
-                                    />
+                                            onClick={() => {
+                                                setDataPatternEntered(true)
+                                                try {
+                                                    searchDids()
+                                                } catch (error) {
+                                                    showAlert({
+                                                        message: error,
+                                                        variant: 'error',
+                                                    })
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                                <table className={'inline_alignment'}>
-                                    <tbody>
-                                        <tr>
-                                            <td style={{ width: '40%' }}>
-                                                <Input
-                                                    name={'filter'}
-                                                    label={''}
-                                                    type={'text'}
-                                                    placeholder={'Filter'}
-                                                    onChange={(event: any) => {
-                                                        setFilterEntered(
-                                                            event.target.value,
-                                                        )
-                                                    }}
-                                                />
-                                            </td>
-                                            <td style={{ width: '20%' }}>
+
+                                {dataPatternEntered ? (
+                                    <>
+                                        <div className="rucio-flex m-5">
+                                            <Input
+                                                name="filter"
+                                                label="Filter"
+                                                type="text"
+                                                size="medium"
+                                                show="rounded"
+                                                placeholder="Filter"
+                                                onChange={(event: any) => {
+                                                    setFilterEntered(
+                                                        event?.target?.value,
+                                                    )
+                                                }}
+                                            />
+                                            <div className="rucio-flex m-t-20 ">
                                                 <Dropdown
-                                                    label={'Show'}
+                                                    label="Show"
                                                     options={[
                                                         '10',
                                                         '25',
@@ -247,8 +260,7 @@ export function RuleDef() {
                                                         )
                                                     }}
                                                 />
-                                            </td>
-                                            <td style={{ width: '40%' }}>
+
                                                 <Dropdown
                                                     label={
                                                         'Level of Granularity'
@@ -267,41 +279,47 @@ export function RuleDef() {
                                                         )
                                                     }}
                                                 />
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                {dataPatternEntered ? (
-                                    <div className={'list_entries'}>
-                                        {didEntries.map((entry, index) => (
-                                            <>
-                                                <br />
-                                                <label>
-                                                    <input
-                                                        key={`custom-checkbox-${index}`}
-                                                        type={'checkbox'}
-                                                        checked={
-                                                            checkedDIDs[index]
-                                                        }
-                                                        onChange={(
-                                                            event: any,
-                                                        ) => {
-                                                            handleDIDListChange(
-                                                                index,
-                                                            )
-                                                        }}
-                                                    />{' '}
-                                                    {entry.id}
-                                                </label>
-                                            </>
-                                        ))}
-                                    </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="list_entries">
+                                            {didEntries.map((entry, index) => (
+                                                <>
+                                                    <br />
+                                                    <label>
+                                                        <input
+                                                            key={`custom-checkbox-${index}`}
+                                                            type="checkbox"
+                                                            checked={
+                                                                checkedDIDs[
+                                                                    index
+                                                                ]
+                                                            }
+                                                            onChange={() => {
+                                                                handleDIDListChange(
+                                                                    index,
+                                                                )
+                                                            }}
+                                                        />
+                                                        &nbsp;{entry.id}
+                                                    </label>
+                                                </>
+                                            ))}
+                                        </div>
+                                    </>
                                 ) : null}
-                                <div className={'next_button'}>
+                                <br></br>
+                                <hr></hr>
+                                <div
+                                    className="next_button"
+                                    style={{ float: 'right' }}
+                                >
                                     <Button
-                                        label={'Next'}
-                                        kind={'outline'}
-                                        type={'submit'}
+                                        label="Next&nbsp;&#8250;"
+                                        kind="outline"
+                                        type="submit"
+                                        size="medium"
+                                        show="invisible"
                                         disabled={
                                             granularityLevel.length === 0 &&
                                             recordAmountEntered.length === 0 &&
@@ -334,11 +352,12 @@ export function RuleDef() {
                                         setDidSearchMethod(didSearchMethod)
                                     }}
                                 ></textarea>
-                                <div className={'next_button'}>
+                                <div className="next_button">
                                     <Button
-                                        label={'Next'}
-                                        kind={'primary'}
-                                        type={'submit'}
+                                        label="Next&nbsp;&#8250;"
+                                        kind="outline"
+                                        type="submit"
+                                        show="invisible"
                                         disabled={listEntered.length === 0}
                                         onClick={() => {
                                             setSelectedStep(1)
@@ -398,23 +417,22 @@ export function RuleDef() {
                                                 about permissions and quotas in
                                                 Rucio can be found on this
                                                 <a href="https://twiki.cern.ch/twiki/bin/viewauth/AtlasComputing/RucioClientsHowTo#Permissions_and_quotas">
-                                                    {' '}
-                                                    twiki
-                                                </a>{' '}
-                                                page.
+                                                    " " twiki
+                                                </a>
+                                                " " page.
                                             </p>
                                             <hr />
                                             <p>Examples:</p>
                                             <p>
                                                 Replicate to any LOCALGROUPDISK
-                                                in the US cloud:{' '}
+                                                in the US cloud:" "
                                                 <em>
                                                     cloud=UStype=LOCALGROUPDISK
                                                 </em>
                                             </p>
                                             <p>
                                                 Replicate to any Tier-1
-                                                SCRATCHDISK but not RAL-LCG2:{' '}
+                                                SCRATCHDISK but not RAL-LCG2:" "
                                                 <em>
                                                     tier=1type=SCRATCHDISK\site=RAL-LCG2
                                                 </em>
@@ -426,8 +444,8 @@ export function RuleDef() {
                         />
                         <div className="data_pattern">
                             <Input
-                                label={''}
-                                name={'rse'}
+                                label=""
+                                name="rse"
                                 placeholder={
                                     'Please enter an RSE or an RSE expression'
                                 }
@@ -438,10 +456,10 @@ export function RuleDef() {
                                 }}
                             />
                             <Button
-                                label={'Check Quota'}
-                                kind={'outline'}
-                                show={'invisible'}
-                                type={'button'}
+                                label="Check Quota"
+                                kind="outline"
+                                show="invisible"
+                                type="button"
                                 disabled={
                                     rseexpressionvalueEntered.length === 0
                                 }
@@ -477,13 +495,13 @@ export function RuleDef() {
                                 &nbsp;
                                 <label>
                                     <input
-                                        type={'checkbox'}
+                                        type="checkbox"
                                         checked={isCheckedApproval}
                                         onChange={(event: any) => {
                                             setIsChecked(!isCheckedApproval)
                                         }}
                                     />
-                                    {' I want to ask for approval'}
+                                    &nbsp;I want to ask for approval
                                 </label>
                             </>
                         ) : null}
@@ -492,9 +510,10 @@ export function RuleDef() {
                                 <tr>
                                     <td style={{ float: 'left' }}>
                                         <Button
-                                            label={'Back'}
-                                            kind={'primary'}
-                                            type={'submit'}
+                                            label="&#x2039;&nbsp;Back"
+                                            kind="outline"
+                                            type="submit"
+                                            show="invisible"
                                             onClick={(event: any) => {
                                                 setSelectedStep(0)
                                             }}
@@ -502,9 +521,10 @@ export function RuleDef() {
                                     </td>
                                     <td style={{ float: 'right' }}>
                                         <Button
-                                            label={'Next'}
-                                            kind={'primary'}
-                                            type={'submit'}
+                                            label="Next&nbsp;&#8250;"
+                                            kind="outline"
+                                            type="submit"
+                                            show="invisible"
                                             disabled={!rseexpressionEnabled}
                                             onClick={(event: any) => {
                                                 setSelectedStep(2)
@@ -572,7 +592,7 @@ export function RuleDef() {
                                             <hr />
                                             <p>
                                                 <b>Notifications: </b>Enable
-                                                email notification. If set to{' '}
+                                                email notification. If set to" "
                                                 <em>Yes</em> you will get an
                                                 email when the rule has
                                                 successfully replicated the
@@ -596,7 +616,7 @@ export function RuleDef() {
                                                 the same RSE. NONE means that
                                                 all files are spread over all
                                                 possible RSEs of the RSE
-                                                Expression.{' '}
+                                                Expression.
                                                 <em>
                                                     A new one is essential
                                                     picked for each file
@@ -635,17 +655,17 @@ export function RuleDef() {
                             }}
                         />
 
-                        <table className={'inline_alignment'}>
+                        <table className="inline_alignment">
                             <tbody>
                                 <tr>
                                     <td>
                                         <label>Expiration date</label>
                                         <Input
-                                            name={'lifetime'}
-                                            label={''}
+                                            name="lifetime"
+                                            label=""
                                             value={lifetimeEntered}
-                                            type={'date'}
-                                            placeholder={'Lifetime'}
+                                            type="date"
+                                            placeholder="Lifetime"
                                             onChange={(event: any) => {
                                                 setLifetimeEntered(
                                                     event.target.value,
@@ -656,11 +676,11 @@ export function RuleDef() {
                                     <td>
                                         <label>Create Sample</label>
                                         <Input
-                                            name={'sample'}
-                                            label={''}
-                                            type={'number'}
+                                            name="sample"
+                                            label=""
+                                            type="number"
                                             min={0}
-                                            placeholder={'Amount'}
+                                            placeholder="Amount"
                                             onChange={(event: any) => {
                                                 setsamplesAmountEntered(
                                                     event.target.value,
@@ -670,7 +690,7 @@ export function RuleDef() {
                                     </td>
                                     <td style={{ verticalAlign: 'middle' }}>
                                         <ToggleSwitch
-                                            label={'Notification'}
+                                            label="Notification"
                                             checked={notificationsEnabled}
                                             handleChange={(event: any) => {
                                                 setNotificationsEnabled(
@@ -684,11 +704,11 @@ export function RuleDef() {
                         </table>
                         <div style={{ marginBottom: '20px' }}>
                             <Button
-                                label={'Advanced'}
-                                kind={'outline'}
-                                size={'small'}
-                                show={'block'}
-                                type={'button'}
+                                label="Advanced"
+                                kind="outline"
+                                size="small"
+                                show="block"
+                                type="button"
                                 onClick={(event: any) => {
                                     setAdvancedEnabled(!advancedEnabled)
                                 }}
@@ -696,12 +716,12 @@ export function RuleDef() {
                         </div>
                         {advancedEnabled ? (
                             <div>
-                                <table className={'inline_alignment'}>
+                                <table className="inline_alignment">
                                     <tbody>
                                         <tr>
                                             <td style={{ width: '30%' }}>
                                                 <Dropdown
-                                                    label={'Grouping'}
+                                                    label="Grouping"
                                                     options={[
                                                         'All',
                                                         'Dataset',
@@ -718,7 +738,7 @@ export function RuleDef() {
                                             </td>
                                             <td style={{ width: '30%' }}>
                                                 <ToggleSwitch
-                                                    label={'Asynchronous Mode'}
+                                                    label="Asynchronous Mode"
                                                     checked={asynchModeEnabled}
                                                     handleChange={(
                                                         event: any,
@@ -732,14 +752,14 @@ export function RuleDef() {
                                             <label>Copies</label>
                                             <td style={{ width: '30%' }}>
                                                 <Input
-                                                    name={'copies'}
-                                                    kind={'info'}
-                                                    label={''}
+                                                    name="copies"
+                                                    kind="info"
+                                                    label=""
                                                     value={copiesAmountEntered}
                                                     min={1}
-                                                    size={'small'}
-                                                    type={'number'}
-                                                    placeholder={'Copies'}
+                                                    size="small"
+                                                    type="number"
+                                                    placeholder="Copies"
                                                     onChange={(event: any) => {
                                                         setCopiesAmountEntered(
                                                             event.target.value,
@@ -757,7 +777,7 @@ export function RuleDef() {
                                         width: '100%',
                                     }}
                                     rows={3}
-                                    placeholder={'Comment'}
+                                    placeholder="Comment"
                                     onChange={(event: any) => {
                                         setCommentEntered(event.target.value)
                                     }}
@@ -769,19 +789,21 @@ export function RuleDef() {
                                 <tr>
                                     <td style={{ float: 'left' }}>
                                         <Button
-                                            label={'Back'}
-                                            kind={'primary'}
-                                            type={'submit'}
-                                            onClick={(event: any) => {
+                                            label="&#x2039;&nbsp;Back"
+                                            kind="outline"
+                                            type="submit"
+                                            show="invisible"
+                                            onClick={() => {
                                                 setSelectedStep(1)
                                             }}
                                         />
                                     </td>
                                     <td style={{ float: 'right' }}>
                                         <Button
-                                            label={'Next'}
-                                            kind={'primary'}
-                                            type={'submit'}
+                                            label="Next&nbsp;&#8250;"
+                                            kind="outline"
+                                            type="submit"
+                                            show="invisible"
                                             // disabled={
                                             //     typeof lifetimeEntered === "number"
                                             // }
@@ -831,9 +853,10 @@ export function RuleDef() {
                                 <tr>
                                     <td style={{ float: 'left' }}>
                                         <Button
-                                            label={'Back'}
-                                            kind={'primary'}
-                                            type={'submit'}
+                                            label="&#x2039;&nbsp;Back"
+                                            kind="outline"
+                                            type="submit"
+                                            show="invisible"
                                             onClick={(event: any) => {
                                                 setSelectedStep(2)
                                             }}
@@ -841,9 +864,9 @@ export function RuleDef() {
                                     </td>
                                     <td style={{ float: 'right' }}>
                                         <Button
-                                            label={'Submit Request'}
-                                            kind={'primary'}
-                                            type={'submit'}
+                                            label="Submit Request"
+                                            kind="primary"
+                                            type="submit"
                                             onClick={(event: any) => {
                                                 // navigateToSubmit()
                                             }}

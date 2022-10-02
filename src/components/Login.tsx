@@ -6,7 +6,7 @@ import { Form } from '../stories/Form/Form'
 
 import { MutableRefObject, ReactElement, useRef, useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
-import { getData } from '../utils/restApiWrapper'
+import { commonHeaders, getData } from '../utils/restApiWrapper'
 
 import { env } from '../util'
 import { useAuthConfig, useAlert, useModal } from '../components/GlobalHooks'
@@ -14,20 +14,14 @@ import { AlertProps } from '../stories/Alert/Alert'
 import { ModalProps } from '../stories/Modal/Modal'
 import { AuthError } from '../utils/exceptions'
 
-export const commonHeaders = {
-    'X-Rucio-VO': 'def',
-    'X-Rucio-AppID': 'test',
-    'X-Rucio-Script': 'webui::login',
-}
-
 function Login() {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
     const [userpassEnabled, setUserpassEnabled] = useState(false)
-    const [accountName, setAccountName] = useState('')
 
     const authType: MutableRefObject<string> = useRef('')
     const oidcProvider: MutableRefObject<string> = useRef('')
+    const accountName: MutableRefObject<string> = useRef('')
 
     const navigate: NavigateFunction = useNavigate()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
@@ -38,11 +32,11 @@ function Login() {
     const AccountInput = (): ReactElement => (
         <Input
             label="Account Name (Optional)"
-            placeholder={accountName}
+            placeholder={accountName.current}
             size="medium"
             kind="primary"
             onChange={(event: any) => {
-                setAccountName(event?.target?.value)
+                accountName.current = event?.target?.value
             }}
         />
     )
@@ -77,7 +71,7 @@ function Login() {
 
     const makeUserPassAuthFetch = (): Promise<unknown> => {
         let headers = {}
-        if (accountName.length === 0) {
+        if (accountName.current.length === 0) {
             headers = {
                 'X-Rucio-Username': userNameEntered,
                 'X-Rucio-Password': passwordEntered,
@@ -86,7 +80,7 @@ function Login() {
             headers = {
                 'X-Rucio-Username': userNameEntered,
                 'X-Rucio-Password': passwordEntered,
-                'X-Rucio-Account': accountName,
+                'X-Rucio-Account': accountName.current,
             }
         }
 
@@ -106,7 +100,7 @@ function Login() {
                         const rucioAccount = response?.headers.get(
                             'X-Rucio-Auth-Account',
                         )
-                        setAccountName(rucioAccount)
+                        accountName.current = rucioAccount
                         sessionStorage.setItem(
                             'X-Rucio-Auth-Token',
                             rucioAuthToken,
@@ -143,9 +137,8 @@ function Login() {
                                                 name="radio-group"
                                                 defaultChecked={false}
                                                 onChange={(event: any) => {
-                                                    setAccountName(
-                                                        event.target.value,
-                                                    )
+                                                    accountName.current =
+                                                        event?.target?.value
                                                 }}
                                             />
                                             &nbsp;{element}

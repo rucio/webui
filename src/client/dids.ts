@@ -5,8 +5,8 @@ class DID extends DIDModel {
     public static search(scope: string, name: string, type: string) {
         const url = '/dids/' + scope + '/dids/search'
         return streamData(url, {
-            name: name,
-            type: type,
+            name,
+            type,
         })
     }
     public static get_did(scope: string, name: string, dynamic: boolean) {

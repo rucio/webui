@@ -5,6 +5,11 @@ const rucioToken: string = sessionStorage.getItem('X-Rucio-Auth-Token') ?? ''
 const authorizationHeader = {
     'X-Rucio-Auth-Token': rucioToken,
 }
+export const commonHeaders = {
+    'X-Rucio-VO': 'def',
+    'X-Rucio-AppID': 'test',
+    'X-Rucio-Script': 'webui::login',
+}
 
 export async function postData(
     endpoint: string | undefined = '/',

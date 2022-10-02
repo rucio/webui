@@ -5,6 +5,7 @@
 .rucio-dropdown {
     @extend .dropdown;
     cursor: pointer;
+    margin: auto 2px;
     &.active {
         @extend .is-active;
     }

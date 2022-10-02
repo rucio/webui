@@ -14,7 +14,7 @@ function Home() {
     }, [])
 
     function updateRulesArray(newRulesArray: RuleModel[]) {
-        setRulesArray(prevRulesArray => [...prevRulesArray, ...newRulesArray])
+        setRulesArray(newRulesArray)
     }
 
     async function handleOnClick() {
@@ -22,13 +22,7 @@ function Home() {
     }
 
     function rules() {
-        // will undergo change
-        const rucioToken: string =
-            sessionStorage.getItem('X-Rucio-Auth-Token') || ''
-
-        streamData('/rules', {
-            'X-Rucio-Auth-Token': rucioToken,
-        }).then((data: any) => {
+        streamData('/rules').then((data: any) => {
             const rules = [] as RuleModel[]
             for (const rule of data) {
                 const ruleObj = new RuleModel(rule['id'])
