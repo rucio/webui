@@ -13,8 +13,9 @@ import { useAuthConfig, useAlert, useModal } from '../components/GlobalHooks'
 import { AlertProps } from '../stories/Alert/Alert'
 import { ModalProps } from '../stories/Modal/Modal'
 import { AuthError } from '../utils/exceptions'
+import { RucioClient } from '../client'
 
-function Login() {
+const Login = () => {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
     const [userpassEnabled, setUserpassEnabled] = useState(false)
@@ -69,7 +70,7 @@ function Login() {
         })
     }
 
-    const makeUserPassAuthFetch = (): Promise<unknown> => {
+    const userPassAuth = () => {
         let headers = {}
         if (accountName.current.length === 0) {
             headers = {
@@ -83,36 +84,21 @@ function Login() {
                 'X-Rucio-Account': accountName.current,
             }
         }
-
-        return getData('/auth/userpass', '', {
-            ...commonHeaders,
-            ...headers,
-        })
-    }
-
-    const userPassAuth = () => {
-        makeUserPassAuthFetch()
-            .then((response: any) => {
+        RucioClient.Auth.userpassAuthCall(
+            {
+                ...commonHeaders,
+                ...headers,
+            },
+            (response: any) => {
                 if (response) {
                     if (response.status === 200) {
-                        const rucioAuthToken =
-                            response?.headers.get('X-Rucio-Auth-Token')
                         const rucioAccount = response?.headers.get(
                             'X-Rucio-Auth-Account',
                         )
                         accountName.current = rucioAccount
-                        sessionStorage.setItem(
-                            'X-Rucio-Auth-Token',
-                            rucioAuthToken,
-                        )
+
                         loginNavigateHome(rucioAccount)
                     } else if (response.status === 206) {
-                        const has_accounts_header = response.headers.has(
-                            'X-Rucio-Auth-Accounts',
-                        )
-                        if (!has_accounts_header) {
-                            throw AuthError.fromType('USERPASS_NO_HEADER')
-                        }
                         const accounts = response?.headers
                             .get('X-Rucio-Auth-Accounts')
                             .split(',')
@@ -164,25 +150,23 @@ function Login() {
                             message: 'Login failed.',
                             variant: 'error',
                         })
-                        throw AuthError.fromType('COMMON_LOGIN_FAILED')
                     }
                 } else {
                     showAlert({
                         message: 'Unable to fetch response from server.',
                         variant: 'error',
                     })
-                    throw AuthError.fromType('COMMON_LOGIN_FAILED')
                 }
-            })
-            .catch((error: Error) => {
+            },
+            () => {
                 setTimeout(() => {
                     showAlert({
                         message: 'Unable to log in, please try again.',
                         variant: 'error',
                     })
                 }, 5000)
-                console.error(error)
-            })
+            },
+        )
     }
 
     const OAuth = () => {
@@ -227,7 +211,7 @@ function Login() {
             })
     }
 
-    function handleSubmit(event: any) {
+    const handleSubmit = (event: any) => {
         event?.preventDefault()
         const currentAuthType: string = authType.current
         if (currentAuthType === 'x509') {

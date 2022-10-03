@@ -62,3 +62,4 @@ export class RSEModel implements RSEType {
 }
 
 export class AccountLimitModel implements AccountLimitType {}
+export class AuthModel implements AuthType {}

@@ -25,3 +25,9 @@ export const RuleConfig = {
         analysis: env('rule_analysis') ?? '',
     },
 }
+
+export const AuthConfig = {
+    endpoints: {
+        userpass: env('userpass') ?? '/auth/userpass',
+    },
+}

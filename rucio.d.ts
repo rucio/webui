@@ -8,6 +8,7 @@ type AccountType = {
 }
 
 type AccountLimitType = {}
+type AuthType = {}
 
 type RuleType = {
     rule_id: string
