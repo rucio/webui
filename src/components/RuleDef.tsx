@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Steps } from '../stories/Steps/Steps'
 import { Button } from '../stories/Button/Button'
 import { Input } from '../stories/Input/Input'
@@ -11,8 +11,9 @@ import { ModalProps } from '../stories/Modal/Modal'
 import { DIDModel } from '../utils/models'
 import { useAlert, useModal } from './GlobalHooks'
 import { RucioClient } from '../client'
+import { Separator } from '../stories/Separator/Separator'
 
-export function RuleDef() {
+export const RuleDef = () => {
     const showModal: (options: ModalProps) => Promise<void> = useModal()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
 
@@ -27,23 +28,7 @@ export function RuleDef() {
     const [copiesAmountEntered, setCopiesAmountEntered] = useState(1 as number)
     const [DIDEntries, setDIDEntries] = useState<string[]>([])
 
-    // useEffect(() => {
-    //     if (selectedStep === 1) {
-    //         showAlert({
-    //             message:
-    //                 'You do not have enough quota left on the selected RSE. However, if you check to box below you can still submit the rule and ask for approval.',
-    //             variant: 'warn',
-    //         })
-    //     } else if (selectedStep === 3 && isCheckedApproval === true) {
-    //         showAlert({
-    //             message:
-    //                 'This request will ask for approval to create a rule for the following DID',
-    //             variant: 'primary',
-    //         })
-    //     }
-    // }, [selectedStep, isCheckedApproval])
-
-    function DID() {
+    const DID = () => {
         const [didEntries, setdidEntries] = useState([] as DIDModel[])
         const [granularityLevel, setGranularityLevel] = useState(
             'collection' as string,
@@ -62,7 +47,7 @@ export function RuleDef() {
             setCheckedDIDs(checkedDIDs)
         }
 
-        const extract_scope = function (name: any): string[] {
+        const extract_scope = (name: any): string[] => {
             if (name.indexOf(':') > -1) {
                 return name.split(':')
             }
@@ -77,11 +62,11 @@ export function RuleDef() {
             return [scope, name]
         }
 
-        function updateDidEntries(newDIDArray: DIDModel[]) {
+        const updateDidEntries = (newDIDArray: DIDModel[]) => {
             setdidEntries(prevDIDArray => [...prevDIDArray, ...newDIDArray])
         }
 
-        function searchDids() {
+        const searchDids = () => {
             const [scope, name] = extract_scope(dataPatternValue.trim())
             if (!scope) {
                 return 'cannot determine scope. please provide the did with scope'
@@ -146,17 +131,17 @@ export function RuleDef() {
                                                     production scopes like
                                                     <em>mc15_13TeV.</em>
                                                 </p>
-                                                <hr />
+                                                <Separator />
                                                 <p>Examples:</p>
                                                 <strong>
                                                     Official dataset:
                                                 </strong>
-                                                " "
+
                                                 <br />
                                                 <em>
                                                     data15_13TeV.00266904.physics_Main.
                                                 </em>
-                                                " "
+
                                                 <br />
                                                 <em>merge.DAOD_SUSY1.</em>
                                                 <br />
@@ -164,8 +149,8 @@ export function RuleDef() {
                                                     f594_m1435_p2361_tid05608871_00
                                                 </em>
                                                 <br />
-                                                <strong>User dataset:</strong>"
-                                                "
+                                                <strong>User dataset:</strong>
+
                                                 <br />
                                                 <em>ser.jdoe:my.dataset.1</em>
                                             </>
@@ -177,7 +162,7 @@ export function RuleDef() {
                             </a>
                             .
                         </h6>
-                        <hr></hr>
+                        <Separator />
                         <Tabs
                             tabs={['DID Search Pattern', 'List of DIDs']}
                             active={didSearchMethod}
@@ -199,7 +184,7 @@ export function RuleDef() {
                                         type="text"
                                         onChange={(event: any) => {
                                             setDataPatternValue(
-                                                event.target.value,
+                                                event?.target?.value,
                                             )
                                         }}
                                     ></Input>
@@ -256,7 +241,8 @@ export function RuleDef() {
                                                         event: any,
                                                     ) => {
                                                         setRecordAmountEntered(
-                                                            event.target.value,
+                                                            event?.target
+                                                                ?.value,
                                                         )
                                                     }}
                                                 />
@@ -275,7 +261,8 @@ export function RuleDef() {
                                                         event: any,
                                                     ) => {
                                                         setGranularityLevel(
-                                                            event.target.value,
+                                                            event?.target
+                                                                ?.value,
                                                         )
                                                     }}
                                                 />
@@ -301,15 +288,14 @@ export function RuleDef() {
                                                                 )
                                                             }}
                                                         />
-                                                        &nbsp;{entry.id}
+                                                        &nbsp;{entry?.id}
                                                     </label>
                                                 </>
                                             ))}
                                         </div>
                                     </>
                                 ) : null}
-                                <br></br>
-                                <hr></hr>
+                                <Separator />
                                 <div
                                     className="next_button"
                                     style={{ float: 'right' }}
@@ -372,7 +358,7 @@ export function RuleDef() {
         )
     }
 
-    function RSE() {
+    const RSE = () => {
         const [rseexpressionvalueEntered, setRseexpressionvalueEntered] =
             useState('' as string)
         const [RSEInfoOpened, setRSEInfoOpened] = useState(false as boolean)
@@ -381,68 +367,79 @@ export function RuleDef() {
             <Card
                 content={
                     <>
-                        <Button
-                            label="RSE"
-                            onClick={() => {
-                                showModal({
-                                    title: 'RSE',
-                                    body: (
-                                        <>
-                                            <p>
-                                                Rucio Storage Elements (RSEs)
-                                                are storage endpoints at sites,
-                                                where data is written to. They
-                                                can have different types like
-                                                DATADISK or LOCALGROUPDISK,
-                                                which are subject to different
-                                                permissions and policies.
-                                            </p>
-                                            <p>
-                                                RSEs have a set of attributes
-                                                assigned to them so that they
-                                                can be grouped in different
-                                                ways, e.g., all UK RSEs or all
-                                                Tier-1 RSEs. Those attributes
-                                                can be used to compose RSE
-                                                expressions, which can be
-                                                applied if you don't explicitly
-                                                want to have the data replicated
-                                                to one specific RSE.
-                                            </p>
-                                            <p>
-                                                Accounts in Rucio have quota set
-                                                per RSEs that specify where one
-                                                account can write data and how
-                                                much. A detailed explanation
-                                                about permissions and quotas in
-                                                Rucio can be found on this
-                                                <a href="https://twiki.cern.ch/twiki/bin/viewauth/AtlasComputing/RucioClientsHowTo#Permissions_and_quotas">
-                                                    " " twiki
-                                                </a>
-                                                " " page.
-                                            </p>
-                                            <hr />
-                                            <p>Examples:</p>
-                                            <p>
-                                                Replicate to any LOCALGROUPDISK
-                                                in the US cloud:" "
-                                                <em>
-                                                    cloud=UStype=LOCALGROUPDISK
-                                                </em>
-                                            </p>
-                                            <p>
-                                                Replicate to any Tier-1
-                                                SCRATCHDISK but not RAL-LCG2:" "
-                                                <em>
-                                                    tier=1type=SCRATCHDISK\site=RAL-LCG2
-                                                </em>
-                                            </p>
-                                        </>
-                                    ),
-                                })
-                            }}
-                        />
-                        <div className="data_pattern">
+                        <h6>
+                            &#9888;&nbsp;To learn more about RSEs,{' '}
+                            <a
+                                onClick={() => {
+                                    showModal({
+                                        title: 'RSE',
+                                        body: (
+                                            <>
+                                                <p>
+                                                    Rucio Storage Elements
+                                                    (RSEs) are storage endpoints
+                                                    at sites, where data is
+                                                    written to. They can have
+                                                    different types like
+                                                    DATADISK or LOCALGROUPDISK,
+                                                    which are subject to
+                                                    different permissions and
+                                                    policies.
+                                                </p>
+                                                <p>
+                                                    RSEs have a set of
+                                                    attributes assigned to them
+                                                    so that they can be grouped
+                                                    in different ways, e.g., all
+                                                    UK RSEs or all Tier-1 RSEs.
+                                                    Those attributes can be used
+                                                    to compose RSE expressions,
+                                                    which can be applied if you
+                                                    don't explicitly want to
+                                                    have the data replicated to
+                                                    one specific RSE.
+                                                </p>
+                                                <p>
+                                                    Accounts in Rucio have quota
+                                                    set per RSEs that specify
+                                                    where one account can write
+                                                    data and how much. A
+                                                    detailed explanation about
+                                                    permissions and quotas in
+                                                    Rucio can be found on this
+                                                    <a href="https://twiki.cern.ch/twiki/bin/viewauth/AtlasComputing/RucioClientsHowTo#Permissions_and_quotas">
+                                                        " " twiki
+                                                    </a>
+                                                    " " page.
+                                                </p>
+                                                <Separator />
+                                                <p>Examples:</p>
+                                                <p>
+                                                    Replicate to any
+                                                    LOCALGROUPDISK in the US
+                                                    cloud:" "
+                                                    <em>
+                                                        cloud=UStype=LOCALGROUPDISK
+                                                    </em>
+                                                </p>
+                                                <p>
+                                                    Replicate to any Tier-1
+                                                    SCRATCHDISK but not
+                                                    RAL-LCG2:" "
+                                                    <em>
+                                                        tier=1type=SCRATCHDISK\site=RAL-LCG2
+                                                    </em>
+                                                </p>
+                                            </>
+                                        ),
+                                    })
+                                }}
+                            >
+                                click here.
+                            </a>
+                        </h6>
+                        <Separator />
+                        <div className="rucio-flex data_pattern">
                             <Input
                                 label=""
                                 name="rse"
@@ -457,9 +454,9 @@ export function RuleDef() {
                             />
                             <Button
                                 label="Check Quota"
-                                kind="outline"
-                                show="invisible"
+                                kind="primary"
                                 type="button"
+                                size="large"
                                 disabled={
                                     rseexpressionvalueEntered.length === 0
                                 }
@@ -505,42 +502,39 @@ export function RuleDef() {
                                 </label>
                             </>
                         ) : null}
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td style={{ float: 'left' }}>
-                                        <Button
-                                            label="&#x2039;&nbsp;Back"
-                                            kind="outline"
-                                            type="submit"
-                                            show="invisible"
-                                            onClick={(event: any) => {
-                                                setSelectedStep(0)
-                                            }}
-                                        />
-                                    </td>
-                                    <td style={{ float: 'right' }}>
-                                        <Button
-                                            label="Next&nbsp;&#8250;"
-                                            kind="outline"
-                                            type="submit"
-                                            show="invisible"
-                                            disabled={!rseexpressionEnabled}
-                                            onClick={(event: any) => {
-                                                setSelectedStep(2)
-                                            }}
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <Separator />
+                        <div style={{ float: 'left' }}>
+                            <Button
+                                label="&#x2039;&nbsp;Back"
+                                kind="outline"
+                                type="submit"
+                                show="invisible"
+                                size="medium"
+                                onClick={(event: any) => {
+                                    setSelectedStep(0)
+                                }}
+                            />
+                        </div>
+                        <div style={{ float: 'right' }}>
+                            <Button
+                                label="Next&nbsp;&#8250;"
+                                kind="outline"
+                                type="submit"
+                                show="invisible"
+                                size="medium"
+                                disabled={!rseexpressionEnabled}
+                                onClick={(event: any) => {
+                                    setSelectedStep(2)
+                                }}
+                            />
+                        </div>
                     </>
                 }
             />
         )
     }
 
-    function Options() {
+    const Options = () => {
         const [lifetimeEntered, setLifetimeEntered] = useState(new Date())
         const [samplesAmountEntered, setsamplesAmountEntered] = useState(
             0 as number,
@@ -564,158 +558,155 @@ export function RuleDef() {
             <Card
                 content={
                     <>
-                        <Button
-                            label="Options"
-                            onClick={() => {
-                                showModal({
-                                    title: 'RSE',
-                                    body: (
-                                        <>
-                                            <p>
-                                                <b>Lifetime: </b>The lifetime is
-                                                specified in days and defines
-                                                when a rule will be deleted
-                                                again. For SCRATCHDISK the
-                                                maximum lifetime is 15 days and
-                                                for everything else you can
-                                                choose any number of days or
-                                                leave it empty to set no
-                                                lifetime at all.
-                                            </p>
-                                            <hr />
-                                            <p>
-                                                <b>Samples: </b>Create a sample
-                                                dataset with the given number of
-                                                random files from the selected
-                                                dataset.
-                                            </p>
-                                            <hr />
-                                            <p>
-                                                <b>Notifications: </b>Enable
-                                                email notification. If set to" "
-                                                <em>Yes</em> you will get an
-                                                email when the rule has
-                                                successfully replicated the
-                                                requested DID.
-                                            </p>
-                                            <hr />
-                                            <p>
-                                                <b>ADVANCED OPTIONS</b>
-                                            </p>
-                                            <hr />
-                                            <p>
-                                                <b>Grouping: </b>The grouping
-                                                option defines how replicas are
-                                                distributed, if the RSE
-                                                Expression covers multiple RSEs.
-                                                ALL means that all files are
-                                                written to the same RSE (Picked
-                                                from the RSE Expression).
-                                                DATASET means that all files in
-                                                the same dataset are written to
-                                                the same RSE. NONE means that
-                                                all files are spread over all
-                                                possible RSEs of the RSE
-                                                Expression.
-                                                <em>
-                                                    A new one is essential
-                                                    picked for each file
-                                                </em>
-                                            </p>
-                                            <hr />
-                                            <p>
-                                                <b>Asynchronous Mode: </b>If you
-                                                have a large requests with a lot
-                                                of datasets/files you might
-                                                check this box. In this mode you
-                                                don't have to wait until the
-                                                server has fully evaluated your
-                                                request, but you will have to
-                                                check after some time on your
-                                                rule list if the request has
-                                                been successful.
-                                            </p>
-                                            <hr />
-                                            <p>
-                                                <b>Copies: </b>The copies also
-                                                only work with RSE expression
-                                                and it defines the number of
-                                                replicas that should be created.
-                                            </p>
-                                            <hr />
-                                            <p>
-                                                <b>Comment: </b>The comment is
-                                                optional unless you want to ask
-                                                for approval. Then you have to
-                                                give a justification here.
-                                            </p>
-                                        </>
-                                    ),
-                                })
+                        <h6>
+                            &#9888;&nbsp;To learn more about Options,
+                            <a
+                                onClick={() => {
+                                    showModal({
+                                        title: 'RSE',
+                                        body: (
+                                            <>
+                                                <p>
+                                                    <b>Lifetime: </b>The
+                                                    lifetime is specified in
+                                                    days and defines when a rule
+                                                    will be deleted again. For
+                                                    SCRATCHDISK the maximum
+                                                    lifetime is 15 days and for
+                                                    everything else you can
+                                                    choose any number of days or
+                                                    leave it empty to set no
+                                                    lifetime at all.
+                                                </p>
+                                                <Separator />
+                                                <p>
+                                                    <b>Samples: </b>Create a
+                                                    sample dataset with the
+                                                    given number of random files
+                                                    from the selected dataset.
+                                                </p>
+                                                <Separator />
+                                                <p>
+                                                    <b>Notifications: </b>Enable
+                                                    email notification. If set
+                                                    to" "<em>Yes</em> you will
+                                                    get an email when the rule
+                                                    has successfully replicated
+                                                    the requested DID.
+                                                </p>
+                                                <Separator />
+                                                <p>
+                                                    <b>ADVANCED OPTIONS</b>
+                                                </p>
+                                                <Separator />
+                                                <p>
+                                                    <b>Grouping: </b>The
+                                                    grouping option defines how
+                                                    replicas are distributed, if
+                                                    the RSE Expression covers
+                                                    multiple RSEs. ALL means
+                                                    that all files are written
+                                                    to the same RSE (Picked from
+                                                    the RSE Expression). DATASET
+                                                    means that all files in the
+                                                    same dataset are written to
+                                                    the same RSE. NONE means
+                                                    that all files are spread
+                                                    over all possible RSEs of
+                                                    the RSE Expression.
+                                                    <em>
+                                                        A new one is essential
+                                                        picked for each file
+                                                    </em>
+                                                </p>
+                                                <Separator />
+                                                <p>
+                                                    <b>Asynchronous Mode: </b>If
+                                                    you have a large requests
+                                                    with a lot of datasets/files
+                                                    you might check this box. In
+                                                    this mode you don't have to
+                                                    wait until the server has
+                                                    fully evaluated your
+                                                    request, but you will have
+                                                    to check after some time on
+                                                    your rule list if the
+                                                    request has been successful.
+                                                </p>
+                                                <Separator />
+                                                <p>
+                                                    <b>Copies: </b>The copies
+                                                    also only work with RSE
+                                                    expression and it defines
+                                                    the number of replicas that
+                                                    should be created.
+                                                </p>
+                                                <Separator />
+                                                <p>
+                                                    <b>Comment: </b>The comment
+                                                    is optional unless you want
+                                                    to ask for approval. Then
+                                                    you have to give a
+                                                    justification here.
+                                                </p>
+                                            </>
+                                        ),
+                                    })
+                                }}
+                            >
+                                &nbsp;click here.
+                            </a>
+                        </h6>
+                        <Separator />
+
+                        <Input
+                            name="lifetime"
+                            label="Expiration date"
+                            value={lifetimeEntered}
+                            type="date"
+                            placeholder="Lifetime"
+                            onChange={(event: any) => {
+                                setLifetimeEntered(event.target.value)
                             }}
                         />
 
-                        <table className="inline_alignment">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <label>Expiration date</label>
-                                        <Input
-                                            name="lifetime"
-                                            label=""
-                                            value={lifetimeEntered}
-                                            type="date"
-                                            placeholder="Lifetime"
-                                            onChange={(event: any) => {
-                                                setLifetimeEntered(
-                                                    event.target.value,
-                                                )
-                                            }}
-                                        />
-                                    </td>
-                                    <td>
-                                        <label>Create Sample</label>
-                                        <Input
-                                            name="sample"
-                                            label=""
-                                            type="number"
-                                            min={0}
-                                            placeholder="Amount"
-                                            onChange={(event: any) => {
-                                                setsamplesAmountEntered(
-                                                    event.target.value,
-                                                )
-                                            }}
-                                        />
-                                    </td>
-                                    <td style={{ verticalAlign: 'middle' }}>
-                                        <ToggleSwitch
-                                            label="Notification"
-                                            checked={notificationsEnabled}
-                                            handleChange={(event: any) => {
-                                                setNotificationsEnabled(
-                                                    !notificationsEnabled,
-                                                )
-                                            }}
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div style={{ marginBottom: '20px' }}>
+                        <Input
+                            name="sample"
+                            label="Create Sample"
+                            type="number"
+                            min={0}
+                            placeholder="Amount"
+                            onChange={(event: any) => {
+                                setsamplesAmountEntered(event.target.value)
+                            }}
+                        />
+
+                        <div className="rucio-flex m-t-10">
+                            <ToggleSwitch
+                                label="Turn on Notifications?"
+                                checked={notificationsEnabled}
+                                handleChange={() => {
+                                    setNotificationsEnabled(
+                                        !notificationsEnabled,
+                                    )
+                                }}
+                            />
+
                             <Button
-                                label="Advanced"
-                                kind="outline"
-                                size="small"
-                                show="block"
+                                label="Advanced Options"
+                                kind="secondary"
+                                size="medium"
+                                show="danger"
                                 type="button"
                                 onClick={(event: any) => {
                                     setAdvancedEnabled(!advancedEnabled)
                                 }}
                             />
                         </div>
+
                         {advancedEnabled ? (
                             <div>
+                                <Separator />
                                 <table className="inline_alignment">
                                     <tbody>
                                         <tr>
@@ -740,21 +731,18 @@ export function RuleDef() {
                                                 <ToggleSwitch
                                                     label="Asynchronous Mode"
                                                     checked={asynchModeEnabled}
-                                                    handleChange={(
-                                                        event: any,
-                                                    ) => {
+                                                    handleChange={() => {
                                                         setAsynchModeEnabled(
                                                             !notificationsEnabled,
                                                         )
                                                     }}
                                                 />
                                             </td>
-                                            <label>Copies</label>
                                             <td style={{ width: '30%' }}>
                                                 <Input
                                                     name="copies"
                                                     kind="info"
-                                                    label=""
+                                                    label="Copies"
                                                     value={copiesAmountEntered}
                                                     min={1}
                                                     size="small"
@@ -784,112 +772,112 @@ export function RuleDef() {
                                 ></textarea>
                             </div>
                         ) : null}
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td style={{ float: 'left' }}>
-                                        <Button
-                                            label="&#x2039;&nbsp;Back"
-                                            kind="outline"
-                                            type="submit"
-                                            show="invisible"
-                                            onClick={() => {
-                                                setSelectedStep(1)
-                                            }}
-                                        />
-                                    </td>
-                                    <td style={{ float: 'right' }}>
-                                        <Button
-                                            label="Next&nbsp;&#8250;"
-                                            kind="outline"
-                                            type="submit"
-                                            show="invisible"
-                                            // disabled={
-                                            //     typeof lifetimeEntered === "number"
-                                            // }
-                                            onClick={(event: any) => {
-                                                setSelectedStep(3)
-                                            }}
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <Separator />
+                        <div style={{ float: 'left' }}>
+                            <Button
+                                label="&#x2039;&nbsp;Back"
+                                kind="outline"
+                                type="submit"
+                                show="invisible"
+                                onClick={() => {
+                                    setSelectedStep(1)
+                                }}
+                            />
+                        </div>
+                        <div style={{ float: 'right' }}>
+                            <Button
+                                label="Next&nbsp;&#8250;"
+                                kind="outline"
+                                type="submit"
+                                show="invisible"
+                                // disabled={
+                                //     typeof lifetimeEntered === "number"
+                                // }
+                                onClick={(event: any) => {
+                                    setSelectedStep(3)
+                                }}
+                            />
+                        </div>
                     </>
                 }
             />
         )
     }
 
-    function Summary() {
-        return (
-            <Card
-                content={
-                    <>
-                        <table>
-                            <thead>
-                                <th>DID</th>
-                                <th>Copies</th>
-                                <th>Files</th>
-                                <th>Size</th>
-                                <th>Requested Size</th>
-                            </thead>
-                            <tbody>
-                                {DIDEntries.map((entry, index) => {
-                                    return (
-                                        <tr>
-                                            <td>{entry}</td>
-                                            <td>{copiesAmountEntered}</td>
-                                            <td>8342</td>
-                                            <td>30.36 TB</td>
-                                            <td>30.36 TB</td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td style={{ float: 'left' }}>
-                                        <Button
-                                            label="&#x2039;&nbsp;Back"
-                                            kind="outline"
-                                            type="submit"
-                                            show="invisible"
-                                            onClick={(event: any) => {
-                                                setSelectedStep(2)
-                                            }}
-                                        />
-                                    </td>
-                                    <td style={{ float: 'right' }}>
-                                        <Button
-                                            label="Submit Request"
-                                            kind="primary"
-                                            type="submit"
-                                            onClick={(event: any) => {
-                                                // navigateToSubmit()
-                                            }}
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </>
-                }
-            />
-        )
-    }
+    const Summary = () => (
+        <Card
+            content={
+                <>
+                    <table>
+                        <thead>
+                            <th>DID</th>
+                            <th>Copies</th>
+                            <th>Files</th>
+                            <th>Size</th>
+                            <th>Requested Size</th>
+                        </thead>
+                        <tbody>
+                            {DIDEntries.map((entry, index) => {
+                                return (
+                                    <tr>
+                                        <td>{entry.toString()}</td>
+                                        <td>{copiesAmountEntered}</td>
+                                        <td>8342</td>
+                                        <td>30.36 TB</td>
+                                        <td>30.36 TB</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                    <Separator />
+                    <div style={{ float: 'left' }}>
+                        <Button
+                            label="&#x2039;&nbsp;Back"
+                            kind="outline"
+                            type="submit"
+                            show="invisible"
+                            onClick={() => {
+                                setSelectedStep(2)
+                            }}
+                        />
+                    </div>
+                    <div style={{ float: 'right' }}>
+                        <Button
+                            label="Submit Request"
+                            kind="primary"
+                            type="submit"
+                            onClick={() => {
+                                // navigateToSubmit()
+                            }}
+                        />
+                    </div>
+                </>
+            }
+        />
+    )
 
     return (
-        <div className="App">
-            <div className="limiter" style={{ marginTop: '2%' }}>
+        <div className="rule-def">
+            <div className="limiter m-t-30">
                 <Steps
                     steps={[
-                        ['DIDs', 'Select Data Identifiers'],
-                        ['RSEs', 'Select Rucio Storage Elements'],
-                        ['Options', 'Select additional options'],
-                        ['Summary', 'Submit request'],
+                        [
+                            'DIDs',
+                            'Select Data Identifiers',
+                            () => setSelectedStep(0),
+                        ],
+                        [
+                            'RSEs',
+                            'Select Rucio Storage Elements',
+                            () => setSelectedStep(1),
+                        ],
+                        [
+                            'Options',
+                            'Select additional options',
+                            () => setSelectedStep(2),
+                        ],
+                        ['Summary', 'Submit request', () => setSelectedStep(3)],
                     ]}
                     active={selectedStep}
                 />
