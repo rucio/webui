@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { MutableRefObject, useRef, useState } from 'react'
 import { Steps } from '../stories/Steps/Steps'
 import { Button } from '../stories/Button/Button'
 import { Input } from '../stories/Input/Input'
@@ -25,7 +25,7 @@ export const RuleDef = () => {
     )
     const [didSearchMethod, setDidSearchMethod] = useState(0 as number)
     const [isCheckedApproval, setIsChecked] = useState(false as boolean)
-    const [copiesAmountEntered, setCopiesAmountEntered] = useState(1 as number)
+    const copiesAmountEntered: MutableRefObject<number> = useRef(1 as number)
     const [DIDEntries, setDIDEntries] = useState<string[]>([])
 
     const DID = () => {
@@ -271,7 +271,7 @@ export const RuleDef = () => {
 
                                         <div className="list_entries">
                                             {didEntries.map((entry, index) => (
-                                                <>
+                                                <div key={index}>
                                                     <br />
                                                     <label>
                                                         <input
@@ -290,7 +290,7 @@ export const RuleDef = () => {
                                                         />
                                                         &nbsp;{entry?.id}
                                                     </label>
-                                                </>
+                                                </div>
                                             ))}
                                         </div>
                                     </>
@@ -546,7 +546,6 @@ export const RuleDef = () => {
             true as boolean,
         )
         const [advancedEnabled, setAdvancedEnabled] = useState(false as boolean)
-        const [optionsOpened, setOptionsOpened] = useState(false as boolean)
         const [groupingEntered, setGroupingEntered] = useState('' as string)
         const [commentEntered, setCommentEntered] = useState('' as string)
 
@@ -681,29 +680,24 @@ export const RuleDef = () => {
                             }}
                         />
 
-                        <div className="rucio-flex m-t-10">
-                            <ToggleSwitch
-                                label="Turn on Notifications?"
-                                checked={notificationsEnabled}
-                                handleChange={() => {
-                                    setNotificationsEnabled(
-                                        !notificationsEnabled,
-                                    )
-                                }}
-                            />
-
-                            <Button
-                                label="Advanced Options"
-                                kind="secondary"
-                                size="medium"
-                                show="danger"
-                                type="button"
-                                onClick={(event: any) => {
-                                    setAdvancedEnabled(!advancedEnabled)
-                                }}
-                            />
+                        <div className="m-t-10">
+                            <div style={{ float: 'left' }}>
+                                <ToggleSwitch label="Turn on Notifications?" />
+                            </div>
+                            <div style={{ float: 'right' }}>
+                                <Button
+                                    label="Advanced Options"
+                                    kind="secondary"
+                                    size="medium"
+                                    show="danger"
+                                    type="button"
+                                    onClick={(event: any) => {
+                                        setAdvancedEnabled(!advancedEnabled)
+                                    }}
+                                />
+                            </div>
                         </div>
-
+                        <br></br>
                         {advancedEnabled ? (
                             <div>
                                 <Separator />
@@ -728,30 +722,20 @@ export const RuleDef = () => {
                                                 />
                                             </td>
                                             <td style={{ width: '30%' }}>
-                                                <ToggleSwitch
-                                                    label="Asynchronous Mode"
-                                                    checked={asynchModeEnabled}
-                                                    handleChange={() => {
-                                                        setAsynchModeEnabled(
-                                                            !notificationsEnabled,
-                                                        )
-                                                    }}
-                                                />
+                                                <ToggleSwitch label="Asynchronous Mode" />
                                             </td>
                                             <td style={{ width: '30%' }}>
                                                 <Input
                                                     name="copies"
                                                     kind="info"
                                                     label="Copies"
-                                                    value={copiesAmountEntered}
                                                     min={1}
                                                     size="small"
                                                     type="number"
                                                     placeholder="Copies"
                                                     onChange={(event: any) => {
-                                                        setCopiesAmountEntered(
-                                                            event.target.value,
-                                                        )
+                                                        copiesAmountEntered.current =
+                                                            event?.target?.value
                                                     }}
                                                 />
                                             </td>
@@ -790,9 +774,6 @@ export const RuleDef = () => {
                                 kind="outline"
                                 type="submit"
                                 show="invisible"
-                                // disabled={
-                                //     typeof lifetimeEntered === "number"
-                                // }
                                 onClick={(event: any) => {
                                     setSelectedStep(3)
                                 }}
@@ -821,7 +802,7 @@ export const RuleDef = () => {
                                 return (
                                     <tr>
                                         <td>{entry.toString()}</td>
-                                        <td>{copiesAmountEntered}</td>
+                                        <td>{copiesAmountEntered.current}</td>
                                         <td>8342</td>
                                         <td>30.36 TB</td>
                                         <td>30.36 TB</td>

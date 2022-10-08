@@ -290,7 +290,9 @@ const Login = () => {
                                             }
                                             type="submit"
                                             kind="outline"
-                                            label="Google"
+                                            label={
+                                                env('oidc_provider_1') as string
+                                            }
                                             show="invisible"
                                             size="large"
                                             onClick={() => {

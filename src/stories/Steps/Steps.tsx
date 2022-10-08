@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './steps.scss'
 
 interface StepsProps {
@@ -13,16 +12,14 @@ export const Steps = ({
     size,
     ...props
 }: StepsProps) => {
-    const [currIndex, setCurrentIndex] = useState(active)
     return (
         <div className={`rucio-steps ${size}`}>
             {steps.map((element, index) => {
-                return index < currIndex ? (
+                return index < active ? (
                     <div
                         className="step-item is-completed is-success"
                         key={index}
                         onClick={() => {
-                            setCurrentIndex(index)
                             element[2]?.()
                         }}
                     >
@@ -32,7 +29,7 @@ export const Steps = ({
                             <p>{element[1]}</p>
                         </div>
                     </div>
-                ) : index === currIndex ? (
+                ) : index === active ? (
                     <div className="step-item is-active" key={index}>
                         <div className="step-marker"></div>
                         <div className="step-details">
@@ -41,14 +38,7 @@ export const Steps = ({
                         </div>
                     </div>
                 ) : (
-                    <div
-                        className="step-item"
-                        key={index}
-                        onClick={() => {
-                            setCurrentIndex(index)
-                            element[2]?.()
-                        }}
-                    >
+                    <div className="step-item" key={index}>
                         <div className="step-marker">{index + 1}</div>
                         <div className="step-details">
                             <p className="step-title">{element[0]}</p>
