@@ -12,6 +12,8 @@ import { DIDModel } from '../utils/models'
 import { useAlert, useModal } from './GlobalHooks'
 import { RucioClient } from '../client'
 import { Separator } from '../stories/Separator/Separator'
+import { CheckBox } from '../stories/Checkbox/Checkbox.stories'
+import { Table } from '../stories/Table/Table'
 
 export const RuleDef = () => {
     const showModal: (options: ModalProps) => Promise<void> = useModal()
@@ -24,9 +26,26 @@ export const RuleDef = () => {
         false as boolean,
     )
     const [didSearchMethod, setDidSearchMethod] = useState(0 as number)
-    const [isCheckedApproval, setIsChecked] = useState(false as boolean)
     const copiesAmountEntered: MutableRefObject<number> = useRef(1 as number)
     const [DIDEntries, setDIDEntries] = useState<string[]>([])
+    const totalSizeOfSelectedDid: MutableRefObject<string> = useRef(
+        '' as string,
+    )
+
+    const extract_scope = (name: any): string[] => {
+        if (name.indexOf(':') > -1) {
+            return name.split(':')
+        }
+        const items = name.split('.')
+        if (items.length <= 1) {
+            throw Error('')
+        }
+        let scope = items[0]
+        if (name.indexOf('user') === 0 || name.indexOf('group') === 0) {
+            scope = items[0] + '.' + items[1]
+        }
+        return [scope, name]
+    }
 
     const DID = () => {
         const [didEntries, setdidEntries] = useState([] as DIDModel[])
@@ -39,31 +58,16 @@ export const RuleDef = () => {
         const [dataPatternEntered, setDataPatternEntered] = useState(
             false as boolean,
         )
-        const [checkedDIDs, setCheckedDIDs] = useState(new Array(10).fill(true))
-        const [filterEntered, setFilterEntered] = useState('' as string)
+        const [checkedDIDs, setCheckedDIDs] = useState(Array(10).fill(true))
 
-        const handleDIDListChange = function (position: number) {
-            checkedDIDs[position] = !checkedDIDs[position]
-            setCheckedDIDs(checkedDIDs)
-        }
-
-        const extract_scope = (name: any): string[] => {
-            if (name.indexOf(':') > -1) {
-                return name.split(':')
-            }
-            const items = name.split('.')
-            if (items.length <= 1) {
-                throw Error('')
-            }
-            let scope = items[0]
-            if (name.indexOf('user') === 0 || name.indexOf('group') === 0) {
-                scope = items[0] + '.' + items[1]
-            }
-            return [scope, name]
+        const handleDIDListChange = (position: number) => {
+            const DIDchecklist = checkedDIDs
+            DIDchecklist[position] = !DIDchecklist[position]
+            setCheckedDIDs(DIDchecklist)
         }
 
         const updateDidEntries = (newDIDArray: DIDModel[]) => {
-            setdidEntries(prevDIDArray => [...prevDIDArray, ...newDIDArray])
+            setdidEntries(newDIDArray)
         }
 
         const searchDids = () => {
@@ -71,17 +75,29 @@ export const RuleDef = () => {
             if (!scope) {
                 return 'cannot determine scope. please provide the did with scope'
             }
-            RucioClient.DID.search(scope, name, granularityLevel).then(
-                (data: any) => {
-                    const dids = [] as DIDModel[]
-                    for (const did of data) {
-                        const didObj = new DIDModel(did)
-                        dids.push(didObj)
+            RucioClient.DID.search(
+                scope,
+                name,
+                granularityLevel,
+                (dids: any) => {
+                    if (dids && dids?.length > 0) {
+                        updateDidEntries(dids)
+                    } else {
+                        showAlert({
+                            message: 'No matching DID entries were found.',
+                            variant: 'primary',
+                        })
                     }
-                    updateDidEntries(dids)
+                },
+                (error: any) => {
+                    showAlert({
+                        message: 'Something went wrong, please try again.',
+                        variant: 'warn',
+                    })
                 },
             )
         }
+
         return (
             <Card
                 content={
@@ -174,6 +190,43 @@ export const RuleDef = () => {
                         />
                         {didSearchMethod === 0 ? (
                             <>
+                                <div className="rucio-flex m-5">
+                                    <Input
+                                        name="filter"
+                                        label="Filter"
+                                        type="text"
+                                        size="medium"
+                                        show="rounded"
+                                        placeholder="Filter"
+                                        onChange={(event: any) => event}
+                                    />
+                                    <div className="rucio-flex m-t-20 ">
+                                        <Dropdown
+                                            label="Show"
+                                            options={['10', '25', '50', '100']}
+                                            handleChange={(event: any) => {
+                                                setRecordAmountEntered(
+                                                    event?.target?.value,
+                                                )
+                                            }}
+                                        />
+
+                                        <Dropdown
+                                            label={'Level of Granularity'}
+                                            options={[
+                                                'dataset',
+                                                'container',
+                                                'collection',
+                                                'file',
+                                            ]}
+                                            handleChange={(event: any) => {
+                                                setGranularityLevel(
+                                                    event?.target?.value,
+                                                )
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                                 <div className="data_pattern rucio-flex">
                                     <Input
                                         label="Data Pattern"
@@ -214,85 +267,94 @@ export const RuleDef = () => {
 
                                 {dataPatternEntered ? (
                                     <>
-                                        <div className="rucio-flex m-5">
-                                            <Input
-                                                name="filter"
-                                                label="Filter"
-                                                type="text"
-                                                size="medium"
-                                                show="rounded"
-                                                placeholder="Filter"
-                                                onChange={(event: any) => {
-                                                    setFilterEntered(
-                                                        event?.target?.value,
-                                                    )
-                                                }}
-                                            />
-                                            <div className="rucio-flex m-t-20 ">
-                                                <Dropdown
-                                                    label="Show"
-                                                    options={[
-                                                        '10',
-                                                        '25',
-                                                        '50',
-                                                        '100',
-                                                    ]}
-                                                    handleChange={(
-                                                        event: any,
-                                                    ) => {
-                                                        setRecordAmountEntered(
-                                                            event?.target
-                                                                ?.value,
-                                                        )
-                                                    }}
-                                                />
-
-                                                <Dropdown
-                                                    label={
-                                                        'Level of Granularity'
-                                                    }
-                                                    options={[
-                                                        'dataset',
-                                                        'container',
-                                                        'collection',
-                                                        'file',
-                                                    ]}
-                                                    handleChange={(
-                                                        event: any,
-                                                    ) => {
-                                                        setGranularityLevel(
-                                                            event?.target
-                                                                ?.value,
-                                                        )
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-
                                         <div className="list_entries">
                                             {didEntries.map((entry, index) => (
                                                 <div key={index}>
-                                                    <br />
-                                                    <label>
-                                                        <input
-                                                            key={`custom-checkbox-${index}`}
-                                                            type="checkbox"
-                                                            checked={
-                                                                checkedDIDs[
-                                                                    index
-                                                                ]
-                                                            }
-                                                            onChange={() => {
+                                                    <br></br>
+                                                    <div
+                                                        style={{
+                                                            float: 'left',
+                                                        }}
+                                                    >
+                                                        <CheckBox
+                                                            label={entry?.id}
+                                                            isChecked
+                                                            handleChange={() => {
                                                                 handleDIDListChange(
                                                                     index,
                                                                 )
                                                             }}
                                                         />
-                                                        &nbsp;{entry?.id}
-                                                    </label>
+                                                    </div>
+                                                    <div
+                                                        style={{
+                                                            float: 'right',
+                                                        }}
+                                                    >
+                                                        <Button
+                                                            label="More info"
+                                                            type="button"
+                                                            size="small"
+                                                            kind="secondary"
+                                                            show="block"
+                                                            onClick={() => {
+                                                                const [
+                                                                    scope,
+                                                                    name,
+                                                                ] =
+                                                                    extract_scope(
+                                                                        dataPatternValue,
+                                                                    )
+                                                                RucioClient.DID.meta(
+                                                                    scope,
+                                                                    name,
+                                                                    data => {
+                                                                        const selectedData: any =
+                                                                            Object.entries(
+                                                                                data as any,
+                                                                            ).filter(
+                                                                                ([
+                                                                                    _,
+                                                                                    v,
+                                                                                ]) =>
+                                                                                    v !=
+                                                                                    null,
+                                                                            )
+
+                                                                        showModal(
+                                                                            {
+                                                                                title: 'DID Info',
+                                                                                body: (
+                                                                                    <Table
+                                                                                        id="didinfo"
+                                                                                        rows={
+                                                                                            selectedData
+                                                                                        }
+                                                                                    />
+                                                                                ),
+                                                                            },
+                                                                        )
+                                                                    },
+                                                                    (
+                                                                        error: any,
+                                                                    ) => {
+                                                                        showAlert(
+                                                                            {
+                                                                                message:
+                                                                                    'Something went wrong, please try again.',
+                                                                                variant:
+                                                                                    'warn',
+                                                                            },
+                                                                        )
+                                                                    },
+                                                                )
+                                                            }}
+                                                        ></Button>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
+                                        <br></br>
                                     </>
                                 ) : null}
                                 <Separator />
@@ -306,11 +368,6 @@ export const RuleDef = () => {
                                         type="submit"
                                         size="medium"
                                         show="invisible"
-                                        disabled={
-                                            granularityLevel.length === 0 &&
-                                            recordAmountEntered.length === 0 &&
-                                            filterEntered.length === 0
-                                        }
                                         onClick={() => {
                                             setSelectedStep(1)
                                         }}
@@ -361,7 +418,6 @@ export const RuleDef = () => {
     const RSE = () => {
         const [rseexpressionvalueEntered, setRseexpressionvalueEntered] =
             useState('' as string)
-        const [RSEInfoOpened, setRSEInfoOpened] = useState(false as boolean)
 
         return (
             <Card
@@ -448,7 +504,7 @@ export const RuleDef = () => {
                                 }
                                 onChange={(event: any) => {
                                     setRseexpressionvalueEntered(
-                                        event.target.value,
+                                        event?.target?.value,
                                     )
                                 }}
                             />
@@ -461,45 +517,75 @@ export const RuleDef = () => {
                                     rseexpressionvalueEntered.length === 0
                                 }
                                 onClick={() => {
-                                    setRSEexpressionEnabled(true)
+                                    const [scope, name] =
+                                        extract_scope(dataPatternValue)
+                                    RucioClient.DID.get_did(
+                                        scope,
+                                        name,
+                                        true,
+                                        (data: any) => {
+                                            totalSizeOfSelectedDid.current =
+                                                data?.[0]?.bytes
+                                            console.error(
+                                                'rseexpressionvalueEntered',
+                                                rseexpressionvalueEntered,
+                                            )
+                                            RucioClient.RSE.listRses(
+                                                rseexpressionvalueEntered,
+                                                (data1: any) => {
+                                                    console.error(
+                                                        'Data 1',
+                                                        data1,
+                                                        data1?.rse,
+                                                    )
+                                                    RucioClient.AccountLimit.getAccountLimits(
+                                                        'root',
+                                                        (data2: any) => {
+                                                            console.error(
+                                                                'Data 2',
+                                                                data2,
+                                                                data2?.[
+                                                                    data1?.rse
+                                                                ],
+                                                            )
+                                                        },
+                                                    )
+                                                    setRSEexpressionEnabled(
+                                                        true,
+                                                    )
+                                                },
+                                            )
+                                        },
+                                        (error: any) => {
+                                            console.error('error', error)
+                                        },
+                                    )
                                 }}
                             />
                         </div>
                         {rseexpressionEnabled ? (
                             <>
-                                <label>
-                                    Total size of selected DIDs: 30 TB
-                                </label>
-                                <table style={{ width: '50%' }}>
-                                    <thead>
-                                        <th>RSE</th>
-                                        <th>Remaining Quota</th>
-                                        <th>Total Quota</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>SCRATCHDISK</td>
-                                            <td>10.5 TB</td>
-                                            <td>10.5 TB</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UKI-NORTHGRID</td>
-                                            <td>13.19 TB</td>
-                                            <td>13.19 TB</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <br></br>
+                                <h6>
+                                    Total Size of Selected DIDs:{' '}
+                                    {totalSizeOfSelectedDid.current}
+                                </h6>
+                                <br></br>
+                                <Table
+                                    id="rse"
+                                    columns={[
+                                        'RSE',
+                                        'Remaining Quota',
+                                        'Total Quota',
+                                    ]}
+                                    footer={[
+                                        'Name',
+                                        'Remaining Quota',
+                                        'Total Quota',
+                                    ]}
+                                />
                                 &nbsp;
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={isCheckedApproval}
-                                        onChange={(event: any) => {
-                                            setIsChecked(!isCheckedApproval)
-                                        }}
-                                    />
-                                    &nbsp;I want to ask for approval
-                                </label>
+                                <CheckBox label="I want to ask for approval" />
                             </>
                         ) : null}
                         <Separator />
@@ -558,6 +644,10 @@ export const RuleDef = () => {
                 content={
                     <>
                         <h6>
+                            &#9888;&nbsp;Please select/enter your wanted options
+                            and then submit your rule request.
+                            <br />
+                            <br></br>
                             &#9888;&nbsp;To learn more about Options,
                             <a
                                 onClick={() => {
@@ -789,28 +879,27 @@ export const RuleDef = () => {
         <Card
             content={
                 <>
-                    <table>
-                        <thead>
-                            <th>DID</th>
-                            <th>Copies</th>
-                            <th>Files</th>
-                            <th>Size</th>
-                            <th>Requested Size</th>
-                        </thead>
-                        <tbody>
-                            {DIDEntries.map((entry, index) => {
-                                return (
-                                    <tr>
-                                        <td>{entry.toString()}</td>
-                                        <td>{copiesAmountEntered.current}</td>
-                                        <td>8342</td>
-                                        <td>30.36 TB</td>
-                                        <td>30.36 TB</td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
+                    <h6>
+                        &#9888;&nbsp;This request will create a rule for the
+                        following DID: The DIDs in bold are still open.
+                        <br></br>
+                        <br></br>
+                        &#9888;&nbsp;Everything that will be added to them after
+                        you created the rule will also be transferred to the
+                        selected RSE.
+                    </h6>
+                    <Separator />
+                    <Table
+                        id="summary"
+                        columns={[
+                            'DID',
+                            'Copies',
+                            'Files',
+                            'Size',
+                            'Requested Size',
+                        ]}
+                        footer={['Total']}
+                    />
                     <Separator />
                     <div style={{ float: 'left' }}>
                         <Button
@@ -844,21 +933,25 @@ export const RuleDef = () => {
                 <Steps
                     steps={[
                         [
-                            'DIDs',
+                            '1. DIDs',
                             'Select Data Identifiers',
                             () => setSelectedStep(0),
                         ],
                         [
-                            'RSEs',
+                            '2. RSEs',
                             'Select Rucio Storage Elements',
                             () => setSelectedStep(1),
                         ],
                         [
-                            'Options',
+                            '3. Options',
                             'Select additional options',
                             () => setSelectedStep(2),
                         ],
-                        ['Summary', 'Submit request', () => setSelectedStep(3)],
+                        [
+                            '4. Summary',
+                            'Submit request',
+                            () => setSelectedStep(3),
+                        ],
                     ]}
                     active={selectedStep}
                 />

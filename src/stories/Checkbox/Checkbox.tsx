@@ -1,9 +1,9 @@
-import React, { ChangeEventHandler } from 'react'
+import { useState } from 'react'
 import './checkbox.scss'
 
 interface CheckboxProps {
-    isChecked: boolean
-    handleChange: (args: any) => void
+    isChecked?: boolean
+    handleChange?: (args: any) => void
     label: string
     kind?: 'danger' | 'warning' | 'success' | 'info'
     size?: 'small' | 'normal' | 'medium' | 'large'
@@ -17,20 +17,25 @@ export const Checkbox = ({
     size,
     kind,
     style,
-    isChecked,
+    isChecked = false,
     handleChange,
     ...props
 }: CheckboxProps) => {
+    const [checked, setChecked] = useState(isChecked)
     return (
-        <>
+        <div
+            onClick={(event: any) => {
+                setChecked(!checked)
+                handleChange?.(event)
+            }}
+        >
             <input
-                // className={`rucio-checkradio ${kind} ${size} ${style}`}
-                className="is-checkradio"
+                className={`rucio-checkradio ${type} ${size} ${kind} ${style}`}
                 type={type}
-                checked={isChecked}
-                onChange={handleChange}
+                checked={checked}
+                onChange={args => args}
             />
             <label>{label}</label>
-        </>
+        </div>
     )
 }

@@ -1,13 +1,24 @@
+import { RSEConfig } from '../utils/config'
 import { RSEModel } from '../utils/models'
 import { streamData } from '../utils/restApiWrapper'
 
 class RSE extends RSEModel {
-    public static glistRses(expression: boolean): object {
-        let url = '/rses/'
-        if (expression === true) {
-            url += '?expression=' + encodeURIComponent(expression)
+    public static listRses(
+        expression?: any,
+        onSuccess?: (args?: unknown) => void,
+        onError?: (args?: unknown) => void,
+    ) {
+        let url = RSEConfig.endpoints.rses
+        if (expression) {
+            url += '?expression=' + expression
         }
-        return streamData(url)
+        streamData(url)
+            .then((data: any) => {
+                onSuccess?.(data)
+            })
+            .catch((error: any) => {
+                onError?.(error)
+            })
     }
 }
 

@@ -7,16 +7,40 @@ import NotFound from './components/NotFound'
 import reportWebVitals from './reportWebVitals'
 import { ServiceProvider } from './components/GlobalHooks'
 import { RuleDef } from './components/RuleDef'
+import { ListRules } from './components/ListRules'
+import { element } from 'prop-types'
+
+const pathElementMap: any[] = [
+    {
+        path: '/home',
+        element: <Home />,
+    },
+    {
+        path: '/login',
+        element: <Login />,
+    },
+    {
+        path: '/ruledef',
+        element: <RuleDef />,
+    },
+    {
+        path: '/listrules',
+        element: <ListRules />,
+    },
+    {
+        path: '/*',
+        element: <NotFound />,
+    },
+]
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <ServiceProvider>
         <BrowserRouter>
             <Routes>
-                <Route path="/home" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/ruledef" element={<RuleDef />} />
-                <Route path="*" element={<NotFound />} />
+                {pathElementMap.map(({ path, element }: any) => (
+                    <Route path={path} element={element} />
+                ))}
             </Routes>
         </BrowserRouter>
     </ServiceProvider>,

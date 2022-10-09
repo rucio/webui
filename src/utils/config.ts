@@ -1,33 +1,44 @@
-import { env } from '../util'
-
 export const AccountConfig = {
     endpoints: {
-        accounts: env('accounts') ?? '',
-        account: env('account') ?? '',
-        attribute: env('account_attribute') ?? '',
-        scope: env('account_scope') ?? '',
-        limit: env('account_limit') ?? '',
-        identities: env('account_identities') ?? '',
-        rules: env('account_rules') ?? '',
-        usage_history: env('account_usage_history') ?? '',
+        accounts: '/accounts',
+        account: '/accounts/{account}',
+        attribute: '/accounts/{account}/attr/{key}',
+        scope: '/accounts/{account}/scopes/{scope}',
+        limit: '/accounts/{account}/limits',
+        identities: '/accounts/{account}/identities',
+        rules: '/accounts/{account}/rules',
+        usage_history: 'accounts/{account}/usage/history',
     },
 }
 
 export const RuleConfig = {
     endpoints: {
-        rules: env('rules') ?? '',
-        rule: env('rule') ?? '',
-        locks: env('rule_locks') ?? '',
-        reduce: env('rule_reduce') ?? '',
-        move: env('rule_move') ?? '',
-        history: env('rule_history') ?? '',
-        did_history: env('did_history') ?? '',
-        analysis: env('rule_analysis') ?? '',
+        rules: '/rules',
+        rule: '/rules/{rule_id}',
+        locks: '/rules/{rule_id}/locks',
+        reduce: '/rules/{rule_id}/reduce',
+        move: '/rules/{rule_id}/move',
+        history: '/rules/{rule_id}/history',
+        did_history: '/rules/{scope_name}/history',
+        analysis: '/rules/{rule_id}/analysis',
     },
 }
 
 export const AuthConfig = {
     endpoints: {
-        userpass: env('userpass') ?? '/auth/userpass',
+        userpass: '/auth/userpass',
+    },
+}
+
+export const DidConfig = {
+    endpoints: {
+        did: '/dids/{scope_name}',
+        metadata: '/dids/{scope_name}/meta',
+    },
+}
+
+export const RSEConfig = {
+    endpoints: {
+        rses: '/rses',
     },
 }

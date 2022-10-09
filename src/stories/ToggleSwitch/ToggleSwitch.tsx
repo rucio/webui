@@ -24,13 +24,14 @@ export const ToggleSwitch = ({
         <div
             onClick={(event: any) => {
                 setCheckedState(!checkedState)
-                handleChange(event)
+                handleChange?.(event)
             }}
         >
             <input
                 className={`rucio-switch ${kind} ${size} ${style}`}
                 type="checkbox"
                 checked={checkedState}
+                onChange={handleChange}
             />
             <label>{label}</label>
         </div>

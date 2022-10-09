@@ -6,6 +6,8 @@
     @extend .dropdown;
     cursor: pointer;
     margin: auto 2px;
+    border: 1px solid gray;
+    border-radius: 5px;
     &.active {
         @extend .is-active;
     }
