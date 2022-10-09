@@ -20,7 +20,6 @@ export const useModal = () => React.useContext(ModalServiceContext)
 export const useAuthConfig = () => React.useContext(AuthServiceContext)
 
 export const ServiceProvider = ({ children }: any) => {
-    // may make use of these in the future
     const { tokenData, token, login, logOut, error, loginInProgress } =
         useContext(AuthContext)
     const [alertState, setAlertState] = React.useState<AlertProps | any>(null)
@@ -87,10 +86,9 @@ export const ServiceProvider = ({ children }: any) => {
                 {...modalState}
             ></Modal>
             <ModalServiceContext.Provider value={openModalConfirmation}>
-                <AlertServiceContext.Provider
-                    value={openAlertConfirmation}
-                    children={children}
-                />
+                <AlertServiceContext.Provider value={openAlertConfirmation}>
+                    {children}
+                </AlertServiceContext.Provider>
             </ModalServiceContext.Provider>
         </>
     )

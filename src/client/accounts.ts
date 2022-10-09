@@ -26,7 +26,6 @@ class Account extends AccountModel {
         return {}
     }
 
-    // Approach 1, avoids callback hell, no promises returned (inline functions + callbacks)
     public static async create(
         createPayload: AccountType,
         onSuccess = (args?: unknown) => args,
@@ -38,7 +37,6 @@ class Account extends AccountModel {
         )
         postData(createEndpoint)
             .then((response: any) => {
-                // throw custom exceptions if required/necessary from here, before calling onSuccess
                 onSuccess(response)
             })
             .catch((error: Error) => {
@@ -47,7 +45,6 @@ class Account extends AccountModel {
             })
     }
 
-    // Approach 2, returns promise, need to .then() on it in the react pages, handle exceptions on react side
     public static async delete(
         deletePayload: AccountType,
         onSuccess = (args?: unknown) => args,
