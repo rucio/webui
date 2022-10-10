@@ -24,3 +24,9 @@
 tr:hover {
     cursor: pointer;
 }
+
+tr {
+    &.selected{
+        background-color: #94d3a2;
+    }
+}

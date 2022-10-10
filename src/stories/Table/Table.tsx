@@ -32,11 +32,10 @@ export const Table = ({ columns, rows, id, footer }: TableProps) => {
                                 if (currentSelectedRow) {
                                     currentSelectedRow.className =
                                         currentSelectedRow.className ===
-                                        'is-selected'
+                                        'selected'
                                             ? ''
-                                            : 'is-selected'
+                                            : 'selected'
                                 }
-                                console.error('Clicked', index)
                             }}
                         >
                             <th>{index + 1}</th>

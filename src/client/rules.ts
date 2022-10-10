@@ -1,8 +1,23 @@
+import { RuleConfig } from '../utils/config'
 import { RuleModel } from '../utils/models'
+import { postData, streamData } from '../utils/restApiWrapper'
 
 class Rules extends RuleModel {
-    public static get(): object {
-        return {}
+    public static get(
+        getRulePayload: any,
+        onSuccess = (args?: unknown) => args,
+        onError = (args?: unknown) => args,
+    ) {
+        const getRuleEndpoint: string = RuleConfig?.endpoints?.rules
+
+        streamData(getRuleEndpoint, getRulePayload)
+            .then((response: any) => {
+                onSuccess?.(response)
+            })
+            .catch((error: Error) => {
+                console.error(error)
+                onError?.(error)
+            })
     }
     public static update(): object {
         return {}
@@ -13,8 +28,21 @@ class Rules extends RuleModel {
     public static getAll(): object {
         return {}
     }
-    public static new(): object {
-        return {}
+    public static new(
+        newPayload: any,
+        onSuccess = (args?: unknown) => args,
+        onError = (args?: unknown) => args,
+    ) {
+        const newRuleEndpoint: string = RuleConfig?.endpoints?.rules
+
+        postData(newRuleEndpoint, {}, newPayload)
+            .then((response: any) => {
+                onSuccess?.(response)
+            })
+            .catch((error: Error) => {
+                console.error(error)
+                onError?.(error)
+            })
     }
     public static getLocks(): object {
         return {}
