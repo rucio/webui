@@ -38,21 +38,24 @@ export async function getData(
         | string[][]
         | Record<string, string>
         | URLSearchParams
-        | undefined = {},
+        | undefined = undefined,
     headers: object | undefined = authorizationHeader,
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
-    const response = await fetch(
-        host + endpoint + '?' + new URLSearchParams(queryParams),
-        {
-            method: 'GET',
-            headers: {
-                ...authorizationHeader,
-                ...headers,
-                'Content-Type': 'application/json',
-            },
+    let url = ''
+    if (queryParams) {
+        url = host + endpoint + '?' + new URLSearchParams(queryParams)
+    } else {
+        url = host + endpoint
+    }
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            ...authorizationHeader,
+            ...headers,
+            'Content-Type': 'application/json',
         },
-    ).catch((err: Error) => {
+    }).catch((err: Error) => {
         console.error(err)
     })
     return response
@@ -105,12 +108,18 @@ export async function streamData(
         | string[][]
         | Record<string, string>
         | URLSearchParams
-        | undefined = {},
+        | undefined = undefined,
     headers: object | undefined = authorizationHeader,
     host: string | undefined = defaultHostEndpoint,
 ): Promise<unknown> {
+    let url = ''
+    if (queryParams) {
+        url = host + endpoint + '?' + new URLSearchParams(queryParams)
+    } else {
+        url = host + endpoint
+    }
     return new Promise((resolve, reject) => {
-        fetch(host + endpoint + '?' + new URLSearchParams(queryParams), {
+        fetch(url, {
             method: 'GET',
             headers: {
                 ...authorizationHeader,

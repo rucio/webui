@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useRef, useState } from 'react'
+import { MutableRefObject, useEffect, useRef, useState } from 'react'
 import { Steps } from '../stories/Steps/Steps'
 import { Button } from '../stories/Button/Button'
 import { Input } from '../stories/Input/Input'
@@ -27,10 +27,15 @@ export const RuleDef = () => {
     )
     const [didSearchMethod, setDidSearchMethod] = useState(0 as number)
     const copiesAmountEntered: MutableRefObject<number> = useRef(1 as number)
-    const [DIDEntries, setDIDEntries] = useState<string[]>([])
     const totalSizeOfSelectedDid: MutableRefObject<string> = useRef(
-        '' as string,
+        '0' as string,
     )
+    const samplesAmountEntered: MutableRefObject<number> = useRef(4 as number)
+    const [rseRowData, setRSERowData] = useState(['', '', ''] as any)
+    const asynchModeEnabled: MutableRefObject<boolean> = useRef(false)
+    const commentEntered: MutableRefObject<string> = useRef('' as string)
+    const groupingEntered: MutableRefObject<string> = useRef('NONE' as string)
+    const [lifetimeEntered, setLifetimeEntered] = useState(new Date())
 
     const extract_scope = (name: any): string[] => {
         if (name.indexOf(':') > -1) {
@@ -419,6 +424,10 @@ export const RuleDef = () => {
         const [rseexpressionvalueEntered, setRseexpressionvalueEntered] =
             useState('' as string)
 
+        useEffect(() => {
+            setRSEexpressionEnabled(true)
+        }, [setRSERowData])
+
         return (
             <Card
                 content={
@@ -526,32 +535,29 @@ export const RuleDef = () => {
                                         (data: any) => {
                                             totalSizeOfSelectedDid.current =
                                                 data?.[0]?.bytes
-                                            console.error(
-                                                'rseexpressionvalueEntered',
-                                                rseexpressionvalueEntered,
-                                            )
+
                                             RucioClient.RSE.listRses(
                                                 rseexpressionvalueEntered,
                                                 (data1: any) => {
-                                                    console.error(
-                                                        'Data 1',
-                                                        data1,
-                                                        data1?.rse,
-                                                    )
                                                     RucioClient.AccountLimit.getAccountLimits(
                                                         'root',
                                                         (data2: any) => {
-                                                            console.error(
-                                                                'Data 2',
-                                                                data2,
-                                                                data2?.[
-                                                                    data1?.rse
-                                                                ],
-                                                            )
+                                                            const displayData =
+                                                                data2?.[0]?.[
+                                                                    data1?.[0]
+                                                                        ?.rse
+                                                                ] === -1
+                                                                    ? 'Infinity'
+                                                                    : data2?.[0]?.[
+                                                                          data1?.[0]
+                                                                              ?.rse
+                                                                      ]
+                                                            setRSERowData([
+                                                                data1?.[0]?.rse,
+                                                                displayData,
+                                                                displayData,
+                                                            ])
                                                         },
-                                                    )
-                                                    setRSEexpressionEnabled(
-                                                        true,
                                                     )
                                                 },
                                             )
@@ -568,17 +574,20 @@ export const RuleDef = () => {
                                 <br></br>
                                 <h6>
                                     Total Size of Selected DIDs:{' '}
-                                    {totalSizeOfSelectedDid.current}
+                                    {totalSizeOfSelectedDid.current} bytes
                                 </h6>
                                 <br></br>
                                 <Table
                                     id="rse"
                                     columns={[
+                                        '',
                                         'RSE',
                                         'Remaining Quota',
                                         'Total Quota',
                                     ]}
+                                    rows={[rseRowData]}
                                     footer={[
+                                        '',
                                         'Name',
                                         'Remaining Quota',
                                         'Total Quota',
@@ -621,23 +630,7 @@ export const RuleDef = () => {
     }
 
     const Options = () => {
-        const [lifetimeEntered, setLifetimeEntered] = useState(new Date())
-        const [samplesAmountEntered, setsamplesAmountEntered] = useState(
-            0 as number,
-        )
-        const [asynchModeEnabled, setAsynchModeEnabled] = useState(
-            true as boolean,
-        )
-        const [notificationsEnabled, setNotificationsEnabled] = useState(
-            true as boolean,
-        )
         const [advancedEnabled, setAdvancedEnabled] = useState(false as boolean)
-        const [groupingEntered, setGroupingEntered] = useState('' as string)
-        const [commentEntered, setCommentEntered] = useState('' as string)
-
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setAsynchModeEnabled(e.target.checked)
-        }
 
         return (
             <Card
@@ -766,13 +759,20 @@ export const RuleDef = () => {
                             min={0}
                             placeholder="Amount"
                             onChange={(event: any) => {
-                                setsamplesAmountEntered(event.target.value)
+                                samplesAmountEntered.current =
+                                    event?.target?.value
                             }}
                         />
 
                         <div className="m-t-10">
                             <div style={{ float: 'left' }}>
-                                <ToggleSwitch label="Turn on Notifications?" />
+                                <ToggleSwitch
+                                    label="Turn on Notifications?"
+                                    handleChange={event => {
+                                        asynchModeEnabled.current =
+                                            event?.target?.checked
+                                    }}
+                                />
                             </div>
                             <div style={{ float: 'right' }}>
                                 <Button
@@ -781,7 +781,7 @@ export const RuleDef = () => {
                                     size="medium"
                                     show="danger"
                                     type="button"
-                                    onClick={(event: any) => {
+                                    onClick={() => {
                                         setAdvancedEnabled(!advancedEnabled)
                                     }}
                                 />
@@ -805,9 +805,8 @@ export const RuleDef = () => {
                                                     handleChange={(
                                                         event: any,
                                                     ) => {
-                                                        setGroupingEntered(
-                                                            event.target.value,
-                                                        )
+                                                        groupingEntered.current =
+                                                            event?.target?.value
                                                     }}
                                                 />
                                             </td>
@@ -841,7 +840,8 @@ export const RuleDef = () => {
                                     rows={3}
                                     placeholder="Comment"
                                     onChange={(event: any) => {
-                                        setCommentEntered(event.target.value)
+                                        commentEntered.current =
+                                            event?.target?.value
                                     }}
                                 ></textarea>
                             </div>
@@ -875,57 +875,122 @@ export const RuleDef = () => {
         )
     }
 
-    const Summary = () => (
-        <Card
-            content={
-                <>
-                    <h6>
-                        &#9888;&nbsp;This request will create a rule for the
-                        following DID: The DIDs in bold are still open.
-                        <br></br>
-                        <br></br>
-                        &#9888;&nbsp;Everything that will be added to them after
-                        you created the rule will also be transferred to the
-                        selected RSE.
-                    </h6>
-                    <Separator />
-                    <Table
-                        id="summary"
-                        columns={[
-                            'DID',
-                            'Copies',
-                            'Files',
-                            'Size',
-                            'Requested Size',
-                        ]}
-                        footer={['Total']}
-                    />
-                    <Separator />
-                    <div style={{ float: 'left' }}>
-                        <Button
-                            label="&#x2039;&nbsp;Back"
-                            kind="outline"
-                            type="submit"
-                            show="invisible"
-                            onClick={() => {
-                                setSelectedStep(2)
-                            }}
-                        />
-                    </div>
-                    <div style={{ float: 'right' }}>
-                        <Button
-                            label="Submit Request"
-                            kind="primary"
-                            type="submit"
-                            onClick={() => {
-                                // navigateToSubmit()
-                            }}
-                        />
-                    </div>
-                </>
+    const Summary = () => {
+        const finalSubmit = () => {
+            const createRulePayload = {
+                account: 'root',
+                ask_approval: false,
+                asynchronous: asynchModeEnabled.current,
+                comments: commentEntered.current,
+                copies: parseInt('1'),
+                dids: [
+                    {
+                        scope: extract_scope(dataPatternValue)?.[0],
+                        name: extract_scope(dataPatternValue)?.[1],
+                    },
+                ],
+                grouping: groupingEntered.current.toUpperCase(),
+                ignore_availability: true,
+                lifetime: parseInt('0'),
+                meta: 'string',
+                locked: true,
+                notify: 'Y',
+                priority: parseInt('0'),
+                purge_replicas: true,
+                rse_expression: rseRowData?.[0],
+                split_container: true,
             }
-        />
-    )
+            RucioClient.Rules.new(
+                createRulePayload,
+                (data: any) => {
+                    console.error('Yaaay', data)
+                },
+                (error: any) => {
+                    console.error('Error', error)
+                },
+            )
+        }
+        return (
+            <Card
+                content={
+                    <>
+                        <h6>
+                            &#9888;&nbsp;This request will create a rule for the
+                            following DID: The DIDs in bold are still open.
+                            <br></br>
+                            <br></br>
+                            &#9888;&nbsp;Everything that will be added to them
+                            after you created the rule will also be transferred
+                            to the selected RSE.
+                        </h6>
+                        <Separator />
+                        <Table
+                            id="summary"
+                            columns={[
+                                '',
+                                'DID',
+                                'Copies',
+                                'Files',
+                                'Size',
+                                'Requested Size',
+                            ]}
+                            rows={[
+                                [
+                                    dataPatternValue,
+                                    copiesAmountEntered.current,
+                                    samplesAmountEntered.current,
+                                    totalSizeOfSelectedDid.current,
+                                    totalSizeOfSelectedDid.current,
+                                ],
+                            ]}
+                        />
+                        <Separator />
+                        <h6>
+                            &#9888;&nbsp;The rule will replicate to the
+                            following RSE:
+                        </h6>
+                        <Separator />
+                        <Table
+                            id="rse"
+                            columns={[
+                                '',
+                                'RSE',
+                                'Remaining Quota',
+                                'Total Quota',
+                            ]}
+                            rows={[rseRowData]}
+                            footer={[
+                                '',
+                                'Name',
+                                'Remaining Quota',
+                                'Total Quota',
+                            ]}
+                        />
+                        <Separator />
+                        <div style={{ float: 'left' }}>
+                            <Button
+                                label="&#x2039;&nbsp;Back"
+                                kind="outline"
+                                type="submit"
+                                show="invisible"
+                                onClick={() => {
+                                    setSelectedStep(2)
+                                }}
+                            />
+                        </div>
+                        <div style={{ float: 'right' }}>
+                            <Button
+                                label="Submit Request"
+                                kind="primary"
+                                type="submit"
+                                onClick={finalSubmit}
+                            />
+                        </div>
+                    </>
+                }
+            />
+        )
+    }
 
     return (
         <div className="rule-def">
