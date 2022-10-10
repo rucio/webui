@@ -16,7 +16,7 @@
     &.hoverable {
         @extend .is-hoverable;
     }
-    &.fullwidth{
+    &.fullwidth {
         @extend .is-fullwidth;
     }
 }
@@ -26,7 +26,7 @@ tr:hover {
 }
 
 tr {
-    &.selected{
+    &.selected {
         background-color: #94d3a2;
     }
 }

@@ -51,8 +51,12 @@ test('Userpass auth flow', () => {
     fireEvent.change(userPassUsernameInput, { target: { value: 'ddmlab' } })
     fireEvent.change(userPassPasswordInput, { target: { value: 'secret' } })
 
-    expect(userPassSignInButton.getAttribute('type')).toEqual('submit')
-    expect(userPassSignInButton.getAttribute('aria-disabled')).toEqual('false')
+    const userPassSignInButtonEnabled = screen.getByText('Sign In')
+    expect(userPassSignInButtonEnabled).toBeInTheDocument()
+    expect(userPassSignInButtonEnabled.getAttribute('type')).toEqual('submit')
+    expect(userPassSignInButtonEnabled.getAttribute('aria-disabled')).toEqual(
+        'false',
+    )
 
-    expect(() => act(() => userPassSignInButton.click())).not.toThrow()
+    expect(() => act(() => userPassSignInButtonEnabled.click())).not.toThrow()
 })

@@ -414,6 +414,7 @@ const Login = () => {
                                     kind="outline"
                                     show="block"
                                     label="Username / Password"
+                                    type="button"
                                     onClick={(event: any) => {
                                         event.preventDefault()
                                         setUserpassEnabled(true)

@@ -14,8 +14,8 @@ export const Table = ({ columns, rows, id, footer }: TableProps) => {
             <table className="rucio-table bordered striped narrow hoverable fullwidth">
                 <thead>
                     <tr>
-                        {columns?.map((columnTitle: string) => (
-                            <th>
+                        {columns?.map((columnTitle: string, index: number) => (
+                            <th key={index}>
                                 <abbr title={columnTitle}>{columnTitle}</abbr>
                             </th>
                         ))}
@@ -47,8 +47,8 @@ export const Table = ({ columns, rows, id, footer }: TableProps) => {
                 </tbody>
                 <tfoot>
                     <tr>
-                        {footer?.map((footerTitle: string) => (
-                            <th>
+                        {footer?.map((footerTitle: string, index: number) => (
+                            <th key={index}>
                                 <abbr title={footerTitle}>{footerTitle}</abbr>
                             </th>
                         ))}
