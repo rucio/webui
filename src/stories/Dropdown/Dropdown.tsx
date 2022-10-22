@@ -1,11 +1,6 @@
-import { useState } from 'react'
 import './dropdown.scss'
 
-interface DropdownProps {
-    label?: string
-    options?: Array<string>
-    handleChange: (args: any) => void
-}
+import { useState } from 'react'
 
 export const Dropdown = ({
     label = '',
@@ -38,7 +33,7 @@ export const Dropdown = ({
                 onClick={(event: any) => {
                     setActive(false)
                     setSelectedLabel(event?.target?.value)
-                    props.handleChange(event)
+                    props?.handleChange?.(event)
                 }}
             >
                 <div className="dropdown-content">

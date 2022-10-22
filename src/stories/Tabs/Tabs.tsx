@@ -1,16 +1,5 @@
 import './tabs.scss'
 
-interface TabsProps {
-    tabs: Array<string>
-    active: number
-    alignment?: 'right' | 'centered'
-    size?: 'small' | 'medium' | 'large'
-    rounded?: 'toggle' | 'toggle-rounded'
-    boxed?: 'boxed'
-    fullwidth?: 'fullwidth'
-    handleClick: (args: any) => void
-}
-
 export const Tabs = ({
     tabs = [],
     active,

@@ -1,19 +1,10 @@
-import { ReactElement } from 'react'
 import './modal.scss'
-
-export interface ModalProps {
-    active?: boolean
-    body?: ReactElement
-    title?: string
-    onClose?: () => void
-}
 
 export const Modal = ({
     active = true,
     body = <>Lorem Ipsum</>,
     title = 'Modal title',
     onClose,
-    ...props
 }: ModalProps) => {
     return (
         <div className={active ? 'modal is-active' : 'modal'}>
