@@ -1,12 +1,5 @@
 import './image.scss'
 
-interface ImageProps {
-    src?: string
-    type?: string
-    height?: number
-    width?: number
-}
-
 export const Image = ({
     src = 'https://placehold.jp/60x60.png',
     type,

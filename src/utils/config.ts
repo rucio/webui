@@ -40,5 +40,6 @@ export const DidConfig = {
 export const RSEConfig = {
     endpoints: {
         rses: '/rses',
+        usage: '/rses/{rse}/accounts/usage',
     },
 }

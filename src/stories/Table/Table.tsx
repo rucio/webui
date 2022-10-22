@@ -1,12 +1,6 @@
-import { ReactElement } from 'react'
 import './table.scss'
 
-interface TableProps {
-    id?: string
-    columns?: string[]
-    rows?: any[][]
-    footer?: string[]
-}
+import { ReactElement } from 'react'
 
 export const Table = ({ columns, rows, id, footer }: TableProps) => {
     return (
@@ -39,9 +33,15 @@ export const Table = ({ columns, rows, id, footer }: TableProps) => {
                             }}
                         >
                             <th>{index + 1}</th>
-                            {rowData?.map((rowElement: ReactElement) => (
-                                <td>{rowElement.toString()}</td>
-                            ))}
+                            {rowData?.map(
+                                (rowElement: ReactElement, index: number) => (
+                                    <td key={index}>
+                                        {typeof rowElement === 'boolean'
+                                            ? (rowElement as boolean).toString()
+                                            : rowElement}
+                                    </td>
+                                ),
+                            )}
                         </tr>
                     ))}
                 </tbody>

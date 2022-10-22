@@ -1,23 +1,8 @@
 import './input.scss'
 
-interface InputProps {
-    type?: string
-    label?: string
-    name?: string
-    placeholder?: string
-    kind?: 'primary' | 'info' | 'link' | 'normal'
-    show?: 'danger' | 'warning' | 'success' | 'rounded'
-    size?: 'small' | 'medium' | 'large'
-    value?: any
-    min?: number
-    max?: number
-    focusByDefault?: boolean
-    onChange?: (args: any) => void
-}
-
 export const Input = ({
     type = 'text',
-    label = 'Sample label',
+    label,
     name = 'sample',
     placeholder = 'Sample placeholder',
     size = 'medium',
@@ -28,7 +13,7 @@ export const Input = ({
     min,
     max,
     onChange,
-    ...props
+    width,
 }: InputProps) => {
     return (
         <label>
@@ -43,6 +28,7 @@ export const Input = ({
                 autoFocus={focusByDefault}
                 min={min}
                 max={max}
+                style={{ width }}
             ></input>
         </label>
     )

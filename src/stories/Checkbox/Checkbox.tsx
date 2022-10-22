@@ -1,15 +1,6 @@
-import { useState } from 'react'
 import './checkbox.scss'
 
-interface CheckboxProps {
-    isChecked?: boolean
-    handleChange?: (args: any) => void
-    label: string
-    kind?: 'danger' | 'warning' | 'success' | 'info'
-    size?: 'small' | 'normal' | 'medium' | 'large'
-    style?: 'rounded_checkbox' | 'block' | 'no_border' | 'background-color'
-    type?: 'checkbox' | 'radio'
-}
+import { useState } from 'react'
 
 export const Checkbox = ({
     label = '',
@@ -18,8 +9,8 @@ export const Checkbox = ({
     kind,
     style,
     isChecked = false,
+    name,
     handleChange,
-    ...props
 }: CheckboxProps) => {
     const [checked, setChecked] = useState(isChecked)
     return (
@@ -34,6 +25,7 @@ export const Checkbox = ({
                 type={type}
                 checked={checked}
                 onChange={args => args}
+                name={name}
             />
             <label>{label}</label>
         </div>

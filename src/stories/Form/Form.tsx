@@ -1,17 +1,12 @@
 import './form.scss'
-import { Button } from '../Button/Button'
+
 import { useEffect } from 'react'
 
-interface FormProps {
-    title?: string
-    subtitle?: string
-    children?: any
-    onSubmit?: (args: unknown) => void
-}
+import { Button } from '../Button/Button'
 
 export const Form = ({
-    title = 'Sample form',
-    subtitle = 'Please fill in the details',
+    title = 'Title',
+    subtitle = 'Subtitle',
     children = (
         <div>
             <div className="field">
@@ -43,7 +38,6 @@ export const Form = ({
     onSubmit = () => {
         alert('form submitted')
     },
-    ...props
 }: FormProps) => {
     useEffect(() => {
         const formElements: any = document.getElementsByClassName('rucio-form')
