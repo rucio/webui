@@ -4,16 +4,16 @@ import { Button } from '../stories/Button/Button'
 import { Input } from '../stories/Input/Input'
 import { ToggleSwitch } from '../stories/ToggleSwitch/ToggleSwitch'
 import { Dropdown } from '../stories/Dropdown/Dropdown'
-import { AlertProps } from '../stories/Alert/Alert'
 import { Card } from '../stories/Card/Card'
 import { Tabs } from '../stories/Tabs/Tabs'
-import { ModalProps } from '../stories/Modal/Modal'
 import { DIDModel } from '../utils/models'
 import { useAlert, useModal } from './GlobalHooks'
 import { RucioClient } from '../client'
 import { Separator } from '../stories/Separator/Separator'
-import { CheckBox } from '../stories/Checkbox/Checkbox.stories'
+import { Checkbox } from '../stories/Checkbox/Checkbox'
 import { Table } from '../stories/Table/Table'
+import { Header } from '../stories/Header/Header'
+import { extract_scope } from '../util'
 
 export const RuleDef = () => {
     const showModal: (options: ModalProps) => Promise<void> = useModal()
@@ -37,26 +37,12 @@ export const RuleDef = () => {
     const groupingEntered: MutableRefObject<string> = useRef('NONE' as string)
     const [lifetimeEntered, setLifetimeEntered] = useState(new Date())
 
-    const extract_scope = (name: any): string[] => {
-        if (name.indexOf(':') > -1) {
-            return name.split(':')
-        }
-        const items = name.split('.')
-        if (items.length <= 1) {
-            throw Error('')
-        }
-        let scope = items[0]
-        if (name.indexOf('user') === 0 || name.indexOf('group') === 0) {
-            scope = items[0] + '.' + items[1]
-        }
-        return [scope, name]
-    }
-
     const DID = () => {
         const [didEntries, setdidEntries] = useState([] as DIDModel[])
         const [granularityLevel, setGranularityLevel] = useState(
             'collection' as string,
         )
+        const [nextButtonEnable, enableNextButton] = useState(false)
         const [recordAmountEntered, setRecordAmountEntered] = useState(
             '10' as string,
         )
@@ -217,7 +203,7 @@ export const RuleDef = () => {
                                         />
 
                                         <Dropdown
-                                            label={'Level of Granularity'}
+                                            label="Level of Granularity"
                                             options={[
                                                 'dataset',
                                                 'container',
@@ -274,89 +260,89 @@ export const RuleDef = () => {
                                     <>
                                         <div className="list_entries">
                                             {didEntries.map((entry, index) => (
-                                                <div key={index}>
+                                                <>
                                                     <br></br>
                                                     <div
-                                                        style={{
-                                                            float: 'left',
-                                                        }}
+                                                        key={index}
+                                                        className="rucio-flex"
                                                     >
-                                                        <CheckBox
+                                                        <Checkbox
                                                             label={entry?.id}
                                                             isChecked
+                                                            name="list-group"
                                                             handleChange={() => {
                                                                 handleDIDListChange(
                                                                     index,
                                                                 )
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        style={{
-                                                            float: 'right',
-                                                        }}
-                                                    >
-                                                        <Button
-                                                            label="More info"
-                                                            type="button"
-                                                            size="small"
-                                                            kind="secondary"
-                                                            show="block"
-                                                            onClick={() => {
-                                                                const [
-                                                                    scope,
-                                                                    name,
-                                                                ] =
-                                                                    extract_scope(
-                                                                        dataPatternValue,
-                                                                    )
-                                                                RucioClient.DID.meta(
-                                                                    scope,
-                                                                    name,
-                                                                    data => {
-                                                                        const selectedData: any =
-                                                                            Object.entries(
-                                                                                data as any,
-                                                                            ).filter(
-                                                                                ([
-                                                                                    _,
-                                                                                    v,
-                                                                                ]) =>
-                                                                                    v !=
-                                                                                    null,
-                                                                            )
-
-                                                                        showModal(
-                                                                            {
-                                                                                title: 'DID Info',
-                                                                                body: (
-                                                                                    <Table
-                                                                                        id="didinfo"
-                                                                                        rows={
-                                                                                            selectedData
-                                                                                        }
-                                                                                    />
-                                                                                ),
-                                                                            },
-                                                                        )
-                                                                    },
-                                                                    (
-                                                                        error: any,
-                                                                    ) => {
-                                                                        showAlert(
-                                                                            {
-                                                                                message:
-                                                                                    'Something went wrong, please try again.',
-                                                                                variant:
-                                                                                    'warn',
-                                                                            },
-                                                                        )
-                                                                    },
+                                                                enableNextButton(
+                                                                    true,
                                                                 )
                                                             }}
-                                                        ></Button>
+                                                        />
+
+                                                        <div>
+                                                            <Button
+                                                                label="More info"
+                                                                type="button"
+                                                                size="small"
+                                                                kind="secondary"
+                                                                show="block"
+                                                                onClick={() => {
+                                                                    const [
+                                                                        scope,
+                                                                        name,
+                                                                    ] =
+                                                                        extract_scope(
+                                                                            dataPatternValue,
+                                                                        )
+                                                                    RucioClient.DID.meta(
+                                                                        scope,
+                                                                        entry?.id,
+                                                                        data => {
+                                                                            const selectedData: any =
+                                                                                Object.entries(
+                                                                                    data as any,
+                                                                                ).filter(
+                                                                                    ([
+                                                                                        _,
+                                                                                        v,
+                                                                                    ]) =>
+                                                                                        v !=
+                                                                                        null,
+                                                                                )
+
+                                                                            showModal(
+                                                                                {
+                                                                                    title: 'DID Info',
+                                                                                    body: (
+                                                                                        <Table
+                                                                                            id="didinfo"
+                                                                                            rows={
+                                                                                                selectedData
+                                                                                            }
+                                                                                        />
+                                                                                    ),
+                                                                                },
+                                                                            )
+                                                                        },
+                                                                        (
+                                                                            error: any,
+                                                                        ) => {
+                                                                            showAlert(
+                                                                                {
+                                                                                    message:
+                                                                                        'Something went wrong, please try again.',
+                                                                                    variant:
+                                                                                        'warn',
+                                                                                },
+                                                                            )
+                                                                        },
+                                                                    )
+                                                                }}
+                                                            ></Button>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </>
                                             ))}
                                         </div>
                                         <br></br>
@@ -373,6 +359,7 @@ export const RuleDef = () => {
                                         type="submit"
                                         size="medium"
                                         show="invisible"
+                                        disabled={!nextButtonEnable}
                                         onClick={() => {
                                             setSelectedStep(1)
                                         }}
@@ -396,7 +383,7 @@ export const RuleDef = () => {
                                     }
                                     value={listEntered}
                                     onChange={(event: any) => {
-                                        setListEntered(event.target.value)
+                                        setListEntered(event?.target?.value)
                                         setDidSearchMethod(didSearchMethod)
                                     }}
                                 ></textarea>
@@ -594,7 +581,7 @@ export const RuleDef = () => {
                                     ]}
                                 />
                                 &nbsp;
-                                <CheckBox label="I want to ask for approval" />
+                                <Checkbox label="I want to ask for approval" />
                             </>
                         ) : null}
                         <Separator />
@@ -994,6 +981,7 @@ export const RuleDef = () => {
 
     return (
         <div className="rule-def">
+            <Header user={{ name: 'root' }} />
             <div className="limiter m-t-30">
                 <Steps
                     steps={[

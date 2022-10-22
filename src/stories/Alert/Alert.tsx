@@ -1,14 +1,6 @@
-import { ReactElement, useEffect } from 'react'
 import './alert.scss'
 
-export interface AlertProps {
-    open?: boolean
-    leftIcon?: ReactElement | undefined
-    rightIcon?: ReactElement | undefined
-    message?: string | any
-    variant?: 'primary' | 'warn' | 'success' | 'error' | undefined
-    onClose?: () => void
-}
+import { useEffect } from 'react'
 
 export const Alert = ({
     open = true,
@@ -53,14 +45,13 @@ export const Alert = ({
             </svg>
         </button>
     ),
-    ...props
 }: AlertProps) => {
     useEffect(() => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
         })
-    })
+    }, [])
     return (
         <>
             {open ? (
