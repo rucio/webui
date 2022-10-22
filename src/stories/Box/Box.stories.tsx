@@ -8,9 +8,6 @@ export default {
     title: 'Components/Box',
     component: Box,
     subcomponents: { BoxBody: BoxBody, BoxFooter: BoxFooter },
-    argTypes: {
-        background: { control: 'color' },
-    },
 } as ComponentMeta<typeof Box>
 
 const Template: ComponentStory<typeof Box> = args => (

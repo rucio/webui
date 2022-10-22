@@ -22,3 +22,19 @@ export const parsedEndpoint = (
     })
     return endpoint
 }
+
+// extracts scope from a pattern
+export const extract_scope = (name: any): string[] => {
+    if (name.indexOf(':') > -1) {
+        return name.split(':')
+    }
+    const items = name.split('.')
+    if (items.length <= 1) {
+        throw Error('')
+    }
+    let scope = items[0]
+    if (name.indexOf('user') === 0 || name.indexOf('group') === 0) {
+        scope = items[0] + '.' + items[1]
+    }
+    return [scope, name]
+}

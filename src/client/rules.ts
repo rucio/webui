@@ -1,6 +1,7 @@
+import { parsedEndpoint } from '../util'
 import { RuleConfig } from '../utils/config'
 import { RuleModel } from '../utils/models'
-import { postData, streamData } from '../utils/restApiWrapper'
+import { getData, postData, streamData } from '../utils/restApiWrapper'
 
 class Rules extends RuleModel {
     public static get(
@@ -11,6 +12,25 @@ class Rules extends RuleModel {
         const getRuleEndpoint: string = RuleConfig?.endpoints?.rules
 
         streamData(getRuleEndpoint, getRulePayload)
+            .then((response: any) => {
+                onSuccess?.(response)
+            })
+            .catch((error: Error) => {
+                console.error(error)
+                onError?.(error)
+            })
+    }
+    public static meta(
+        rule_id: string,
+        onSuccess = (args?: unknown) => args,
+        onError = (args?: unknown) => args,
+    ) {
+        const getRuleMetaEndpoint: string = RuleConfig?.endpoints?.rule
+        const ruleMetaEndpoint: string = parsedEndpoint(getRuleMetaEndpoint, {
+            rule_id,
+        })
+        getData(ruleMetaEndpoint)
+            .then((response: any) => response?.json())
             .then((response: any) => {
                 onSuccess?.(response)
             })

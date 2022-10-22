@@ -1,21 +1,17 @@
-import '../App.css'
 import { Button } from '../stories/Button/Button'
 import { Input } from '../stories/Input/Input'
 import { Image } from '../stories/Image/Image'
 import { Form } from '../stories/Form/Form'
 
 import { MutableRefObject, ReactElement, useRef, useState } from 'react'
-import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { commonHeaders, getData } from '../utils/restApiWrapper'
 
 import { env } from '../util'
 import { useAuthConfig, useAlert, useModal } from '../components/GlobalHooks'
-import { AlertProps } from '../stories/Alert/Alert'
-import { ModalProps } from '../stories/Modal/Modal'
 import { AuthError } from '../utils/exceptions'
 import { RucioClient } from '../client'
 
-const Login = () => {
+const Login = ({ onLoginSuccess }: any) => {
     const [userNameEntered, setUserNameEntered] = useState('')
     const [passwordEntered, setPasswordEntered] = useState('')
     const [userpassEnabled, setUserpassEnabled] = useState(false)
@@ -24,7 +20,6 @@ const Login = () => {
     const oidcProvider: MutableRefObject<string> = useRef('')
     const accountName: MutableRefObject<string> = useRef('')
 
-    const navigate: NavigateFunction = useNavigate()
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
     const showModal: (options: ModalProps) => Promise<void> = useModal()
     const setOidcConfig: (options: ModalProps) => Promise<void> =
@@ -65,9 +60,7 @@ const Login = () => {
             message: 'Login successful!',
             variant: 'success',
         })
-        navigate('/home', {
-            state: { name: account },
-        })
+        onLoginSuccess(account)
     }
 
     const userPassAuth = () => {
@@ -95,9 +88,8 @@ const Login = () => {
                         const rucioAccount = response?.headers.get(
                             'X-Rucio-Auth-Account',
                         )
-                        accountName.current = rucioAccount
-
-                        loginNavigateHome(rucioAccount)
+                        accountName.current = rucioAccount ?? 'root'
+                        loginNavigateHome(accountName.current)
                     } else if (response.status === 206) {
                         const accounts = response?.headers
                             .get('X-Rucio-Auth-Accounts')
@@ -203,11 +195,9 @@ const Login = () => {
                     'X-Rucio-Auth-Token',
                     'x509_sample_token',
                 )
-                navigate('/login')
             })
             .catch((error: Error) => {
                 console.error(error)
-                navigate('/login')
             })
     }
 

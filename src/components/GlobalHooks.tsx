@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useContext, useEffect, useRef } from 'react'
-import { Alert, AlertProps } from '../stories/Alert/Alert'
-import { Modal, ModalProps } from '../stories/Modal/Modal'
+import { Alert } from '../stories/Alert/Alert'
+import { Modal } from '../stories/Modal/Modal'
 import { AuthContext, AuthProvider } from 'react-oauth2-code-pkce'
 
 const AlertServiceContext = React.createContext<
