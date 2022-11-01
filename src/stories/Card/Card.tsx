@@ -9,9 +9,14 @@ export const Card = ({
     header = <></>,
     content,
     footer = [],
+    onCardClick = (args: unknown) => undefined,
+    hoverable = false,
 }: CardProps) => {
     return (
-        <div className="rucio-card">
+        <div
+            className={hoverable ? 'rucio-card hoverable' : 'rucio-card'}
+            onClick={onCardClick}
+        >
             {img !== undefined ? (
                 <div className={'image'}>
                     <figure className="image is-4by3">

@@ -5,7 +5,10 @@ import { ReactElement } from 'react'
 export const Table = ({ columns, rows, id, footer }: TableProps) => {
     return (
         <div className="table-container">
-            <table className="rucio-table bordered striped narrow hoverable fullwidth">
+            <table
+                className="rucio-table bordered striped narrow hoverable fullwidth"
+                id={id}
+            >
                 <thead>
                     <tr>
                         {columns?.map((columnTitle: string, index: number) => (
@@ -19,10 +22,13 @@ export const Table = ({ columns, rows, id, footer }: TableProps) => {
                     {rows?.map((rowData: ReactElement[], index: number) => (
                         <tr
                             key={index}
-                            id={id ?? '' + index}
+                            id={(id as string) + '_' + index}
+                            className="display-row-data"
                             onClick={() => {
                                 const currentSelectedRow =
-                                    document.getElementById(id ?? '' + index)
+                                    document.getElementById(
+                                        (id as string) + '_' + index,
+                                    )
                                 if (currentSelectedRow) {
                                     currentSelectedRow.className =
                                         currentSelectedRow.className ===

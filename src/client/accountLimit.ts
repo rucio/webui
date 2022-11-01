@@ -9,7 +9,7 @@ class AccountLimit extends AccountLimitModel {
         onSuccess = (args?: unknown) => args,
         onError = (args?: unknown) => args,
     ) {
-        const url = parsedEndpoint(AccountConfig.endpoints.limit, {
+        const url = parsedEndpoint(AccountConfig?.endpoints?.limit, {
             account: account,
         })
         streamData(url)

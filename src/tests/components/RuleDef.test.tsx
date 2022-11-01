@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react'
-import Home from '../../components/Home'
+import { RuleDef } from '../../components/RuleDef'
 import { BrowserRouter } from 'react-router-dom'
 
-test('renders Home Page', () => {
+test('renders Rule Definition page', () => {
     render(
         <BrowserRouter>
-            <Home />
+            <RuleDef />
         </BrowserRouter>,
     )
 })

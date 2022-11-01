@@ -1,5 +1,5 @@
 import './App.scss'
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import {
     Routes,
     Route,
@@ -38,7 +38,7 @@ const App = () => {
         return children
     }
 
-    const protectedPathElementMap: any[] = [
+    const protectedPathElementMap: { path: string; element: ReactElement }[] = [
         {
             path: '/home',
             element: <Home />,
@@ -65,62 +65,29 @@ const App = () => {
         },
     ]
 
+    const LoginComponent = () => (
+        <ErrorBoundaryWrapper>
+            <Login
+                onLoginSuccess={(args: string) => {
+                    updateStore({ account: args })
+                    sessionStorage.setItem('X-Rucio-Account', args)
+                    navigate('/home')
+                }}
+                onLoginFailure={() => {
+                    updateStore({ account: null })
+                    sessionStorage.removeItem('X-Rucio-Account')
+                    sessionStorage.removeItem('X-Rucio-Auth-Token')
+                }}
+            />
+        </ErrorBoundaryWrapper>
+    )
+
     return (
         <StoreContext.Provider value={{ store, updateStore }}>
             <ServiceProvider>
                 <Routes>
-                    <Route
-                        index
-                        element={
-                            <ErrorBoundaryWrapper>
-                                <Login
-                                    onLoginSuccess={(args: any) => {
-                                        updateStore({ account: args })
-                                        sessionStorage.setItem(
-                                            'X-Rucio-Account',
-                                            args,
-                                        )
-                                        navigate('/home')
-                                    }}
-                                    onLoginFailure={() => {
-                                        updateStore({ account: null })
-                                        sessionStorage.removeItem(
-                                            'X-Rucio-Account',
-                                        )
-                                        sessionStorage.removeItem(
-                                            'X-Rucio-Auth-Token',
-                                        )
-                                    }}
-                                />
-                            </ErrorBoundaryWrapper>
-                        }
-                    />
-                    <Route
-                        path="/login"
-                        element={
-                            <ErrorBoundaryWrapper>
-                                <Login
-                                    onLoginSuccess={(args: any) => {
-                                        updateStore({ account: args })
-                                        sessionStorage.setItem(
-                                            'X-Rucio-Account',
-                                            args,
-                                        )
-                                        navigate('/home')
-                                    }}
-                                    onLoginFailure={() => {
-                                        updateStore({ account: null })
-                                        sessionStorage.removeItem(
-                                            'X-Rucio-Account',
-                                        )
-                                        sessionStorage.removeItem(
-                                            'X-Rucio-Auth-Token',
-                                        )
-                                    }}
-                                />
-                            </ErrorBoundaryWrapper>
-                        }
-                    />
+                    <Route index element={<LoginComponent />} />
+                    <Route path="/login" element={<LoginComponent />} />
                     {protectedPathElementMap.map(
                         ({ path, element }: any, index: number) => (
                             <Route

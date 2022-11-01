@@ -1,11 +1,13 @@
 import { render } from '@testing-library/react'
-import Home from '../../components/Home'
+import App from '../App'
 import { BrowserRouter } from 'react-router-dom'
 
-test('renders Home Page', () => {
+window.scrollTo = jest.fn()
+
+test('renders react app', () => {
     render(
         <BrowserRouter>
-            <Home />
+            <App />
         </BrowserRouter>,
     )
 })

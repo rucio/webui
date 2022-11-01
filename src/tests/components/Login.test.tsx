@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { ServiceProvider } from '../../components/GlobalHooks'
 import { ReactElement } from 'react'
 
+window.scrollTo = jest.fn()
+
 const renderComponent: ReactElement = (
     <ServiceProvider>
         <BrowserRouter>

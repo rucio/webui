@@ -7,6 +7,8 @@ import { Button } from '../Button/Button'
 import { Image } from '../Image/Image'
 import { Input } from '../Input/Input'
 import { Navbar } from '../Navigation/Navbar'
+import React from 'react'
+import { StoreContext } from '../../App'
 
 export const Header = ({
     menuActive = false,
@@ -18,6 +20,10 @@ export const Header = ({
 }: HeaderProps) => {
     const [navIconClickToggle, setNavIconClickToggle] = useState(menuActive)
     const enteredPattern: MutableRefObject<string> = useRef('' as string)
+
+    const { store } = React.useContext(StoreContext) as any
+    const account = store?.account ?? sessionStorage.getItem('X-Rucio-Account')
+
     const navigate = useNavigate()
     const toggleNav = () => {
         setNavIconClickToggle(!navIconClickToggle)
@@ -36,21 +42,19 @@ export const Header = ({
                     ></Image>
                 </span>
 
-                <span className="rucio-flex" style={{ float: 'right' }}>
-                    <div style={{ width: 500 }}>
-                        <Input
-                            name="pattern"
-                            placeholder="search dids/rules"
-                            focusByDefault
-                            type="text"
-                            size="small"
-                            show="rounded"
-                            width={1000}
-                            onChange={(event: any) => {
-                                enteredPattern.current = event?.target?.value
-                            }}
-                        ></Input>
-                    </div>
+                <span className="rucio-flex">
+                    <Input
+                        name="pattern"
+                        placeholder="search dids/rules"
+                        focusByDefault
+                        type="text"
+                        size="small"
+                        show="rounded"
+                        onChange={(event: any) => {
+                            enteredPattern.current = event?.target?.value
+                        }}
+                    ></Input>
+
                     <div className="m-t-5">
                         <Button
                             label="Search"
@@ -67,10 +71,10 @@ export const Header = ({
                 </span>
 
                 <div>
-                    {user ? (
+                    {account ? (
                         <>
                             <span className="welcome">
-                                Welcome, <b>{user.name}</b>!
+                                Welcome, <b>{account}</b>!
                             </span>
                             <Button
                                 size="small"

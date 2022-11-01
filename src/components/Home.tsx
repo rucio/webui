@@ -1,11 +1,11 @@
 import { Header } from '../stories/Header/Header'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { StoreContext } from '../App'
 import { Card } from '../stories/Card/Card'
 import { ProgressBar } from '../stories/ProgressBar/ProgressBar'
-import { Button } from '../stories/Button/Button'
 import { RucioClient } from '../client'
+import { Box } from '../stories/Box/Box'
 
 function Home() {
     const navigate = useNavigate()
@@ -39,9 +39,9 @@ function Home() {
         RucioClient.RSE.listRses(
             '*',
             (data: any) => {
-                const RSEData = data?.slice(0, 10)
+                const RSEData = data?.slice(0, 5)
                 const fullRSEDetails = [] as any
-                RSEData.forEach((element: any, index: number) => {
+                RSEData.forEach((element: any) => {
                     RucioClient.RSE.getRSEMeta(
                         element?.rse,
                         (response: any) => {
@@ -49,9 +49,7 @@ function Home() {
                                 (element: any) => element?.account === account,
                             )
                             fullRSEDetails.push(...RSEMetaForAccount)
-                            console.error(fullRSEDetails)
                             if (fullRSEDetails.length === RSEData.length) {
-                                console.error(fullRSEDetails)
                                 setRecentRSEArray(fullRSEDetails)
                             }
                         },
@@ -97,109 +95,59 @@ function Home() {
                     width: '70%',
                 }}
             >
-                <Card
-                    header={
-                        <>
-                            <br></br>
-                            <span className="p-l-25" style={{ fontSize: 30 }}>
-                                <strong>Recent Rules</strong>
-                            </span>
-                            <hr></hr>
-                        </>
-                    }
-                    content={
-                        <div style={{ width: 350 }}>
-                            {recentRules.map((element: any, index: number) => (
-                                <>
-                                    <Card
-                                        content={
-                                            <>
-                                                ID:{' '}
-                                                {element?.id?.substring(0, 25) +
-                                                    '...'}
-                                                <hr></hr>
-                                                <div className="rucio-flex">
-                                                    <Button
-                                                        label="View"
-                                                        kind="primary"
-                                                        type="button"
-                                                        size="small"
-                                                        onClick={() => {
-                                                            navigate(
-                                                                `/rule?rule_id=${element?.id}`,
-                                                            )
-                                                        }}
-                                                    ></Button>
-                                                    <Button
-                                                        label="Delete"
-                                                        kind="secondary"
-                                                        type="button"
-                                                        show="danger"
-                                                        size="small"
-                                                    ></Button>
-                                                </div>
-                                            </>
-                                        }
-                                    ></Card>
-                                    <br></br>
-                                </>
-                            ))}
-                        </div>
-                    }
-                ></Card>
-                <Card
-                    header={
-                        <>
-                            <br></br>
-                            <span className="p-l-25" style={{ fontSize: 30 }}>
-                                <strong>Rucio Storage Elements</strong>
-                            </span>
-                            <hr></hr>
-                        </>
-                    }
-                    content={
-                        <div style={{ width: 350 }}>
-                            <Card
-                                content={
-                                    <>
-                                        {recentRSE.map(
-                                            (element: any, index: number) => {
-                                                const progressValue: number =
-                                                    100 - (index + 1) * 10
-                                                // element?.used_bytes === -1
-                                                //     ? 100
-                                                //     : element?.used_bytes ??
-                                                //       0
+                <Box title="Recent Rules" type="spacious">
+                    <div style={{ width: 380 }}>
+                        {recentRules.map((element: any, index: number) => (
+                            <div className="m-t-20" key={index}>
+                                <Card
+                                    content={<>ID: {element?.id}</>}
+                                    onCardClick={() => {
+                                        navigate(`/rule?rule_id=${element?.id}`)
+                                    }}
+                                    hoverable
+                                ></Card>
+                            </div>
+                        ))}
+                    </div>
+                </Box>
 
-                                                return (
-                                                    <div key={index}>
-                                                        {element?.rse}
-                                                        <ProgressBar
-                                                            value={
-                                                                progressValue
-                                                            }
-                                                            type={
-                                                                progressValue >
-                                                                75
-                                                                    ? 'danger'
-                                                                    : progressValue >
-                                                                      50
-                                                                    ? 'warning'
-                                                                    : 'info'
-                                                            }
-                                                        />
-                                                        <br></br>
-                                                    </div>
-                                                )
-                                            },
-                                        )}
-                                    </>
-                                }
-                            ></Card>
-                            <br></br>
-                        </div>
-                    }
-                ></Card>
+                <Box title="Rucio Storage Elements" type="spacious">
+                    <div style={{ width: 380 }}>
+                        <>
+                            {recentRSE.map((element: any, index: number) => {
+                                const progressValue: number =
+                                    100 - (index + 1) * 10
+                                // element?.used_bytes === -1
+                                //     ? 100
+                                //     : element?.used_bytes ?? 0
+
+                                return (
+                                    <div className="m-t-20" key={index}>
+                                        <Card
+                                            content={
+                                                <div key={index}>
+                                                    {element?.rse}
+                                                    <ProgressBar
+                                                        value={progressValue}
+                                                        type={
+                                                            progressValue > 75
+                                                                ? 'danger'
+                                                                : progressValue >
+                                                                  50
+                                                                ? 'warning'
+                                                                : 'success'
+                                                        }
+                                                    />
+                                                </div>
+                                            }
+                                            hoverable
+                                        ></Card>
+                                    </div>
+                                )
+                            })}
+                        </>
+                    </div>
+                </Box>
             </div>
         </>
     )

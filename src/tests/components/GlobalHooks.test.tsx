@@ -1,11 +1,13 @@
 import { render } from '@testing-library/react'
-import Home from '../../components/Home'
+import { ServiceProvider } from '../../components/GlobalHooks'
 import { BrowserRouter } from 'react-router-dom'
 
-test('renders Home Page', () => {
+window.scrollTo = jest.fn()
+
+test('renders Global Hooks wrapper', () => {
     render(
         <BrowserRouter>
-            <Home />
+            <ServiceProvider />
         </BrowserRouter>,
     )
 })

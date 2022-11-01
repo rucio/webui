@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react'
-import Home from '../../components/Home'
+import { ErrorBoundaryWrapper } from '../../components/ErrorBoundary'
 import { BrowserRouter } from 'react-router-dom'
 
-test('renders Home Page', () => {
+test('renders Error Boundary Page', () => {
     render(
         <BrowserRouter>
-            <Home />
+            <ErrorBoundaryWrapper />
         </BrowserRouter>,
     )
 })

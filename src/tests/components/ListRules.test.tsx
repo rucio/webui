@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react'
-import Home from '../../components/Home'
 import { BrowserRouter } from 'react-router-dom'
+import { ListRules } from '../../components/ListRules'
 
-test('renders Home Page', () => {
+test('renders List Rules', () => {
     render(
         <BrowserRouter>
-            <Home />
+            <ListRules />
         </BrowserRouter>,
     )
 })

@@ -65,6 +65,8 @@ interface CardProps {
     header?: ReactElement | string
     content: ReactElement
     footer?: Array<any>
+    onCardClick?: (args: unknown) => void
+    hoverable?: boolean
 }
 
 interface CheckboxProps {
@@ -120,7 +122,7 @@ interface InputProps {
     value?: any
     min?: number
     max?: number
-    width?: number
+    width?: string | number
     focusByDefault?: boolean
     onChange?: (args: any) => void
 }
