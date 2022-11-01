@@ -11,11 +11,9 @@ export const Rule = () => {
     function rule() {
         const urlSearchParams = new URLSearchParams(window?.location?.search)
         const params = Object.fromEntries(urlSearchParams.entries())
-        console.error(params?.['rule_id'])
         RucioClient.Rules.meta(
             params?.['rule_id'],
             data => {
-                console.error('Data', data)
                 let selectedData: any = Object.entries(data as any).filter(
                     ([_, v]) => v != null,
                 )
@@ -39,7 +37,7 @@ export const Rule = () => {
 
     return (
         <div className="rule-def">
-            <Header user={{ name: 'root' }} />
+            <Header />
             <br></br>
             <Card
                 header={

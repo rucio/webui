@@ -1,5 +1,6 @@
 import { parsedEndpoint } from '../util'
 import { RuleConfig } from '../utils/config'
+import { HttpError } from '../utils/exceptions'
 import { RuleModel } from '../utils/models'
 import { getData, postData, streamData } from '../utils/restApiWrapper'
 
@@ -57,7 +58,11 @@ class Rules extends RuleModel {
 
         postData(newRuleEndpoint, {}, newPayload)
             .then((response: any) => {
-                onSuccess?.(response)
+                if (response?.status === 201) {
+                    onSuccess?.(response)
+                } else {
+                    throw HttpError.fromCode(response?.status)
+                }
             })
             .catch((error: Error) => {
                 console.error(error)

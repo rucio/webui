@@ -63,7 +63,7 @@ export const Search = () => {
 
     return (
         <div className="rule-def">
-            <Header user={{ name: 'root' }} />
+            <Header />
             <br></br>
             <Card
                 header={

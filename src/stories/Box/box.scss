@@ -57,6 +57,8 @@
             @extend .Box-row-link;
         }
     }
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 @media (max-width: 768px) {

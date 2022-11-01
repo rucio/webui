@@ -17,8 +17,8 @@ export const parsedEndpoint = (
     endpoint: string,
     replacePayload: object,
 ): string => {
-    Object.entries(replacePayload).forEach(([key, value]) => {
-        endpoint = endpoint.replaceAll(`{${key}}`, value)
+    Object.entries(replacePayload)?.forEach(([key, value]) => {
+        endpoint = endpoint?.replaceAll(`{${key}}`, value)
     })
     return endpoint
 }
