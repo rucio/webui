@@ -12,7 +12,7 @@
         @extend .card-header-title;
     }
     &.hoverable {
-        transition: transform .2s;
+        transition: transform 0.2s;
         cursor: pointer;
     }
     &.hoverable:hover {
