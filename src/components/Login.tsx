@@ -16,6 +16,10 @@ export const Login = ({ onLoginSuccess }: any) => {
     const [passwordEntered, setPasswordEntered] = useState('' as string)
     const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
 
+    const [selectedVO, setSelectedVO] = useState('def' as string)
+    const possibleVos = env('long_vos')?.split(',')
+    const shortVos = env('short_vos')?.split(',')
+    
     const authType: MutableRefObject<string> = useRef('')
     const oidcProvider: MutableRefObject<string> = useRef('')
     const accountName: MutableRefObject<string> = useRef('')
@@ -69,12 +73,14 @@ export const Login = ({ onLoginSuccess }: any) => {
             headers = {
                 'X-Rucio-Username': userNameEntered,
                 'X-Rucio-Password': passwordEntered,
+                'X-Rucio-VO': selectedVO,
             }
         } else {
             headers = {
                 'X-Rucio-Username': userNameEntered,
                 'X-Rucio-Password': passwordEntered,
                 'X-Rucio-Account': accountName.current,
+                'X-Rucio-VO': selectedVO,
             }
         }
         RucioClient.Auth.userpassAuthCall(
@@ -367,19 +373,44 @@ export const Login = ({ onLoginSuccess }: any) => {
 
                                 {userpassEnabled ? (
                                     <>
-                                        <Input
-                                            label="Username"
-                                            placeholder="Enter Username"
-                                            kind="info"
-                                            size="medium"
-                                            focusByDefault
-                                            onChange={(event: any) => {
-                                                setUserNameEntered(
-                                                    event?.target?.value,
-                                                )
-                                            }}
-                                        />
-
+                                        <div className='rucio-flex'>
+                                            <Input
+                                                label="Username"
+                                                placeholder="Enter Username"
+                                                kind="info"
+                                                size="medium"
+                                                focusByDefault
+                                                onChange={(event: any) => {
+                                                    setUserNameEntered(
+                                                        event?.target?.value,
+                                                    )
+                                                }}
+                                            />
+                                            <div className='rucio-flex m-t-20 fs-20'>
+                                                {env('multi_vo') === 'true' && (
+                                                <span className='select rucio-flex-item'>
+                                                    <select id='Select VO' onChange={(event) => {
+                                                        const index=event.target.selectedIndex-1
+                                                        if(shortVos){
+                                                            setSelectedVO(shortVos[index]); 
+                                                        }
+                                                        console.log(selectedVO)
+                                                        }} >
+                                                        <option value="Select VO" hidden>Select VO</option>
+                                                        {possibleVos?.map((element: any, index: number) => (
+                                                            <option
+                                                                className="dropdown-content"
+                                                                value={element}
+                                                                key={index}
+                                                            >
+                                                                {element}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </span>
+                                                )}
+                                            </div>
+                                        </div>
                                         <Input
                                             label="Password"
                                             placeholder="Enter Password"

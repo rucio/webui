@@ -6,7 +6,6 @@ const authorizationHeader = {
     'X-Rucio-Auth-Token': rucioToken,
 }
 export const commonHeaders = {
-    'X-Rucio-VO': 'def',
     'X-Rucio-AppID': 'test',
     'X-Rucio-Script': 'webui::login',
 }
