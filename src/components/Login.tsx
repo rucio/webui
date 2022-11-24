@@ -19,7 +19,7 @@ export const Login = ({ onLoginSuccess }: any) => {
     const [selectedVO, setSelectedVO] = useState('def' as string)
     const possibleVos = env('long_vos')?.split(',')
     const shortVos = env('short_vos')?.split(',')
-    
+
     const authType: MutableRefObject<string> = useRef('')
     const oidcProvider: MutableRefObject<string> = useRef('')
     const accountName: MutableRefObject<string> = useRef('')
@@ -373,7 +373,7 @@ export const Login = ({ onLoginSuccess }: any) => {
 
                                 {userpassEnabled ? (
                                     <>
-                                        <div className='rucio-flex'>
+                                        <div className="rucio-flex">
                                             <Input
                                                 label="Username"
                                                 placeholder="Enter Username"
@@ -386,28 +386,56 @@ export const Login = ({ onLoginSuccess }: any) => {
                                                     )
                                                 }}
                                             />
-                                            <div className='rucio-flex m-t-20 fs-20'>
+                                            <div className="rucio-flex m-t-20 fs-20">
                                                 {env('multi_vo') === 'true' && (
-                                                <span className='select rucio-flex-item'>
-                                                    <select id='Select VO' onChange={(event) => {
-                                                        const index=event.target.selectedIndex-1
-                                                        if(shortVos){
-                                                            setSelectedVO(shortVos[index]); 
-                                                        }
-                                                        console.log(selectedVO)
-                                                        }} >
-                                                        <option value="Select VO" hidden>Select VO</option>
-                                                        {possibleVos?.map((element: any, index: number) => (
+                                                    <span className="select rucio-flex-item">
+                                                        <select
+                                                            id="Select VO"
+                                                            onChange={event => {
+                                                                const index =
+                                                                    event.target
+                                                                        .selectedIndex -
+                                                                    1
+                                                                if (shortVos) {
+                                                                    setSelectedVO(
+                                                                        shortVos[
+                                                                            index
+                                                                        ],
+                                                                    )
+                                                                }
+                                                                console.log(
+                                                                    selectedVO,
+                                                                )
+                                                            }}
+                                                        >
                                                             <option
-                                                                className="dropdown-content"
-                                                                value={element}
-                                                                key={index}
+                                                                value="Select VO"
+                                                                hidden
                                                             >
-                                                                {element}
+                                                                Select VO
                                                             </option>
-                                                        ))}
-                                                    </select>
-                                                </span>
+                                                            {possibleVos?.map(
+                                                                (
+                                                                    element: any,
+                                                                    index: number,
+                                                                ) => (
+                                                                    <option
+                                                                        className="dropdown-content"
+                                                                        value={
+                                                                            element
+                                                                        }
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            element
+                                                                        }
+                                                                    </option>
+                                                                ),
+                                                            )}
+                                                        </select>
+                                                    </span>
                                                 )}
                                             </div>
                                         </div>
