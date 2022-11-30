@@ -18,11 +18,16 @@ export const Login = ({ onLoginSuccess }: any) => {
     const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
 
     const vos_defined = env('vos') as string
-    const vos: string[] = vos_defined.replace(/\s+/g, '').split(",") as string[]
 
-    const multi_vo = env('multi_vo_enabled')?.toLowerCase() === 'true' && vos_defined
+    const multi_vo =
+        env('multi_vo_enabled')?.toLowerCase() === 'true' && vos_defined
+    const vos: string[] = multi_vo
+        ? (vos_defined.replace(/\s+/g, '').split(',') as string[])
+        : []
 
-    const [selectedVO, setSelectedVO] = useState(multi_vo ? vos[0] : 'def' as string)
+    const [selectedVO, setSelectedVO] = useState(
+        multi_vo ? vos[0] : ('def' as string),
+    )
 
     const authType: MutableRefObject<string> = useRef('')
     const oidcProvider: MutableRefObject<string> = useRef('')
@@ -265,22 +270,24 @@ export const Login = ({ onLoginSuccess }: any) => {
                             Welcome to Rucio!
                         </span>
                         <div className="m-b-20">
-                            
-                        {
-                        (multi_vo) && (
-                            <Tabs
-                                boxed='boxed'
-                                size='medium'
-                                alignment='centered'
-                                tabs={vo_names(vos_defined)}
-                                active={selectedVO === 'def' ? 0 : vos.indexOf(selectedVO)}
-                                handleClick={(event) => {
-                                    const index: number = event.target.id
-                                    const vo = vos[index] as string
-                                    setSelectedVO(vo)
-                                }}
-                            />
-                        )}
+                            {multi_vo && (
+                                <Tabs
+                                    boxed="boxed"
+                                    size="medium"
+                                    alignment="centered"
+                                    tabs={vo_names(vos_defined)}
+                                    active={
+                                        selectedVO === 'def'
+                                            ? 0
+                                            : vos.indexOf(selectedVO)
+                                    }
+                                    handleClick={event => {
+                                        const index: number = event.target.id
+                                        const vo = vos[index] as string
+                                        setSelectedVO(vo)
+                                    }}
+                                />
+                            )}
 
                             <Form title="" subtitle="" onSubmit={handleSubmit}>
                                 <div className="rucio-flex m-b-20">
@@ -304,13 +311,23 @@ export const Login = ({ onLoginSuccess }: any) => {
                                                 type="submit"
                                                 kind="outline"
                                                 label={
-                                                    multi_vo ? env('oidc_provider_1_' + selectedVO) ?? '' : env('oidc_provider_1') ?? ''
+                                                    multi_vo
+                                                        ? env(
+                                                              'oidc_provider_1_' +
+                                                                  selectedVO,
+                                                          ) ?? ''
+                                                        : env(
+                                                              'oidc_provider_1',
+                                                          ) ?? ''
                                                 }
                                                 show="invisible"
                                                 size="large"
                                                 onClick={() => {
                                                     authType.current = 'OAuth'
-                                                    oidcProvider.current = multi_vo ? '1_' + selectedVO : '1'
+                                                    oidcProvider.current =
+                                                        multi_vo
+                                                            ? '1_' + selectedVO
+                                                            : '1'
                                                 }}
                                             />
                                         </div>
@@ -335,13 +352,23 @@ export const Login = ({ onLoginSuccess }: any) => {
                                                 type="submit"
                                                 kind="outline"
                                                 label={
-                                                    multi_vo ? env('oidc_provider_2_' + selectedVO) ?? '' : env('oidc_provider_2') ?? ''
+                                                    multi_vo
+                                                        ? env(
+                                                              'oidc_provider_2_' +
+                                                                  selectedVO,
+                                                          ) ?? ''
+                                                        : env(
+                                                              'oidc_provider_2',
+                                                          ) ?? ''
                                                 }
                                                 show="invisible"
                                                 size="large"
                                                 onClick={() => {
                                                     authType.current = 'OAuth'
-                                                    oidcProvider.current = multi_vo ? '2_' + selectedVO : '2'
+                                                    oidcProvider.current =
+                                                        multi_vo
+                                                            ? '2_' + selectedVO
+                                                            : '2'
                                                 }}
                                             />
                                         </div>
@@ -367,14 +394,24 @@ export const Login = ({ onLoginSuccess }: any) => {
                                                 kind="outline"
                                                 label={
                                                     env(
-                                                        multi_vo ? env('oidc_provider_3_' + selectedVO) ?? '' : env('oidc_provider_3') ?? ''
+                                                        multi_vo
+                                                            ? env(
+                                                                  'oidc_provider_3_' +
+                                                                      selectedVO,
+                                                              ) ?? ''
+                                                            : env(
+                                                                  'oidc_provider_3',
+                                                              ) ?? '',
                                                     ) as string
                                                 }
                                                 show="invisible"
                                                 size="large"
                                                 onClick={() => {
                                                     authType.current = 'OAuth'
-                                                    oidcProvider.current = multi_vo ? '3_' + selectedVO : '3'
+                                                    oidcProvider.current =
+                                                        multi_vo
+                                                            ? '3_' + selectedVO
+                                                            : '3'
                                                 }}
                                             />
                                         </div>
