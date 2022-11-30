@@ -23,11 +23,11 @@ export const Tabs = ({
                             className="is-active"
                             key={index}
                         >
-                            <a>{element}</a>
+                            <a id={index.toString()}>{element}</a>
                         </li>
                     ) : (
                         <li onClick={props.handleClick} key={index}>
-                            <a>{element}</a>
+                            <a id={index.toString()}>{element}</a>
                         </li>
                     )
                 })}
