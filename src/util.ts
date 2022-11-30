@@ -38,3 +38,13 @@ export const extract_scope = (name: any): string[] => {
     }
     return [scope, name]
 }
+
+export const vo_names = (vos: string): string[] => {
+    const possibleVos: string[] = vos.replace(/\s+/g, '').split(',')
+    const vo_names: string[] = []
+    for(const vo in possibleVos){
+        const vo_name = env("vo_" + possibleVos[vo]) as string
+        vo_names.push(vo_name)
+    }
+    return vo_names
+}
