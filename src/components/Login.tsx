@@ -291,7 +291,14 @@ export const Login = ({ onLoginSuccess }: any) => {
 
                             <Form title="" subtitle="" onSubmit={handleSubmit}>
                                 <div className="rucio-flex m-b-20">
-                                    {env('oidc_provider_1') ? (
+                                    {(
+                                        multi_vo
+                                            ? env(
+                                                  'oidc_provider_1_' +
+                                                      selectedVO,
+                                              ) ?? ''
+                                            : env('oidc_provider_1') ?? ''
+                                    ) ? (
                                         <div className="rucio-flex-item">
                                             <Button
                                                 icon={
@@ -332,7 +339,14 @@ export const Login = ({ onLoginSuccess }: any) => {
                                             />
                                         </div>
                                     ) : null}
-                                    {env('oidc_provider_2') ? (
+                                    {(
+                                        multi_vo
+                                            ? env(
+                                                  'oidc_provider_2_' +
+                                                      selectedVO,
+                                              ) ?? ''
+                                            : env('oidc_provider_2') ?? ''
+                                    ) ? (
                                         <div className="rucio-flex-item">
                                             <Button
                                                 icon={
@@ -373,7 +387,14 @@ export const Login = ({ onLoginSuccess }: any) => {
                                             />
                                         </div>
                                     ) : null}
-                                    {env('oidc_provider_3') ? (
+                                    {(
+                                        multi_vo
+                                            ? env(
+                                                  'oidc_provider_3_' +
+                                                      selectedVO,
+                                              ) ?? ''
+                                            : env('oidc_provider_3') ?? ''
+                                    ) ? (
                                         <div className="rucio-flex-item">
                                             <Button
                                                 icon={
