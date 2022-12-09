@@ -13,6 +13,8 @@ import { RucioClient } from '../client'
 import { Tabs } from '../stories/Tabs/Tabs'
 
 export const Login = ({ onLoginSuccess }: any) => {
+    const rucioAuthHost: string | undefined = env('rucio_auth_host')
+
     const [userNameEntered, setUserNameEntered] = useState('' as string)
     const [passwordEntered, setPasswordEntered] = useState('' as string)
     const [userpassEnabled, setUserpassEnabled] = useState(false as boolean)
@@ -97,6 +99,7 @@ export const Login = ({ onLoginSuccess }: any) => {
                 ...commonHeaders,
                 ...headers,
             },
+            rucioAuthHost,
             (response: any) => {
                 if (response) {
                     if (response?.status === 200) {
