@@ -6,10 +6,11 @@ import { getData } from '../utils/restApiWrapper'
 class Auth extends AuthModel {
     public static async userpassAuthCall(
         userpassPayload: AuthType,
+        authHost: string | undefined,
         onSuccess = (args?: unknown) => args,
         onError = (args?: unknown) => args,
     ) {
-        getData(AuthConfig.endpoints.userpass, {}, userpassPayload)
+        getData(AuthConfig.endpoints.userpass, {}, userpassPayload, authHost)
             .then((response: any) => {
                 if (response.status === 200) {
                     const rucioAuthToken =
