@@ -14,11 +14,12 @@ export const Navbar = ({ active, menuItems }: NavProps) => {
             }}
         >
             {menuItems?.map(
-                (element: { route: string; display: any }, index: number) => (
+                (element: { route: string; display: any; click: any }, index: number) => (
                     <Link
                         to={element?.route}
                         className="SideNav-item"
                         key={index}
+                        onClick={element?.click}
                     >
                         {element?.display}
                     </Link>
