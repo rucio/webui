@@ -28,6 +28,15 @@ export const Header = ({
     const toggleNav = () => {
         setNavIconClickToggle(!navIconClickToggle)
     }
+    const logout = () => {
+        alert('User logged out!')
+        sessionStorage.removeItem(
+            'X-Rucio-Auth-Token',
+        )
+        sessionStorage.removeItem('X-Rucio-Account')
+        navigate('/login')
+        onLogout?.()
+    }
     return (
         <header>
             <div className="wrapper">
@@ -78,15 +87,7 @@ export const Header = ({
                             </span>
                             <Button
                                 size="small"
-                                onClick={() => {
-                                    alert('User logged out!')
-                                    sessionStorage.removeItem(
-                                        'X-Rucio-Auth-Token',
-                                    )
-                                    sessionStorage.removeItem('X-Rucio-Account')
-                                    navigate('/login')
-                                    onLogout?.()
-                                }}
+                                onClick={logout}
                                 label="Log out"
                             />
                         </>
@@ -128,6 +129,7 @@ export const Header = ({
                     {
                         route: '/login',
                         display: 'Logout',
+                        click: logout,
                     },
                 ]}
             />
