@@ -30,9 +30,7 @@ export const Header = ({
     }
     const logout = () => {
         alert('User logged out!')
-        sessionStorage.removeItem(
-            'X-Rucio-Auth-Token',
-        )
+        sessionStorage.removeItem('X-Rucio-Auth-Token')
         sessionStorage.removeItem('X-Rucio-Account')
         navigate('/login')
         onLogout?.()
