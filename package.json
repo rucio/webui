@@ -37,7 +37,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "CI=false react-scripts build",
-        "test": "NODE_ENV=test react-scripts test --env=jsdom",
+        "test": "react-scripts test --env=jsdom",
         "test:coverage": "CI=true npm test -- --coverage",
         "test:multi-vo": "REACT_APP_multi_vo_enabled=true npm test",
         "lint": "eslint src --color",
