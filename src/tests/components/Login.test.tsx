@@ -23,20 +23,15 @@ describe('Login page render', () => {
     test('Titles', () => {
         render(renderComponent)
         const loginPrimaryText = screen.getByText('Rucio Login')
-        expect(loginPrimaryText).toBeInTheDocument()
-
         const loginSecondaryText = screen.getByText('Welcome to Rucio!')
-        expect(loginSecondaryText).toBeInTheDocument()
     })
 
     itif(multi_vo)('Multi-vo Tabs Enabled', () => {
         render(renderComponent)
+
         const voTab1 = screen.getByTestId('Tab0')
-        expect(voTab1).toBeInTheDocument()
         const voTab2 = screen.getByTestId('Tab1')
-        expect(voTab2).toBeInTheDocument()
         const voTab3 = screen.getByTestId('Tab2')
-        expect(voTab3).toBeInTheDocument()
 
         expect(voTab1.getAttribute('class')).toEqual('is-active')
         expect(voTab2.getAttribute('class')).toEqual(null)
@@ -67,10 +62,7 @@ describe('Login page render', () => {
     test('Login Options', () => {
         render(renderComponent)
         const x509PassAuthText = screen.getByText('x509 Certificate')
-        expect(x509PassAuthText).toBeInTheDocument()
-
         const userPassAuthText = screen.getByText('Username / Password')
-        expect(userPassAuthText).toBeInTheDocument()
     })
 })
 
@@ -85,16 +77,13 @@ describe('Auth workflow', () => {
 
         const userPassUsernameInput =
             screen.getByPlaceholderText('Enter Username')
-        expect(userPassUsernameInput).toBeInTheDocument()
         expect(userPassUsernameInput.innerHTML.length).toEqual(0)
 
         const userPassPasswordInput =
             screen.getByPlaceholderText('Enter Password')
-        expect(userPassPasswordInput).toBeInTheDocument()
         expect(userPassPasswordInput.innerHTML.length).toEqual(0)
 
         const userPassSignInButton = screen.getByText('Sign In')
-        expect(userPassSignInButton).toBeInTheDocument()
         expect(userPassSignInButton.getAttribute('type')).toEqual('button')
         expect(userPassSignInButton.getAttribute('aria-disabled')).toEqual(
             'true',
@@ -104,7 +93,6 @@ describe('Auth workflow', () => {
         fireEvent.change(userPassPasswordInput, { target: { value: 'secret' } })
 
         const userPassSignInButtonEnabled = screen.getByText('Sign In')
-        expect(userPassSignInButtonEnabled).toBeInTheDocument()
         expect(userPassSignInButtonEnabled.getAttribute('type')).toEqual(
             'submit',
         )
