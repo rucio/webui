@@ -1,6 +1,6 @@
 export const AccountConfig = {
     endpoints: {
-        accounts: '/accounts',
+        accounts: '/accounts/',
         account: '/accounts/{account}',
         attribute: '/accounts/{account}/attr/{key}',
         scope: '/accounts/{account}/scopes/{scope}',
@@ -13,7 +13,7 @@ export const AccountConfig = {
 
 export const RuleConfig = {
     endpoints: {
-        rules: '/rules',
+        rules: '/rules/',
         rule: '/rules/{rule_id}',
         locks: '/rules/{rule_id}/locks',
         reduce: '/rules/{rule_id}/reduce',
@@ -39,7 +39,7 @@ export const DidConfig = {
 
 export const RSEConfig = {
     endpoints: {
-        rses: '/rses',
+        rses: '/rses/',
         usage: '/rses/{rse}/accounts/usage',
     },
 }
