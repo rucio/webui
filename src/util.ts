@@ -29,7 +29,7 @@ export const extract_scope = (name: any): string[] => {
         return name.split(':')
     }
     const items = name.split('.')
-    if (items[0] == 'user' || items[0] == 'group') {
+    if (items[0] === 'user' || items[0] === 'group') {
         if (items.length <= 2) {
             return [name, '']
         }

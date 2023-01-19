@@ -71,7 +71,7 @@ export const Search = () => {
                 }
                 content={
                     <div className="m-b-50">
-                        {selectedData.length != 0 ? (
+                        {selectedData.length !== 0 ? (
                             <Table
                                 id="didsearch"
                                 columns={['Sl No.', 'DID', '']}
