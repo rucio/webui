@@ -30,10 +30,10 @@ export const Login = ({ onLoginSuccess }: any) => {
     const [selectedVO, setSelectedVO] = useState(
         multi_vo ? vos[0] : ('def' as string),
     )
+    const [accountName, setAccountName] = useState('' as string)
 
     const authType: MutableRefObject<string> = useRef('')
     const oidcProvider: MutableRefObject<string> = useRef('')
-    const accountName: MutableRefObject<string> = useRef('')
 
     const showAlert: (options: AlertProps) => Promise<void> = useAlert()
     const showModal: (options: ModalProps) => Promise<void> = useModal()
@@ -43,11 +43,11 @@ export const Login = ({ onLoginSuccess }: any) => {
     const AccountInput = (): ReactElement => (
         <Input
             label="Account Name (Optional)"
-            placeholder={accountName.current}
+            placeholder={accountName}
             size="medium"
             kind="primary"
             onChange={(event: any) => {
-                accountName.current = event?.target?.value
+                setAccountName(event?.target?.value)
             }}
         />
     )
@@ -110,104 +110,108 @@ export const Login = ({ onLoginSuccess }: any) => {
         onLoginSuccess(account)
     }
 
-    const userPassAuth = () => {
+    const rucioAccountAndVOHeaders = () => {
         let headers = {}
-        if (accountName.current.length === 0) {
+        headers = {
+            ...headers,
+            'X-Rucio-VO': selectedVO,
+        }
+        if (accountName.length) {
             headers = {
-                'X-Rucio-Username': userNameEntered,
-                'X-Rucio-Password': passwordEntered,
-                'X-Rucio-VO': selectedVO,
-            }
-        } else {
-            headers = {
-                'X-Rucio-Username': userNameEntered,
-                'X-Rucio-Password': passwordEntered,
-                'X-Rucio-Account': accountName.current,
-                'X-Rucio-VO': selectedVO,
+                ...headers,
+                'X-Rucio-Account': accountName,
             }
         }
+        return headers
+    }
+    const onSuccessfulAuth = (response: any) => {
+        if (response) {
+            if (response?.status === 200) {
+                const rucioAccount = response?.headers?.get(
+                    'X-Rucio-Auth-Account',
+                )
+                const account = rucioAccount ?? 'root'
+                loginNavigateHome(account)
+            } else if (response?.status === 206) {
+                const accounts = response?.headers
+                    .get('X-Rucio-Auth-Accounts')
+                    .split(',')
+                showModal({
+                    title: 'Select Rucio Account',
+                    body: (
+                        <Form
+                            title=""
+                            subtitle="We detected multiple accounts for
+                    this identity, please select a rucio account."
+                            onSubmit={() => {
+                                showModal({ active: false })
+                            }}
+                        >
+                            {accounts.map((element: string) => (
+                                <label key={element}>
+                                    <input
+                                        type="radio"
+                                        id={element}
+                                        value={element}
+                                        name="radio-group"
+                                        defaultChecked={false}
+                                        onChange={(event: any) => {
+                                            setAccountName(event?.target?.value)
+                                        }}
+                                    />
+                                    &nbsp;{element}
+                                </label>
+                            ))}
+                            <Button
+                                size="large"
+                                kind="primary"
+                                show="block"
+                                label="Select Account"
+                                type="submit"
+                            />
+                        </Form>
+                    ),
+                })
+            } else if (response.status === 401) {
+                showAlert({
+                    message: 'Invalid credentials',
+                    variant: 'error',
+                })
+            } else {
+                showAlert({
+                    message: 'Login failed.',
+                    variant: 'error',
+                })
+            }
+        } else {
+            showAlert({
+                message: 'Unable to fetch response from server.',
+                variant: 'error',
+            })
+        }
+    }
+
+    const onFailedAuth = () => {
+        setTimeout(() => {
+            showAlert({
+                message: 'Unable to log in, please try again.',
+                variant: 'error',
+            })
+        }, 2000)
+    }
+    const userPassAuth = () => {
+        const rucioHeaders = rucioAccountAndVOHeaders()
+
         RucioClient.Auth.userpassAuthCall(
             {
                 ...commonHeaders,
-                ...headers,
+                ...rucioHeaders,
+                'X-Rucio-Username': userNameEntered,
+                'X-Rucio-Password': passwordEntered,
             },
             rucioAuthHost,
-            (response: any) => {
-                if (response) {
-                    if (response?.status === 200) {
-                        const rucioAccount = response?.headers?.get(
-                            'X-Rucio-Auth-Account',
-                        )
-                        accountName.current = rucioAccount ?? 'root'
-                        loginNavigateHome(accountName.current)
-                    } else if (response?.status === 206) {
-                        const accounts = response?.headers
-                            .get('X-Rucio-Auth-Accounts')
-                            .split(',')
-                        showModal({
-                            title: 'Select Rucio Account',
-                            body: (
-                                <Form
-                                    title=""
-                                    subtitle="We detected multiple accounts for
-                            this user, please select the desired
-                            one."
-                                    onSubmit={() => {
-                                        showModal({ active: false })
-                                    }}
-                                >
-                                    {accounts.map((element: string) => (
-                                        <label key={element}>
-                                            <input
-                                                type="radio"
-                                                id={element}
-                                                value={element}
-                                                name="radio-group"
-                                                defaultChecked={false}
-                                                onChange={(event: any) => {
-                                                    accountName.current =
-                                                        event?.target?.value
-                                                }}
-                                            />
-                                            &nbsp;{element}
-                                        </label>
-                                    ))}
-                                    <Button
-                                        size="large"
-                                        kind="primary"
-                                        show="block"
-                                        label="Select Account"
-                                        type="submit"
-                                    />
-                                </Form>
-                            ),
-                        })
-                    } else if (response.status === 401) {
-                        showAlert({
-                            message: 'Invalid credentials',
-                            variant: 'error',
-                        })
-                    } else {
-                        showAlert({
-                            message: 'Login failed.',
-                            variant: 'error',
-                        })
-                    }
-                } else {
-                    showAlert({
-                        message: 'Unable to fetch response from server.',
-                        variant: 'error',
-                    })
-                }
-            },
-            () => {
-                setTimeout(() => {
-                    showAlert({
-                        message: 'Unable to log in, please try again.',
-                        variant: 'error',
-                    })
-                }, 5000)
-            },
+            onSuccessfulAuth,
+            onFailedAuth,
         )
     }
 
@@ -239,16 +243,16 @@ export const Login = ({ onLoginSuccess }: any) => {
     }
 
     const x509Auth = () => {
-        getData('/auth/x509')
-            .then(() => {
-                sessionStorage.setItem(
-                    'X-Rucio-Auth-Token',
-                    'x509_sample_token',
-                )
-            })
-            .catch((error: Error) => {
-                console.error(error)
-            })
+        const headers = rucioAccountAndVOHeaders()
+        RucioClient.Auth.x509AuthCall(
+            {
+                ...commonHeaders,
+                ...headers,
+            },
+            rucioAuthHost,
+            onSuccessfulAuth,
+            onFailedAuth,
+        )
     }
 
     const handleSubmit = (event: any) => {

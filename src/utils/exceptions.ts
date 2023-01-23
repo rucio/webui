@@ -55,7 +55,8 @@ export class AuthError extends CustomError implements Error {
     protected static messages = {
         COMMON_LOGIN_FAILED: 'Login failed',
         OIDC_PROVIDER_NOT_FOUND: 'OIDC provider not found',
-        USERPASS_NO_HEADER: 'No X-Rucio-Auth-Accounts header found in response',
+        NO_ACCOUNTS_LIST_PROVIDED:
+            'No X-Rucio-Auth-Accounts header found in response',
     }
 
     public constructor(public type: string, message: string) {
