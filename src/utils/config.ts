@@ -27,6 +27,7 @@ export const RuleConfig = {
 export const AuthConfig = {
     endpoints: {
         userpass: '/auth/userpass',
+        x509: '/auth/x509',
     },
 }
 
