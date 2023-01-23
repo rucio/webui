@@ -40,11 +40,6 @@ export const Search = () => {
                             ></Button>,
                         ]),
                     )
-                } else {
-                    showAlert({
-                        message: 'No matching DID entries were found.',
-                        variant: 'warn',
-                    })
                 }
             },
             //onError
@@ -76,12 +71,16 @@ export const Search = () => {
                 }
                 content={
                     <div className="m-b-50">
-                        <Table
-                            id="didsearch"
-                            columns={['Sl No.', 'DID', '']}
-                            rows={selectedData}
-                            footer={['Sl No.', 'DID', '']}
-                        />
+                        {selectedData.length !== 0 ? (
+                            <Table
+                                id="didsearch"
+                                columns={['Sl No.', 'DID', '']}
+                                rows={selectedData}
+                                footer={['Sl No.', 'DID', '']}
+                            />
+                        ) : (
+                            <strong>No dids found</strong>
+                        )}
                     </div>
                 }
             ></Card>

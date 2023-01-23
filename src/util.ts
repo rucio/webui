@@ -29,8 +29,12 @@ export const extract_scope = (name: any): string[] => {
         return name.split(':')
     }
     const items = name.split('.')
-    if (items.length <= 1) {
-        throw Error('')
+    if (items[0] === 'user' || items[0] === 'group') {
+        if (items.length <= 2) {
+            return [name, '']
+        }
+    } else if (items.length <= 1) {
+        return [name, '']
     }
     let scope = items[0]
     if (name.indexOf('user') === 0 || name.indexOf('group') === 0) {
