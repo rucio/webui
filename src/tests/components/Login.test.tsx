@@ -29,35 +29,33 @@ describe('Login page render', () => {
     itif(multi_vo)('Multi-vo Tabs Enabled', () => {
         render(renderComponent)
 
-        const atlasTab = screen.getByText('ATLAS')
-        const opsTab = screen.getByText('Operations')
-        const dtmTab = screen.getByText('Dteam')
+        const voTab1 = screen.getByTestId('Tab0')
+        const voTab2 = screen.getByTestId('Tab1')
+        const voTab3 = screen.getByTestId('Tab2')
 
-        expect(atlasTab.parentElement?.getAttribute('class')).toEqual(
-            'is-active',
-        )
-        expect(opsTab.parentElement?.getAttribute('class')).toEqual(null)
-        expect(dtmTab.parentElement?.getAttribute('class')).toEqual(null)
+        expect(voTab1.getAttribute('class')).toEqual('is-active')
+        expect(voTab2.getAttribute('class')).toEqual(null)
+        expect(voTab3.getAttribute('class')).toEqual(null)
 
-        expect(() => act(() => opsTab.click())).not.toThrow()
+        expect(() =>
+            act(() => screen.getByText('Operations').click()),
+        ).not.toThrow()
 
-        expect(atlasTab.parentElement?.getAttribute('class')).toEqual(null)
-        expect(opsTab.parentElement?.getAttribute('class')).toEqual('is-active')
-        expect(dtmTab.parentElement?.getAttribute('class')).toEqual(null)
+        expect(voTab1.getAttribute('class')).toEqual(null)
+        expect(voTab2.getAttribute('class')).toEqual('is-active')
+        expect(voTab3.getAttribute('class')).toEqual(null)
 
-        expect(() => act(() => dtmTab.click())).not.toThrow()
+        expect(() => act(() => screen.getByText('Dteam').click())).not.toThrow()
 
-        expect(atlasTab.parentElement?.getAttribute('class')).toEqual(null)
-        expect(opsTab.parentElement?.getAttribute('class')).toEqual(null)
-        expect(dtmTab.parentElement?.getAttribute('class')).toEqual('is-active')
+        expect(voTab1.getAttribute('class')).toEqual(null)
+        expect(voTab2.getAttribute('class')).toEqual(null)
+        expect(voTab3.getAttribute('class')).toEqual('is-active')
 
-        expect(() => act(() => atlasTab.click())).not.toThrow()
+        expect(() => act(() => screen.getByText('ATLAS').click())).not.toThrow()
 
-        expect(atlasTab.parentElement?.getAttribute('class')).toEqual(
-            'is-active',
-        )
-        expect(opsTab.parentElement?.getAttribute('class')).toEqual(null)
-        expect(dtmTab.parentElement?.getAttribute('class')).toEqual(null)
+        expect(voTab1.getAttribute('class')).toEqual('is-active')
+        expect(voTab2.getAttribute('class')).toEqual(null)
+        expect(voTab3.getAttribute('class')).toEqual(null)
     })
 
     test('Login Options', () => {
