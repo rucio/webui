@@ -22,7 +22,6 @@ export const Tabs = ({
                             onClick={props.handleClick}
                             className="is-active"
                             key={index}
-                            data-testid={'Tab' + index}
                         >
                             <a id={index.toString()}>{element}</a>
                         </li>
@@ -30,7 +29,6 @@ export const Tabs = ({
                         <li
                             onClick={props.handleClick}
                             key={index}
-                            data-testid={'Tab' + index}
                         >
                             <a id={index.toString()}>{element}</a>
                         </li>
