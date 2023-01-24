@@ -26,10 +26,7 @@ export const Tabs = ({
                             <a id={index.toString()}>{element}</a>
                         </li>
                     ) : (
-                        <li
-                            onClick={props.handleClick}
-                            key={index}
-                        >
+                        <li onClick={props.handleClick} key={index}>
                             <a id={index.toString()}>{element}</a>
                         </li>
                     )

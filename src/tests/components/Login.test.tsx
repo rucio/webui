@@ -28,12 +28,14 @@ describe('Login page render', () => {
 
     itif(multi_vo)('Multi-vo Tabs Enabled', () => {
         render(renderComponent)
-        
+
         const atlasTab = screen.getByText('ATLAS')
         const opsTab = screen.getByText('Operations')
         const dtmTab = screen.getByText('Dteam')
 
-        expect(atlasTab.parentElement?.getAttribute('class')).toEqual('is-active')
+        expect(atlasTab.parentElement?.getAttribute('class')).toEqual(
+            'is-active',
+        )
         expect(opsTab.parentElement?.getAttribute('class')).toEqual(null)
         expect(dtmTab.parentElement?.getAttribute('class')).toEqual(null)
 
@@ -51,7 +53,9 @@ describe('Login page render', () => {
 
         expect(() => act(() => atlasTab.click())).not.toThrow()
 
-        expect(atlasTab.parentElement?.getAttribute('class')).toEqual('is-active')
+        expect(atlasTab.parentElement?.getAttribute('class')).toEqual(
+            'is-active',
+        )
         expect(opsTab.parentElement?.getAttribute('class')).toEqual(null)
         expect(dtmTab.parentElement?.getAttribute('class')).toEqual(null)
     })
@@ -96,6 +100,5 @@ describe('Auth workflow', () => {
         expect(
             userPassSignInButtonEnabled.getAttribute('aria-disabled'),
         ).toEqual('false')
-
     })
 })
