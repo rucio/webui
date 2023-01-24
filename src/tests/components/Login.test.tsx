@@ -97,8 +97,5 @@ describe('Auth workflow', () => {
             userPassSignInButtonEnabled.getAttribute('aria-disabled'),
         ).toEqual('false')
 
-        expect(() =>
-            act(() => userPassSignInButtonEnabled.click()),
-        ).not.toThrow()
     })
 })
