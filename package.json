@@ -39,6 +39,7 @@
         "build": "CI=false react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "test:coverage": "CI=true npm test -- --coverage",
+        "test:multi-vo": "REACT_APP_multi_vo_enabled=true npm test",
         "lint": "eslint src --color",
         "lint-staged": "lint-staged --config tools/lint-staged.js",
         "prettier": "prettier -c src",

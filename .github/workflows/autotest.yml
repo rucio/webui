@@ -17,6 +17,8 @@ jobs:
               run: npm clean-install --legacy-peer-deps
             - name: Run tests
               run: npm test
+            - name: Test in Multi-vo
+              run: REACT_APP_multi_vo_enabled=true npm test
             - name: Format code
               run: npm run prettier
             - name: Lint
