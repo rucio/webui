@@ -248,6 +248,7 @@ export const Login = ({ onLoginSuccess }: any) => {
             {
                 ...commonHeaders,
                 ...headers,
+                'X-Rucio-Allow-Return-Multiple-Accounts': 'true',
             },
             rucioAuthHost,
             onSuccessfulAuth,
