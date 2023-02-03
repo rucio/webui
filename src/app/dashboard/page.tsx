@@ -1,44 +1,17 @@
 'use client';
 import React from 'react';
-import { withSessionSsr } from '@/lib/infrastructure/auth/withSession';
-import useUser from '@/lib/infrastructure/hooks/useUser';
+import withSession from '@/components/auth-wrapper';
+import { RucioUser } from '@/lib/core/entity/auth-models';
 
-export default function Dashboard() {
-  const { user } = useUser({
-    redirectTo: '/login',
-    redirectIfFound: false,
-  });
-  if (!user?.isLoggedIn) {
-    return (
-      <div>
-        <h1>Dashboard</h1>
-        <p>You are not logged in</p>
-      </div>
-    )
-  }
+const Dashboard = (props: any) => {
+  const user: RucioUser = props.user;
+
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Welcome to the dashboard, {user?.rucioIdentity}</p>
+      <p>Welcome to the dashboard, {user.rucioIdentity}</p>
     </div>
   );
 }
 
-
-// export const getServerSideProps = withSessionSsr(
-//   async function getServerSideProps({ req }) {
-//     const user = req.session.user;
-
-//     if (user?.isLoggedIn !== true) {
-//       return {
-//         notFound: true,
-//       };
-//     }
-
-//     return {
-//       props: {
-//         user: req.session.user,
-//       },
-//     };
-//   },
-// );
+export default withSession(Dashboard);
