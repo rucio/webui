@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { withIronSessionApiRoute } from 'iron-session/next'
-import { sessionOptions } from '@/lib/infrastructure/auth/session'
 import { RucioUser } from "@/lib/core/entity/auth-models"
-
+import { withSessionRoute } from "@/lib/infrastructure/auth/withSession"
 
 async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     const { username, password } = req.body
@@ -25,4 +23,4 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
-export default withIronSessionApiRoute(loginRoute, sessionOptions)
+export default withSessionRoute(loginRoute)

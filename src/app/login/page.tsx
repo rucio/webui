@@ -1,24 +1,38 @@
 'use client';
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import useUser from "@/lib/infrastructure/hooks/useUser";
+
+
 export default function Login() {
     const [username, setUsername] = useState('');
-    const router = useRouter();
+    const { mutateUser } = useUser({
+        redirectTo: '/dashboard',
+        redirectIfFound: true,
+      })  
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+              
+        
         // Add your authentication logic here
         const body = {
             username: event.currentTarget.username.value,
           }
-        console.log(body);
-        // router.push('/dashboard');
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        })
+        try{
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            })
+            if (res.status === 200) {
+                const user = await res.json()
+                mutateUser(user)
+            }
+        } catch (error) {
+            console.error('An unexpected error happened occurred:', error)
+        }
+
         console.log(`Username: ${username}`);
     };
     return (
