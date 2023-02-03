@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from './page.module.css'
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,7 +31,7 @@ export default function Home() {
           </a>
         </div>
       </div>
-
+      <Link href="/dashboard">Go to Dashboard</Link>
       <div className={styles.center}>
         <Image
           className={styles.logo}
@@ -46,8 +47,7 @@ export default function Home() {
       </div>
 
       <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+        <a href="/dashboard"
           className={styles.card}
           target="_blank"
           rel="noopener noreferrer"
