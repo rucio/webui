@@ -1,11 +1,11 @@
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
+import { sessionOptions } from "@/lib/infrastructure/auth/session";
 import {
     GetServerSidePropsContext,
     GetServerSidePropsResult,
     NextApiHandler,
 } from "next";
 
-import { sessionOptions } from "@/lib/infrastructure/auth/session";
 
 export function withSessionRoute(handler: NextApiHandler) {
     return withIronSessionApiRoute(handler, sessionOptions);
