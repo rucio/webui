@@ -1,6 +1,9 @@
 import { RucioUser } from "@/lib/core/entity/auth-models";
 import { unsealData } from "iron-session";
+import { withIronSessionApiRoute } from "iron-session/next/dist";
+import { NextApiHandler } from "next";
 import { ReadonlyRequestCookies } from "next/dist/server/app-render";
+import { sessionOptions } from "../config/session";
 
 /**
  * Returns the {@link Ruciouser} object from the iron session
@@ -30,6 +33,16 @@ export const getRucioAuthToken =async (cookies:ReadonlyRequestCookies): Promise<
     const rucioUser = await getRucioUserFromSession(cookies);
     if (!rucioUser) return new Promise<string>(resolve => resolve(""));
     return new Promise<string>(resolve => resolve(rucioUser.rucioAuthToken));
+}
+
+
+/**
+ * Makes a iron session available to a NEXT.js API route via its req.session.user property
+ * @param handler {@link NextApiHandler} or a NEXT.js API route
+ * @returns wrapped {@link NextApiHandler} or a NEXT.js API route
+ */
+export function withSessionRoute(handler: NextApiHandler) {
+    return withIronSessionApiRoute(handler, sessionOptions);
 }
 
 

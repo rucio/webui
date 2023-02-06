@@ -2,8 +2,10 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { RucioUser } from "@/lib/core/entity/auth-models"
 import { withSessionRoute } from "@/lib/infrastructure/auth/session-utils"
 
-async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
-    const { username, password } = req.body
+async function userpassRoute(req: NextApiRequest, res: NextApiResponse) {
+    const { username, password, account } = req.body
+    const { redirectTo } = req.query
+    
     // const user = await getUser(username, password)
     const user: RucioUser = { 
         rucioIdentity: username, 
@@ -23,4 +25,4 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
-export default withSessionRoute(loginRoute)
+export default withSessionRoute(userpassRoute)
