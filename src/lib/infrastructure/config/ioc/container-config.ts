@@ -10,15 +10,14 @@ import UserPassLoginController from "@/lib/infrastructure/controller/userpass-lo
 import UserPassLoginPresenter from "@/lib/infrastructure/presenter/usepass-login-presenter";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 
-export default function createContainer() {
-    const container = new Container();
-    container.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase);
-    container.bind<UserPassLoginOutputPort<any>>(OUTPUT_PORT.USERPASS_LOGIN).to(UserPassLoginPresenter);
-    container.bind<UserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
-    container.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN).toFactory<UserPassLoginUseCase, [NextApiResponse]>((context: interfaces.Context) =>
-        (response: NextApiResponse) => {
-            return new UserPassLoginUseCase(new UserPassLoginPresenter(response));
-        }
-    );
-    return container;
-}
+const appContainer = new Container();
+appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase);
+appContainer.bind<UserPassLoginOutputPort<any>>(OUTPUT_PORT.USERPASS_LOGIN).to(UserPassLoginPresenter);
+appContainer.bind<UserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
+appContainer.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN).toFactory<UserPassLoginUseCase, [NextApiResponse]>((context: interfaces.Context) =>
+    (response: NextApiResponse) => {
+        return new UserPassLoginUseCase(new UserPassLoginPresenter(response));
+    }
+);
+
+export default appContainer;

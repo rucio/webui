@@ -62,7 +62,7 @@ describe("Test Clean Architecture Design", () => {
     
     it("should present unique response for each incoming request", () => {
         const container = new Container();
-        container.bind<IUseCaseInputPort>("IUseCaseInputPort").to(TestUseCase).inRequestScope();
+        container.bind<IUseCaseInputPort>("IUseCaseInputPort").to(TestUseCase)
         // container.bind<IUseCaseOutputPort<IRESTResponse>>("IUseCaseOutputPort").to(TestUseCasePresenter);
         container.bind<ITestController>("ITestController").to(TestController);
         container.bind<interfaces.Factory<IUseCaseInputPort>>(`Factory<IUseCaseInputPort>`).toFactory<TestUseCase, [IRESTResponse]>((context: interfaces.Context) => 
