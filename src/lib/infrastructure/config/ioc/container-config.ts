@@ -1,5 +1,5 @@
-import UserPassLoginInputPort from "@/lib/core/port/primary/userpass-login-input-port";
 import { Container, interfaces } from "inversify";
+import UserPassLoginInputPort from "@/lib/core/port/primary/userpass-login-input-port";
 import { NextApiResponse } from "next";
 import CONTROLLERS from "./ioc-symbols-controllers";
 import INPUT_PORT from "../../../common/ioc/ioc-symbols-input-port";

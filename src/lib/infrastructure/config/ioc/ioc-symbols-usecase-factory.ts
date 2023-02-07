@@ -5,7 +5,8 @@
  * They inject the response object into the presenter used by the use case.
  */
 const USECASE_FACTORY = {
-    USERPASS_LOGIN: Symbol.for("Factory<UserPassLoginUseCase>")
+    USERPASS_LOGIN: Symbol.for("Factory<UserPassLoginUseCase>"),
+    TEST: Symbol.for("Factory<TestUseCase>")
 }
 
 export default USECASE_FACTORY;

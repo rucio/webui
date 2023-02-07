@@ -9,7 +9,7 @@ export interface IUserPassLoginController {
 }
 
 @injectable()
-export default class UserPassLoginController implements IUserPassLoginController {
+class UserPassLoginController implements IUserPassLoginController {
     private useCase: UserPassLoginInputPort | null = null;
     private useCaseFactory: (response: NextApiResponse) => UserPassLoginInputPort;
     
@@ -29,3 +29,5 @@ export default class UserPassLoginController implements IUserPassLoginController
         this.useCase.execute(username, password, account);
     }
 }
+
+export default UserPassLoginController
