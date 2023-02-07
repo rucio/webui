@@ -1,3 +1,7 @@
+import { injectable } from "inversify";
+
+
+@injectable()
 export default interface UserPassLoginInputPort {
     execute(
         username: string, 

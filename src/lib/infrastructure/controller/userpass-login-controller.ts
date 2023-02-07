@@ -4,8 +4,12 @@ import { inject, injectable } from "inversify";
 import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
 
+export interface IUserPassLoginController {
+    handle(username: string, password: string, account: string, response: NextApiResponse, redirectTo: string): void;
+}
+
 @injectable()
-export default class UserPassLoginController {
+export default class UserPassLoginController implements IUserPassLoginController {
     private useCase: UserPassLoginInputPort | null = null;
     private useCaseFactory: (response: NextApiResponse) => UserPassLoginInputPort;
     

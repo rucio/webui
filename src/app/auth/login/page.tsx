@@ -18,7 +18,7 @@ export default function Login() {
             username: event.currentTarget.username.value,
           }
         try{
-            const res = await fetch('/api/auth/logout', {
+            const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

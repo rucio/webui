@@ -3,7 +3,7 @@ import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-outp
 import { NextApiResponse } from "next";
 
 export default class UserPassLoginPresenter implements UserPassLoginOutputPort<NextApiResponse> {
-    response: any;
+    response: NextApiResponse;
 
     constructor(response: NextApiResponse) {
         this.response = response;

@@ -5,9 +5,8 @@ import type UserPassLoginOutputPort from "../port/primary/userpass-login-output-
 
 @injectable()
 class UserPassLoginUseCase implements UserPassLoginInputPort {
-    private presenter: UserPassLoginOutputPort<any>;
 
-    constructor(presenter: UserPassLoginOutputPort<any>) {
+    constructor(private presenter: UserPassLoginOutputPort<any>) {
         this.presenter = presenter;
     }
     execute(
