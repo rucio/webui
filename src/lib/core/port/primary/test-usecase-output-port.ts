@@ -1,4 +1,6 @@
+import { UserpassLoginResponse } from "../../data/userpass-login";
+
 export default interface IUseCaseOutputPort<T> {
     response: T;
-    present(message: string): void;
+    present(responseModel: UserpassLoginResponse): void;
 }

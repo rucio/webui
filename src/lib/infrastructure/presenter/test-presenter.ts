@@ -1,6 +1,7 @@
 import IUseCaseOutputPort from "@/lib/core/port/primary/test-usecase-output-port";
 import type { NextApiResponse } from "next";
 import { injectable } from "inversify";
+import { UserpassLoginResponse } from "@/lib/core/data/userpass-login";
 
 @injectable()
 class TestUseCasePresenter implements IUseCaseOutputPort<NextApiResponse> {
@@ -8,8 +9,8 @@ class TestUseCasePresenter implements IUseCaseOutputPort<NextApiResponse> {
     constructor(response: NextApiResponse) {
         this.response = response;
     }
-    present(message: string): void {
-        this.response.status(200).json(message + Math.random());
+    present(responseModel: UserpassLoginResponse): void {
+        this.response.status(200).json(responseModel.rucioIdentity + Math.random());
     }
 }
 
