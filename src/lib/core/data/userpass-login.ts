@@ -1,4 +1,6 @@
-
+/**
+ * RequestModel for {@link UserPassLoginInputPort}
+ */
 export type UserpassLoginRequest = {
     username: string;
     password: string;
@@ -6,6 +8,9 @@ export type UserpassLoginRequest = {
     redirectTo?: string;
 }
 
+/**
+ * ResponseModel for {@link UserPassLoginOutputPort}, if login was successful
+ */
 export type UserpassLoginResponse = {
     rucioIdentity: string;
     rucioAccount: string;
@@ -13,6 +18,9 @@ export type UserpassLoginResponse = {
     rucioAuthToken: string;
 }
 
+/**
+ * ErrorModel for {@link UserPassLoginOutputPort}, if login was not successful
+ */
 export type UserpassLoginError = {
     message: string;
 }

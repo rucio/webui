@@ -8,11 +8,12 @@ import USECASE_FACTORY from "./ioc-symbols-usecase-factory";
 import UserPassLoginUseCase from "@/lib/core/use-case/userpass-login-usecase";
 import UserPassLoginController, {IUserPassLoginController} from "@/lib/infrastructure/controller/userpass-login-controller";
 import UserPassLoginPresenter from "@/lib/infrastructure/presenter/usepass-login-presenter";
-import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 
+/**
+ * IoC Container configuration for the application.
+ */
 const appContainer = new Container();
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
-// appContainer.bind<UserPassLoginOutputPort<any>>(OUTPUT_PORT.USERPASS_LOGIN).to(UserPassLoginPresenter);
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
 appContainer.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN).toFactory<UserPassLoginUseCase, [NextApiResponse]>((context: interfaces.Context) =>
     (response: NextApiResponse) => {

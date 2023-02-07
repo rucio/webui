@@ -3,6 +3,9 @@ import { UserpassLoginRequest, UserpassLoginResponse } from "../data/userpass-lo
 import UserPassLoginInputPort from "../port/primary/userpass-login-input-port";
 import type UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";
 
+/**
+ * UseCase for UserPassLogin workflow.
+ */
 @injectable()
 class UserPassLoginUseCase implements UserPassLoginInputPort {
 

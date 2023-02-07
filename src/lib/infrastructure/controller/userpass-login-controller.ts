@@ -4,10 +4,16 @@ import { inject, injectable } from "inversify";
 import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
 
+/**
+ * Declares an interface to initiate the UserPassLogin workflow via the {@link UserPassLoginUseCase}
+ */
 export interface IUserPassLoginController {
     handle(username: string, password: string, account: string, response: NextApiResponse, redirectTo: string): void;
 }
 
+/**
+ * Provides an implementation of the {@link UserPassLoginController} interface.
+ */
 @injectable()
 class UserPassLoginController implements IUserPassLoginController {
     private useCase: UserPassLoginInputPort | null = null;
@@ -26,7 +32,7 @@ class UserPassLoginController implements IUserPassLoginController {
             password: password,
             account: 'ddmlab',
         }
-        this.useCase.execute(username, password, account);
+        this.useCase.execute(requestModel);
     }
 }
 
