@@ -4,6 +4,7 @@
  */
 const INPUT_PORT = {
     USERPASS_LOGIN: Symbol.for("UserPassLoginInputPort"),
+    TEST: Symbol.for("TestInputPort")
 }
 
 export default INPUT_PORT;
