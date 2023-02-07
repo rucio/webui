@@ -6,7 +6,6 @@
  */
 const USECASE_FACTORY = {
     USERPASS_LOGIN: Symbol.for("Factory<UserPassLoginUseCase>"),
-    TEST: Symbol.for("Factory<TestUseCase>")
 }
 
 export default USECASE_FACTORY;

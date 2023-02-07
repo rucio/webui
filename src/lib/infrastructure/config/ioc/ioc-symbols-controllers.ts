@@ -6,7 +6,6 @@
  */
 const CONTROLLERS = {
     USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
-    TEST: Symbol.for("TestController")
 }
 
 export default CONTROLLERS;
