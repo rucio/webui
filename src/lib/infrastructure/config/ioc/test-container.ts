@@ -1,22 +1,10 @@
+import "reflect-metadata"
 import { inject, injectable, Container, interfaces } from 'inversify';
 import type { NextApiResponse } from 'next';
-import IUseCaseInputPort from '@/lib/core/port/primary/test-usecase-input-port';
+import type IUseCaseInputPort from '@/lib/core/port/primary/test-usecase-input-port';
+import type IUseCaseOutputPort from '@/lib/core/port/primary/test-usecase-output-port';
 
-interface IUseCaseOutputPort<T> {
-    response: T;
-    present(message: string): void;
-}
 
-@injectable()
-class TestUseCase implements IUseCaseInputPort {
-
-    constructor(private presenter: IUseCaseOutputPort<any>) {
-        this.presenter = presenter;
-    }
-    execute(): void {
-        this.presenter.present("Hello World");
-    }
-}
 
 @injectable()
 class TestUseCasePresenter implements IUseCaseOutputPort<NextApiResponse> {
