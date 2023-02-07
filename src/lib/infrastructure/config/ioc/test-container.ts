@@ -4,12 +4,7 @@ import type { NextApiResponse } from 'next';
 import type IUseCaseInputPort from '@/lib/core/port/primary/test-usecase-input-port';
 import TestUseCase from "@/lib/core/use-case/test-usecase";
 import TestUseCasePresenter from "@/lib/infrastructure/presenter/test-presenter";
-
-
-export interface ITestController {
-    handle(response: NextApiResponse): void;
-}
-
+import TestController, { ITestController } from "@/lib/infrastructure/controller/test-usecase-controller";
 
 
 const container = new Container();
