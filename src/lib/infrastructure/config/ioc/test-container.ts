@@ -1,24 +1,11 @@
 import { inject, injectable, Container, interfaces } from 'inversify';
 import type { NextApiResponse } from 'next';
+import IUseCaseInputPort from '@/lib/core/port/primary/test-usecase-input-port';
 
-interface IUseCaseInputPort {
-    execute(): void;
-}
 interface IUseCaseOutputPort<T> {
     response: T;
     present(message: string): void;
 }
-// interface IRESTResponse {
-//     message: string;
-//     setMessage(message: string): void;
-// }
-
-// class RESTResponse implements IRESTResponse {
-//     message: string = "";
-//     setMessage(message: string): void {
-//         this.message = message;
-//     }
-// }
 
 @injectable()
 class TestUseCase implements IUseCaseInputPort {
