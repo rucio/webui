@@ -1,4 +1,5 @@
 import { createMocks } from 'node-mocks-http';
+import { enableFetchMocks } from 'jest-fetch-mock'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config';
 import { IUserPassLoginController } from '@/lib/infrastructure/controller/userpass-login-controller';
 import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers';
@@ -7,7 +8,24 @@ import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 
 
 describe('UserPassLogin API Test', () => {
+    beforeEach(() => {
+        fetchMock.doMock();
+        const authServer = process.env.RUCIO_AUTH_HOST;
+        fetchMock.mockIf(/^https?:\/\/rucio-auth-host.com.*$/, (req) => {
+            if (req.url.endsWith('/auth/userpass')) {
+                return Promise.resolve({
+                    status: 200,
+                    body: JSON.stringify({
+                        rucioIdentity: 'ddmlab'
+                    })
+                })
+            }
+        })
+    })
+    // enableFetchMocks();
     it('should present successful LoginViewModel', async () => {
+
+        // fetch.mockResponseOnce(JSON.stringify({ rucioIdentity: 'ddmlab' }));
         const { req, res } = createMocks({
             method: 'POST',
             body: {

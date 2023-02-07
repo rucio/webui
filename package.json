@@ -17,6 +17,7 @@
     "eslint-config-next": "13.1.6",
     "inversify": "^6.0.1",
     "iron-session": "^6.3.1",
+    "jest-fetch-mock": "^3.0.3",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",

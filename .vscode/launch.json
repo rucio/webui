@@ -31,7 +31,7 @@
         "runtimeArgs": [
           "--inspect-brk",
           "${workspaceRoot}/node_modules/.bin/jest",
-          "--runInBand"
+          "--runInBand",
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
