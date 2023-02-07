@@ -1,9 +1,9 @@
+import "reflect-metadata";
 import { Container, interfaces } from "inversify";
 import UserPassLoginInputPort from "@/lib/core/port/primary/userpass-login-input-port";
 import { NextApiResponse } from "next";
 import CONTROLLERS from "./ioc-symbols-controllers";
 import INPUT_PORT from "../../../common/ioc/ioc-symbols-input-port";
-import OUTPUT_PORT from "../../../common/ioc/ioc-symbols-output-port";
 import USECASE_FACTORY from "./ioc-symbols-usecase-factory";
 import UserPassLoginUseCase from "@/lib/core/use-case/userpass-login-usecase";
 import UserPassLoginController, {IUserPassLoginController} from "@/lib/infrastructure/controller/userpass-login-controller";

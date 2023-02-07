@@ -1,11 +1,8 @@
 import { injectable } from "inversify";
+import { UserpassLoginRequest } from "../../data/userpass-login";
 
 
 @injectable()
 export default interface UserPassLoginInputPort {
-    execute(
-        username: string, 
-        password: string, 
-        account: string, 
-    ): void;
+    execute(request: UserpassLoginRequest ): void;
 }
