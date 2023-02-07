@@ -3,7 +3,7 @@ import { inject, injectable, Container, interfaces } from 'inversify';
 import type { NextApiResponse } from 'next';
 import type IUseCaseInputPort from '@/lib/core/port/primary/test-usecase-input-port';
 import type IUseCaseOutputPort from '@/lib/core/port/primary/test-usecase-output-port';
-
+import TestUseCase from "@/lib/core/use-case/test-usecase";
 
 
 @injectable()
