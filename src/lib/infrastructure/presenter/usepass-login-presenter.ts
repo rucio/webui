@@ -1,5 +1,4 @@
-import { UserpassLoginResponse } from "@/lib/core/data/userpass-login";
-import { RucioUser } from "@/lib/core/entity/auth-models";
+import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 import { NextApiResponse } from "next";
 
@@ -14,11 +13,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
         this.response.status(200).json({ responseModel });
     }
 
-    presentError(error: Error, redirectTo?: string) {
-        this.response.status(500).json({ error, redirectTo });
-    }
-
-    setResponseHandler(handler: NextApiResponse) {
-        this.response = handler;
+    presentError(error: UserpassLoginError) {
+        this.response.status(500).json({ message: error.message });
     }
 }

@@ -3,7 +3,5 @@ export default interface UserPassLoginInputPort {
         username: string, 
         password: string, 
         account: string, 
-        response: any, 
-        redirectTo?: string
-    ): Promise<void>;
+    ): void;
 }

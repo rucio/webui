@@ -14,5 +14,5 @@ export type UserpassLoginResponse = {
 }
 
 export type UserpassLoginError = {
-    error: string;
+    message: string;
 }

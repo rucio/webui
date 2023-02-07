@@ -8,5 +8,4 @@ export default interface UserPassLoginOutputPort<T> {
     response: T;
     presentSuccess(responseModel: UserpassLoginResponse): void;
     presentError(error: UserpassLoginError): void;
-    setResponseHandler(handler: T): void;
 }

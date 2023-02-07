@@ -1,13 +1,28 @@
+import { injectable } from "inversify";
+import { UserpassLoginResponse } from "../data/userpass-login";
 import UserPassLoginInputPort from "../port/primary/userpass-login-input-port";
+import type UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";
 
-class UserpassLoginUseCase implements UserPassLoginInputPort {
-    async execute(
+@injectable()
+class UserPassLoginUseCase implements UserPassLoginInputPort {
+    private presenter: UserPassLoginOutputPort<any>;
+
+    constructor(presenter: UserPassLoginOutputPort<any>) {
+        this.presenter = presenter;
+    }
+    execute(
         username: string, 
         password: string, 
         account: string, 
-        response: any, 
-        redirectTo?: string
-    ): Promise<void> {
-        // ...
+    ): void {
+        const responseModel: UserpassLoginResponse = {
+            rucioIdentity: username,
+            rucioAccount: account,
+            rucioAuthType: 'userpass',
+            rucioAuthToken: 'token' + password +  Math.random(),
+        }
+        this.presenter.presentSuccess(responseModel)
     }
 }
+
+export default UserPassLoginUseCase;

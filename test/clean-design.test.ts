@@ -4,7 +4,7 @@ describe("Test Clean Architecture Design", () => {
     interface IUseCaseInputPort {
         execute(): void;
     }
-    interface IUseCaseOutputPort {
+    interface IUseCaseOutputPort<IRESTResponse> {
         present(message: string): void;
     }
     interface IRESTResponse {
@@ -22,7 +22,7 @@ describe("Test Clean Architecture Design", () => {
     @injectable()
     class TestUseCase implements IUseCaseInputPort {
         
-        constructor(@inject("ITestPresenter") private presenter: IUseCaseOutputPort) {
+        constructor(private presenter: IUseCaseOutputPort<any>) {
             this.presenter = presenter;
         }
         execute(): void{
@@ -31,7 +31,7 @@ describe("Test Clean Architecture Design", () => {
     }
     
     @injectable()
-    class TestUseCasePresenter implements IUseCaseOutputPort {
+    class TestUseCasePresenter implements IUseCaseOutputPort<IRESTResponse> {
         constructor(private respone: IRESTResponse) {
             this.respone = respone;
         }
@@ -63,7 +63,7 @@ describe("Test Clean Architecture Design", () => {
     it("should present unique response for each incoming request", () => {
         const container = new Container();
         container.bind<IUseCaseInputPort>("IUseCaseInputPort").to(TestUseCase).inRequestScope();
-        container.bind<IUseCaseOutputPort>("ITestPresenter").to(TestUseCasePresenter);
+        // container.bind<IUseCaseOutputPort<IRESTResponse>>("IUseCaseOutputPort").to(TestUseCasePresenter);
         container.bind<ITestController>("ITestController").to(TestController);
         container.bind<interfaces.Factory<IUseCaseInputPort>>(`Factory<IUseCaseInputPort>`).toFactory<TestUseCase, [IRESTResponse]>((context: interfaces.Context) => 
             (response: IRESTResponse) => {
@@ -79,7 +79,9 @@ describe("Test Clean Architecture Design", () => {
         const controller = container.get<ITestController>("ITestController");
         controller.handle(response1);
         controller.handle(response2);
-
+        
+        console.log(response1.message);
+        console.log(response2.message);
         expect(response1.message).not.toBe(response2.message);
     });
 });
