@@ -25,14 +25,14 @@ class UserPassLoginController implements IUserPassLoginController {
         this.useCaseFactory = useCaseFactory;
       }
 
-    handle(username: string, password: string, account: string, response: NextApiResponse, redirectTo: string) {
+    async handle(username: string, password: string, account: string, response: NextApiResponse, redirectTo: string) {
         this.useCase = this.useCaseFactory(response);
         const requestModel: UserpassLoginRequest = {
             username: username,
             password: password,
             account: 'ddmlab',
         }
-        this.useCase.execute(requestModel);
+        await this.useCase.execute(requestModel);
     }
 }
 

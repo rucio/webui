@@ -1,5 +1,4 @@
 import { createMocks } from 'node-mocks-http';
-import { enableFetchMocks } from 'jest-fetch-mock'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config';
 import { IUserPassLoginController } from '@/lib/infrastructure/controller/userpass-login-controller';
 import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers';
@@ -15,17 +14,20 @@ describe('UserPassLogin API Test', () => {
             if (req.url.endsWith('/auth/userpass')) {
                 return Promise.resolve({
                     status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Rucio-Auth-Token': 'rucio-ddmlab-askdjljioj',
+                        'X-Rucio-Auth-Account': 'root'
+                    },
                     body: JSON.stringify({
-                        rucioIdentity: 'ddmlab'
                     })
+                    
                 })
             }
         })
     })
-    // enableFetchMocks();
     it('should present successful LoginViewModel', async () => {
 
-        // fetch.mockResponseOnce(JSON.stringify({ rucioIdentity: 'ddmlab' }));
         const { req, res } = createMocks({
             method: 'POST',
             body: {
@@ -34,12 +36,16 @@ describe('UserPassLogin API Test', () => {
             }
         });
         const userpassLoginController = appContainer.get<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN)
-        userpassLoginController.handle(req.body.username, req.body.password, 'ddmlab', res as undefined as NextApiResponse, '/dashboard');
-        console.log(res._getStatusCode());
+        await userpassLoginController.handle(req.body.username, req.body.password, '', res as undefined as NextApiResponse, '/dashboard');
         expect(res._getStatusCode()).toBe(200);
+        console.log(JSON.parse(res._getData()))
         const viewModel: LoginViewModel = JSON.parse(res._getData());
         expect(viewModel).toHaveProperty('rucioIdentity');
         expect(viewModel.rucioIdentity).toBe('ddmlab');
+        expect(viewModel).toHaveProperty('rucioAuthToken');
+        expect(viewModel.rucioAuthToken).toBe('rucio-ddmlab-askdjljioj');
+        expect(viewModel).toHaveProperty('rucioAccount');
+        expect(viewModel.rucioAccount).toBe('root');
     });
 
 });

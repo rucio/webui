@@ -80,8 +80,6 @@ describe("Test Clean Architecture Design", () => {
         controller.handle(response1);
         controller.handle(response2);
         
-        console.log(response1.message);
-        console.log(response2.message);
         expect(response1.message).not.toBe(response2.message);
     });
 });

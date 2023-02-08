@@ -16,14 +16,21 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
     ) {
         this.presenter = presenter;
     }
-    execute(request: UserpassLoginRequest):void {
+    async execute(request: UserpassLoginRequest): Promise<void> {
+        const dto = await this.authServer.userpassLogin(request.username, request.password, request.account)
+        if (dto.statusCode !== 200) {
+            // this.presenter.presentError({
+            //     message: dto.message,
+            //     status: dto.statusCode,
+            // })
+            // return
+        }
         const responseModel: UserpassLoginResponse = {
             rucioIdentity: request.username,
-            rucioAccount: request.account,
+            rucioAccount: dto.account,
             rucioAuthType: 'userpass',
-            rucioAuthToken: 'token' + request.account +  Math.random(),
+            rucioAuthToken: dto.authToken,
         }
-        this.authServer.userpassLogin(request.username, request.password, request.account)
         this.presenter.presentSuccess(responseModel)
     }
 }
