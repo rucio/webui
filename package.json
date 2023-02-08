@@ -6,20 +6,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest --watch"
   },
   "dependencies": {
     "@next/font": "13.1.6",
-    "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
+    "inversify": "^6.0.1",
     "iron-session": "^6.3.1",
+    "jest-fetch-mock": "^3.0.3",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "reflect-metadata": "^0.1.13",
     "swr": "^2.0.3",
+    "ts-node": "^10.9.1",
     "typescript": "4.9.5"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "jest": "^29.4.1",
+    "jest-environment-jsdom": "^29.4.1",
+    "node-mocks-http": "^1.12.1"
   }
 }
