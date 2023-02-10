@@ -1,9 +1,7 @@
 export type LoginViewModel = {
-    status: 'success' | 'error';
-    message?: string;
-    redirectTo?: string;
-    rucioIdentity: string;
-    rucioAccount: string;
-    rucioAuthType: string;
-    rucioAuthToken: string;
-};
+    x509Enabled: boolean;
+    oidcEnabled: boolean;
+    oidcProviders: OIDCProvider[];
+    multiVOEnabled: boolean;
+    voList: string[];
+}

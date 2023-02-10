@@ -3,7 +3,7 @@ import appContainer from '@/lib/infrastructure/config/ioc/container-config';
 import { IUserPassLoginController } from '@/lib/infrastructure/controller/userpass-login-controller';
 import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers';
 import { NextApiResponse } from 'next';
-import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
+import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 
 
 describe('UserPassLogin API Test', () => {
@@ -39,7 +39,7 @@ describe('UserPassLogin API Test', () => {
         await userpassLoginController.handle(req.body.username, req.body.password, '', res as undefined as NextApiResponse, '/dashboard');
         expect(res._getStatusCode()).toBe(200);
         console.log(JSON.parse(res._getData()))
-        const viewModel: LoginViewModel = JSON.parse(res._getData());
+        const viewModel: AuthViewModel = JSON.parse(res._getData());
         expect(viewModel).toHaveProperty('rucioIdentity');
         expect(viewModel.rucioIdentity).toBe('ddmlab');
         expect(viewModel).toHaveProperty('rucioAuthToken');

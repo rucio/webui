@@ -6,8 +6,7 @@ import { IUserPassLoginController } from "@/lib/infrastructure/controller/userpa
 import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers"
 
 async function userpassAuthRoute(req: NextApiRequest, res: NextApiResponse) {
-    const { username, password } = req.body
-    const account = 'ddmlab'
+    const { username, password, account } = req.body
     const redirectTo = '/dashboard'
     const userpassLoginController = appContainer.get<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN)
     userpassLoginController.handle(username, password, account, res, redirectTo)

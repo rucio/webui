@@ -31,6 +31,7 @@ class UserPassLoginController implements IUserPassLoginController {
             username: username,
             password: password,
             account: 'ddmlab',
+            redirectTo: redirectTo,
         }
         await this.useCase.execute(requestModel);
     }

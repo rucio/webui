@@ -9,3 +9,28 @@ export type RucioUser = {
     rucioOIDCProvider: string
     isLoggedIn: boolean
 }
+
+/**
+ * Represents an OIDC provider in Rucio. Used by auth models when OIDC is enabled.
+ */
+export type OIDCProvider = {
+    name: string;
+    url: string;
+    icon: string;
+    clientId: string;
+    clientSecret: string;
+    authorizationUrl: string;
+    refreshTokenUrl: string;
+    redirectUrl: string;
+    tokenUrl: string;
+    userInfoUrl: string;
+    scope: string;
+};
+
+/**
+ * Represents a VO in Rucio. Used by auth models when multi-VO is enabled.
+ */
+export type VO = {
+    name: string;
+    shortName: string;
+}
