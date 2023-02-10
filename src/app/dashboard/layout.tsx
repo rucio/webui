@@ -2,13 +2,15 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getRucioAuthToken } from '@/lib/infrastructure/auth/session-utils'
 import { ReadonlyRequestCookies } from 'next/dist/server/app-render';
+import { RequestCookies } from "next/dist/server/web/spec-extension/cookies";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const rucioAuthToken = await getRucioAuthToken(cookies() as unknown as ReadonlyRequestCookies)
+  const all_cookies: RequestCookies | ReadonlyRequestCookies = cookies()
+  const rucioAuthToken = await getRucioAuthToken(all_cookies)
   if (!rucioAuthToken || rucioAuthToken === '') {
     redirect('/auth/login')
   }

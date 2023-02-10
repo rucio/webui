@@ -1,6 +1,7 @@
 import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login";
+import { RucioUser } from "@/lib/core/entity/auth-models";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
-import { NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import type { AuthViewModel } from "../data/auth/auth";
 
 
@@ -10,9 +11,11 @@ import type { AuthViewModel } from "../data/auth/auth";
  */
 export default class UserPassLoginPresenter implements UserPassLoginOutputPort<NextApiResponse> {
     response: NextApiResponse;
+    request: NextApiRequest;
 
-    constructor(response: NextApiResponse) {
+    constructor(request: NextApiRequest, response: NextApiResponse) {
         this.response = response;
+        this.request = request;
     }
 
     presentSuccess(responseModel: UserpassLoginResponse) {
@@ -23,6 +26,12 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthToken: responseModel.rucioAuthToken,
             status: 'success',
         }
+        // set session
+        // if redirect was requested, redirect
+        // const sessionModel: RucioUser = {
+        //     rucioIdentity: responseModel.rucioIdentity,
+        //     rucioAccount: responseModel.rucioAccount,
+
         this.response.status(200).json(viewModel);
     }
 

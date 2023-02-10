@@ -3,6 +3,7 @@ import { unsealData } from "iron-session";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiHandler } from "next";
 import { ReadonlyRequestCookies } from "next/dist/server/app-render";
+import { RequestCookies } from "next/dist/server/web/spec-extension/cookies";
 import { sessionOptions } from "../config/session";
 
 /**
@@ -29,8 +30,9 @@ export const getRucioUserFromSession = async(
  * @param cookies {@link ReadonlyRequestCookies} from the iron session object
  * @returns rucioAuthToken for the current {@link RucioUser} or an empty string
  */
-export const getRucioAuthToken =async (cookies:ReadonlyRequestCookies): Promise<string> => {
-    const rucioUser = await getRucioUserFromSession(cookies);
+export const getRucioAuthToken =async (cookies: RequestCookies | ReadonlyRequestCookies): Promise<string> => {
+    let readOnlyCookies = cookies as unknown as ReadonlyRequestCookies;
+    const rucioUser = await getRucioUserFromSession(readOnlyCookies);
     if (!rucioUser) return new Promise<string>(resolve => resolve(""));
     return new Promise<string>(resolve => resolve(rucioUser.rucioAuthToken));
 }

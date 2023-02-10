@@ -1,5 +1,6 @@
 /**
  * Rucio User Model obtained after a successful login via any of the supported auth methods
+ * This model is stored in the session cookie
  */
 export type RucioUser = {
     rucioAuthToken: string
