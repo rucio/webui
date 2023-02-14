@@ -1,7 +1,8 @@
 import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login";
-import { RucioUser } from "@/lib/core/entity/auth-models";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
-import { NextApiRequest, NextApiResponse } from "next";
+import { IronSession } from "iron-session";
+import { NextApiResponse } from "next";
+import { setEmptySession } from "../auth/session-utils";
 import type { AuthViewModel } from "../data/auth/auth";
 
 
@@ -11,14 +12,14 @@ import type { AuthViewModel } from "../data/auth/auth";
  */
 export default class UserPassLoginPresenter implements UserPassLoginOutputPort<NextApiResponse> {
     response: NextApiResponse;
-    request: NextApiRequest;
+    session: IronSession;
 
-    constructor(request: NextApiRequest, response: NextApiResponse) {
+    constructor(session: IronSession, response: NextApiResponse) {
         this.response = response;
-        this.request = request;
+        this.session = session;
     }
 
-    presentSuccess(responseModel: UserpassLoginResponse) {
+    async presentSuccess(responseModel: UserpassLoginResponse) {
         const viewModel: AuthViewModel = {
             rucioIdentity: responseModel.rucioIdentity,
             rucioAccount: responseModel.rucioAccount,
@@ -26,16 +27,22 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthToken: responseModel.rucioAuthToken,
             status: 'success',
         }
-        // set session
-        // if redirect was requested, redirect
-        // const sessionModel: RucioUser = {
-        //     rucioIdentity: responseModel.rucioIdentity,
-        //     rucioAccount: responseModel.rucioAccount,
+
+        this.session.user = {
+            rucioIdentity: responseModel.rucioIdentity,
+            rucioAccount: responseModel.rucioAccount,
+            rucioAuthType: 'userpass',
+            rucioAuthToken: responseModel.rucioAuthToken,
+            rucioOIDCProvider: null,
+            isLoggedIn: true,
+        }
+        
+        await this.session.save();
 
         this.response.status(200).json(viewModel);
     }
 
-    presentError(error: UserpassLoginError) {
+    async presentError(error: UserpassLoginError) {
         const viewModel: AuthViewModel = {
             rucioIdentity: '',
             rucioAccount: '',
@@ -45,6 +52,8 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             message: error.message,
             error_cause: error.type,
         }
+
+        await setEmptySession(this.session);
         this.response.status(500).json(viewModel);
     }
 }

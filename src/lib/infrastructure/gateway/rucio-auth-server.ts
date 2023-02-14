@@ -1,7 +1,8 @@
 import type { UserPassLoginAuthServerDTO } from "@/lib/core/data/auth-server-dto";
 import AuthServerGatewayOutputPort from "@/lib/core/port/secondary/auth-server-gateway-output-port";
 import { injectable } from "inversify";
-import https from 'https';
+
+
 /**
  * Provides an implementation of the {@link AuthServerGatewayOutputPort} interface.
  * It makes calls to the Rucio Auth Server.
@@ -15,10 +16,6 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
         let response = null
         let dto: UserPassLoginAuthServerDTO;
 
-        const httpsAgent = new https.Agent({
-            rejectUnauthorized: false,
-          });
-        
         try {
             response = await fetch(url, {
             method: 'GET',

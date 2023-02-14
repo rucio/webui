@@ -2,12 +2,12 @@
  * Rucio User Model obtained after a successful login via any of the supported auth methods
  * This model is stored in the session cookie
  */
-export type RucioUser = {
+export type SessionUser = {
     rucioAuthToken: string
     rucioAccount: string
     rucioIdentity: string
-    rucioAuthType: 'x509' | 'userpass' | 'oidc'
-    rucioOIDCProvider: string
+    rucioAuthType: 'x509' | 'userpass' | 'oidc' | null
+    rucioOIDCProvider: string | null
     isLoggedIn: boolean
 }
 

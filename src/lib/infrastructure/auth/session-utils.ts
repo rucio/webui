@@ -1,5 +1,5 @@
-import { RucioUser } from "@/lib/core/entity/auth-models";
-import { unsealData } from "iron-session";
+import { SessionUser } from "@/lib/core/entity/auth-models";
+import { IronSession, unsealData } from "iron-session";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiHandler } from "next";
 import { ReadonlyRequestCookies } from "next/dist/server/app-render";
@@ -13,22 +13,22 @@ import { sessionOptions } from "../config/session";
  */
 export const getRucioUserFromSession = async(
     cookies: ReadonlyRequestCookies,
-): Promise<RucioUser | undefined> => {
+): Promise<SessionUser | undefined> => {
     const cookieName = process.env.NEXT_SESSION_COOKIE_NAME as string || "rucio_webui_session";
     const cookie = cookies.get(cookieName);
-    if (!cookie) return new Promise<RucioUser | undefined>(resolve => resolve(undefined));
+    if (!cookie) return new Promise<SessionUser | undefined>(resolve => resolve(undefined));
 
-    const user = await unsealData<RucioUser>(cookie.value, {
+    const user = await unsealData<SessionUser>(cookie.value, {
         password: process.env.SESSION_PASSWORD as string,
     })
-    return new Promise<RucioUser | undefined>(resolve => resolve(user));
+    return new Promise<SessionUser | undefined>(resolve => resolve(user));
 }
 
 
 /**
- * Get the rucioAuthToken from the {@link RucioUser} object in the iron session
+ * Get the rucioAuthToken from the {@link SessionUser} object in the iron session
  * @param cookies {@link ReadonlyRequestCookies} from the iron session object
- * @returns rucioAuthToken for the current {@link RucioUser} or an empty string
+ * @returns rucioAuthToken for the current {@link SessionUser} or an empty string
  */
 export const getRucioAuthToken =async (cookies: RequestCookies | ReadonlyRequestCookies): Promise<string> => {
     let readOnlyCookies = cookies as unknown as ReadonlyRequestCookies;
@@ -47,6 +47,23 @@ export function withSessionRoute(handler: NextApiHandler) {
     return withIronSessionApiRoute(handler, sessionOptions);
 }
 
+
+/**
+ * Set am empty {@link SessionUser} object in the iron session if login fails
+ * @param session The {@link IronSession} object
+ * @param saveSession If true, the session will be saved
+ */
+export async function setEmptySession(session: IronSession, saveSession: boolean = true) {
+    session.user = {
+        rucioIdentity: '',
+        rucioAccount: '',
+        rucioAuthType: null,
+        rucioAuthToken: '',
+        rucioOIDCProvider: null,
+        isLoggedIn: false,
+    }
+    saveSession ? await session.save() : null;
+}
 
 // /**
 //  * 

@@ -1,5 +1,5 @@
 import type { IronSessionOptions } from 'iron-session'
-import type { RucioUser } from '@/lib/core/entity/auth-models'
+import type { SessionUser } from '@/lib/core/entity/auth-models'
 
 /**
  * Iron session options
@@ -19,7 +19,7 @@ export const sessionOptions: IronSessionOptions = {
  */
 declare module 'iron-session' {
     interface IronSessionData {
-        user?: RucioUser
+        user?: SessionUser
         redirectAfterLogin?: string
     }
 }

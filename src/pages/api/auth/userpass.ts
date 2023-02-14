@@ -9,7 +9,7 @@ async function userpassAuthRoute(req: NextApiRequest, res: NextApiResponse) {
     const { username, password, account } = req.body
     const redirectTo = '/dashboard'
     const userpassLoginController = appContainer.get<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN)
-    userpassLoginController.handle(username, password, account, res, redirectTo)
+    userpassLoginController.handle(username, password, account, req.session, res, redirectTo)
 }
 
 export default withSessionRoute(userpassAuthRoute)

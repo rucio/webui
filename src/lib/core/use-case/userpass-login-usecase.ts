@@ -23,7 +23,8 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                 rucioAccount: dto.account,
                 rucioAuthToken: dto.authToken,
             }
-            this.presenter.presentSuccess(responseModel)
+            await this.presenter.presentSuccess(responseModel)
+            return;
         } 
         let error_type: 'AUTH_SERVER_CONFIGURATION_ERROR' | 'AUTH_SERVER_SIDE_ERROR' | 'INVALID_CREDENTIALS' | 'UNKNOWN_ERROR'
         switch(dto.statusCode){
@@ -37,7 +38,8 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             type: error_type,
             message: dto.message,
         }
-        this.presenter.presentError(errorModel)
+        await this.presenter.presentError(errorModel)
+        return;
     }
 }
 
