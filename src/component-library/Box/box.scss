@@ -1,0 +1,76 @@
+@import '@primer/css/utilities/index.scss';
+@import '@primer/css/box/index.scss';
+
+.rucio-box {
+    @extend .Box;
+    &.condensed {
+        @extend .Box--condensed;
+    }
+    &.spacious {
+        @extend .Box--spacious;
+    }
+    &.blue {
+        @extend .Box--blue;
+    }
+    &.danger {
+        @extend .Box--danger;
+    }
+    .header {
+        @extend .Box-header;
+    }
+    .title {
+        @extend .Box-title;
+    }
+    .body {
+        @extend .Box-body;
+    }
+    .footer {
+        @extend .Box-footer;
+    }
+    .row {
+        @extend .Box-row;
+        &.gray {
+            @extend .Box-row--gray;
+        }
+        &.blue {
+            @extend .Box-row--gray;
+        }
+        &.yellow {
+            @extend .Box-row--yellow;
+        }
+        &.hover-blue {
+            @extend .Box-row--hover-blue;
+        }
+        &.hover-gray {
+            @extend .Box-row--hover-gray;
+        }
+        &.unread {
+            @extend .Box-row--unread;
+        }
+        &.border-dashed {
+            @extend .border-dashed;
+        }
+        &.clear {
+            @extend .clearfix;
+        }
+        .link {
+            @extend .Box-row-link;
+        }
+    }
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+    .wrap-login100 {
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+
+    @media (max-width: 576px) {
+        .wrap-login100 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+}
