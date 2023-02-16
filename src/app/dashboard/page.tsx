@@ -8,7 +8,7 @@ export default function Dashboard(props: any) {
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Welcome to the dashboard, {user.rucioIdentity}</p>
+      <p>Welcome to the dashboard!!</p>
     </div>
   );
 }

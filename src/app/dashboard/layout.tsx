@@ -14,18 +14,14 @@ export default async function DashboardLayout({
   const sessionUser: SessionUser | undefined = await getSessionUser(all_cookies as unknown as ReadonlyRequestCookies)
   const rucioAuthToken = await getRucioAuthToken(all_cookies)
   if (!rucioAuthToken || rucioAuthToken === '') {
-    redirect('/auth/login')
+    const callbackUrl = encodeURIComponent('/dashboard')
+    const loginUrl = `/api/auth/login?callbackUrl=${callbackUrl}`
+    redirect(loginUrl)
   }
   return (
-    <html lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <head />
-      <body>
+    <div>
+    <h3>You are logged in as {sessionUser?.rucioIdentity}</h3>
         {children}
-      </body>
-    </html>
+    </div>
   )
 }
