@@ -6,7 +6,7 @@ import type { SessionUser } from '@/lib/core/entity/auth-models'
  */
 export const sessionOptions: IronSessionOptions = {
     password: process.env.SESSION_PASSWORD as string,
-    cookieName: 'rucio-ui-session',
+    cookieName: process.env.NEXT_SESSION_COOKIE_NAME as string || "rucio_webui_session",
     cookieOptions: {
         secure: process.env.NODE_ENV === 'production',
     },

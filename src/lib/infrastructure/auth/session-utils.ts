@@ -11,17 +11,17 @@ import { sessionOptions } from "../config/session";
  * @param cookies {@link ReadOnlyRequestCookies} from the iron session object
  * @returns {@link RucioUser} object or null
  */
-export const getRucioUserFromSession = async(
+export const getSessionUser = async(
     cookies: ReadonlyRequestCookies,
 ): Promise<SessionUser | undefined> => {
     const cookieName = process.env.NEXT_SESSION_COOKIE_NAME as string || "rucio_webui_session";
     const cookie = cookies.get(cookieName);
     if (!cookie) return new Promise<SessionUser | undefined>(resolve => resolve(undefined));
 
-    const user = await unsealData<SessionUser>(cookie.value, {
+    const sessionData = await unsealData<any>(cookie.value, {
         password: process.env.SESSION_PASSWORD as string,
     })
-    return new Promise<SessionUser | undefined>(resolve => resolve(user));
+    return new Promise<SessionUser | undefined>(resolve => resolve(sessionData.user));
 }
 
 
@@ -30,11 +30,12 @@ export const getRucioUserFromSession = async(
  * @param cookies {@link ReadonlyRequestCookies} from the iron session object
  * @returns rucioAuthToken for the current {@link SessionUser} or an empty string
  */
-export const getRucioAuthToken =async (cookies: RequestCookies | ReadonlyRequestCookies): Promise<string> => {
+export const getRucioAuthToken = async (cookies: RequestCookies | ReadonlyRequestCookies): Promise<string> => {
     let readOnlyCookies = cookies as unknown as ReadonlyRequestCookies;
-    const rucioUser = await getRucioUserFromSession(readOnlyCookies);
+    const rucioUser = await getSessionUser(readOnlyCookies);
     if (!rucioUser) return new Promise<string>(resolve => resolve(""));
-    return new Promise<string>(resolve => resolve(rucioUser.rucioAuthToken));
+    const rucioAuthToken = rucioUser.rucioAuthToken;
+    return Promise.resolve(rucioAuthToken);
 }
 
 
