@@ -1,0 +1,18 @@
+@import 'bulma/sass/utilities/_all.sass';
+@import 'bulma/sass/elements/_all.sass';
+@import 'bulma/sass/form/_all.sass';
+
+.rucio-form {
+    .header {
+        @extend .title;
+    }
+    .subheader {
+        @extend .subtitle;
+    }
+    .entry {
+        @extend .field;
+        .controls {
+            @extend .control;
+        }
+    }
+}
