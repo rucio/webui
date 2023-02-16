@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import { RucioUser } from '@/lib/core/entity/auth-models';
+import { SessionUser } from '@/lib/core/entity/auth-models';
 
 export default function Dashboard(props: any) {
-  const user: RucioUser = props.user;
+  const user: SessionUser = props.user;
 
   return (
     <div>

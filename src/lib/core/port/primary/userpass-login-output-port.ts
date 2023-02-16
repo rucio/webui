@@ -6,6 +6,6 @@ import { UserpassLoginError, UserpassLoginResponse } from "../../data/userpass-l
  */
 export default interface UserPassLoginOutputPort<T> {
     response: T;
-    presentSuccess(responseModel: UserpassLoginResponse): void;
-    presentError(error: UserpassLoginError): void;
+    presentSuccess(responseModel: UserpassLoginResponse): Promise<void>;
+    presentError(error: UserpassLoginError): Promise<void>;
 }

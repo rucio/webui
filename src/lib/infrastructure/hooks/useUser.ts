@@ -3,14 +3,14 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import useSWR from 'swr'
-import { RucioUser } from '@/lib/core/entity/auth-models'
+import { SessionUser } from '@/lib/core/entity/auth-models'
 
 export default function useUser({
     redirectTo = '',
     redirectIfFound = false,
 } = {}) {
     const router = useRouter()
-    const { data: user, mutate: mutateUser } = useSWR<RucioUser>('/api/auth/login')
+    const { data: user, mutate: mutateUser } = useSWR<SessionUser>('/api/auth/login')
     useEffect(() => {
         // if no redirect needed, just return (example: already on /dashboard)
         // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
