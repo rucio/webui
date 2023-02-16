@@ -1,5 +1,6 @@
 @import 'bulma/sass/utilities/_all.sass';
 @import 'bulma/sass/elements/_all.sass';
+@import '../../scss/main.scss';
 
 .rucio-table {
     @extend .table;

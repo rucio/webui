@@ -1,32 +1,18 @@
 @import 'bulma/sass/utilities/_all.sass';
 @import 'bulma/sass/form/_all.sass';
+@import 'bulma-switch/src/sass/index.sass';
+@import '../../scss/main.scss';
 
-.rucio-input {
-    @extend .input;
+.rucio-switch {
+    @extend .switch;
     &.small {
         @extend .is-small;
-    }
-    &.normal {
-        @extend .is-normal;
     }
     &.medium {
         @extend .is-medium;
     }
     &.large {
         @extend .is-large;
-    }
-    &.primary {
-        @extend .is-primary;
-    }
-    &.link {
-        @extend .is-link;
-    }
-    &.info {
-        @extend .is-info;
-        border-color: #0969da;
-        :focus {
-            border-color: #f8f9fd;
-        }
     }
     &.success {
         @extend .is-success;
@@ -37,13 +23,13 @@
     &.danger {
         @extend .is-danger;
     }
+    &.info {
+        @extend .is-info;
+    }
     &.rounded {
         @extend .is-rounded;
     }
-    border-radius: 0.5em;
-}
-
-label {
-    width: 100%;
-    padding-block: 5px;
+    &.outlined {
+        @extend .is-outlined;
+    }
 }
