@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:api": "jest --config ./test/config/jest.api.config.ts",
-    "test:api-watch": "jest --config ./test/config/jest.api.config.ts --watch"
+    "test": "jest --projects test/api/jest.api.config.js test/component/jest.component.config.js",
+    "test:api": "jest --projects test/api/jest.api.config.js",
+    "test:component": "jest --projects test/component/jest.component.config.js"
   },
   "dependencies": {
     "@inrupt/jest-jsdom-polyfills": "^1.5.5",
