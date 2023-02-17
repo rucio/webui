@@ -16,10 +16,6 @@
     "incremental": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    // "types": [
-    //   "reflect-metadata",
-    //   "node",
-    // ],
     "plugins": [
       {
         "name": "next"
