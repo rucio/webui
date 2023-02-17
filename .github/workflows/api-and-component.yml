@@ -8,13 +8,18 @@ on:
       - main
 jobs:
   build-and-deploy:
+    name: Build and Deploy
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [16.14.0, 18.5.0]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.5.0
+          node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm install
       - name: Run Component Tests
