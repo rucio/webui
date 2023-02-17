@@ -1,4 +1,4 @@
-name: Build and Deploy Rucio WebUI Component Library & React App
+name: API and Component Tests
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18.x
       - name: Install dependencies
-        run: npm clean install
+        run: npm install
       - name: Run Component Tests
         run: npm run test:component
       - name: Run API Tests
