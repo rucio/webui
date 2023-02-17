@@ -1,0 +1,5 @@
+name: Build and Deploy Rucio WebUI Component Library & React App
+on:
+    push:
+        branches:
+            - master

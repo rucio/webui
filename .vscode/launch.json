@@ -31,10 +31,28 @@
         "runtimeArgs": [
           "--inspect-brk",
           "${workspaceRoot}/node_modules/.bin/jest",
-          "--runInBand",
+          "--runInBand"
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
+      },
+      {
+        "type": "node",
+        "name": "vscode-jest-tests.v2",
+        "request": "launch",
+        "args": [
+          "--runInBand",
+          "--watchAll=false",
+          "--testNamePattern",
+          "${jest.testNamePattern}",
+          "--runTestsByPath",
+          "${jest.testFile}"
+        ],
+        "cwd": "/Users/maany/Projects/rucio-webui-nextjs",
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
+        "disableOptimisticBPs": true,
+        "program": "/Users/maany/Projects/rucio-webui-nextjs/node_modules/.bin/jest"
       }
     ]
   }
