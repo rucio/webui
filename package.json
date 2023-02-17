@@ -12,16 +12,11 @@
     "test:component": "jest --projects test/component/jest.component.config.js"
   },
   "dependencies": {
-    "@inrupt/jest-jsdom-polyfills": "^1.5.5",
     "@next/font": "13.1.6",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
-    "eslint": "8.33.0",
-    "eslint-config-next": "13.1.6",
     "inversify": "^6.0.1",
     "iron-session": "^6.3.1",
-    "jest-fetch-mock": "^3.0.3",
-    "jest-runner-groups": "^2.2.0",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -30,12 +25,16 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
+    "@inrupt/jest-jsdom-polyfills": "^1.5.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
+    "eslint": "^8.34.0",
+    "eslint-config-next": "^13.1.6",
     "jest": "^29.4.1",
     "jest-environment-jsdom": "^29.4.1",
+    "jest-fetch-mock": "^3.0.3",
     "node-mocks-http": "^1.12.1",
-    "ts-jest": "^29.0.5",
+    "prettier": "^2.8.4",
     "ts-node": "^10.9.1"
   }
 }
