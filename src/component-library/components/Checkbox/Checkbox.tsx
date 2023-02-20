@@ -1,33 +1,46 @@
-import './checkbox.scss'
-
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 
 export const Checkbox = ({
-    label = '',
-    type = 'checkbox',
-    size,
-    kind,
-    style,
-    isChecked = false,
-    name,
+    label,
+    isChecked = true,
+    disabled = true,
     handleChange,
+    type
 }: CheckboxProps) => {
     const [checked, setChecked] = useState(isChecked)
+    useEffect(() => {
+        setChecked(isChecked)
+    }, [isChecked])
+    var inputClasses: string[] = ["w-4 h-4"]
+    var labelClasses: string[] = ["ml-2 text-sm font-medium"]
+    if (!disabled) {
+        labelClasses.push("hover:cursor-pointer")
+    }
+    else {
+        labelClasses.push("text-gray-500")
+    }
     return (
         <div
+            className="flex items-center mb-4"
             onClick={(event: any) => {
-                setChecked(!checked)
-                handleChange?.(event)
+                if (!disabled) {
+                    setChecked(event.target.checked)
+                    handleChange?.(event)
+                }
             }}
         >
             <input
-                className={`rucio-checkradio ${type} ${size} ${kind} ${style}`}
+                disabled={disabled}
                 type={type}
                 checked={checked}
-                onChange={args => args}
-                name={name}
+                className={inputClasses.join(" ")}
+                onChange= {args => args}
             />
-            <label>{label}</label>
-        </div>
+            <label
+                className={labelClasses.join(" ")}
+            >
+                {label}
+            </label>
+        </div>  
     )
 }

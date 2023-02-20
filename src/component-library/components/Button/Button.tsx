@@ -1,26 +1,24 @@
-import './button.scss'
-
 export const Button = ({
-    icon = null,
-    kind = 'secondary',
-    size = 'medium',
-    show = 'normal',
     label,
-    type = 'button',
-    selected = false,
+    icon = null,
+    type = "button",
     disabled = false,
     onClick = undefined,
 }: ButtonProps) => {
     const handleOnClick = disabled ? undefined : onClick
+    var classes: string[] = ["font-bold rounded py-1 px-3"]
+    if (!disabled) {
+        classes.push("bg-green-600", "hover:bg-green-700", "text-white")
+    }
+    else {
+        classes.push("bg-gray-500", "text-gray-200")
+    }
     return (
         <button
-            type={disabled ? 'button' : type}
-            tabIndex={0}
-            className={['rucio-btn', kind, size, show].join(' ')}
-            aria-selected={selected}
-            aria-disabled={disabled}
-            aria-pressed="false"
-            onClick={handleOnClick}
+            type = {type}
+            disabled = {disabled}
+            className = {classes.join(" ")}
+            onClick = {handleOnClick}
         >
             {icon}
             &nbsp;

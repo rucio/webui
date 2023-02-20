@@ -2,8 +2,6 @@
 
 interface AlertProps {
     open?: boolean
-    leftIcon?: ReactElement | undefined
-    rightIcon?: ReactElement | undefined
     message?: string | any
     variant?: 'primary' | 'warn' | 'success' | 'error'
     onClose?: () => void
@@ -11,19 +9,15 @@ interface AlertProps {
 
 interface BoxProps {
     title?: string
+    body?: string
+    footer?: string
     type?: 'condensed' | 'spacious' | 'blue' | 'danger'
-    background?: string
-    children?: any
 }
 
 interface ButtonProps {
-    icon?: ReactNode
-    kind?: 'primary' | 'secondary' | 'outline'
-    show?: 'danger' | 'block' | 'invisible' | 'normal'
-    size?: 'small' | 'medium' | 'large'
     label: string
+    icon?: ReactNode
     type?: 'button' | 'submit' | 'reset'
-    selected?: boolean
     disabled?: boolean
     onClick?: (args: unknown) => void
 }
@@ -38,13 +32,17 @@ interface CardProps {
 }
 
 interface CheckboxProps {
-    isChecked?: boolean
     label: string
-    kind?: 'danger' | 'warning' | 'success' | 'info'
-    size?: 'small' | 'normal' | 'medium' | 'large'
-    style?: 'rounded_checkbox' | 'block' | 'no_border' | 'background-color'
-    type?: 'checkbox' | 'radio'
-    name?: string
+    isChecked?: boolean
+    disabled?: boolean
+    handleChange?: (args: any) => void
+    type: "checkbox" | "radio"
+}
+
+interface RadioButtonProps{
+    label: string
+    isChecked?: boolean
+    disabled?: boolean
     handleChange?: (args: any) => void
 }
 

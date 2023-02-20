@@ -7,3 +7,4 @@ export const parameters = {
     },
   },
 }
+import '../src/component-library/outputtailwind.css'

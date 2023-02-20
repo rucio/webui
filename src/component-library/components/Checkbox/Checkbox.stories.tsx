@@ -1,26 +1,25 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { Checkbox } from './Checkbox'
 
 export default {
     title: 'Components/Button',
     component: Checkbox,
-} as ComponentMeta<typeof Checkbox>
+} as Meta<typeof Checkbox>
 
-const Template: ComponentStory<typeof Checkbox> = args => <Checkbox {...args} />
+const Template: StoryFn<typeof Checkbox> = args => <Checkbox {...args} />
 
 export const CheckBox = Template.bind({})
 CheckBox.args = {
     label: 'example',
-    kind: 'success',
     isChecked: true,
-    style: 'rounded_checkbox',
+    disabled: false,
+    type: 'checkbox'
 }
 
 export const RadioButton = Template.bind({})
 RadioButton.args = {
     label: 'example',
-    kind: 'info',
-    style: 'background-color',
     isChecked: true,
+    disabled: false,
     type: 'radio',
 }
