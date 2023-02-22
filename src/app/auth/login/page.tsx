@@ -4,6 +4,8 @@ import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { Login as LoginStory } from "@/component-library/components/Pages/Login/Login";
+
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -61,19 +63,22 @@ export default function Login() {
         console.log(`Username: ${username}`);
     };
     return (
-        <div>
-            <h1>Login</h1>
-            <p>Welcome to the login page</p>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input type="text" id="username" value={username} onChange={(event) => setUsername(event.target.value)} />
-                    <br />
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-                </div>
-                <button type="submit">Login</button>
-            </form>
+        <div className="flex items-center justify-center h-screen">
+            <LoginStory />
         </div>
+        // <div>
+        //     <h1>Login</h1>
+        //     <p>Welcome to the login page</p>
+        //     <form onSubmit={handleSubmit}>
+        //         <div>
+        //             <label htmlFor="username">Username:</label>
+        //             <input type="text" id="username" value={username} onChange={(event) => setUsername(event.target.value)} />
+        //             <br />
+        //             <label htmlFor="password">Password:</label>
+        //             <input type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        //         </div>
+        //         <button type="submit">Login</button>
+        //     </form>
+        // </div>
     );
 }

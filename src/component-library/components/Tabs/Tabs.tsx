@@ -1,4 +1,4 @@
-import './tabs.scss'
+import { useEffect, useState } from "react"
 
 export const Tabs = ({
     tabs = [],
@@ -6,37 +6,46 @@ export const Tabs = ({
     alignment,
     size,
     rounded,
-    boxed,
-    fullwidth,
-    ...props
+    handleClick,
 }: TabsProps) => {
+    const [activestate, setActivestate] = useState(active)
+    useEffect(() => {
+        setActivestate(active)
+    }, [active])
+    var onClick = (event: any) => {
+        console.log(event.target.id)
+        setActivestate(event.target.id)
+        handleClick?.(event)
+    }
     return (
-        <div
-            className={`rucio-tabs 
-            ${alignment} ${size} ${rounded} ${boxed} ${fullwidth}`}
-        >
-            <ul>
-                {tabs.map((element, index) => {
-                    return index === active ? (
-                        <li
-                            onClick={props.handleClick}
-                            className="is-active"
-                            key={index}
-                            data-testid={'Tab' + index}
+        <ul className="flex flex-wrap flex-row list-none">
+            {tabs.map((element, index) => {
+                return index == activestate ? (
+                    <li
+                        onClick={onClick}
+                        className="flex-auto text-center"
+                    >
+                        <a
+                            id={index.toString()}
+                            className="block border-b-2 text-blue-500 border-blue-500 p-4"
                         >
-                            <a id={index.toString()}>{element}</a>
-                        </li>
-                    ) : (
-                        <li
-                            onClick={props.handleClick}
-                            key={index}
-                            data-testid={'Tab' + index}
+                            {element}
+                        </a>
+                    </li>
+                ) : (
+                    <li
+                        onClick={onClick}
+                        className="flex-auto text-center"
+                    >
+                        <a
+                            id={index.toString()}
+                            className="block border-b-2 text-gray-600 border-gray-300 p-4"
                         >
-                            <a id={index.toString()}>{element}</a>
-                        </li>
-                    )
-                })}
-            </ul>
-        </div>
+                            {element}
+                        </a>
+                    </li>
+                )
+            })}
+        </ul>
     )
 }

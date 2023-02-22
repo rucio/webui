@@ -1,7 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react'
 
 import { Input } from './Input'
-import { NumberInput } from './NumberInput'
 
 export default {
     title: 'Components/Input',

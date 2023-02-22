@@ -12,5 +12,7 @@ const Template: StoryFn<typeof Button> = args => <Button {...args} />
 export const Standard = Template.bind({})
 Standard.args = {
     label: 'Button',
-    disabled: false
+    disabled: false,
+    fullwidth: false,
+    type: 'button',
 }

@@ -19,6 +19,7 @@ interface ButtonProps {
     icon?: ReactNode
     type?: 'button' | 'submit' | 'reset'
     disabled?: boolean
+    fullwidth?: boolean
     onClick?: (args: unknown) => void
 }
 
@@ -136,8 +137,6 @@ interface TabsProps {
     alignment?: 'right' | 'centered'
     size?: 'small' | 'medium' | 'large'
     rounded?: 'toggle' | 'toggle-rounded'
-    boxed?: 'boxed'
-    fullwidth?: 'fullwidth'
     handleClick: (args: any) => void
 }
 

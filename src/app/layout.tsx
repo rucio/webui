@@ -1,4 +1,5 @@
-import './globals.css'
+// import './globals.css'
+import "../component-library/outputtailwind.css";
 import "reflect-metadata";
 
 export default function RootLayout({
