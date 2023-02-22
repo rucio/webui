@@ -9,6 +9,7 @@ export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [redirectURL, setRedirectURL] = useState<string>('/dashboard' as string)
+    const [viewModel, setViewModel] = useState({})
     const router = useRouter()
     const callbackUrl = useSearchParams().get('callbackUrl')
 
@@ -24,6 +25,7 @@ export default function Login() {
             .then((res) => res.json())
             .then((loginViewModel: LoginViewModel) => {
                 console.log('loginViewModel', loginViewModel)
+                setViewModel(loginViewModel)
                 if (loginViewModel.isLoggedIn) {
                     router.push(redirectURL)
                 }
