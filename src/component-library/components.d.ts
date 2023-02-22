@@ -148,3 +148,15 @@ interface ToggleSwitchProps {
     checked?: boolean
     handleChange?: (event: any) => void
 }
+
+/************************ Text ************************/
+interface TextProps {
+    text: string
+}
+
+
+/************************ Pages ************************/
+interface LoginPageProps {
+    loginViewModel: LoginViewModel
+    login: (args: any) => void
+}

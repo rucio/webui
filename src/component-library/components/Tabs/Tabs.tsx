@@ -13,7 +13,7 @@ export const Tabs = ({
         setActivestate(active)
     }, [active])
     var onClick = (event: any) => {
-        console.log(event.target.id)
+        // console.log(event.target.id)
         setActivestate(event.target.id)
         handleClick?.(event)
     }
@@ -24,6 +24,7 @@ export const Tabs = ({
                     <li
                         onClick={onClick}
                         className="flex-auto text-center"
+                        key={index.toString()}
                     >
                         <a
                             id={index.toString()}
@@ -36,6 +37,7 @@ export const Tabs = ({
                     <li
                         onClick={onClick}
                         className="flex-auto text-center"
+                        key={index.toString()}
                     >
                         <a
                             id={index.toString()}
