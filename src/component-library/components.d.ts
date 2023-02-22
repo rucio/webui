@@ -78,19 +78,23 @@ interface ImageProps {
 }
 
 interface InputProps {
-    type?: string
-    label?: string
-    name?: string
-    placeholder?: string
-    kind?: 'primary' | 'info' | 'link' | 'normal'
-    show?: 'danger' | 'warning' | 'success' | 'rounded'
-    size?: 'small' | 'medium' | 'large'
-    value?: any
-    min?: number
-    max?: number
-    width?: string | number
+    // kind?: 'primary' | 'info' | 'link' | 'normal'
+    disabled?: boolean
     focusByDefault?: boolean
+    inline?: boolean
+    label?: string
     onChange?: (args: any) => void
+    placeholder?: string
+    show?: "error" | "success" | "standard"
+}
+
+interface TextInputProps extends InputProps {
+    password?: boolean
+}
+
+interface NumberInputProps extends InputProps {
+    max?: number
+    min?: number
 }
 
 interface ModalProps {

@@ -11,7 +11,8 @@
     "test:api": "jest --projects test/api/jest.api.config.js",
     "test:component": "jest --projects test/component/jest.component.config.js",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build-tailwind": "tailwindcss -i src/component-library/tailwind.css -o src/component-library/outputtailwind.css"
   },
   "dependencies": {
     "@next/font": "13.1.6",

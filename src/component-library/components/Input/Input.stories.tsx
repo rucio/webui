@@ -1,27 +1,35 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import { StoryFn, Meta } from '@storybook/react'
 
 import { Input } from './Input'
+import { NumberInput } from './NumberInput'
 
 export default {
     title: 'Components/Input',
     component: Input,
-} as ComponentMeta<typeof Input>
+} as Meta<typeof Input>
 
-const Template: ComponentStory<typeof Input> = args => <Input {...args} />
+const TemplateText: StoryFn<typeof Input> = args => <Input {...args} />
 
-export const TextInput = Template.bind({})
+export const TextInput = TemplateText.bind({})
 TextInput.args = {
-    size: 'medium',
-    kind: 'primary',
+    disabled: false,
+    focusByDefault: false,
+    inline: false,
     label: 'TextInput',
+    password: false,
+    placeholder: 'Placeholder String',
+    show: 'standard'
 }
 
-export const NumberInput = Template.bind({})
-NumberInput.args = {
-    type: 'number',
-    show: 'rounded',
-    kind: 'primary',
-    label: 'NumberInput',
-    min: 0,
-    max: 5,
-}
+// export const NumericInput = TemplateNumber.bind({})
+// NumericInput.args = {
+//     disabled: false,
+//     focusByDefault: false,
+//     inline: false,
+//     label: 'TextInput',
+//     max: 100,
+//     min: 0,
+//     password: false,
+//     placeholder: 'Placeholder String',
+//     show: 'standard'
+// }

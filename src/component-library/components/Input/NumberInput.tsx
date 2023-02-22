@@ -1,13 +1,14 @@
-export const Input = ({
+export const NumberInput = ({
     disabled = false,
     focusByDefault = false,
     inline = false,
     label = "",
+    max,
+    min,
     onChange,
-    password = false,
     placeholder = "",
     show,
-}: TextInputProps) => {
+}: NumberInputProps) => {
     var divClasses: string[] = ["w-full"]
     var labelClasses: string[] = []
     var inputClasses: string[] = ["border", "rounded"]
@@ -54,7 +55,9 @@ export const Input = ({
                 placeholder={placeholder}
                 autoFocus={focusByDefault}
                 disabled={disabled}
-                type={password ? "password" : "text"}
+                max={max ? max.toString() : ""} 
+                min={min ? min.toString() : ""}
+                type="number"
             >
             </input>
         </div>

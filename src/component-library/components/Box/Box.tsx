@@ -34,10 +34,10 @@ export const Box = ({
                 <h3 className="text-xl font-bold">{title}</h3>
             </div>
             <div className={divBodyClasses.join(" ")}>
-                Hello
+                {body}
             </div>
             <div className={divFooterClasses.join(" ")}>
-                Hello
+                {footer}
             </div>
         </div>
     )
