@@ -18,7 +18,7 @@ export const Tabs = ({
         handleClick?.(event)
     }
     return (
-        <ul className="flex flex-wrap flex-row list-none">
+        <ul className="flex flex-wrap flex-row list-none font-bold">
             {tabs.map((element, index) => {
                 return index == activestate ? (
                     <li
@@ -27,7 +27,7 @@ export const Tabs = ({
                     >
                         <a
                             id={index.toString()}
-                            className="block border-b-2 text-blue-500 border-blue-500 p-4"
+                            className="block border-b-4 text-blue-500 border-blue-500 p-4 hover:bg-gray-100 hover:cursor-pointer"
                         >
                             {element}
                         </a>
@@ -39,7 +39,7 @@ export const Tabs = ({
                     >
                         <a
                             id={index.toString()}
-                            className="block border-b-2 text-gray-600 border-gray-300 p-4"
+                            className="block border-b-4 text-gray-600 border-gray-300 p-4 hover:bg-gray-100 hover:cursor-pointer"
                         >
                             {element}
                         </a>
