@@ -35,7 +35,7 @@ export default function Login() {
             )
     }, []);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleUpassSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const body = {
             username: event.currentTarget.username.value,
@@ -62,9 +62,23 @@ export default function Login() {
 
         console.log(`Username: ${username}`);
     };
+
     return (
         <div className="flex items-center justify-center h-screen">
-            <LoginStory />
+            <LoginStory
+                loginViewModel={
+                    // viewModel
+                    {
+                        x509Enabled: true,
+                        oidcEnabled: true,
+                        oidcProviders: ["OIDC Provider 1", "OIDC Provider 2", "OIDC Provider 3"],
+                        multiVOEnabled: true,
+                        voList: ["VO 1", "VO 2", "VO 3"],
+                        isLoggedIn: false,
+                    } as LoginViewModel
+                }
+                login={() => {console.log("upass login")}}
+            />
         </div>
         // <div>
         //     <h1>Login</h1>

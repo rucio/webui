@@ -4,6 +4,7 @@ import { Tabs } from "../../Tabs/Tabs";
 import { TextInput } from '../../Input/Input.stories';
 import { H1 } from '../../Text/Headings/H1';
 import { Collapsible } from '../../Helpers/Collapsible';
+import { CredentialInput } from './CredentialInput';
 
 export const Login = ({
     loginViewModel,
@@ -67,18 +68,17 @@ export const Login = ({
                             <Button label="x509" onClick={switchLoginForm(ShowLoginType.x509)}/>
                         </Collapsible>
                         <Button label="Userpass" onClick={switchLoginForm(ShowLoginType.upass)}/> 
-                        <div className={showLogin === ShowLoginType.upass ? "visible" : "collapse"}>
-                            <div className="m-6">
+                        <Collapsible show={showLogin == ShowLoginType.upass}>
+                            <CredentialInput login={login}>
                                 <TextInput label="Username" inline/>
                                 <TextInput label="Password" inline password/>
-                                <div className="mt-2">
-                                    <Button label="Login" type="submit" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className={showLogin === ShowLoginType.x509 ? "visible" : "collapse"}>
-                            input for x509 login
-                        </div>
+                            </CredentialInput>
+                        </Collapsible>
+                        <Collapsible show={showLogin == ShowLoginType.x509}>
+                            <CredentialInput login={login}>
+                                x509 Login
+                            </CredentialInput>
+                        </Collapsible>
                     </div>
                 </div>
             </div>

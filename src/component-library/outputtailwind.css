@@ -547,10 +547,6 @@ video {
   }
 }
 
-.visible {
-  visibility: visible;
-}
-
 .collapse {
   visibility: collapse;
 }
