@@ -158,5 +158,12 @@ interface TextProps {
 /************************ Pages ************************/
 interface LoginPageProps {
     loginViewModel: LoginViewModel
-    login: (args: any) => void
+    login: (LoginPageResponse) => void
+}
+
+interface LoginPageResponse {
+    loginType: "upass" | "x509"
+    vo: string
+    username: string
+    password: string
 }
