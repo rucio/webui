@@ -1,3 +1,12 @@
+interface ButtonProps {
+    label: string
+    icon?: any
+    type?: 'button' | 'submit' | 'reset'
+    disabled?: boolean
+    fullwidth?: boolean
+    onClick?: (args: unknown) => void
+}
+
 export const Button = ({
     label,
     icon = null,

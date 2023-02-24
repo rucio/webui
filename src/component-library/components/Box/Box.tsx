@@ -1,3 +1,10 @@
+interface BoxProps {
+    title?: string
+    body?: any
+    footer?: string
+    type?: 'condensed' | 'spacious' | 'blue' | 'danger'
+}
+
 export const Box = ({
     title = 'Sample Box',
     body = 'box body',

@@ -1,3 +1,15 @@
+interface TextInputProps {
+    // kind?: 'primary' | 'info' | 'link' | 'normal'
+    disabled?: boolean
+    focusByDefault?: boolean
+    inline?: boolean
+    label?: string
+    onChange?: (args: any) => void
+    placeholder?: string
+    show?: "error" | "success" | "standard"
+    password?: boolean
+}
+
 export const Input = ({
     disabled = false,
     focusByDefault = false,

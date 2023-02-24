@@ -9,24 +9,8 @@ export default {
 
 const Template: StoryFn<typeof Alert> = args => <Alert {...args} />
 
-export const Standard= Template.bind({})
-Standard.args = {
+export const Primary = Template.bind({})
+Primary.args = {
     message: "Standard banner message",
     variant: "primary",
-}
-
-export const Warning = Template.bind({})
-Warning.args = {
-    message: "Warning banner message",
-    variant: "warn",
-}
-export const Success = Template.bind({})
-Success.args = {
-    message: "Success banner message",
-    variant: "success",
-}
-export const Error = Template.bind({})
-Error.args = {
-    message: "Error banner message",
-    variant: "error",
 }

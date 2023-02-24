@@ -4,7 +4,7 @@ import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Login as LoginStory } from "@/component-library/components/Pages/Login/Login";
+import { Login as LoginStory, LoginPageProps, LoginPageResponse, ShowLoginType} from "@/component-library/components/Pages/Login/Login";
 
 
 export default function Login() {
@@ -35,7 +35,7 @@ export default function Login() {
             )
     }, []);
 
-    const handleUpassSubmit = async (username: string, password: string) => {
+    const handleuserpassSubmit = async (username: string, password: string) => {
         const body = {
             username: username,
             password: password
@@ -62,7 +62,7 @@ export default function Login() {
         console.log(`Username: ${username}`);
     };
 
-    const mockUpassSubmit = async (username: string, password: string) => {
+    const mockuserpassSubmit = async (username: string, password: string) => {
         if(username === "test" && password === "test"){
             const redirect: string = redirectURL
             router.push(redirect)
@@ -78,8 +78,8 @@ export default function Login() {
     ) => {
         console.log(`Username: ${response.username}, Password: ${response.password}, VO: ${response.vo}, Login Type: ${response.loginType}`);
         switch(response.loginType){
-            case "upass":
-                mockUpassSubmit(response.username, response.password)
+            case "userpass":
+                mockuserpassSubmit(response.username, response.password)
                 break;
             case "x509":
                 console.log("x509 login not yet implemented")
@@ -104,19 +104,5 @@ export default function Login() {
                 login={handleSubmit}
             />
         </div>
-        // <div>
-        //     <h1>Login</h1>
-        //     <p>Welcome to the login page</p>
-        //     <form onSubmit={handleSubmit}>
-        //         <div>
-        //             <label htmlFor="username">Username:</label>
-        //             <input type="text" id="username" value={username} onChange={(event) => setUsername(event.target.value)} />
-        //             <br />
-        //             <label htmlFor="password">Password:</label>
-        //             <input type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-        //         </div>
-        //         <button type="submit">Login</button>
-        //     </form>
-        // </div>
     );
 }

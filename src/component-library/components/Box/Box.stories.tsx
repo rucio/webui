@@ -9,32 +9,10 @@ export default {
 
 const Template: StoryFn<typeof Box> = args => <Box {...args}/>
 
-export const Condensed = Template.bind({})
-Condensed.args = {
+export const Primary = Template.bind({})
+Primary.args = {
     title: "Condensed Box Title",
     body: "Body",
     footer: "Box footer",
     type: "condensed",
 }
-export const Spacious = Template.bind({})
-Spacious.args = {
-    title: "Spacious Box Title",
-    body: "Body",
-    footer: "Box footer",
-    type: "spacious",
-}
-export const Blue= Template.bind({})
-Blue.args = {
-    title: "Blue Box Title",
-    body: "Body",
-    footer: "Box footer",
-    type: "blue",
-}
-export const Danger= Template.bind({})
-Danger.args = {
-    title: "Danger Box Title",
-    body: "Body",
-    footer: "Box footer",
-    type: "danger",
-}
-

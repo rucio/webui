@@ -1,27 +1,7 @@
 /************************ Rucio WebUI Story Components PropType Definitions ************************/
 
-interface AlertProps {
-    open?: boolean
-    message?: string | any
-    variant?: 'primary' | 'warn' | 'success' | 'error'
-    onClose?: () => void
-}
 
-interface BoxProps {
-    title?: string
-    body?: string
-    footer?: string
-    type?: 'condensed' | 'spacious' | 'blue' | 'danger'
-}
 
-interface ButtonProps {
-    label: string
-    icon?: ReactNode
-    type?: 'button' | 'submit' | 'reset'
-    disabled?: boolean
-    fullwidth?: boolean
-    onClick?: (args: unknown) => void
-}
 
 interface CardProps {
     img?: any
@@ -30,21 +10,6 @@ interface CardProps {
     footer?: Array<any>
     onCardClick?: (args: unknown) => void
     hoverable?: boolean
-}
-
-interface CheckboxProps {
-    label: string
-    isChecked?: boolean
-    disabled?: boolean
-    handleChange?: (args: any) => void
-    type: "checkbox" | "radio"
-}
-
-interface RadioButtonProps{
-    label: string
-    isChecked?: boolean
-    disabled?: boolean
-    handleChange?: (args: any) => void
 }
 
 interface DropdownProps {
@@ -78,25 +43,6 @@ interface ImageProps {
     width?: number
 }
 
-interface InputProps {
-    // kind?: 'primary' | 'info' | 'link' | 'normal'
-    disabled?: boolean
-    focusByDefault?: boolean
-    inline?: boolean
-    label?: string
-    onChange?: (args: any) => void
-    placeholder?: string
-    show?: "error" | "success" | "standard"
-}
-
-interface TextInputProps extends InputProps {
-    password?: boolean
-}
-
-interface NumberInputProps extends InputProps {
-    max?: number
-    min?: number
-}
 
 interface ModalProps {
     active?: boolean
@@ -147,23 +93,4 @@ interface ToggleSwitchProps {
     style?: 'rounded' | 'outlined'
     checked?: boolean
     handleChange?: (event: any) => void
-}
-
-/************************ Text ************************/
-interface TextProps {
-    text: string
-}
-
-
-/************************ Pages ************************/
-interface LoginPageProps {
-    loginViewModel: LoginViewModel
-    login: (LoginPageResponse) => void
-}
-
-interface LoginPageResponse {
-    loginType: "upass" | "x509"
-    vo: string
-    username: string
-    password: string
 }

@@ -1,3 +1,16 @@
+interface NumberInputProps {
+    // kind?: 'primary' | 'info' | 'link' | 'normal'
+    disabled?: boolean
+    focusByDefault?: boolean
+    inline?: boolean
+    label?: string
+    onChange?: (args: any) => void
+    placeholder?: string
+    show?: "error" | "success" | "standard"
+    max?: number
+    min?: number
+}
+
 export const NumberInput = ({
     disabled = false,
     focusByDefault = false,

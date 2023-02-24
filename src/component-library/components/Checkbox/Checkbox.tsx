@@ -1,5 +1,13 @@
 import { useState , useEffect } from 'react'
 
+interface CheckboxProps {
+    label: string
+    isChecked?: boolean
+    disabled?: boolean
+    handleChange?: (args: any) => void
+    type: "checkbox" | "radio"
+}
+
 export const Checkbox = ({
     label,
     isChecked = true,

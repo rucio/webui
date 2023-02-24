@@ -1,5 +1,12 @@
 import { useEffect } from 'react'
 
+interface AlertProps {
+    open?: boolean
+    message?: string | any
+    variant?: 'primary' | 'warn' | 'success' | 'error'
+    onClose?: () => void
+}
+
 export const Alert = ({
     open = true,
     message = 'Flash banner message.',

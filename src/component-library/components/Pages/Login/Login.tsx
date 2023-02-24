@@ -5,6 +5,23 @@ import { TextInput } from '../../Input/Input.stories';
 import { H1 } from '../../Text/Headings/H1';
 import { Collapsible } from '../../Helpers/Collapsible';
 import { CredentialInput } from './CredentialInput';
+import { LoginViewModel } from '../../../../lib/infrastructure/data/view-model/login.d';
+
+
+type ShowLoginType = "none" | "x509" | "userpass"
+
+interface LoginPageResponse {
+    loginType: ShowLoginType
+    vo: string
+    username: string
+    password: string
+}
+
+interface LoginPageProps {
+    loginViewModel: LoginViewModel
+    login: (arg0: LoginPageResponse) => void
+}
+
 
 export const Login = ({
     loginViewModel,
@@ -22,15 +39,10 @@ export const Login = ({
      */
 
     // Login type
-    enum ShowLoginType {
-        none = "none",
-        x509 = "x509",
-        upass = "upass",
-    }
-    const [showLogin, setShowLogin] = useState<ShowLoginType>(ShowLoginType.none)
+    const [showLogin, setShowLogin] = useState<ShowLoginType>("none")
     var switchLoginForm = (choice: ShowLoginType) => {
         if (showLogin === choice) {
-            return () => {setShowLogin(ShowLoginType.none)}
+            return () => {setShowLogin("none")}
         }
         else {
             return () => {setShowLogin(choice)}
@@ -52,8 +64,8 @@ export const Login = ({
             {
                 loginType: showLogin,
                 vo: loginViewModel.voList[vosetting],
-                username: showLogin == ShowLoginType.upass ? unamesetting : "",
-                password: showLogin == ShowLoginType.upass ? passwordsetting : "",
+                username: showLogin == "userpass" ? unamesetting : "",
+                password: showLogin == "userpass" ? passwordsetting : "",
             }
         )
     }
@@ -80,16 +92,16 @@ export const Login = ({
                     </Collapsible>
                     <div className="flex flex-col space-y-4">
                         <Collapsible show={loginViewModel.x509Enabled}>
-                            <Button label="x509" onClick={switchLoginForm(ShowLoginType.x509)}/>
+                            <Button label="x509" onClick={switchLoginForm("x509")}/>
                         </Collapsible>
-                        <Button label="Userpass" onClick={switchLoginForm(ShowLoginType.upass)}/> 
-                        <Collapsible show={showLogin == ShowLoginType.upass}>
+                        <Button label="Userpass" onClick={switchLoginForm("userpass")}/> 
+                        <Collapsible show={showLogin == "userpass"}>
                             <CredentialInput login={prepareResponse}>
                                 <TextInput label="Username" inline onChange={(event) => {set_unamesetting(event.target.value)}}/>
                                 <TextInput label="Password" inline password onChange={(event) => {set_passwordsetting(event.target.value)}}/>
                             </CredentialInput>
                         </Collapsible>
-                        <Collapsible show={showLogin == ShowLoginType.x509}>
+                        <Collapsible show={showLogin == "x509"}>
                             <CredentialInput login={prepareResponse}>
                                 x509 Login
                             </CredentialInput>
