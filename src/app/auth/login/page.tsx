@@ -11,7 +11,7 @@ export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [redirectURL, setRedirectURL] = useState<string>('/dashboard' as string)
-    const [viewModel, setViewModel] = useState({})
+    const [viewModel, setViewModel] = useState<LoginViewModel>()
     const router = useRouter()
     const callbackUrl = useSearchParams().get('callbackUrl')
 
@@ -62,15 +62,6 @@ export default function Login() {
         console.log(`Username: ${username}`);
     };
 
-    const mockuserpassSubmit = async (username: string, password: string) => {
-        if(username === "test" && password === "test"){
-            const redirect: string = redirectURL
-            router.push(redirect)
-        }
-        else {
-            console.log("Invalid username or password")
-        }
-    };
 
 
     const handleSubmit = (
@@ -79,7 +70,7 @@ export default function Login() {
         console.log(`Username: ${response.username}, Password: ${response.password}, VO: ${response.vo}, Login Type: ${response.loginType}`);
         switch(response.loginType){
             case "userpass":
-                mockuserpassSubmit(response.username, response.password)
+                handleuserpassSubmit(response.username, response.password)
                 break;
             case "x509":
                 console.log("x509 login not yet implemented")
@@ -87,22 +78,18 @@ export default function Login() {
         }
     }
 
-    return (
-        <div className="flex items-center justify-center h-screen">
-            <LoginStory
-                loginViewModel={
-                    // viewModel
-                    {
-                        x509Enabled: true,
-                        oidcEnabled: true,
-                        oidcProviders: ["OIDC Provider 1", "OIDC Provider 2", "OIDC Provider 3"],
-                        multiVOEnabled: true,
-                        voList: ["VO 1", "VO 2", "VO 3"],
-                        isLoggedIn: false,
-                    } as LoginViewModel
-                }
-                login={handleSubmit}
-            />
-        </div>
-    );
+    if(viewModel === undefined) {
+        // the hook has not yet run
+        return <p>Loading login page</p>
+    }
+    else {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <LoginStory
+                    loginViewModel={viewModel}
+                    login={handleSubmit}
+                />
+            </div>
+        );
+    }
 }

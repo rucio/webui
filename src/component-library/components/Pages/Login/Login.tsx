@@ -8,16 +8,16 @@ import { CredentialInput } from './CredentialInput';
 import { LoginViewModel } from '../../../../lib/infrastructure/data/view-model/login.d';
 
 
-type ShowLoginType = "none" | "x509" | "userpass"
+export type ShowLoginType = "none" | "x509" | "userpass"
 
-interface LoginPageResponse {
+export interface LoginPageResponse {
     loginType: ShowLoginType
     vo: string
     username: string
     password: string
 }
 
-interface LoginPageProps {
+export interface LoginPageProps {
     loginViewModel: LoginViewModel
     login: (arg0: LoginPageResponse) => void
 }
