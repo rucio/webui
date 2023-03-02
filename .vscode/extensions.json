@@ -1,0 +1,23 @@
+{
+    "recommendations": [
+      // Linting / Formatting
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "usernamehw.errorlens",
+  
+      // Testing
+      "orta.vscode-jest",
+  
+      // PR management / Reviewing
+      "github.vscode-pull-request-github",
+  
+      // Showing todo comments
+      "gruntfuggly.todo-tree",
+  
+      // Collaborating
+      "ms-vsliveshare.vsliveshare",
+  
+      // Debugging
+      "ms-vscode.vscode-js-profile-flame"
+    ]
+  }

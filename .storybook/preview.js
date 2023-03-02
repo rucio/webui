@@ -6,11 +6,5 @@ export const parameters = {
       date: /Date$/,
     },
   },
-  docs: {
-    source: {
-        type: 'auto',
-        format: true,
-        language: 'typescript'
-    },
-},
 }
+import '../src/component-library/outputtailwind.css'
