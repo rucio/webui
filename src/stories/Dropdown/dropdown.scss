@@ -1,0 +1,19 @@
+@import 'bulma/sass/components/dropdown.sass';
+
+.rucio-dropdown {
+    @extend .dropdown;
+    cursor: pointer;
+    margin: auto 2px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    &.active {
+        @extend .is-active;
+    }
+}
+option {
+    text-align: left;
+}
+
+option:hover {
+    background-color: #f5f5f5ff;
+}

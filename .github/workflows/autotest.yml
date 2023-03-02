@@ -1,0 +1,27 @@
+name: Rucio WebUI Autotests
+
+on:
+    pull_request:
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+            - name: Setup NodeJS
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 16.14.0
+            - name: Install project in clean state
+              run: npm clean-install --legacy-peer-deps
+            - name: Run tests
+              run: npm test
+            - name: Test in Multi-vo
+              run: REACT_APP_multi_vo_enabled=true npm test
+            - name: Format code
+              run: npm run prettier
+            - name: Lint
+              run: npm run lint
+            - name: Check TypeScript
+              run: npm run typescript

@@ -1,0 +1,24 @@
+@import 'bulma/sass/components/card.sass';
+
+.rucio-card {
+    @extend .card;
+    &.image {
+        @extend .card-image;
+    }
+    &.header {
+        @extend .card-header;
+    }
+    &.header-title {
+        @extend .card-header-title;
+    }
+    &.hoverable {
+        transition: transform 0.2s;
+        cursor: pointer;
+    }
+    &.hoverable:hover {
+        transform: scale(1.1);
+    }
+    padding-bottom: 20px;
+    max-width: 80%;
+    margin: 0 10% 0 10%;
+}

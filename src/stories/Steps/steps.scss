@@ -1,0 +1,20 @@
+@import 'bulma/sass/utilities/_all.sass';
+@import 'bulma-steps/src/sass/index.sass';
+
+.rucio-steps {
+    @extend .steps;
+    max-width: 100%;
+    &.small {
+        @extend .is-small;
+    }
+    &.medium {
+        @extend .is-medium;
+    }
+    &.large {
+        @extend .is-large;
+    }
+}
+
+.rucio-steps:hover {
+    cursor: pointer;
+}

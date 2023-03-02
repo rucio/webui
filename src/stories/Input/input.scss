@@ -1,0 +1,49 @@
+@import 'bulma/sass/utilities/_all.sass';
+@import 'bulma/sass/form/_all.sass';
+
+.rucio-input {
+    @extend .input;
+    &.small {
+        @extend .is-small;
+    }
+    &.normal {
+        @extend .is-normal;
+    }
+    &.medium {
+        @extend .is-medium;
+    }
+    &.large {
+        @extend .is-large;
+    }
+    &.primary {
+        @extend .is-primary;
+    }
+    &.link {
+        @extend .is-link;
+    }
+    &.info {
+        @extend .is-info;
+        border-color: #0969da;
+        :focus {
+            border-color: #f8f9fd;
+        }
+    }
+    &.success {
+        @extend .is-success;
+    }
+    &.warning {
+        @extend .is-warning;
+    }
+    &.danger {
+        @extend .is-danger;
+    }
+    &.rounded {
+        @extend .is-rounded;
+    }
+    border-radius: 0.5em;
+}
+
+label {
+    width: 100%;
+    padding-block: 5px;
+}

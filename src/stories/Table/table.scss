@@ -1,0 +1,31 @@
+@import 'bulma/sass/utilities/_all.sass';
+@import 'bulma/sass/elements/_all.sass';
+
+.rucio-table {
+    @extend .table;
+    &.bordered {
+        @extend .is-bordered;
+    }
+    &.striped {
+        @extend .is-striped;
+    }
+    &.narrow {
+        @extend .is-narrow;
+    }
+    &.hoverable {
+        @extend .is-hoverable;
+    }
+    &.fullwidth {
+        @extend .is-fullwidth;
+    }
+}
+
+tr:hover {
+    cursor: pointer;
+}
+
+tr {
+    &.selected {
+        background-color: #94d3a2;
+    }
+}
