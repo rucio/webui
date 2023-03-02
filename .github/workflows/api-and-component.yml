@@ -8,7 +8,7 @@ on:
       - master
 jobs:
   test:
-    name: Test API and Component
+    name: Test API and Components
     strategy:
       matrix:
         node-version: [16.14.0, 18.5.0]
