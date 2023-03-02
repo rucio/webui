@@ -7,8 +7,8 @@ on:
     branches:
       - master
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+  test:
+    name: Test API and Component
     strategy:
       matrix:
         node-version: [16.14.0, 18.5.0]

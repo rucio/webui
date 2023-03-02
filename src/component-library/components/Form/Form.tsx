@@ -28,9 +28,7 @@ export const Form = ({
             <div className="buttons">
                 <Button
                     label="Submit"
-                    size="medium"
                     type="submit"
-                    kind="primary"
                 />
             </div>
         </div>
