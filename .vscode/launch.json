@@ -2,19 +2,19 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Next.js: debug server-side",
+        "name": "Next.js: server-side",
         "type": "node-terminal",
         "request": "launch",
         "command": "npm run dev"
       },
       {
-        "name": "Next.js: debug client-side",
+        "name": "Next.js: client-side",
         "type": "chrome",
         "request": "launch",
         "url": "http://localhost:3000"
       },
       {
-        "name": "Next.js: debug full stack",
+        "name": "Next.js: full stack",
         "type": "node-terminal",
         "request": "launch",
         "command": "npm run dev",
@@ -25,7 +25,7 @@
         }
       },
       {
-        "name": "Debug API Tests",
+        "name": "API Tests",
         "type": "node",
         "request": "launch",
         "runtimeArgs": [
@@ -34,12 +34,14 @@
           "--runInBand",
           "--projects",
           "${workspaceRoot}/test/api/jest.api.config.js",
+          "--testPathPattern",
+          "${workspaceRoot}/test/api}"
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
       },
       {
-        "name": "Debug Component Tests",
+        "name": "Component Tests",
         "type": "node",
         "request": "launch",
         "runtimeArgs": [
@@ -48,6 +50,24 @@
           "--runInBand",
           "--projects",
           "${workspaceRoot}/test/component/jest.component.config.js",
+          "--testPathPattern",
+          "${workspaceRoot}/test/component}"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      },
+      {
+        "name": "Gateway Tests",
+        "type": "node",
+        "request": "launch",
+        "runtimeArgs": [
+          "--inspect-brk",
+          "${workspaceRoot}/node_modules/.bin/jest",
+          "--runInBand",
+          "--projects",
+          "${workspaceRoot}/test/gateway/jest.gateway.config.js",
+          "--testPathPattern",
+          "${workspaceRoot}/test/gateway}"
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
