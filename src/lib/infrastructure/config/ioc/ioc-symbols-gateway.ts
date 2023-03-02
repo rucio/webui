@@ -3,6 +3,7 @@
  */
 const GATEWAYS = {
     AUTH_SERVER: Symbol.for("RucioAuthServer"),
+    ENV_CONFIG: Symbol.for("EnvConfigGateway"),
 }
 
 export default GATEWAYS;
