@@ -1,4 +1,4 @@
-import { OIDCProvider } from "../entity/auth-models";
+import { OIDCProvider, VO } from "../entity/auth-models";
 
 /**
  * Response Model for {@link LoginConfigOutputPort}
@@ -13,7 +13,7 @@ export type LoginConfigResponse = {
     oidcEnabled: boolean;
     oidcProviders: OIDCProvider[];
     multiVOEnabled: boolean;
-    voList: string[];
+    voList: VO[];
 }
 
 /**

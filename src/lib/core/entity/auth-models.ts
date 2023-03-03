@@ -16,16 +16,16 @@ export type SessionUser = {
  */
 export type OIDCProvider = {
     name: string;
-    url: string | null;
-    iconUrl: string | null;
+    url?: string | null;
+    iconUrl?: string | null;
     clientId: string;
     clientSecret: string;
     authorizationUrl: string;
     refreshTokenUrl: string;
     redirectUrl: string;
     tokenUrl: string;
-    userInfoUrl: string;
-    scopes: [string];
+    userInfoUrl?: string;
+    scopes?: [string];
 };
 
 /**
