@@ -35,7 +35,7 @@
           "--projects",
           "${workspaceRoot}/test/api/jest.api.config.js",
           "--testPathPattern",
-          "${workspaceRoot}/test/api}"
+          "${workspaceRoot}/test/api"
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
@@ -51,7 +51,7 @@
           "--projects",
           "${workspaceRoot}/test/component/jest.component.config.js",
           "--testPathPattern",
-          "${workspaceRoot}/test/component}"
+          "${workspaceRoot}/test/component"
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
@@ -67,7 +67,7 @@
           "--projects",
           "${workspaceRoot}/test/gateway/jest.gateway.config.js",
           "--testPathPattern",
-          "${workspaceRoot}/test/gateway}"
+          "${workspaceRoot}/test/gateway"
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"

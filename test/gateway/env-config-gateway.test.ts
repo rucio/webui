@@ -44,7 +44,7 @@ describe('env-config-gateway', () => {
 })
 
 
-describe('env-config-gateway valid oidc config test', () => {
+describe('env-config-gateway oidc config test', () => {
     beforeEach(() => {
         process.env['OIDC_ENABLED'] = 'true'
         process.env['OIDC_PROVIDERS'] = 'cern, test-provider'
@@ -130,53 +130,20 @@ describe('env-config-gateway valid oidc config test', () => {
         expect(cern.refreshTokenUrl).toEqual('https://cern.ch/userinfo')
         
     })
-
-})
-
-
-describe('env-config-gateway invalid oidc config test', () => {
-
-    it('should throw errors if invalid oidc config is provided', async () => {
+    it('should throw InvalidConfig if oidc is enabled but no providers are provided', async () => {
+        process.env['OIDC_PROVIDERS'] = ''
         const gateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG)
-        const oidcEnabled = await gateway.oidcEnabled()
-        expect(oidcEnabled).toBe(false)
-        
-        process.env['OIDC_ENABLED'] = 'true'
-        process.env['OIDC_PROVIDERS'] = 'cern'
-
-        expect(await gateway.oidcEnabled()).toBe(true)
-
-        // expect(gateway.oidcProviders()).rejects.toThrow(InvalidConfig)
-        
-        process.env['OIDC_PROVIDER_CERN_URL'] = 'https://cern.ch'
-        process.env['OIDC_PROVIDER_CERN_ICON_URL'] = 'https://cern.ch/icon.png'
-        process.env['OIDC_PROVIDER_CERN_CLIENT_ID'] = 'client-id'
-        process.env['OIDC_PROVIDER_CERN_CLIENT_SECRET'] = 'client-secret'
-        process.env['OIDC_PROVIDER_CERN_SCOPES'] = 'scope1,scope2'
-        process.env['OIDC_PROVIDER_CERN_AUTHORIZATION_URL'] = 'https://cern.ch/auth'
-        process.env['OIDC_PROVIDER_CERN_TOKEN_URL'] = 'https://cern.ch/token'
-        process.env['OIDC_PROVIDER_CERN_USERINFO_URL'] = 'https://cern.ch/userinfo'
-        process.env['OIDC_PROVIDER_CERN_REDIRECT_URL'] = 'https://cern.ch/redirect'
-        process.env['OIDC_PROVIDER_CERN_REFRESH_TOKEN_URL'] = 'https://cern.ch/userinfo'
-        process.env['OIDC_PROVIDER_CERN_LOGOUT_URL'] = 'https://cern.ch/logout'
-
-        expect(await gateway.oidcProviders()).toHaveLength(1)
-
-        delete process.env['OIDC_ENABLED']
-        delete process.env['OIDC_PROVIDERS']
-        delete process.env['OIDC_PROVIDER_CERN_URL']
-        delete process.env['OIDC_PROVIDER_CERN_ICON_URL']
-        delete process.env['OIDC_PROVIDER_CERN_CLIENT_ID']
-        delete process.env['OIDC_PROVIDER_CERN_CLIENT_SECRET']
-        delete process.env['OIDC_PROVIDER_CERN_SCOPES']
-        delete process.env['OIDC_PROVIDER_CERN_AUTHORIZATION_URL']
-        delete process.env['OIDC_PROVIDER_CERN_TOKEN_URL']
-        delete process.env['OIDC_PROVIDER_CERN_USERINFO_URL']
-        delete process.env['OIDC_PROVIDER_CERN_REDIRECT_URL']
-        delete process.env['OIDC_PROVIDER_CERN_REFRESH_TOKEN_URL']
-        delete process.env['OIDC_PROVIDER_CERN_LOGOUT_URL']
-        
-
-        
+        await expect(gateway.oidcProviders()).rejects.toThrow(InvalidConfig)
     })
+
+    it('should not throw InvalidConfig if url for OIDC Provider is not provided', async () => {
+        delete process.env['OIDC_PROVIDER_TEST-PROVIDER_URL']
+        const gateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG)
+        const result = await gateway.oidcProviders()
+        expect(result.length).toEqual(2)
+        const testProvider = result[1]
+        expect(testProvider.url).toBeUndefined()
+    })
+
+
 })
