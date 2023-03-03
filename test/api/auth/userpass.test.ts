@@ -28,6 +28,7 @@ describe('UserPassLogin API Test', () => {
             }
         })
     })
+    
     it('should present successful LoginViewModel', async () => {
         const { req, res } = createMocks({
             method: 'POST',
