@@ -34,7 +34,7 @@ export type OIDCProvider = {
 export type VO = {
     name: string;
     shortName: string;
-    logo_url: string;
-    oidc_enabled: boolean;
-    oidc_providers: OIDCProvider[];
+    logoUrl: string;
+    oidcEnabled: boolean;
+    oidcProviders: OIDCProvider[];
 }

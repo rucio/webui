@@ -1,4 +1,4 @@
-import { InvalidConfig } from "@/lib/core/data/env-config-exceptions";
+import { ConfigNotFound, InvalidConfig } from "@/lib/core/data/env-config-exceptions";
 import { OIDCProvider, VO } from "@/lib/core/entity/auth-models";
 import EnvConfigGatewayOutputPort from "@/lib/core/port/secondary/env-config-gateway-output-port";
 import { injectable } from "inversify";
@@ -76,14 +76,14 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
     async voList(): Promise<VO[]> {
         const multiVOEnabled = await this.multiVOEnabled()
         const vos: VO[] = []
-
+        
         if (!multiVOEnabled) {
             vos.push({
                 name: 'default',
                 shortName: 'def',
-                logo_url: '',
-                oidc_enabled: false,
-                oidc_providers: []
+                logoUrl: '',
+                oidcEnabled: false,
+                oidcProviders: []
             })
             return Promise.resolve(vos)
         }
@@ -92,34 +92,36 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         if (voList === undefined) {
             throw new InvalidConfig('VO_LIST is not defined, but MULTIVO_ENABLED is true')
         }
-        const oidcProviders = await this.oidcProviders()
+        const allOIDCProviders = await this.oidcProviders()
         const voNames = voList.split(',').map((vo) => vo.trim())
         for (const voName of voNames) {
-            const name = await this.get(`VO_${voName}_NAME`)
+            const name = await this.get(`VO_${voName}_NAME`, true)
             const logoUrl = await this.get(`VO_${voName}_LOGO_URL`)
-            const oidcEnabledStr = await this.get(`VO_${voName}_OIDC_ENABLED`)
-            let oidcEnabled = false
+            const voOIDCEnabledStr = await this.get(`VO_${voName}_OIDC_ENABLED`)
+            let voOIDCEnabled = false
+            let voOIDCProviders: OIDCProvider[] = []
             // if oidc_enabled is true, oidc_providers must be defined
-            if (oidcEnabledStr === 'true' || oidcEnabledStr === 'True' || oidcEnabledStr === 'TRUE') {
-                oidcEnabled = true
-                const oidc_providers = await this.get(`VO_${voName}_OIDC_PROVIDERS`)
-                if (oidc_providers === undefined) {
+            if (voOIDCEnabledStr === 'true' || voOIDCEnabledStr === 'True' || voOIDCEnabledStr === 'TRUE') {
+                voOIDCEnabled = true
+                let voOIDCProviderNames = await this.get(`VO_${voName}_OIDC_PROVIDERS`)
+                if (voOIDCProviderNames === undefined) {
                     throw new InvalidConfig(`VO_${voName}_OIDC_PROVIDERS is not defined, but VO_${voName}_OIDC_ENABLED is true`)
                 }
-                const providerNames = oidc_providers.split(',').map((provider) => provider.trim())
+                const providerNames = voOIDCProviderNames.split(',').map((provider) => provider.trim())
                 for (const providerName of providerNames) {
-                    const provider = oidcProviders.find((provider) => provider.name === providerName)
+                    const provider = allOIDCProviders.find((provider) => provider.name === providerName)
                     if (provider === undefined) {
                         throw new InvalidConfig(`OIDC provider ${providerName} is not defined, but VO_${voName}_OIDC_PROVIDERS is defined`)
                     }
+                    voOIDCProviders.push(provider)
                 }
             }
             const vo: VO = {
                 shortName: voName as string,
                 name: name as string,
-                logo_url: logoUrl as string,
-                oidc_enabled: oidcEnabled,
-                oidc_providers: oidcProviders
+                logoUrl: logoUrl as string,
+                oidcEnabled: voOIDCEnabled,
+                oidcProviders: voOIDCProviders
             }
             vos.push(vo)
         }
@@ -127,14 +129,14 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
     }
 
     async x509Enabled(): Promise<boolean> {
-        const value = process.env['X509_ENABLED']
+        const value = await this.get('X509_ENABLED')
         if (value === 'false' || value === 'False' || value === 'FALSE') {
             return Promise.resolve(false)
         }
         return Promise.resolve(true)
     }
 
-    async get(key: string): Promise<string | undefined> {
+    async get(key: string, required: boolean = false): Promise<string | undefined> {
         let value = process.env[key]
         if (value !== undefined) {
             return Promise.resolve(value)
@@ -146,6 +148,9 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         value = process.env[key.toLowerCase()]
         if (value !== undefined) {
             return Promise.resolve(value)
+        }
+        if (required) {
+            throw new ConfigNotFound(key)
         }
         return Promise.resolve(undefined)
     }
