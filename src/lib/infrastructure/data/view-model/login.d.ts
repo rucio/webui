@@ -1,8 +1,5 @@
-export type LoginViewModel = {
-    x509Enabled: boolean;
-    oidcEnabled: boolean;
-    oidcProviders: OIDCProvider[];
-    multiVOEnabled: boolean;
-    voList: string[];
+import { LoginConfigResponse } from "@/lib/core/data/login-config"
+
+export interface LoginViewModel extends LoginConfigResponse {
     isLoggedIn: boolean;
 }

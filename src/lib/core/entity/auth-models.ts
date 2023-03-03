@@ -16,8 +16,8 @@ export type SessionUser = {
  */
 export type OIDCProvider = {
     name: string;
-    url: string;
-    icon: string;
+    url: string | null;
+    iconUrl: string | null;
     clientId: string;
     clientSecret: string;
     authorizationUrl: string;
@@ -25,7 +25,7 @@ export type OIDCProvider = {
     redirectUrl: string;
     tokenUrl: string;
     userInfoUrl: string;
-    scope: string;
+    scopes: [string];
 };
 
 /**
@@ -34,4 +34,7 @@ export type OIDCProvider = {
 export type VO = {
     name: string;
     shortName: string;
+    logo_url: string;
+    oidc_enabled: boolean;
+    oidc_providers: OIDCProvider[];
 }
