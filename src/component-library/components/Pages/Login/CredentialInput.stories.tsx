@@ -10,6 +10,6 @@ const Template: StoryFn<typeof CredentialInput> = args => <CredentialInput {...a
 
 export const CredentialInputComponent = Template.bind({})
 CredentialInputComponent.args = {
-    login: () => {},
+    submitHandler: () => {},
     children: "Credential Input",
 }

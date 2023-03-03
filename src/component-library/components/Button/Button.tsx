@@ -3,6 +3,7 @@ interface ButtonProps {
     icon?: any
     type?: 'button' | 'submit' | 'reset'
     disabled?: boolean
+    theme?: 'blue' | 'orange',
     fullwidth?: boolean
     onClick?: (args: unknown) => void
 }
@@ -12,6 +13,7 @@ export const Button = ({
     icon = null,
     type = "button",
     disabled = false,
+    theme = "blue",
     fullwidth = true,
     onClick = undefined,
 }: ButtonProps) => {
@@ -26,7 +28,11 @@ export const Button = ({
                 classes.push("bg-red-500", "hover:bg-red-600", "text-white")
                 break
             case "button":
-                classes.push("bg-blue-500", "hover:bg-blue-600", "text-white")
+                if (theme === "blue") {
+                    classes.push("bg-blue-500", "hover:bg-blue-600", "text-white")
+                } else if (theme === "orange") {
+                    classes.push("bg-amber-500", "hover:bg-amber-600", "text-black")
+                }
                 break
         }
     }
@@ -37,15 +43,18 @@ export const Button = ({
         classes.push("w-full")
     }
     return (
+        
         <button
             type = {type}
             disabled = {disabled}
             className = {classes.join(" ")}
             onClick = {handleOnClick}
         >
-            {icon}
-            &nbsp;
-            {label}
+            <div className="flex justify-center">
+                <div>{label}</div>
+                &nbsp;
+                <div className="flex items-center">{icon}</div>
+            </div>
         </button>
     )
 }

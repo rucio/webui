@@ -6,104 +6,82 @@ import { H1 } from '../../Text/Headings/H1';
 import { Collapsible } from '../../Helpers/Collapsible';
 import { CredentialInput } from './CredentialInput';
 import { LoginViewModel } from '../../../../lib/infrastructure/data/view-model/login.d';
+import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
+import { MdAccountCircle } from 'react-icons/md';
+import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
+import { Alert } from '../../Alert/Alert';
 
-
-export type ShowLoginType = "none" | "x509" | "userpass"
-
-export interface LoginPageResponse {
-    loginType: ShowLoginType
-    vo: string
-    username: string
-    password: string
-}
+export type SupportedAuthWorkflows = "oidc" | "x509" | "userpass" | "none"
 
 export interface LoginPageProps {
     loginViewModel: LoginViewModel
-    login: (arg0: LoginPageResponse) => void
+    authViewModel: AuthViewModel | undefined
+    userPassSubmitHandler: (username: string, password: string, vo: VO, account?: string) => void
+    x509SubmitHandler: (vo: VO, account?: string) => void | undefined
+    oidcSubmitHandler: (oidcProvider: OIDCProvider, vo: VO, account?: string) => void
+    
 }
-
 
 export const Login = ({
     loginViewModel,
-    login,
+    authViewModel,
+    userPassSubmitHandler: handleUserPassSubmit,
+    x509SubmitHandler: handleX509Submit,
+    oidcSubmitHandler: handleOIDCSubmit
 }: LoginPageProps ) => {
 
-    /**
-     * Designing the login page
-     */
     var mainDivClasses: string[] = ["border-gray-300", "border", "rounded", "p-4", "flex", "flex-col", "justify-center", "space-y-2"]
+    const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false)
+    
+    const [selectedVOTab, setSelectedVOTab] = useState<number>(1)
+    const [username, setUsername] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+    const [account, setAccount] = useState<string | undefined>(undefined)
 
-
-    /**
-     * State variables
-     */
-
-    // Login type
-    const [showLogin, setShowLogin] = useState<ShowLoginType>("none")
-    var switchLoginForm = (choice: ShowLoginType) => {
-        if (showLogin === choice) {
-            return () => {setShowLogin("none")}
-        }
-        else {
-            return () => {setShowLogin(choice)}
-        }
-    }
-
-    // VO setting
-    const [vosetting, set_vosetting] = useState<number>(1)
-
-    // Username and password
-    const [unamesetting, set_unamesetting] = useState<string>("")
-    const [passwordsetting, set_passwordsetting] = useState<string>("")
-
-    /**
-     * Preparing the response
-     */
-    const prepareResponse = () => {
-        login(
-            {
-                loginType: showLogin,
-                vo: loginViewModel.voList[vosetting],
-                username: showLogin == "userpass" ? unamesetting : "",
-                password: showLogin == "userpass" ? passwordsetting : "",
-            }
-        )
-    }
-
-    /**
-     * Building the login form
-     */
     return (
         <div className={mainDivClasses.join(" ")}>
+            {authViewModel && authViewModel.status === 'error' && <Alert message={authViewModel.message} />}
             <div className="text-center">
                 <H1 text="Rucio Login" />
             </div>
+
             <div className="flex flex-col space-y-2">
-                <Collapsible show={loginViewModel.multiVOEnabled}>
-                    <Tabs tabs={loginViewModel.voList} active={1} handleClick={(event: any) => {set_vosetting(event.target.id)}}/>
+                <Collapsible showIf={loginViewModel.multiVOEnabled}>
+                    <Tabs tabs={loginViewModel.voList.map((vo) => vo.name)} active={1} handleClick={(event: any) => {setSelectedVOTab(event.target.id)}}/>
                 </Collapsible>
+                
                 <div className="flex justify-center flex-col space-y-4">
-                    <Collapsible show={loginViewModel.oidcEnabled}>
+                    <Collapsible showIf={loginViewModel.oidcEnabled}>
                         <div className="flex flex-row justify-center space-x-2">
-                            {loginViewModel.oidcProviders.map((provider: string, index: number) => {
-                                return (<Button label={provider} key={index.toString()}/>)
+                            {loginViewModel.oidcProviders.map((provider: OIDCProvider, index: number) => {
+                                return (<Button theme='orange' label={provider.name} key={index.toString()} icon={<MdAccountCircle/>}/>)
                             })}
                         </div>
                     </Collapsible>
+                    
                     <div className="flex flex-col space-y-4">
-                        <Collapsible show={loginViewModel.x509Enabled}>
-                            <Button label="x509" onClick={switchLoginForm("x509")}/>
+                        <Collapsible showIf={loginViewModel.x509Enabled}>
+                            <Button label="x509" onClick={() => {
+                                handleX509Submit(loginViewModel.voList[selectedVOTab - 1], account)
+                            }}/>
                         </Collapsible>
-                        <Button label="Userpass" onClick={switchLoginForm("userpass")}/> 
-                        <Collapsible show={showLogin == "userpass"}>
-                            <CredentialInput login={prepareResponse}>
-                                <TextInput label="Username" inline onChange={(event) => {set_unamesetting(event.target.value)}}/>
-                                <TextInput label="Password" inline password onChange={(event) => {set_passwordsetting(event.target.value)}}/>
-                            </CredentialInput>
-                        </Collapsible>
-                        <Collapsible show={showLogin == "x509"}>
-                            <CredentialInput login={prepareResponse}>
-                                x509 Login
+
+                        <Button label="Userpass" onClick={() => {
+                                setShowUserPassLoginForm(!showUserPassLoginForm)
+                            }
+                        }/>
+
+                        <Collapsible showIf={showUserPassLoginForm}>
+                            <CredentialInput submitHandler={() => {
+                                handleUserPassSubmit(
+                                    username,
+                                    password,
+                                    loginViewModel.voList[selectedVOTab - 1],
+                                    account
+                                )
+                            }}>
+                                <TextInput label="Username" inline onChange={(event) => {setUsername(event.target.value)}}/>
+                                <TextInput label="Password" inline password onChange={(event) => {setPassword(event.target.value)}}/>
                             </CredentialInput>
                         </Collapsible>
                     </div>
