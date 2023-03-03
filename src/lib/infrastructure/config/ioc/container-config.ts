@@ -17,6 +17,7 @@ import UserPassLoginPresenter from "@/lib/infrastructure/presenter/usepass-login
 import LoginConfigInputPort from "@/lib/core/port/primary/login-config-input-port";
 import LoginConfigUseCase from "@/lib/core/use-case/login-config-usecase";
 import LoginConfigPresenter from "@/lib/infrastructure/presenter/login-config-presenter";
+import LoginConfigController, {ILoginConfigController} from "@/lib/infrastructure/controller/login-config-controller";
 
 /**
  * IoC Container configuration for the application.
@@ -36,6 +37,7 @@ appContainer.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.US
 );
 
 appContainer.bind<LoginConfigInputPort>(INPUT_PORT.LOGIN_CONFIG).to(LoginConfigUseCase).inRequestScope();
+appContainer.bind<ILoginConfigController>(CONTROLLERS.LOGIN_CONFIG).to(LoginConfigController);
 appContainer.bind<interfaces.Factory<LoginConfigInputPort>>(USECASE_FACTORY.LOGIN_CONFIG).toFactory<LoginConfigUseCase, [IronSession, NextApiResponse]>((context: interfaces.Context) =>
     (session: IronSession, response: NextApiResponse) => {
         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
