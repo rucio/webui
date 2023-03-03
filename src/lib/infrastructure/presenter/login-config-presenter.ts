@@ -2,7 +2,7 @@ import { LoginConfigError, LoginConfigResponse } from "@/lib/core/data/login-con
 import LoginConfigOutputPort from "@/lib/core/port/primary/login-config-output-port";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
-import { LoginViewModel } from "../data/view-model/login";
+import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 
 export default class LoginConfigPresenter implements LoginConfigOutputPort<NextApiResponse> {
     response: NextApiResponse;

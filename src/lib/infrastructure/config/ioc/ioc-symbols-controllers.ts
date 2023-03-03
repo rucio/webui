@@ -6,6 +6,7 @@
  */
 const CONTROLLERS = {
     USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
+    LOGIN_CONFIG: Symbol.for("LoginConfigController"),
 }
 
 export default CONTROLLERS;
