@@ -1,7 +1,9 @@
 import "reflect-metadata"
 import { NextApiRequest, NextApiResponse } from "next"
 import { withSessionRoute } from "@/lib/infrastructure/auth/session-utils"
-import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login"
+import appContainer from "@/lib/infrastructure/config/ioc/container-config"
+import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers"
+import { ILoginConfigController } from "@/lib/infrastructure/controller/login-config-controller"
 
 async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     const sessionExists = req.session !== undefined
@@ -23,15 +25,8 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
         res.redirect(`/auth/login?callbackUrl=${callbackUrl}`)
     }
     else if (req.method === 'POST') {
-        const viewModel: LoginViewModel = {
-            x509Enabled: false,
-            oidcEnabled: false,
-            oidcProviders: [],
-            multiVOEnabled: false,
-            voList: [],
-            isLoggedIn: isLoggedIn
-        }
-        res.status(200).json(viewModel)
+        const loginConfigController = appContainer.get<ILoginConfigController>(CONTROLLERS.LOGIN_CONFIG)
+        await loginConfigController.getLoginViewModel(req.session, res)
     }
     else {
         res.status(405).json({ error: 'Method not allowed' })

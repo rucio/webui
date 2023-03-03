@@ -58,7 +58,7 @@ describe('Login Page Config API Test', () => {
 
     it('should present successful LoginViewModel for multiVO', async () => {
         const { req, res } = createMocks({
-            method: 'GET',
+            method: 'POST',
         });
         const session = await getIronSession(req, res, {
             password: 'passwordpasswordpasswordpasswordpassword',
@@ -111,7 +111,7 @@ describe('Login Page Config API Test', () => {
 
     it('should present LoginConfigError for invalid or missing config', async () => {
         const { req, res } = createMocks({
-            method: 'GET',
+            method: 'POST',
         });
         
         const session = await getIronSession(req, res, {

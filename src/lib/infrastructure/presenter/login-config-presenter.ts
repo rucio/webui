@@ -4,6 +4,7 @@ import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 
+
 export default class LoginConfigPresenter implements LoginConfigOutputPort<NextApiResponse> {
     response: NextApiResponse;
     session: IronSession;
