@@ -58,3 +58,5 @@ class LoginConfigUseCase implements LoginConfigInputPort {
     }
 
 }
+
+export default LoginConfigUseCase;

@@ -21,7 +21,7 @@ export type OIDCProvider = {
     clientId: string;
     clientSecret: string;
     authorizationUrl: string;
-    refreshTokenUrl: string;
+    refreshTokenUrl?: string;
     redirectUrl: string;
     tokenUrl: string;
     userInfoUrl?: string;
