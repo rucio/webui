@@ -28,21 +28,19 @@ export default function Login() {
                 },
                 body: JSON.stringify(body),
             })
-            if (res.status === 200) {
+            if (res.status === 200 || res.status === 401) {
                 const auth: AuthViewModel = await res.json()
                 setAuthViewModel(auth)
                 if (auth.status === 'success') {
                     const redirect: string = redirectURL
                     router.push(redirect)
-                }else if (auth.status === 'error') {
+                }else {
                     console.log('error', auth)
                 }
             }
         } catch (error) {
             console.error('An unexpected error happened occurred:', error)
         }
-
-        console.log(`Username: ${username}`);
     };
 
 

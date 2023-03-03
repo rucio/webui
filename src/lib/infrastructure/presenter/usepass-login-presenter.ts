@@ -54,6 +54,6 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
         }
 
         await setEmptySession(this.session);
-        this.response.status(500).json(viewModel);
+        this.response.status(401).json(viewModel);
     }
 }
