@@ -26,23 +26,29 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         }
         const providerNames = providerList.split(',').map((provider) => provider.trim())
         for (const providerName of providerNames) {
-            const provider_config = [
-                'ICON_URL',
-                'CLIENT_ID',
-                'CLIENT_SECRET',
+            const requiredProviderConfig = [
                 'AUTHORIZATION_URL',
                 'TOKEN_URL',
+                'CLIENT_ID',
+                'CLIENT_SECRET',
+                'REDIRECT_URL',
+            ]
+            const optionalProviderConfig = [
+                'ICON_URL',
                 'REFRESH_TOKEN_URL',
                 'USERINFO_URL',
-                'REDIRECT_URL',
                 'SCOPES',
                 'LOGOUT_URL'
             ]
-            for (const config of provider_config) {
+            for (const config of optionalProviderConfig) {
+                const key = `OIDC_PROVIDER_${providerName}_${config}`
+                const value = await this.get(key)
+            }
+            for (const config of requiredProviderConfig) {
                 const key = `OIDC_PROVIDER_${providerName}_${config}`
                 const value = await this.get(key)
                 if (value === undefined) {
-                    throw new InvalidConfig(`${key} is not defined, but OIDC_ENABLED is true`)
+                    throw new ConfigNotFound(key)
                 }
             }
             let scopesConfig = await this.get(`OIDC_PROVIDER_${providerName}_SCOPES`)
