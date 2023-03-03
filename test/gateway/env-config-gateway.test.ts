@@ -161,7 +161,7 @@ describe('env-config-gateway oidc config test', () => {
         expect(cern.refreshTokenUrl).toEqual('https://cern.ch/userinfo')
     })
     it('should throw InvalidConfig if oidc is enabled but no providers are provided', async () => {
-        process.env['OIDC_PROVIDERS'] = ''
+        delete process.env['OIDC_PROVIDERS']
         const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
             GATEWAYS.ENV_CONFIG,
         )
@@ -179,12 +179,12 @@ describe('env-config-gateway oidc config test', () => {
         expect(testProvider.url).toBeUndefined()
     })
 
-    it('should throw InvalidConfig if authorization url for OIDC Provider is not provided', async () => {
+    it('should throw ConfigNotFound if authorization url for OIDC Provider is not provided', async () => {
         delete process.env['OIDC_PROVIDER_TEST-PROVIDER_AUTHORIZATION_URL']
         const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
             GATEWAYS.ENV_CONFIG,
         )
-        await expect(gateway.oidcProviders()).rejects.toThrow(InvalidConfig)
+        await expect(gateway.oidcProviders()).rejects.toThrow(ConfigNotFound)
     })
 })
 
