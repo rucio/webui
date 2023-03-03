@@ -28,7 +28,7 @@ export default class LoginConfigPresenter implements LoginConfigOutputPort<NextA
             oidcProviders: responseModel.oidcProviders,
             isLoggedIn: loggedIn,
         }
-        this.response.status(200).json(responseModel);
+        this.response.status(200).json(viewModel);
     }
 
     async presentError(error: LoginConfigError) {
@@ -43,6 +43,6 @@ export default class LoginConfigPresenter implements LoginConfigOutputPort<NextA
             message: error.message,
         }
         
-        this.response.status(500).json(error);
+        this.response.status(500).json(viewModel);
     }
 }
