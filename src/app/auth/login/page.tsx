@@ -3,7 +3,8 @@ import { AuthViewModel } from "@/lib/infrastructure/data/auth/auth";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Login as LoginStory, LoginPageResponse } from "@/component-library/components/Pages/Login/Login";
+import { Login as LoginStory } from "@/component-library/components/Pages/Login/Login";
+import { VO } from "@/lib/core/entity/auth-models";
 
 
 export default function Login() {
@@ -14,7 +15,7 @@ export default function Login() {
     const callbackUrl = useSearchParams().get('callbackUrl')
 
     
-    const handleUserpassSubmit = async (username: string, password: string) => {
+    const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
         const body = {
             username: username,
             password: password
@@ -46,20 +47,6 @@ export default function Login() {
 
 
 
-    const handleSubmit = (
-        response: LoginPageResponse
-    ) => {
-        console.log(`Username: ${response.username}, Password: ${response.password}, VO: ${response.vo}, Login Type: ${response.loginType}`);
-        switch(response.loginType){
-            case "userpass":
-                handleUserpassSubmit(response.username, response.password)
-                break;
-            case "x509":
-                console.log("x509 login not yet implemented")
-                break;
-        }
-    }
-
     useEffect(() => {
         if (callbackUrl) {
             const redirectURL = decodeURIComponent(callbackUrl)
@@ -89,7 +76,10 @@ export default function Login() {
             <div className="flex items-center justify-center h-screen">
                 <LoginStory
                     loginViewModel={viewModel}
-                    login={handleSubmit}
+                    authViewModel={authViewModel}
+                    userPassSubmitHandler={handleUserpassSubmit}
+                    oidcSubmitHandler={() => { }}
+                    x509SubmitHandler={() => { }}
                 />
             </div>
         );
