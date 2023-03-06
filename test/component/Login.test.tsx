@@ -3,11 +3,13 @@
  */
 
 import Login from "@/app/auth/login/page";
+import { Login as LoginStory } from "@/component-library/components/Pages/Login/Login";
 import { render, act, screen, cleanup, fireEvent } from "@testing-library/react";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login"
 import { useSearchParams } from "next/navigation";
 import { getSampleOIDCProviders } from "test/fixtures/oidc-provider-config";
 import { getSampleVOs } from "test/fixtures/multi-vo-fixtures";
+import { AuthViewModel } from "@/lib/infrastructure/data/auth/auth";
 
 jest.mock('next/navigation')
 
@@ -121,4 +123,41 @@ describe("Login Page Test", () => {
         expect(alert.textContent).toContain("Some Random Error Message")
         
     })
+
+    it("should show error message if login fails", async () => {
+        const loginViewModel: LoginViewModel = {
+            x509Enabled: true,
+            oidcEnabled: false,
+            oidcProviders: getSampleOIDCProviders(),
+            multiVOEnabled: true,
+            voList: getSampleVOs(),
+            isLoggedIn: false,
+            status: "success",
+        }
+
+        const authViewModel: AuthViewModel = {
+            status: "error",
+            message: "Invalid Credentials",
+            rucioAccount: "",
+            rucioAuthType: "",
+            rucioAuthToken: "",
+            rucioIdentity: "",
+        }
+
+        await act( async () => render(<LoginStory
+            loginViewModel={loginViewModel}
+            authViewModel={authViewModel}
+            userPassSubmitHandler = {() => {}}
+            oidcSubmitHandler = {() => {}}
+            x509SubmitHandler = {() => {}}
+        />))
+        const userPassButton = screen.getByRole('button', {name: /Userpass/})
+        fireEvent.click(userPassButton)
+        const loginButton = screen.getByRole('button', {name: /Login/})
+        fireEvent.click(loginButton)
+        const alert = screen.getByTestId('login-page-error')
+        expect(alert).toBeInTheDocument()
+        expect(alert.textContent).toContain("Invalid Credentials")
+    })
+   
 })
