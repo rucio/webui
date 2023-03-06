@@ -34,8 +34,6 @@ export default function Login() {
                 if (auth.status === 'success') {
                     const redirect: string = redirectURL
                     router.push(redirect)
-                }else {
-                    console.log('error', auth)
                 }
             }
         } catch (error) {

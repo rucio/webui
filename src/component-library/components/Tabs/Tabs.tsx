@@ -13,7 +13,6 @@ export const Tabs = ({
         setActivestate(active)
     }, [active])
     var onClick = (event: any) => {
-        // console.log(event.target.id)
         setActivestate(event.target.id)
         handleClick?.(event)
     }

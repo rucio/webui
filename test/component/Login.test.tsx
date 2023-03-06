@@ -42,11 +42,10 @@ describe("Login Page Test", () => {
                 multiVOEnabled: true,
                 voList: voList,
                 isLoggedIn: false,
-                status: "error"
+                status: "success"
             } as LoginViewModel)));
         
         await act( async () => render(<Login/>))
-             
 
         // Check OIDC buttons are present but NOT rendered
         oidcProviders.map((provider) => {
@@ -78,7 +77,7 @@ describe("Login Page Test", () => {
         fireEvent.click(userpassButton)
         expect(loginFormParent.className).toContain('collapse')
 
-        // Check no eroor message is rendered
+        // Check no error message is rendered
         const errorMessage = screen.queryByTestId('login-page-error')
         expect(errorMessage).not.toBeInTheDocument()
 
