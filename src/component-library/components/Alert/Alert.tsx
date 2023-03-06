@@ -11,7 +11,7 @@ interface AlertProps {
 export const Alert = ({
     id,
     open = true,
-    message = 'Flash banner message.',
+    message = 'Welcome to Rucio!',
     variant = 'primary',
     onClose,
 }: AlertProps) => {
@@ -28,7 +28,7 @@ export const Alert = ({
             behavior: 'smooth',
         })
         setIsOpen(open)
-    }, [open])
+    }, [open, message])
     var rightIcon = (
             <button
                 className="flash-close js-flash-close"

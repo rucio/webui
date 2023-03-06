@@ -52,8 +52,7 @@ export const Login = ({
 
     return (
         <div className={mainDivClasses.join(" ")}>
-            {(error !== undefined && error !== "" && error !== null ) ? <Alert id="login-page-error" variant="error" message={error} /> : null}
-            <Alert variant="error" message={error} />
+            {(error !== undefined && error !== "" && error !== null ) ? <Alert id="login-page-error" variant="error" open={true} message={error} /> : null}
             <div className="text-center">
                 <H1 text="Rucio Login" />
             </div>
