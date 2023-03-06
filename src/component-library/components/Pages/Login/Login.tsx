@@ -38,20 +38,33 @@ export const Login = ({
     const [password, setPassword] = useState<string>("")
     const [account, setAccount] = useState<string | undefined>(undefined)
 
+    const [error, setError] = useState<string | undefined>(undefined)
+
+    useEffect(() => {
+        if (authViewModel && authViewModel.status === 'error') {
+            setError(authViewModel.message)
+            return
+        }
+        if (loginViewModel && loginViewModel.status === 'error') {
+            setError(loginViewModel.message)
+        }
+    }, [loginViewModel, authViewModel])
+
     return (
         <div className={mainDivClasses.join(" ")}>
-            {authViewModel && authViewModel.status === 'error' && <Alert message={authViewModel.message} />}
+            {(error !== undefined && error !== "" && error !== null ) ? <Alert id="login-page-error" variant="error" message={error} /> : null}
+            <Alert variant="error" message={error} />
             <div className="text-center">
                 <H1 text="Rucio Login" />
             </div>
 
             <div className="flex flex-col space-y-2">
-                <Collapsible showIf={loginViewModel.multiVOEnabled}>
+                <Collapsible id="vo-tabs" showIf={loginViewModel.multiVOEnabled}>
                     <Tabs tabs={loginViewModel.voList.map((vo) => vo.name)} active={1} handleClick={(event: any) => {setSelectedVOTab(event.target.id)}}/>
                 </Collapsible>
                 
                 <div className="flex justify-center flex-col space-y-4">
-                    <Collapsible showIf={loginViewModel.oidcEnabled}>
+                    <Collapsible id="oidc-buttons" showIf={loginViewModel.oidcEnabled}>
                         <div className="flex flex-row justify-center space-x-2">
                             {loginViewModel.oidcProviders.map((provider: OIDCProvider, index: number) => {
                                 return (<Button theme='orange' label={provider.name} key={index.toString()} icon={<MdAccountCircle/>}/>)
@@ -71,7 +84,7 @@ export const Login = ({
                             }
                         }/>
 
-                        <Collapsible showIf={showUserPassLoginForm}>
+                        <Collapsible showIf={showUserPassLoginForm} id="userpass-form">
                             <CredentialInput submitHandler={() => {
                                 handleUserPassSubmit(
                                     username,

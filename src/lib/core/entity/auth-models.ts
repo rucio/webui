@@ -25,7 +25,7 @@ export type OIDCProvider = {
     redirectUrl: string;
     tokenUrl: string;
     userInfoUrl?: string;
-    scopes?: [string];
+    scopes?: string[];
 };
 
 /**

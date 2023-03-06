@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface AlertProps {
+    id?: string
     open?: boolean
     message?: string | any
     variant?: 'primary' | 'warn' | 'success' | 'error'
@@ -8,23 +9,32 @@ interface AlertProps {
 }
 
 export const Alert = ({
+    id,
     open = true,
     message = 'Flash banner message.',
     variant = 'primary',
     onClose,
 }: AlertProps) => {
+    const [isOpen, setIsOpen] = useState(open)
+    const onCloseWrapper = () => {
+        setIsOpen(false)
+        if (onClose) {
+            onClose()
+        }
+    }
     useEffect(() => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
         })
-    }, [])
+        setIsOpen(open)
+    }, [open])
     var rightIcon = (
             <button
                 className="flash-close js-flash-close"
                 type="button"
                 aria-label="Close"
-                onClick={onClose}
+                onClick={onCloseWrapper}
                 style={{ marginLeft: 'auto' }}
             >
                 <svg
@@ -61,9 +71,9 @@ export const Alert = ({
 
     return (
         <>
-            {open ? (
+            {isOpen ? (
                 <div className={divClasses.join(" ")}>
-                    <span className="block sm:inline">{message}</span>
+                    <span className="block sm:inline" data-testid={id}>{message}</span>
                     <span className="absolute top-0 bottom-0 right-0 px-4 py-3">{rightIcon}</span>
                 </div>
             ) : null}

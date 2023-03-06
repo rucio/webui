@@ -1,6 +1,6 @@
-export const Collapsible = (props: {showIf: boolean, children: any}) => {
+export const Collapsible = (props: {showIf: boolean, id?: string, children: any,}) => {
     return (
-        <div className={props.showIf ? "" : "collapse"}>
+        <div className={props.showIf ? "" : "collapse"} data-testid={props.id? props.id: "" }>
             {props.children}
         </div>
     )
