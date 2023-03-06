@@ -1,3 +1,34 @@
+import { OIDCProvider } from "@/lib/core/entity/auth-models"
+
+export const getSampleOIDCProviders = (): OIDCProvider[] => {
+    const oidcProviders: OIDCProvider[] = []
+    const cern: OIDCProvider = {
+        name: 'cern',
+        url: 'https://cern.ch',
+        iconUrl: 'https://cern.ch/icon.png',
+        clientId: 'client-id',
+        clientSecret: 'client-secret',
+        scopes: ['scope1', 'scope2'],
+        authorizationUrl: 'https://cern.ch/auth',
+        tokenUrl: 'https://cern.ch/token',
+        redirectUrl: 'https://cern.ch/redirect',
+    }
+    const testProvider: OIDCProvider = {
+        name: 'test-provider',
+        url: 'https://test-provider.ch',
+        iconUrl: 'https://test-provider.ch/icon.png',
+        clientId: 'client-id',
+        clientSecret: 'client-secret',
+        scopes: ['scope1', 'scope2'],
+        authorizationUrl: 'https://test-provider.ch/auth',
+        tokenUrl: 'https://test-provider.ch/token',
+        redirectUrl: 'https://test-provider.ch/redirect',
+    }
+    oidcProviders.push(cern)
+    oidcProviders.push(testProvider)
+    return oidcProviders
+}
+
 export const createOIDCProviders = () => {
     process.env['OIDC_ENABLED'] = 'true'
     process.env['OIDC_PROVIDERS'] = 'cern, test-provider'

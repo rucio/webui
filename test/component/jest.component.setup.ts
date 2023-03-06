@@ -6,7 +6,13 @@ fetchMock.enableMocks()
 
 import { loadEnvConfig } from '@next/env'
 
-export default async () => {
+const noop = () => {};
+Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
+
+const setupTests = async () => {
     const projectDir = process.cwd()
     loadEnvConfig(projectDir)
-  }
+    
+}
+
+export default setupTests
