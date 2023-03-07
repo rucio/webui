@@ -7,6 +7,7 @@ export type AuthViewModel = {
     rucioAccount: string;
     rucioAuthType: string;
     rucioAuthToken: string;
+    rucioAuthTokenExpires: string;
 };
 
 export type x509AuthRequestHeaders  = {

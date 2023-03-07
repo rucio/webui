@@ -86,7 +86,8 @@ export default function Login() {
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
-                rucioAuthToken: ''
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: ''
             }
             if (rucioAuthToken === null) {
                 return Promise.resolve(auth)
@@ -96,6 +97,7 @@ export default function Login() {
             auth.rucioAccount = res.headers.get('X-Rucio-Auth-Account') || account || ''
             auth.rucioAuthType = 'x509'
             auth.rucioAuthToken = rucioAuthToken
+            auth.rucioAuthTokenExpires = res.headers.get('X-Rucio-Auth-Token-Expires') || ''
             return Promise.resolve(auth)
 
         } else if (res.status === 206) {
@@ -105,7 +107,8 @@ export default function Login() {
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
-                rucioAuthToken: ''
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: ''
             }
             return Promise.resolve(auth)
         } else if (res.status === 401) {
@@ -115,17 +118,19 @@ export default function Login() {
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
-                rucioAuthToken: ''
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: ''
             }
             return Promise.resolve(auth)
         } else {
             const auth: AuthViewModel = {
                 status: 'error',
-                message: 'error',
+                message: 'unknown error',
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
-                rucioAuthToken: ''
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: ''
             }
             return Promise.resolve(auth)
         }
@@ -133,9 +138,10 @@ export default function Login() {
    
     /**
      * Sets the session after a x509 login
-     * @param auth details of the x509 login
+     * @param {AuthViewModel} auth details of the x509 login containing the rucioAuthToken, rucioTokenExpiry or the error.
+     * The rest of the parameters should to be provided by this function
      */
-    const handleX509Session = async (auth: AuthViewModel) => {
+    const handleX509Session = async (auth: AuthViewModel, rucioAccount: string, shortVoName: string) => {
         if (auth.status !== 'success') {
             auth.message = 'Cannot set session for x509 login as the login was not successful'
             setAuthViewModel(auth)
@@ -146,7 +152,12 @@ export default function Login() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(auth)
+            body: JSON.stringify({
+                rucioAccount: rucioAccount,
+                rucioAuthToken: auth.rucioAuthToken,
+                rucioTokenExpiry: auth.rucioAuthTokenExpires,
+                shortVoName: shortVoName
+            })
         })
         
         if (res.status === 200) {
@@ -155,7 +166,8 @@ export default function Login() {
             return Promise.resolve()
         }
         else {
-            setAuthViewModel(auth)
+            const responseViewModel: AuthViewModel = await res.json()
+            setAuthViewModel(responseViewModel)
         }
     }
 

@@ -66,6 +66,7 @@ LoginPage.args = {
         rucioAccount: '',
         rucioAuthToken: '',
         rucioAuthType: 'userpass',
+        rucioAuthTokenExpires: '',
 
     }
 }

@@ -19,7 +19,7 @@ export interface LoginPageProps {
     authViewModel: AuthViewModel | undefined
     userPassSubmitHandler: (username: string, password: string, vo: VO, account?: string) => void
     x509SubmitHandler: (vo: VO, loginViewModel: LoginViewModel, account?: string) => Promise<AuthViewModel | undefined>
-    x509SessionHandler: (authViewModel: AuthViewModel) => void
+    x509SessionHandler: (authViewModel: AuthViewModel, rucioAccount: string, shortVoName: string) => void
     oidcSubmitHandler: (oidcProvider: OIDCProvider, vo: VO, account?: string) => void
     
 }
@@ -78,6 +78,7 @@ export const Login = ({
                         <Collapsible showIf={loginViewModel.x509Enabled}>
                             <Button label="x509" onClick={async () => {
                                 const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
+                                
                                 const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
                                 
                                 if (x509AuthViewModel) {
@@ -85,7 +86,7 @@ export const Login = ({
                                         setError(x509AuthViewModel.message)
                                         return
                                     }
-                                    await handleX509Session(x509AuthViewModel)
+                                    await handleX509Session(x509AuthViewModel, account || "", vo.shortName)
                                 }
                             }}/>
                         </Collapsible>
