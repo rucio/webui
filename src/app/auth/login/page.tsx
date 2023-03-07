@@ -74,11 +74,9 @@ export default function Login() {
         } catch (error) {
             // do nothing
         }
-
-        const responseHeaders = res.headers
-
-        if (res.status === 200) {
-            const rucioAuthToken: string | null = responseHeaders.get('X-Rucio-Auth-Token')
+        
+        if (res.status === 200 ) {
+            const rucioAuthToken: string | null = res.headers.get('X-Rucio-Auth-Token')
             let auth: AuthViewModel = {
                 status: 'error',
                 message: 'Cannot retrieve RucioAuthToken from response headers',
@@ -91,7 +89,8 @@ export default function Login() {
                 return Promise.resolve(auth)
             }
             auth.status = 'success'
-            auth.rucioAccount = responseHeaders.get('X-Rucio-Auth-Account') || account || ''
+            auth.message = "Login successful. The session has not been set yet."
+            auth.rucioAccount = res.headers.get('X-Rucio-Auth-Account') || account || ''
             auth.rucioAuthType = 'x509'
             auth.rucioAuthToken = rucioAuthToken
             return Promise.resolve(auth)
@@ -99,7 +98,7 @@ export default function Login() {
         } else if (res.status === 206) {
             const auth: AuthViewModel = {
                 status: 'multiple_accounts',
-                message: responseHeaders.get('X-Rucio-Auth-Accounts') || '',
+                message: res.headers.get('X-Rucio-Auth-Accounts') || '',
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
@@ -109,7 +108,7 @@ export default function Login() {
         } else if (res.status === 401) {
             const auth: AuthViewModel = {
                 status: 'error',
-                message: `Unauthorized: ${responseBody.ExceptionMessage}`,
+                message: `Unauthorized: ${responseBody?.ExceptionMessage}`,
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
@@ -128,28 +127,36 @@ export default function Login() {
             return Promise.resolve(auth)
         }
     };
-
+   
     /**
      * Sets the session after a x509 login
-     * @param authViewModel details of the x509 login
+     * @param auth details of the x509 login
      */
-    const handleX509Session = async (authViewModel: AuthViewModel) => {
-        if (authViewModel.status === 'success') {
-            const res = await fetch('/api/auth/x509', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(authViewModel)
-            })
-            if (res.status === 200) {
-            }
-            else {
-            }
+    const handleX509Session = async (auth: AuthViewModel) => {
+        if (auth.status !== 'success') {
+            auth.message = 'Cannot set session for x509 login as the login was not successful'
+            setAuthViewModel(auth)
+            return
         }
-        setAuthViewModel(authViewModel)
+        const res = await fetch('/api/auth/x509', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(auth)
+        })
+        
+        if (res.status === 200) {
+            // redirect to callback url
+            router.push(redirectURL)
+            return Promise.resolve()
+        }
+        else {
+            setAuthViewModel(auth)
+        }
     }
 
+    
     useEffect(() => {
         if (callbackUrl) {
             const redirectURL = decodeURIComponent(callbackUrl)
