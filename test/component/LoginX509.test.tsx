@@ -1,4 +1,4 @@
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Login from "@/app/auth/login/page";
 import { act, render, screen, cleanup, fireEvent } from "@testing-library/react";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
@@ -12,6 +12,11 @@ describe('Login Component Tests for x509 Login workflow', () => {
         useSearchParams.mockReturnValue(
             {
                 get: jest.fn(() => null)
+            }
+        )
+        useRouter.mockReturnValue(
+            {
+                push: jest.fn()
             }
         )
         fetchMock.doMock();
