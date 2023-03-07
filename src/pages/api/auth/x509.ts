@@ -19,8 +19,8 @@ async function x509Route(req: NextApiRequest, res: NextApiResponse) {
                 rucioAccount: rucioAccount,
                 rucioOIDCProvider: '',
             }
-            session.save()
-            res.status(200)
+            await session.save()
+            res.status(200).end()
         }
         else {
             res.status(500).json({ error: 'Session not intitialized' })

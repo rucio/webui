@@ -79,8 +79,9 @@ export const Login = ({
                             <Button label="x509" onClick={async () => {
                                 const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
                                 const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
-                                if (x509AuthViewModel) {
-                                    handleX509Session(x509AuthViewModel)
+                                
+                                if (x509AuthViewModel && x509AuthViewModel.status === 'success') {
+                                    await handleX509Session(x509AuthViewModel)
                                 }
                             }}/>
                         </Collapsible>
@@ -91,8 +92,8 @@ export const Login = ({
                         }/>
 
                         <Collapsible showIf={showUserPassLoginForm} id="userpass-form">
-                            <CredentialInput submitHandler={() => {
-                                handleUserPassSubmit(
+                            <CredentialInput submitHandler={async () => {
+                                await handleUserPassSubmit(
                                     username,
                                     password,
                                     loginViewModel.voList[selectedVOTab - 1],
