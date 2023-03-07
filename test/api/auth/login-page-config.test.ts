@@ -47,6 +47,9 @@ describe('Login Page Config API Test', () => {
         expect(viewModel.oidcProviders).toHaveLength(2);
         expect(viewModel.oidcProviders[0]).toHaveProperty('name');
         expect(viewModel.oidcProviders[0].name).toBe('cern');
+        
+        expect(viewModel).toHaveProperty('rucioAuthHost');
+        expect(viewModel.rucioAuthHost).toBe('https://rucio-auth-host.com');
 
         expect(viewModel).toHaveProperty('multiVOEnabled');
         expect(viewModel.multiVOEnabled).toBe(false);

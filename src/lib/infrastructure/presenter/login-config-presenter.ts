@@ -28,6 +28,7 @@ export default class LoginConfigPresenter implements LoginConfigOutputPort<NextA
             voList: responseModel.voList,
             oidcProviders: responseModel.oidcProviders,
             isLoggedIn: loggedIn,
+            rucioAuthHost: responseModel.rucioAuthHost,
         }
         this.response.status(200).json(viewModel);
     }
@@ -42,6 +43,7 @@ export default class LoginConfigPresenter implements LoginConfigOutputPort<NextA
             oidcProviders: [],
             isLoggedIn: false,
             message: error.message,
+            rucioAuthHost: '',
         }
         
         this.response.status(500).json(viewModel);

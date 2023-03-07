@@ -14,6 +14,7 @@ export type LoginConfigResponse = {
     oidcProviders: OIDCProvider[];
     multiVOEnabled: boolean;
     voList: VO[];
+    rucioAuthHost: string;
 }
 
 /**
