@@ -1,5 +1,5 @@
 export type AuthViewModel = {
-    status: 'success' | 'error';
+    status: 'success' | 'error' | 'multiple_accounts';
     message?: string;
     error_cause?: string;
     redirectTo?: string;
@@ -11,7 +11,7 @@ export type AuthViewModel = {
 
 export type x509AuthRequestHeaders  = {
     'X-Rucio-VO': string;
-    'X-Rucio-Allow-Return-Multiple-Accounts': boolean = true;
+    'X-Rucio-Allow-Return-Multiple-Accounts': boolean;
+    'X-Rucio-AppID': string = 'rucio-webui';
     'X-Rucio-Account'?: string;
-    'X-Rucio-AppID'?: string = 'rucio-webui';
 }

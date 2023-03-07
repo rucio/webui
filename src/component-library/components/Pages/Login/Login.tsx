@@ -76,9 +76,12 @@ export const Login = ({
                     
                     <div className="flex flex-col space-y-4">
                         <Collapsible showIf={loginViewModel.x509Enabled}>
-                            <Button label="x509" onClick={() => {
+                            <Button label="x509" onClick={async () => {
                                 const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
-                                handleX509Submit(vo, loginViewModel, account)
+                                const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
+                                if (x509AuthViewModel) {
+                                    handleX509Session(x509AuthViewModel)
+                                }
                             }}/>
                         </Collapsible>
 

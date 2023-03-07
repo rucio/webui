@@ -53,6 +53,7 @@ export default function Login() {
         let requestHeaders: X509AuthRequestHeaders = {
             'X-Rucio-Allow-Return-Multiple-Accounts': true,
             'X-Rucio-VO': vo.shortName,
+            'X-Rucio-AppID': 'rucio-webui',
         }
         if (account) {
             requestHeaders['X-Rucio-Account'] = account
@@ -67,12 +68,54 @@ export default function Login() {
             headers: headers
         })
 
-        const responseBody = await res.json()
-        console.log('responseBody', responseBody)
-        console.log('res.status', res.status)
-        
+        let responseBody = {}
+        try{
+            responseBody = await res.json()
+        } catch (error) {
+            // do nothing
+        }
+
+        const responseHeaders = res.headers
+
         if (res.status === 200) {
-            console.log(responseBody)
+            const rucioAuthToken: string | null = responseHeaders.get('X-Rucio-Auth-Token')
+            let auth: AuthViewModel = {
+                status: 'error',
+                message: 'Cannot retrieve RucioAuthToken from response headers',
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: ''
+            }
+            if (rucioAuthToken === null) {
+                return Promise.resolve(auth)
+            }
+            auth.status = 'success'
+            auth.rucioAccount = responseHeaders.get('X-Rucio-Auth-Account') || account || ''
+            auth.rucioAuthType = 'x509'
+            auth.rucioAuthToken = rucioAuthToken
+            return Promise.resolve(auth)
+
+        } else if (res.status === 206) {
+            const auth: AuthViewModel = {
+                status: 'multiple_accounts',
+                message: responseHeaders.get('X-Rucio-Auth-Accounts') || '',
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: ''
+            }
+            return Promise.resolve(auth)
+        } else if (res.status === 401) {
+            const auth: AuthViewModel = {
+                status: 'error',
+                message: `Unauthorized: ${responseBody.ExceptionMessage}`,
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: ''
+            }
+            return Promise.resolve(auth)
         } else {
             const auth: AuthViewModel = {
                 status: 'error',
@@ -82,25 +125,28 @@ export default function Login() {
                 rucioIdentity: '',
                 rucioAuthToken: ''
             }
-            setAuthViewModel(auth)
+            return Promise.resolve(auth)
         }
-        return new Promise((resolve, reject) => {
-            resolve({
-                status: 'success',
-                message: 'success',
-                rucioAccount: 'root',
-                rucioAuthType: 'x509',
-                rucioIdentity: 'C=DE,O=GermanGrid,OU=DESY,CN=DESY User',
-                rucioAuthToken: 'asd'
-            })
-        })
     };
 
     /**
-     * Sets the session of the x509 login
+     * Sets the session after a x509 login
      * @param authViewModel details of the x509 login
      */
-    const handleX509Session = (authViewModel: AuthViewModel) => {
+    const handleX509Session = async (authViewModel: AuthViewModel) => {
+        if (authViewModel.status === 'success') {
+            const res = await fetch('/api/auth/x509', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(authViewModel)
+            })
+            if (res.status === 200) {
+            }
+            else {
+            }
+        }
         setAuthViewModel(authViewModel)
     }
 
@@ -123,7 +169,7 @@ export default function Login() {
             )
     }, []);
 
-    if(viewModel === undefined) {
+    if (viewModel === undefined) {
         // the hook has not yet run
         return <p>Loading...</p>
     }
