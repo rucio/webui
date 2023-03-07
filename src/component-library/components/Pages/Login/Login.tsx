@@ -80,7 +80,11 @@ export const Login = ({
                                 const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
                                 const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
                                 
-                                if (x509AuthViewModel && x509AuthViewModel.status === 'success') {
+                                if (x509AuthViewModel) {
+                                    if(x509AuthViewModel.status === 'error') {
+                                        setError(x509AuthViewModel.message)
+                                        return
+                                    }
                                     await handleX509Session(x509AuthViewModel)
                                 }
                             }}/>
