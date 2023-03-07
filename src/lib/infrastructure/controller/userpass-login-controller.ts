@@ -18,10 +18,10 @@ export interface IUserPassLoginController {
 @injectable()
 class UserPassLoginController implements IUserPassLoginController {
     private useCase: UserPassLoginInputPort | null = null;
-    private useCaseFactory: (request: IronSession, response: NextApiResponse) => UserPassLoginInputPort;
+    private useCaseFactory: (session: IronSession, response: NextApiResponse) => UserPassLoginInputPort;
     
     public constructor(
-        @inject(USECASE_FACTORY.USERPASS_LOGIN) useCaseFactory: (request: IronSession, response: NextApiResponse) => UserPassLoginInputPort,
+        @inject(USECASE_FACTORY.USERPASS_LOGIN) useCaseFactory: (session: IronSession, response: NextApiResponse) => UserPassLoginInputPort,
       ) {
         this.useCaseFactory = useCaseFactory;
       }

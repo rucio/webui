@@ -7,6 +7,7 @@
 const CONTROLLERS = {
     USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
     LOGIN_CONFIG: Symbol.for("LoginConfigController"),
+    SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),
 }
 
 export default CONTROLLERS;

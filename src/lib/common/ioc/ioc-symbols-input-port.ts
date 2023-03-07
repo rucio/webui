@@ -5,6 +5,7 @@
 const INPUT_PORT = {
     USERPASS_LOGIN: Symbol.for("UserPassLoginInputPort"),
     LOGIN_CONFIG: Symbol.for("LoginConfigInputPort"),
+    SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionInputPort"),
     TEST: Symbol.for("TestInputPort")
 }
 

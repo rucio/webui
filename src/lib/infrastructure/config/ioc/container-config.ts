@@ -18,6 +18,10 @@ import LoginConfigInputPort from "@/lib/core/port/primary/login-config-input-por
 import LoginConfigUseCase from "@/lib/core/use-case/login-config-usecase";
 import LoginConfigPresenter from "@/lib/infrastructure/presenter/login-config-presenter";
 import LoginConfigController, {ILoginConfigController} from "@/lib/infrastructure/controller/login-config-controller";
+import SetX509LoginSessionInputPort from "@/lib/core/port/primary/set-x509-login-session-input-port";
+import SetX509LoginSessionUseCase from "@/lib/core/use-case/set-x509-login-session-usecase";
+import SetX509LoginSessionController, { ISetX509LoginSessionController } from "../../controller/set-x509-login-session-controller";
+import SetX509LoginSessionPresenter from "../../presenter/set-x509-login-session-presenter";
 
 /**
  * IoC Container configuration for the application.
@@ -42,6 +46,15 @@ appContainer.bind<interfaces.Factory<LoginConfigInputPort>>(USECASE_FACTORY.LOGI
     (session: IronSession, response: NextApiResponse) => {
         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
         return new LoginConfigUseCase(new LoginConfigPresenter(session, response), envConfigGateway);
+    }
+);
+
+appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionUseCase).inRequestScope();
+appContainer.bind<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionController);
+appContainer.bind<interfaces.Factory<SetX509LoginSessionInputPort>>(USECASE_FACTORY.SET_X509_LOGIN_SESSION).toFactory<SetX509LoginSessionUseCase, [IronSession, NextApiResponse]>((context: interfaces.Context) =>
+    (session: IronSession, response: NextApiResponse) => {
+        const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
+        return new SetX509LoginSessionUseCase(new SetX509LoginSessionPresenter(session, response), envConfigGateway);
     }
 );
 

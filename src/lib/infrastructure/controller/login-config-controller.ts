@@ -12,10 +12,10 @@ export interface ILoginConfigController {
 @injectable()
 class LoginConfigController implements ILoginConfigController {
     private loginConfigUseCase: LoginConfigInputPort | null = null;
-    private loginConfigUseCaseFactory: (request: IronSession, response: NextApiResponse) => LoginConfigInputPort;
+    private loginConfigUseCaseFactory: (session: IronSession, response: NextApiResponse) => LoginConfigInputPort;
 
     public constructor(
-        @inject(USECASE_FACTORY.LOGIN_CONFIG) loginConfigUseCaseFactory: (request: IronSession, response: NextApiResponse) => LoginConfigInputPort,
+        @inject(USECASE_FACTORY.LOGIN_CONFIG) loginConfigUseCaseFactory: (session: IronSession, response: NextApiResponse) => LoginConfigInputPort,
         ) {
         this.loginConfigUseCaseFactory = loginConfigUseCaseFactory;
     }
