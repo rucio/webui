@@ -53,7 +53,8 @@ describe('Login Component Tests for x509 Login workflow', () => {
                         headers: {
                             'Content-Type': 'application/json',
                             'X-Rucio-Auth-Token': 'rucio-asdnjkdf',
-                            'X-Rucio-Auth-Token-Expires': '2021-09-01T00:00:00Z'
+                            'X-Rucio-Auth-Token-Expires': '2021-09-01T00:00:00Z',
+                            'X-Rucio-Auth-Account': 'root',
                         },
                         body: JSON.stringify({
                             rucioAuthToken: 'rucio-asdnjkdf'
