@@ -213,3 +213,54 @@ describe('env-config-gateway MultiVo Config', () => {
         await expect(gateway.voList()).rejects.toThrow(ConfigNotFound)
     })
 })
+
+describe('env-config-gateway Rucio Host config', () => {
+    it('should throw ConfigNotFound if RUCIO_HOST is not provided', async () => {
+        delete process.env['RUCIO_HOST']
+        const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
+            GATEWAYS.ENV_CONFIG,
+        )
+        await expect(gateway.rucioHost()).rejects.toThrow(ConfigNotFound)
+    })
+    it('should return RUCIO_HOST if provided', async () => {
+        process.env['RUCIO_HOST'] = 'https://rucio.ch'
+        const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
+            GATEWAYS.ENV_CONFIG,
+        )
+        const result = await gateway.rucioHost()
+        expect(result).toEqual('https://rucio.ch')
+        delete process.env['RUCIO_HOST']
+    })
+    it('should throw InvalidConfig if RUCIO_HOST is empty', async () => {
+        process.env['RUCIO_HOST'] = ''
+        const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
+            GATEWAYS.ENV_CONFIG,
+        )
+        await expect(gateway.rucioHost()).rejects.toThrow(InvalidConfig)
+        delete process.env['RUCIO_HOST']
+    })
+    it('should throw ConfigNotFound if RUCIO_AUTH_HOST is not provided', async () => {
+        delete process.env['RUCIO_AUTH_HOST']
+        const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
+            GATEWAYS.ENV_CONFIG,
+        )
+        await expect(gateway.rucioAuthHost()).rejects.toThrow(ConfigNotFound)
+    })
+    it('should return RUCIO_AUTH_HOST if provided', async () => {
+        process.env['RUCIO_AUTH_HOST'] = 'https://rucio-auth.ch'
+        const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
+            GATEWAYS.ENV_CONFIG,
+        )
+        const result = await gateway.rucioAuthHost()
+        expect(result).toEqual('https://rucio-auth.ch')
+        delete process.env['RUCIO_AUTH_HOST']
+    })
+    it('should throw InvalidConfig if RUCIO_AUTH_HOST is empty', async () => {
+        process.env['RUCIO_AUTH_HOST'] = ''
+        const gateway = appContainer.get<EnvConfigGatewayOutputPort>(
+            GATEWAYS.ENV_CONFIG,
+        )
+        await expect(gateway.rucioAuthHost()).rejects.toThrow(InvalidConfig)
+        delete process.env['RUCIO_AUTH_HOST']
+    })
+})
