@@ -10,6 +10,7 @@ import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 import { MdAccountCircle } from 'react-icons/md';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 import { Alert } from '../../Alert/Alert';
+import DefaultVO from '@/lib/common/default-vo';
 
 export type SupportedAuthWorkflows = "oidc" | "x509" | "userpass" | "none"
 
@@ -17,7 +18,8 @@ export interface LoginPageProps {
     loginViewModel: LoginViewModel
     authViewModel: AuthViewModel | undefined
     userPassSubmitHandler: (username: string, password: string, vo: VO, account?: string) => void
-    x509SubmitHandler: (vo: VO, account?: string) => void | undefined
+    x509SubmitHandler: (vo: VO, loginViewModel: LoginViewModel, account?: string) => Promise<AuthViewModel | undefined>
+    x509SessionHandler: (authViewModel: AuthViewModel) => void
     oidcSubmitHandler: (oidcProvider: OIDCProvider, vo: VO, account?: string) => void
     
 }
@@ -27,6 +29,7 @@ export const Login = ({
     authViewModel,
     userPassSubmitHandler: handleUserPassSubmit,
     x509SubmitHandler: handleX509Submit,
+    x509SessionHandler: handleX509Session,
     oidcSubmitHandler: handleOIDCSubmit
 }: LoginPageProps ) => {
 
@@ -74,7 +77,8 @@ export const Login = ({
                     <div className="flex flex-col space-y-4">
                         <Collapsible showIf={loginViewModel.x509Enabled}>
                             <Button label="x509" onClick={() => {
-                                handleX509Submit(loginViewModel.voList[selectedVOTab - 1], account)
+                                const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
+                                handleX509Submit(vo, loginViewModel, account)
                             }}/>
                         </Collapsible>
 
