@@ -1,4 +1,7 @@
 import { withSessionRoute } from "@/lib/infrastructure/auth/session-utils";
+import appContainer from "@/lib/infrastructure/config/ioc/container-config";
+import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers";
+import { ISetX509LoginSessionController } from "@/lib/infrastructure/controller/set-x509-login-session-controller";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -7,26 +10,18 @@ import { NextApiRequest, NextApiResponse } from "next";
  */
 async function x509Route(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const rucioAuthToken = req.body.rucioAuthToken
-        const rucioAccount = req.body.rucioAccount
-        const session = req.session
-        if (session) {
-            session.user = {
-                isLoggedIn: true,
-                rucioAuthToken: rucioAuthToken,
-                rucioIdentity: '',
-                rucioAuthType: 'x509',
-                rucioAccount: rucioAccount,
-                rucioOIDCProvider: '',
-            }
-            await session.save()
-            res.status(200).end()
-        }
-        else {
-            res.status(500).json({ error: 'Session not intitialized' })
-        }
+        const { rucioAccount, rucioAuthToken, rucioTokenExpiry, shortVOName } = req.body
+        const setX509LoginSessionController = appContainer.get<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION)
+        await setX509LoginSessionController.handle(
+            req.session,
+            res,
+            rucioAuthToken,
+            rucioAccount,
+            shortVOName,
+            rucioTokenExpiry
+        )
     } else {
-        res.status(405).json({ error: 'Method not allowed' })
+        res.status(405).json({ message: 'Method not allowed' })
     }
 }
 

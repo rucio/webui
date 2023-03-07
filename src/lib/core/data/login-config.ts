@@ -1,4 +1,5 @@
 import { OIDCProvider, VO } from "../entity/auth-models";
+import LoginConfigOutputPort from "../port/primary/login-config-output-port";
 
 /**
  * Response Model for {@link LoginConfigOutputPort}
