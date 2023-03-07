@@ -24,6 +24,7 @@ class LoginConfigUseCase implements LoginConfigInputPort {
                 this.envConfigGateway.multiVOEnabled(),
                 this.envConfigGateway.voList(),
                 this.envConfigGateway.oidcProviders(),
+                this.envConfigGateway.rucioAuthHost(),
             ])
             const responseModel: LoginConfigResponse = {
                 x509Enabled: config[0],
@@ -31,6 +32,7 @@ class LoginConfigUseCase implements LoginConfigInputPort {
                 multiVOEnabled: config[2],
                 voList: config[3],
                 oidcProviders: config[4],
+                rucioAuthHost: config[5],
             }
             await this.presenter.presentSuccess(responseModel)
             return
