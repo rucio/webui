@@ -23,6 +23,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                 rucioIdentity: request.username,
                 rucioAccount: dto.account,
                 rucioAuthToken: dto.authToken,
+                rucioAuthTokenExpires: dto.authTokenExpires,
             }
             await this.presenter.presentSuccess(responseModel)
             return;

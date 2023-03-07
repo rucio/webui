@@ -26,6 +26,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthType: 'userpass',
             rucioAuthToken: responseModel.rucioAuthToken,
             status: 'success',
+            rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
         }
 
         this.session.user = {
@@ -35,6 +36,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthToken: responseModel.rucioAuthToken,
             rucioOIDCProvider: null,
             isLoggedIn: true,
+            rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
         }
         
         await this.session.save();
@@ -48,6 +50,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAccount: '',
             rucioAuthType: '',
             rucioAuthToken: '',
+            rucioAuthTokenExpires: '',
             status: 'error',
             message: error.message,
             error_cause: error.type,

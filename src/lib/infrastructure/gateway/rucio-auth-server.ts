@@ -34,6 +34,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                     message: 'Rucio Auth Server is not configured in the WebUI settings',
                     account: '',
                     authToken: '',
+                    authTokenExpires: '',
                 }
             } else {
                 dto = {
@@ -41,6 +42,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                     message: 'Rucio Auth Server error: fetch failed. Reason: ' + error.cause.message,
                     account: '',
                     authToken: '',
+                    authTokenExpires: '',
                 }
             }
             return Promise.resolve(dto)
@@ -51,6 +53,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 message: 'Rucio Auth Server did not return a response',
                 account: '',
                 authToken: '',
+                authTokenExpires: '',
             }
             return Promise.resolve(dto)
         }
@@ -61,6 +64,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 message: 'Invalid credentials',
                 account: '',
                 authToken: '',
+                authTokenExpires: '',
             }
             return Promise.resolve(dto)
         }
@@ -71,17 +75,20 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 message: '',
                 account: '',
                 authToken: '',
+                authTokenExpires: '',
             }
             const authToken = response.headers.get('X-Rucio-Auth-Token')
             const account = response.headers.get('X-Rucio-Auth-Account')
+            const authTokenExpires = response.headers.get('X-Rucio-Auth-Token-Expires')
             
-            if (!authToken || !account) {
+            if (!authToken || !account || !authTokenExpires) {
                 dto.message = 'Rucio Auth Server returned 200 but no auth token or account headers'
                 dto.account = ''
                 dto.authToken = ''
             } else {
                 dto.authToken = authToken
                 dto.account = account
+                dto.authTokenExpires = authTokenExpires
             }
             
             return Promise.resolve(dto)

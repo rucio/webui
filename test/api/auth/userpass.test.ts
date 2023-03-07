@@ -11,7 +11,6 @@ import { setEmptySession } from '@/lib/infrastructure/auth/session-utils';
 describe('UserPassLogin API Test', () => {
     beforeEach(() => {
         fetchMock.doMock();
-        const authServer = process.env.RUCIO_AUTH_HOST;
         fetchMock.mockIf(/^https?:\/\/rucio-auth-host.com.*$/, (req) => {
             if (req.url.endsWith('/auth/userpass')) {
                 return Promise.resolve({
@@ -19,11 +18,11 @@ describe('UserPassLogin API Test', () => {
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Rucio-Auth-Token': 'rucio-ddmlab-askdjljioj',
-                        'X-Rucio-Auth-Account': 'root'
+                        'X-Rucio-Auth-Account': 'root',
+                        'X-Rucio-Auth-Token-Expires': '2021-09-01T00:00:00.000Z'
                     },
                     body: JSON.stringify({
                     })
-                    
                 })
             }
         })
@@ -57,8 +56,10 @@ describe('UserPassLogin API Test', () => {
         expect(viewModel.rucioAuthToken).toBe('rucio-ddmlab-askdjljioj');
         expect(viewModel).toHaveProperty('rucioAccount');
         expect(viewModel.rucioAccount).toBe('root');
+        expect(viewModel).toHaveProperty('rucioAuthTokenExpires');
+        expect(viewModel.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
+        
         expect(session.user).toHaveProperty('rucioIdentity');
-
         expect(session.user?.rucioIdentity).toBe('ddmlab');
         expect(session.user).toHaveProperty('rucioAuthToken');
         expect(session.user?.rucioAuthToken).toBe('rucio-ddmlab-askdjljioj');
@@ -66,6 +67,8 @@ describe('UserPassLogin API Test', () => {
         expect(session.user?.rucioAccount).toBe('root');
         expect(session.user).toHaveProperty('isLoggedIn');
         expect(session.user?.isLoggedIn).toBe(true);
+        expect(session.user).toHaveProperty('rucioAuthTokenExpires');
+        expect(session.user?.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
     });
 
 });

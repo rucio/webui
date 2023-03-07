@@ -17,6 +17,7 @@ export type UserpassLoginResponse = {
     rucioIdentity: string;
     rucioAccount: string;
     rucioAuthToken: string;
+    rucioAuthTokenExpires: string;
 }
 
 /**
