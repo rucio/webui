@@ -5,7 +5,7 @@ export const getSampleVOs = (): VO[] => {
     const vos: VO[] = [];
     const atlas: VO = {
         name: "ATLAS",
-        shortName: "atlas",
+        shortName: "atl",
         logoUrl: "https://atlas.ch/logo.png",
         oidcEnabled: true,
         oidcProviders: [getSampleOIDCProviders()[0]],
