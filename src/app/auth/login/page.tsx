@@ -68,7 +68,10 @@ export default function Login() {
             headers: headers
         })
 
-        let responseBody = {}
+        let responseBody: {
+            ExceptionMessage?: string
+            ExceptionClass?: string
+        } = {}
         try{
             responseBody = await res.json()
         } catch (error) {

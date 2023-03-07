@@ -57,6 +57,7 @@ LoginPage.args = {
         multiVOEnabled: true,
         voList: [voAtlas, voCMS],
         isLoggedIn: false,
+        rucioAuthHost: 'https://rucio.cern.ch',
     },
     authViewModel: {
         status: 'error',
