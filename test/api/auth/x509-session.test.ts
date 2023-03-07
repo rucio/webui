@@ -44,13 +44,15 @@ describe('X509Login API Test', () => {
         expect(session.user).toHaveProperty('isLoggedIn');
         expect(session.user?.isLoggedIn).toBe(true);
         expect(session.user).toHaveProperty('rucioAuthToken');
-        expect(session.user?.rucioAuthToken).toBe(requestBody.rucioAuthToken);
+        expect(session.user?.rucioAuthToken).toBe('rucio-/C=GB/O=Isode Limited/CN=Steve Kille-askdjljioj');
         expect(session.user).toHaveProperty('rucioAccount');
-        expect(session.user?.rucioAccount).toBe(requestBody.rucioAccount);
+        expect(session.user?.rucioAccount).toBe('root');
         expect(session.user).toHaveProperty('rucioIdentity')
         expect(session.user?.rucioIdentity).toBe('/C=GB/O=Isode Limited/CN=Steve Kille');
         expect(session.user).toHaveProperty('rucioAuthType')
         expect(session.user?.rucioAuthType).toBe('x509');
+        expect(session.user).toHaveProperty('rucioAuthTokenExpires')
+        expect(session.user?.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
         
         const response: AuthViewModel = JSON.parse(res._getData());
         expect(response).toHaveProperty('status');
@@ -62,7 +64,9 @@ describe('X509Login API Test', () => {
         expect(response).toHaveProperty('rucioAuthType');
         expect(response.rucioAuthType).toBe('x509');
         expect(response).toHaveProperty('rucioAuthToken');
-        expect(response.rucioAuthToken).toBe(requestBody.rucioAuthToken);
+        expect(response.rucioAuthToken).toBe('rucio-/C=GB/O=Isode Limited/CN=Steve Kille-askdjljioj');
+        expect(response).toHaveProperty('rucioAuthTokenExpires');
+        expect(response.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
 
     })
 
@@ -101,6 +105,8 @@ describe('X509Login API Test', () => {
         expect(session.user?.isLoggedIn).toBe(false);
         expect(session.user).toHaveProperty('rucioAuthToken');
         expect(session.user?.rucioAuthToken).toBe('');
+        expect(session.user).toHaveProperty('rucioAuthTokenExpires');
+        expect(session.user?.rucioAuthTokenExpires).toBe('');
 
         const response: AuthViewModel = JSON.parse(res._getData());
         expect(response).toHaveProperty('status');

@@ -6,13 +6,13 @@ import SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-sessio
  * @property {string} rucioAuthToken - Rucio Auth Token retrieved after a successful x509 login
  * @property {string} rucioAccount - Rucio Account retrieved after a successful x509 login
  * @property {string} shortVOName - Short name of the VO to which the user belongs
- * @property {string} rucioTokenExpiry - Expiry time of the Rucio Auth Token
+ * @property {string} rucioAuthTokenExpires - Expiry time of the Rucio Auth Token
  */
 export type SetX509LoginSessionRequest = {
     rucioAuthToken: string
+    rucioAuthTokenExpires: string
     rucioAccount: string
     shortVOName: string  
-    rucioTokenExpiry: string
 }
 
 /**
@@ -20,7 +20,6 @@ export type SetX509LoginSessionRequest = {
  * @property {boolean} isLoggedIn - true if the user is logged in
  * @property {string} rucioIdentity - Rucio Identity of the user extracted from the token
  * @property {VO} vo - VO to which the user belongs
- * @property {string} rucioTokenExpiry - Expiry time of the Rucio Auth Token
  */
 export interface SetX509LoginSessionResponse extends SetX509LoginSessionRequest {
     isLoggedIn: boolean

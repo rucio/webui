@@ -60,6 +60,7 @@ export async function setEmptySession(session: IronSession, saveSession: boolean
         rucioAccount: '',
         rucioAuthType: null,
         rucioAuthToken: '',
+        rucioAuthTokenExpires: '',
         rucioOIDCProvider: null,
         isLoggedIn: false,
     }
