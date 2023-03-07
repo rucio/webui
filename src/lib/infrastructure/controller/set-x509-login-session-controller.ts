@@ -25,7 +25,7 @@ class SetX509LoginSessionController implements ISetX509LoginSessionController {
             rucioAuthToken: rucioAuthToken,
             rucioAccount: rucioAccount,
             shortVOName: shortVOName,
-            rucioTokenExpiry: rucioTokenExpiry,
+            rucioAuthTokenExpires: rucioTokenExpiry,
         } as SetX509LoginSessionRequest);   
     }
 }

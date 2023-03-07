@@ -21,6 +21,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
         this.session.user = {
             isLoggedIn: true,
             rucioAuthToken: responseModel.rucioAuthToken,
+            rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
             rucioIdentity: responseModel.rucioIdentity,
             rucioAuthType: 'x509',
             rucioAccount: responseModel.rucioAccount,
@@ -33,6 +34,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             rucioAccount: responseModel.rucioAccount,
             rucioAuthType: 'x509',
             rucioAuthToken: responseModel.rucioAuthToken,
+            rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
             rucioIdentity: responseModel.rucioIdentity,
         }
         this.response.status(200).json(viewModel);
@@ -45,6 +47,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             rucioAccount: '',
             rucioAuthType: '',
             rucioAuthToken: '',
+            rucioAuthTokenExpires: '',
             status: 'error',
             message: errorModel.message,
             error_cause: errorModel.type,

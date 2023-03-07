@@ -16,7 +16,7 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
     }
 
     async execute(requestModel: SetX509LoginSessionRequest): Promise<void> {
-        const { rucioAuthToken, rucioAccount, shortVOName, rucioTokenExpiry } = requestModel;
+        const { rucioAuthToken, rucioAccount, shortVOName, rucioAuthTokenExpires } = requestModel;
         let rucioIdentity = '';
         let vo: VO | undefined;
         try {
@@ -50,7 +50,7 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
             rucioAuthToken: rucioAuthToken,
             rucioAccount: rucioAccount,
             shortVOName: shortVOName,
-            rucioTokenExpiry: rucioTokenExpiry,
+            rucioAuthTokenExpires: rucioAuthTokenExpires,
         }
         await this.presenter.presentSuccess(responseModel);
     }

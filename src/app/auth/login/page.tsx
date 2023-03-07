@@ -80,30 +80,44 @@ export default function Login() {
         
         if (res.status === 200 ) {
             const rucioAuthToken: string | null = res.headers.get('X-Rucio-Auth-Token')
+            const rucioAuthTokenExpires: string | null = res.headers.get('X-Rucio-Auth-Token-Expires')
+            const rucioAccount: string | null = res.headers.get('X-Rucio-Auth-Account')
             let auth: AuthViewModel = {
                 status: 'error',
-                message: 'Cannot retrieve RucioAuthToken from response headers',
+                message: 'Cannot retrieve RucioAuthToken, RucioAccount or RucioAuthTokenExpires from response headers',
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
                 rucioAuthToken: '',
                 rucioAuthTokenExpires: ''
             }
-            if (rucioAuthToken === null) {
+            if (rucioAuthToken === null || rucioAuthTokenExpires === null || rucioAccount === null) {
                 return Promise.resolve(auth)
             }
             auth.status = 'success'
             auth.message = "Login successful. The session has not been set yet."
-            auth.rucioAccount = res.headers.get('X-Rucio-Auth-Account') || account || ''
+            auth.rucioAccount = rucioAccount
             auth.rucioAuthType = 'x509'
             auth.rucioAuthToken = rucioAuthToken
-            auth.rucioAuthTokenExpires = res.headers.get('X-Rucio-Auth-Token-Expires') || ''
+            auth.rucioAuthTokenExpires = rucioAuthTokenExpires
             return Promise.resolve(auth)
 
         } else if (res.status === 206) {
+            const multiple_accounts = res.headers.get('X-Rucio-Auth-Accounts')
+            if (multiple_accounts === null) {
+                return Promise.resolve({
+                    status: 'error',
+                    message: 'Cannot retrieve X-Rucio-Auth-Accounts from response headers',
+                    rucioAccount: '',
+                    rucioAuthType: '',
+                    rucioIdentity: '',
+                    rucioAuthToken: '',
+                    rucioAuthTokenExpires: ''
+                })
+            }
             const auth: AuthViewModel = {
                 status: 'multiple_accounts',
-                message: res.headers.get('X-Rucio-Auth-Accounts') || '',
+                message: multiple_accounts,
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
