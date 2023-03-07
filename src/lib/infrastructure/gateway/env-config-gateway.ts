@@ -5,6 +5,22 @@ import { injectable } from "inversify";
 
 @injectable()
 class EnvConfigGateway implements EnvConfigGatewayOutputPort {
+    async rucioHost(): Promise<string> {
+        const value = await this.get('RUCIO_HOST', true)
+        if (value === '' || value === undefined) {
+            throw new InvalidConfig(`RUCIO_HOST:${value} is not properly defined`)
+        }
+        return Promise.resolve(value)
+    }
+
+    async rucioAuthHost(): Promise<string> {
+        const value = await this.get('RUCIO_AUTH_HOST', true)
+        if (value === '' || value === undefined) {
+            throw new InvalidConfig(`RUCIO_AUTH_HOST:${value} is not properly defined`)
+        }
+        return Promise.resolve(value)
+    }
+    
     async oidcEnabled(): Promise<boolean> {
         const value = await this.get('OIDC_ENABLED')
         if (value === 'true' || value === 'True' || value === 'TRUE') {

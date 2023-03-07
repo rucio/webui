@@ -41,4 +41,18 @@ export default interface EnvConfigGatewayOutputPort {
      * @returns true if X509 is enabled, false otherwise.
      */
     x509Enabled(): Promise<boolean>
+
+    /**
+     * @returns the URL of the Rucio Auth service
+     * @throws {@link ConfigNotFound} if RUCIO_AUTH_HOST is not found
+     * @throws {@link InvalidConfig} if RUCIO_AUTH_HOST is empty
+     */
+    rucioAuthHost(): Promise<string>
+
+    /**
+     * @returns the URL of the Rucio service
+     * @throws {@link ConfigNotFound} if RUCIO_HOST is not found
+     * @throws {@link InvalidConfig} if RUCIO_HOST is empty
+     */
+    rucioHost(): Promise<string>
 }
