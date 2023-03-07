@@ -4,6 +4,7 @@
  */
 export type SessionUser = {
     rucioAuthToken: string
+    rucioAuthTokenExpires: string
     rucioAccount: string
     rucioIdentity: string
     rucioAuthType: 'x509' | 'userpass' | 'oidc' | null
