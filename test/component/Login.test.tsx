@@ -42,7 +42,8 @@ describe("Login Page Test", () => {
                 multiVOEnabled: true,
                 voList: voList,
                 isLoggedIn: false,
-                status: "success"
+                status: "success",
+                rucioAuthHost: "https://rucio-auth-server",
             } as LoginViewModel)));
         
         await act( async () => render(<Login/>))
@@ -132,6 +133,7 @@ describe("Login Page Test", () => {
             voList: getSampleVOs(),
             isLoggedIn: false,
             status: "success",
+            rucioAuthHost: "https://rucio-auth.cern.ch",
         }
 
         const authViewModel: AuthViewModel = {
@@ -148,7 +150,8 @@ describe("Login Page Test", () => {
             authViewModel={authViewModel}
             userPassSubmitHandler = {() => {}}
             oidcSubmitHandler = {() => {}}
-            x509SubmitHandler = {() => {}}
+            x509SubmitHandler = {() => {return Promise.resolve(authViewModel)}}
+            x509SessionHandler = {(authViewModel) => {}}
         />))
         const userPassButton = screen.getByRole('button', {name: /Userpass/})
         fireEvent.click(userPassButton)
