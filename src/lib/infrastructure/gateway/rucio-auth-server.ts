@@ -23,7 +23,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 'X-Rucio-AppID': 'webui',
                 'X-Rucio-Username': username,
                 'X-Rucio-Password': password,
-                'X-Rucio-Account': 'root'
+                'X-Rucio-Account': 'root' // TODO: remove this hard-coded value
             },
 
         })

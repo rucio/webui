@@ -104,7 +104,7 @@ describe("Login Page Test", () => {
         
     })
 
-    it("should show error message if login fails", async () => {
+    it("should show error message if exists during initial page load", async () => {
         fetchMock.doMock();
         fetchMock.mockIf(/login/, (req) => Promise.resolve(JSON.stringify(
                     {
@@ -143,6 +143,7 @@ describe("Login Page Test", () => {
             rucioAuthType: "",
             rucioAuthToken: "",
             rucioIdentity: "",
+            rucioAuthTokenExpires: "",
         }
 
         await act( async () => render(<LoginStory
