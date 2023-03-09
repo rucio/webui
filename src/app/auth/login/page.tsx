@@ -63,35 +63,58 @@ export default function Login() {
             headers.append(key, value as string)
         })
 
-        const res = await fetch(rucioX509Endpoint, {
-            method: 'GET',
-            headers: headers
-        })
+        let res: Response;
+        try {
+            res = await fetch(rucioX509Endpoint, {
+                method: 'GET',
+                headers: headers
+            })
+        } catch (error) {
+            console.log(error)
+            return Promise.resolve({
+                status: 'error',
+                message: 'Oops! Did you provide a x509 certificate?',
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: ''
+            })
+        }
 
         let responseBody: {
             ExceptionMessage?: string
             ExceptionClass?: string
         } = {}
-        try{
+        try {
             responseBody = await res.json()
         } catch (error) {
             // do nothing
         }
-        
-        if (res.status === 200 ) {
+
+        if (res.status === 200) {
             const rucioAuthToken: string | null = res.headers.get('X-Rucio-Auth-Token')
             const rucioAuthTokenExpires: string | null = res.headers.get('X-Rucio-Auth-Token-Expires')
             const rucioAccount: string | null = res.headers.get('X-Rucio-Auth-Account')
             let auth: AuthViewModel = {
                 status: 'error',
-                message: 'Cannot retrieve RucioAuthToken, RucioAccount or RucioAuthTokenExpires from response headers',
+                message: '',
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
                 rucioAuthToken: '',
                 rucioAuthTokenExpires: ''
             }
-            if (rucioAuthToken === null || rucioAuthTokenExpires === null || rucioAccount === null) {
+            if(rucioAuthToken === null) {
+                auth.message = 'Cannot retrieve X-Rucio-Auth-Token from response headers'
+                return Promise.resolve(auth)
+            }
+            if(rucioAuthTokenExpires === null) {
+                auth.message = 'Cannot retrieve X-Rucio-Auth-Token-Expires from response headers'
+                return Promise.resolve(auth)
+            }
+            if(rucioAccount === null) {
+                auth.message = 'Cannot retrieve X-Rucio-Account from response headers'
                 return Promise.resolve(auth)
             }
             auth.status = 'success'
@@ -149,13 +172,13 @@ export default function Login() {
             return Promise.resolve(auth)
         }
     };
-   
+
     /**
      * Sets the session after a x509 login
      * @param {AuthViewModel} auth details of the x509 login containing the rucioAuthToken, rucioTokenExpiry or the error.
      * The rest of the parameters should to be provided by this function
      */
-    const handleX509Session = async (auth: AuthViewModel, rucioAccount: string, shortVoName: string) => {
+    const handleX509Session = async (auth: AuthViewModel, rucioAccount: string, shortVOName: string) => {
         if (auth.status !== 'success') {
             auth.message = 'Cannot set session for x509 login as the login was not successful'
             setAuthViewModel(auth)
@@ -170,10 +193,10 @@ export default function Login() {
                 rucioAccount: rucioAccount,
                 rucioAuthToken: auth.rucioAuthToken,
                 rucioTokenExpiry: auth.rucioAuthTokenExpires,
-                shortVoName: shortVoName
+                shortVOName: shortVOName,
             })
         })
-        
+
         if (res.status === 200) {
             // redirect to callback url
             router.push(redirectURL)
@@ -185,7 +208,7 @@ export default function Login() {
         }
     }
 
-    
+
     useEffect(() => {
         if (callbackUrl) {
             const redirectURL = decodeURIComponent(callbackUrl)

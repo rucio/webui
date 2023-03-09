@@ -36,7 +36,7 @@ export default class LoginConfigPresenter implements LoginConfigOutputPort<NextA
     async presentError(error: LoginConfigError) {
         const viewModel: LoginViewModel = {
             status: 'error',
-            x509Enabled: false,
+            x509Enabled: true,
             oidcEnabled: false,
             multiVOEnabled: false,
             voList: [],

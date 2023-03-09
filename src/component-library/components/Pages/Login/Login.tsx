@@ -86,6 +86,8 @@ export const Login = ({
                                         setError(x509AuthViewModel.message)
                                         return
                                     }
+                                    console.log("x509AuthViewModel", x509AuthViewModel)
+                                    console.log("voName", vo.shortName)
                                     await handleX509Session(x509AuthViewModel, account || "", vo.shortName)
                                 }
                             }}/>
