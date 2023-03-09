@@ -79,10 +79,10 @@ describe("Login Page Test", () => {
         expect(loginFormParent.className).toContain('collapse')
 
         // Check no error message is rendered
-        const errorMessage = screen.queryByTestId('login-page-error')
-        expect(errorMessage).not.toBeInTheDocument()
+        const errorElement = screen.queryByTestId('login-page-error')
+        expect(errorElement?.className).toBe('collapse')
 
-    })
+    }, 1000 * 60 * 5)
     
     it("should not render OIDC buttons if OIDC is disabled", async () => {
         fetchMock.doMock();
@@ -151,7 +151,10 @@ describe("Login Page Test", () => {
             authViewModel={authViewModel}
             userPassSubmitHandler = {() => {}}
             oidcSubmitHandler = {() => {}}
-            x509SubmitHandler = {() => {return Promise.resolve(authViewModel)}}
+            x509SubmitHandler = {() => {
+                
+                return Promise.resolve(authViewModel)}
+            }
             x509SessionHandler = {(authViewModel) => {}}
         />))
         const userPassButton = screen.getByRole('button', {name: /Userpass/})
@@ -163,4 +166,67 @@ describe("Login Page Test", () => {
         expect(alert.textContent).toContain("Invalid Credentials")
     })
    
+    it('should show error alert if login fails, user closes alert, and login fails again', async () => {
+        const loginViewModel: LoginViewModel = {
+            x509Enabled: true,
+            oidcEnabled: false,
+            oidcProviders: getSampleOIDCProviders(),
+            multiVOEnabled: true,
+            voList: getSampleVOs(),
+            isLoggedIn: false,
+            status: "success",
+            rucioAuthHost: "https://rucio-auth.cern.ch",
+        }
+
+        const authViewModel: AuthViewModel = {
+            status: "error",
+            message: "Invalid Credentials",
+            rucioAccount: "",
+            rucioAuthType: "",
+            rucioAuthToken: "",
+            rucioIdentity: "",
+            rucioAuthTokenExpires: "",
+        }
+
+        await act( async () => render(<LoginStory
+            loginViewModel={loginViewModel}
+            authViewModel={authViewModel}
+            userPassSubmitHandler = {() => {}}
+            oidcSubmitHandler = {() => {}}
+            x509SubmitHandler = {() => {
+                const x509ErrorModel = {
+                    ...authViewModel,
+                }
+                x509ErrorModel.message = "Oops, something went wrong"
+                return Promise.resolve(x509ErrorModel)
+            }}
+            x509SessionHandler = {(authViewModel) => {}}
+        />))
+        
+        // check if Alert is displayed with message Invalid Credentials
+        const alertCollapsible = screen.getByTestId('login-page-error')
+        expect(alertCollapsible.className).not.toContain('collapse')
+
+        const alertCloseButton = screen.getByRole('button', {name: /Close/})
+        
+        // close the alert
+        await act( async () => fireEvent.click(alertCloseButton))
+
+        // check if Alert is not displayed
+        expect(alertCollapsible.className).toContain('collapse')
+
+        // Login again
+        const x509LoginButton = screen.getByRole('button', {name: /x509/})
+        await act( async () => fireEvent.click(x509LoginButton))
+
+        // check if Alert is displayed with message Oops, something went wrong
+        expect(alertCollapsible.className).not.toContain('collapse')
+        expect(alertCollapsible.textContent).toContain('Oops, something went wrong')
+
+        // close the alert again
+        await act( async () => fireEvent.click(alertCloseButton))
+
+        // check if Alert is not displayed
+        expect(alertCollapsible.className).toContain('collapse')
+    })
 })

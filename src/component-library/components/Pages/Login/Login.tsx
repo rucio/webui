@@ -55,7 +55,13 @@ export const Login = ({
 
     return (
         <div className={mainDivClasses.join(" ")}>
-            {(error !== undefined && error !== "" && error !== null ) ? <Alert id="login-page-error" variant="error" open={true} message={error} /> : null}
+            <Collapsible id='login-page-error' showIf={error !== undefined}>
+                    <Alert variant="error" message={error} onClose={
+                        () => {
+                            setError(undefined)
+                        }
+                    }/> 
+            </Collapsible>
             <div className="text-center">
                 <H1 text="Rucio Login" />
             </div>
