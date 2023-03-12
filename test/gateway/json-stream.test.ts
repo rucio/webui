@@ -4,6 +4,12 @@ import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
 import { createMocks } from 'node-mocks-http'
 import { PassThrough } from 'node:stream'
 
+afterAll(() => {
+    if (!process.stdout.write('')) {
+        process.stdout.once('drain', () => { });
+    }
+});
+
 describe('Streaming tests for JSON encoded text payloads', () => {
     beforeEach(async () => {
         fetchMock.mockIf(/^http:\/\/localhost:8080\/stream/, async (req) => {
@@ -20,24 +26,29 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         })
         // uncomment the line below to fetch data directly from a running mock server
         // fetchMock.dontMock()
-    }, 10000 * 60 * 5)
+    })
 
-    it('should return the mocked responses', async () => {
+    it('should return the mocked chunks as text', async () => {
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-        const responseBody: PassThrough | null = await streamingGateway.getTextStream()
-        expect(responseBody).not.toBeNull()
+        const textStream: PassThrough | null = await streamingGateway.getTextStream()
+        expect(textStream).not.toBeNull()
         // if response is null fail the test
-        if(responseBody === null) {
+        if(textStream === null) {
             fail('response is null')
         }
-        let chunks = []
-        responseBody.on('data', (chunk) => {
+        let chunks:string[] = []
+        const outputStream = new PassThrough()
+        textStream.pipe(outputStream)
+
+        outputStream.on('data', (chunk) => {
             chunks.push(chunk.toString())
         })
-        responseBody.on('end', () => {
-            // console.log(chunks)
-            expect(chunks.join('')).toEqual('HelloWorld')
+        outputStream.on('end', async () => {
+            expect(chunks).toEqual(['Hello', 'World'])
         })
-
+        while(outputStream.readableLength > 0) {
+            await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+        await console.log(chunks)
     })
 })
