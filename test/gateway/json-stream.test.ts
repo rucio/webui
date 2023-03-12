@@ -1,59 +1,30 @@
-import JSONStream from '@/lib/infrastructure/gateway/streaming-utils'
+import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port'
+import appContainer from '@/lib/infrastructure/config/ioc/container-config'
+import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
 import { createMocks } from 'node-mocks-http'
-import { ReadableStream } from 'node:stream/web'
-
+import { PassThrough } from 'node:stream'
 
 describe('Streaming tests for JSON encoded text payloads', () => {
     beforeEach(() => {
-        fetchMock.doMock()
+        fetchMock.dontMock()
     })
-    afterEach(() => {
-        fetchMock.resetMocks()
-    })
-    it('should return a stream of JSON objects', async () => {
+
+    it('should return the mocked responses', async () => {
         const { req, res } = createMocks({
             method: 'GET',
-            body: {
-            }
-        });
-        
-        const textChunks = [
-            '{"id": 1, "name": "file1"}',
-            '{"id": 2, "name": "file2"}',
-            '{"id": 3, "name": "file3"}',
-        ]
-        const textStream = new ReadableStream<string>({
-            
-            start(controller) {
-                textChunks.forEach(chunk => {
-                    controller.enqueue(chunk)
-                })
-                controller.close()
-            },
+            url: 'http://localhost/stream',
         })
-        
-        // take the readable stream and convert it into a stream of JSON objects
 
-        
-
-        fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, req => {
-            if (req.url.endsWith('/did')) {
-                
-                return Promise.resolve({
-                    status: 200,
-                    body: textStream,
-                })
-            }
+        const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
+        const response: PassThrough | null = await streamingGateway.getTextStream()
+        expect(response).not.toBeNull()
+        // if response is null fail the test
+        if(response === null) {
+            fail('response is null')
+        }
+        response.on('data', (chunk) => {
+            console.log(chunk.toString())
         })
-        // fetchMock.once(textStream)
-        // fetch('https://rucio-host.com/did').then(res => {
-        //     console.log(res)
-        // })
-        const stream = new JSONStream('https://rucio-host.com/did', [])
-        
-        // for await (const chunk of stream) {
-        //     console.log(chunk)
-        // }
-        
-    } )
+
+    })
 })
