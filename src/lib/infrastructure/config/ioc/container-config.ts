@@ -70,8 +70,8 @@ appContainer.bind<StreamInputPort<RSE>>(INPUT_PORT.STREAM).to(StreamUseCase).inR
 appContainer.bind<IStreamingController>(CONTROLLERS.STREAM).to(StreamingController);
 appContainer.bind<interfaces.Factory<StreamInputPort<RSE>>>(USECASE_FACTORY.STREAM).toFactory<StreamUseCase, [NextApiResponse]>((context: interfaces.Context) =>
     (response: NextApiResponse) => {
-        const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
-        return new StreamUseCase(new StreamPresenter(response));
+        const streamingGateway: StreamGatewayOutputPort = appContainer.get(GATEWAYS.STREAM)
+        return new StreamUseCase(new StreamPresenter(response), streamingGateway);
     }
 );
 export default appContainer;
