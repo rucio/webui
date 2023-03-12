@@ -5,25 +5,38 @@ import { createMocks } from 'node-mocks-http'
 import { PassThrough } from 'node:stream'
 
 describe('Streaming tests for JSON encoded text payloads', () => {
-    beforeEach(() => {
-        fetchMock.dontMock()
-    })
+    beforeEach(async () => {
+        fetchMock.mockIf(/^http:\/\/localhost:8080\/stream/, async (req) => {
+            if (req.method === 'GET') {
+                const stream = new PassThrough()
+                stream.write('Hello')
+                stream.write('World')
+                stream.end()
+                return Promise.resolve({
+                    status: 200,
+                    body: stream,
+                })
+            }
+        })
+        // uncomment the line below to fetch data directly from a running mock server
+        // fetchMock.dontMock()
+    }, 10000 * 60 * 5)
 
     it('should return the mocked responses', async () => {
-        const { req, res } = createMocks({
-            method: 'GET',
-            url: 'http://localhost/stream',
-        })
-
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-        const response: PassThrough | null = await streamingGateway.getTextStream()
-        expect(response).not.toBeNull()
+        const responseBody: PassThrough | null = await streamingGateway.getTextStream()
+        expect(responseBody).not.toBeNull()
         // if response is null fail the test
-        if(response === null) {
+        if(responseBody === null) {
             fail('response is null')
         }
-        response.on('data', (chunk) => {
-            console.log(chunk.toString())
+        let chunks = []
+        responseBody.on('data', (chunk) => {
+            chunks.push(chunk.toString())
+        })
+        responseBody.on('end', () => {
+            // console.log(chunks)
+            expect(chunks.join('')).toEqual('HelloWorld')
         })
 
     })

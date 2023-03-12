@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-output-port";
 import { injectable } from "inversify";
 import fetch from "node-fetch";
@@ -21,7 +22,6 @@ export default class StreamingGateway<T> implements StreamGatewayOutputPort {
             throw new Error(`Failed to fetch stream: ${response.statusText}`);
         }
         const responseBody = response.body
-
         return Promise.resolve(
             responseBody
         )
