@@ -1,3 +1,5 @@
+import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-output-port";
+import StreamingGateway from "../../gateway/streaming-gateway";
 import "reflect-metadata";
 import { Container, interfaces } from "inversify";
 import { IronSession } from "iron-session";
@@ -22,6 +24,11 @@ import SetX509LoginSessionInputPort from "@/lib/core/port/primary/set-x509-login
 import SetX509LoginSessionUseCase from "@/lib/core/use-case/set-x509-login-session-usecase";
 import SetX509LoginSessionController, { ISetX509LoginSessionController } from "../../controller/set-x509-login-session-controller";
 import SetX509LoginSessionPresenter from "../../presenter/set-x509-login-session-presenter";
+import StreamInputPort from "@/lib/core/port/primary/stream-input-port";
+import StreamUseCase from "@/lib/core/use-case/stream-usecase";
+import { RSE } from "@/lib/core/entity/rucio";
+import StreamingController, { IStreamingController } from "../../controller/streaming-controller";
+import StreamPresenter from "../../presenter/stream-presenter";
 
 /**
  * IoC Container configuration for the application.
@@ -30,6 +37,7 @@ const appContainer = new Container();
 
 appContainer.bind<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER).to(RucioAuthServer);
 appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
+appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway);
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
@@ -58,4 +66,12 @@ appContainer.bind<interfaces.Factory<SetX509LoginSessionInputPort>>(USECASE_FACT
     }
 );
 
+appContainer.bind<StreamInputPort<RSE>>(INPUT_PORT.STREAM).to(StreamUseCase).inRequestScope();
+appContainer.bind<IStreamingController>(CONTROLLERS.STREAM).to(StreamingController);
+appContainer.bind<interfaces.Factory<StreamInputPort<RSE>>>(USECASE_FACTORY.STREAM).toFactory<StreamUseCase, [NextApiResponse]>((context: interfaces.Context) =>
+    (response: NextApiResponse) => {
+        const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
+        return new StreamUseCase(new StreamPresenter(response));
+    }
+);
 export default appContainer;
