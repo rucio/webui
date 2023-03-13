@@ -8,7 +8,8 @@ import { PassThrough } from "node:stream";
 
 const streamRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-    const responseBody: PassThrough | null = await streamingGateway.getTextStream()
+    const url = 'http://localhost:8080/stream'
+    const responseBody: PassThrough | null = await streamingGateway.getTextStream(url)
     responseBody?.pipe(res)
 }
 
