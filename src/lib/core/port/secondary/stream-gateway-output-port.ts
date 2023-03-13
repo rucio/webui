@@ -1,6 +1,6 @@
 import { PassThrough } from 'node:stream';
 
 export default interface StreamGatewayOutputPort {
-    getTextStream(): Promise<PassThrough | null>;
-
+    getTextStream(url: string): Promise<PassThrough | null>;
+    getJSONChunks(url: string): Promise<PassThrough | null>;
 }

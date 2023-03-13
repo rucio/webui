@@ -1,8 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {createWriteStream} from 'node:fs';
-import {pipeline} from 'node:stream';
-import {promisify} from 'node:util'
-import fetch from 'node-fetch';
 import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-output-port";
 import appContainer from "@/lib/infrastructure/config/ioc/container-config";
 import GATEWAYS from "@/lib/infrastructure/config/ioc/ioc-symbols-gateway";
