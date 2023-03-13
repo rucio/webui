@@ -51,19 +51,16 @@ describe('Streaming tests for JSON encoded text payloads', () => {
             }
             if(req.url.endsWith('listofobjects')) {
                 const stream = new PassThrough()
-                const baseObject = {
-                    RSE: {
-                        name: 'RSE',
-                        info: {
-                            size: 100,
-                        }
-                    }                            
-                }
                 const listOfObjects = []
                 for(let i = 0; i < 10; i++) {
-                    listOfObjects.push(baseObject)
-                    baseObject.RSE.name = `RSE${i}`
-                    baseObject.RSE.info.size = i * 100
+                    listOfObjects.push({
+                        RSE: {
+                            name: `RSE${i}`,
+                            info: {
+                                size: i * 100,
+                            }
+                        }
+                    })
                 }
                 const json = JSON.stringify(listOfObjects)
                 // split the json into chunks of 10 characters
@@ -115,21 +112,25 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if(jsonStream === null) {
             fail('response is null')
         }
-        let chunks:string[] = []
+        let chunks: any[] = []
         const outputStream = new PassThrough()
         jsonStream.pipe(outputStream)
 
         outputStream.on('data', (chunk) => {
-            chunks.push(chunk.toString())
+            const data = chunk.toString()
+            const jsonObject = JSON.parse(data)
+            chunks.push(jsonObject)
         })
         outputStream.on('end', () => {
-            const json = JSON.parse(chunks.join(''))
-            expect(json).toEqual({'Hello': 'World'})
+            expect('Hello' in chunks[0]).toEqual(true)
+            expect(chunks[0].Hello).toEqual('World')
         })
+
         while(outputStream.readableLength > 0) {
             await new Promise(resolve => setTimeout(resolve, 1000))
         }
     })
+
     it('should return nested json responses as JSON', async () => {
         const url = 'http://localhost:8080/nestedjsonstream'
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
@@ -139,15 +140,18 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if(jsonStream === null) {
             fail('response is null')
         }
-        let chunks:string[] = []
+        let chunks: Object[] = []
         const outputStream = new PassThrough()
         jsonStream.pipe(outputStream)
 
         outputStream.on('data', (chunk) => {
-            chunks.push(chunk.toString())
+            const data = chunk.toString()
+            const jsonObject = JSON.parse(data)
+            chunks.push(jsonObject)
         })
         outputStream.on('end', () => {
-            const json = JSON.parse(chunks.join(''))
+            expect(chunks.length).toEqual(1)
+            const json = chunks[0]
             expect(json).toEqual({
                 parent: {
                     child: {
@@ -167,20 +171,23 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         const url = 'http://localhost:8080/listofobjects'
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
         const jsonStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
+        
         expect(jsonStream).not.toBeNull()
         // if response is null fail the test
         if(jsonStream === null) {
             fail('response is null')
         }
-        let chunks:string[] = []
+        let chunks:Object[] = []
         const outputStream = new PassThrough()
         jsonStream.pipe(outputStream)
 
         outputStream.on('data', (chunk: string) => {
-            chunks.push(chunk.toString())
+            const data = chunk.toString()
+            const jsonObject = JSON.parse(data)
+            chunks.push(jsonObject)
         })
         outputStream.on('end', () => {
-            const json = JSON.parse(chunks.join(''))
+            const json = chunks
             expect(json.length).toEqual(10)
             expect(json[0]).toEqual({
                 RSE: {
@@ -199,5 +206,9 @@ describe('Streaming tests for JSON encoded text payloads', () => {
                 }
             })
         })
+    })
+
+    it('should stream individual JSON objects in a list', async () => {
+        
     })
 })
