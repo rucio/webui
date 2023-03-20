@@ -21,7 +21,7 @@ export const Input = ({
     show,
 }: TextInputProps) => {
     var divClasses: string[] = ["w-full"]
-    var labelClasses: string[] = []
+    var labelClasses: string[] = ["dark:text-white"]
     var inputClasses: string[] = ["border", "rounded"]
 
     // Handle inline or block

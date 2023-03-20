@@ -33,7 +33,7 @@ export const Login = ({
     oidcSubmitHandler: handleOIDCSubmit
 }: LoginPageProps ) => {
 
-    var mainDivClasses: string[] = ["border-gray-300", "border", "rounded", "p-4", "flex", "flex-col", "justify-center", "space-y-2"]
+    var mainDivClasses: string[] = ["border-gray-300", "dark:border-white", "border", "dark:border-2", "rounded", "p-4", "flex", "flex-col", "justify-center", "space-y-2"]
     const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false)
     
     const [selectedVOTab, setSelectedVOTab] = useState<number>(1)
@@ -62,7 +62,7 @@ export const Login = ({
                         }
                     }/> 
             </Collapsible>
-            <div className="text-center">
+            <div className="text-center dark:text-white">
                 <H1 text="Rucio Login" />
             </div>
 

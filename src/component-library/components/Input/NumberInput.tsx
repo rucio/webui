@@ -23,7 +23,7 @@ export const NumberInput = ({
     show,
 }: NumberInputProps) => {
     var divClasses: string[] = ["w-full"]
-    var labelClasses: string[] = []
+    var labelClasses: string[] = ["dark:text-white"]
     var inputClasses: string[] = ["border", "rounded"]
 
     // Handle inline or block
