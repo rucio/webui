@@ -22,10 +22,10 @@ export const Checkbox = ({
     var inputClasses: string[] = ["w-4 h-4"]
     var labelClasses: string[] = ["ml-2 text-sm font-medium"]
     if (!disabled) {
-        labelClasses.push("hover:cursor-pointer")
+        labelClasses.push("hover:cursor-pointer", "dark:text-white")
     }
     else {
-        labelClasses.push("text-gray-500")
+        labelClasses.push("text-gray-500", "dark:text-gray-300")
     }
     return (
         <div

@@ -2,40 +2,40 @@ import './steps.scss'
 
 export const Steps = ({ steps = [], active = 1, size }: StepsProps) => {
     return (
-        <div className={`rucio-steps ${size}`}>
-            {steps.map((element: any, index: number) => {
-                return index < active ? (
-                    <div
-                        className="step-item is-completed is-success"
-                        key={index}
-                        onClick={() => {
-                            element[2]?.()
-                        }}
-                    >
-                        <div className="step-marker">&#x2714;</div>
-                        <div className="step-details">
-                            <p className="step-title">{element?.[0]}</p>
-                            <p>{element?.[1]}</p>
-                        </div>
-                    </div>
-                ) : index === active ? (
-                    <div className="step-item is-active" key={index}>
-                        <div className="step-marker"></div>
-                        <div className="step-details">
-                            <p className="step-title">{element?.[0]}</p>
-                            <p>{element?.[1]}</p>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="step-item" key={index}>
-                        <div className="step-marker">{index + 1}</div>
-                        <div className="step-details">
-                            <p className="step-title">{element?.[0]}</p>
-                            <p>{element?.[1]}</p>
-                        </div>
-                    </div>
-                )
-            })}
+        <div className='w-full'>
+            <ol className="flex items-center w-full font-medium text-center text-gray-500 dark:text-gray-200">
+                {steps.map((element: any, index: number) => {
+                    let lispan = (element:any, index:number) => {
+                        return (
+                            <span className="flex items-center">
+                                <span className="mr-2">{index + 1}</span>
+                                {element?.[0]}
+                            </span>
+                        )
+                    }
+                    return index === 0 ? (
+                        /* leftmost */
+                        <li className="flex grow-0 items-center text-blue-600 dark:text-blue-500" key={index}>
+                            {lispan(element, index)}
+                        </li>
+                    ) : index < active ? (
+                        /* completed */
+                        <li className="flex grow items-center text-blue-600 dark:text-blue-500 before:content-[''] before:w-full before:h-1 before:border-b before:border-blue-200 dark:before:border-blue-400 before:border-4 before:mx-6" key={index}>
+                            {lispan(element, index)}
+                        </li>
+                    ) : index === active ? (
+                        /* active */
+                        <li className="flex grow items-center text-blue-600 dark:text-blue-500 before:content-[''] before:w-full before:h-1 before:border-b before:border-blue-200 dark:before:border-blue-400 before:border-4 before:mx-6" key={index}>
+                            {lispan(element, index)}
+                        </li>
+                    ) : (
+                        /* not completed */
+                        <li className="flex grow items-center before:content-[''] before:w-full before:h-1 before:border-b before:border-gray-200 dark:before:border-gray-600 before:border-4 before:mx-6">
+                            {lispan(element, index)}
+                        </li>
+                    )
+                })}
+            </ol>
         </div>
     )
 }
