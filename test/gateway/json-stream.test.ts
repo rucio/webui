@@ -207,8 +207,4 @@ describe('Streaming tests for JSON encoded text payloads', () => {
             })
         })
     })
-
-    it('should stream individual JSON objects in a list', async () => {
-        
-    })
 })

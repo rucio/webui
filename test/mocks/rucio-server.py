@@ -80,13 +80,13 @@ def stream():
         'type': 'test'
     }]
     long_list = [
-        {f'RSE{value}': value for value in range(100000)} 
+        {f'RSE{value}': value} for value in range(10)
     ]
     try:
         def generate():
             for i in long_list:
-                # print(f"yielding response {i}")
-                time.sleep(2)
+                # time.sleep(2)
+                print(f"sending {i}")
                 yield render_json(i) + '\n'
                 print("sleeping")
 
