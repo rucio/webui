@@ -603,10 +603,6 @@ video {
   margin-right: 2.5rem;
 }
 
-.mr-2 {
-  margin-right: 0.5rem;
-}
-
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -723,6 +719,10 @@ video {
 
 .rounded {
   border-radius: 0.25rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
 }
 
 .rounded-b {
@@ -961,12 +961,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.before\:mx-6::before {
-  content: var(--tw-content);
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
 }
 
 .before\:h-1::before {
