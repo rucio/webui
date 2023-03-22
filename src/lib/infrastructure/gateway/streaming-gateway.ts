@@ -4,6 +4,7 @@ import { injectable } from 'inversify'
 import fetch from 'node-fetch'
 import { PassThrough, Transform } from 'node:stream'
 import { TransformCallback } from 'stream'
+import 'ndjson'
 
 class BytesToStringifiedJSONTransform extends Transform {
     buffer: string[]
@@ -70,7 +71,7 @@ class BytesToStringifiedJSONTransform extends Transform {
             if (numOfClosedBrackets === numOfOpenBrackets) {
                 const lastObjectIndex = bufferData.lastIndexOf('}')
                 const lastObject = bufferData.slice(0, lastObjectIndex + 1)
-                if (bufferData[lastObjectIndex + 1] === ',') {
+                if (bufferData[lastObjectIndex + 1] === ','|| bufferData[lastObjectIndex + 1] === '\n') {
                     this.buffer = [bufferData.slice(lastObjectIndex + 2)]
                 } else {
                     this.buffer = [bufferData.slice(lastObjectIndex + 1)]
@@ -193,6 +194,7 @@ export default class StreamingGateway<T> implements StreamGatewayOutputPort {
         const responseBody = response.body
         const jsonStream = new PassThrough()
         responseBody
+            // .pipe(ndjson.parse())
             .pipe(new BytesToStringifiedJSONTransform({ objectMode: true }))
             .pipe(jsonStream)
         return Promise.resolve(jsonStream)
