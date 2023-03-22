@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react'
 import { NumberInput } from './NumberInput'
 
 export default {
-    title: 'Components/Input',
+    title: 'Components/Input/Legacy',
     component: NumberInput,
 } as Meta<typeof NumberInput>
 
@@ -18,5 +18,6 @@ NumericInput.args = {
     max: 100,
     min: 0,
     placeholder: 'Placeholder String',
-    show: 'standard'
+    show: 'standard',
+    value: 5
 }

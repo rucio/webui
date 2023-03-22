@@ -1,3 +1,5 @@
+import { Collapsible } from "../Helpers/Collapsible"
+
 interface ButtonProps {
     label: string
     icon?: any
@@ -6,6 +8,7 @@ interface ButtonProps {
     theme?: 'blue' | 'orange',
     fullwidth?: boolean
     onClick?: (args: unknown) => void
+    id?: string
 }
 
 export const Button = ({
@@ -16,11 +19,12 @@ export const Button = ({
     theme = "blue",
     fullwidth = true,
     onClick = undefined,
+    id = undefined,
 }: ButtonProps) => {
     const handleOnClick = disabled ? undefined : onClick
     var classes: string[] = ["font-bold rounded py-1 px-3"]
     if (!disabled) {
-        switch(type) {
+        switch (type) {
             case "submit":
                 classes.push("bg-green-500", "hover:bg-green-600", "text-white")
                 break
@@ -39,20 +43,21 @@ export const Button = ({
     else {
         classes.push("bg-gray-500", "text-gray-200")
     }
-    if(fullwidth) {
+    if (fullwidth) {
         classes.push("w-full")
     }
     return (
-        
+
         <button
-            type = {type}
-            disabled = {disabled}
-            className = {classes.join(" ")}
-            onClick = {handleOnClick}
+            type={type}
+            disabled={disabled}
+            className={classes.join(" ")}
+            onClick={handleOnClick}
+            id={id}
         >
             <div className="flex justify-center">
                 <div>{label}</div>
-                &nbsp;
+                {icon ? "\u00A0" : "" /* nonbreaking space */}
                 <div className="flex items-center">{icon}</div>
             </div>
         </button>

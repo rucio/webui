@@ -12,11 +12,6 @@ interface CardProps {
     hoverable?: boolean
 }
 
-interface DropdownProps {
-    label?: string
-    options?: Array<string>
-    handleChange?: (args: any) => void
-}
 
 interface FormProps {
     title?: string

@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react"
 
-export const Tabs = ({
-    tabs = [],
-    active,
-    alignment,
-    size,
-    rounded,
-    handleClick,
-}: TabsProps) => {
-    const [activestate, setActivestate] = useState(active)
+export const Tabs = (
+    props: {
+        tabs: string[],
+        active: number,
+        handleClick: (event: any) => void,
+        id?: string,
+    }
+) => {
+    const [activestate, setActivestate] = useState<string>(props.active.toString())
     useEffect(() => {
-        setActivestate(active)
-    }, [active])
+        setActivestate(props.active.toString())
+    }, [props.active])
     var onClick = (event: any) => {
         setActivestate(event.target.id)
-        handleClick?.(event)
+        props.handleClick(event)
     }
     return (
-        <ul className="flex flex-wrap flex-row list-none font-bold">
-            {tabs.map((element, index) => {
-                return index == activestate ? (
+        <ul
+            className="flex flex-wrap flex-row list-none font-bold"
+            id={props.id ?? "tabs"}
+        >
+            {props.tabs.map((element, index) => {
+                return index === Number(activestate) ? (
                     <li
                         onClick={onClick}
                         className="flex-auto text-center"
@@ -39,7 +42,6 @@ export const Tabs = ({
                         key={index.toString()}
                     >
                         <a
-                            id={index.toString()}
                             className="block border-b-4 text-gray-600 dark:text-gray-100 border-gray-300 dark:border-gray-100 p-4 hover:bg-gray-100 dark:hover:bg-transparent hover:cursor-pointer"
                         >
                             {element}

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 interface NumberInputProps {
     // kind?: 'primary' | 'info' | 'link' | 'normal'
     disabled?: boolean
@@ -9,9 +10,12 @@ interface NumberInputProps {
     show?: "error" | "success" | "standard"
     max?: number
     min?: number
+    id?: string
+    value: number
 }
 
 export const NumberInput = ({
+    value,
     disabled = false,
     focusByDefault = false,
     inline = false,
@@ -21,7 +25,13 @@ export const NumberInput = ({
     onChange,
     placeholder = "",
     show,
+    id,
 }: NumberInputProps) => {
+    const [numvalue, setNumvalue] = useState<number>(value);
+    useEffect(() => {
+        setNumvalue(value);
+    }, [value]);
+
     var divClasses: string[] = ["w-full"]
     var labelClasses: string[] = ["dark:text-white"]
     var inputClasses: string[] = ["border", "rounded"]
@@ -59,20 +69,22 @@ export const NumberInput = ({
         >
             <label
                 className={labelClasses.join(" ")}
+                htmlFor={id}
             >
                 {label}
             </label>
             <input
                 className={inputClasses.join(" ")}
-                onChange={onChange}
+                onChange={(event: any) => {onChange?.(event); setNumvalue(event.target.value)}}
                 placeholder={placeholder}
                 autoFocus={focusByDefault}
                 disabled={disabled}
                 max={max ? max.toString() : ""} 
                 min={min ? min.toString() : ""}
                 type="number"
-            >
-            </input>
+                value={numvalue}
+                id={id}
+            />
         </div>
     )
 }
