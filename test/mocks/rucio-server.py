@@ -80,7 +80,7 @@ def stream():
         'type': 'test'
     }]
     long_list = [
-        {f'RSE{value}': value} for value in range(10)
+        {f'RSE{value}': value} for value in range(10000)
     ]
     try:
         def generate():
