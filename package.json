@@ -16,6 +16,7 @@
     "build-tailwind": "tailwindcss -i src/component-library/tailwind.css -o src/component-library/outputtailwind.css"
   },
   "dependencies": {
+    "@builder.io/partytown": "^0.7.6",
     "@next/font": "13.1.6",
     "@primer/css": "^20.8.2",
     "@types/node-fetch": "^2.6.2",

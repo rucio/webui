@@ -16,28 +16,22 @@ const streamRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('X-Accel-Buffering', 'no');
     const responseStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
-    let initialPayloadSent: boolean = false
     responseStream?.on('data', async (chunk) => {
-        // console.log('chunk', chunk)
-        if (!initialPayloadSent) {
-            res.write('[')
-            initialPayloadSent = true
-        }
         res.write(chunk.toString() + '\n')
+        await sleep(1000);
     })
     responseStream?.on('end', async () => {
-        res.write(']')
         res.end()
     })
-    for (let i = 0; i < 5; i++) {
-        res.write(`data: Hello seq ${i}\n\n`);
-        await sleep(1000);
-      }
-    res.end('done\n');
+    //     res.write(`data: Hello seq ${i}\n\n`);
+    //     await sleep(1000);
+    //   }
+    // res.end('done\n');
     // res.write(
     //     '{data: Hello}\n{data: World}\n\n'
     // )
     // res.end()
+
 }
 
 export default streamRoute;
