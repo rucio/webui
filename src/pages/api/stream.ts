@@ -6,7 +6,7 @@ import { PassThrough } from "node:stream";
 // TODO https://2ality.com/2022/06/web-streams-nodejs.html#kinds-of-streams
 // TODO https://soshace.com/node-lessons-writable-res-stream/
 
-export const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const streamRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)

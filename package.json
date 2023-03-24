@@ -18,6 +18,7 @@
   "dependencies": {
     "@next/font": "13.1.6",
     "@primer/css": "^20.8.2",
+    "@types/node-fetch": "^2.6.2",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "bulma": "^0.9.4",

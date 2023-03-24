@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
-import ndjsonStream from 'can-ndjson-stream';
-
+import { renderToPipeableStream } from 'react-dom/server';
 const ListElement = () => {
     return (
         <div>
@@ -11,33 +10,30 @@ const ListElement = () => {
 
 const fetchData = async () => {
     // TODO: Need to provide complete url
-    const streamResponse = await fetch('http://localhost:8080/stream', {
+    const streamResponse = await fetch('http://localhost:3000/api/stream', {
         method: 'GET',
     });
-    const stream = ndjsonStream(streamResponse.body).getReader();
-    let result: {
-        done: boolean;
-        value: any;
-    } = {
-        done: false,
-        value: null,
-    };
-    while(!result || !result.done) {
-        result = await stream.read();
-        console.log(result.value);
+    if(!streamResponse.ok || streamResponse.body === null) {
+        throw new Error('Error while fetching data');
     }
+    streamResponse.body.on('data', (chunk: any) => {
+        console.log(chunk.toString());
+    });
+    streamResponse.body.on('end', () => {
+        console.log('end');
+    });
+    return streamResponse;
 };
 export default async function Dashboard(props: any) {
 
-   const data = await fetchData();
-
+    const data = await fetchData();
+    
     return (
-        
-        <ul>
+        <>
             <Suspense fallback={<div>Loading...</div>}>
                 <ListElement />
             </Suspense>
-        </ul>
+        </>
     );
 }
 
