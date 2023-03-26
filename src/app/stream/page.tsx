@@ -5,18 +5,38 @@ import Head from 'next/head';
 import { Partytown } from '@builder.io/partytown/react';
 import ReactDOM from 'react-dom';
 import { debug } from 'util';
+import { wrap, proxy } from 'comlink'
+import Script from 'next/script';
+
 
 export type Props = {
     columns: string[],
     endpointUrl: string
 }
+
 type RowProps = {
     data: RowData
 }
+
 export type RowData = {
     [key: string]: string
 }
 
+export function PartyTownStreamWorker() {
+    return (
+        <Script id="" strategy='worker'>
+            
+        </Script>
+    )
+}
+function callback(data: any) {
+    console.log('data', data)
+}
+
+export async function comLinkTest() {
+    const streamObjects = wrap(new Worker('/stream_worker.js'))  
+    await streamObjects('http://localhost:3000/api/stream', proxy(callback))
+}
 const Row = ({ data }: RowProps) => {
     return (
         <tr>
@@ -26,16 +46,24 @@ const Row = ({ data }: RowProps) => {
         </tr>
     )
 }
+
+
 const StreamingTable = () => {
     const tableBodyRef = useRef<HTMLTableSectionElement | null>(null);
     const [tableBodyRootElement, setTableBodyRootElement] = useState<Root | null>(null);
-    
-    const dataQueue = useMemo(() => {
-        return new Array<RowData>();
-    }, []);
-    
     const [rows, setRows] = useState<RowData[]>([]);
     const [columns, setColumns] = useState<string[]>([]);
+    const worker = useRef()
+    const rowElements = useMemo(() => {
+        return rows.map((row: RowData) => {
+            // eslint-disable-next-line react/jsx-key
+            return <Row key={row.email} data={row} />
+        });
+    }, [rows]);
+
+    useEffect(() => {
+        comLinkTest();
+    }, [])
 
     useEffect(() => {
         if (tableBodyRootElement === null) {
@@ -43,16 +71,16 @@ const StreamingTable = () => {
             return;
         }
         console.log('tableBodyRootElement in other useEffect', tableBodyRootElement)
-        const rowElements = rows.map((row: RowData) => {
-            // eslint-disable-next-line react/jsx-key
-            return <Row data={row} />
-        })
+        // const rowElements = rows.map((row: RowData) => {
+        // eslint-disable-next-line react/jsx-key
+        // return <Row data={row} />
+        // })
         tableBodyRootElement.render(rowElements);
-    }, [tableBodyRootElement, rows]);
+    }, [tableBodyRootElement, rowElements]);
 
 
     useEffect(() => {
-        if(tableBodyRef === null) {
+        if (tableBodyRef === null) {
             console.log('tableBodyRef is null')
             return;
         }
@@ -60,24 +88,26 @@ const StreamingTable = () => {
             console.log('tableBodyRef.current is null')
             return;
         }
-        if  (tableBodyRef.current.id === '' || tableBodyRef.current.id === null) {
+        if (tableBodyRef.current.id === '' || tableBodyRef.current.id === null) {
             console.log('tableBodyRef.current.id is empty')
             return;
         }
         const tableBody = document.getElementById(tableBodyRef.current.id);
-        if(tableBody === null) {
+        if (tableBody === null) {
             console.log('tableBody is null')
             return;
         }
-        const root = createRoot(tableBody);
-        if ( root === null) {
-            console.log('root is null')
-            return;
+        if (tableBodyRootElement === null) {
+            const root = createRoot(tableBody);
+            if (root === null) {
+                console.log('root is null')
+                return;
+            }
+            console.log('root', root)
+            console.log('Setting tableBodyRootElement')
+            setTableBodyRootElement(root);
         }
-        console.log('root', root)
-        console.log('Setting tableBodyRootElement')
-        setTableBodyRootElement(root);
-    }, []);
+    }, [tableBodyRef, tableBodyRootElement]);
 
 
     useEffect(() => {
@@ -97,26 +127,6 @@ const StreamingTable = () => {
         setRows(initialRows);
         setColumns(initialColumns);
     }, []);
-
-    // useEffect(() => {
-    //     // const tableBody = document.getElementById('table-body');
-    //     const tableBody = tableBodyRef.current;
-    //     if (tableBody === null) {
-    //         console.log('tableBody is null')
-    //         return;
-    //     }
-
-    //     console.log('Available rows', rows)
-    
-    //     tableBody.innerHTML = '';
-    //     rows.forEach((row: RowData) => {
-    //         const rowReactElement = <Row data={row} />
-    //         console.log('Inserting rowData', row)
-    //         // add row to table body
-    //         tableBody.appendChild(ReactDOM.render(rowReactElement));
-    //     })
-        
-    // }, [rows, tableBodyRef]);
 
     return (
         <>

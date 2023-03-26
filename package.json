@@ -27,6 +27,7 @@
     "bulma-steps": "^2.2.1",
     "bulma-switch": "^2.0.4",
     "can-ndjson-stream": "^1.0.2",
+    "comlink": "^4.4.1",
     "inversify": "^6.0.1",
     "iron-session": "^6.3.1",
     "ndjson": "^2.0.0",
