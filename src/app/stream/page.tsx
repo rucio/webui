@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, Suspense } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import Head from 'next/head';
 import { Partytown } from '@builder.io/partytown/react';
@@ -19,7 +19,8 @@ type RowProps = {
 }
 
 export type RowData = {
-    [key: string]: string
+    id: number,
+    name: string
 }
 
 export function PartyTownStreamWorker() {
@@ -33,17 +34,17 @@ export function PartyTownStreamWorker() {
 const Row = ({ data }: RowProps) => {
     return (
         <tr>
-            {Object.keys(data).map((key: string) => {
-                return <td key={key}>{data[key]}</td>
-            })}
+            <td>{data.id}</td>
+            <td>{data.name}</td>
         </tr>
     )
 }
 
-async function comLinkTest(callback: (data: any) => void) {
+async function comLinkTestWithCallback(callback: (data: any) => void) {
     const streamObjects = wrap(new Worker('/stream_worker.js'))  
     await streamObjects('http://localhost:3000/api/stream', proxy(callback))
 }
+
 
 const StreamingTable = () => {
     const tableBodyRef = useRef<HTMLTableSectionElement | null>(null);
@@ -54,20 +55,32 @@ const StreamingTable = () => {
     const rowElements = useMemo(() => {
         return rows.map((row: RowData) => {
             // eslint-disable-next-line react/jsx-key
-            return <Row key={row.email} data={row} />
+            return <Row key={row.id} data={row} />
         });
     }, [rows]);
 
     
     function callback(data: any) {
-        console.log('data', data)
-        setRows(rowData => [...rowData, data])
+        console.log('Existing Rows:', rows)
+        console.log('New Rows:', data.length)
+        setRows( (prevRowData) => {
+            // only return new data
+            
+            data.forEach((row: RowData) => {
+                if (prevRowData.find((prevRow: RowData) => prevRow.id === row.id)) {
+                    return;
+                }
+                prevRowData.push(row);
+            })
+
+            return [...prevRowData]
+        })
     }
     
     
 
     useEffect(() => {
-        comLinkTest(callback);
+        comLinkTestWithCallback(callback);
     }, [])
 
     useEffect(() => {
@@ -116,17 +129,15 @@ const StreamingTable = () => {
 
 
     useEffect(() => {
-        const initialColumns = ['id', 'name', 'email']
+        const initialColumns = ['RSE ID', 'RSE Name']
         const initialRows = [
             {
-                'id': '1',
-                'name': 'John Dosse',
-                'email': 'fakeEmail@gmail.com',
+                'id': -1,
+                'name': 'test'
             },
             {
-                'id': '2',
-                'name': 'Jane Doe',
-                'email': 'jane.doe@cern.ch',
+                'id': -2,
+                'name': 'test2'
             }
         ];
         setRows(initialRows);
@@ -135,6 +146,7 @@ const StreamingTable = () => {
 
     return (
         <>
+            Size: {rows.length}
             <div id='table-container'>
                 <table>
                     <thead>
@@ -157,7 +169,9 @@ export default function App(props: Props) {
     return (
         <div>
             <p> Data is streamed from server </p>
+            <Suspense fallback={<div>Loading...</div>}>
             <StreamingTable />
+            </Suspense>
         </div>
     )
 }
