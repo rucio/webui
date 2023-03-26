@@ -40,7 +40,7 @@ const Row = ({ data }: RowProps) => {
     )
 }
 
-async function comLinkTestWithCallback(callback: (data: any) => void) {
+async function comLinkTestWithCallback(callback: (batchID:number, data: any, done: boolean) => void) {
     const streamObjects = wrap(new Worker('/stream_worker.js'))  
     await streamObjects('http://localhost:3000/api/stream', proxy(callback))
 }
@@ -60,9 +60,28 @@ const StreamingTable = () => {
     }, [rows]);
 
     
-    function callback(data: any) {
+    function callback(batchID: number, data: any, done: boolean) {
+        console.log('Batch ID:', batchID)
         console.log('Existing Rows:', rows)
         console.log('New Rows:', data.length)
+        console.log('Done:', done)
+        if (done) {
+            console.log('Done')
+            // do not add suspense
+            return;
+        }
+        else {
+            // add suspense
+            const appendElementList = data.map((row: RowData) => {
+                // eslint-disable-next-line react/jsx-key
+                return <Row key={row.id} data={row} />
+            })
+            rowElements.push(
+                <Suspense fallback={<div>Loading...</div>}>
+                </Suspense>
+            )
+            
+        }
         setRows( (prevRowData) => {
             // only return new data
             

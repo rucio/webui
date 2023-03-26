@@ -68,11 +68,11 @@ async function fetchObjects(url, callback) {
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let data = '';
-    let count = 0;
+    let batchID = 0;
     let batchSize = 100;
     while (true) {
         const { done, value } = await reader.read();
-        count++;
+        batchID++;
         if (done) {
             break;
         }
@@ -81,13 +81,13 @@ async function fetchObjects(url, callback) {
         if (data.length > batchSize) {
             let objects = await convertNDJsonToObjects(data);
             console.log('batch', objects);
-            callback(objects);
+            callback(batchID, objects, false);
             data = '';
         }
     }
     // send final batch
     // console.log('final batch', data);
-    callback(await convertNDJsonToObjects(data));
+    callback(batchID++, await convertNDJsonToObjects(data), false);
     // setTimeout(() => {
     //     callback({
     //         id: 3,
