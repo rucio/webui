@@ -29,14 +29,7 @@ export function PartyTownStreamWorker() {
         </Script>
     )
 }
-function callback(data: any) {
-    console.log('data', data)
-}
 
-export async function comLinkTest() {
-    const streamObjects = wrap(new Worker('/stream_worker.js'))  
-    await streamObjects('http://localhost:3000/api/stream', proxy(callback))
-}
 const Row = ({ data }: RowProps) => {
     return (
         <tr>
@@ -47,6 +40,10 @@ const Row = ({ data }: RowProps) => {
     )
 }
 
+async function comLinkTest(callback: (data: any) => void) {
+    const streamObjects = wrap(new Worker('/stream_worker.js'))  
+    await streamObjects('http://localhost:3000/api/stream', proxy(callback))
+}
 
 const StreamingTable = () => {
     const tableBodyRef = useRef<HTMLTableSectionElement | null>(null);
@@ -61,8 +58,16 @@ const StreamingTable = () => {
         });
     }, [rows]);
 
+    
+    function callback(data: any) {
+        console.log('data', data)
+        setRows(rowData => [...rowData, data])
+    }
+    
+    
+
     useEffect(() => {
-        comLinkTest();
+        comLinkTest(callback);
     }, [])
 
     useEffect(() => {
