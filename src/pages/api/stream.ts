@@ -15,6 +15,8 @@ const streamRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('X-Accel-Buffering', 'no');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Content-Encoding', 'none');
     const responseStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
     responseStream?.on('data', async (chunk) => {
         res.write(chunk.toString() + '\n')
