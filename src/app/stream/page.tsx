@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { Partytown } from '@builder.io/partytown/react';
 import ReactDOM from 'react-dom';
 import { debug } from 'util';
-import { wrap, proxy } from 'comlink'
+import { wrap, proxy, ProxyMarked } from 'comlink'
 import Script from 'next/script';
 
 
@@ -41,7 +41,7 @@ const Row = ({ data }: RowProps) => {
 }
 
 async function comLinkTestWithCallback(callback: (batchID:number, data: any, done: boolean) => void) {
-    const streamObjects = wrap(new Worker('/stream_worker.js'))  
+    const streamObjects = wrap<(url: string, callback: ProxyMarked) => []>(new Worker('/stream_worker.js'))  
     await streamObjects('http://localhost:3000/api/stream', proxy(callback))
 }
 

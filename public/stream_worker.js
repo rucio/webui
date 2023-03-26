@@ -6,32 +6,32 @@
 
 importScripts("https://unpkg.com/comlink/dist/umd/comlink.js");
 
-class StreamWorker {
-  constructor() {
-    this.url = null;
-    this.stream = null;
-    this.reader = null;
-  }
+// class StreamWorker {
+//   constructor() {
+//     this.url = null;
+//     this.stream = null;
+//     this.reader = null;
+//   }
 
-  async start(url) {
-    this.url = url;
-    this.stream = await fetch(this.url);
-    this.reader = this.stream.body.getReader();
-    this.read();
-  }
+//   async start(url) {
+//     this.url = url;
+//     this.stream = await fetch(this.url);
+//     this.reader = this.stream.body.getReader();
+//     this.read();
+//   }
 
-  async read() {
-    const { done, value } = await this.reader.read();
-    if (done) {
-      if (Comlink.transferHandlers.get('messageport')!== null){
-         Comlink.transferHandlers.get('messageport').release(this)
-        };
-      return; 
-    }
-    Comlink.transfer(value.buffer, [value.buffer]);
-    this.read();
-  }
-}
+//   async read() {
+//     const { done, value } = await this.reader.read();
+//     if (done) {
+//       if (Comlink.transferHandlers.get('messageport')!== null){
+//          Comlink.transferHandlers.get('messageport').release(this)
+//         };
+//       return; 
+//     }
+//     Comlink.transfer(value.buffer, [value.buffer]);
+//     this.read();
+//   }
+// }
 
 async function streamObjects(url, callback) {
     // console.log('streaming objects');
