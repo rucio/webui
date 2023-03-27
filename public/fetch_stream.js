@@ -24,7 +24,9 @@ class Fetch {
         this.mutationWaitInterval = 50;
         this.queryIsReadyToFetch = queryIsReadyToFetch;
     }
-    
+    getBatches() {
+        return this.batches;
+    }
     pushObjectsToBuffer(data, buffer) {
         if (this.textBuffer !== '') {
             data = this.textBuffer + data;

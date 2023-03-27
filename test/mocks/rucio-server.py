@@ -92,7 +92,7 @@ def stream():
             'longitude': fake.longitude().to_eng_string(),
             'rse_type': random.choice(['DISK', 'TAPE', 'DISK+TAPE']),
             'volatile': random.choice([True, False]),
-        } for value in range(100000)
+        } for value in range(1000)
     ]
     try:
         def generate():
