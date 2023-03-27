@@ -1,7 +1,7 @@
 'use client'
 import {useQuery, useMutation, UseMutationResult, useQueryClient} from '@tanstack/react-query'
 import { wrap, proxy, ProxyMarked } from 'comlink'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 type RSE = {
     id: number,
@@ -15,7 +15,7 @@ const RSES: RSE[] = [
 
 
 interface Fetch {
-    new(url: string, queryMutator: UseMutationResult<RSE[]>): Fetch
+    new(url: string, queryMutator: UseMutationResult, status: UseMutationResult): Fetch
     fetch: () => Promise<any>
 
 }
@@ -36,6 +36,13 @@ async function extendRSERows(rses: RSE[]) {
 }
 
 export default function RSEList() {
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        setIsLoading(false)
+    }, [])
+
+
     const queryClient = useQueryClient()
     const rseQuery = useQuery({
         queryKey: ['rse'], 
@@ -45,11 +52,14 @@ export default function RSEList() {
 
     const rseMutation = useMutation({
         mutationFn: extendRSERows,
-        onSuccess: (rse) => {
+        onSuccess: () => {
             queryClient.invalidateQueries(['rse'])
         }
     })
 
+    const qyeryIsReadyToFetch = () => {
+        return rseQuery.fetchStatus === 'idle'
+    }
     const usingAsyncFunction = async () => {
         const worker = new Worker('/fetch_stream.js')
 
@@ -62,7 +72,11 @@ export default function RSEList() {
     const usingFetchClass = async () => {
         const worker = new Worker('/fetch_stream.js')
         const Fetch = wrap<Fetch>(worker)
-        const fetcher = await new Fetch('http://localhost:3000/api/stream', proxy(rseMutation))
+        const fetcher = await new Fetch(
+            'http://localhost:3000/api/stream', 
+            proxy(rseMutation), 
+            proxy(qyeryIsReadyToFetch)
+        )
         await fetcher.fetch()
     }
     const onRequestData = async () => {
@@ -72,26 +86,34 @@ export default function RSEList() {
 
 
     
-    if (rseQuery.isLoading) {
-        return <div>Loading...</div>
-    }
+    // if (rseQuery.isLoading) {
+    //     return <div>Loading...</div>
+    // }
 
-    if(rseQuery.isError) {
-        return <div>{JSON.stringify(rseQuery.error)}</div>
-    }
+    // if(rseQuery.isError) {
+    //     return <div>{JSON.stringify(rseQuery.error)}</div>
+    // }
     return (
         <div>
+            {isLoading? <div>Component is Loading...</div>: <div>Component has been Loaded</div>}
+            {rseMutation.isLoading? <div>RSE Mutation is Loading...</div>:
+                <button onClick={() => rseMutation.mutate([{id: -3, name: 'RSE -3'}])}>Add RSE</button>
+            }
+            <div>RSE Query: {rseQuery.fetchStatus}</div>
+            <br></br>
+            <div>RSE Mutation: {rseMutation.status}</div>
+            <br></br>
+            <div>Component: {isLoading? 'true': 'false'}</div>
+            <br></br>
+            <button onClick={onRequestData}>fetch</button>
+            <br></br>
             {
-                rseQuery.data.map((rse: any) => {
+                rseQuery.data && rseQuery.data.map((rse: any) => {
                     return <div key={rse.id}>{rse.name}
                     </div>
                 })
             }
-            {rseMutation.isLoading? <div>Loading...</div>:
-                <button onClick={() => rseMutation.mutate([{id: -3, name: 'RSE -3'}])}>Add RSE</button>
-            }
-            <br></br>
-            <button onClick={onRequestData}>fetch</button>
+            
         </div>
     )
 }
