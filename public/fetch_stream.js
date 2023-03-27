@@ -57,11 +57,13 @@ class Fetch {
         });
         this.mutation.mutate(objectsToDrain);
         let isReady = await this.queryIsReadyToFetch();
-        while(!isReady) {
+        let currentBackPressureRatio = this.buffer.length / this.highWaterMark;
+        while(!isReady && currentBackPressureRatio > this.idealBackPressureRatio) {
             console.log(`Waiting!! Query is processing batch: ${batchID}`)
             await new Promise(r => setTimeout(r, this.mutationWaitInterval));
             console.log('queryStatus', isReady)
             isReady = await this.queryIsReadyToFetch();
+            currentBackPressureRatio = this.buffer.length / this.highWaterMark;
         }
         this.status = postDrainStatus;
         console.log('Draining complete! Query Status', await this.queryIsReadyToFetch())
