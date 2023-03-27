@@ -9,13 +9,13 @@ type RSE = {
 }
 
 const RSES: RSE[] = [
-    { id: 1, name: 'RSE 1' },
-    { id: 2, name: 'RSE 2' },
+    { id: -1, name: 'RSE -1' },
+    { id: -2, name: 'RSE -2' },
 ]
 
 
 interface Fetch {
-    constructor: (url: string, queryMutator: UseMutationResult) => void
+    new(url: string, queryMutator: UseMutationResult<RSE[]>): Fetch
     fetch: () => Promise<any>
 
 }
@@ -29,6 +29,11 @@ function wait(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+async function extendRSERows(rses: RSE[]) {
+    rses.forEach((rse: RSE) => {
+        RSES.push(rse)
+    })
+}
 
 export default function RSEList() {
     const queryClient = useQueryClient()
@@ -39,24 +44,30 @@ export default function RSEList() {
     
 
     const rseMutation = useMutation({
-        mutationFn: (rse: any) => wait(1000).then(() => RSES.push(rse)),
+        mutationFn: extendRSERows,
         onSuccess: (rse) => {
             queryClient.invalidateQueries(['rse'])
         }
     })
 
     const usingAsyncFunction = async () => {
-        const worker = new Worker(new URL('../../../public/fetch_stream.js', import.meta.url))
+        const worker = new Worker('/fetch_stream.js')
 
         const WrappedWorker = wrap<FetchWorker>(worker)
 
         const rses = await WrappedWorker.eventStream('http://localhost:3000/api/stream')
-        rses.forEach((rse: RSE) => {
-            rseMutation.mutate(rse)
-        })
+        rseMutation.mutate(rses)
+    }
+
+    const usingFetchClass = async () => {
+        const worker = new Worker('/fetch_stream.js')
+        const Fetch = wrap<Fetch>(worker)
+        const fetcher = await new Fetch('http://localhost:3000/api/stream', proxy(rseMutation))
+        await fetcher.fetch()
     }
     const onRequestData = async () => {
-        usingAsyncFunction()
+        // usingAsyncFunction()
+        usingFetchClass()
     }
 
 
@@ -77,7 +88,7 @@ export default function RSEList() {
                 })
             }
             {rseMutation.isLoading? <div>Loading...</div>:
-                <button onClick={() => rseMutation.mutate({id: 3, name: 'RSE 3'})}>Add RSE</button>
+                <button onClick={() => rseMutation.mutate([{id: -3, name: 'RSE -3'}])}>Add RSE</button>
             }
             <br></br>
             <button onClick={onRequestData}>fetch</button>

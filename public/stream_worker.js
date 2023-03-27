@@ -47,7 +47,7 @@ async function streamObjects(url, callback) {
         });
     }, 5000);
 }
-async function convertNDJsonToObjects(data) {
+async function pushObjectsToBuffer(data) {
     const result = [];
     const objects = data.split('\n').map((line) => {
         // try to parse as json, if not, return nothing
@@ -79,7 +79,7 @@ async function fetchObjects(url, callback) {
         // console.log('chunk', count, decoder.decode(value));
         data += decoder.decode(value);
         if (data.length > batchSize) {
-            let objects = await convertNDJsonToObjects(data);
+            let objects = await pushObjectsToBuffer(data);
             console.log('batch', objects);
             callback(batchID, objects, false);
             data = '';
@@ -87,7 +87,7 @@ async function fetchObjects(url, callback) {
     }
     // send final batch
     // console.log('final batch', data);
-    callback(batchID++, await convertNDJsonToObjects(data), false);
+    callback(batchID++, await pushObjectsToBuffer(data), false);
     // setTimeout(() => {
     //     callback({
     //         id: 3,
