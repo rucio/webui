@@ -1,4 +1,6 @@
 import datetime
+import random
+from faker import Faker
 from enum import Enum
 import time
 from flask import Flask
@@ -7,7 +9,7 @@ import itertools
 import json
 
 app = Flask(__name__)
-
+fake = Faker()
 # RFC 1123 (ex RFC 822)
 DATE_FORMAT = '%a, %d %b %Y %H:%M:%S UTC'
 
@@ -82,7 +84,14 @@ def stream():
     long_list = [
         {
             'id': value,
-            'name': f'RSE{value}'
+            'name': f'RSE{value}',
+            'city': fake.city(),
+            'country': fake.country(),
+            'continent': fake.country_code(),
+            'latitude': fake.latitude().to_eng_string(),
+            'longitude': fake.longitude().to_eng_string(),
+            'rse_type': random.choice(['DISK', 'TAPE', 'DISK+TAPE']),
+            'volatile': random.choice([True, False]),
         } for value in range(100000)
     ]
     try:
