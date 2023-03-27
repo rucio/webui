@@ -10,7 +10,7 @@ const Status = {
 
 
 class Fetch {
-    constructor(url, mutation) {
+    constructor(url, mutation, queryIsReadyToFetch) {
         this.url = url;
         this.mutation = mutation;
         this.status = Status.NOT_STARTED;
@@ -21,7 +21,8 @@ class Fetch {
         this.highWaterMark = 100;
         this.idealBackPressureRatio = 0.5;
         this.idealBufferLength = this.highWaterMark * this.idealBackPressureRatio;
-        this.mutationWaitInterval = 5000;
+        this.mutationWaitInterval = 50;
+        this.queryIsReadyToFetch = queryIsReadyToFetch;
     }
     
     pushObjectsToBuffer(data, buffer) {
@@ -41,7 +42,7 @@ class Fetch {
         });
     }
 
-    drain(emptyBuffer = false, postDrainStatus = Status.FETCHING) {
+    async drain(emptyBuffer = false, postDrainStatus = Status.FETCHING) {
         this.status = Status.DRAINING;
         let deleteCount = this.buffer.length - this.idealBufferLength;
         if (emptyBuffer) {
@@ -55,13 +56,15 @@ class Fetch {
             data: objectsToDrain,
         });
         this.mutation.mutate(objectsToDrain);
-        // while(this.mutation.isLoading) {
-            console.log(this.mutation.status === 'loading')
-            console.log(`Batch size: ${deleteCount} Status: ${this.status}`)
-            setTimeout(() => {}, this.mutationWaitInterval);
-        // }
-        console.log('Draining complete. Buffer size: ', this.buffer.length, 'Status: ', postDrainStatus, '')
+        let isReady = await this.queryIsReadyToFetch();
+        while(!isReady) {
+            console.log(`Waiting!! Query is processing batch: ${batchID}`)
+            await new Promise(r => setTimeout(r, this.mutationWaitInterval));
+            console.log('queryStatus', isReady)
+            isReady = await this.queryIsReadyToFetch();
+        }
         this.status = postDrainStatus;
+        console.log('Draining complete! Query Status', await this.queryIsReadyToFetch())
     }
     
     async fetch() {
@@ -75,49 +78,20 @@ class Fetch {
             const { done, value } = await reader.read();
             if (done) {
                 console.log('done reading stream! Final buffer size: ', this.buffer.length)
-                this.drain(1, Status.DONE);
+                await this.drain(1, Status.DONE);
                 break;
             }
             const text = decoder.decode(value);
             this.pushObjectsToBuffer(text, this.buffer);
             const currentBackPressureRatio = this.buffer.length / this.highWaterMark;
             if (currentBackPressureRatio > this.idealBackPressureRatio) {
-                this.drain();                
+                await this.drain();                
             }
         }
 
     }
 }
-async function eventStream(url) {
-    this.url = url;
-    const res = await fetch(url)
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
 
-    // while (true) {
-    //     const { done, value } = await reader.read();
-    //     if (done) {
-    //         // console.log('done reading stream');
-    //         return;
-    //     }
-    //     const text = decoder.decode(value);
-    //     // console.log('text', text);
-    //     const objects = await convertNDJsonToObjects(text);
-    //     // console.log('objects', objects);
-    //     this.data = objects;
-    // }
-    return [
-        {
-            id: 4,
-            name: 'test',
-        },
-        {
-            id: 5,
-            name: 'test2',
-        },
-    ]   
-}
-// Comlink.expose({eventStream, Fetch})
 Comlink.expose(Fetch)
 
 
