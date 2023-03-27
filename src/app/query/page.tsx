@@ -3,6 +3,7 @@ import { useQuery, useMutation, UseMutationResult, useQueryClient } from '@tanst
 import { wrap, proxy, ProxyMarked } from 'comlink'
 import { useEffect, useState } from 'react'
 
+
 type RSE = {
     id: number,
     name: string,
@@ -18,15 +19,16 @@ type RSE = {
 const RSES: RSE[] = []
 
 
-interface Fetch {
-    new(url: string, queryMutator: UseMutationResult, status: UseMutationResult): Fetch
+export interface IFetch {
+    new(url: string, queryMutator: UseMutationResult<void, unknown, RSE[], unknown>, status: () => boolean): IFetch
     fetch: () => Promise<any>
+    getBatches: () => Promise<any[]>
 
 }
 
 type FetchWorker = {
     eventStream: (url: string) => Promise<RSE[]>
-    Fetch: Fetch
+    Fetch: IFetch
 }
 
 function wait(ms: number) {
@@ -56,9 +58,9 @@ export default function RSEList() {
 
     const rseMutation = useMutation({
         mutationFn: extendRSERows,
-        onSuccess: () => {
-            queryClient.invalidateQueries(['rse'])
-        }
+        // onSuccess: () => {
+        //     queryClient.invalidateQueries(['rse'])
+        // }
     })
 
     const qyeryIsReadyToFetch = () => {
@@ -75,13 +77,14 @@ export default function RSEList() {
 
     const usingFetchClass = async () => {
         const worker = new Worker('/fetch_stream.js')
-        const Fetch = wrap<Fetch>(worker)
+        const Fetch = wrap<IFetch>(worker)
         const fetcher = await new Fetch(
             'http://localhost:3000/api/stream',
             proxy(rseMutation),
             proxy(qyeryIsReadyToFetch)
         )
         await fetcher.fetch()
+        console.log(await fetcher.getBatches())
     }
     const onRequestData = async () => {
         // usingAsyncFunction()
