@@ -1,37 +1,16 @@
 'use client'
 
 import { RSE } from "@/lib/core/entity/rucio"
-import { proxy, wrap } from "comlink"
-import { useReducer, useState } from "react"
+import { proxy, Remote, wrap } from "comlink"
+import { useMemo, useReducer, useRef, useState } from "react"
 import type { IFetch } from "@/app/query/page"
+import { wait } from "@/app/query/page"
 import { createColumnHelper, useReactTable, getCoreRowModel, TableOptions, flexRender } from "@tanstack/react-table"
 import '@/component-library/outputtailwind.css'
+import { Query, QueryKey, useQuery, useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
-const defaultData: RSE[] = [
-    {
-        id: '-1',
-        name: 'T1-UK-London',
-        city: 'London',
-        country: 'Wakanda',
-        continent: 'Africa',
-        latitude: 1,
-        longitude: 1,
-        rse_type: 'DISK',
-        volatile: true,
-    },
-    {
-        id: '-2',
-        name: 'T1-UK-London',
-        city: 'London',
-        country: 'Wakanda',
-        continent: 'Africa',
-        latitude: 1,
-        longitude: 1,
-        rse_type: 'DISK',
-        volatile: true,
-    },
-    
-]
+const defaultData: RSE[] = []
 
 const columnHelper = createColumnHelper<RSE>()
 
@@ -72,17 +51,73 @@ export default function RSETable() {
     const [rses, setRSEs] = useState<RSE[]>(defaultData)
     const rerender = useReducer(() => ({}), {})[1]
 
+    
+    const Fetcher = useRef<Remote<IFetch<RSE>> | null>(null)
+    const worker = useMemo<Worker>( () => { return new Worker('background-fetch.js')} , [])
+    
+    const startNewWorker = async () => {
+        const fetchProxyWrapper = wrap<IFetch<RSE>>(worker)
+        const fetcher = await new fetchProxyWrapper('http://localhost:3000/api/stream', null, null)
+        Fetcher.current = fetcher
+        // sleep for 2 seconds using setTImeout
+        // await new Promise(resolve => setTimeout(resolve, 2000))
+
+        // console.log('Status', await Fetcher.current.getStatus())
+        // console.log('isDataAvailable', await Fetcher.current.isBatchAvailable())
+        // const batch = await Fetcher.current.getNextBatch()
+        // console.log('Batch', batch)
+        // console.log('isDataAvailable', await Fetcher.current.isBatchAvailable())
+        
+    }
+
+    const fetchRSEBatch = async () => {
+        if (Fetcher.current === null) {
+            const fetchProxyWrapper = wrap<IFetch<RSE>>(worker)
+            const fetcher = await new fetchProxyWrapper('http://localhost:3000/api/stream', null, null)
+            Fetcher.current = fetcher
+        }
+        let isWorkerFinished = await Fetcher.current.getStatus()
+        let isBatchAvailable = await Fetcher.current.isBatchAvailable()
+        while (!isWorkerFinished) {
+            
+        }
+        const isNewBatchAvailable = await Fetcher.current.isBatchAvailable()
+        if (!isNewBatchAvailable) {
+            return []
+        }
+        const batch = await Fetcher.current.getNextBatch()
+        console.log('Batch', batch.id, batch.data)
+        return batch.data
+    }
+
+    const queryClient = useQueryClient()
+
+    const rseQuery = useInfiniteQuery({
+        queryKey: ['rse'],
+        queryFn: fetchRSEBatch,
+        keepPreviousData: true,
+        refetchInterval: (data, query) => {
+            console.log('DATA', data)
+            console.log('QUERY', query)
+            return Infinity
+        }
+
+    })
+
     const table = useReactTable<RSE>({
-        data: rses,
+        data: rseQuery.data || [],
         columns: columns,
-        getCoreRowModel: getCoreRowModel()
+        getCoreRowModel: getCoreRowModel(),
+        debugTable: true,
     } as TableOptions<RSE>)
 
+    
     return (
         <div>
             <h1 className="text-3xl font-bold underline">
                 List RSEs
             </h1>
+            <ReactQueryDevtools />
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     {table.getHeaderGroups().map(headerGroup => (
@@ -114,6 +149,9 @@ export default function RSETable() {
             </table>
             <button onClick={() => rerender()} className="border p-2">
                 Rerender
+            </button>
+            <button onClick={() => startNewWorker()} className="border p-2">
+                Fetch
             </button>
         </div>
     )
