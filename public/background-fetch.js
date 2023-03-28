@@ -92,14 +92,14 @@ class Fetch {
         const batch = this.batches.shift();
         return batch;
     }
-    
+
     isBatchAvailable() {
         return this.batches.length > 0
     }
 
 
     getStatus() {
-        if (this.status === Status.DONE && this.batches.length === 0) {
+        if (this.status === Status.DONE) {
             return true;
         }
         return false;

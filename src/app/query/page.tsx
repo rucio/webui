@@ -18,20 +18,24 @@ type RSE = {
 
 const RSES: RSE[] = []
 
-
-export interface IFetch {
-    new(url: string, queryMutator: UseMutationResult<void, unknown, RSE[], unknown>, status: () => boolean): IFetch
+export type BatchResponse<T> = {
+    id: number,
+    data: T[]
+}
+export interface IFetch<T> {
+    new(url: string, queryMutator: UseMutationResult<void, unknown, T[], unknown> | null, status: (() => boolean) | null): IFetch<T>
     fetch: () => Promise<any>
-    getBatches: () => Promise<any[]>
-
+    getNextBatch: () => Promise<BatchResponse<T>>
+    getStatus: () => Promise<boolean>
+    isBatchAvailable: () => Promise<boolean>
 }
 
 type FetchWorker = {
     eventStream: (url: string) => Promise<RSE[]>
-    Fetch: IFetch
+    Fetch: IFetch<RSE>
 }
 
-function wait(ms: number) {
+export function wait(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -77,7 +81,7 @@ export default function RSEList() {
 
     const usingFetchClass = async () => {
         const worker = new Worker('/fetch_stream.js')
-        const Fetch = wrap<IFetch>(worker)
+        const Fetch = wrap<IFetch<RSE>>(worker)
         const fetcher = await new Fetch(
             'http://localhost:3000/api/stream',
             proxy(rseMutation),
