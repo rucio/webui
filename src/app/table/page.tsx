@@ -48,10 +48,11 @@ const columns: any[] = [
 ]
 
 export default function RSETable() {
-    const [rses, setRSEs] = useState<RSE[]>(defaultData)
+    // const [rses, setRSEs] = useState<RSE[]>(defaultData)
     const rerender = useReducer(() => ({}), {})[1]
 
-    
+    const data = useRef<RSE[]>(defaultData)
+    const [pollInterval, setPollInterval] = useState(1000)
     const Fetcher = useRef<Remote<IFetch<RSE>> | null>(null)
     const worker = useMemo<Worker>( () => { return new Worker('background-fetch.js')} , [])
     
@@ -59,15 +60,6 @@ export default function RSETable() {
         const fetchProxyWrapper = wrap<IFetch<RSE>>(worker)
         const fetcher = await new fetchProxyWrapper('http://localhost:3000/api/stream', null, null)
         Fetcher.current = fetcher
-        // sleep for 2 seconds using setTImeout
-        // await new Promise(resolve => setTimeout(resolve, 2000))
-
-        // console.log('Status', await Fetcher.current.getStatus())
-        // console.log('isDataAvailable', await Fetcher.current.isBatchAvailable())
-        // const batch = await Fetcher.current.getNextBatch()
-        // console.log('Batch', batch)
-        // console.log('isDataAvailable', await Fetcher.current.isBatchAvailable())
-        
     }
 
     const fetchRSEBatch = async () => {
@@ -77,31 +69,29 @@ export default function RSETable() {
             Fetcher.current = fetcher
         }
         let isWorkerFinished = await Fetcher.current.getStatus()
-        let isBatchAvailable = await Fetcher.current.isBatchAvailable()
-        while (!isWorkerFinished) {
-            
-        }
         const isNewBatchAvailable = await Fetcher.current.isBatchAvailable()
+        
+        if (isWorkerFinished && !isNewBatchAvailable) {
+            setPollInterval(Infinity)
+            return data.current
+        }
+        
         if (!isNewBatchAvailable) {
-            return []
+            return data.current
         }
         const batch = await Fetcher.current.getNextBatch()
         console.log('Batch', batch.id, batch.data)
-        return batch.data
+        data.current.push(...batch.data)
+        return data.current
     }
 
     const queryClient = useQueryClient()
 
-    const rseQuery = useInfiniteQuery({
+    const rseQuery = useQuery({
         queryKey: ['rse'],
         queryFn: fetchRSEBatch,
         keepPreviousData: true,
-        refetchInterval: (data, query) => {
-            console.log('DATA', data)
-            console.log('QUERY', query)
-            return Infinity
-        }
-
+        refetchInterval: pollInterval,
     })
 
     const table = useReactTable<RSE>({
