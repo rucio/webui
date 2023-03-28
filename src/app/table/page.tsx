@@ -9,7 +9,7 @@ import '@/component-library/outputtailwind.css'
 import { Query, QueryKey, useQuery, useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
-const defaultData: RSE[] = []
+
 
 const columnHelper = createColumnHelper<RSE>()
 
@@ -48,6 +48,7 @@ const columns: any[] = [
 
 export default function RSETable() {
     // const [rses, setRSEs] = useState<RSE[]>(defaultData)
+    const defaultData: RSE[] = []
     const rerender = useReducer(() => ({}), {})[1]
     const fetchingInterval = useRef<number>(200)
     const sleepInterval = useRef<number>(10000)
@@ -61,8 +62,8 @@ export default function RSETable() {
         const fetchProxyWrapper = wrap<IFetch<RSE>>(worker.current)
         const fetcher = await new fetchProxyWrapper('http://localhost:3000/api/stream', null, null)
         Fetcher.current = fetcher
-        data.current = defaultData
-        queryClient.setQueryData(['rse'], defaultData)
+        data.current = []
+        queryClient.setQueryData(['rse'], [])
         setPollInterval(fetchingInterval.current)
     }
 
@@ -113,6 +114,12 @@ export default function RSETable() {
             <h1 className="text-3xl font-bold underline">
                 List RSEs
             </h1>
+            <button onClick={() => rerender()} className="border p-2">
+                Rerender
+            </button>
+            <button onClick={() => launchWorker()} className="border p-2">
+                Fetch
+            </button>
             <ReactQueryDevtools />
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -143,12 +150,7 @@ export default function RSETable() {
                     ))}
                 </tbody>
             </table>
-            <button onClick={() => rerender()} className="border p-2">
-                Rerender
-            </button>
-            <button onClick={() => launchWorker()} className="border p-2">
-                Fetch
-            </button>
+            
         </div>
     )
 }
