@@ -20,7 +20,8 @@ const RSES: RSE[] = []
 
 export type BatchResponse<T> = {
     id: number,
-    data: T[]
+    data: T[],
+    next: boolean,
 }
 export interface IFetch<T> {
     new(url: string, queryMutator: UseMutationResult<void, unknown, T[], unknown> | null, status: (() => boolean) | null): IFetch<T>
@@ -28,6 +29,7 @@ export interface IFetch<T> {
     getNextBatch: () => Promise<BatchResponse<T>>
     getStatus: () => Promise<boolean>
     isBatchAvailable: () => Promise<boolean>
+    getBatches: () => Promise<any>
 }
 
 type FetchWorker = {
