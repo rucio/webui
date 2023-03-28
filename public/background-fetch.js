@@ -49,7 +49,7 @@ class Fetch {
     }
     
 
-    async prepareBatch() {
+    async prepareBatch(final = false) {
         this.status = Status.PREPARING_BATCH;
         const batchID = this.lastBatchID++;
         const batchSize = this.buffer.length;
@@ -60,6 +60,7 @@ class Fetch {
         this.batches.push({
             id: batchID,
             data: this.buffer.splice(0, this.buffer.length),
+            next: !final
         });
     }
     
@@ -74,7 +75,7 @@ class Fetch {
             const { done, value } = await reader.read();
             if (done) {
                 console.log('done reading stream! Final buffer size: ', this.buffer.length)
-                await this.prepareBatch(true, Status.DONE);
+                await this.prepareBatch(true);
                 this.status = Status.DONE;
                 break;
             }
@@ -105,7 +106,7 @@ class Fetch {
         return false;
     }
 
-    async terminate() {
+    terminate() {
         this.status = Status.TERMINATION_REQUESTED;
     }
 
