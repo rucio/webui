@@ -1,10 +1,9 @@
 'use client'
 
 import { RSE } from "@/lib/core/entity/rucio"
-import { proxy, Remote, wrap } from "comlink"
-import { useMemo, useReducer, useRef, useState } from "react"
+import { Remote, wrap } from "comlink"
+import { useReducer, useRef, useState } from "react"
 import type { IFetch } from "@/app/query/page"
-import { wait } from "@/app/query/page"
 import { createColumnHelper, useReactTable, getCoreRowModel, TableOptions, flexRender } from "@tanstack/react-table"
 import '@/component-library/outputtailwind.css'
 import { Query, QueryKey, useQuery, useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
@@ -50,35 +49,44 @@ const columns: any[] = [
 export default function RSETable() {
     // const [rses, setRSEs] = useState<RSE[]>(defaultData)
     const rerender = useReducer(() => ({}), {})[1]
-
+    const fetchingInterval = useRef<number>(200)
+    const sleepInterval = useRef<number>(10000)
     const data = useRef<RSE[]>(defaultData)
-    const [pollInterval, setPollInterval] = useState(1000)
+    const [pollInterval, setPollInterval] = useState(sleepInterval.current)
     const Fetcher = useRef<Remote<IFetch<RSE>> | null>(null)
-    const worker = useMemo<Worker>( () => { return new Worker('background-fetch.js')} , [])
+    const worker = useRef<Worker | null>(null)
     
-    const startNewWorker = async () => {
-        const fetchProxyWrapper = wrap<IFetch<RSE>>(worker)
+    const launchWorker = async () => {
+        worker.current = await new Worker('/background-fetch.js') 
+        const fetchProxyWrapper = wrap<IFetch<RSE>>(worker.current)
         const fetcher = await new fetchProxyWrapper('http://localhost:3000/api/stream', null, null)
         Fetcher.current = fetcher
+        data.current = defaultData
+        queryClient.setQueryData(['rse'], defaultData)
+        setPollInterval(fetchingInterval.current)
     }
 
-    const fetchRSEBatch = async () => {
+    const pollForNextBatch = async () => {
         if (Fetcher.current === null) {
-            const fetchProxyWrapper = wrap<IFetch<RSE>>(worker)
-            const fetcher = await new fetchProxyWrapper('http://localhost:3000/api/stream', null, null)
-            Fetcher.current = fetcher
+            return data.current
         }
+
         let isWorkerFinished = await Fetcher.current.getStatus()
         const isNewBatchAvailable = await Fetcher.current.isBatchAvailable()
         
         if (isWorkerFinished && !isNewBatchAvailable) {
-            setPollInterval(Infinity)
+            setPollInterval(sleepInterval.current)
+            Fetcher.current = null
+            if (worker.current !== null) {
+                worker.current.terminate()
+            }
             return data.current
         }
         
         if (!isNewBatchAvailable) {
             return data.current
         }
+
         const batch = await Fetcher.current.getNextBatch()
         console.log('Batch', batch.id, batch.data)
         data.current.push(...batch.data)
@@ -86,11 +94,9 @@ export default function RSETable() {
     }
 
     const queryClient = useQueryClient()
-
     const rseQuery = useQuery({
         queryKey: ['rse'],
-        queryFn: fetchRSEBatch,
-        keepPreviousData: true,
+        queryFn: pollForNextBatch,
         refetchInterval: pollInterval,
     })
 
@@ -140,22 +146,9 @@ export default function RSETable() {
             <button onClick={() => rerender()} className="border p-2">
                 Rerender
             </button>
-            <button onClick={() => startNewWorker()} className="border p-2">
+            <button onClick={() => launchWorker()} className="border p-2">
                 Fetch
             </button>
         </div>
     )
-
-
-
-    // const fetchRSEs = async () => {
-    //     const worker = new Worker('/fetch_stream.js')
-    //     const Fetch = wrap<IFetch>(worker)
-    //     const fetcher = await new Fetch(
-    //         'http://localhost:3000/api/stream',
-    //         proxy(setRSEs),
-    //         () => false
-    //     )
-
-    // }
 }
