@@ -16,11 +16,11 @@ export enum ComDOMStatus {
 /**
  * @description Represents the batch of data returned by the ComDOM web worker
  */
-export type BatchResponse<T> = {
+export type BatchResponse<TData> = {
     /** @description The batch id */
     id: number
     /** @description The batch of data */
-    data: T[]
+    data: TData[]
     /** @description True if there is another batch available, false otherwise */
     next: boolean
 }
@@ -157,7 +157,10 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
         const comdomStatus = await this.getComDOMStatus()
 
         if(isNewBatchAvailable) {
-            return this.comDOM?.getNextBatch()
+            if (this.comDOM === undefined) {
+                return Promise.reject('ComDOM is undefined')
+            }
+            return this.comDOM.getNextBatch()
         }
         if (comdomStatus == ComDOMStatus.DONE) {
             this.destroy()
