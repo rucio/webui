@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import ComDOMWrapper, {
     BatchResponse,
     ComDOMStatus,
@@ -34,22 +34,22 @@ export default function useComDOM<TData>(
     const comDOM: IComDOMWrapper<TData> = useMemo(() => {
         return new ComDOMWrapper<TData>(requestURL, fetchOnCreate, debug)
     }, [requestURL, fetchOnCreate, debug])
-    const comDOMStatus = useMemo(async () => {
-        return await comDOM.getComDOMStatus()
-    }, [comDOM])
+    const [comDOMStatus, setComDOMStatus] = useState<ComDOMStatus>(ComDOMStatus.NOT_STARTED)
 
     const errors = useRef<ComDOMError[]>([])
     const [errorSignal, setErrorSignal] = useState(false)
     const [pollInterval, setPollInterval] = useState(fetchOnCreate ? fetchInterval : Infinity)
     const [status, setStatus] = useState<UseComDOMStatus>(UseComDOMStatus.NOT_STARTED)
     const queryClient = useQueryClient()
-    const queryKey = [requestURL.hostname, requestURL.pathname, requestURL.searchParams.toString()]
+    const queryKey = [requestURL.hostname, requestURL.pathname]
+    
     const _log = (...args: any[]) => {
         if (debug) {
             console.log(...args)
         }
     }
 
+    
     const resolveError = (id: number) => {
         const error = errors.current.find(error => error.id === id)
         if (error) {
@@ -86,11 +86,12 @@ export default function useComDOM<TData>(
     }
 
     const queryFn = async () => {
-        setStatus(UseComDOMStatus.FETCHING)
+        
         const comDOMStatus = await comDOM.getComDOMStatus()
         if (comDOMStatus === ComDOMStatus.NOT_STARTED) {
             await comDOM.start()
         }
+        setStatus(UseComDOMStatus.FETCHING)
         try {
             const batchResponse: BatchResponse<TData> | null =
                 await comDOM.next()
@@ -110,6 +111,16 @@ export default function useComDOM<TData>(
         queryKey: queryKey,
         queryFn: queryFn,
         initialData: initialData,
+        refetchInterval: pollInterval,
+    })
+
+    const comDOMStatusQuery = useQuery({
+        queryKey: [...queryKey, 'comdom-status'],
+        queryFn: async () => {
+            const status = await comDOM.getComDOMStatus()
+            setComDOMStatus(status)
+            return status
+        },
         refetchInterval: pollInterval,
     })
 
