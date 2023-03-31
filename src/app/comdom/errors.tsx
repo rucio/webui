@@ -5,9 +5,6 @@ export type ErrorListProps = {
     errorSignal: boolean
     errors: ComDOMError[]
     resolve: (id: number) => void
-    all: ComDOMError[]
-    resolved: ComDOMError[]
-    unresolved: ComDOMError[]
 }
 
 export type ErrorProps = {
@@ -20,10 +17,11 @@ export const Error = ({ error, resolve }: ErrorProps) => {
     return (
         <li key={error.id} className={`flex p-4 mb-4 text-sm text-red-800 rounded-lg ${backgroundColor}`} role="alert">
             {error.message}
+            {error.cause}
             <button className="ml-4 text-red-500 hover:text-red-700" onClick={() => {
                 resolve(error.id)
             }}>
-
+                resolve
             </button>
         </li>
     )

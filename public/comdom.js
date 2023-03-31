@@ -34,16 +34,16 @@ class ComDOM {
                 buffer.push(JSON.parse(line));
             } catch (e) {
                 if (line !== '') {
-                    console.log('error parsing line', line)
+                    this.log('error parsing line', line)
                 }
                 this.textBuffer += line;
             }
         });
     }
     
-    log(msg) {
+    log(...msg) {
         if(this.verbose) {
-            console.log(msg)
+            console.log('ComDOMorker@', this.url, new Date().toTimeString(), ...msg)
         }
     }
 
@@ -94,6 +94,10 @@ class ComDOM {
         return batch;
     }
 
+    getStatus() {
+        return this.status;
+    }
+
     isBatchAvailable() {
         return this.batches.length > 0
     }
@@ -106,5 +110,5 @@ class ComDOM {
     }
 }
 
-Comlink.expose(Fetch)
+Comlink.expose(ComDOM);
 
