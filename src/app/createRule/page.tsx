@@ -1,38 +1,32 @@
-import { OIDCProvider, VO } from '@/lib/core/entity/auth-models'
-import { StoryFn, Meta } from '@storybook/react'
-
-import { CreateRule } from './CreateRule'
+'use client';
+import { CreateRule as CreateRuleStory } from "@/component-library/components/Pages/CreateRule/CreateRule";
 import {
     CreateRuleQuery, DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
     RSESearchQuery
 } from '@/lib/infrastructure/data/view-model/createRule'
 
-export default {
-    title: 'Components/Pages/CreateRule',
-    component: CreateRule,
-} as Meta<typeof CreateRule>
 
-const Template: StoryFn<typeof CreateRule> = args => <CreateRule {...args} />
+export default function CreateRule() {
 
-export const CreateRulePage = Template.bind({})
-CreateRulePage.args = {
-    onSubmit: (query: CreateRuleQuery) => {
+    const onSubmit = (query: CreateRuleQuery) => {
         return Promise.resolve({
             success: true,
         })
-    },
-    didSearch: (query: DIDSearchQuery) => {
+    }
+
+    const didSearch = (query: DIDSearchQuery) => {
         return Promise.resolve({
             DIDList: [
-                { DID: "First_DID", DIDType: "Dataset" },
-                { DID: "Second_DID", DIDType: "Dataset" },
-                { DID: "Third_DID", DIDType: "File" },
-                { DID: query.DIDSearchString, DIDType: "Collection" } // just add the search string to the list
+                { DID: "First_DID", DIDType: "Dataset" as const },
+                { DID: "Second_DID", DIDType: "Dataset" as const },
+                { DID: "Third_DID", DIDType: "File" as const },
+                { DID: query.DIDSearchString, DIDType: "Collection" as const } // just add the search string to the list
             ]
         })
-    },
-    didValidation: (query: TypedDIDValidationQuery) => {
+    }
+    
+    const didValidation = (query: TypedDIDValidationQuery) => { 
         // if the DID contains the string "error", it will be added to the error list
         var localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] }
         query.DIDList.map((DID: string, index: number) => {
@@ -47,8 +41,9 @@ CreateRulePage.args = {
         else {
             return Promise.reject(localErrorDIDs)
         }
-    },
-    rseSearch: (query: RSESearchQuery) => {
+    }
+
+    const rseSearch = (query: RSESearchQuery) => {
         return Promise.resolve({
             RSEList: [
                 { RSEName: query.RSEExpression, RSEID: "RSE0", RemainingQuota: 0, TotalQuota: 0},
@@ -64,5 +59,16 @@ CreateRulePage.args = {
                 { RSEName: "RSE10", RSEID: "RSE10", RemainingQuota: 1000, TotalQuota: 10000 },
             ]
         })
-    },
+    }
+
+    return (
+        <div className="flex items-center justify-center h-screen dark:bg-black">
+            <CreateRuleStory
+                onSubmit={onSubmit}
+                didSearch={didSearch}
+                didValidation={didValidation}
+                rseSearch={rseSearch}
+            />
+        </div>
+    )
 }

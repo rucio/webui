@@ -19,6 +19,8 @@ import { RSEQuotaTable } from '../../Table/RSEQuotaTable';
 import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
 
+var format = require("date-format")
+
 /* =================================================
 *  Importing Types and Interfaces
 *  ================================================= */
@@ -514,7 +516,7 @@ export const CreateRule = (
                                 <tbody className="w-full overflow-y-auto flex flex-col h-48">
                                     <tr className="hover:cursor-default w-full flex">
                                         <td className="w-1/2"><P>Expiry Date</P></td>
-                                        <td className="w-1/2"><P>{Page2State.expiryDate.toISOString()}</P></td>
+                                        <td className="w-1/2"><P>{format("yyyy-MM-dd", Page2State.expiryDate)}</P></td>
                                     </tr>
                                     <tr className="hover:cursor-default w-full flex">
                                         <td className="w-1/2"><P>Enable Notifications</P></td>
