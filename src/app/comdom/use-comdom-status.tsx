@@ -23,7 +23,7 @@ export default function UseComDOMStatusCard({status: useComDOMStatus}: UseComDom
                 return 'unknown'
         }
     }, [useComDOMStatus])
-    console.log('status', useComDOMStatus)
+    
     return (
         <QueryInfo  title="UseComDOM Hook Status" status={status} realStatus={useComDOMStatus.toString()} />
     )

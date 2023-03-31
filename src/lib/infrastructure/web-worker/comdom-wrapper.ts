@@ -90,7 +90,7 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
    
     log(...args: any[]) {
         if (this.verbose) {
-            console.log(...args)
+            console.log('ComDOM Wrapper:',new Date().toTimeString() , ...args)
         }
     }
 
@@ -100,7 +100,14 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
             this.wrappedComDOM = wrap<ComDOM<TData>>(this.worker)
         }
         this.log('Initializing ComDOM')
-        this.comDOM = await new this.wrappedComDOM(this.url, this.startFetchingOnWorkerCreation, this.verbose)
+        try {
+            this.comDOM = await new this.wrappedComDOM(this.url, this.startFetchingOnWorkerCreation, this.verbose)
+        } catch (error) {
+            this.log('Error initializing ComDOM', error)
+            
+            Promise.reject(error)
+        }
+        this.log('ComDOM initialized')
     }
     
     async start(): Promise<boolean> {
@@ -154,11 +161,25 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
 
     
     async next(): Promise<BatchResponse<TData> | null> {
+       
         if( !this.comDOM || this.comDOM === undefined) {
             await this.init()
         }
-        const isNewBatchAvailable = await this.comDOM?.isBatchAvailable()
-        const comdomStatus = await this.getComDOMStatus()
+        let isNewBatchAvailable = null
+        let comDOMStatus = ComDOMStatus.UNKNOWN 
+        try {
+            isNewBatchAvailable = await this.comDOM?.isBatchAvailable()
+        } catch (error) {
+            this.log('Error getting batch availability', error)
+            return Promise.reject(error)
+        }
+
+        try {
+             comDOMStatus = await this.getComDOMStatus()
+        } catch (error) {
+            this.log('Error getting ComDOM status', error)
+            return Promise.reject(error)
+        }
 
         if(isNewBatchAvailable) {
             if (this.comDOM === undefined) {
@@ -166,7 +187,7 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
             }
             return this.comDOM.getNextBatch()
         }
-        if (comdomStatus == ComDOMStatus.DONE) {
+        if (comDOMStatus == ComDOMStatus.DONE) {
             this.destroy()
             return null
         } else {

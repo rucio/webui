@@ -45,7 +45,7 @@ export default function useComDOM<TData>(
     
     const _log = (...args: any[]) => {
         if (debug) {
-            console.log(...args)
+            console.log('useComDOM Hook: ', new Date().toTimeString(), ':' , ...args)
         }
     }
 
@@ -76,6 +76,7 @@ export default function useComDOM<TData>(
 
     const setError = (message: string, cause: string) => {
         setStatus(UseComDOMStatus.ERROR)
+        _log('Error', message, cause)
         errors.current.push({
             id: errors.current.length + 1,
             message: message,
@@ -102,7 +103,7 @@ export default function useComDOM<TData>(
             }
             return batchResponse.data
         } catch (error: any) {
-            setError(error.message, error.cause)
+            setError(error, 'Error fetching data from background thread')
             return undefined
         }
     }
@@ -126,10 +127,10 @@ export default function useComDOM<TData>(
 
     const start = async () => {
         _log('Starting ComDOM')
-        setStatus(UseComDOMStatus.FETCHING)
         try {
             await comDOM.start()
             setPollInterval(fetchInterval)
+            setStatus(UseComDOMStatus.FETCHING)
             return true
         } catch (error: any) {
             _log('Error starting ComDOM', error)
@@ -143,6 +144,7 @@ export default function useComDOM<TData>(
         const success = comDOM.destroy()
         if (success){
             setPollInterval(Infinity)
+            setStatus(UseComDOMStatus.NOT_STARTED)
         }
         return success
     }
