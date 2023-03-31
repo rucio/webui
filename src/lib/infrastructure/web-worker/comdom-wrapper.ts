@@ -60,7 +60,7 @@ export interface IComDOMWrapper<TData> {
     destroy() : boolean
     /**
      * @description Returns the next batch of data from the ComDOM web worker
-     * @returns Promise<TData[]> | false. If the ComDOM web worker is done, it will be terminated and null will be returned.
+     * @returns Promise<BatchResponse<TData> | null>. If the ComDOM web worker is done, it will be terminated and null will be returned.
      * If the ComDOM web worker is not done, the promise will be rejected if next batch is not yet available.
      */
     next: () => Promise<BatchResponse<TData> | null>
@@ -76,17 +76,15 @@ export interface IComDOMWrapper<TData> {
  */
 export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     private url: string
-    private worker: Worker
+    private worker: Worker | null = null
     private verbose: boolean
-    private wrappedComDOM: Remote<ComDOM<TData>>
+    private wrappedComDOM: Remote<ComDOM<TData>> | null = null
     private comDOM: Remote<ComDOM<TData>> | undefined
     private startFetchingOnWorkerCreation: boolean
 
-    constructor(url: string, start_fetching: boolean = false, verbose: boolean = false) {
-        this.url = url
+    constructor(url: URL, start_fetching: boolean = false, verbose: boolean = false) {
+        this.url = url.toString()
         this.verbose = verbose
-        this.worker = new Worker('/comdom.js')
-        this.wrappedComDOM = wrap<ComDOM<TData>>(this.worker)
         this.startFetchingOnWorkerCreation = start_fetching
     }
    
@@ -97,6 +95,11 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     }
 
     async init() {
+        if(this.worker === null || this.wrappedComDOM === null){
+            this.worker = new Worker('/comdom.js')
+            this.wrappedComDOM = wrap<ComDOM<TData>>(this.worker)
+        }
+        this.log('Initializing ComDOM')
         this.comDOM = await new this.wrappedComDOM(this.url, this.startFetchingOnWorkerCreation, this.verbose)
     }
     
@@ -117,7 +120,8 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     destroy(): boolean {
         try {
             this.comDOM = undefined
-            this.worker.terminate()
+            this.worker?.terminate()
+            this.worker = null
             return true
         } catch (error) {
             console.error('Error terminating background thread', error)
