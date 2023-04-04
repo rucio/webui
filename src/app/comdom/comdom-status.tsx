@@ -8,7 +8,8 @@ export type ComDOMStatusCardProps = {
 export function ComDOMStatusCard({ comDOMStatus }: ComDOMStatusCardProps) {
     const status = useMemo(() => {
         switch (comDOMStatus) {
-            case ComDOMStatus.NOT_STARTED:
+            case ComDOMStatus.NOT_CREATED:
+            case ComDOMStatus.STOPPED:
                 return 'not_started'
             case ComDOMStatus.RUNNING:
                 return 'loading'

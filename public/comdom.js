@@ -1,19 +1,18 @@
 importScripts("https://unpkg.com/comlink/dist/umd/comlink.js");
 
 const Status = {
-    NOT_STARTED: 'not_started',
+    STOPPED: 'stopped',
     RUNNING: 'running',
     DONE: 'done',
     PREPARING_BATCH: 'preparing_batch',
     ERROR: 'error'
-    
 }
 
 
 class ComDOM {
     constructor(url, startFetching = false, verbose = false) {
         this.url = url;
-        this.status = Status.NOT_STARTED;
+        this.status = Status.STOPPED;
         this.lastBatchID = 0;
         this.batches = [];
         this.buffer = []
@@ -43,7 +42,7 @@ class ComDOM {
     
     log(...msg) {
         if(this.verbose) {
-            console.log('ComDOMorker@', this.url, new Date().toTimeString(), ...msg)
+            console.log('ComDOMWorker@', this.url, new Date().toTimeString(), ...msg)
         }
     }
 
