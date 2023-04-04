@@ -1,17 +1,51 @@
 'use client'
 import { RSE } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
-import { ComDOMStatus } from "@/lib/infrastructure/web-worker/comdom-wrapper"
+import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable } from "@tanstack/react-table"
 import {ComDOMLifeCycle, ComDOMStatusCard} from "./comdom-status"
 import ErrorList from "./errors"
-import QueryInfo from "./query-info"
 import RSEQueryStatus from "./rse-query-status"
 import UseComDOMStatusCard from "./use-comdom-status"
 
+const columnHelper = createColumnHelper<RSE>()
+
+const columns: any[] = [
+    columnHelper.accessor('id', {
+        header: 'ID',
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('name', {
+        header: 'Name',
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('city', {
+        header: 'City',
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('country', {
+        header: 'Country',
+    }),
+    columnHelper.accessor('continent', {
+        header: 'Continent',
+    }),
+    columnHelper.accessor('latitude', {
+        header: 'Latitude',
+    }),
+    columnHelper.accessor('longitude', {
+        header: 'Longitude',
+    }),
+    columnHelper.accessor('rse_type', {
+        header: 'RSE Type',
+    }),
+    columnHelper.accessor('volatile', {
+        header: 'Volatile',
+    }),
+]
 
 export default function RSETable() {
     const {
         query,
+        dataSink,
         status,
         comDOMStatus,
         start,
@@ -20,7 +54,9 @@ export default function RSETable() {
         resume,
         clean,
         pollInterval,
-        errors
+        errors,
+        resolveError,
+        resolveAllErrors
     } = useComDOM<RSE>(
         'http://localhost:3000/api/stream',
         [],
@@ -29,12 +65,20 @@ export default function RSETable() {
         200,
         true
     )
+    
+    const table = useReactTable<RSE>({
+        data: query.data || [],
+        columns: columns,
+        getCoreRowModel: getCoreRowModel(),
+        debugTable: true,
+    } as TableOptions<RSE>)
 
     return ( 
         <div className="bg-slate-800">
-            <ErrorList errorSignal={errors.signal} errors={errors.all} resolve={errors.resolve} />
+            <ErrorList errors={errors} resolve={resolveError} resolveAllErrors={resolveAllErrors} />
             <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={async () => {
                 await start()
+                
             }}>Start</button>
             <button className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onClick={async() => {
                 await stop()
@@ -51,6 +95,36 @@ export default function RSETable() {
                 <UseComDOMStatusCard status={status}/>
             </div>
             <ComDOMLifeCycle/>
+
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    {table.getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id}>
+                            {headerGroup.headers.map(header => (
+                                <th key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody>
+                    {table.getRowModel().rows.map(row => (
+                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" key={row.id}>
+                            {row.getVisibleCells().map(cell => (
+                                <td key={cell.id}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     )
 }
