@@ -10,7 +10,6 @@ export type ComDOMError = {
     id: number
     message: string
     cause: string
-    resolved: boolean
 }
 
 /**
@@ -45,8 +44,8 @@ export default function useComDOM<TData>(
         ComDOMStatus.UNKNOWN,
     )
 
-    const errors = useRef<ComDOMError[]>([])
-    const [errorSignal, setErrorSignal] = useState(false)
+    const [errors, setErrors] = useState<ComDOMError[]>([])
+    const errorId = useRef(0)
     const [pollInterval, setPollInterval] = useState(
         fetchOnCreate ? fetchInterval : Infinity,
     )
@@ -74,39 +73,23 @@ export default function useComDOM<TData>(
     }
 
     const resolveError = (id: number) => {
-        const error = errors.current.find(error => error.id === id)
-        if (error) {
-            error.resolved = true
-        }
-        // if all errors are resolved, reset the error signal
-        if (errors.current.every(error => error.resolved)) {
-            setErrorSignal(false)
-        }
+        setErrors(errors => errors.filter(error => error.id !== id))
     }
 
     const resolveAllErrors = () => {
-        errors.current.forEach(error => (error.resolved = true))
-        setErrorSignal(false)
+        setErrors([])
     }
 
-    const getResolvedErrors = () => {
-        return errors.current.filter(error => error.resolved)
-    }
-
-    const getUnresolvedErrors = () => {
-        return errors.current.filter(error => !error.resolved)
-    }
-
-    const setError = (message: string, cause: string) => {
+    const reportError = (message: string, cause: string) => {
         // setStatus(UseComDOMStatus.ERROR)
         _log('Error', message, cause)
-        errors.current.push({
-            id: errors.current.length + 1,
+        errorId.current += 1
+        const error = {
+            id: errorId.current ,
             message: message,
             cause: cause,
-            resolved: false,
-        })
-        setErrorSignal(true)
+        }
+        setErrors([...errors, error])
     }
     const comDOMStatusQueryFn = async () => {
         try {
@@ -114,7 +97,7 @@ export default function useComDOM<TData>(
             setComDOMStatus(status)
             return status
         } catch (error: any) {
-            setError(error, 'Error fetching ComDOM status')
+            reportError(error, 'Error fetching ComDOM status')
         }
     }
 
@@ -144,7 +127,7 @@ export default function useComDOM<TData>(
             dataSink.current.push(...batchResponse.data)
             return dataSink.current
         } catch (error: any) {
-            setError(error, 'Error fetching data from background thread')
+            reportError(error, 'Error fetching data from background thread')
             setStatus(UseComDOMStatus.ERROR)
             return Promise.reject(error)
         }
@@ -155,6 +138,8 @@ export default function useComDOM<TData>(
         queryFn: queryFn,
         initialData: initialData,
         refetchInterval: pollInterval,
+        refetchOnWindowFocus: fetchOnCreate,
+        refetchOnMount: fetchOnCreate,
     })
 
     const comDOMStatusQuery = useQuery({
@@ -181,7 +166,7 @@ export default function useComDOM<TData>(
             return true
         } catch (error: any) {
             _log('Error starting ComDOM', error)
-            setError(error.message, error.cause)
+            reportError(error.message, error.cause)
             return false
         }
     }
@@ -193,7 +178,7 @@ export default function useComDOM<TData>(
         if (success) {
             setStatus(UseComDOMStatus.STOPPED)
         } else {
-            setError('Error stopping ComDOM', 'Error Destroying ComDOM')
+            reportError('Error stopping ComDOM', 'Error Destroying ComDOM')
             setStatus(UseComDOMStatus.ERROR)
         }
         return success
@@ -226,6 +211,7 @@ export default function useComDOM<TData>(
 
     return {
         query,
+        dataSink,
         status,
         start,
         stop,
@@ -234,13 +220,8 @@ export default function useComDOM<TData>(
         clean,
         comDOMStatus,
         pollInterval,
-        errors: {
-            signal: errorSignal,
-            all: errors.current,
-            resolved: getResolvedErrors(),
-            unresolved: getUnresolvedErrors(),
-            resolve: resolveError,
-            resolveAll: resolveAllErrors,
-        },
+        errors,
+        resolveError,
+        resolveAllErrors,
     }
 }
