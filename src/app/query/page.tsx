@@ -37,7 +37,7 @@ type FetchWorker = {
     Fetch: IFetch<RSE>
 }
 
-export function wait(ms: number) {
+function wait(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
