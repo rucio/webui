@@ -9,9 +9,9 @@ type UseComDomStatusCardProps = {
 export default function UseComDOMStatusCard({status: useComDOMStatus}: UseComDomStatusCardProps){
     const status = useMemo(() => {
         switch(useComDOMStatus){
-            case UseComDOMStatus.NOT_STARTED:
-                return 'not_started'
-            case UseComDOMStatus.FETCHING:
+            case UseComDOMStatus.STOPPED:
+                return 'Stopped'
+            case UseComDOMStatus.RUNNING:
                 return 'loading'
             case UseComDOMStatus.DONE:
                 return 'success'

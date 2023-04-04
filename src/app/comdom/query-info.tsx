@@ -3,7 +3,7 @@ import { useMemo } from "react"
 
 export type QueryInfoProps = {
     title: string
-    status: QueryStatus | 'not_started' | 'unknown' | 'paused' | 'fetching' | 'idle' | 'preparing_batch'
+    status: QueryStatus | 'not_started' | 'unknown' | 'paused' | 'fetching' | 'idle' | 'preparing_batch' | 'stopped'
     realStatus: string
 }
 export default function QueryInfo({title, status, realStatus}: QueryInfoProps) {
@@ -11,6 +11,8 @@ export default function QueryInfo({title, status, realStatus}: QueryInfoProps) {
         switch(status){
             case 'not_started':
                 return 'bg-gray-800'
+            case 'stopped':
+                return 'bg-gray-200'
             case 'idle':
                 return 'bg-gray-800'
             case 'loading':

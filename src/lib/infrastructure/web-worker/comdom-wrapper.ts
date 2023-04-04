@@ -2,10 +2,19 @@ import { Remote, wrap } from "comlink"
 
 /**
  * @description Represents the status of the ComDOM web worker
+ * @enum {string}
+ * @property {string} NOT_CREATED - The ComDOM web worker has not been created yet
+ * @property {string} STOPPED - The ComDOM web worker has been created but not started
+ * @property {string} RUNNING - The ComDOM web worker is running
+ * @property {string} PREPARING_BATCH - The ComDOM web worker is preparing the next batch of data
+ * @property {string} ERROR - The ComDOM web worker has encountered an error
+ * @property {string} DONE - The ComDOM web worker has finished fetching all data
+ * @property {string} UNKNOWN - The ComDOM web worker has an unknown status
  */
 
 export enum ComDOMStatus {
-    NOT_STARTED = 'NOT_STARTED',
+    NOT_CREATED = 'not_created',
+    STOPPED = 'stopped',
     RUNNING = 'running',
     PREPARING_BATCH = 'preparing_batch',
     ERROR = 'error',
@@ -34,6 +43,7 @@ export interface ComDOM<TData> {
     getNextBatch: () => Promise<BatchResponse<TData> | null>
     isDone: () => Promise<boolean>
     isBatchAvailable: () => Promise<boolean>
+    getStatus: () => Promise<ComDOMStatus>
     status: () => Promise<string>
 }
 
@@ -112,10 +122,16 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     
     async start(): Promise<boolean> {
         if (!this.comDOM || this.comDOM === undefined) {
+            this.log('ComDOM not initialized. Initializing ComDOM...')
             await this.init()
         }
         try {
-            await this.comDOM?.run()
+            if(this.comDOM === undefined){
+                Promise.reject('Failed to start web worker. ComDOM worker did not initialize')
+                return Promise.resolve(false)
+            }
+            this.log('Starting Fetching of data via ComDOM Web Worker')
+            this.comDOM.run()
             return Promise.resolve(true)
         } catch (error) {
             Promise.reject(error)
@@ -138,10 +154,13 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
 
     async getComDOMStatus(): Promise<ComDOMStatus> {
         try {
-            const status = await this.comDOM?.status()
+            if (this.worker === null || this.wrappedComDOM === null || this.comDOM === null || this.comDOM === undefined){
+                return Promise.resolve(ComDOMStatus.NOT_CREATED)
+            }
+            const status = await this.comDOM.getStatus()
             switch (status) {
-                case 'not_started':
-                    return Promise.resolve(ComDOMStatus.NOT_STARTED)
+                case 'stopped':
+                    return Promise.resolve(ComDOMStatus.STOPPED)
                 case 'running':
                     return Promise.resolve(ComDOMStatus.RUNNING)
                 case 'preparing_batch':
@@ -161,14 +180,13 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
 
     
     async next(): Promise<BatchResponse<TData> | null> {
-       
-        if( !this.comDOM || this.comDOM === undefined) {
-            await this.init()
+        if(this.comDOM === undefined || this.comDOM === null){
+            return Promise.reject('ComDOM Web Worker is not initialized')
         }
         let isNewBatchAvailable = null
-        let comDOMStatus = ComDOMStatus.UNKNOWN 
+        let comDOMStatus = null
         try {
-            isNewBatchAvailable = await this.comDOM?.isBatchAvailable()
+            isNewBatchAvailable = await this.comDOM.isBatchAvailable()
         } catch (error) {
             this.log('Error getting batch availability', error)
             return Promise.reject(error)
@@ -188,7 +206,8 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
             return this.comDOM.getNextBatch()
         }
         if (comDOMStatus == ComDOMStatus.DONE) {
-            this.destroy()
+            // TODO check if this is the right way to terminate the worker
+            // this.destroy()
             return null
         } else {
             return Promise.reject('No new batch available yet! Try again later.')
