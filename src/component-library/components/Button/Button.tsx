@@ -56,7 +56,7 @@ export const Button = ({
             id={id}
         >
             <div className="flex justify-center">
-                <div>{label}</div>
+                <label htmlFor={id}>{label}</label>
                 {icon ? "\u00A0" : "" /* nonbreaking space */}
                 <div className="flex items-center">{icon}</div>
             </div>

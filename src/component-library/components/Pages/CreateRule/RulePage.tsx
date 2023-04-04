@@ -13,8 +13,11 @@ export const RulePage = (
     }
 ) => {
     return (
-        <Collapsible id={"page-" + props.activePage} showIf={props.activePage === props.pagenum}>
-            <div className="m-2 p-4 border rounded-md dark:border-2 flex flex-col space-y-2">
+        <Collapsible showIf={props.activePage === props.pagenum}>
+            <div
+                className="m-2 p-4 border rounded-md dark:border-2 flex flex-col space-y-2"
+                data-testid={`rule-page-${props.pagenum}`}
+            >
                 <div>
                     {props.children}
                 </div>

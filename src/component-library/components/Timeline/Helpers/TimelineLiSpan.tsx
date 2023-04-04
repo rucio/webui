@@ -12,7 +12,7 @@ export const TimelineLiSpan = (props: {
             props.highlight ? highlightClasses.join(" ") : (props.completed ? completedClasses.join(" ") : normalClasses.join(" "))
         }
         >
-            {props.children}
+            <h3>{props.children}</h3>
         </span>
     )
 }

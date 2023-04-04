@@ -254,8 +254,8 @@ export const CreateRule = (
     *  Building the page
     *  ================================================= */
     return (
-        <div>
-            <div className="py-4 px-8">
+        <div data-testid="create-rule-root">
+            <div className="py-4 px-8" data-testid="timeline">
                 <Timeline
                     steps={["DIDs", "RSEs", "Options", "Summary"]}
                     active={activePage}
@@ -268,7 +268,7 @@ export const CreateRule = (
                         tabs={["DID Search Pattern", "List of DIDs"]}
                         active={Page0State.selectDIDMethod}
                         handleClick={(event: any) => { console.log(event.target.id); setPage0State({ ...Page0State, selectDIDMethod: Number(event.target.id) }) }}
-                        id="selectDIDMethod"
+                        dataTestid="selectDIDMethod"
                     />
                     <Collapsible showIf={Page0State.selectDIDMethod === 0}>
                         <div className="flex flex-col space-y-2 m-2">
