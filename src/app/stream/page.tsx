@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect, useMemo, Suspense } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import Head from 'next/head';
-import { Partytown } from '@builder.io/partytown/react';
 import ReactDOM from 'react-dom';
 import { debug } from 'util';
 import { wrap, proxy, ProxyMarked } from 'comlink'
@@ -23,13 +22,6 @@ export type RowData = {
     name: string
 }
 
-export function PartyTownStreamWorker() {
-    return (
-        <Script id="" strategy='worker'>
-            
-        </Script>
-    )
-}
 
 const Row = ({ data }: RowProps) => {
     return (
@@ -184,7 +176,7 @@ const StreamingTable = () => {
     )
 }
 
-export default function App(props: Props) {
+export default function App() {
     return (
         <div>
             <p> Data is streamed from server </p>

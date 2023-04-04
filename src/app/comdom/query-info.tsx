@@ -12,7 +12,7 @@ export default function QueryInfo({title, status, realStatus}: QueryInfoProps) {
             case 'not_started':
                 return 'bg-gray-800'
             case 'stopped':
-                return 'bg-gray-200'
+                return 'bg-gray-800'
             case 'idle':
                 return 'bg-gray-800'
             case 'loading':
