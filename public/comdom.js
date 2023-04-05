@@ -1,4 +1,4 @@
-importScripts("https://unpkg.com/comlink/dist/umd/comlink.js");
+importScripts("/comlink.js");
 
 const Status = {
     STOPPED: 'stopped',
