@@ -18,14 +18,14 @@ export const Tabs = (
     }
     return (
         <ul
-            className="flex flex-wrap flex-row list-none font-bold"
+            className="flex flex-col sm:flex-row list-none font-bold"
             data-testid={props.dataTestid ?? "tabs"}
         >
             {props.tabs.map((element, index) => {
                 return index === Number(activestate) ? (
                     <li
                         onClick={onClick}
-                        className="flex-auto text-center"
+                        className="flex-1 text-center"
                         key={index.toString()}
                     >
                         <a
@@ -38,7 +38,7 @@ export const Tabs = (
                 ) : (
                     <li
                         onClick={onClick}
-                        className="flex-auto text-center"
+                        className="flex-1 text-center"
                         key={index.toString()}
                     >
                         <a
