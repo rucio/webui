@@ -35,7 +35,7 @@ export const NumInput = (
     return (
         <input
             type="number"
-            value={numvalue}
+            value={numvalue > 0 ? numvalue : ""}
             placeholder={props.placeholder}
             max={props.max ? props.max.toString() : ""}
             min={props.min ? props.min.toString() : ""}

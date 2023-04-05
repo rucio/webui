@@ -218,7 +218,7 @@ export const CreateRule = (
     const [Page2State, setPage2State] = useState<Page2State>({
         expiryDate: new Date(),
         takesamples: false,
-        numsamples: 1,
+        numsamples: -1,
         enableNotifications: false,
         showAdvanced: false,
         groupBy: "Dataset",
@@ -474,14 +474,18 @@ export const CreateRule = (
                                         <CheckBox
                                             type="checkbox"
                                             label="Create Sample"
-                                            handleChange={(event: any) => { setPage2State({ ...Page2State, takesamples: event.target.checked }) }}
+                                            handleChange={(event: any) => {
+                                                setPage2State({ ...Page2State, takesamples: event.target.checked });
+                                                if(!event.target.checked) {
+                                                    setPage2State({...Page2State, numsamples: -1})
+                                                }
+                                            }}
                                             isChecked={Page2State.takesamples}
                                         />
                                         <div className="grow flex flex-col justify-end -mt-2">
                                             <Label label="numSamples">Number of Samples</Label>
                                             <NumInput
                                                 value={Page2State.numsamples}
-                                                placeholder="Rule Expiry Date"
                                                 onChange={(event: any) => { setPage2State({ ...Page2State, numsamples: event.target.value }) }}
                                                 id="numSamples"
                                                 min={1}
