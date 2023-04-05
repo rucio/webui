@@ -20,7 +20,7 @@ export const Checkbox = ({
         setChecked(isChecked)
     }, [isChecked])
     var inputClasses: string[] = ["w-4 h-4 hover:cursor-pointer"]
-    var labelClasses: string[] = ["ml-2 text-sm font-medium"]
+    var labelClasses: string[] = ["ml-2"]
     if (!disabled) {
         labelClasses.push("dark:text-white")
     }
@@ -29,7 +29,7 @@ export const Checkbox = ({
     }
     return (
         <div
-            className="flex items-center mb-4"
+            className="flex items-center"
             onClick={(event: any) => {
                 if (!disabled) {
                     setChecked(event.target.checked)

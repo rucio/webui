@@ -265,7 +265,7 @@ export const CreateRule = (
                 />
             </div>
             <div className="flex flex-col">
-                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={0} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
                     <Tabs
                         tabs={["DID Search Pattern", "List of DIDs"]}
                         active={Page0State.selectDIDMethod}
@@ -409,7 +409,7 @@ export const CreateRule = (
                         </div>
                     </div>
                 </RulePage>
-                <RulePage pagenum={0} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
                     <div className="flex md:flex-row md:space-x-2 flex-col space-y-2 m-2">
                         <div className="flex flex-col space-y-2 md:w-60 w-full">
                             <div className="w-full">
@@ -462,11 +462,11 @@ export const CreateRule = (
                                         />
                                     </div>
                                     <div className="w-full">
+                                        <Label label="freecomment">Add free comment</Label>
                                         <AreaInput
                                             id="freecomment"
                                             rows={3}
                                             onChange={(event) => { setPage2State({ ...Page2State, freeComment: event.target.value }); }}
-                                            placeholder="Type your comment here."
                                             content={Page2State.freeComment}
                                         />
                                     </div>
@@ -482,7 +482,7 @@ export const CreateRule = (
                                             }}
                                             isChecked={Page2State.takesamples}
                                         />
-                                        <div className="grow flex flex-col justify-end -mt-2">
+                                        <div className="grow flex flex-col justify-end">
                                             <Label label="numSamples">Number of Samples</Label>
                                             <NumInput
                                                 value={Page2State.numsamples}
