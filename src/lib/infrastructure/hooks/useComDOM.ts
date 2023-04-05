@@ -32,12 +32,24 @@ export enum UseComDOMStatus {
  * @param url The URL that the ComDOM web worker will fetch data from. This URL must be the same origin as the page that is using this hook. The URL must stream NDJSON events.
  * @param initialData An array of TData type that will be used as the initial data for the query.
  * @param fetchOnCreate If true, the ComDOM web worker will start fetching data immediately after it is created. If false, the ComDOM web worker will not start fetching data until the start() function is called.
- * @param restInterval 
- * @param fetchInterval 
- * @param debug 
- * @returns 
+ * @param restInterval The time in ms that the query will sleep before checking if new data is available from the ComDOM web worker. Set to Infinity to disable automatic background checking for new data.
+ * @param fetchInterval The time in ms that the query will wait before fetching the next batch of data. This is used to prevent the query from fetching data too frequently.
+ * @param debug Enable debug logging for the hook, ComDOM wrapper and ComDOM web worker.
  * 
+ * @returns query The query object from (tanstack/react-query) returned by the useQuery hook.
+ * @returns dataSink A ref that contains the current data sink. This is same as query.data but is a ref instead of a state variable.
+ * @returns status {@link UseComDOMStatus}The status of the useComDOM hook, derived from the status of the query and the web worker.
+ * @returns comDOMStatus {@link ComDOMStatus} The status of the ComDOM web worker.
+ * @returns pollInterval The current poll interval of the query in milliseconds.
+ * @returns errors {@link ComDOMError[]} An array of errors that have occurred.
+ * @returns start(url: string = {@link @param url}) A function that starts the ComDOM web worker.
+ * @returns pause A function that pauses the query.
+ * @returns resume A function that resumes the query.
+ * @returns stop A function that stops the ComDOM web worker. This will also stop the query.
+ * @returns resolveError A function that removes an error from the errors array, given the error id. The errors are of type {@link ComDOMError}.
+ * @returns resolveAllErrors A function that removes all errors from the errors array.
  */
+
 export default function useComDOM<TData>(
     url: string,
     initialData: TData[] = [],
@@ -92,7 +104,6 @@ export default function useComDOM<TData>(
     }
 
     const reportError = (message: string, cause: string) => {
-        // setStatus(UseComDOMStatus.ERROR)
         _log('Error', message, cause)
         errorId.current += 1
         const error = {
@@ -159,11 +170,11 @@ export default function useComDOM<TData>(
         refetchInterval: pollInterval,
     })
 
-    const start = async () => {
+    const start = async (streamURL: string | null = null) => {
         try {
             _log('Resetting data sink')
             dataSink.current = initialData
-            _log('Starting ComDOM')
+            _log('Starting ComDOM with URL', requestURL.toString())
             const status = await comDOMWrapper.start()
             if (!status) {
                 throw new Error('Error starting ComDOM')
@@ -182,16 +193,21 @@ export default function useComDOM<TData>(
         }
     }
 
+    /**
+     * Stops the ComDOM web worker and the query.
+     * @returns true if the ComDOM web worker was stopped successfully, false otherwise.
+     */
     const stop = async () => {
         _log('Stopping ComDOM')
-        setPollInterval(Infinity)
         const success = comDOMWrapper.destroy()
         if (success) {
             setStatus(UseComDOMStatus.STOPPED)
+            setPollInterval(Infinity)
         } else {
             reportError('Error stopping ComDOM', 'Error Destroying ComDOM')
             setStatus(UseComDOMStatus.ERROR)
         }
+        queryClient.invalidateQueries([...queryKey, 'comdom-status'])
         return success
     }
 
@@ -227,14 +243,14 @@ export default function useComDOM<TData>(
         query,
         dataSink,
         status,
+        comDOMStatus,
+        pollInterval,
+        errors,
         start,
         stop,
         pause,
         resume,
         clean,
-        comDOMStatus,
-        pollInterval,
-        errors,
         resolveError,
         resolveAllErrors,
     }
