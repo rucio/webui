@@ -11,6 +11,7 @@ export const NumInput = (
         max?: number,
         min?: number,
         id?: string,
+        disabled?: boolean
     }
 ) => {
     const [numvalue, setNumvalue] = useState<number>(props.value);
@@ -43,6 +44,7 @@ export const NumInput = (
             onBlur={onBlur}
             onChange={onChange}
             onKeyDown={onEnterkey}
+            disabled={props.disabled}
         >
             {props.children}
         </input>
