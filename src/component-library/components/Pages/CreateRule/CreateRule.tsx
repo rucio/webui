@@ -79,6 +79,7 @@ interface Page2State {
     groupBy: DIDType
     asynchronousMode: boolean
     numcopies: number
+    takesamples: boolean
     numsamples: number
     freeComment: string
 }
@@ -155,11 +156,11 @@ export const CreateRule = (
         // execute query
         const typedDIDValidationResponse = props.didValidation(TypedDIDValidationQuery)
         typedDIDValidationResponse.then((response) => {
-            setPage0State({ ...Page0State, errorDIDs: response})
+            setPage0State({ ...Page0State, errorDIDs: response })
             setActivePage(activePage + 1)
         })
         typedDIDValidationResponse.catch((error) => {
-            setPage0State({ ...Page0State, errorDIDs: error})
+            setPage0State({ ...Page0State, errorDIDs: error })
         })
 
         // TODO: display errors in a modal
@@ -216,6 +217,7 @@ export const CreateRule = (
     // page 2 state
     const [Page2State, setPage2State] = useState<Page2State>({
         expiryDate: new Date(),
+        takesamples: false,
         numsamples: 1,
         enableNotifications: false,
         showAdvanced: false,
@@ -263,7 +265,7 @@ export const CreateRule = (
                 />
             </div>
             <div className="flex flex-col">
-                <RulePage pagenum={0} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
                     <Tabs
                         tabs={["DID Search Pattern", "List of DIDs"]}
                         active={Page0State.selectDIDMethod}
@@ -401,13 +403,13 @@ export const CreateRule = (
                             <CheckBox
                                 label="Ask for Approval"
                                 type="checkbox"
-                                handleChange={(event: any) => { setPage1State({ ...Page1State, askForApproval: event.target.checked})}}
+                                handleChange={(event: any) => { setPage1State({ ...Page1State, askForApproval: event.target.checked }) }}
                                 isChecked={Page1State.askForApproval}
                             />
                         </div>
                     </div>
                 </RulePage>
-                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={0} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
                     <div className="flex md:flex-row md:space-x-2 flex-col space-y-2 m-2">
                         <div className="flex flex-col space-y-2 md:w-60 w-full">
                             <div className="w-full">
@@ -420,13 +422,12 @@ export const CreateRule = (
                                 />
                             </div>
                             <div className="w-full">
-                                <Label label="numSamples">Number of Samples</Label>
+                                <Label label="numCopies">Number of Copies</Label>
                                 <NumInput
-                                    value={Page2State.numsamples}
-                                    placeholder="Rule Expiry Date"
-                                    onChange={(event: any) => { setPage2State({ ...Page2State, numsamples: event.target.value }) }}
-                                    id="numSamples"
+                                    value={Page2State.numcopies}
                                     min={1}
+                                    onChange={(event: any) => { setPage2State({ ...Page2State, numcopies: event.target.value }) }}
+                                    id="numCopies"
                                 />
                             </div>
                             <div className="w-full">
@@ -452,15 +453,6 @@ export const CreateRule = (
                                             handleChange={(element: any) => { setPage2State({ ...Page2State, groupBy: element }) }}
                                         />
                                     </div>
-                                    <div className="grow flex flex-col justify-end">
-                                        <Label label="numCopies">Number of Copies</Label>
-                                        <NumInput
-                                            value={Page2State.numcopies}
-                                            min={1}
-                                            onChange={(event: any) => { setPage2State({ ...Page2State, numcopies: event.target.value }) }}
-                                            id="numCopies"
-                                        />
-                                    </div>
                                     <div className="">
                                         <CheckBox
                                             type="checkbox"
@@ -477,6 +469,25 @@ export const CreateRule = (
                                             placeholder="Type your comment here."
                                             content={Page2State.freeComment}
                                         />
+                                    </div>
+                                    <div className="flex flex-col border rounded-sm bg-gray-100 dark:bg-gray-800 p-2">
+                                        <CheckBox
+                                            type="checkbox"
+                                            label="Create Sample"
+                                            handleChange={(event: any) => { setPage2State({ ...Page2State, takesamples: event.target.checked }) }}
+                                            isChecked={Page2State.takesamples}
+                                        />
+                                        <div className="grow flex flex-col justify-end -mt-2">
+                                            <Label label="numSamples">Number of Samples</Label>
+                                            <NumInput
+                                                value={Page2State.numsamples}
+                                                placeholder="Rule Expiry Date"
+                                                onChange={(event: any) => { setPage2State({ ...Page2State, numsamples: event.target.value }) }}
+                                                id="numSamples"
+                                                min={1}
+                                                disabled={!Page2State.takesamples}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </Collapsible>
