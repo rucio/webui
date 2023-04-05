@@ -15,9 +15,9 @@ export type ComDOMError = {
 /**
  * @description The status of the useComDOM hook, derived from the status of the query and the web worker.
  * @enum string STOPPED - The ComDOM web worker does not exist
- * @enum PAUSED - The query has been paused, but the ComDOM web worker is still exists
- * @enum RUNNING - The query is running
- * @enum DONE - The query is done, ComDOM web worker has also finished fetching all data.
+ * @enum string PAUSED - The query has been paused, but the ComDOM web worker is still exists
+ * @enum string RUNNING - The query is running
+ * @enum string DONE - The query is done, ComDOM web worker has also finished fetching all data.
  */
 export enum UseComDOMStatus {
     STOPPED = 'stopped',
@@ -27,6 +27,17 @@ export enum UseComDOMStatus {
     ERROR = 'error',
 }
 
+/**
+ * @description A React hook that fetches data from a ComDOM web worker and updates the corresponding query in the React Query cache.
+ * @param url The URL that the ComDOM web worker will fetch data from. This URL must be the same origin as the page that is using this hook. The URL must stream NDJSON events.
+ * @param initialData An array of TData type that will be used as the initial data for the query.
+ * @param fetchOnCreate If true, the ComDOM web worker will start fetching data immediately after it is created. If false, the ComDOM web worker will not start fetching data until the start() function is called.
+ * @param restInterval 
+ * @param fetchInterval 
+ * @param debug 
+ * @returns 
+ * 
+ */
 export default function useComDOM<TData>(
     url: string,
     initialData: TData[] = [],
@@ -186,7 +197,7 @@ export default function useComDOM<TData>(
 
     const pause = () => {
         setPollInterval(Infinity)
-        if (comDOMStatus !== ComDOMStatus.RUNNING) {
+        if (status !== UseComDOMStatus.RUNNING) {
             _log('Cannot pause a non-running ComDOM')
             return false
         }
@@ -195,6 +206,7 @@ export default function useComDOM<TData>(
     }
 
     const resume = () => {
+        setStatus(UseComDOMStatus.RUNNING)
         setPollInterval(fetchInterval)
         return true
     }
@@ -202,6 +214,8 @@ export default function useComDOM<TData>(
     const clean = () => {
         try {
             queryClient.setQueriesData(queryKey, initialData)
+            dataSink.current = initialData
+            _log('Data sink cleaned')
         } catch (error: any) {
             _log('Error cleaning ComDOM', error)
             return false
