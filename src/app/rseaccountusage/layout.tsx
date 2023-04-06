@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
 
     return (
-        <div className="bg-slate-800 text-sky-400/100">
+        <div className="">
             <QueryClientProvider client={queryClient}>
                 {children}
                 <ReactQueryDevtools initialIsOpen={false} />

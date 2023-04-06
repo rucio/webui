@@ -1,5 +1,10 @@
 'use client'
-import { RSEAccountUsageLimitDTO} from "@/lib/core/data/rucio-dto"
+import { H3 } from "@/component-library/components/Text/Headings/H3"
+import { P } from "@/component-library/components/Text/Content/P"
+
+import { useState } from "react"
+
+import { RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable } from "@tanstack/react-table"
 
@@ -7,25 +12,37 @@ const columnHelper = createColumnHelper<RSEAccountUsageLimitDTO>()
 
 const columns: any[] = [
     columnHelper.accessor('rse_id', {
+        id: 'rse_id',
         header: 'ID',
         cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('rse', {
-        header: 'Name',
+        id: 'rse',
+        header: () => <H3>RSE Name</H3>,
         cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('account', {
-        header: 'Account',
-        cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('used_files', {
-        header: 'Files',
     }),
     columnHelper.accessor('used_bytes', {
-        header: 'Used',
+        id: 'used_bytes',
+        header: () => <H3>Used</H3>,
+        cell: (props) => {
+            // if value is greater than quota bytes, print in red
+            if (props.row.original.quota_bytes && props.row.original.quota_bytes < props.row.original.used_bytes) {
+                return <P className="text-red-500">{props.row.original.used_bytes}</P>
+            }
+            return <P>{props.row.original.used_bytes}</P>
+        },
     }),
     columnHelper.accessor('quota_bytes', {
-        header: 'Quota',
+        id: 'quota_bytes',
+        header: () => <H3>Quota</H3>,
+    }),
+    columnHelper.accessor('used_files', {
+        id: 'used_files',
+        header: 'Files',
+    }),
+    columnHelper.accessor('account', {
+        id: 'account',
+        header: 'Account',
     }),
 ]
 
@@ -53,31 +70,45 @@ export default function RSEAccountUsage() {
         200,
         true
     )
-    
+    const [columnVisibility, setColumnVisibility] = useState(
+        { 
+            account: false,
+            used_files: false,
+            rse_id: false,
+            rse: true,
+            used_bytes: true,
+            quota_bytes: true,
+        }
+    )
+
     const table = useReactTable<RSEAccountUsageLimitDTO>({
         data: query.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         debugTable: true,
+        state: {
+            columnVisibility: columnVisibility,
+        }
     } as TableOptions<RSEAccountUsageLimitDTO>)
 
-    return ( 
-        <div className="bg-slate-800">
-            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={async () => {
-                await start()
-                
-            }}>Start</button>
-            <button className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onClick={async() => {
-                await stop()
-            }}>Stop</button>
-            <button className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900" onClick={ async() => {
-                pause()
-            }}>Pause</button>
-            <button className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={resume}>Resume</button>
-            <button className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={clean}>Clean</button>
-            <div className="flex flex-row">Poll Interval: {pollInterval}</div>
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    return (
+        <div className="">
+            <div className="flex-row">
+                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={async () => {
+                    await start()
+                }}>Start</button>
+                <button className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onClick={async () => {
+                    await stop()
+                }}>Stop</button>
+                <button className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900" onClick={async () => {
+                    pause()
+                }}>Pause</button>
+                <button className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={resume}>Resume</button>
+                <button className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={clean}>Clean</button>
+                <div className="flex flex-row">Poll Interval: {pollInterval}</div>
+            </div>
+            <table className="w-full text-left">
+                <thead className="w-full border-b">
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map(header => (
