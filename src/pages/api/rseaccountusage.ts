@@ -9,7 +9,7 @@ export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 
 const rseAccountUsageRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-    const url = 'http://localhost:8080/rseaccountusage`'
+    const url = 'http://localhost:8080/rseaccountusage'
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
