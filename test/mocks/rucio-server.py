@@ -108,11 +108,12 @@ def stream():
 
 @app.route('/rseaccountusage')
 def rseaccountusage():
+    name = f'{fake.first_name()}_{fake.last_name()}'
     long_list = [
         {
             'rse_id': f'rse_{value}',
             'rse': fake.pystr_format(),
-            'account': f'{fake.first_name()}_{fake.last_name()}',
+            'account': name,
             'used_files': random.randint(0, 50),
             'used_bytes': random.randint(0, 1000),
             'quota_bytes': random.randint(500, 2000),
