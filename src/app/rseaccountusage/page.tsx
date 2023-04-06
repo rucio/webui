@@ -141,7 +141,7 @@ export default function RSEAccountUsage() {
                 }>Row Model</button>
                 <div className="flex flex-row">Poll Interval: {pollInterval}</div>
             </div>
-            <table className="w-full text-left">
+            <table className={`w-full text-left ${query.fetchStatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                 <thead className="w-full border-b">
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id}>
@@ -171,6 +171,7 @@ export default function RSEAccountUsage() {
                 </tbody>
             </table>
             {selectedDIDs.map((did, index) => <P key={index}>{did}</P>)}
+            <P>{query.fetchStatus}</P>
         </div>
     )
 }
