@@ -106,5 +106,29 @@ def stream():
     except Exception as e:
         return flask.Response(status=500, response=str(e))
 
+@app.route('/rseaccountusage')
+def rseaccountusage():
+    long_list = [
+        {
+            'rse_id': f'rse_{value}',
+            'rse': fake.pystr_format(),
+            'account': f'{fake.first_name()}_{fake.last_name()}',
+            'used_files': random.randint(0, 50),
+            'used_bytes': random.randint(0, 1000),
+            'quota_bytes': random.randint(500, 2000),
+        } for value in range(10)
+    ]
+    try:
+        def generate():
+            for i in long_list:
+                # time.sleep(2)
+                print(f"sending {i}")
+                yield render_json(i) + '\n'
+                print("sleeping")
+
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
