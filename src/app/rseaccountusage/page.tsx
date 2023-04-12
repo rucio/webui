@@ -144,7 +144,7 @@ export default function RSEAccountUsage() {
     } as TableOptions<RSEAccountUsageLimitDTO>)
 
     return (
-        <div className="">
+        <div className="dark:bg-gray-900">
             <div className="flex-row">
                 <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={async () => {
                     await start()
@@ -160,18 +160,18 @@ export default function RSEAccountUsage() {
                 <div className="flex flex-row">Poll Interval: {pollInterval}</div>
             </div>
             <div className="p-4">
-                <div className={`h-72 overflow-y-auto border ${query.fetchStatus === "fetching" ? "hover:cursor-wait" : ""}`}>
+                <div className={`h-72 overflow-y-auto border dark:border-2 rounded-md ${query.fetchStatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                     <table className="table-fixed w-full text-left">
                         <thead className="w-full">
                             {table.getHeaderGroups().map(headerGroup => (
                                 <tr
                                     key={headerGroup.id}
-                                    className="w-full flex-row sticky top-0 bg-white shadow-md"
+                                    className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
                                 >
                                     <th className="w-8 grow-0"></th>
-                                    <th className="w-1/2 flex-auto">RSE Name</th>
-                                    <th className="flex-initial">Remaining Quota</th>
-                                    <th className="hidden sm:table-cell sm:flex-initial">Total Quota</th>
+                                    <th className="w-1/2 flex-auto"><H3>RSE Name</H3></th>
+                                    <th className="flex-initial"><H3>Remaining Quota</H3></th>
+                                    <th className="hidden sm:table-cell sm:flex-initial"><H3>Total Quota</H3></th>
                                 </tr>
                             ))}
                         </thead>
@@ -179,7 +179,7 @@ export default function RSEAccountUsage() {
                             className="w-full"
                         >
                             {table.getRowModel().rows.map((row) => {
-                                const classes = "w-full border-b hover:cursor-pointer "  // maybe handle spinnywheel here
+                                const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-8 "  // maybe handle spinnywheel here
                                 const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
                                 const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
                                 const rse_id = row.original.rse_id
