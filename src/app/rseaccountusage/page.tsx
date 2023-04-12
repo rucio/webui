@@ -6,13 +6,16 @@ import { useEffect, useState } from "react"
 
 import { RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
-import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable } from "@tanstack/react-table"
+import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row } from "@tanstack/react-table"
 
 const columnHelper = createColumnHelper<RSEAccountUsageLimitDTO>()
 
 
 
 export default function RSEAccountUsage() {
+    const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimitDTO>) => {
+        return (row.original.quota_bytes && row.original.quota_bytes < row.original.used_bytes)
+    }
 
     const [selectedRSEIDs, setSelectedRSEIDs] = useState<string[]>([])
 
@@ -20,14 +23,14 @@ export default function RSEAccountUsage() {
         {
             id: 'selection',
             header: () => <span className="w-8"/>,
-            cell: (props) => {
+            cell: (props: any) => {
                 return <span className="w-8">
                     <input
                         type="checkbox"
                         disabled={
                             // if quota_bytes is less than used_bytes, disable checkbox
                             // TODO handle "askpermission" case
-                            (props.row.original.quota_bytes && props.row.original.quota_bytes < props.row.original.used_bytes) ? true : false
+                            isNoQuotaLeftFunction(props.row) ? true : false
                         }
                         checked={props.row.getIsSelected()}
                         onChange={(event: any) => {
@@ -62,10 +65,21 @@ export default function RSEAccountUsage() {
             header: () => <H3>Used</H3>,
             cell: (props) => {
                 // if value is greater than quota bytes, print in red
-                if (props.row.original.quota_bytes && props.row.original.quota_bytes < props.row.original.used_bytes) {
+                if (isNoQuotaLeftFunction(props.row)) {
                     return <P mono className="text-red-500 dark:text-red-500 font-bold">{props.row.original.used_bytes}</P>
                 }
                 return <P mono>{props.row.original.used_bytes}</P>
+            },
+        }),
+        columnHelper.accessor(row => row.quota_bytes - row.used_bytes, {
+            id: 'remaining_bytes',
+            header: () => <H3>Remaining</H3>,
+            cell: (props) => {
+                // if value is greater than quota bytes, print in red
+                if (isNoQuotaLeftFunction(props.row)) {
+                    return <P mono className="text-red-500 dark:text-red-500 font-bold">{props.row.original.quota_bytes - props.row.original.used_bytes}</P>
+                }
+                return <P mono>{props.row.original.quota_bytes - props.row.original.used_bytes}</P>
             },
         }),
         columnHelper.accessor('quota_bytes', {
@@ -112,7 +126,8 @@ export default function RSEAccountUsage() {
             used_files: false,
             rse_id: false,
             rse: true,
-            used_bytes: true,
+            used_bytes: false,
+            remaining_bytes: true,
             quota_bytes: true,
         }
     )
@@ -155,7 +170,7 @@ export default function RSEAccountUsage() {
                                 >
                                     <th className="w-8 grow-0"></th>
                                     <th className="w-1/2 flex-auto">RSE Name</th>
-                                    <th className="flex-initial">Used Quota</th>
+                                    <th className="flex-initial">Remaining Quota</th>
                                     <th className="hidden sm:table-cell sm:flex-initial">Total Quota</th>
                                 </tr>
                             ))}
@@ -169,6 +184,11 @@ export default function RSEAccountUsage() {
                                     key={row.id}
                                     onClick={(event) => {
                                         let rse_id = row.original.rse_id
+                                        // if there is no more quota remaining, do nothing on click
+                                        if (isNoQuotaLeftFunction(row)) {
+                                            console.log(isNoQuotaLeftFunction(row))
+                                            return
+                                        }
                                         if (selectedRSEIDs.includes(rse_id)) {
                                             setSelectedRSEIDs(selectedRSEIDs.filter(id => id !== rse_id))
                                         } else {
