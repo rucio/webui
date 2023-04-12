@@ -2,6 +2,8 @@
 import { H3 } from "@/component-library/components/Text/Headings/H3"
 import { P } from "@/component-library/components/Text/Content/P"
 
+import { twMerge } from "tailwind-merge"
+
 import { useEffect, useState } from "react"
 
 import { RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto"
@@ -180,13 +182,14 @@ export default function RSEAccountUsage() {
                         >
                             {table.getRowModel().rows.map((row) => {
                                 const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-8 "  // maybe handle spinnywheel here
+                                const classesDisabled = twMerge(`${classes} dark:bg-gray-800 hover:cursor-not-allowed`)
                                 const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
                                 const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
                                 const rse_id = row.original.rse_id
                                 const isRSESelected = selectedRSEIDs.includes(rse_id)
                                 return (
                                     <tr
-                                        className={isRSESelected ? classesSelected : classesNormal}
+                                        className={isRSESelected ? classesSelected : (isNoQuotaLeftFunction(row) ? classesDisabled : classesNormal)}
                                         key={row.id}
                                         onClick={(event) => {
                                             // if there is no more quota remaining, do nothing on click
