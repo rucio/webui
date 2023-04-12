@@ -95,4 +95,6 @@ RSEQuotaTable.args = {
         },
     ],
     fetchstatus: "idle",
+    onChange: (selected: string[]) => { console.log(selected) },
+    selected: [],
 }
