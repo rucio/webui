@@ -24,7 +24,7 @@ export default function RSEAccountUsage() {
             id: 'selection',
             header: () => <span className="w-8" />,
             cell: (props: any) => {
-                return <span className="w-8">
+                return <span className="ml-2 w-8">
                     <input
                         type="checkbox"
                         disabled={
