@@ -22,7 +22,7 @@ export default function RSEAccountUsage() {
     const columns: any[] = [
         {
             id: 'selection',
-            header: () => <span className="w-8"/>,
+            header: () => <span className="w-8" />,
             cell: (props: any) => {
                 return <span className="w-8">
                     <input
@@ -178,36 +178,42 @@ export default function RSEAccountUsage() {
                         <tbody
                             className="w-full"
                         >
-                            {table.getRowModel().rows.map(row => (
-                                <tr
-                                    className="hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 w-full border-b hover:cursor-pointer"
-                                    key={row.id}
-                                    onClick={(event) => {
-                                        let rse_id = row.original.rse_id
-                                        // if there is no more quota remaining, do nothing on click
-                                        if (isNoQuotaLeftFunction(row)) {
-                                            console.log(isNoQuotaLeftFunction(row))
-                                            return
-                                        }
-                                        if (selectedRSEIDs.includes(rse_id)) {
-                                            setSelectedRSEIDs(selectedRSEIDs.filter(id => id !== rse_id))
-                                        } else {
-                                            setSelectedRSEIDs([...selectedRSEIDs, rse_id])
-                                        }
-                                        row.getToggleSelectedHandler()(event)
-                                    }}
-                                >
-                                    {row.getVisibleCells().map(cell => (
-                    
-                                        <td
-                                            key={cell.id}
-                                            className={cell.column.id === "quota_bytes" ? "hidden sm:table-cell" : ""}
-                                        >
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
+                            {table.getRowModel().rows.map((row) => {
+                                const classes = "w-full border-b hover:cursor-pointer "  // maybe handle spinnywheel here
+                                const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
+                                const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                const rse_id = row.original.rse_id
+                                const isRSESelected = selectedRSEIDs.includes(rse_id)
+                                return (
+                                    <tr
+                                        className={isRSESelected ? classesSelected : classesNormal}
+                                        key={row.id}
+                                        onClick={(event) => {
+                                            // if there is no more quota remaining, do nothing on click
+                                            if (isNoQuotaLeftFunction(row)) {
+                                                console.log(isNoQuotaLeftFunction(row))
+                                                return
+                                            }
+                                            if (isRSESelected) {
+                                                setSelectedRSEIDs(selectedRSEIDs.filter(id => id !== rse_id))
+                                            } else {
+                                                setSelectedRSEIDs([...selectedRSEIDs, rse_id])
+                                            }
+                                            row.getToggleSelectedHandler()(event)
+                                        }}
+                                    >
+                                        {row.getVisibleCells().map(cell => (
+
+                                            <td
+                                                key={cell.id}
+                                                className={cell.column.id === "quota_bytes" ? "hidden sm:table-cell" : ""}
+                                            >
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
                 </div>
