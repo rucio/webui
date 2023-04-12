@@ -19,6 +19,8 @@ export const RSEQuotaTable = (
     props: {
         data: any,
         fetchstatus: FetchStatus,
+        onChange: (selected: string[]) => void,
+        selected?: string[],
     }
 ) => {
     const columnHelper = createColumnHelper<RSEAccountUsageLimitDTO>()
@@ -27,7 +29,13 @@ export const RSEQuotaTable = (
         return (row.original.quota_bytes && row.original.quota_bytes < row.original.used_bytes)
     }
 
-    const [selectedRSEIDs, setSelectedRSEIDs] = useState<string[]>([])
+    const [selectedRSEIDs, setSelectedRSEIDs] = useState<string[]>(props.selected ?? [])
+    useEffect(() => {
+        setSelectedRSEIDs(props.selected ?? [])
+    }, [props.selected])
+    useEffect(() => {
+        props.onChange(selectedRSEIDs)
+    }, [selectedRSEIDs])
 
     const columns: any[] = [
         {
