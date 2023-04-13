@@ -1,6 +1,7 @@
 import { H3 } from "@/component-library/components/Text/Headings/H3"
 import { P } from "@/component-library/components/Text/Content/P"
 import { Number } from "../Text/Content/Number"
+import { DIDTypeTag } from "../Tags/DIDTypeTag"
 
 import { twMerge } from "tailwind-merge"
 
@@ -59,7 +60,16 @@ export const DIDListTable = (
         },
         columnHelper.accessor('name', {
             id: 'name',
-            cell: (info) => <P mono>{info.getValue()}</P>,
+            cell: (info) => {
+                return (
+                    <div className="flex flex-row items-center justify-between mr-2">
+                        <span className="text-left select-all">
+                            <P mono>{info.getValue()}</P>
+                        </span>
+                        <DIDTypeTag type={info.row.original.did_type}/>
+                    </div>
+                )
+            },
         }),
         columnHelper.accessor('scope', {
             id: 'scope',
@@ -102,7 +112,7 @@ export const DIDListTable = (
 
     return (
         <div >
-            <div className={`h-72 overflow-y-auto border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
+            <div className={`h-96 overflow-y-auto border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                 <table className="table-fixed w-full text-left">
                     <thead className="w-full">
                         {table.getHeaderGroups().map(headerGroup => (

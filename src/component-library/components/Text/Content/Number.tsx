@@ -12,5 +12,5 @@ export const Number = (
 
     const i = Math.floor(Math.log(props.number) / Math.log(base))
 
-    return `${parseFloat((props.number/ Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`
+    return <span>{`${parseFloat((props.number/ Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`}</span>
 }

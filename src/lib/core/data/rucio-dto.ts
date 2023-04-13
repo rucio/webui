@@ -19,7 +19,7 @@ export type RSEAccountUsageLimitDTO = {
 export type DIDDTO = {
     name: string;
     scope: string;
-    did_type: string;
+    did_type: DIDType;
     bytes: number;
     length: number;
 }
