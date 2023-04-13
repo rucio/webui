@@ -1,5 +1,6 @@
 import { H3 } from "@/component-library/components/Text/Headings/H3"
 import { P } from "@/component-library/components/Text/Content/P"
+import { Number } from "../Text/Content/Number"
 
 import { twMerge } from "tailwind-merge"
 
@@ -70,7 +71,7 @@ export const DIDListTable = (
         }),
         columnHelper.accessor('bytes', {
             id: 'bytes',
-            cell: (info) => <P mono>{info.getValue()}</P>,
+            cell: (info) => <P mono><Number number={info.getValue()}/></P>,
         }),
         columnHelper.accessor('length', {
             id: 'length',
@@ -110,7 +111,7 @@ export const DIDListTable = (
                                 className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
                             >
                                 <th className="w-8 grow-0"></th>
-                                <th className="w-1/2 flex-auto"><H3>DID Name</H3></th>
+                                <th className="w-2/3 md:1/2 flex-auto"><H3>DID Name</H3></th>
                                 <th className="flex-initial"><H3>Size</H3></th>
                             </tr>
                         ))}
@@ -119,7 +120,7 @@ export const DIDListTable = (
                         className="w-full"
                     >
                         {table.getRowModel().rows.map((row) => {
-                            const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-8 "  // maybe handle spinnywheel here
+                            const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-16 md:h-8 "  // maybe handle spinnywheel here
                             const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
                             const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
                             const did_name = row.original.name
