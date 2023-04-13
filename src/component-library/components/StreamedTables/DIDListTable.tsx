@@ -1,0 +1,157 @@
+import { H3 } from "@/component-library/components/Text/Headings/H3"
+import { P } from "@/component-library/components/Text/Content/P"
+
+import { twMerge } from "tailwind-merge"
+
+import { useEffect, useState } from "react"
+
+import { DIDDTO } from "@/lib/core/data/rucio-dto"
+import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
+import { FetchStatus } from "@tanstack/react-query"
+import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row } from "@tanstack/react-table"
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import "@/component-library/outputtailwind.css";
+import "reflect-metadata";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+export const DIDListTable = (
+    props: {
+        data: any,
+        fetchstatus: FetchStatus,
+        onChange: (selected: string[]) => void,
+        selected?: string[],
+    }
+) => {
+    const columnHelper = createColumnHelper<DIDDTO>()
+
+    const [selectedDIDs, setSelectedDIDs] = useState<string[]>(props.selected ?? [])
+    useEffect(() => {
+        setSelectedDIDs(props.selected ?? [])
+    }, [props.selected])
+    useEffect(() => {
+        props.onChange(selectedDIDs)
+    }, [selectedDIDs])
+
+    const columns: any[] = [
+        {
+            id: 'selection',
+            header: () => <span className="w-8" />,
+            cell: (props: any) => {
+                return <span className="ml-2 w-8">
+                    <input
+                        type="checkbox"
+                        disabled={false}
+                        checked={props.row.getIsSelected()}
+                        onChange={(event: any) => {
+                            if (event.target.checked) {
+                                setSelectedDIDs([...selectedDIDs, props.row.original.rse_id])
+                            }
+                            else {
+                                setSelectedDIDs(selectedDIDs.filter((did) => did !== props.row.original.rse_id))
+                            }
+                            props.row.getToggleSelectedHandler()(event)
+                        }}
+                    />
+                </span>
+            },
+        },
+        columnHelper.accessor('name', {
+            id: 'name',
+            cell: (info) => <P mono>{info.getValue()}</P>,
+        }),
+        columnHelper.accessor('scope', {
+            id: 'scope',
+            cell: (info) => { <P mono>{info.getValue()}</P> },
+        }),
+        columnHelper.accessor('did_type', {
+            id: 'did_type',
+            cell: (info) => <P mono>{info.getValue()}</P>,
+        }),
+        columnHelper.accessor('bytes', {
+            id: 'bytes',
+            cell: (info) => <P mono>{info.getValue()}</P>,
+        }),
+        columnHelper.accessor('length', {
+            id: 'length',
+            cell: (info) => <P mono>{info.getValue()}</P>,
+        }),
+    ]
+    const [columnVisibility, setColumnVisibility] = useState(
+        {
+            selection: true,
+            name: true,
+            bytes: true,
+            scope: false,
+            did_type: false,
+            length: false,
+        }
+    )
+
+    const table = useReactTable<DIDDTO>({
+        data: props.data || [],
+        columns: columns,
+        getCoreRowModel: getCoreRowModel(),
+        debugTable: true,
+        enableRowSelection: true,
+        state: {
+            columnVisibility: columnVisibility,
+        }
+    } as TableOptions<DIDDTO>)
+
+    return (
+        <div >
+            <div className={`h-72 overflow-y-auto border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
+                <table className="table-fixed w-full text-left">
+                    <thead className="w-full">
+                        {table.getHeaderGroups().map(headerGroup => (
+                            <tr
+                                key={headerGroup.id}
+                                className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
+                            >
+                                <th className="w-8 grow-0"></th>
+                                <th className="w-1/2 flex-auto"><H3>DID Name</H3></th>
+                                <th className="flex-initial"><H3>Size</H3></th>
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody
+                        className="w-full"
+                    >
+                        {table.getRowModel().rows.map((row) => {
+                            const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-8 "  // maybe handle spinnywheel here
+                            const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
+                            const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+                            const did_name = row.original.name
+                            const isDIDSelected = selectedDIDs.includes(did_name)
+                            return (
+                                <tr
+                                    className={isDIDSelected ? classesSelected : classesNormal}
+                                    key={row.id}
+                                    onClick={(event) => {
+                                        // if there is no more quota remaining, do nothing on click
+                                        if (isDIDSelected) {
+                                            setSelectedDIDs(selectedDIDs.filter(id => id !== did_name))
+                                        } else {
+                                            setSelectedDIDs([...selectedDIDs, did_name])
+                                        }
+                                        row.getToggleSelectedHandler()(event)
+                                    }}
+                                >
+                                    {row.getVisibleCells().map(cell => (
+                                        <td
+                                            key={cell.id}
+                                            className={cell.column.id === "quota_bytes" ? "hidden sm:table-cell" : ""}
+                                        >
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </td>
+                                    ))}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
