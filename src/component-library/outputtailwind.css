@@ -715,6 +715,10 @@ video {
   height: 3rem;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
 .h-24 {
   height: 6rem;
 }
@@ -1939,6 +1943,10 @@ video {
 @media (min-width: 768px) {
   .md\:visible {
     visibility: visible;
+  }
+
+  .md\:h-8 {
+    height: 2rem;
   }
 
   .md\:w-1\/2 {
