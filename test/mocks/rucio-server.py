@@ -131,5 +131,30 @@ def rseaccountusage():
     except Exception as e:
         return flask.Response(status=500, response=str(e))
 
+@app.route('/listdids')
+def listdids():
+
+    long_list = [
+        {
+            "scope": fake.pystr_format("user.{{first_name}}{{last_name}}"),
+            "name": random.choice(["file", "dataset", "container"]) + "-" + fake.pystr(),
+            "did_type": random.choice(["FILE", "DATASET", "CONTAINER"]),
+            "bytes": random.randint(0, 1e8),
+            "length": random.randint(0, 1e8),
+        } for i in range(100)
+    ]
+    try:
+        def generate():
+            for i in long_list:
+                # time.sleep(2)
+                print(f"sending {i}")
+                yield render_json(i) + '\n'
+                print("sleeping")
+
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
+    
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
