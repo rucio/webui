@@ -15,13 +15,67 @@ import { useEffect, useState } from "react"
 import { DIDDTO } from "@/lib/core/data/rucio-dto"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { FetchStatus } from "@tanstack/react-query"
-import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row, getPaginationRowModel } from "@tanstack/react-table"
+import {
+    createColumnHelper, flexRender, getCoreRowModel, TableOptions,
+    useReactTable, getPaginationRowModel, getFilteredRowModel, Table,
+    Column, Row } from "@tanstack/react-table"
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Dropdown } from "../Dropdown/Dropdown"
+import { TextInput } from "../Input/TextInput"
+
+const Filter = (
+    props: {
+        column: Column<any, any>,
+        table: Table<any>
+    }
+) => {
+    const { column, table } = props;
+    const firstValue = table
+        .getPreFilteredRowModel()
+        .flatRows[0]?.getValue(column.id);
+
+    const columnFilterValue = column.getFilterValue();
+
+    return typeof firstValue === "number" ? (
+        <div className="flex space-x-2">
+            <input
+                type="number"
+                value={(columnFilterValue as [number, number])?.[0] ?? ""}
+                onChange={(e) =>
+                    column.setFilterValue((old: [number, number]) => [
+                        e.target.value,
+                        old?.[1],
+                    ])
+                }
+                placeholder={`Min`}
+                className="w-24 border shadow rounded"
+            />
+            <input
+                type="number"
+                value={(columnFilterValue as [number, number])?.[1] ?? ""}
+                onChange={(e) =>
+                    column.setFilterValue((old: [number, number]) => [
+                        old?.[0],
+                        e.target.value,
+                    ])
+                }
+                placeholder={`Max`}
+            />
+        </div>
+    ) : (
+        <span className="w-full pr-4">
+            <TextInput
+                placeholder="Filter Results"
+                onChange={(e) => column.setFilterValue(e.target.value)}
+            />
+        </span>
+
+    );
+}
 
 export const DIDListTable = (
     props: {
@@ -116,6 +170,7 @@ export const DIDListTable = (
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
         debugTable: true,
         enableRowSelection: true,
         state: {
@@ -198,7 +253,14 @@ export const DIDListTable = (
                                 className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
                             >
                                 <th className="w-8 grow-0"></th>
-                                <th className="w-2/3 md:1/2 flex-auto"><H3>DID Name</H3></th>
+                                <th className="w-2/3 md:1/2 flex-auto">
+                                    <div className="flex flex-row items-center space-x-8">
+                                        <span className="shrink-0">
+                                            <H3>DID Name</H3>
+                                        </span>
+                                        <Filter column={table.getColumn("name")} table={table} />
+                                    </div>
+                                </th>
                                 <th className="flex-initial"><H3>Size</H3></th>
                             </tr>
                         ))}
