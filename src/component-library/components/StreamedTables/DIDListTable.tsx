@@ -20,6 +20,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Dropdown } from "../Dropdown/Dropdown"
 
 export const DIDListTable = (
     props: {
@@ -76,7 +77,7 @@ export const DIDListTable = (
                         <span className="text-left select-all">
                             <P mono>{info.getValue()}</P>
                         </span>
-                        <DIDTypeTag type={info.row.original.did_type}/>
+                        <DIDTypeTag type={info.row.original.did_type} />
                     </div>
                 )
             },
@@ -91,7 +92,7 @@ export const DIDListTable = (
         }),
         columnHelper.accessor('bytes', {
             id: 'bytes',
-            cell: (info) => <P mono><Number number={info.getValue()}/></P>,
+            cell: (info) => <P mono><Number number={info.getValue()} /></P>,
         }),
         columnHelper.accessor('length', {
             id: 'length',
@@ -127,7 +128,7 @@ export const DIDListTable = (
 
     return (
         <div >
-            <div className={`h-96 overflow-y-auto border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
+            <div className={`h-[${pageSize * 30}px] border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                 <table className="table-fixed w-full text-left">
                     <thead className="w-full">
                         {table.getHeaderGroups().map(headerGroup => (
@@ -178,7 +179,7 @@ export const DIDListTable = (
                     </tbody>
                 </table>
             </div>
-            <div className="w-full flex justify-center">
+            <div className="w-full flex justify-center space-x-2">
                 <nav className="w-[400px] flex justify-center space-x-2">
                     <span className="w-1/3 flex space-x-2">
                         <Button
@@ -186,14 +187,14 @@ export const DIDListTable = (
                                 table.setPageIndex(0)
                             }}
                             disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronDoubleLeft/>}
+                            icon={<HiChevronDoubleLeft />}
                         />
                         <Button
                             onClick={() => {
                                 table.previousPage()
                             }}
                             disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronLeft/>}
+                            icon={<HiChevronLeft />}
                         />
                     </span>
                     <span className="w-1/3 inline-flex space-x-2">
@@ -211,17 +212,26 @@ export const DIDListTable = (
                                 table.nextPage()
                             }}
                             disabled={!table.getCanNextPage()}
-                            icon={<HiChevronRight/>}
+                            icon={<HiChevronRight />}
                         />
                         <Button
                             onClick={() => {
                                 table.setPageIndex(table.getPageCount() - 1)
                             }}
                             disabled={!table.getCanNextPage()}
-                            icon={<HiChevronDoubleRight/>}
+                            icon={<HiChevronDoubleRight />}
                         />
                     </span>
                 </nav>
+                <div>
+                    <Dropdown
+                        label={String(pageSize)}
+                        options={[10, 20, 50, 100].map(num => String(num))}
+                        handleChange={(element: any) => {
+                            setPageSize(parseInt(element))
+                        }}
+                    />
+                </div>
             </div>
         </div>
     )
