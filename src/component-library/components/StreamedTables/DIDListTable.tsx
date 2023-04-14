@@ -3,6 +3,9 @@ import { P } from "@/component-library/components/Text/Content/P"
 import { Button } from "../Button/Button"
 import { Number } from "../Text/Content/Number"
 import { DIDTypeTag } from "../Tags/DIDTypeTag"
+import { NumInput } from "../Input/NumInput"
+
+import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi"
 
 import { twMerge } from "tailwind-merge"
 
@@ -17,7 +20,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { NumInput } from "../Input/NumInput"
 
 export const DIDListTable = (
     props: {
@@ -184,14 +186,14 @@ export const DIDListTable = (
                                 table.setPageIndex(0)
                             }}
                             disabled={!table.getCanPreviousPage()}
-                            label={"<<"}
+                            icon={<HiChevronDoubleLeft/>}
                         />
                         <Button
                             onClick={() => {
                                 table.previousPage()
                             }}
                             disabled={!table.getCanPreviousPage()}
-                            label={"<"}
+                            icon={<HiChevronLeft/>}
                         />
                     </span>
                     <span className="w-1/3 inline-flex space-x-2">
@@ -208,14 +210,14 @@ export const DIDListTable = (
                                 table.nextPage()
                             }}
                             disabled={!table.getCanNextPage()}
-                            label={">"}
+                            icon={<HiChevronRight/>}
                         />
                         <Button
                             onClick={() => {
                                 table.setPageIndex(table.getPageCount() - 1)
                             }}
                             disabled={!table.getCanNextPage()}
-                            label={">>"}
+                            icon={<HiChevronDoubleRight/>}
                         />
                     </span>
                 </div>
