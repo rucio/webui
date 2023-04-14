@@ -1,5 +1,6 @@
 import { H3 } from "@/component-library/components/Text/Headings/H3"
 import { P } from "@/component-library/components/Text/Content/P"
+import { Button } from "../Button/Button"
 import { Number } from "../Text/Content/Number"
 import { DIDTypeTag } from "../Tags/DIDTypeTag"
 
@@ -10,18 +11,20 @@ import { useEffect, useState } from "react"
 import { DIDDTO } from "@/lib/core/data/rucio-dto"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { FetchStatus } from "@tanstack/react-query"
-import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row } from "@tanstack/react-table"
+import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row, getPaginationRowModel } from "@tanstack/react-table"
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { NumInput } from "../Input/NumInput"
 
 export const DIDListTable = (
     props: {
         data: any,
         fetchstatus: FetchStatus,
         onChange: (selected: string[]) => void,
+        pageSize: number,
         selected?: string[],
     }
 ) => {
@@ -34,6 +37,11 @@ export const DIDListTable = (
     useEffect(() => {
         props.onChange(selectedDIDs)
     }, [selectedDIDs])
+
+    const [pageSize, setPageSize] = useState(props.pageSize)
+    useEffect(() => {
+        setPageSize(props.pageSize)
+    }, [props.pageSize])
 
     const columns: any[] = [
         {
@@ -103,12 +111,17 @@ export const DIDListTable = (
         data: props.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
         debugTable: true,
         enableRowSelection: true,
         state: {
             columnVisibility: columnVisibility,
         }
     } as TableOptions<DIDDTO>)
+
+    useEffect(() => {
+        table.setPageSize(pageSize)
+    }, [pageSize])
 
     return (
         <div >
@@ -162,6 +175,50 @@ export const DIDListTable = (
                         })}
                     </tbody>
                 </table>
+            </div>
+            <div className="w-full flex justify-center">
+                <div className="w-1/3 flex justify-center space-x-2">
+                    <span className="w-1/3 flex space-x-2">
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(0)
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            label={"<<"}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.previousPage()
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            label={"<"}
+                        />
+                    </span>
+                    <span className="w-1/3 inline-flex space-x-2">
+                        <NumInput value={table.getState().pagination.pageIndex + 1} />
+                        <span className="w-full mt-2">
+                            <P>
+                                of {table.getPageCount()}
+                            </P>
+                        </span>
+                    </span>
+                    <span className="w-1/3 space-x-2 flex">
+                        <Button
+                            onClick={() => {
+                                table.nextPage()
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            label={">"}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(table.getPageCount() - 1)
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            label={">>"}
+                        />
+                    </span>
+                </div>
             </div>
         </div>
     )
