@@ -88,18 +88,7 @@ export const DIDListTable = (
 ) => {
     const columnHelper = createColumnHelper<DIDDTO>()
 
-    const [selectedDIDs, setSelectedDIDs] = useState<string[]>(props.selected ?? [])
-    useEffect(() => {
-        setSelectedDIDs(props.selected ?? [])
-    }, [props.selected])
-    useEffect(() => {
-        props.onChange(selectedDIDs)
-    }, [selectedDIDs])
 
-    const [pageSize, setPageSize] = useState(props.pageSize)
-    useEffect(() => {
-        setPageSize(props.pageSize)
-    }, [props.pageSize])
 
     const columns: any[] = [
         {
@@ -178,9 +167,29 @@ export const DIDListTable = (
         }
     } as TableOptions<DIDDTO>)
 
+    const [selectedDIDs, setSelectedDIDs] = useState<string[]>(props.selected ?? [])
+    useEffect(() => {
+        setSelectedDIDs(props.selected ?? [])
+    }, [props.selected])
+    useEffect(() => {
+        props.onChange(selectedDIDs)
+    }, [selectedDIDs])
+
+    const [pageSize, setPageSize] = useState(props.pageSize)
+    useEffect(() => {
+        setPageSize(props.pageSize)
+    }, [props.pageSize])
     useEffect(() => {
         table.setPageSize(pageSize)
     }, [pageSize])
+
+    const [pageIndex, setPageIndex] = useState(table.getState().pagination.pageIndex)
+    useEffect(() => {
+        setPageIndex(table.getState().pagination.pageIndex)
+    }, [table.getState().pagination.pageIndex])
+    useEffect(() => {
+        table.setPageIndex(pageIndex)
+    }, [pageIndex])
 
     return (
         <div className="flex flex-col space-y-2">
@@ -301,6 +310,57 @@ export const DIDListTable = (
                         })}
                     </tbody>
                 </table>
+            </div>
+            <div className="w-full flex justify-center">
+                <div className="w-1/3 flex justify-center space-x-2">
+                    <span className="w-1/3 flex space-x-2">
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(0)
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            label={"<<"}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.previousPage()
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            label={"<"}
+                        />
+                    </span>
+                    <span className="w-1/3 inline-flex space-x-2">
+                        <NumInput
+                            value={pageIndex + 1}
+                            onChange={(event) => {
+                                setPageIndex(event.target.value - 1)
+                            }}
+                            min={1}
+                            max={table.getPageCount()}
+                        />
+                        <span className="w-full mt-2">
+                            <P>
+                                of {table.getPageCount()}
+                            </P>
+                        </span>
+                    </span>
+                    <span className="w-1/3 space-x-2 flex">
+                        <Button
+                            onClick={() => {
+                                table.nextPage()
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            label={">"}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(table.getPageCount() - 1)
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            label={">>"}
+                        />
+                    </span>
+                </div>
             </div>
         </div>
     )
