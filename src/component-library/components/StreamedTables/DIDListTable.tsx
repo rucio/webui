@@ -4,6 +4,7 @@ import { Button } from "../Button/Button"
 import { Number } from "../Text/Content/Number"
 import { DIDTypeTag } from "../Tags/DIDTypeTag"
 import { NumInput } from "../Input/NumInput"
+import { Label } from "../Text/Content/Label"
 
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi"
 
@@ -127,7 +128,67 @@ export const DIDListTable = (
     }, [pageSize])
 
     return (
-        <div >
+        <div className="flex flex-col space-y-2">
+            <div className="w-full flex justify-center space-x-2">
+                <nav className="w-[400px] flex justify-center space-x-2">
+                    <span className="w-1/3 flex space-x-2">
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(0)
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            icon={<HiChevronDoubleLeft />}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.previousPage()
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            icon={<HiChevronLeft />}
+                        />
+                    </span>
+                    <span className="w-1/3 inline-flex space-x-2 items-end">
+
+                        <NumInput value={table.getState().pagination.pageIndex + 1} />
+                        <span className="w-full">
+                            <P>
+                                of {table.getPageCount()}
+                            </P>
+                        </span>
+                    </span>
+                    <span className="w-1/3 space-x-2 flex">
+                        <Button
+                            onClick={() => {
+                                table.nextPage()
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            icon={<HiChevronRight />}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(table.getPageCount() - 1)
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            icon={<HiChevronDoubleRight />}
+                        />
+                    </span>
+                </nav>
+                <div className="flex flex-row space-x-2 items-end">
+                    <Label label="page-size">
+                        <P>Rows per page:</P>
+                    </Label>
+                    <span className="w-24 h-full">
+                        <Dropdown
+                            label={String(pageSize)}
+                            options={[10, 20, 50, 100].map(num => String(num))}
+                            handleChange={(element: any) => {
+                                setPageSize(parseInt(element))
+                            }}
+                            id="page-size"
+                        />
+                    </span>
+                </div>
+            </div>
             <div className={`h-[${pageSize * 30}px] border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                 <table className="table-fixed w-full text-left">
                     <thead className="w-full">
@@ -178,60 +239,6 @@ export const DIDListTable = (
                         })}
                     </tbody>
                 </table>
-            </div>
-            <div className="w-full flex justify-center space-x-2">
-                <nav className="w-[400px] flex justify-center space-x-2">
-                    <span className="w-1/3 flex space-x-2">
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(0)
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronDoubleLeft />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.previousPage()
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronLeft />}
-                        />
-                    </span>
-                    <span className="w-1/3 inline-flex space-x-2">
-
-                        <NumInput value={table.getState().pagination.pageIndex + 1} />
-                        <span className="w-full mt-2">
-                            <P>
-                                of {table.getPageCount()}
-                            </P>
-                        </span>
-                    </span>
-                    <span className="w-1/3 space-x-2 flex">
-                        <Button
-                            onClick={() => {
-                                table.nextPage()
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronRight />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(table.getPageCount() - 1)
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronDoubleRight />}
-                        />
-                    </span>
-                </nav>
-                <div>
-                    <Dropdown
-                        label={String(pageSize)}
-                        options={[10, 20, 50, 100].map(num => String(num))}
-                        handleChange={(element: any) => {
-                            setPageSize(parseInt(element))
-                        }}
-                    />
-                </div>
             </div>
         </div>
     )

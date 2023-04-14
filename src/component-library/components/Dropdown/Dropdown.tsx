@@ -2,19 +2,16 @@ import { useState } from 'react'
 import { Button } from '../Button/Button'
 import { Collapsible } from '../Helpers/Collapsible'
 
-interface DropdownProps {
-    label?: string
-    options?: Array<string>
-    handleChange?: (args: any) => void
-}
-
-export const Dropdown = ({
-    label = "hello",
-    options = [],
-    handleChange = () => { },
-}: DropdownProps) => {
+export const Dropdown = (
+    props: {
+        label: string,
+        options: Array<string>,
+        handleChange: (args: any) => void,
+        id?: string
+    }
+    ) => {
     const [isActive, setActive] = useState<boolean>(false)
-    const [selectedLabel, setSelectedLabel] = useState<string>(label)
+    const [selectedLabel, setSelectedLabel] = useState<string>(props.label)
     let icon = () => {
         return (
             <svg
@@ -38,13 +35,13 @@ export const Dropdown = ({
                 <div className="absolute right-0 mt-2 w-56 rounded border">
                     <div className="p-2 flex flex-col bg-white">
                         <ol>
-                            {options.map((element: any, index: number) => {
+                            {props.options.map((element: any, index: number) => {
                                 return (
                                     <li
                                         key={index}
                                         onClick={() => {
                                             setActive(!isActive);
-                                            handleChange(element);
+                                            props.handleChange(element);
                                             setSelectedLabel(element);
                                         }}
                                         className="hover:bg-gray-200"
