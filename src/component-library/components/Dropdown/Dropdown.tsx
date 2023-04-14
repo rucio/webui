@@ -32,7 +32,7 @@ export const Dropdown = (
         <div className="w-full relative">
             <Button label={selectedLabel} onClick={() => {setActive(!isActive)}} icon={icon()} />
             <Collapsible showIf={isActive}>
-                <div className="absolute right-0 mt-2 w-56 rounded border">
+                <div className="absolute right-0 mt-2 w-56 rounded border z-[100]">
                     <div className="p-2 flex flex-col bg-white">
                         <ol>
                             {props.options.map((element: any, index: number) => {
