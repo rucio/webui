@@ -179,7 +179,7 @@ export const DIDListTable = (
                 </table>
             </div>
             <div className="w-full flex justify-center">
-                <div className="w-1/3 flex justify-center space-x-2">
+                <nav className="w-[400px] flex justify-center space-x-2">
                     <span className="w-1/3 flex space-x-2">
                         <Button
                             onClick={() => {
@@ -197,6 +197,7 @@ export const DIDListTable = (
                         />
                     </span>
                     <span className="w-1/3 inline-flex space-x-2">
+
                         <NumInput value={table.getState().pagination.pageIndex + 1} />
                         <span className="w-full mt-2">
                             <P>
@@ -220,7 +221,7 @@ export const DIDListTable = (
                             icon={<HiChevronDoubleRight/>}
                         />
                     </span>
-                </div>
+                </nav>
             </div>
         </div>
     )
