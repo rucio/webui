@@ -18,13 +18,36 @@ export const SearchDropdown = (
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             className={twMerge(
-                "w-[50rem] h-16 bg-amber-400 p-2",
+                "w-[50rem] flex flex-col bg-white p-2",
+                "rounded-md border shadow-md",
                 props.inputSelected || isHovering ? "visible" : "invisible",
                 "absolute mt-2"
             )}
         >
-            {props.searchstring}
+            <nav
+                className="w-full h-full flex flex-col items-start"
+            >
+                <a className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer" >Search for <i>{props.searchstring}</i> in <b>DIDs</b></a>
+                <a className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer" >Search for <i>{props.searchstring}</i> in <b>Rules</b></a>
+                <a className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer" >Search for <i>{props.searchstring}</i> in <b>RSEs</b></a>
+            </nav>
         </div>
+    )
+}
+
+export const HeaderLinks = (
+    props: {
+        children: any
+        link: string,
+    }
+) => {
+    return (
+        <a
+            className="text-gray-100 hover:text-gray-400 font-bold text-l hover:cursor-pointer"
+            href={props.link}
+        >
+            {props.children}
+        </a>
     )
 }
 
@@ -48,35 +71,44 @@ export const Layout = (
                         className="md:hidden"
                     >
                         <a className="text-gray-100">
-                            <HiBars3 className="text-4xl"/>
+                            <HiBars3 className="text-4xl" />
                         </a>
                     </span>
                     <span className="flex flex-row space-x-2">
-                        <a className="bg-green-500 w-12 h-12"/>
-                        <a className="bg-purple-500 w-12 h-12"/>
+                        <a className="bg-green-500 w-12 h-12" />
+                        <a className="bg-purple-500 w-12 h-12" />
                     </span>
-                    <span className="hidden md:visible md:flex space-x-2 items-center">
+                    <span className="hidden md:visible md:flex space-x-4 items-center">
                         <span className="relative">
                             <input
-                                className="p-2 rounded-lg w-48 lg:w-96 bg-gray-600 focus:bg-white"
+                                className={twMerge(
+                                    "p-2 rounded-lg w-48 lg:w-96 bg-gray-600 text-gray-100",
+                                    "focus:bg-white focus:text-black"
+                                )}
                                 placeholder="Search"
                                 onFocus={() => setIsSearching(true)}
                                 onBlur={() => setIsSearching(false)}
                                 onChange={(e) => setSearchString(e.target.value)}
                             />
-                            <SearchDropdown inputSelected={isSearching} searchstring={searchString}/>
+                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} />
                         </span>
-                        <a className="text-gray-100 font-bold text-xl">Hi</a>
-                        <a className="text-gray-100 font-bold text-xl">Hi</a>
-                        <a className="text-gray-100 font-bold text-xl">Hi</a>
+                        <HeaderLinks link="/createrule">Create Rule</HeaderLinks>
+                        <HeaderLinks link="/dids">List DIDs</HeaderLinks>
+                        <HeaderLinks link="/rules">List Rules</HeaderLinks>
                     </span>
                     <span className="flex space-x-2 items-end">
-                        <a className="invisible md:visible text-gray-100">
-                            <HiOutlineBell className="text-4xl"/>
+                        <a
+                            className="invisible md:visible text-gray-100"
+                            href="/notifications"
+                        >
+                            <HiOutlineBell className="text-4xl" />
                         </a>
-                        <a className="text-gray-100 flex items-center">
-                            <HiUserCircle className="text-4xl"/>
-                            <HiChevronDown className="hidden md:inline"/>
+                        <a
+                            className="text-gray-100 flex items-center"
+                            href="/profile"
+                        >
+                            <HiUserCircle className="text-4xl" />
+                            <HiChevronDown className="hidden md:inline" />
                         </a>
                     </span>
                 </nav>
