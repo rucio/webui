@@ -4,9 +4,6 @@ import { HiOutlineBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons
 import { twMerge } from "tailwind-merge"
 
 import { useState, useEffect, useRef } from "react"
-import { sleep } from "@tanstack/query-core/build/lib/utils"
-
-
 
 export const Layout = (
     props: {
@@ -24,14 +21,18 @@ export const Layout = (
         }
     ) => {
 
+        const [isMouseOver, setIsMouseOver] = useState(false)
+
         return (
             <div
                 className={twMerge(
                     "w-[50rem] flex flex-col bg-white p-2",
                     "rounded-md border shadow-md",
-                    props.inputSelected ? "visible" : "invisible",
+                    (props.inputSelected || isMouseOver) ? "visible" : "invisible",
                     "absolute mt-2"
                 )}
+                onMouseEnter={() => { setIsMouseOver(true) }}
+                onMouseLeave={() => { setIsMouseOver(false) }}
             >
                 <nav
                     className="w-full h-full flex flex-col items-start"
@@ -39,19 +40,21 @@ export const Layout = (
                     <a
                         className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
                         href="/dids"
-                        onClick={() => {console.log("dids")}}
+                        onMouseDown={e => { e.preventDefault() }}
                     >
                         Search for <i>{props.searchstring}</i> in <b>DIDs</b>
                     </a>
                     <a
                         className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
                         href="/rules"
+                        onMouseDown={e => { e.preventDefault() }}
                     >
                         Search for <i>{props.searchstring}</i> in <b>Rules</b>
                     </a>
                     <a
                         className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
                         href="/rses"
+                        onMouseDown={e => { e.preventDefault() }}
                     >
                         Search for <i>{props.searchstring}</i> in <b>RSEs</b>
                     </a>
