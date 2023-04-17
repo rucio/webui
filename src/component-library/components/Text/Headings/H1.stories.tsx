@@ -11,5 +11,5 @@ const Template: StoryFn<typeof H1> = args => <H1 {...args} />
 
 export const Primary = Template.bind({})
 Primary.args = {
-    text: 'H1',
+    children: 'H1',
 }

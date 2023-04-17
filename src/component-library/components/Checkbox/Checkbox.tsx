@@ -11,7 +11,7 @@ interface CheckboxProps {
 export const Checkbox = ({
     label,
     isChecked = true,
-    disabled = true,
+    disabled = false,
     handleChange,
     type
 }: CheckboxProps) => {
@@ -19,10 +19,10 @@ export const Checkbox = ({
     useEffect(() => {
         setChecked(isChecked)
     }, [isChecked])
-    var inputClasses: string[] = ["w-4 h-4"]
+    var inputClasses: string[] = ["w-4 h-4 hover:cursor-pointer"]
     var labelClasses: string[] = ["ml-2 text-sm font-medium"]
     if (!disabled) {
-        labelClasses.push("hover:cursor-pointer", "dark:text-white")
+        labelClasses.push("dark:text-white")
     }
     else {
         labelClasses.push("text-gray-500", "dark:text-gray-300")

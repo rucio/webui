@@ -1,13 +1,18 @@
 export const TimelineLiSpan = (props: {
     children: any,
-    highlight?: boolean,
+    highlight: boolean,
+    completed?: boolean
 }) => {
-    var classes = ["h-6", "w-6", "rounded-full", "text-center", "text-[10px]", "font-bold", "leading-6"]
+    var classes = ["h-10", "w-10", "rounded-full", "text-center", "text-xl", "font-bold", "leading-10"]
     var highlightClasses = classes.concat("bg-blue-600", "text-white")
+    var completedClasses = classes.concat("bg-green-600", "text-white")
     var normalClasses = classes.concat("bg-gray-100", "dark:bg-gray-600")
     return (
-        <span className={props.highlight ? highlightClasses.join(" ") : normalClasses.join(" ")}>
-            {props.children}
+        <span className={
+            props.highlight ? highlightClasses.join(" ") : (props.completed ? completedClasses.join(" ") : normalClasses.join(" "))
+        }
+        >
+            <h3>{props.children}</h3>
         </span>
     )
 }

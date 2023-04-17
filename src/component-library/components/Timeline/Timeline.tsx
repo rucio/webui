@@ -1,14 +1,16 @@
 import { TimelineLiSpan } from './Helpers/TimelineLiSpan'
+import { H3 } from '../Text/Headings/H3'
 
-interface TimelineProps {
-    steps: Array<string>,
-    active: number
-}
-
-export const Timeline = ({
-    steps = [],
-    active = 1
-}: TimelineProps) => {
+export const Timeline = (
+    props: {
+        steps: Array<string>
+        active: number
+        onJump: (goal: number) => void
+    }
+) => {
+    var noClickClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-black", "p-2", "hover:cursor-default"]
+    var clickableClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-black", "p-2", "hover:cursor-pointer"]
+    
     return (
         <div className='w-full'>
             <div
@@ -17,14 +19,27 @@ export const Timeline = ({
                 <ol
                     className="relative z-10 flex justify-between text-sm font-medium text-gray-700 dark:text-gray-100"
                 >
-                    {steps.map((element: any, index: number) => {
+                    {props.steps.map((element: any, index: number) => {
                         // the black bgs are not actually the same colour, dont understand why
                         return (
-                            <li className="flex items-center gap-2 bg-white dark:bg-[#1B1C1D] p-2" key={index}>
-                                <TimelineLiSpan highlight={index === active ? true : false}>
+                            <li
+                                className={index < props.active ? clickableClasses.join(" ") : noClickClasses.join(" ")}
+                                key={index}
+                                onClick={() => {
+                                    if(index < props.active)  {
+                                        props.onJump(index)
+                                    }
+                                }}
+                            >
+                                <TimelineLiSpan
+                                    highlight={index === props.active}
+                                    completed={index < props.active}
+                                >
                                     {index + 1}
                                 </TimelineLiSpan>
-                                <span className="hidden sm:block">{element}</span>
+                                <span className="hidden sm:block align-middle">
+                                    <H3>{element}</H3>
+                                </span>
                             </li>
                         )
 

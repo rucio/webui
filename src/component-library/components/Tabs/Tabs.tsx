@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react"
 
-export const Tabs = ({
-    tabs = [],
-    active,
-    alignment,
-    size,
-    rounded,
-    handleClick,
-}: TabsProps) => {
-    const [activestate, setActivestate] = useState(active)
+export const Tabs = (
+    props: {
+        tabs: string[],
+        active: number,
+        handleClick: (event: any) => void,
+        dataTestid?: string,
+    }
+) => {
+    const [activestate, setActivestate] = useState<string>(props.active.toString())
     useEffect(() => {
-        setActivestate(active)
-    }, [active])
+        setActivestate(props.active.toString())
+    }, [props.active])
     var onClick = (event: any) => {
         setActivestate(event.target.id)
-        handleClick?.(event)
+        props.handleClick(event)
     }
     return (
-        <ul className="flex flex-wrap flex-row list-none font-bold">
-            {tabs.map((element, index) => {
-                return index == activestate ? (
+        <ul
+            className="flex flex-wrap flex-row list-none font-bold"
+            data-testid={props.dataTestid ?? "tabs"}
+        >
+            {props.tabs.map((element, index) => {
+                return index === Number(activestate) ? (
                     <li
                         onClick={onClick}
                         className="flex-auto text-center"

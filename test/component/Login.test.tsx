@@ -54,7 +54,7 @@ describe("Login Page Test", () => {
             expect(OIDCButton).toBeInTheDocument()
         })
         const oidcParent = screen.getByTestId('oidc-buttons')
-        expect(oidcParent.className).not.toContain('collapse')
+        expect(oidcParent.className).not.toContain('hidden')
 
         // Check VO tabs are rendered
         voList.map((vo) => {
@@ -72,15 +72,15 @@ describe("Login Page Test", () => {
 
         // check userpass form is collapsed/uncollapsed on click
         const loginFormParent = screen.getByTestId('userpass-form')
-        expect(loginFormParent.className).toContain('collapse')
+        expect(loginFormParent.className).toContain('hidden')
         fireEvent.click(userpassButton)
-        expect(loginFormParent.className).not.toContain('collapse')
+        expect(loginFormParent.className).not.toContain('hidden')
         fireEvent.click(userpassButton)
-        expect(loginFormParent.className).toContain('collapse')
+        expect(loginFormParent.className).toContain('hidden')
 
         // Check no error message is rendered
         const errorElement = screen.queryByTestId('login-page-error')
-        expect(errorElement?.className).toBe('collapse')
+        expect(errorElement?.className).toBe('hidden')
 
     }, 1000 * 60 * 5)
     
@@ -100,7 +100,7 @@ describe("Login Page Test", () => {
 
         // Check OIDC buttons: 2 pieces and collapsed
         const oidcParent = screen.getByTestId('oidc-buttons')
-        expect(oidcParent.className).toContain('collapse')
+        expect(oidcParent.className).toContain('hidden')
         
     })
 
@@ -205,7 +205,7 @@ describe("Login Page Test", () => {
         
         // check if Alert is displayed with message Invalid Credentials
         const alertCollapsible = screen.getByTestId('login-page-error')
-        expect(alertCollapsible.className).not.toContain('collapse')
+        expect(alertCollapsible.className).not.toContain('hidden')
 
         const alertCloseButton = screen.getByRole('button', {name: /Close/})
         
@@ -213,20 +213,20 @@ describe("Login Page Test", () => {
         await act( async () => fireEvent.click(alertCloseButton))
 
         // check if Alert is not displayed
-        expect(alertCollapsible.className).toContain('collapse')
+        expect(alertCollapsible.className).toContain('hidden')
 
         // Login again
         const x509LoginButton = screen.getByRole('button', {name: /x509/})
         await act( async () => fireEvent.click(x509LoginButton))
 
         // check if Alert is displayed with message Oops, something went wrong
-        expect(alertCollapsible.className).not.toContain('collapse')
+        expect(alertCollapsible.className).not.toContain('hidden')
         expect(alertCollapsible.textContent).toContain('Oops, something went wrong')
 
         // close the alert again
         await act( async () => fireEvent.click(alertCloseButton))
 
         // check if Alert is not displayed
-        expect(alertCollapsible.className).toContain('collapse')
+        expect(alertCollapsible.className).toContain('hidden')
     })
 })
