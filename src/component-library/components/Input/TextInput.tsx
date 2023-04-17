@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge"
+
 export const TextInput = (
     props: {
         children?: any,
@@ -6,13 +8,17 @@ export const TextInput = (
         onChange?: (event: any) => void,
         onEnterkey?: (event: any) => void,
         id?: string,
-    }
+        className?: string
+    },
 ) => {
     return (
         <input
             id={props.id}
             placeholder={props.placeholder}
-            className="w-full border rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white dark:border-2"
+            className={twMerge(
+                "w-full border rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white dark:border-2",
+                props.className ?? ""
+            )}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onKeyDown={(e) => {
