@@ -4,6 +4,7 @@ import { HiOutlineBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons
 import { twMerge } from "tailwind-merge"
 
 import { useState, useEffect, useRef } from "react"
+import { Collapsible } from "../../Helpers/Collapsible"
 
 export const Layout = (
     props: {
@@ -13,6 +14,7 @@ export const Layout = (
 
     const [isSearching, setIsSearching] = useState(false)
     const [searchString, setSearchString] = useState<string>("")
+    const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
 
     const SearchDropdown = (
         props: {
@@ -67,14 +69,16 @@ export const Layout = (
         props: {
             children: any,
             link: string,
-            onFocus?: () => void,
+            className?: string,
         }
     ) => {
         return (
             <a
-                className="text-gray-100 hover:text-gray-400 font-bold text-l hover:cursor-pointer"
+                className={twMerge(
+                    "hover:text-gray-400 font-bold text-l hover:cursor-pointer text-gray-100",
+                    props.className ?? "",
+                )}
                 href={props.link}
-                onFocus={props.onFocus}
             >
                 {props.children}
             </a>
@@ -85,18 +89,25 @@ export const Layout = (
     return (
         <div>
             <header
-                className="w-full h-16 bg-gray-800 p-2"
+                className={twMerge(
+                    "w-full flex flex-col bg-gray-800 space-y-2 p-2",
+                    "md:h-16"
+                )}
             >
                 <nav
                     className="w-full h-full flex justify-between items-center"
                 >
                     <span
-                        className="md:hidden"
+                        className="flex md:hidden"
                     >
-                        <a className="text-gray-100">
+                        <button
+                            className="text-gray-100"
+                            onClick={() => { setIsHamburgerOpen(!isHamburgerOpen) }}
+                        >
                             <HiBars3 className="text-4xl" />
-                        </a>
+                        </button>
                     </span>
+
                     <span className="flex flex-row space-x-2">
                         <a className="bg-green-500 w-12 h-12" />
                         <a className="bg-purple-500 w-12 h-12" />
@@ -113,7 +124,7 @@ export const Layout = (
                                 onBlur={() => setIsSearching(false)}
                                 onChange={(e) => setSearchString(e.target.value)}
                             />
-                            <SearchDropdown inputSelected={isSearching} searchstring={searchString}/>
+                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} />
                         </span>
                         <HeaderLinks link="/createrule">Create Rule</HeaderLinks>
                         <HeaderLinks link="/dids">List DIDs</HeaderLinks>
@@ -121,7 +132,7 @@ export const Layout = (
                     </span>
                     <span className="flex space-x-2 items-end">
                         <a
-                            className="invisible md:visible text-gray-100"
+                            className="hidden md:block text-gray-100"
                             href="/notifications"
                         >
                             <HiOutlineBell className="text-4xl" />
@@ -135,6 +146,15 @@ export const Layout = (
                         </a>
                     </span>
                 </nav>
+                <Collapsible showIf={isHamburgerOpen}>
+                    <nav
+                        className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 "
+                    >
+                        <HeaderLinks link="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
+                        <HeaderLinks link="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
+                        <HeaderLinks link="/rules" className="w-full pt-2">List Rules</HeaderLinks>
+                    </nav>
+                </Collapsible>
             </header>
             <main>
                 {props.child}
