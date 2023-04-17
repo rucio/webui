@@ -153,6 +153,7 @@ export const Layout = (
                         <HeaderLinks link="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
                         <HeaderLinks link="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
                         <HeaderLinks link="/rules" className="w-full pt-2">List Rules</HeaderLinks>
+                        <HeaderLinks link="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiOutlineBell/></span></HeaderLinks>
                     </nav>
                 </Collapsible>
             </header>
