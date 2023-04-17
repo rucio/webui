@@ -3,62 +3,82 @@ import { TextInput } from "../../Input/TextInput"
 import { HiOutlineBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons/hi2"
 import { twMerge } from "tailwind-merge"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { sleep } from "@tanstack/query-core/build/lib/utils"
 
-export const SearchDropdown = (
-    props: {
-        inputSelected: boolean,
-        searchstring: string
-    }
-) => {
-    const [isHovering, setIsHovering] = useState(false)
 
-    return (
-        <div
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            className={twMerge(
-                "w-[50rem] flex flex-col bg-white p-2",
-                "rounded-md border shadow-md",
-                props.inputSelected || isHovering ? "visible" : "invisible",
-                "absolute mt-2"
-            )}
-        >
-            <nav
-                className="w-full h-full flex flex-col items-start"
-            >
-                <a className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer" >Search for <i>{props.searchstring}</i> in <b>DIDs</b></a>
-                <a className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer" >Search for <i>{props.searchstring}</i> in <b>Rules</b></a>
-                <a className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer" >Search for <i>{props.searchstring}</i> in <b>RSEs</b></a>
-            </nav>
-        </div>
-    )
-}
-
-export const HeaderLinks = (
-    props: {
-        children: any
-        link: string,
-    }
-) => {
-    return (
-        <a
-            className="text-gray-100 hover:text-gray-400 font-bold text-l hover:cursor-pointer"
-            href={props.link}
-        >
-            {props.children}
-        </a>
-    )
-}
 
 export const Layout = (
     props: {
         child: React.ReactNode
     }
 ) => {
-    // images to be returned by static nextjs
+
     const [isSearching, setIsSearching] = useState(false)
     const [searchString, setSearchString] = useState<string>("")
+
+    const SearchDropdown = (
+        props: {
+            inputSelected: boolean,
+            searchstring: string,
+        }
+    ) => {
+
+        return (
+            <div
+                className={twMerge(
+                    "w-[50rem] flex flex-col bg-white p-2",
+                    "rounded-md border shadow-md",
+                    props.inputSelected ? "visible" : "invisible",
+                    "absolute mt-2"
+                )}
+            >
+                <nav
+                    className="w-full h-full flex flex-col items-start"
+                >
+                    <a
+                        className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
+                        href="/dids"
+                        onClick={() => {console.log("dids")}}
+                    >
+                        Search for <i>{props.searchstring}</i> in <b>DIDs</b>
+                    </a>
+                    <a
+                        className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
+                        href="/rules"
+                    >
+                        Search for <i>{props.searchstring}</i> in <b>Rules</b>
+                    </a>
+                    <a
+                        className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
+                        href="/rses"
+                    >
+                        Search for <i>{props.searchstring}</i> in <b>RSEs</b>
+                    </a>
+                </nav>
+            </div>
+        )
+    }
+
+    const HeaderLinks = (
+        props: {
+            children: any,
+            link: string,
+            onFocus?: () => void,
+        }
+    ) => {
+        return (
+            <a
+                className="text-gray-100 hover:text-gray-400 font-bold text-l hover:cursor-pointer"
+                href={props.link}
+                onFocus={props.onFocus}
+            >
+                {props.children}
+            </a>
+        )
+    }
+
+    // images to be returned by static nextjs
     return (
         <div>
             <header
@@ -90,7 +110,7 @@ export const Layout = (
                                 onBlur={() => setIsSearching(false)}
                                 onChange={(e) => setSearchString(e.target.value)}
                             />
-                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} />
+                            <SearchDropdown inputSelected={isSearching} searchstring={searchString}/>
                         </span>
                         <HeaderLinks link="/createrule">Create Rule</HeaderLinks>
                         <HeaderLinks link="/dids">List DIDs</HeaderLinks>
