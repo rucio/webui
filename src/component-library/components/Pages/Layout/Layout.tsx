@@ -15,6 +15,7 @@ export const Layout = (
     const [isSearching, setIsSearching] = useState(false)
     const [searchString, setSearchString] = useState<string>("")
     const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
+    const [isProfileOpen, setIsProfileOpen] = useState(false)
 
     const SearchDropdown = (
         props: {
@@ -130,20 +131,44 @@ export const Layout = (
                         <HeaderLinks link="/dids">List DIDs</HeaderLinks>
                         <HeaderLinks link="/rules">List Rules</HeaderLinks>
                     </span>
-                    <span className="flex space-x-2 items-end">
+                    <span className="flex space-x-2 items-end relative">
                         <a
                             className="hidden md:block text-gray-100"
                             href="/notifications"
                         >
                             <HiOutlineBell className="text-4xl" />
                         </a>
-                        <a
+                        <button
                             className="text-gray-100 flex items-center"
-                            href="/profile"
+                            onClick={() => setIsProfileOpen(!isProfileOpen)}
                         >
                             <HiUserCircle className="text-4xl" />
                             <HiChevronDown className="hidden md:inline" />
-                        </a>
+                        </button>
+                        <div
+                            className={twMerge("flex flex-col bg-white p-2 w-56",
+                                "rounded-md border shadow-md", 
+                                isProfileOpen ? "visible" : "invisible",
+                                "absolute top-10 right-0"
+                            )}
+                            onMouseEnter={e => e.preventDefault()}
+                        >
+                            <a
+                                className="text-gray-800 hover:bg-gray-200 hover:cursor-pointer "
+                            >
+                                Switch to <b>Andromeda</b>
+                            </a>
+                            <a
+                                className="text-gray-800 hover:bg-gray-200 hover:cursor-pointer "
+                            >
+                                Switch to <b>Cassiopeia</b>
+                            </a>
+                            <a
+                                className="text-gray-800 hover:bg-gray-200 hover:cursor-pointer flex items-center justify-between"
+                            >
+                                Logout <HiUserCircle className="text-4xl" />
+                            </a>
+                        </div>
                     </span>
                 </nav>
                 <Collapsible showIf={isHamburgerOpen}>
@@ -153,7 +178,7 @@ export const Layout = (
                         <HeaderLinks link="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
                         <HeaderLinks link="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
                         <HeaderLinks link="/rules" className="w-full pt-2">List Rules</HeaderLinks>
-                        <HeaderLinks link="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiOutlineBell/></span></HeaderLinks>
+                        <HeaderLinks link="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiOutlineBell /></span></HeaderLinks>
                     </nav>
                 </Collapsible>
             </header>
