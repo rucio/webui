@@ -1,6 +1,32 @@
 import { TextInput } from "../../Input/TextInput"
 
 import { HiOutlineBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons/hi2"
+import { twMerge } from "tailwind-merge"
+
+import { useState, useEffect } from "react"
+
+export const SearchDropdown = (
+    props: {
+        inputSelected: boolean,
+        searchstring: string
+    }
+) => {
+    const [isHovering, setIsHovering] = useState(false)
+
+    return (
+        <div
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            className={twMerge(
+                "w-[50rem] h-16 bg-amber-400 p-2",
+                props.inputSelected || isHovering ? "visible" : "invisible",
+                "absolute mt-2"
+            )}
+        >
+            {props.searchstring}
+        </div>
+    )
+}
 
 export const Layout = (
     props: {
@@ -8,6 +34,8 @@ export const Layout = (
     }
 ) => {
     // images to be returned by static nextjs
+    const [isSearching, setIsSearching] = useState(false)
+    const [searchString, setSearchString] = useState<string>("")
     return (
         <div>
             <header
@@ -28,10 +56,16 @@ export const Layout = (
                         <a className="bg-purple-500 w-12 h-12"/>
                     </span>
                     <span className="hidden md:visible md:flex space-x-2 items-center">
-                        <input
-                            className="p-2 rounded-lg w-48 lg:w-96 bg-gray-600 focus:bg-white"
-                            placeholder="Search"
-                        />
+                        <span className="relative">
+                            <input
+                                className="p-2 rounded-lg w-48 lg:w-96 bg-gray-600 focus:bg-white"
+                                placeholder="Search"
+                                onFocus={() => setIsSearching(true)}
+                                onBlur={() => setIsSearching(false)}
+                                onChange={(e) => setSearchString(e.target.value)}
+                            />
+                            <SearchDropdown inputSelected={isSearching} searchstring={searchString}/>
+                        </span>
                         <a className="text-gray-100 font-bold text-xl">Hi</a>
                         <a className="text-gray-100 font-bold text-xl">Hi</a>
                         <a className="text-gray-100 font-bold text-xl">Hi</a>
