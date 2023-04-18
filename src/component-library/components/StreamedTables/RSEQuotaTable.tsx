@@ -182,7 +182,14 @@ export const RSEQuotaTable = (
                                 >
                                     <span className="flex flex-row justify-between items-center pr-4">
                                         <H3>Remaining Quota</H3>
-                                        {{ asc: <HiSortAscending className="text-xl"/>, desc: <HiSortDescending className="text-xl"/>, }[headerGroup.headers.find((h) => h.id === "remaining_bytes")?.column.getIsSorted() as string] ?? <HiDotsHorizontal className="text-xl"/>}
+                                        <span className="text-gray-500 dark:text-gray-200 text-xl">
+                                            {
+                                                { 
+                                                    asc: <HiSortAscending/>, desc: <HiSortDescending/>, 
+                                                }[headerGroup.headers.find((h) => h.id === "remaining_bytes")?.column.getIsSorted() as string] ??
+                                                <HiDotsHorizontal/>
+                                            }
+                                        </span>
                                     </span>
                                 </th>
                                 <th
@@ -198,7 +205,14 @@ export const RSEQuotaTable = (
                                 >
                                     <span className="flex flex-row justify-between items-center pr-4">
                                         <H3>Total Quota</H3>
-                                        {{ asc: <HiSortAscending className="text-xl"/>, desc: <HiSortDescending className="text-xl"/>, }[headerGroup.headers.find((h) => h.id === "quota_bytes")?.column.getIsSorted() as string] ?? <HiDotsHorizontal className="text-xl"/>}
+                                        <span className="text-gray-500 dark:text-gray-200 text-xl">
+                                            {
+                                                { 
+                                                    asc: <HiSortAscending/>, desc: <HiSortDescending/>, 
+                                                }[headerGroup.headers.find((h) => h.id === "quota_bytes")?.column.getIsSorted() as string] ??
+                                                <HiDotsHorizontal/>
+                                            }
+                                        </span>
                                     </span>
                                 </th>
                             </tr>
