@@ -8,12 +8,17 @@ import { useEffect, useState } from "react"
 import { RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { FetchStatus } from "@tanstack/react-query"
-import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row } from "@tanstack/react-table"
+import {
+    createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row,
+    getSortedRowModel, SortingState,
+} from "@tanstack/react-table"
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+import { HiSortAscending, HiSortDescending, HiDotsHorizontal} from "react-icons/hi"
 
 export const RSEQuotaTable = (
     props: {
@@ -36,6 +41,8 @@ export const RSEQuotaTable = (
     useEffect(() => {
         props.onChange(selectedRSEIDs)
     }, [selectedRSEIDs])
+
+    const [sorting, setSorting] = useState<SortingState>([])
 
     const columns: any[] = [
         {
@@ -132,6 +139,7 @@ export const RSEQuotaTable = (
         data: props.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         debugTable: true,
         enableRowSelection: true,
         state: {
@@ -149,10 +157,40 @@ export const RSEQuotaTable = (
                                 key={headerGroup.id}
                                 className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
                             >
-                                <th className="w-8 grow-0"></th>
-                                <th className="w-1/2 flex-auto"><H3>RSE Name</H3></th>
-                                <th className="flex-initial"><H3>Remaining Quota</H3></th>
-                                <th className="hidden sm:table-cell sm:flex-initial"><H3>Total Quota</H3></th>
+                                <th className="w-8 flex-none grow-0"></th>
+                                <th className="w-1/2 sm:w-2/3 flex-auto grow"><H3>RSE Name</H3></th>
+                                <th
+                                    {...{
+                                        className: twMerge(
+                                            "w-1/2 sm:w-1/3 h-full",
+                                            "hover:cursor-pointer select-none"
+                                        ),
+                                        onClick: (e) => {
+                                            headerGroup.headers.find((h) => h.id === "remaining_bytes")?.column.getToggleSortingHandler()?.(e)
+                                        }
+                                    }}
+                                >
+                                    <span className="flex flex-row justify-between items-center pr-4">
+                                        <H3>Remaining Quota</H3>
+                                        {{ asc: <HiSortAscending className="text-xl"/>, desc: <HiSortDescending className="text-xl"/>, }[headerGroup.headers.find((h) => h.id === "remaining_bytes")?.column.getIsSorted() as string] ?? <HiDotsHorizontal className="text-xl"/>}
+                                    </span>
+                                </th>
+                                <th
+                                    {...{
+                                        className: twMerge(
+                                            "hidden sm:table-cell sm:w-1/3 h-full",
+                                            "hover:cursor-pointer select-none"
+                                        ),
+                                        onClick: (e) => {
+                                            headerGroup.headers.find((h) => h.id === "quota_bytes")?.column.getToggleSortingHandler()?.(e)
+                                        }
+                                    }}
+                                >
+                                    <span className="flex flex-row justify-between items-center pr-4">
+                                        <H3>Total Quota</H3>
+                                        {{ asc: <HiSortAscending className="text-xl"/>, desc: <HiSortDescending className="text-xl"/>, }[headerGroup.headers.find((h) => h.id === "quota_bytes")?.column.getIsSorted() as string] ?? <HiDotsHorizontal className="text-xl"/>}
+                                    </span>
+                                </th>
                             </tr>
                         ))}
                     </thead>
