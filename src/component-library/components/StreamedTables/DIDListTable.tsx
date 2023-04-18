@@ -5,6 +5,7 @@ import { Number } from "../Text/Content/Number"
 import { DIDTypeTag } from "../Tags/DIDTypeTag"
 import { NumInput } from "../Input/NumInput"
 import { Label } from "../Text/Content/Label"
+import { Filter } from "./Filter"
 
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi"
 
@@ -27,55 +28,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Dropdown } from "../Dropdown/Dropdown"
 import { TextInput } from "../Input/TextInput"
 
-const Filter = (
-    props: {
-        column: Column<any, any>,
-        table: Table<any>
-    }
-) => {
-    const { column, table } = props;
-    const firstValue = table
-        .getPreFilteredRowModel()
-        .flatRows[0]?.getValue(column.id);
-
-    const columnFilterValue = column.getFilterValue();
-
-    return typeof firstValue === "number" ? (
-        <div className="flex space-x-2">
-            <input
-                type="number"
-                value={(columnFilterValue as [number, number])?.[0] ?? ""}
-                onChange={(e) =>
-                    column.setFilterValue((old: [number, number]) => [
-                        e.target.value,
-                        old?.[1],
-                    ])
-                }
-                placeholder={`Min`}
-                className="w-24 border shadow rounded"
-            />
-            <input
-                type="number"
-                value={(columnFilterValue as [number, number])?.[1] ?? ""}
-                onChange={(e) =>
-                    column.setFilterValue((old: [number, number]) => [
-                        old?.[0],
-                        e.target.value,
-                    ])
-                }
-                placeholder={`Max`}
-            />
-        </div>
-    ) : (
-        <span className="w-full pr-4">
-            <TextInput
-                placeholder="Filter Results"
-                onChange={(e) => column.setFilterValue(e.target.value)}
-            />
-        </span>
-
-    );
-}
 
 export const DIDListTable = (
     props: {
@@ -267,7 +219,7 @@ export const DIDListTable = (
                                         <span className="shrink-0">
                                             <H3>DID Name</H3>
                                         </span>
-                                        <Filter column={table.getColumn("name")} table={table} />
+                                        <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
                                     </div>
                                 </th>
                                 <th className="flex-initial"><H3>Size</H3></th>
