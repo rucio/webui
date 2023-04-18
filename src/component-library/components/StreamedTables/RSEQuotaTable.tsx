@@ -9,8 +9,9 @@ import { RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { FetchStatus } from "@tanstack/react-query"
 import {
-    createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row,
+    createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row, Column,
     getSortedRowModel, SortingState,
+    getFilteredRowModel,
 } from "@tanstack/react-table"
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -19,6 +20,7 @@ import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { HiSortAscending, HiSortDescending, HiDotsHorizontal} from "react-icons/hi"
+import { Filter } from "./Filter"
 
 export const RSEQuotaTable = (
     props: {
@@ -140,6 +142,7 @@ export const RSEQuotaTable = (
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
         debugTable: true,
         enableRowSelection: true,
         state: {
@@ -158,7 +161,14 @@ export const RSEQuotaTable = (
                                 className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
                             >
                                 <th className="w-8 flex-none grow-0"></th>
-                                <th className="w-1/2 sm:w-2/3 flex-auto grow"><H3>RSE Name</H3></th>
+                                <th className="w-1/2 sm:w-2/3 flex-auto grow">
+                                    <div className={twMerge("flex flex-row items-center space-x-8")}>
+                                        <span className="shrink-0">
+                                            <H3>RSE Name</H3>
+                                        </span>
+                                        <Filter column={table.getColumn("rse") as Column<RSEAccountUsageLimitDTO, unknown>} table={table} />
+                                    </div>
+                                </th>
                                 <th
                                     {...{
                                         className: twMerge(
