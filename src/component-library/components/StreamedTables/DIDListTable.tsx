@@ -13,7 +13,7 @@ import { twMerge } from "tailwind-merge"
 
 import { useEffect, useState } from "react"
 
-import { DIDDTO } from "@/lib/core/data/rucio-dto"
+import { DIDDTO, DIDType } from "@/lib/core/data/rucio-dto"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { FetchStatus } from "@tanstack/react-query"
 import {
@@ -149,6 +149,8 @@ export const DIDListTable = (
         table.setPageIndex(pageIndex)
     }, [pageIndex])
 
+    const [filterType, setFilterType] = useState<DIDType | undefined>(undefined)
+
     return (
         <div className="flex flex-col space-y-2">
             <div className="w-full flex justify-center space-x-2">
@@ -228,7 +230,44 @@ export const DIDListTable = (
                                         <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
                                     </div>
                                 </th>
-                                <th className="flex-initial"><H3>Type</H3></th>
+                                <th
+                                    className="flex-initial hover:cursor-pointer select-none"
+                                    onClick={(e) => {
+                                        // create a match statement for the filter type
+                                        const filterchange = (filterType: DIDType | undefined) => {
+                                            setFilterType(filterType)
+                                            var column = table.getColumn("did_type") as Column<DIDDTO, unknown>
+                                            column.setFilterValue(filterType ?? "")
+                                        }
+                                        switch (filterType) {
+                                            case undefined: {
+                                                filterchange("File")
+                                                break
+                                            }
+                                            case "File": {
+                                                filterchange("Dataset")
+                                                break
+                                            }
+                                            case "Dataset": {
+                                                filterchange("Container")
+                                                break
+                                            }
+                                            case "Container": {
+                                                filterchange(undefined)
+                                                break
+                                            }
+                                        }
+                                    }}
+                                >
+                                    <span className="flex flex-row justify-between items-center pr-4">
+                                        <H3>Type</H3>
+                                        <span>
+                                            {
+                                                filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200"/> : <DIDTypeTag type={filterType} forcesmall/>
+                                            }
+                                        </span>
+                                    </span>
+                                </th>
                                 <th
                                     className={twMerge(
                                         "flex-initial",
