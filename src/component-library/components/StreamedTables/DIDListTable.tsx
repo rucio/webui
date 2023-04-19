@@ -40,6 +40,7 @@ export const DIDListTable = (
         onChange: (selected: string[]) => void,
         pageSize: number,
         selected?: string[],
+        useScopenames?: boolean
     }
 ) => {
     const columnHelper = createColumnHelper<DIDDTO>()
@@ -73,7 +74,7 @@ export const DIDListTable = (
             id: 'name',
             cell: (info) => {
                 return (
-                    <P mono>{info.getValue()}</P>
+                    <P mono>{props.useScopenames ? info.row.original.scope + ":" + info.getValue() : info.getValue()}</P>
                 )
             },
         }),
@@ -129,9 +130,11 @@ export const DIDListTable = (
     // most important part: selecting DIDs (rows)
     // this is handled OUTSIDE of tanstack
     const [selectedDIDs, setSelectedDIDs] = useState<string[]>(props.selected ?? [])
+    // if the selection is changed externally, reflect this internally
     useEffect(() => {
         setSelectedDIDs(props.selected ?? [])
     }, [props.selected])
+    // if the selection is changed internally, reflect this externally
     useEffect(() => {
         props.onChange(selectedDIDs)
     }, [selectedDIDs])
@@ -228,21 +231,6 @@ export const DIDListTable = (
                         />
                     </span>
                 </nav>
-                {/* <div className="flex flex-row space-x-2 items-end">
-                    <Label label="page-size">
-                        <P>Rows per page:</P>
-                    </Label>
-                    <span className="w-24 h-full">
-                        <Dropdown
-                            label={String(pageSize)}
-                            options={[10, 20, 50, 100].map(num => String(num))}
-                            handleChange={(element: any) => {
-                                setPageSize(parseInt(element))
-                            }}
-                            id="page-size"
-                        />
-                    </span>
-                </div> */}
             </div>
             <div className={`h-[${pageSize * 30}px] border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                 <table className="table-fixed w-full text-left">
@@ -250,13 +238,13 @@ export const DIDListTable = (
                         {table.getHeaderGroups().map(headerGroup => (
                             <tr
                                 key={headerGroup.id}
-                                className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
+                                className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
                             >
                                 <th className="w-6 sm:w-8 grow-0"></th>
                                 <th className="w-2/3 flex-auto">
                                     <div className="flex flex-row items-center space-x-8 justify-between">
                                         <span className="shrink-0">
-                                            <H3>DID Name</H3>
+                                            <H3>{props.useScopenames ? "DID" : "DID Name"}</H3>
                                         </span>
                                         <span className="hidden sm:flex w-full">
                                             <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
@@ -315,7 +303,7 @@ export const DIDListTable = (
                                         }
                                     }}
                                 >
-                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 md:pr-4">
+                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 space-y-1 md:pr-4">
                                         <H3>Type</H3>
                                         <span className="h-6">
                                             {
@@ -333,7 +321,7 @@ export const DIDListTable = (
                                         headerGroup.headers.find((h) => h.id === "bytes")?.column.getToggleSortingHandler()?.(e)
                                     }}
                                 >
-                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 md:pr-4">
+                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 space-y-1 md:pr-4">
                                         <H3>Size</H3>
                                         <span className="text-gray-500 dark:text-gray-200 text-xl h-6">
                                             {
@@ -355,8 +343,8 @@ export const DIDListTable = (
                             const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-16 md:h-8 "  // maybe handle spinnywheel here
                             const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
                             const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
-                            const did_name = row.original.name
-                            const isDIDSelected = selectedDIDs.includes(did_name)
+                            const did_scopename = row.original.scope + ":" + row.original.name
+                            const isDIDSelected = selectedDIDs.includes(did_scopename)
                             return (
                                 <tr
                                     className={isDIDSelected ? classesSelected : classesNormal}
@@ -364,9 +352,9 @@ export const DIDListTable = (
                                     onClick={(event) => {
                                         // if there is no more quota remaining, do nothing on click
                                         if (isDIDSelected) {
-                                            setSelectedDIDs(selectedDIDs.filter(id => id !== did_name))
+                                            setSelectedDIDs(selectedDIDs.filter(id => id !== did_scopename))
                                         } else {
-                                            setSelectedDIDs([...selectedDIDs, did_name])
+                                            setSelectedDIDs([...selectedDIDs, did_scopename])
                                         }
                                         row.getToggleSelectedHandler()(event)
                                     }}
