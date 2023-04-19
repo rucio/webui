@@ -126,6 +126,8 @@ export const DIDListTable = (
         }
     } as TableOptions<DIDDTO>)
 
+    // most important part: selecting DIDs (rows)
+    // this is handled OUTSIDE of tanstack
     const [selectedDIDs, setSelectedDIDs] = useState<string[]>(props.selected ?? [])
     useEffect(() => {
         setSelectedDIDs(props.selected ?? [])
@@ -134,6 +136,7 @@ export const DIDListTable = (
         props.onChange(selectedDIDs)
     }, [selectedDIDs])
 
+    // Page Size: this can be removed if we don't want to allow the user to change the page size
     const [pageSize, setPageSize] = useState(props.pageSize)
     useEffect(() => {
         setPageSize(props.pageSize)
@@ -142,6 +145,7 @@ export const DIDListTable = (
         table.setPageSize(pageSize)
     }, [pageSize])
 
+    // Pagination
     const [pageIndex, setPageIndex] = useState(table.getState().pagination.pageIndex)
     useEffect(() => {
         setPageIndex(table.getState().pagination.pageIndex)
@@ -150,7 +154,33 @@ export const DIDListTable = (
         table.setPageIndex(pageIndex)
     }, [pageIndex])
 
+    // filtering by DID Type
     const [filterType, setFilterType] = useState<DIDType | undefined>(undefined)
+
+    // handle window resize
+    const [windowSize, setWindowSize] = useState([
+        window.innerWidth,
+        window.innerHeight,
+    ]);
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
+    // using the window size to determine whether we shall show the input form with full width
+    const [smallScreenNameFiltering, setSmallScreenNameFiltering] = useState(false)
+    useEffect(() => {
+        if (windowSize[0] > 640) {
+            setSmallScreenNameFiltering(false)
+        }
+    }, [windowSize])
 
     return (
         <div className="flex flex-col space-y-2">
@@ -238,6 +268,22 @@ export const DIDListTable = (
                                                 <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
                                             </button>
                                         </span>
+                                    </div>
+                                    <div
+                                        id="smallScreenNameFiltering"
+                                        className={twMerge(
+                                            "absolute inset-0",
+                                            smallScreenNameFiltering ? "flex" : "hidden",
+                                            "bg-white",
+                                            "p-2 flex-row justify-between space-x-2 items-center"
+                                        )}
+                                    >
+                                        <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
+                                        <button
+                                            onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                        >
+                                            <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
+                                        </button>
                                     </div>
                                 </th>
                                 <th
