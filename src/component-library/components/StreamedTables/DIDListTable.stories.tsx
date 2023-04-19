@@ -119,4 +119,5 @@ DIDListTable.args = {
     onChange: (selected: string[]) => { console.log(selected) },
     pageSize: 10,
     selected: [],
+    useScopenames: false,
 }
