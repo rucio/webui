@@ -19,7 +19,8 @@ import { FetchStatus } from "@tanstack/react-query"
 import {
     createColumnHelper, flexRender, getCoreRowModel, TableOptions,
     useReactTable, getPaginationRowModel, getFilteredRowModel, Table,
-    Column, Row } from "@tanstack/react-table"
+    Column, Row
+} from "@tanstack/react-table"
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
@@ -69,12 +70,7 @@ export const DIDListTable = (
             id: 'name',
             cell: (info) => {
                 return (
-                    <div className="flex flex-row items-center justify-between mr-2">
-                        <span className="text-left select-all">
-                            <P mono>{info.getValue()}</P>
-                        </span>
-                        <DIDTypeTag type={info.row.original.did_type} />
-                    </div>
+                    <P mono>{info.getValue()}</P>
                 )
             },
         }),
@@ -84,7 +80,13 @@ export const DIDListTable = (
         }),
         columnHelper.accessor('did_type', {
             id: 'did_type',
-            cell: (info) => <P mono>{info.getValue()}</P>,
+            cell: (info) => {
+                return (
+                    <div className="flex flex-row items-center">
+                        <DIDTypeTag type={info.row.original.did_type} />
+                    </div>
+                )
+            },
         }),
         columnHelper.accessor('bytes', {
             id: 'bytes',
@@ -101,7 +103,7 @@ export const DIDListTable = (
             name: true,
             bytes: true,
             scope: false,
-            did_type: false,
+            did_type: true,
             length: false,
         }
     )
@@ -222,6 +224,7 @@ export const DIDListTable = (
                                         <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
                                     </div>
                                 </th>
+                                <th className="flex-initial"><H3>Type</H3></th>
                                 <th className="flex-initial"><H3>Size</H3></th>
                             </tr>
                         ))}
@@ -252,7 +255,6 @@ export const DIDListTable = (
                                     {row.getVisibleCells().map(cell => (
                                         <td
                                             key={cell.id}
-                                            className={cell.column.id === "quota_bytes" ? "hidden sm:table-cell" : ""}
                                         >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </td>
