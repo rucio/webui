@@ -19,7 +19,7 @@ import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { HiSortAscending, HiSortDescending, HiDotsHorizontal} from "react-icons/hi"
+import { HiSortAscending, HiSortDescending, HiDotsHorizontal, HiSearch, HiCheck } from "react-icons/hi"
 import { Filter } from "./Filter"
 
 export const RSEQuotaTable = (
@@ -44,7 +44,30 @@ export const RSEQuotaTable = (
         props.onChange(selectedRSEIDs)
     }, [selectedRSEIDs])
 
+    const [windowSize, setWindowSize] = useState([
+        window.innerWidth,
+        window.innerHeight,
+    ]);
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
+
     const [sorting, setSorting] = useState<SortingState>([])
+    const [smallScreenNameFiltering, setSmallScreenNameFiltering] = useState(false)
+    useEffect(() => {
+        if (windowSize[0] > 640) {
+            setSmallScreenNameFiltering(false)
+        }
+    }, [windowSize])
 
     const columns: any[] = [
         {
@@ -162,11 +185,36 @@ export const RSEQuotaTable = (
                             >
                                 <th className="w-8 flex-none grow-0"></th>
                                 <th className="w-1/2 sm:w-2/3 flex-auto grow">
-                                    <div className={twMerge("flex flex-row items-center space-x-8")}>
+                                    <div className={twMerge("flex flex-row items-center space-x-8 justify-between")}>
                                         <span className="shrink-0">
                                             <H3>RSE Name</H3>
                                         </span>
+                                        <span className="hidden sm:flex w-full">
+                                            <Filter column={table.getColumn("rse") as Column<RSEAccountUsageLimitDTO, unknown>} table={table} />
+                                        </span>
+                                        <span className="flex sm:hidden pr-4 relative">
+                                            <button
+                                                onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                            >
+                                                <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <div
+                                        id="smallScreenNameFiltering"
+                                        className={twMerge(
+                                            "absolute inset-0",
+                                            smallScreenNameFiltering ? "flex" : "hidden",
+                                            "bg-white",
+                                            "p-2 flex-row justify-between space-x-2 items-center"
+                                        )}
+                                    >
                                         <Filter column={table.getColumn("rse") as Column<RSEAccountUsageLimitDTO, unknown>} table={table} />
+                                        <button
+                                            onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                        >
+                                            <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
+                                        </button>
                                     </div>
                                 </th>
                                 <th
@@ -184,10 +232,10 @@ export const RSEQuotaTable = (
                                         <H3>Remaining Quota</H3>
                                         <span className="text-gray-500 dark:text-gray-200 text-xl">
                                             {
-                                                { 
-                                                    asc: <HiSortAscending/>, desc: <HiSortDescending/>, 
+                                                {
+                                                    asc: <HiSortAscending />, desc: <HiSortDescending />,
                                                 }[headerGroup.headers.find((h) => h.id === "remaining_bytes")?.column.getIsSorted() as string] ??
-                                                <HiDotsHorizontal/>
+                                                <HiDotsHorizontal />
                                             }
                                         </span>
                                     </span>
@@ -207,10 +255,10 @@ export const RSEQuotaTable = (
                                         <H3>Total Quota</H3>
                                         <span className="text-gray-500 dark:text-gray-200 text-xl">
                                             {
-                                                { 
-                                                    asc: <HiSortAscending/>, desc: <HiSortDescending/>, 
+                                                {
+                                                    asc: <HiSortAscending />, desc: <HiSortDescending />,
                                                 }[headerGroup.headers.find((h) => h.id === "quota_bytes")?.column.getIsSorted() as string] ??
-                                                <HiDotsHorizontal/>
+                                                <HiDotsHorizontal />
                                             }
                                         </span>
                                     </span>

@@ -575,6 +575,13 @@ video {
   position: sticky;
 }
 
+.inset-0 {
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+
 .bottom-0 {
   bottom: 0px;
 }
@@ -2003,8 +2010,16 @@ video {
     display: inline;
   }
 
+  .sm\:flex {
+    display: flex;
+  }
+
   .sm\:table-cell {
     display: table-cell;
+  }
+
+  .sm\:hidden {
+    display: none;
   }
 
   .sm\:w-1\/3 {
