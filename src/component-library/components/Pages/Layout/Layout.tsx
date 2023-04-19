@@ -3,7 +3,7 @@ import { TextInput } from "../../Input/TextInput"
 import { HiOutlineBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons/hi2"
 import { twMerge } from "tailwind-merge"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, MutableRefObject } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 
 export const Layout = (
@@ -86,6 +86,17 @@ export const Layout = (
         )
     }
 
+    const accountMenuRef = useRef(null)
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (!accountMenuRef.current.contains(event.target)) {  // TODO fix this type error
+                setIsProfileOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+    }, [accountMenuRef])
+
+
     // images to be returned by static nextjs
     return (
         <div>
@@ -147,11 +158,12 @@ export const Layout = (
                         </button>
                         <div
                             className={twMerge("flex flex-col bg-white p-2 w-56",
-                                "rounded-md border shadow-md", 
+                                "rounded-md border shadow-md",
                                 isProfileOpen ? "visible" : "invisible",
                                 "absolute top-10 right-0"
                             )}
                             onMouseEnter={e => e.preventDefault()}
+                            ref={accountMenuRef}
                         >
                             <a
                                 className="text-gray-800 hover:bg-gray-200 hover:cursor-pointer "
