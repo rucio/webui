@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge"
 export const DIDTypeTag = (
     props: {
         type: DIDType,
+        forcesmall?: boolean
     }
 ) => {
 
@@ -13,7 +14,7 @@ export const DIDTypeTag = (
         const handleResize = () => setWindowWidth(window.innerWidth)
         window.addEventListener('resize', handleResize)
     }, [])
-    const belowMedium = windowWidth < 768
+    const belowMedium = (windowWidth < 768) || props.forcesmall
 
     const baseClasses = ["rounded-full md:mr-2 md:px-2.5 md:py-0.5 md:rounded w-6 h-6 md:w-24 text-center"]
     var classes// done this way so tailwind compiles
