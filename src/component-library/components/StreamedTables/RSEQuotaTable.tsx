@@ -61,7 +61,6 @@ export const RSEQuotaTable = (
         };
     }, []);
 
-    const [sorting, setSorting] = useState<SortingState>([])
     const [smallScreenNameFiltering, setSmallScreenNameFiltering] = useState(false)
     useEffect(() => {
         if (windowSize[0] > 640) {
