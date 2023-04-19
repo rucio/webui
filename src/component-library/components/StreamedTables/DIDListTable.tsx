@@ -51,7 +51,7 @@ export const DIDListTable = (
             id: 'selection',
             header: () => <span className="w-8" />,
             cell: (props: any) => {
-                return <span className="ml-2 w-8">
+                return <span className="ml-1 w-6 sm:ml-2 sm:w-8">
                     <input
                         type="checkbox"
                         disabled={false}
@@ -85,7 +85,7 @@ export const DIDListTable = (
             id: 'did_type',
             cell: (info) => {
                 return (
-                    <div className="flex flex-row items-center">
+                    <div className="flex flex-row items-center justify-center">
                         <DIDTypeTag type={info.row.original.did_type} />
                     </div>
                 )
@@ -93,7 +93,8 @@ export const DIDListTable = (
         }),
         columnHelper.accessor('bytes', {
             id: 'bytes',
-            cell: (info) => <P mono><Number number={info.getValue()} /></P>,
+            cell: (info) =>
+                <P mono><Number number={info.getValue()} /></P>,
         }),
         columnHelper.accessor('length', {
             id: 'length',
@@ -197,7 +198,7 @@ export const DIDListTable = (
                         />
                     </span>
                 </nav>
-                <div className="flex flex-row space-x-2 items-end">
+                {/* <div className="flex flex-row space-x-2 items-end">
                     <Label label="page-size">
                         <P>Rows per page:</P>
                     </Label>
@@ -211,7 +212,7 @@ export const DIDListTable = (
                             id="page-size"
                         />
                     </span>
-                </div>
+                </div> */}
             </div>
             <div className={`h-[${pageSize * 30}px] border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                 <table className="table-fixed w-full text-left">
@@ -221,17 +222,26 @@ export const DIDListTable = (
                                 key={headerGroup.id}
                                 className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-12"
                             >
-                                <th className="w-8 grow-0"></th>
-                                <th className="w-2/3 md:1/2 flex-auto">
-                                    <div className="flex flex-row items-center space-x-8">
+                                <th className="w-6 sm:w-8 grow-0"></th>
+                                <th className="w-2/3 flex-auto">
+                                    <div className="flex flex-row items-center space-x-8 justify-between">
                                         <span className="shrink-0">
                                             <H3>DID Name</H3>
                                         </span>
-                                        <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
+                                        <span className="hidden sm:flex w-full">
+                                            <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
+                                        </span>
+                                        <span className="flex sm:hidden pr-4 relative">
+                                            <button
+                                                onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                            >
+                                                <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
+                                            </button>
+                                        </span>
                                     </div>
                                 </th>
                                 <th
-                                    className="flex-initial hover:cursor-pointer select-none"
+                                    className="flex-auto hover:cursor-pointer select-none"
                                     onClick={(e) => {
                                         // create a match statement for the filter type
                                         const filterchange = (filterType: DIDType | undefined) => {
@@ -259,27 +269,27 @@ export const DIDListTable = (
                                         }
                                     }}
                                 >
-                                    <span className="flex flex-row justify-between items-center pr-4">
+                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 md:pr-4">
                                         <H3>Type</H3>
-                                        <span>
+                                        <span className="h-6">
                                             {
-                                                filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200"/> : <DIDTypeTag type={filterType} forcesmall/>
+                                                filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag type={filterType} forcesmall />
                                             }
                                         </span>
                                     </span>
                                 </th>
                                 <th
                                     className={twMerge(
-                                        "flex-initial",
+                                        "flex-auto",
                                         "hover:cursor-pointer select-none"
                                     )}
                                     onClick={(e) => {
                                         headerGroup.headers.find((h) => h.id === "bytes")?.column.getToggleSortingHandler()?.(e)
                                     }}
                                 >
-                                    <span className="flex flex-row justify-between items-center pr-4">
+                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 md:pr-4">
                                         <H3>Size</H3>
-                                        <span className="text-gray-500 dark:text-gray-200 text-xl">
+                                        <span className="text-gray-500 dark:text-gray-200 text-xl h-6">
                                             {
                                                 {
                                                     asc: <HiSortAscending />, desc: <HiSortDescending />,

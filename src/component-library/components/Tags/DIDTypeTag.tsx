@@ -16,7 +16,7 @@ export const DIDTypeTag = (
     }, [])
     const belowMedium = (windowWidth < 768) || props.forcesmall
 
-    const baseClasses = ["rounded-full md:mr-2 md:px-2.5 md:py-0.5 md:rounded w-6 h-6 md:w-24 text-center"]
+    const baseClasses = ["rounded-full md:mr-2 md:px-2.5 md:py-0.5 md:rounded w-6 h-6 md:w-full text-center"]
     var classes// done this way so tailwind compiles
     // switch determining the colour depending on the type
     switch (props.type.toUpperCase()) {
