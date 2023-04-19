@@ -19,8 +19,11 @@ import { FetchStatus } from "@tanstack/react-query"
 import {
     createColumnHelper, flexRender, getCoreRowModel, TableOptions,
     useReactTable, getPaginationRowModel, getFilteredRowModel, Table,
+    getSortedRowModel,
     Column, Row
 } from "@tanstack/react-table"
+
+import { HiSortAscending, HiSortDescending, HiDotsHorizontal, HiSearch, HiCheck } from "react-icons/hi"
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
@@ -114,6 +117,7 @@ export const DIDListTable = (
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         debugTable: true,
         enableRowSelection: true,
         state: {
@@ -225,7 +229,27 @@ export const DIDListTable = (
                                     </div>
                                 </th>
                                 <th className="flex-initial"><H3>Type</H3></th>
-                                <th className="flex-initial"><H3>Size</H3></th>
+                                <th
+                                    className={twMerge(
+                                        "flex-initial",
+                                        "hover:cursor-pointer select-none"
+                                    )}
+                                    onClick={(e) => {
+                                        headerGroup.headers.find((h) => h.id === "bytes")?.column.getToggleSortingHandler()?.(e)
+                                    }}
+                                >
+                                    <span className="flex flex-row justify-between items-center pr-4">
+                                        <H3>Size</H3>
+                                        <span className="text-gray-500 dark:text-gray-200 text-xl">
+                                            {
+                                                {
+                                                    asc: <HiSortAscending />, desc: <HiSortDescending />,
+                                                }[headerGroup.headers.find((h) => h.id === "bytes")?.column.getIsSorted() as string] ??
+                                                <HiDotsHorizontal />
+                                            }
+                                        </span>
+                                    </span>
+                                </th>
                             </tr>
                         ))}
                     </thead>
