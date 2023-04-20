@@ -86,10 +86,10 @@ export const Layout = (
         )
     }
 
-    const accountMenuRef = useRef(null)
+    const accountMenuRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
         const handleClickOutside = (event: any) => {
-            if (!accountMenuRef.current.contains(event.target)) {  // TODO fix this type error
+            if (!accountMenuRef.current?.contains(event.target)) {  // TODO fix this type error
                 setIsProfileOpen(false)
             }
         }
