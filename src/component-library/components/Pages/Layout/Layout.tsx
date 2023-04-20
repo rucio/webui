@@ -1,7 +1,7 @@
 import { TextInput } from "../../Input/TextInput"
 
-import { HiBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons/hi2"
-import { HiLogout, HiSwitchHorizontal, HiCog } from "react-icons/hi"
+import { HiUserCircle, HiBell } from "react-icons/hi2"
+import { HiMenu, HiChevronDown } from "react-icons/hi"
 import { twMerge } from "tailwind-merge"
 
 import { useState, useEffect, useRef, MutableRefObject } from "react"
@@ -13,6 +13,8 @@ import { AccountDropdown } from "./AccountDropdown"
 export interface LayoutViewModel {
     accountActive: string,
     accountsPossible: string[],
+    rucioProjectLink: string,
+    experimentProjectLink: string,
 }
 
 export const Layout = (
@@ -127,13 +129,13 @@ export const Layout = (
                             className="text-gray-100"
                             onClick={() => { setIsHamburgerOpen(!isHamburgerOpen) }}
                         >
-                            <HiBars3 className="text-4xl" />
+                            <HiMenu className="text-4xl" />
                         </button>
                     </span>
 
                     <span className="flex flex-row space-x-2">
-                        <a className="bg-green-500 w-12 h-12" />
-                        <a className="bg-purple-500 w-12 h-12" />
+                        <a className="bg-green-500 w-12 h-12" href={props.LVM.rucioProjectLink}/>
+                        <a className="bg-purple-500 w-12 h-12" href={props.LVM.experimentProjectLink}/>
                     </span>
                     <span className="hidden md:visible md:flex space-x-4 items-center">
                         <span className="relative">
