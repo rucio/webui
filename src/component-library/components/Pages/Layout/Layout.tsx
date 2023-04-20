@@ -97,9 +97,10 @@ export const Layout = (
     }
 
     const accountMenuRef = useRef<HTMLDivElement>(null)
+    const accountMenuButtonRef = useRef<HTMLButtonElement>(null)
     useEffect(() => {
         const handleClickOutside = (event: any) => {
-            if (!accountMenuRef.current?.contains(event.target)) {  // TODO fix this type error
+            if (!accountMenuRef.current?.contains(event.target) && !accountMenuButtonRef.current?.contains(event.target)) {
                 setIsProfileOpen(false)
             }
         }
@@ -162,6 +163,7 @@ export const Layout = (
                         <button
                             className="text-gray-100 flex items-center"
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
+                            ref={accountMenuButtonRef}
                         >
                             <HiUserCircle className="text-4xl" />
                             <HiChevronDown className="hidden md:inline" />
