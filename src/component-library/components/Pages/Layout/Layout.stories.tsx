@@ -15,5 +15,7 @@ Layout.args = {
     LVM: {
         accountActive: "Galahad",
         accountsPossible: ["Galahad", "Percival", "Gawain", "Gareth"],
+        rucioProjectLink: "rucio.cern.ch",
+        experimentProjectLink: "atlas.cern",
     } as LayoutViewModel
 }
