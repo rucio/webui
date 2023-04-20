@@ -8,6 +8,7 @@ import { useState, useEffect, useRef, MutableRefObject } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 import { H3 } from "../../Text/Headings/H3"
 import { P } from "../../Text/Content/P"
+import { AccountDropdown } from "./AccountDropdown"
 
 export interface LayoutViewModel {
     accountActive: string,
@@ -165,65 +166,12 @@ export const Layout = (
                             <HiUserCircle className="text-4xl" />
                             <HiChevronDown className="hidden md:inline" />
                         </button>
-                        <div
-                            className={twMerge("flex flex-col p-2 w-fit",
-                                "rounded-md border shadow-md",
-                                isProfileOpen ? "visible" : "invisible",
-                                "absolute top-10 right-0",
-                                "divide-y",
-                                "bg-white dark:bg-slate-800"
-                            )}
-                            onMouseEnter={e => e.preventDefault()}
+                        <AccountDropdown
+                            isProfileOpen={isProfileOpen}
+                            accountActive={props.LVM.accountActive}
+                            accountsPossible={props.LVM.accountsPossible}
                             ref={accountMenuRef}
-                        >
-                            <a
-                                className={twMerge(
-                                    "text-gray-600 dark:text-gray-300 hover:bg-gray-200 hover:cursor-pointer",
-                                    "flex items-center justify-between py-2 space-x-4",
-                                    "text-right"
-                                )}
-                                href="/accountsettings"
-                            >
-                                <HiCog className="text-3xl text-gray-600 dark:text-gray-100" />
-                                <span>
-                                    <span>Settings for </span>
-                                    <b className="text-gray-800 dark:text-gray-100">{props.LVM.accountActive}</b>
-                                </span>
-                            </a>
-                            <div
-                                className="flex flex-col"
-                            >
-                                {
-                                    (props.LVM.accountsPossible.filter(
-                                        (account) => account !== props.LVM.accountActive
-                                    )).map((account, index) => {
-                                        return (
-                                            <a
-                                                className={twMerge(
-                                                    "text-gray-600 dark:text-gray-300 hover:bg-gray-200 hover:cursor-pointer",
-                                                    "flex items-center justify-between py-1 space-x-4",
-                                                    "text-right"
-                                                )}
-                                                key={index}
-                                                href="/switchaccount"
-                                            >
-                                                <HiSwitchHorizontal className="text-2xl dark:text-gray-100" />
-                                                <span>
-                                                    <span>Switch to </span>
-                                                    <b className="text-gray-800 dark:text-gray-100">{account}</b>
-                                                </span>
-                                            </a>
-                                        )
-                                    })
-                                }
-                            </div>
-                            <a
-                                className="text-gray-800 dark:text-gray-100 hover:bg-gray-200 hover:cursor-pointer flex items-center justify-between py-2 w-96"
-                                href="/logout"
-                            >
-                                <b>Logout</b> <HiLogout className="text-3xl" />
-                            </a>
-                        </div>
+                        />
                     </span>
                 </nav>
                 <Collapsible showIf={isHamburgerOpen}>

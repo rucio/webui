@@ -819,17 +819,12 @@ video {
   width: 1.5rem;
 }
 
-.w-96 {
-  width: 24rem;
+.w-64 {
+  width: 16rem;
 }
 
 .w-\[50rem\] {
   width: 50rem;
-}
-
-.w-fit {
-  width: -moz-fit-content;
-  width: fit-content;
 }
 
 .w-full {
@@ -1957,6 +1952,15 @@ video {
 
   .sm\:w-36 {
     width: 9rem;
+  }
+
+  .sm\:w-96 {
+    width: 24rem;
+  }
+
+  .sm\:w-fit {
+    width: -moz-fit-content;
+    width: fit-content;
   }
 
   .sm\:grow-0 {
