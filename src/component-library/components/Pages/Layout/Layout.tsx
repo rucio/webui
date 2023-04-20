@@ -1,14 +1,23 @@
 import { TextInput } from "../../Input/TextInput"
 
-import { HiOutlineBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons/hi2"
+import { HiBell, HiUserCircle, HiChevronDown, HiBars3 } from "react-icons/hi2"
+import { HiLogout, HiSwitchHorizontal, HiCog } from "react-icons/hi"
 import { twMerge } from "tailwind-merge"
 
 import { useState, useEffect, useRef, MutableRefObject } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
+import { H3 } from "../../Text/Headings/H3"
+import { P } from "../../Text/Content/P"
+
+export interface LayoutViewModel {
+    accountActive: string,
+    accountsPossible: string[],
+}
 
 export const Layout = (
     props: {
-        child: React.ReactNode
+        child: React.ReactNode,
+        LVM: LayoutViewModel
     }
 ) => {
 
@@ -147,7 +156,7 @@ export const Layout = (
                             className="hidden md:block text-gray-100"
                             href="/notifications"
                         >
-                            <HiOutlineBell className="text-4xl" />
+                            <HiBell className="text-4xl" />
                         </a>
                         <button
                             className="text-gray-100 flex items-center"
@@ -157,28 +166,62 @@ export const Layout = (
                             <HiChevronDown className="hidden md:inline" />
                         </button>
                         <div
-                            className={twMerge("flex flex-col bg-white p-2 w-56",
+                            className={twMerge("flex flex-col p-2 w-fit",
                                 "rounded-md border shadow-md",
                                 isProfileOpen ? "visible" : "invisible",
-                                "absolute top-10 right-0"
+                                "absolute top-10 right-0",
+                                "divide-y",
+                                "bg-white dark:bg-slate-800"
                             )}
                             onMouseEnter={e => e.preventDefault()}
                             ref={accountMenuRef}
                         >
                             <a
-                                className="text-gray-800 hover:bg-gray-200 hover:cursor-pointer "
+                                className={twMerge(
+                                    "text-gray-600 dark:text-gray-300 hover:bg-gray-200 hover:cursor-pointer",
+                                    "flex items-center justify-between py-2 space-x-4",
+                                    "text-right"
+                                )}
+                                href="/accountsettings"
                             >
-                                Switch to <b>Andromeda</b>
+                                <HiCog className="text-3xl text-gray-600 dark:text-gray-100" />
+                                <span>
+                                    <span>Settings for </span>
+                                    <b className="text-gray-800 dark:text-gray-100">{props.LVM.accountActive}</b>
+                                </span>
                             </a>
-                            <a
-                                className="text-gray-800 hover:bg-gray-200 hover:cursor-pointer "
+                            <div
+                                className="flex flex-col"
                             >
-                                Switch to <b>Cassiopeia</b>
-                            </a>
+                                {
+                                    (props.LVM.accountsPossible.filter(
+                                        (account) => account !== props.LVM.accountActive
+                                    )).map((account, index) => {
+                                        return (
+                                            <a
+                                                className={twMerge(
+                                                    "text-gray-600 dark:text-gray-300 hover:bg-gray-200 hover:cursor-pointer",
+                                                    "flex items-center justify-between py-1 space-x-4",
+                                                    "text-right"
+                                                )}
+                                                key={index}
+                                                href="/switchaccount"
+                                            >
+                                                <HiSwitchHorizontal className="text-2xl dark:text-gray-100" />
+                                                <span>
+                                                    <span>Switch to </span>
+                                                    <b className="text-gray-800 dark:text-gray-100">{account}</b>
+                                                </span>
+                                            </a>
+                                        )
+                                    })
+                                }
+                            </div>
                             <a
-                                className="text-gray-800 hover:bg-gray-200 hover:cursor-pointer flex items-center justify-between"
+                                className="text-gray-800 dark:text-gray-100 hover:bg-gray-200 hover:cursor-pointer flex items-center justify-between py-2 w-96"
+                                href="/logout"
                             >
-                                Logout <HiUserCircle className="text-4xl" />
+                                <b>Logout</b> <HiLogout className="text-3xl" />
                             </a>
                         </div>
                     </span>
@@ -190,7 +233,7 @@ export const Layout = (
                         <HeaderLinks link="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
                         <HeaderLinks link="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
                         <HeaderLinks link="/rules" className="w-full pt-2">List Rules</HeaderLinks>
-                        <HeaderLinks link="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiOutlineBell /></span></HeaderLinks>
+                        <HeaderLinks link="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiBell /></span></HeaderLinks>
                     </nav>
                 </Collapsible>
             </header>
