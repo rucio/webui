@@ -107,7 +107,7 @@ export const RSEQuotaTable = (
                     <H3>RSE Name</H3>
                 </span>
             ),
-            cell: (info) => <P mono>{info.getValue()}</P>,
+            cell: (info) => <P mono className="break-all">{info.getValue()}</P>,
         }),
         columnHelper.accessor('used_bytes', {
             id: 'used_bytes',
@@ -184,8 +184,8 @@ export const RSEQuotaTable = (
                             >
                                 <th className="w-8 flex-none grow-0"></th>
                                 <th className="w-1/2 sm:w-2/3 flex-auto grow">
-                                    <div className={twMerge("flex flex-row items-center space-x-8 justify-between")}>
-                                        <span className="shrink-0">
+                                    <div className={twMerge("flex flex-row items-center space-x-2 sm:space-x-8 justify-between")}>
+                                        <span className="sm:shrink-0">
                                             <H3>RSE Name</H3>
                                         </span>
                                         <span className="hidden sm:flex w-full">

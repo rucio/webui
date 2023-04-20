@@ -74,13 +74,13 @@ export const DIDListTable = (
             id: 'name',
             cell: (info) => {
                 return (
-                    <P mono>{props.useScopenames ? info.row.original.scope + ":" + info.getValue() : info.getValue()}</P>
+                    <P mono className="break-all">{props.useScopenames ? info.row.original.scope + ":" + info.getValue() : info.getValue()}</P>
                 )
             },
         }),
         columnHelper.accessor('scope', {
             id: 'scope',
-            cell: (info) => { <P mono>{info.getValue()}</P> },
+            cell: (info) => { <P mono className="break-all">{info.getValue()}</P> },
         }),
         columnHelper.accessor('did_type', {
             id: 'did_type',
@@ -241,7 +241,7 @@ export const DIDListTable = (
                                 className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
                             >
                                 <th className="w-6 sm:w-8 grow-0"></th>
-                                <th className="w-2/3 flex-auto">
+                                <th className="w-1/2 sm:w-2/3 flex-auto">
                                     <div className="flex flex-row items-center space-x-8 justify-between">
                                         <span className="shrink-0">
                                             <H3>{props.useScopenames ? "DID" : "DID Name"}</H3>
