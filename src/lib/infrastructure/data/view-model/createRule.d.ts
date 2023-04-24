@@ -73,7 +73,7 @@ export interface TypedDIDValidationResponse {
 }
 
 export interface DIDSearchResponse {
-    data: Array<DIDDTO>,
+    data: any, // TODO type this properly
     fetchStatus: FetchStatus
 }
 
