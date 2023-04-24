@@ -15,10 +15,10 @@ import { ListInput } from '../../Input/ListInput';
 import { P } from "../../Text/Content/P";
 import { H3 } from "../../Text/Headings/H3";
 import { Label } from "../../Text/Content/Label"
-import { RSEQuotaTable } from '../../Table/RSEQuotaTable';
 import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
 import { DIDListTable } from '../../StreamedTables/DIDListTable';
+import { RSEQuotaTable } from '../../StreamedTables/RSEQuotaTable';
 
 var format = require("date-format")
 
@@ -41,9 +41,10 @@ export interface CreateRulePageProps {
     didSearch: (didSearchQuery: DIDSearchQuery) => void, 
     didResponse: DIDSearchResponse,
     // Page 0.1 - DID Validation
-    didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>
+    didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
     // Page 1 - RSE Selection
-    rseSearch: (rseSearchQuery: RSESearchQuery) => Promise<RSESearchResponse>
+    rseSearch: (rseSearchQuery: RSESearchQuery) => void,
+    rseResponse: RSESearchResponse,
     // Page 3 - Sendoff
     onSubmit: (createRuleQuery: CreateRuleQuery) => Promise<CreateRuleResponse>
 }
@@ -68,7 +69,6 @@ interface Page0State {
 interface Page1State {
     page1progressBlocked: boolean
     RSEExpression: string
-    RSEQueryResponse: Array<RSEInformation>
     RSESelection: Array<RSEName>
     askForApproval: boolean
 }
@@ -336,11 +336,11 @@ export const CreateRule = (
                             </div>
                         </div>
                         <RSEQuotaTable
-                            data={Page1State.RSEQueryResponse}
+                            data={props.rseResponse.data}
+                            fetchstatus={props.rseResponse.fetchStatus}
                             selected={Page1State.RSESelection}
-                            onAdd={(RSEName: string) => { setPage1State({ ...Page1State, RSESelection: [RSEName, ...Page1State.RSESelection] }) }}
-                            onRemove={(RSEName: string) => { setPage1State({ ...Page1State, RSESelection: Page1State.RSESelection.filter((item) => item !== RSEName) }) }}
-                            askApproval={Page1State.askForApproval}
+                            onChange={(selected: string[]) => { setPage1State({ ...Page1State, RSESelection: selected }) }}
+                            // TODO handle "ask permission"
                         />
                         <div>
                             <CheckBox
