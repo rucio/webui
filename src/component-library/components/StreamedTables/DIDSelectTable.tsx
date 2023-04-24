@@ -33,7 +33,7 @@ import { Dropdown } from "../Dropdown/Dropdown"
 import { TextInput } from "../Input/TextInput"
 
 
-export const DIDListTable = (
+export const DIDSelectTable = (
     props: {
         data: any,
         fetchstatus: FetchStatus,

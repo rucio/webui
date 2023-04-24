@@ -2,7 +2,7 @@
 
 import { StoryFn, Meta } from '@storybook/react'
 
-import { DIDListTable as Table } from './DIDListTable'
+import { DIDSelectTable as Table } from './DIDSelectTable'
 
 export default {
     title: 'Components/StreamedTables',
@@ -11,8 +11,8 @@ export default {
 
 const Template: StoryFn<typeof Table> = args => <Table {...args} />
 
-export const DIDListTable = Template.bind({})
-DIDListTable.args = {
+export const DIDSelectTable = Template.bind({})
+DIDSelectTable.args = {
     data: [
         { "scope": "user.LindaMiller", "name": "dataset-ojTcChlQGtvpWBAnUcNn", "did_type": "CONTAINER", "bytes": 57855156, "length": 35878152 },
         { "scope": "user.TravisRoberts", "name": "file-DfIbGGDiGWyJhrvRYwtw", "did_type": "CONTAINER", "bytes": 42245800, "length": 45289199 },
