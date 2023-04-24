@@ -340,7 +340,7 @@ export const CreateRule = (
                             fetchstatus={props.rseResponse.fetchStatus}
                             selected={Page1State.RSESelection}
                             onChange={(selected: string[]) => { setPage1State({ ...Page1State, RSESelection: selected }) }}
-                            // TODO handle "ask permission"
+                            askApproval={Page1State.askForApproval}
                         />
                         <div>
                             <CheckBox

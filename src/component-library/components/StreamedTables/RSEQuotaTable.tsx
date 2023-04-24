@@ -27,13 +27,15 @@ export const RSEQuotaTable = (
         data: any,
         fetchstatus: FetchStatus,
         onChange: (selected: string[]) => void,
+        askApproval?: boolean,
         selected?: string[],
     }
 ) => {
     const columnHelper = createColumnHelper<RSEAccountUsageLimitDTO>()
 
     const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimitDTO>) => {
-        return (row.original.quota_bytes && row.original.quota_bytes < row.original.used_bytes)
+        let noQuota = (row.original.quota_bytes && row.original.quota_bytes < row.original.used_bytes)
+        return props.askApproval ? false : noQuota
     }
 
     const [selectedRSEIDs, setSelectedRSEIDs] = useState<string[]>(props.selected ?? [])
