@@ -78,5 +78,6 @@ export interface DIDSearchResponse {
 }
 
 export interface RSESearchResponse {
-    RSEList: Array<RSEInformation>
+    data: any, // TODO type this properly
+    fetchStatus: FetchStatus
 }

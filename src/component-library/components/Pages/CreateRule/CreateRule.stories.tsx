@@ -6,7 +6,8 @@ import {
     CreateRuleQuery, DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
     RSESearchQuery,
-    DIDSearchResponse
+    DIDSearchResponse,
+    RSESearchResponse,
 } from '@/lib/infrastructure/data/view-model/createRule'
 
 export default {
@@ -149,20 +150,92 @@ CreateRulePage.args = {
         }
     },
     rseSearch: (query: RSESearchQuery) => {
-        return Promise.resolve({
-            RSEList: [
-                { RSEName: query.RSEExpression, RSEID: "RSE0", RemainingQuota: 0, TotalQuota: 0 },
-                { RSEName: "RSE1", RSEID: "RSE1", RemainingQuota: 100, TotalQuota: 1000 },
-                { RSEName: "RSE2", RSEID: "RSE2", RemainingQuota: 200, TotalQuota: 2000 },
-                { RSEName: "RSE3", RSEID: "RSE3", RemainingQuota: 300, TotalQuota: 3000 },
-                { RSEName: "RSE4", RSEID: "RSE4", RemainingQuota: 400, TotalQuota: 4000 },
-                { RSEName: "RSE5", RSEID: "RSE5", RemainingQuota: 0, TotalQuota: 5000 },
-                { RSEName: "RSE6", RSEID: "RSE6", RemainingQuota: 600, TotalQuota: 6000 },
-                { RSEName: "RSE7", RSEID: "RSE7", RemainingQuota: 0, TotalQuota: 7000 },
-                { RSEName: "RSE8", RSEID: "RSE8", RemainingQuota: 800, TotalQuota: 8000 },
-                { RSEName: "RSE9", RSEID: "RSE9", RemainingQuota: 900, TotalQuota: 9000 },
-                { RSEName: "RSE10", RSEID: "RSE10", RemainingQuota: 1000, TotalQuota: 10000 },
-            ]
-        })
+        console.log("RSE Search Query: ", query)
     },
+    rseResponse: {
+        data: [
+            {
+                rse_id: "rse_0",
+                rse: "h9-8305684h",
+                account: "Martin_Baker",
+                used_files: 50,
+                used_bytes: 676,
+                quota_bytes: 831,
+            },
+            {
+                rse_id: "rse_1",
+                rse: "u8-7477338A",
+                account: "Martin_Baker",
+                used_files: 3,
+                used_bytes: 403,
+                quota_bytes: 1593,
+            },
+            {
+                rse_id: "rse_2",
+                rse: "p2-576767r",
+                account: "Martin_Baker",
+                used_files: 45,
+                used_bytes: 668,
+                quota_bytes: 980,
+            },
+            {
+                rse_id: "rse_3",
+                rse: "b2-1315028K",
+                account: "Martin_Baker",
+                used_files: 0,
+                used_bytes: 901,
+                quota_bytes: 1074,
+            },
+            {
+                rse_id: "rse_4",
+                rse: "r1-7904730V",
+                account: "Martin_Baker",
+                used_files: 22,
+                used_bytes: 449,
+                quota_bytes: 1197,
+            },
+            {
+                rse_id: "rse_5",
+                rse: "R9-5441721G",
+                account: "Martin_Baker",
+                used_files: 46,
+                used_bytes: 797,
+                quota_bytes: 734,
+            },
+            {
+                rse_id: "rse_6",
+                rse: "l8-231238K",
+                account: "Martin_Baker",
+                used_files: 19,
+                used_bytes: 612,
+                quota_bytes: 1989,
+            },
+            {
+                rse_id: "rse_7",
+                rse: "P7-8402193T",
+                account: "Martin_Baker",
+                used_files: 25,
+                used_bytes: 380,
+                quota_bytes: 1355,
+            },
+            {
+                rse_id: "rse_8",
+                rse: "I5-5107988g",
+                account: "Martin_Baker",
+                used_files: 17,
+                used_bytes: 859,
+                quota_bytes: 984,
+            },
+            {
+                rse_id: "rse_9",
+                rse: "I1-538502h",
+                account: "Martin_Baker",
+                used_files: 5,
+                used_bytes: 273,
+                quota_bytes: 986,
+            },
+
+        ],
+        fetchStatus: "idle",
+    } as RSESearchResponse,
 }
