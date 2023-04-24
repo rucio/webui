@@ -1,4 +1,5 @@
-import { DIDType } from "@/lib/core/data/rucio-dto";
+import { DIDDTO, DIDType } from "@/lib/core/data/rucio-dto";
+import { FetchStatus } from "@tanstack/react-query";
 
 export interface CreateRuleViewModel {
     placeholder: string;
@@ -72,7 +73,8 @@ export interface TypedDIDValidationResponse {
 }
 
 export interface DIDSearchResponse {
-    DIDList: Array<DIDElement>
+    data: Array<DIDDTO>,
+    fetchStatus: FetchStatus
 }
 
 export interface RSESearchResponse {

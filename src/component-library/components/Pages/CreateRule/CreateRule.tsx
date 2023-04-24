@@ -18,13 +18,14 @@ import { Label } from "../../Text/Content/Label"
 import { RSEQuotaTable } from '../../Table/RSEQuotaTable';
 import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
+import { DIDListTable } from '../../StreamedTables/DIDListTable';
 
 var format = require("date-format")
 
 /* =================================================
 *  Importing Types and Interfaces
 *  ================================================= */
-import { DIDType } from '@/lib/core/data/rucio-dto';
+import { DIDType, RSEAccountUsageLimitDTO } from '@/lib/core/data/rucio-dto';
 import {
     CreateRuleQuery, CreateRuleResponse,
     DIDName, RSEName,
@@ -36,10 +37,15 @@ import {
 } from '../../../../lib/infrastructure/data/view-model/createRule.d';
 
 export interface CreateRulePageProps {
-    onSubmit: (createRuleQuery: CreateRuleQuery) => Promise<CreateRuleResponse>
-    didSearch: (didSearchQuery: DIDSearchQuery) => Promise<DIDSearchResponse>
+    // Page 0.0 - DID Search`
+    didSearch: (didSearchQuery: DIDSearchQuery) => void, 
+    didResponse: DIDSearchResponse,
+    // Page 0.1 - DID Validation
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>
+    // Page 1 - RSE Selection
     rseSearch: (rseSearchQuery: RSESearchQuery) => Promise<RSESearchResponse>
+    // Page 3 - Sendoff
+    onSubmit: (createRuleQuery: CreateRuleQuery) => Promise<CreateRuleResponse>
 }
 
 // can assume that DIDs are unique, hence SET can be used later
@@ -48,13 +54,9 @@ interface Page0State {
     page0progressBlocked: boolean
 
     // Subpage 0: DID Search Pattern
-    // settings for DID Search
     selectDIDMethod: number
-    selectDIDDataPattern: string
-    showXnumItems: number
-    showItemsGranularity: DIDType
     // selection by search
-    matchingDIDs: DIDSearchResponse
+    selectDIDDataPattern: string
     chosenDIDs: Array<DIDName>
 
     // Subpage 1: List of DIDs
@@ -104,9 +106,6 @@ export const CreateRule = (
     const [Page0State, setPage0State] = useState<Page0State>({
         selectDIDMethod: 0,
         selectDIDDataPattern: "",
-        matchingDIDs: { DIDList: [] },
-        showXnumItems: 10,
-        showItemsGranularity: "Dataset",
         chosenDIDs: [],
         typedDIDs: [],
         errorDIDs: { ErrorList: [] },
@@ -133,12 +132,6 @@ export const CreateRule = (
 
         // execute query
         const DIDSearchResponse = props.didSearch(DIDSearchQuery)
-        DIDSearchResponse.then((response) => {
-            setPage0State({ ...Page0State, matchingDIDs: response })
-        })
-        DIDSearchResponse.catch((error) => {
-            console.log("DIDSearchResponse error: ", error)
-        })
     }
 
     const page0nextFunction = (event: any) => {
@@ -274,8 +267,8 @@ export const CreateRule = (
                     />
                     <Collapsible showIf={Page0State.selectDIDMethod === 0}>
                         <div className="flex flex-col space-y-2 m-2">
-                            <div className="flex flex-col sm:flex-row w-full space-y-2 sm:space-x-2">
-                                <label className='-mb-2 sm:mt-4 sm:w-36' htmlFor='did-search-pattern'><P>DID Search Pattern</P></label>
+                            <div className="flex flex-col sm:flex-row sm:items-end w-full space-y-2 sm:space-x-2">
+                                <label className='w-fit' htmlFor='did-search-pattern'><P>DID Search Pattern</P></label>
                                 <div className='grow'>
                                     <TextInput
                                         onBlur={(event: any) => { setPage0State({ ...Page0State, selectDIDDataPattern: event.target.value }) }}
@@ -286,63 +279,6 @@ export const CreateRule = (
                                 <div className="w-full sm:w-24 sm:grow-0">
                                     <Button type="submit" label="Search" onClick={page0DIDSearch} id="page0-search" />
                                 </div>
-                            </div>
-                            <div className="flex flex-col md:flex-row w-full space-y-2 md:space-x-2">
-                                <div className="grow flex flex-col space-y-2 sm:flex-row sm:space-x-2">
-                                    <label className='-mb-2 sm:mt-4 sm:w-36 shrink-0' htmlFor='did-search-pattern'><P>Filter Results</P></label>
-                                    <div className='grow'>
-                                        <TextInput
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
-                                    <span className="w-full md:w-24">
-                                        <Dropdown
-                                            label={Page0State.showXnumItems.toString()}
-                                            options={["10", "20", "50", "100"]}
-                                            handleChange={(element: any) => { setPage0State({ ...Page0State, showXnumItems: element }) }}
-                                        />
-                                    </span>
-                                    <span className="w-full md:w-48">
-                                        <Dropdown
-                                            label={Page0State.showItemsGranularity}
-                                            options={["Dataset", "Container", "Collection", "File"]}
-                                            handleChange={(element: any) => { setPage0State({ ...Page0State, showItemsGranularity: element }) }}
-                                        />
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="h-full">
-                                <table className="w-full text-left">
-                                    <tbody className="w-full overflow-y-auto">
-                                        {Page0State.matchingDIDs.DIDList.slice(0, Page0State.showXnumItems).map((element, index) => {
-                                            // TODO: add pagination here
-                                            // this works because the DID is unique
-                                            return (
-                                                !Page0State.chosenDIDs.includes(element.DID) ? (
-                                                    <tr
-                                                        key={index}
-                                                        className="first:border-t border-b border-collapse hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 hover:cursor-pointer p-2 flex w-full"
-                                                        onClick={() => {
-                                                            setPage0State({ ...Page0State, chosenDIDs: Page0State.chosenDIDs.concat(element.DID) })
-                                                        }}
-                                                    >
-                                                        <td><P mono>{element.DID}</P></td>
-                                                    </tr>) : (
-                                                    <tr
-                                                        key={index}
-                                                        className="first:border-t border-b border-collapse bg-blue-200 dark:bg-blue-500 hover:bg-blue-300 dark:hover:bg-blue-600 p-2 flex w-full"
-                                                        onClick={() => {
-                                                            setPage0State({ ...Page0State, chosenDIDs: Page0State.chosenDIDs.filter((item) => item !== element.DID) })
-                                                        }}
-                                                    >
-                                                        <td><P mono>{element.DID}</P></td>
-                                                    </tr>
-                                                )
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </Collapsible>
