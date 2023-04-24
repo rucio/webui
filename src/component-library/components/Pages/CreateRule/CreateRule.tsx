@@ -17,7 +17,7 @@ import { H3 } from "../../Text/Headings/H3";
 import { Label } from "../../Text/Content/Label"
 import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
-import { DIDListTable } from '../../StreamedTables/DIDListTable';
+import { DIDSelectTable } from '../../StreamedTables/DIDSelectTable';
 import { RSEQuotaTable } from '../../StreamedTables/RSEQuotaTable';
 
 var format = require("date-format")
@@ -165,7 +165,6 @@ export const CreateRule = (
     // page 1 state
     const [Page1State, setPage1State] = useState<Page1State>({
         RSEExpression: "",
-        RSEQueryResponse: [],
         RSESelection: [],
         askForApproval: false,
         page1progressBlocked: true
@@ -184,24 +183,12 @@ export const CreateRule = (
     const page1RSESearch = (event: any, explicitRSEExpression?: string) => {
         // sometimes the state has not updated yet, so use explicitly passed RSEExpr
         var RSEExpression = explicitRSEExpression ? explicitRSEExpression : Page1State.RSEExpression
-        // if RSEExpression is empty, then set RSEQueryResponse to empty
-        if (RSEExpression === "") {
-            setPage1State({ ...Page1State, RSEQueryResponse: [] })
-            return
-        }
-        // if RSEExpression is not empty, then we need to query the RSEs
         // build query
         const RSESearchQuery: RSESearchQuery = {
             RSEExpression: RSEExpression
         }
         // execute query
         const RSESearchResponse = props.rseSearch(RSESearchQuery)
-        RSESearchResponse.then((response) => {
-            setPage1State({ ...Page1State, RSEQueryResponse: response.RSEList })
-        })
-        RSESearchResponse.catch((error) => {
-            console.log("RSESearchResponse error: ", error)
-        })
     }
 
     /* =================================================
@@ -280,7 +267,7 @@ export const CreateRule = (
                                     <Button type="submit" label="Search" onClick={page0DIDSearch} id="page0-search" />
                                 </div>
                             </div>
-                            <DIDListTable
+                            <DIDSelectTable
                                 data={props.didResponse.data}
                                 fetchstatus={props.didResponse.fetchStatus}
                                 onChange={(selected: string[]) => { setPage0State({ ...Page0State, chosenDIDs: selected }) }}
