@@ -280,6 +280,13 @@ export const CreateRule = (
                                     <Button type="submit" label="Search" onClick={page0DIDSearch} id="page0-search" />
                                 </div>
                             </div>
+                            <DIDListTable
+                                data={props.didResponse.data}
+                                fetchstatus={props.didResponse.fetchStatus}
+                                onChange={(selected: string[]) => { setPage0State({ ...Page0State, chosenDIDs: selected }) }}
+                                pageSize={10}
+                                useScopenames={false}
+                            />
                         </div>
                     </Collapsible>
                     <Collapsible showIf={Page0State.selectDIDMethod === 1}>
