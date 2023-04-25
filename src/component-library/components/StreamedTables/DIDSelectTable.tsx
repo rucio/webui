@@ -59,10 +59,10 @@ export const DIDSelectTable = (
                         checked={props.row.getIsSelected()}
                         onChange={(event: any) => {
                             if (event.target.checked) {
-                                setSelectedDIDs([...selectedDIDs, props.row.original.rse_id])
+                                setSelectedDIDs([...selectedDIDs, props.row.original.scope + ":" + props.row.original.name])
                             }
                             else {
-                                setSelectedDIDs(selectedDIDs.filter((did) => did !== props.row.original.rse_id))
+                                setSelectedDIDs(selectedDIDs.filter((did) => did !== props.row.original.scope + ":" + props.row.original.name))
                             }
                             props.row.getToggleSelectedHandler()(event)
                         }}
