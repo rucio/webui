@@ -74,7 +74,15 @@ export const DIDSelectTable = (
             id: 'name',
             cell: (info) => {
                 return (
-                    <P mono className="break-all">{props.useScopenames ? info.row.original.scope + ":" + info.getValue() : info.getValue()}</P>
+                    <p
+                        onClick={(event) => event.stopPropagation()}
+                        className={twMerge(
+                            "cursor-text flex w-fit select-all break-all",
+                            "font-mono dark:text-gray-200"
+                        )}
+                    >
+                        {props.useScopenames ? info.row.original.scope + ":" + info.getValue() : info.getValue()}
+                    </p>
                 )
             },
         }),
@@ -95,7 +103,9 @@ export const DIDSelectTable = (
         columnHelper.accessor('bytes', {
             id: 'bytes',
             cell: (info) =>
-                <P mono><Number number={info.getValue()} /></P>,
+                <p className="font-mono dark:text-gray-200">
+                    <Number number={info.getValue()} />
+                </p>,
         }),
         columnHelper.accessor('length', {
             id: 'length',
