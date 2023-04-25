@@ -20,7 +20,7 @@ export const Button = (
     const fullwidth = props.fullwidth ?? true
 
     const handleOnClick = props.disabled ? undefined : props.onClick
-    var classes: string[] = ["font-bold rounded py-1 px-3"]
+    var classes: string[] = ["font-bold rounded py-1 px-3 cursor-pointer"]
     if (!props.disabled) {
         switch (type) {
             case "submit":
@@ -53,8 +53,8 @@ export const Button = (
                 onClick={handleOnClick}
                 id={props.id}
             >
-                <div className="flex justify-center">
-                    <label htmlFor={props.id}>
+                <div className="flex justify-center cursor-pointer">
+                    <label htmlFor={props.id} className="cursor-pointer">
                         {props.label}
                     </label>
                     {props.icon ? "\u00A0" : "" /* nonbreaking space */}
@@ -72,7 +72,7 @@ export const Button = (
                 onClick={handleOnClick}
                 id={props.id}
             >
-                <label htmlFor={props.id} className="flex justify-center hover:cursor-pointer">
+                <label htmlFor={props.id} className="flex justify-center cursor-pointer">
                     {props.icon}
                 </label>
             </button>
