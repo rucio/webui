@@ -1,5 +1,6 @@
 import { TimelineLiSpan } from './Helpers/TimelineLiSpan'
 import { H3 } from '../Text/Headings/H3'
+import { twMerge } from 'tailwind-merge'
 
 export const Timeline = (
     props: {
@@ -8,11 +9,15 @@ export const Timeline = (
         onJump: (goal: number) => void
     }
 ) => {
-    var noClickClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-gray-900", "p-2", "hover:cursor-default"]
-    var clickableClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-gray-900", "p-2", "hover:cursor-pointer"]
+    var classes = twMerge(
+        "flex items-center gap-2 rounded-md",
+        "p-2",
+        "bg-white",
+        "dark:bg-gray-800",
+    )
     
     return (
-        <div className='w-full'>
+        <div className='rounded-md p-2 border dark:border-2 bg-white dark:bg-gray-800'>
             <div
                 className="relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100 dark:after:bg-gray-600"
             >
@@ -23,7 +28,10 @@ export const Timeline = (
                         // the black bgs are not actually the same colour, dont understand why
                         return (
                             <li
-                                className={index < props.active ? clickableClasses.join(" ") : noClickClasses.join(" ")}
+                                className={twMerge(
+                                    classes,
+                                    index < props.active ? "hover:cursor-pointer" : "hover:cursor-default",
+                                )}
                                 key={index}
                                 onClick={() => {
                                     if(index < props.active)  {

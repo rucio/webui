@@ -16,7 +16,7 @@ export const TextInput = (
             id={props.id}
             placeholder={props.placeholder}
             className={twMerge(
-                "w-full border rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white dark:border-2",
+                "w-full border rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white",
                 props.className ?? ""
             )}
             onBlur={props.onBlur}
