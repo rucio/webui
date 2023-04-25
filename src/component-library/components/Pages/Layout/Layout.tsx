@@ -19,7 +19,7 @@ export interface LayoutViewModel {
 
 export const Layout = (
     props: {
-        child: React.ReactNode,
+        children: React.ReactNode,
         LVM: LayoutViewModel
     }
 ) => {
@@ -189,8 +189,13 @@ export const Layout = (
                     </nav>
                 </Collapsible>
             </header>
-            <main>
-                {props.child}
+            <main
+                className={twMerge(
+                    "lg:px-24 xl:px-36 py-4 md:py-8",
+                    "dark:bg-gray-900"
+                )}
+            >
+                {props.children}
             </main>
         </div>
     )
