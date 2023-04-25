@@ -138,7 +138,7 @@ def listdids():
         {
             "scope": fake.pystr_format("user.{{first_name}}{{last_name}}"),
             "name": random.choice(["file", "dataset", "container"]) + "-" + fake.pystr(),
-            "did_type": random.choice(["FILE", "DATASET", "CONTAINER"]),
+            "did_type": random.choice(["File", "Dataset", "Container"]),
             "bytes": random.randint(0, 1e8),
             "length": random.randint(0, 1e8),
         } for i in range(100)

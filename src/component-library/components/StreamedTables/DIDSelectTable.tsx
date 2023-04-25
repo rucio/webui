@@ -162,11 +162,12 @@ export const DIDSelectTable = (
 
     // handle window resize
     const [windowSize, setWindowSize] = useState([
-        window.innerWidth,
-        window.innerHeight,
+        1920, 1080
     ]);
 
     useEffect(() => {
+        setWindowSize([window.innerWidth, window.innerHeight])
+
         const handleWindowResize = () => {
             setWindowSize([window.innerWidth, window.innerHeight]);
         };
@@ -187,51 +188,6 @@ export const DIDSelectTable = (
 
     return (
         <div className="flex flex-col space-y-2">
-            <div className="w-full flex justify-center space-x-2">
-                <nav className="w-[400px] flex justify-center space-x-2">
-                    <span className="w-1/3 flex space-x-2">
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(0)
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronDoubleLeft />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.previousPage()
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronLeft />}
-                        />
-                    </span>
-                    <span className="w-1/3 inline-flex space-x-2 items-end">
-
-                        <NumInput value={table.getState().pagination.pageIndex + 1} />
-                        <span className="w-full">
-                            <P>
-                                of {table.getPageCount()}
-                            </P>
-                        </span>
-                    </span>
-                    <span className="w-1/3 space-x-2 flex">
-                        <Button
-                            onClick={() => {
-                                table.nextPage()
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronRight />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(table.getPageCount() - 1)
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronDoubleRight />}
-                        />
-                    </span>
-                </nav>
-            </div>
             <div className={`h-[${pageSize * 30}px] border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
                 <table className="table-fixed w-full text-left">
                     <thead className="w-full">
@@ -372,25 +328,25 @@ export const DIDSelectTable = (
                     </tbody>
                 </table>
             </div>
-            <div className="w-full flex justify-center">
-                <div className="w-1/3 flex justify-center space-x-2">
+            <div className="w-full flex justify-center space-x-2">
+                <nav className="w-[400px] flex justify-center space-x-2">
                     <span className="w-1/3 flex space-x-2">
                         <Button
                             onClick={() => {
                                 table.setPageIndex(0)
                             }}
                             disabled={!table.getCanPreviousPage()}
-                            label={"<<"}
+                            icon={<HiChevronDoubleLeft />}
                         />
                         <Button
                             onClick={() => {
                                 table.previousPage()
                             }}
                             disabled={!table.getCanPreviousPage()}
-                            label={"<"}
+                            icon={<HiChevronLeft />}
                         />
                     </span>
-                    <span className="w-1/3 inline-flex space-x-2">
+                    <span className="w-1/3 inline-flex space-x-2 items-end">
                         <NumInput
                             value={pageIndex + 1}
                             onChange={(event) => {
@@ -399,7 +355,7 @@ export const DIDSelectTable = (
                             min={1}
                             max={table.getPageCount()}
                         />
-                        <span className="w-full mt-2">
+                        <span className="w-full">
                             <P>
                                 of {table.getPageCount()}
                             </P>
@@ -411,17 +367,17 @@ export const DIDSelectTable = (
                                 table.nextPage()
                             }}
                             disabled={!table.getCanNextPage()}
-                            label={">"}
+                            icon={<HiChevronRight />}
                         />
                         <Button
                             onClick={() => {
                                 table.setPageIndex(table.getPageCount() - 1)
                             }}
                             disabled={!table.getCanNextPage()}
-                            label={">>"}
+                            icon={<HiChevronDoubleRight />}
                         />
                     </span>
-                </div>
+                </nav>
             </div>
         </div>
     )
