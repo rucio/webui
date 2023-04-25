@@ -4,7 +4,7 @@ import { HiUserCircle, HiBell } from "react-icons/hi2"
 import { HiMenu, HiChevronDown } from "react-icons/hi"
 import { twMerge } from "tailwind-merge"
 
-import { useState, useEffect, useRef, MutableRefObject } from "react"
+import React, { useState, useEffect, useRef, MutableRefObject } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 import { H3 } from "../../Text/Headings/H3"
 import { P } from "../../Text/Content/P"
@@ -37,14 +37,31 @@ export const Layout = (
     ) => {
 
         const [isMouseOver, setIsMouseOver] = useState(false)
+        const LinkElem = (props: { href: string, children: React.ReactNode }) => {
+            return (
+                <a
+                    href={props.href}
+                    className={twMerge(
+                        "w-full p-1 rounded-sm hover:cursor-pointer",
+                        "hover:bg-gray-200 text-gray-800",
+                        "hover:dark:bg-gray-600 dark:bg-slate-800 dark:text-gray-100"
+                    )}
+                    onMouseDown={e => { e.preventDefault() }}
+
+                >
+                    {props.children}
+                </a>
+            )
+        }
 
         return (
             <div
                 className={twMerge(
-                    "w-[50rem] flex flex-col bg-white p-2",
+                    "w-[50rem] flex flex-col p-2",
                     "rounded-md border shadow-md",
                     (props.inputSelected || isMouseOver) ? "visible" : "invisible",
-                    "absolute mt-2"
+                    "absolute mt-2",
+                    "bg-white dark:bg-slate-800"
                 )}
                 onMouseEnter={() => { setIsMouseOver(true) }}
                 onMouseLeave={() => { setIsMouseOver(false) }}
@@ -52,27 +69,15 @@ export const Layout = (
                 <nav
                     className="w-full h-full flex flex-col items-start"
                 >
-                    <a
-                        className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
-                        href="/dids"
-                        onMouseDown={e => { e.preventDefault() }}
-                    >
+                    <LinkElem href="/dids">
                         Search for <i>{props.searchstring}</i> in <b>DIDs</b>
-                    </a>
-                    <a
-                        className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
-                        href="/rules"
-                        onMouseDown={e => { e.preventDefault() }}
-                    >
+                    </LinkElem>
+                    <LinkElem href="/rules">
                         Search for <i>{props.searchstring}</i> in <b>Rules</b>
-                    </a>
-                    <a
-                        className="hover:bg-blue-300 w-full p-1 rounded-sm hover:cursor-pointer"
-                        href="/rses"
-                        onMouseDown={e => { e.preventDefault() }}
-                    >
+                    </LinkElem>
+                    <LinkElem href="/rses">
                         Search for <i>{props.searchstring}</i> in <b>RSEs</b>
-                    </a>
+                    </LinkElem>
                 </nav>
             </div>
         )
@@ -134,8 +139,8 @@ export const Layout = (
                     </span>
 
                     <span className="flex flex-row space-x-2">
-                        <a className="bg-green-500 w-12 h-12" href={props.LVM.rucioProjectLink}/>
-                        <a className="bg-purple-500 w-12 h-12" href={props.LVM.experimentProjectLink}/>
+                        <a className="bg-green-500 w-12 h-12" href={props.LVM.rucioProjectLink} />
+                        <a className="bg-purple-500 w-12 h-12" href={props.LVM.experimentProjectLink} />
                     </span>
                     <span className="hidden md:visible md:flex space-x-4 items-center">
                         <span className="relative">
@@ -192,7 +197,8 @@ export const Layout = (
             <main
                 className={twMerge(
                     "lg:px-24 xl:px-36 py-4 md:py-8",
-                    "dark:bg-gray-900"
+                    "dark:bg-gray-900 bg-gray-100",
+                    "h-screen"
                 )}
             >
                 {props.children}
