@@ -198,7 +198,14 @@ export const DIDSelectTable = (
 
     return (
         <div className="flex flex-col space-y-2">
-            <div className={`h-[${pageSize * 30}px] border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
+            <div
+                className={twMerge(
+                    "border dark:border-2 rounded-md",
+                    props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
+                    "flex flex-col justify-between space-y-2 pb-2",
+                    "bg-white dark:bg-gray-700"
+                )}
+            >
                 <table className="table-fixed w-full text-left">
                     <thead className="w-full">
                         {table.getHeaderGroups().map(headerGroup => (
@@ -303,17 +310,18 @@ export const DIDSelectTable = (
                         ))}
                     </thead>
                     <tbody
-                        className="w-full"
+                        className={twMerge("w-full")}
                     >
                         {table.getRowModel().rows.map((row) => {
-                            const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-16 md:h-8 "  // maybe handle spinnywheel here
-                            const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
-                            const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
                             const did_scopename = row.original.scope + ":" + row.original.name
                             const isDIDSelected = selectedDIDs.includes(did_scopename)
                             return (
                                 <tr
-                                    className={isDIDSelected ? classesSelected : classesNormal}
+                                    className={twMerge(
+                                        "w-full border-b dark:border-gray-500 hover:cursor-pointer h-16 md:h-8",
+                                        isDIDSelected ? "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600" : "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900",
+                                    )}
+                                    // className={isDIDSelected ? classesSelected : classesNormal}
                                     key={row.id}
                                     onClick={(event) => {
                                         // if there is no more quota remaining, do nothing on click
@@ -337,57 +345,57 @@ export const DIDSelectTable = (
                         })}
                     </tbody>
                 </table>
-            </div>
-            <div className="w-full flex justify-center space-x-2">
-                <nav className="w-[400px] flex justify-center space-x-2">
-                    <span className="w-1/3 flex space-x-2">
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(0)
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronDoubleLeft />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.previousPage()
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronLeft />}
-                        />
-                    </span>
-                    <span className="w-1/3 inline-flex space-x-2 items-end">
-                        <NumInput
-                            value={pageIndex + 1}
-                            onChange={(event) => {
-                                setPageIndex(event.target.value - 1)
-                            }}
-                            min={1}
-                            max={table.getPageCount()}
-                        />
-                        <span className="w-full">
-                            <P>
-                                of {table.getPageCount()}
-                            </P>
+                <div className="w-full flex justify-center space-x-2">
+                    <nav className="w-[400px] flex justify-center space-x-2">
+                        <span className="w-1/3 flex space-x-2">
+                            <Button
+                                onClick={() => {
+                                    table.setPageIndex(0)
+                                }}
+                                disabled={!table.getCanPreviousPage()}
+                                icon={<HiChevronDoubleLeft />}
+                            />
+                            <Button
+                                onClick={() => {
+                                    table.previousPage()
+                                }}
+                                disabled={!table.getCanPreviousPage()}
+                                icon={<HiChevronLeft />}
+                            />
                         </span>
-                    </span>
-                    <span className="w-1/3 space-x-2 flex">
-                        <Button
-                            onClick={() => {
-                                table.nextPage()
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronRight />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(table.getPageCount() - 1)
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronDoubleRight />}
-                        />
-                    </span>
-                </nav>
+                        <span className="w-1/3 inline-flex space-x-2 items-end">
+                            <NumInput
+                                value={pageIndex + 1}
+                                onChange={(event) => {
+                                    setPageIndex(event.target.value - 1)
+                                }}
+                                min={1}
+                                max={table.getPageCount()}
+                            />
+                            <span className="w-full">
+                                <P>
+                                    of {table.getPageCount()}
+                                </P>
+                            </span>
+                        </span>
+                        <span className="w-1/3 space-x-2 flex">
+                            <Button
+                                onClick={() => {
+                                    table.nextPage()
+                                }}
+                                disabled={!table.getCanNextPage()}
+                                icon={<HiChevronRight />}
+                            />
+                            <Button
+                                onClick={() => {
+                                    table.setPageIndex(table.getPageCount() - 1)
+                                }}
+                                disabled={!table.getCanNextPage()}
+                                icon={<HiChevronDoubleRight />}
+                            />
+                        </span>
+                    </nav>
+                </div>
             </div>
         </div>
     )
