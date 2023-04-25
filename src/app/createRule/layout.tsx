@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Layout as LayoutStory } from '@/component-library/components/Pages/Layout/Layout';
 
 
 const queryClient = new QueryClient();
@@ -15,11 +16,17 @@ export default function RootLayout({
 }) {
 
     return (
-        <div className="">
+        <LayoutStory
+            LVM={{
+                accountActive: "test",
+                accountsPossible: ["test", "test2"],
+                rucioProjectLink: "rucio.cern.ch",
+                experimentProjectLink: "atlas.cern",
+            }}
+        >
             <QueryClientProvider client={queryClient}>
                 {children}
-                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
-        </div>
+        </LayoutStory>
     )
 }

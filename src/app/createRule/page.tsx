@@ -56,23 +56,21 @@ export default function CreateRule() {
 
 
     return (
-        <div className="flex items-center justify-center h-screen dark:bg-black">
-            <CreateRuleStory
-                onSubmit={onSubmit}
-                didSearch={async (didSearchQuery: DIDSearchQuery) => await DIDSearchComDOM.start()}
-                didResponse={
-                    {
-                        data: DIDSearchComDOM.query.data,
-                        fetchStatus: DIDSearchComDOM.query.fetchStatus
-                    }
+        <CreateRuleStory
+            onSubmit={onSubmit}
+            didSearch={async (didSearchQuery: DIDSearchQuery) => await DIDSearchComDOM.start()}
+            didResponse={
+                {
+                    data: DIDSearchComDOM.query.data,
+                    fetchStatus: DIDSearchComDOM.query.fetchStatus
                 }
-                didValidation={didValidation}
-                rseSearch={async (rseSearchQuery: RSESearchQuery) => await RSEComDOM.start()}
-                rseResponse={{
-                    data: RSEComDOM.query.data,
-                    fetchStatus: RSEComDOM.query.fetchStatus
-                }}
-            />
-        </div>
+            }
+            didValidation={didValidation}
+            rseSearch={async (rseSearchQuery: RSESearchQuery) => await RSEComDOM.start()}
+            rseResponse={{
+                data: RSEComDOM.query.data,
+                fetchStatus: RSEComDOM.query.fetchStatus
+            }}
+        />
     )
 }
