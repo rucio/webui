@@ -109,7 +109,16 @@ export const RSEQuotaTable = (
                     <H3>RSE Name</H3>
                 </span>
             ),
-            cell: (info) => <P mono className="break-all">{info.getValue()}</P>,
+            cell: (info) =>
+                <p
+                    onClick={(event) => event.stopPropagation()}
+                    className={twMerge(
+                        "cursor-text flex w-fit select-all break-all",
+                        "font-mono dark:text-gray-200"
+                    )}
+                >
+                    {info.getValue()}
+                </p>,
         }),
         columnHelper.accessor('used_bytes', {
             id: 'used_bytes',
