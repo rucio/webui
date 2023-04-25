@@ -1,5 +1,6 @@
 import { Collapsible } from '../../Helpers/Collapsible';
 import { Button } from '../../Button/Button';
+import { twMerge } from 'tailwind-merge';
 
 export const RulePage = (
     props: {
@@ -15,7 +16,10 @@ export const RulePage = (
     return (
         <Collapsible showIf={props.activePage === props.pagenum}>
             <div
-                className="m-2 p-4 border rounded-md dark:border-2 flex flex-col space-y-2"
+                className={twMerge(
+                    "m-2 p-4 border rounded-md dark:border-2 flex flex-col space-y-2",
+                    "bg-white dark:bg-gray-800"
+                )}
                 data-testid={`rule-page-${props.pagenum}`}
             >
                 <div>

@@ -8,8 +8,8 @@ export const Timeline = (
         onJump: (goal: number) => void
     }
 ) => {
-    var noClickClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-black", "p-2", "hover:cursor-default"]
-    var clickableClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-black", "p-2", "hover:cursor-pointer"]
+    var noClickClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-gray-900", "p-2", "hover:cursor-default"]
+    var clickableClasses = ["flex", "items-center", "gap-2", "bg-white", "dark:bg-gray-900", "p-2", "hover:cursor-pointer"]
     
     return (
         <div className='w-full'>
