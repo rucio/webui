@@ -237,7 +237,7 @@ export const CreateRule = (
     *  ================================================= */
     return (
         <div data-testid="create-rule-root">
-            <div className="py-4 px-8" data-testid="timeline">
+            <div className="m-2" data-testid="timeline">
                 <Timeline
                     steps={["DIDs", "RSEs", "Options", "Summary"]}
                     active={activePage}
