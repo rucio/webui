@@ -895,10 +895,20 @@ video {
   cursor: pointer;
 }
 
+.cursor-text {
+  cursor: text;
+}
+
 .select-none {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+
+.select-all {
+  -webkit-user-select: all;
+     -moz-user-select: all;
+          user-select: all;
 }
 
 .resize {
