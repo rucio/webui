@@ -1,3 +1,5 @@
+import {useState, useEffect} from 'react'
+
 import { TbLoader2 } from 'react-icons/tb'
 import { FetchStatus } from '@tanstack/react-query'
 import { HiPause, HiMoon } from 'react-icons/hi'
@@ -6,6 +8,10 @@ import { twMerge } from 'tailwind-merge'
 export const FetchstatusIndicator = (props: {
     status: FetchStatus
 }) => {
+    const [status, setStatus] = useState<FetchStatus>(props.status)
+    useEffect(() => {
+        setStatus(props.status)
+    }, [props.status])
     switch (props.status) {
         case "fetching":
             return (
@@ -22,7 +28,7 @@ export const FetchstatusIndicator = (props: {
                     >
                         <TbLoader2
                             className={twMerge(
-                                "w-full h-full animate-spin",
+                                "w-full h-full animate-slowspin",
                                 "text-amber-800"
                             )}
                             id="spinnywheel"
@@ -38,6 +44,7 @@ export const FetchstatusIndicator = (props: {
                                 "text-amber-800",
                                 "font-semibold tracking-wide"
                             )}
+                            htmlFor="spinnywheel"
                         >
                             Fetching
                         </label>
@@ -48,36 +55,46 @@ export const FetchstatusIndicator = (props: {
             return (
                 <div
                     className={twMerge(
-                        "flex justify-between items-center border p-1 rounded-md w-32",
-                        "bg-blue-200"
+                        "w-[228px] h-fit",
+                        "absolute"
                     )}
                 >
                     <div
                         className={twMerge(
-                            "h-6 w-6",
+                            "flex justify-between items-center border p-1 rounded-md w-32",
+                            "bg-blue-200",
+                            "relative",
+                            "animate-floatout fill-mode-forwards"
                         )}
                     >
-                        <HiMoon
+                        <div
                             className={twMerge(
-                                "w-full h-full",
-                                "text-blue-800"
-                            )}
-                            id="spinnywheel"
-                        />
-                    </div>
-                    <div
-                        className={twMerge(
-                            "grow text-center",
-                        )}
-                    >
-                        <label
-                            className={twMerge(
-                                "text-blue-800",
-                                "font-semibold tracking-wide"
+                                "h-6 w-6",
                             )}
                         >
-                            Idle
-                        </label>
+                            <HiMoon
+                                className={twMerge(
+                                    "w-full h-full",
+                                    "text-blue-800"
+                                )}
+                                id="spinnywheel"
+                            />
+                        </div>
+                        <div
+                            className={twMerge(
+                                "grow text-center",
+                            )}
+                        >
+                            <label
+                                className={twMerge(
+                                    "text-blue-800",
+                                    "font-semibold tracking-wide"
+                                )}
+                                htmlFor="spinnywheel"
+                            >
+                                Idle
+                            </label>
+                        </div>
                     </div>
                 </div>
             )
@@ -112,6 +129,7 @@ export const FetchstatusIndicator = (props: {
                                 "text-stone-800",
                                 "font-semibold tracking-wide"
                             )}
+                            htmlFor="spinnywheel"
                         >
                             Paused
                         </label>

@@ -802,6 +802,11 @@ video {
   height: 430px;
 }
 
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
 .h-full {
   height: 100%;
 }
@@ -874,6 +879,10 @@ video {
   width: 2rem;
 }
 
+.w-\[228px\] {
+  width: 228px;
+}
+
 .w-\[400px\] {
   width: 400px;
 }
@@ -931,14 +940,35 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+@keyframes floatout {
+  0% {
+    opacity: 1;
+    left: 0px;
+  }
+
+  80% {
+    opacity: 1;
+    left: 0px;
+  }
+
+  100% {
+    opacity: 0;
+    left: 100px;
+  }
+}
+
+.animate-floatout {
+  animation: floatout 5s linear 1;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
+.animate-slowspin {
+  animation: spin 2s linear infinite;
 }
 
 .cursor-pointer {
@@ -1686,6 +1716,32 @@ video {
 
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
+  }
+}
+
+.running {
+  animation-play-state: running;
+}
+
+.paused {
+  animation-play-state: paused;
+}
+
+.fill-mode-forwards {
+  animation-fill-mode: forwards;
 }
 
 .after\:absolute::after {
