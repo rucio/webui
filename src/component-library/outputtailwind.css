@@ -602,12 +602,12 @@ video {
   left: 0px;
 }
 
-.left-2 {
-  left: 0.5rem;
-}
-
 .right-0 {
   right: 0px;
+}
+
+.right-2 {
+  right: 0.5rem;
 }
 
 .top-0 {
@@ -618,8 +618,8 @@ video {
   top: 2.5rem;
 }
 
-.top-12 {
-  top: 3rem;
+.top-16 {
+  top: 4rem;
 }
 
 .z-10 {
@@ -882,10 +882,6 @@ video {
   width: 2rem;
 }
 
-.w-\[228px\] {
-  width: 228px;
-}
-
 .w-\[400px\] {
   width: 400px;
 }
@@ -943,25 +939,22 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-@keyframes floatout {
+@keyframes fadeout {
   0% {
     opacity: 1;
-    left: 0px;
   }
 
   80% {
     opacity: 1;
-    left: 0px;
   }
 
   100% {
     opacity: 0;
-    left: 100px;
   }
 }
 
-.animate-floatout {
-  animation: floatout 5s linear 1;
+.animate-fadeout {
+  animation: fadeout 5s linear 1;
 }
 
 @keyframes spin {
@@ -2249,6 +2242,10 @@ video {
 }
 
 @media (min-width: 640px) {
+  .sm\:top-12 {
+    top: 3rem;
+  }
+
   .sm\:ml-2 {
     margin-left: 0.5rem;
   }

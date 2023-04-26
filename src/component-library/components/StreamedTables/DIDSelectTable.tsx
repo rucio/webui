@@ -402,7 +402,7 @@ export const DIDSelectTable = (
                 <div
                     className={twMerge(
                         "absolute",
-                        "top-12 left-2",
+                        "top-16 sm:top-12 right-2",
                     )}
                 >
                     <FetchstatusIndicator status={props.fetchstatus} />
