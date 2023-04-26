@@ -46,12 +46,10 @@ export const RSEQuotaTable = (
         props.onChange(selectedRSEIDs)
     }, [selectedRSEIDs])
 
-    const [windowSize, setWindowSize] = useState([
-        window.innerWidth,
-        window.innerHeight,
-    ]);
+    const [windowSize, setWindowSize] = useState([1920, 1080]);
 
     useEffect(() => {
+        setWindowSize([window.innerWidth, window.innerHeight]);
         const handleWindowResize = () => {
             setWindowSize([window.innerWidth, window.innerHeight]);
         };
