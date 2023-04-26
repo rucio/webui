@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { Button } from "../Button/Button"
 import { TextInput } from "./TextInput"
+import { HiXCircle } from "react-icons/hi"
+import { twMerge } from "tailwind-merge"
 
 export const ListInput = (
     props: {
@@ -24,14 +26,19 @@ export const ListInput = (
                     <p className="m-2 font-mono dark:text-white">{item}</p>
                 </div>
                 <div className="w-12 p-1">
-                    <Button
+                    <button
                         type="reset"
-                        label="X"
                         onClick={() => {
                             setItems(items.filter((i) => i !== item))
                             props.onRemove(item)
                         }}
-                    />
+                        className={twMerge(
+                            "w-full h-full flex justify-center items-center",
+                            "text-red-500 hover:text-red-600"
+                        )}
+                    >
+                        <HiXCircle className="text-3xl"/>
+                    </button>
                 </div>
             </div>
         )
