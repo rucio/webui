@@ -198,215 +198,213 @@ export const DIDSelectTable = (
     }, [windowSize])
 
     return (
-        <div className="flex flex-col space-y-2">
-            <div
-                className={twMerge(
-                    "border dark:border-2 rounded-md",
-                    props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
-                    "flex flex-col justify-between space-y-2 pb-2",
-                    "bg-white dark:bg-gray-700",
-                    "h-[430px]",
-                    "relative"
-                )}
-            >
-                <table className="table-fixed w-full text-left">
-                    <thead className="w-full">
-                        {table.getHeaderGroups().map(headerGroup => (
-                            <tr
-                                key={headerGroup.id}
-                                className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
-                            >
-                                <th className="w-6 sm:w-8 grow-0"></th>
-                                <th className="w-1/2 sm:w-2/3 flex-auto">
-                                    <div className="flex flex-row items-center space-x-8 justify-between">
-                                        <span className="shrink-0">
-                                            <H3>{props.useScopenames ? "DID" : "DID Name"}</H3>
-                                        </span>
-                                        <span className="hidden sm:flex w-full">
-                                            <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
-                                        </span>
-                                        <span className="flex sm:hidden pr-4 relative">
-                                            <button
-                                                onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
-                                            >
-                                                <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
-                                            </button>
-                                        </span>
-                                    </div>
-                                    <div
-                                        id="smallScreenNameFiltering"
-                                        className={twMerge(
-                                            "absolute inset-0",
-                                            smallScreenNameFiltering ? "flex" : "hidden",
-                                            "bg-white",
-                                            "p-2 flex-row justify-between space-x-2 items-center"
-                                        )}
-                                    >
+        <div
+            className={twMerge(
+                "border dark:border-2 rounded-md",
+                props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
+                "flex flex-col justify-between space-y-2 pb-2",
+                "bg-white dark:bg-gray-700",
+                "h-[430px]",
+                "relative"
+            )}
+        >
+            <table className="table-fixed w-full text-left">
+                <thead className="w-full">
+                    {table.getHeaderGroups().map(headerGroup => (
+                        <tr
+                            key={headerGroup.id}
+                            className="w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
+                        >
+                            <th className="w-6 sm:w-8 grow-0"></th>
+                            <th className="w-1/2 sm:w-2/3 flex-auto">
+                                <div className="flex flex-row items-center space-x-8 justify-between">
+                                    <span className="shrink-0">
+                                        <H3>{props.useScopenames ? "DID" : "DID Name"}</H3>
+                                    </span>
+                                    <span className="hidden sm:flex w-full">
                                         <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
+                                    </span>
+                                    <span className="flex sm:hidden pr-4 relative">
                                         <button
                                             onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
                                         >
-                                            <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
+                                            <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
                                         </button>
-                                    </div>
-                                </th>
-                                <th
-                                    className="flex-auto hover:cursor-pointer select-none"
-                                    onClick={(e) => {
-                                        // create a match statement for the filter type
-                                        const filterchange = (filterType: DIDType | undefined) => {
-                                            setFilterType(filterType)
-                                            var column = table.getColumn("did_type") as Column<DIDDTO, unknown>
-                                            column.setFilterValue(filterType ?? "")
-                                        }
-                                        switch (filterType) {
-                                            case undefined: {
-                                                filterchange("File")
-                                                break
-                                            }
-                                            case "File": {
-                                                filterchange("Dataset")
-                                                break
-                                            }
-                                            case "Dataset": {
-                                                filterchange("Container")
-                                                break
-                                            }
-                                            case "Container": {
-                                                filterchange(undefined)
-                                                break
-                                            }
-                                        }
-                                    }}
-                                >
-                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 space-y-1 md:pr-4">
-                                        <H3>Type</H3>
-                                        <span className="h-6">
-                                            {
-                                                filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag type={filterType} forcesmall />
-                                            }
-                                        </span>
                                     </span>
-                                </th>
-                                <th
+                                </div>
+                                <div
+                                    id="smallScreenNameFiltering"
                                     className={twMerge(
-                                        "flex-auto",
-                                        "hover:cursor-pointer select-none"
+                                        "absolute inset-0",
+                                        smallScreenNameFiltering ? "flex" : "hidden",
+                                        "bg-white",
+                                        "p-2 flex-row justify-between space-x-2 items-center"
                                     )}
-                                    onClick={(e) => {
-                                        headerGroup.headers.find((h) => h.id === "bytes")?.column.getToggleSortingHandler()?.(e)
-                                    }}
                                 >
-                                    <span className="flex flex-col sm:flex-row justify-between items-center pr-1 space-y-1 md:pr-4">
-                                        <H3>Size</H3>
-                                        <span className="text-gray-500 dark:text-gray-200 text-xl h-6">
-                                            {
-                                                {
-                                                    asc: <HiSortAscending />, desc: <HiSortDescending />,
-                                                }[headerGroup.headers.find((h) => h.id === "bytes")?.column.getIsSorted() as string] ??
-                                                <HiDotsHorizontal />
-                                            }
-                                        </span>
-                                    </span>
-                                </th>
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody
-                        className={twMerge("w-full")}
-                    >
-                        {table.getRowModel().rows.map((row) => {
-                            const did_scopename = row.original.scope + ":" + row.original.name
-                            const isDIDSelected = selectedDIDs.includes(did_scopename)
-                            return (
-                                <tr
-                                    className={twMerge(
-                                        "w-full border-b dark:border-gray-500 hover:cursor-pointer h-16 md:h-8",
-                                        isDIDSelected ? "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600" : "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900",
-                                    )}
-                                    // className={isDIDSelected ? classesSelected : classesNormal}
-                                    key={row.id}
-                                    onClick={(event) => {
-                                        // if there is no more quota remaining, do nothing on click
-                                        if (isDIDSelected) {
-                                            setSelectedDIDs(selectedDIDs.filter(id => id !== did_scopename))
-                                        } else {
-                                            setSelectedDIDs([...selectedDIDs, did_scopename])
+                                    <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
+                                    <button
+                                        onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                    >
+                                        <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
+                                    </button>
+                                </div>
+                            </th>
+                            <th
+                                className="flex-auto hover:cursor-pointer select-none"
+                                onClick={(e) => {
+                                    // create a match statement for the filter type
+                                    const filterchange = (filterType: DIDType | undefined) => {
+                                        setFilterType(filterType)
+                                        var column = table.getColumn("did_type") as Column<DIDDTO, unknown>
+                                        column.setFilterValue(filterType ?? "")
+                                    }
+                                    switch (filterType) {
+                                        case undefined: {
+                                            filterchange("File")
+                                            break
                                         }
-                                        row.getToggleSelectedHandler()(event)
-                                    }}
-                                >
-                                    {row.getVisibleCells().map(cell => (
-                                        <td
-                                            key={cell.id}
-                                        >
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </td>
-                                    ))}
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-                <div className="w-full flex justify-center space-x-2">
-                    <nav className="w-[400px] flex justify-center space-x-2">
-                        <span className="w-1/3 flex space-x-2">
-                            <Button
-                                onClick={() => {
-                                    table.setPageIndex(0)
+                                        case "File": {
+                                            filterchange("Dataset")
+                                            break
+                                        }
+                                        case "Dataset": {
+                                            filterchange("Container")
+                                            break
+                                        }
+                                        case "Container": {
+                                            filterchange(undefined)
+                                            break
+                                        }
+                                    }
                                 }}
-                                disabled={!table.getCanPreviousPage()}
-                                icon={<HiChevronDoubleLeft />}
-                            />
-                            <Button
-                                onClick={() => {
-                                    table.previousPage()
+                            >
+                                <span className="flex flex-col sm:flex-row justify-between items-center pr-1 space-y-1 md:pr-4">
+                                    <H3>Type</H3>
+                                    <span className="h-6">
+                                        {
+                                            filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag type={filterType} forcesmall />
+                                        }
+                                    </span>
+                                </span>
+                            </th>
+                            <th
+                                className={twMerge(
+                                    "flex-auto",
+                                    "hover:cursor-pointer select-none"
+                                )}
+                                onClick={(e) => {
+                                    headerGroup.headers.find((h) => h.id === "bytes")?.column.getToggleSortingHandler()?.(e)
                                 }}
-                                disabled={!table.getCanPreviousPage()}
-                                icon={<HiChevronLeft />}
-                            />
-                        </span>
-                        <span className="w-1/3 inline-flex space-x-2 items-end">
-                            <NumInput
-                                value={pageIndex + 1}
-                                onChange={(event) => {
-                                    setPageIndex(event.target.value - 1)
-                                }}
-                                min={1}
-                                max={table.getPageCount()}
-                            />
-                            <span className="w-full">
-                                <P>
-                                    of {table.getPageCount()}
-                                </P>
-                            </span>
-                        </span>
-                        <span className="w-1/3 space-x-2 flex">
-                            <Button
-                                onClick={() => {
-                                    table.nextPage()
-                                }}
-                                disabled={!table.getCanNextPage()}
-                                icon={<HiChevronRight />}
-                            />
-                            <Button
-                                onClick={() => {
-                                    table.setPageIndex(table.getPageCount() - 1)
-                                }}
-                                disabled={!table.getCanNextPage()}
-                                icon={<HiChevronDoubleRight />}
-                            />
-                        </span>
-                    </nav>
-                </div>
-                <div
-                    className={twMerge(
-                        "absolute",
-                        "top-16 sm:top-12 right-2",
-                    )}
+                            >
+                                <span className="flex flex-col sm:flex-row justify-between items-center pr-1 space-y-1 md:pr-4">
+                                    <H3>Size</H3>
+                                    <span className="text-gray-500 dark:text-gray-200 text-xl h-6">
+                                        {
+                                            {
+                                                asc: <HiSortAscending />, desc: <HiSortDescending />,
+                                            }[headerGroup.headers.find((h) => h.id === "bytes")?.column.getIsSorted() as string] ??
+                                            <HiDotsHorizontal />
+                                        }
+                                    </span>
+                                </span>
+                            </th>
+                        </tr>
+                    ))}
+                </thead>
+                <tbody
+                    className={twMerge("w-full")}
                 >
-                    <FetchstatusIndicator status={props.fetchstatus} />
-                </div>
+                    {table.getRowModel().rows.map((row) => {
+                        const did_scopename = row.original.scope + ":" + row.original.name
+                        const isDIDSelected = selectedDIDs.includes(did_scopename)
+                        return (
+                            <tr
+                                className={twMerge(
+                                    "w-full border-b dark:border-gray-500 hover:cursor-pointer h-16 md:h-8",
+                                    isDIDSelected ? "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600" : "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900",
+                                )}
+                                // className={isDIDSelected ? classesSelected : classesNormal}
+                                key={row.id}
+                                onClick={(event) => {
+                                    // if there is no more quota remaining, do nothing on click
+                                    if (isDIDSelected) {
+                                        setSelectedDIDs(selectedDIDs.filter(id => id !== did_scopename))
+                                    } else {
+                                        setSelectedDIDs([...selectedDIDs, did_scopename])
+                                    }
+                                    row.getToggleSelectedHandler()(event)
+                                }}
+                            >
+                                {row.getVisibleCells().map(cell => (
+                                    <td
+                                        key={cell.id}
+                                    >
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>
+                                ))}
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
+            <div className="w-full flex justify-center space-x-2">
+                <nav className="w-[400px] flex justify-center space-x-2">
+                    <span className="w-1/3 flex space-x-2">
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(0)
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            icon={<HiChevronDoubleLeft />}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.previousPage()
+                            }}
+                            disabled={!table.getCanPreviousPage()}
+                            icon={<HiChevronLeft />}
+                        />
+                    </span>
+                    <span className="w-1/3 inline-flex space-x-2 items-end">
+                        <NumInput
+                            value={pageIndex + 1}
+                            onChange={(event) => {
+                                setPageIndex(event.target.value - 1)
+                            }}
+                            min={1}
+                            max={table.getPageCount()}
+                        />
+                        <span className="w-full">
+                            <P>
+                                of {table.getPageCount()}
+                            </P>
+                        </span>
+                    </span>
+                    <span className="w-1/3 space-x-2 flex">
+                        <Button
+                            onClick={() => {
+                                table.nextPage()
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            icon={<HiChevronRight />}
+                        />
+                        <Button
+                            onClick={() => {
+                                table.setPageIndex(table.getPageCount() - 1)
+                            }}
+                            disabled={!table.getCanNextPage()}
+                            icon={<HiChevronDoubleRight />}
+                        />
+                    </span>
+                </nav>
+            </div>
+            <div
+                className={twMerge(
+                    "absolute",
+                    "top-16 sm:top-12 right-2",
+                )}
+            >
+                <FetchstatusIndicator status={props.fetchstatus} />
             </div>
         </div>
     )
