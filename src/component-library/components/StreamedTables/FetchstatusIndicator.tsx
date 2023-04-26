@@ -15,39 +15,41 @@ export const FetchstatusIndicator = (props: {
     switch (props.status) {
         case "fetching":
             return (
-                <div
-                    className={twMerge(
-                        "flex justify-between items-center border p-1 rounded-md w-32",
-                        "bg-amber-200"
-                    )}
-                >
+                <div className="h-10 relative w-[228px]">
                     <div
                         className={twMerge(
-                            "h-6 w-6",
+                            "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
+                            "bg-amber-200"
                         )}
                     >
-                        <TbLoader2
+                        <div
                             className={twMerge(
-                                "w-full h-full animate-slowspin",
-                                "text-amber-800"
+                                "h-6 w-6",
                             )}
-                            id="spinnywheel"
-                        />
-                    </div>
-                    <div
-                        className={twMerge(
-                            "grow text-center",
-                        )}
-                    >
-                        <label
-                            className={twMerge(
-                                "text-amber-800",
-                                "font-semibold tracking-wide"
-                            )}
-                            htmlFor="spinnywheel"
                         >
-                            Fetching
-                        </label>
+                            <TbLoader2
+                                className={twMerge(
+                                    "w-full h-full animate-slowspin",
+                                    "text-amber-800"
+                                )}
+                                id="spinnywheel"
+                            />
+                        </div>
+                        <div
+                            className={twMerge(
+                                "grow text-center",
+                            )}
+                        >
+                            <label
+                                className={twMerge(
+                                    "text-amber-800",
+                                    "font-semibold tracking-wide"
+                                )}
+                                htmlFor="spinnywheel"
+                            >
+                                Fetching
+                            </label>
+                        </div>
                     </div>
                 </div>
             )
@@ -55,15 +57,15 @@ export const FetchstatusIndicator = (props: {
             return (
                 <div
                     className={twMerge(
-                        "w-[228px] h-fit",
-                        "absolute"
+                        "w-[228px] h-10",
+                        "relative"
                     )}
                 >
                     <div
                         className={twMerge(
-                            "flex justify-between items-center border p-1 rounded-md w-32",
+                            "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
                             "bg-blue-200",
-                            "relative",
+                            "absolute",
                             "animate-floatout fill-mode-forwards"
                         )}
                     >
@@ -100,39 +102,41 @@ export const FetchstatusIndicator = (props: {
             )
         case "paused":
             return (
-                <div
-                    className={twMerge(
-                        "flex justify-between items-center border p-1 rounded-md w-32",
-                        "bg-stone-200"
-                    )}
-                >
+                <div className="h-10 relative w-[228px]">
                     <div
                         className={twMerge(
-                            "h-6 w-6",
+                            "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
+                            "bg-stone-200"
                         )}
                     >
-                        <HiPause
+                        <div
                             className={twMerge(
-                                "w-full h-full",
-                                "text-stone-800"
+                                "h-6 w-6",
                             )}
-                            id="spinnywheel"
-                        />
-                    </div>
-                    <div
-                        className={twMerge(
-                            "grow text-center",
-                        )}
-                    >
-                        <label
-                            className={twMerge(
-                                "text-stone-800",
-                                "font-semibold tracking-wide"
-                            )}
-                            htmlFor="spinnywheel"
                         >
-                            Paused
-                        </label>
+                            <HiPause
+                                className={twMerge(
+                                    "w-full h-full",
+                                    "text-stone-800"
+                                )}
+                                id="spinnywheel"
+                            />
+                        </div>
+                        <div
+                            className={twMerge(
+                                "grow text-center",
+                            )}
+                        >
+                            <label
+                                className={twMerge(
+                                    "text-stone-800",
+                                    "font-semibold tracking-wide"
+                                )}
+                                htmlFor="spinnywheel"
+                            >
+                                Paused
+                            </label>
+                        </div>
                     </div>
                 </div>
             )

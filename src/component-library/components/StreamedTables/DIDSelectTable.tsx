@@ -31,6 +31,7 @@ import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Dropdown } from "../Dropdown/Dropdown"
 import { TextInput } from "../Input/TextInput"
+import { FetchstatusIndicator } from "./FetchstatusIndicator"
 
 
 export const DIDSelectTable = (
@@ -204,7 +205,8 @@ export const DIDSelectTable = (
                     props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
                     "flex flex-col justify-between space-y-2 pb-2",
                     "bg-white dark:bg-gray-700",
-                    "h-[430px]"
+                    "h-[430px]",
+                    "relative"
                 )}
             >
                 <table className="table-fixed w-full text-left">
@@ -396,6 +398,14 @@ export const DIDSelectTable = (
                             />
                         </span>
                     </nav>
+                </div>
+                <div
+                    className={twMerge(
+                        "absolute",
+                        "top-12 left-2",
+                    )}
+                >
+                    <FetchstatusIndicator status={props.fetchstatus} />
                 </div>
             </div>
         </div>
