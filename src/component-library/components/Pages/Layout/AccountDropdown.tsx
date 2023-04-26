@@ -19,7 +19,8 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                 props.isProfileOpen ? "visible" : "invisible",
                 "absolute top-10 right-0",
                 "divide-y",
-                "bg-white dark:bg-slate-800"
+                "bg-white dark:bg-slate-800",
+                "z-[100]"
             )}
             onMouseEnter={e => e.preventDefault()}
             ref={ref}
