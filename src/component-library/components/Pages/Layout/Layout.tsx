@@ -200,7 +200,7 @@ export const Layout = (
                 className={twMerge(
                     "lg:px-24 xl:px-36 py-4 md:py-8",
                     "dark:bg-gray-900 bg-gray-100",
-                    "h-screen",
+                    "h-full min-h-screen",
                     "z-[10]"
                 )}
             >
