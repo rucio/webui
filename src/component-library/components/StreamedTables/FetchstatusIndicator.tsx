@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 
 import { TbLoader2 } from 'react-icons/tb'
 import { FetchStatus } from '@tanstack/react-query'
@@ -15,41 +15,39 @@ export const FetchstatusIndicator = (props: {
     switch (props.status) {
         case "fetching":
             return (
-                <div className="h-10 relative w-[228px]">
+                <div
+                    className={twMerge(
+                        "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
+                        "bg-amber-200"
+                    )}
+                >
                     <div
                         className={twMerge(
-                            "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
-                            "bg-amber-200"
+                            "h-6 w-6",
                         )}
                     >
-                        <div
+                        <TbLoader2
                             className={twMerge(
-                                "h-6 w-6",
+                                "w-full h-full animate-slowspin",
+                                "text-amber-800"
                             )}
-                        >
-                            <TbLoader2
-                                className={twMerge(
-                                    "w-full h-full animate-slowspin",
-                                    "text-amber-800"
-                                )}
-                                id="spinnywheel"
-                            />
-                        </div>
-                        <div
+                            id="spinnywheel"
+                        />
+                    </div>
+                    <div
+                        className={twMerge(
+                            "grow text-center",
+                        )}
+                    >
+                        <label
                             className={twMerge(
-                                "grow text-center",
+                                "text-amber-800",
+                                "font-semibold tracking-wide"
                             )}
+                            htmlFor="spinnywheel"
                         >
-                            <label
-                                className={twMerge(
-                                    "text-amber-800",
-                                    "font-semibold tracking-wide"
-                                )}
-                                htmlFor="spinnywheel"
-                            >
-                                Fetching
-                            </label>
-                        </div>
+                            Fetching
+                        </label>
                     </div>
                 </div>
             )
@@ -57,86 +55,76 @@ export const FetchstatusIndicator = (props: {
             return (
                 <div
                     className={twMerge(
-                        "w-[228px] h-10",
-                        "relative"
+                        "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
+                        "bg-blue-200",
+                        "animate-fadeout fill-mode-forwards"
                     )}
                 >
                     <div
                         className={twMerge(
-                            "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
-                            "bg-blue-200",
-                            "absolute",
-                            "animate-floatout fill-mode-forwards"
+                            "h-6 w-6",
                         )}
                     >
-                        <div
+                        <HiMoon
                             className={twMerge(
-                                "h-6 w-6",
+                                "w-full h-full",
+                                "text-blue-800"
                             )}
-                        >
-                            <HiMoon
-                                className={twMerge(
-                                    "w-full h-full",
-                                    "text-blue-800"
-                                )}
-                                id="spinnywheel"
-                            />
-                        </div>
-                        <div
+                            id="spinnywheel"
+                        />
+                    </div>
+                    <div
+                        className={twMerge(
+                            "grow text-center",
+                        )}
+                    >
+                        <label
                             className={twMerge(
-                                "grow text-center",
+                                "text-blue-800",
+                                "font-semibold tracking-wide"
                             )}
+                            htmlFor="spinnywheel"
                         >
-                            <label
-                                className={twMerge(
-                                    "text-blue-800",
-                                    "font-semibold tracking-wide"
-                                )}
-                                htmlFor="spinnywheel"
-                            >
-                                Idle
-                            </label>
-                        </div>
+                            Idle
+                        </label>
                     </div>
                 </div>
             )
         case "paused":
             return (
-                <div className="h-10 relative w-[228px]">
+                <div
+                    className={twMerge(
+                        "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
+                        "bg-stone-200"
+                    )}
+                >
                     <div
                         className={twMerge(
-                            "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
-                            "bg-stone-200"
+                            "h-6 w-6",
                         )}
                     >
-                        <div
+                        <HiPause
                             className={twMerge(
-                                "h-6 w-6",
+                                "w-full h-full",
+                                "text-stone-800"
                             )}
-                        >
-                            <HiPause
-                                className={twMerge(
-                                    "w-full h-full",
-                                    "text-stone-800"
-                                )}
-                                id="spinnywheel"
-                            />
-                        </div>
-                        <div
+                            id="spinnywheel"
+                        />
+                    </div>
+                    <div
+                        className={twMerge(
+                            "grow text-center",
+                        )}
+                    >
+                        <label
                             className={twMerge(
-                                "grow text-center",
+                                "text-stone-800",
+                                "font-semibold tracking-wide"
                             )}
+                            htmlFor="spinnywheel"
                         >
-                            <label
-                                className={twMerge(
-                                    "text-stone-800",
-                                    "font-semibold tracking-wide"
-                                )}
-                                htmlFor="spinnywheel"
-                            >
-                                Paused
-                            </label>
-                        </div>
+                            Paused
+                        </label>
                     </div>
                 </div>
             )
