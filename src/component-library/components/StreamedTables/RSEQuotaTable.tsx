@@ -1,5 +1,6 @@
 import { H3 } from "@/component-library/components/Text/Headings/H3"
 import { P } from "@/component-library/components/Text/Content/P"
+import { FetchstatusIndicator } from "./FetchstatusIndicator"
 
 import { twMerge } from "tailwind-merge"
 
@@ -183,7 +184,13 @@ export const RSEQuotaTable = (
 
     return (
         <div >
-            <div className={`h-72 overflow-y-auto border dark:border-2 rounded-md ${props.fetchstatus === "fetching" ? "hover:cursor-wait" : ""}`}>
+            <div
+                className={twMerge(
+                    "h-96 overflow-y-auto border dark:border-2 rounded-md",
+                    props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
+                    "relative"
+                )}
+            >
                 <table className="table-fixed w-full text-left">
                     <thead className="w-full">
                         {table.getHeaderGroups().map(headerGroup => (
@@ -315,6 +322,14 @@ export const RSEQuotaTable = (
                         })}
                     </tbody>
                 </table>
+                <div
+                    className={twMerge(
+                        "absolute",
+                        "top-[3.5rem] right-2",
+                    )}
+                >
+                    <FetchstatusIndicator status={props.fetchstatus} />
+                </div>
             </div>
         </div>
     )
