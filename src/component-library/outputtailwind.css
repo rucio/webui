@@ -622,6 +622,10 @@ video {
   z-index: 100;
 }
 
+.z-\[10\] {
+  z-index: 10;
+}
+
 .col-span-1 {
   grid-column: span 1 / span 1;
 }

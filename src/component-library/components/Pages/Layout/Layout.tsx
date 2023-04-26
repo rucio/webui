@@ -61,7 +61,8 @@ export const Layout = (
                     "rounded-md border shadow-md",
                     (props.inputSelected || isMouseOver) ? "visible" : "invisible",
                     "absolute mt-2",
-                    "bg-white dark:bg-slate-800"
+                    "bg-white dark:bg-slate-800",
+                    "z-[100]"
                 )}
                 onMouseEnter={() => { setIsMouseOver(true) }}
                 onMouseLeave={() => { setIsMouseOver(false) }}
@@ -121,7 +122,8 @@ export const Layout = (
             <header
                 className={twMerge(
                     "w-full flex flex-col bg-gray-800 space-y-2 p-2",
-                    "md:h-16"
+                    "md:h-16",
+                    "z-[100]"
                 )}
             >
                 <nav
@@ -198,7 +200,8 @@ export const Layout = (
                 className={twMerge(
                     "lg:px-24 xl:px-36 py-4 md:py-8",
                     "dark:bg-gray-900 bg-gray-100",
-                    "h-screen"
+                    "h-screen",
+                    "z-[10]"
                 )}
             >
                 {props.children}
