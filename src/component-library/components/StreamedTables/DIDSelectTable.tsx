@@ -204,7 +204,7 @@ export const DIDSelectTable = (
                 props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
                 "flex flex-col justify-between space-y-2 pb-2",
                 "bg-white dark:bg-gray-700",
-                "h-[430px]",
+                "h-fit min-h-[430px]",
                 "relative"
             )}
         >

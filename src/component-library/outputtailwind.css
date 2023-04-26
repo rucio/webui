@@ -810,8 +810,9 @@ video {
   height: 24rem;
 }
 
-.h-\[430px\] {
-  height: 430px;
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .h-full {
@@ -820,6 +821,10 @@ video {
 
 .h-screen {
   height: 100vh;
+}
+
+.min-h-\[430px\] {
+  min-height: 430px;
 }
 
 .w-1\/2 {
