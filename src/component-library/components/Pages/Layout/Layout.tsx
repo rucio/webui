@@ -4,7 +4,7 @@ import { HiUserCircle, HiBell } from "react-icons/hi2"
 import { HiMenu, HiChevronDown } from "react-icons/hi"
 import { twMerge } from "tailwind-merge"
 
-import React, { useState, useEffect, useRef, MutableRefObject } from "react"
+import React, { useState, useEffect, useRef, forwardRef } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 import { H3 } from "../../Text/Headings/H3"
 import { P } from "../../Text/Content/P"
@@ -29,12 +29,14 @@ export const Layout = (
     const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
     const [isProfileOpen, setIsProfileOpen] = useState(false)
 
-    const SearchDropdown = (
-        props: {
-            inputSelected: boolean,
-            searchstring: string,
-        }
-    ) => {
+    const SearchDropdown = forwardRef(function SearchDropdown
+        (
+            props: {
+                inputSelected: boolean,
+                searchstring: string,
+            },
+            ref: React.ForwardedRef<HTMLDivElement>
+        ) {
 
         const [isMouseOver, setIsMouseOver] = useState(false)
         const LinkElem = (props: { href: string, children: React.ReactNode }) => {
@@ -82,7 +84,7 @@ export const Layout = (
                 </nav>
             </div>
         )
-    }
+    })
 
     const HeaderLinks = (
         props: {
@@ -114,6 +116,17 @@ export const Layout = (
         }
         document.addEventListener("mousedown", handleClickOutside)
     }, [accountMenuRef])
+
+    const searchMenuRef = useRef<HTMLDivElement>(null)
+    const searchMenuInputRef = useRef<HTMLInputElement>(null)
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (!searchMenuRef.current?.contains(event.target) && !searchMenuInputRef.current?.contains(event.target)) {
+                setIsSearching(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+    }, [searchMenuRef])
 
 
     // images to be returned by static nextjs
@@ -153,10 +166,11 @@ export const Layout = (
                                 )}
                                 placeholder="Search"
                                 onFocus={() => setIsSearching(true)}
-                                onBlur={() => setIsSearching(false)}
+                                // onBlur={() => setIsSearching(false)}
                                 onChange={(e) => setSearchString(e.target.value)}
+                                ref={searchMenuInputRef}
                             />
-                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} />
+                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} ref={searchMenuRef} />
                         </span>
                         <HeaderLinks link="/createrule">Create Rule</HeaderLinks>
                         <HeaderLinks link="/dids">List DIDs</HeaderLinks>
