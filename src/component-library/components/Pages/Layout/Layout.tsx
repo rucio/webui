@@ -86,11 +86,9 @@ export const Layout = (
         )
     })
 
-    const HeaderLinks = (
-        props: {
-            children: any,
-            link: string,
-            className?: string,
+    const HeaderLinks : React.FC<JSX.IntrinsicElements["a"]> = (
+        {
+            ...props            
         }
     ) => {
         return (
@@ -99,7 +97,7 @@ export const Layout = (
                     "hover:text-gray-400 font-bold text-l hover:cursor-pointer text-gray-100",
                     props.className ?? "",
                 )}
-                href={props.link}
+                {...props}
             >
                 {props.children}
             </a>
@@ -172,9 +170,9 @@ export const Layout = (
                             />
                             <SearchDropdown inputSelected={isSearching} searchstring={searchString} ref={searchMenuRef} />
                         </span>
-                        <HeaderLinks link="/createrule">Create Rule</HeaderLinks>
-                        <HeaderLinks link="/dids">List DIDs</HeaderLinks>
-                        <HeaderLinks link="/rules">List Rules</HeaderLinks>
+                        <HeaderLinks href="/createrule" onFocus={() => setIsSearching(false)}>Create Rule</HeaderLinks>
+                        <HeaderLinks href="/dids">List DIDs</HeaderLinks>
+                        <HeaderLinks href="/rules">List Rules</HeaderLinks>
                     </span>
                     <span className="flex space-x-2 items-end relative">
                         <a
@@ -203,10 +201,10 @@ export const Layout = (
                     <nav
                         className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 "
                     >
-                        <HeaderLinks link="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
-                        <HeaderLinks link="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
-                        <HeaderLinks link="/rules" className="w-full pt-2">List Rules</HeaderLinks>
-                        <HeaderLinks link="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiBell /></span></HeaderLinks>
+                        <HeaderLinks href="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
+                        <HeaderLinks href="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
+                        <HeaderLinks href="/rules" className="w-full pt-2">List Rules</HeaderLinks>
+                        <HeaderLinks href="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiBell /></span></HeaderLinks>
                     </nav>
                 </Collapsible>
             </header>
