@@ -4,7 +4,7 @@ import { HiUserCircle, HiBell } from "react-icons/hi2"
 import { HiMenu, HiChevronDown } from "react-icons/hi"
 import { twMerge } from "tailwind-merge"
 
-import React, { useState, useEffect, useRef, MutableRefObject } from "react"
+import React, { useState, useEffect, useRef, forwardRef } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 import { H3 } from "../../Text/Headings/H3"
 import { P } from "../../Text/Content/P"
@@ -29,12 +29,14 @@ export const Layout = (
     const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
     const [isProfileOpen, setIsProfileOpen] = useState(false)
 
-    const SearchDropdown = (
-        props: {
-            inputSelected: boolean,
-            searchstring: string,
-        }
-    ) => {
+    const SearchDropdown = forwardRef(function SearchDropdown
+        (
+            props: {
+                inputSelected: boolean,
+                searchstring: string,
+            },
+            ref: React.ForwardedRef<HTMLDivElement>
+        ) {
 
         const [isMouseOver, setIsMouseOver] = useState(false)
         const LinkElem = (props: { href: string, children: React.ReactNode }) => {
@@ -82,13 +84,11 @@ export const Layout = (
                 </nav>
             </div>
         )
-    }
+    })
 
-    const HeaderLinks = (
-        props: {
-            children: any,
-            link: string,
-            className?: string,
+    const HeaderLinks : React.FC<JSX.IntrinsicElements["a"]> = (
+        {
+            ...props            
         }
     ) => {
         return (
@@ -97,7 +97,7 @@ export const Layout = (
                     "hover:text-gray-400 font-bold text-l hover:cursor-pointer text-gray-100",
                     props.className ?? "",
                 )}
-                href={props.link}
+                {...props}
             >
                 {props.children}
             </a>
@@ -114,6 +114,17 @@ export const Layout = (
         }
         document.addEventListener("mousedown", handleClickOutside)
     }, [accountMenuRef])
+
+    const searchMenuRef = useRef<HTMLDivElement>(null)
+    const searchMenuInputRef = useRef<HTMLInputElement>(null)
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (!searchMenuRef.current?.contains(event.target) && !searchMenuInputRef.current?.contains(event.target)) {
+                setIsSearching(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+    }, [searchMenuRef])
 
 
     // images to be returned by static nextjs
@@ -153,14 +164,15 @@ export const Layout = (
                                 )}
                                 placeholder="Search"
                                 onFocus={() => setIsSearching(true)}
-                                onBlur={() => setIsSearching(false)}
+                                // onBlur={() => setIsSearching(false)}
                                 onChange={(e) => setSearchString(e.target.value)}
+                                ref={searchMenuInputRef}
                             />
-                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} />
+                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} ref={searchMenuRef} />
                         </span>
-                        <HeaderLinks link="/createrule">Create Rule</HeaderLinks>
-                        <HeaderLinks link="/dids">List DIDs</HeaderLinks>
-                        <HeaderLinks link="/rules">List Rules</HeaderLinks>
+                        <HeaderLinks href="/createrule" onFocus={() => setIsSearching(false)}>Create Rule</HeaderLinks>
+                        <HeaderLinks href="/dids">List DIDs</HeaderLinks>
+                        <HeaderLinks href="/rules">List Rules</HeaderLinks>
                     </span>
                     <span className="flex space-x-2 items-end relative">
                         <a
@@ -189,10 +201,10 @@ export const Layout = (
                     <nav
                         className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 "
                     >
-                        <HeaderLinks link="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
-                        <HeaderLinks link="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
-                        <HeaderLinks link="/rules" className="w-full pt-2">List Rules</HeaderLinks>
-                        <HeaderLinks link="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiBell /></span></HeaderLinks>
+                        <HeaderLinks href="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
+                        <HeaderLinks href="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
+                        <HeaderLinks href="/rules" className="w-full pt-2">List Rules</HeaderLinks>
+                        <HeaderLinks href="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiBell /></span></HeaderLinks>
                     </nav>
                 </Collapsible>
             </header>
