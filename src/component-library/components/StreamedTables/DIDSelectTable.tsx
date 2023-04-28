@@ -320,8 +320,11 @@ export const DIDSelectTable = (
                         return (
                             <tr
                                 className={twMerge(
-                                    "w-full border-b dark:border-gray-500 hover:cursor-pointer h-16 md:h-8",
-                                    isDIDSelected ? "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600" : "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900",
+                                    "w-full hover:cursor-pointer h-16 md:h-8",
+                                    "bg-white odd:bg-stone-100",
+                                    "dark:bg-gray-700 dark:odd:bg-gray-800",
+                                    isDIDSelected ? "bg-blue-200 odd:bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 odd:dark:bg-blue-500 dark:hover:bg-blue-600 border border-blue-400 dark:border-blue-700" :
+                                        "hover:bg-gray-200 dark:hover:bg-gray-900",
                                 )}
                                 // className={isDIDSelected ? classesSelected : classesNormal}
                                 key={row.id}
@@ -347,7 +350,7 @@ export const DIDSelectTable = (
                     })}
                 </tbody>
             </table>
-            <div className="w-full flex justify-center space-x-2">
+            <div className="w-full flex justify-center space-x-2 pt-2 border-t dark:border-gray-400 dark:border-t-2">
                 <nav className="w-[400px] flex justify-center space-x-2">
                     <span className="w-1/3 flex space-x-2">
                         <Button
