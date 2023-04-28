@@ -19,6 +19,7 @@ import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
 import { DIDSelectTable } from '../../StreamedTables/DIDSelectTable';
 import { RSEQuotaTable } from '../../StreamedTables/RSEQuotaTable';
+import { SummaryPage } from './SummaryPage';
 
 var format = require("date-format")
 
@@ -38,7 +39,7 @@ import {
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
-    didSearch: (didSearchQuery: DIDSearchQuery) => void, 
+    didSearch: (didSearchQuery: DIDSearchQuery) => void,
     didResponse: DIDSearchResponse,
     // Page 0.1 - DID Validation
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
@@ -406,8 +407,8 @@ export const CreateRule = (
                                             label="Create Sample"
                                             handleChange={(event: any) => {
                                                 setPage2State({ ...Page2State, takesamples: event.target.checked });
-                                                if(!event.target.checked) {
-                                                    setPage2State({...Page2State, numsamples: -1})
+                                                if (!event.target.checked) {
+                                                    setPage2State({ ...Page2State, numsamples: -1 })
                                                 }
                                             }}
                                             isChecked={Page2State.takesamples}
