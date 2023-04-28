@@ -285,15 +285,18 @@ export const RSEQuotaTable = (
                         className="w-full"
                     >
                         {table.getRowModel().rows.map((row) => {
-                            const classes = "w-full border-b dark:border-gray-200 hover:cursor-pointer h-8 "  // maybe handle spinnywheel here
-                            const classesDisabled = twMerge(`${classes} dark:bg-gray-800 hover:cursor-not-allowed`)
-                            const classesNormal = classes + "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900 "
-                            const classesSelected = classes + "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
                             const rse_id = row.original.rse_id
                             const isRSESelected = selectedRSEIDs.includes(rse_id)
                             return (
                                 <tr
-                                    className={isRSESelected ? classesSelected : (isNoQuotaLeftFunction(row) ? classesDisabled : classesNormal)}
+                                    // className={isRSESelected ? classesSelected : (isNoQuotaLeftFunction(row) ? classesDisabled : classesNormal)}
+                                    className={twMerge(
+                                        "w-full dark:border-gray-200 hover:cursor-pointer h-8 odd:bg-stone-100 odd:dark:bg-gray-800 dark:bg-gray-700",
+                                        isRSESelected ? "bg-blue-200 odd:bg-blue-200 hover:bg-blue-300 odd:dark:bg-blue-500 dark:bg-blue-500 odd:dark:hover:bg-blue-600 dark:hover:bg-blue-600 border border-blue-400 dark:border-blue-700" : (
+                                            isNoQuotaLeftFunction(row) ? "hover:cursor-not-allowed" : "hover:bg-gray-200 dark:hover:bg-gray-900"
+                                        ),
+
+                                    )}
                                     key={row.id}
                                     onClick={(event) => {
                                         // if there is no more quota remaining, do nothing on click
