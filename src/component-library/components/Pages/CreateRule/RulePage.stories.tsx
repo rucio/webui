@@ -2,7 +2,7 @@ import {StoryFn, Meta} from '@storybook/react'
 import {RulePage} from './RulePage'
 
 export default {
-    title: 'Components/Pages/CreateRule/RulePage',
+    title: 'Components/Pages/CreateRule/Components',
     component: RulePage,
 } as Meta<typeof RulePage>
 
