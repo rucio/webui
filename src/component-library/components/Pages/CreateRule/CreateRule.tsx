@@ -430,69 +430,17 @@ export const CreateRule = (
                     </div>
                 </RulePage>
                 <RulePage pagenum={3} activePage={activePage} onNext={page3submitFunction} onPrev={pagePrevFunction} submit>
-                    <div className="flex flex-col space-y-2 m-2">
-                        <div className="w-full">
-                            <H3>DIDs chosen</H3>
-                            <ul>
-                                {Page0State.typedDIDs.concat(Page0State.chosenDIDs).map((element, index) => {
-                                    return (
-                                        <li key={index}><P>{element}</P></li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                        <div className="w-full">
-                            <H3>Replication to the following RSEs {Page1State.askForApproval ? "(will ask for approval)" : ""}</H3>
-                            <ul>
-                                {Page1State.RSESelection.map((element, index) => {
-                                    return (
-                                        <li key={index}><P>{element}</P></li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                        <div className="w-full">
-                            <table className="w-full text-left">
-                                <thead className="w-full flex hover:cursor-default">
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <th className="w-1/2"><H3>Option</H3></th>
-                                        <th className="w-1/2"><H3>Value</H3></th>
-                                    </tr>
-                                </thead>
-                                <tbody className="w-full overflow-y-auto flex flex-col h-48">
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Expiry Date</P></td>
-                                        <td className="w-1/2"><P>{format("yyyy-MM-dd", Page2State.expiryDate)}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Enable Notifications</P></td>
-                                        <td className="w-1/2"><P>{Page2State.enableNotifications ? "Yes" : "No"}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Asynchronous Mode</P></td>
-                                        <td className="w-1/2"><P>{Page2State.asynchronousMode ? "Yes" : "No"}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Number of Copies</P></td>
-                                        <td className="w-1/2"><P>{Page2State.numcopies}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Number of Samples</P></td>
-                                        <td className="w-1/2"><P>{Page2State.numsamples}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Group By</P></td>
-                                        <td className="w-1/2"><P>{Page2State.groupBy}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Comment</P></td>
-                                        <td className="w-1/2"><P>{Page2State.freeComment}</P></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
+                    <SummaryPage data={{
+                        DIDList: Page0State.typedDIDs.concat(Page0State.chosenDIDs),
+                        RSEList: Page1State.RSESelection,
+                        expirydate: Page2State.expiryDate,
+                        notifications: Page2State.enableNotifications,
+                        asynchronousMode: Page2State.asynchronousMode,
+                        numcopies: Page2State.numcopies,
+                        numsamples: Page2State.numsamples,
+                        groupby: Page2State.groupBy,
+                        comment: Page2State.freeComment,
+                    }} />
                 </RulePage>
             </div>
         </div>

@@ -2,6 +2,7 @@ import { CreateRuleQuery } from "@/lib/infrastructure/data/view-model/createRule
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
 import FC from "react"
+import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 
 var format = require("date-format")
 
@@ -92,7 +93,8 @@ export const SummaryPage = (
                 className={twMerge(
                     "bg-gray-100 border",
                     "rounded-md",
-                    "flex flex-col"
+                    "flex flex-col",
+                    "pb-2"
                 )}
             >
                 <div className="flex flex-row">
@@ -103,38 +105,53 @@ export const SummaryPage = (
                     </h3>
                 </div>
                 <div
-                    className="p-2"
+                    className="px-2"
                 >
-                    General
-                    <table className="w-full bg-white border">
+                    <table className="w-full bg-white border table-fixed">
+                        <tr>
+                            <th className="w-56 pl-2 py-2 text-left">Parameter</th>
+                            <th className="pl-2 py-2 text-left">Value</th>
+                        </tr>
                         <tr className="border">
                             <OptionTD>Expiry Date</OptionTD>
-                            <OptionTD>{format("yyyy-MM-dd", props.data.expirydate)}</OptionTD>
+                            <td className="select-all py-1">{format("yyyy-MM-dd", props.data.expirydate)}</td>
                         </tr>
                         <tr className="border">
                             <OptionTD>Enable Notifications</OptionTD>
-                            <OptionTD><BoolTag val={props.data.notifications}/></OptionTD>
+                            <td><BoolTag val={props.data.notifications}/></td>
                         </tr>
                         <tr className="border">
                             <OptionTD>Asynchronous Mode</OptionTD>
-                            <OptionTD><BoolTag val={props.data.asynchronousMode}/></OptionTD>
+                            <td><BoolTag val={props.data.asynchronousMode}/></td>
                         </tr>
                         <tr className="border">
                             <OptionTD>Group By</OptionTD>
-                            <OptionTD>{props.data.groupby}</OptionTD>
+                            <td><DIDTypeTag type={props.data.groupby}/></td>
                         </tr>
                         <tr className="border">
                             <OptionTD>Number of Copies</OptionTD>
-                            <OptionTD>{props.data.numcopies}</OptionTD>
+                            <td className="select-all py-1">{props.data.numcopies}</td>
                         </tr>
                         <tr className="border">
                             <OptionTD>Comment</OptionTD>
-                            <OptionTD>{props.data.comment}</OptionTD>
+                            <td className="select-all py-1">{props.data.comment}</td>
                         </tr>
                     </table>
                 </div>
                 <div>
-                    Samples
+                    <h3
+                        className="text-xl font-bold p-2"
+                    >
+                        Samples
+                    </h3>
+                    <div
+                        className={twMerge(
+                            "px-2 mx-2 rounded border",
+                            props.data.numsamples >= 0 ? "bg-teal-300" : "bg-gray-200"
+                        )}
+                    >
+                        {props.data.numsamples < 0 ? "Not taking Samples" : "Sampling " + props.data.numsamples + " elements from the named DIDs."}
+                    </div>
                 </div>
             </div>
         </div>
