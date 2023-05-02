@@ -1,6 +1,8 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react'
 import { Button } from '../Button/Button'
 import { Collapsible } from '../Helpers/Collapsible'
+import { HiChevronDown } from 'react-icons/hi'
+import { twMerge } from 'tailwind-merge'
 
 export const Dropdown = forwardRef(function Dropdown
     (
@@ -9,9 +11,19 @@ export const Dropdown = forwardRef(function Dropdown
             options: Array<string>,
             handleChange: (args: any) => void,
             id?: string
+            nodes?: Array<React.ReactNode>
         },
         outsideref?: React.ForwardedRef<HTMLDivElement>
     ) {
+
+    const zippedElements = () => {
+        if (!!props.nodes) {
+            return props.options.map((element: any, index: number) => [element, props.nodes?.[index]])
+        } else {
+            return props.options.map((element: any, index: number) => [element, element])
+        }
+    }
+
     const [isActive, setActive] = useState<boolean>(false)
     const [selectedLabel, setSelectedLabel] = useState<string>(props.label)
 
@@ -26,41 +38,29 @@ export const Dropdown = forwardRef(function Dropdown
         document.addEventListener("mousedown", handleClickOutside)
     }, [ref])
 
-    let icon = () => {
-        return (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-            >
-                <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                />
-            </svg>
-        )
-    }
     return (
         <div className="w-full relative">
-            <Button label={selectedLabel} onClick={() => { setActive(!isActive) }} icon={icon()} ref={buttonRef}/>
+            <Button label={selectedLabel} onClick={() => { setActive(!isActive) }} icon={<HiChevronDown />} ref={buttonRef} />
             <Collapsible showIf={isActive}>
-                <div className="absolute right-0 mt-2 w-56 rounded border z-[100]" ref={ref}>
-                    <div className="p-2 flex flex-col bg-white">
+                <div className="absolute right-0 mt-2 w-56 rounded border dark:border-2 z-[100]" ref={ref}>
+                    <div className="p-1 flex flex-col bg-white dark:bg-gray-700">
                         <ol>
-                            {props.options.map((element: any, index: number) => {
+                            {zippedElements().map((element: any, index: number) => {
                                 return (
                                     <li
                                         key={index}
                                         onClick={() => {
                                             setActive(!isActive);
-                                            props.handleChange(element);
-                                            setSelectedLabel(element);
+                                            props.handleChange(element[0]);
+                                            setSelectedLabel(element[0]);
                                         }}
-                                        className="hover:bg-gray-200"
+                                        className={twMerge(
+                                            "py-1 pt-1 rounded select-none cursor-pointer",
+                                            "bg-white hover:bg-gray-200",
+                                            "dark:bg-gray-700 hover:dark:bg-gray-900 dark:text-gray-100"
+                                        )}
                                     >
-                                        {element}
+                                        {element[1]}
                                     </li>
                                 )
                             })}

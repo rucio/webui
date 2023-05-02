@@ -36,6 +36,7 @@ import {
     RSESearchQuery, RSESearchResponse,
 
 } from '../../../../lib/infrastructure/data/view-model/createRule.d';
+import { DIDTypeTag } from '../../Tags/DIDTypeTag';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
@@ -382,6 +383,12 @@ export const CreateRule = (
                                             label={Page2State.groupBy}
                                             options={["Dataset", "Container", "Collection", "File"]}
                                             handleChange={(element: any) => { setPage2State({ ...Page2State, groupBy: element }) }}
+                                            nodes={[
+                                                <DIDTypeTag type='Dataset' key={0}/>,
+                                                <DIDTypeTag type='Container' key={1}/>,
+                                                <DIDTypeTag type='Collection' key={2}/>,
+                                                <DIDTypeTag type='File' key={3}/>,
+                                            ]}
                                         />
                                     </div>
                                     <div className="">

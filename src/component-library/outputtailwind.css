@@ -1400,6 +1400,11 @@ video {
   background-color: rgb(30 41 59 / var(--tw-bg-opacity));
 }
 
+.bg-stone-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 244 / var(--tw-bg-opacity));
+}
+
 .bg-stone-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(231 229 228 / var(--tw-bg-opacity));
@@ -1530,6 +1535,10 @@ video {
 
 .pr-4 {
   padding-right: 1rem;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
 }
 
 .pt-2 {
@@ -2356,6 +2365,11 @@ video {
     background-color: rgb(75 85 99 / var(--tw-bg-opacity));
   }
 
+  .hover\:dark\:bg-gray-900:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+  }
+
   .odd\:dark\:hover\:bg-blue-600:hover:nth-child(odd) {
     --tw-bg-opacity: 1;
     background-color: rgb(37 99 235 / var(--tw-bg-opacity));
@@ -2503,10 +2517,6 @@ video {
     visibility: visible;
   }
 
-  .md\:mr-2 {
-    margin-right: 0.5rem;
-  }
-
   .md\:block {
     display: block;
   }
@@ -2539,12 +2549,12 @@ video {
     width: 25%;
   }
 
-  .md\:w-60 {
-    width: 15rem;
+  .md\:w-24 {
+    width: 6rem;
   }
 
-  .md\:w-full {
-    width: 100%;
+  .md\:w-60 {
+    width: 15rem;
   }
 
   .md\:flex-row {
@@ -2564,26 +2574,6 @@ video {
 
   .md\:rounded {
     border-radius: 0.25rem;
-  }
-
-  .md\:px-2 {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
-  .md\:px-2\.5 {
-    padding-left: 0.625rem;
-    padding-right: 0.625rem;
-  }
-
-  .md\:py-0 {
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-
-  .md\:py-0\.5 {
-    padding-top: 0.125rem;
-    padding-bottom: 0.125rem;
   }
 
   .md\:py-8 {
