@@ -21,9 +21,10 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
     // split props into className and rest using spread operator
     const { className, ...restprops } = props
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+    const [windowWidth, setWindowWidth] = useState(720)
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth)
+        handleResize()
         window.addEventListener('resize', handleResize)
     }, [])
     const belowMedium = (windowWidth < 768) || forcesmall
@@ -31,7 +32,7 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
     const colPicker = (didtype: DIDType) => {
         switch (didtype.toUpperCase()) {
             case "CONTAINER":
-                return "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300"
+                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300"
             case "DATASET":
                 return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
             case "FILE":

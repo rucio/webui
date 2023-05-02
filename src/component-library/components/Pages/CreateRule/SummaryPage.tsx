@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge"
 import FC from "react"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { HiQuestionMarkCircle } from "react-icons/hi"
+import { SamplingTag } from "../../Tags/SamplingTag"
 
 var format = require("date-format")
 
@@ -92,11 +93,14 @@ export const SummaryPage = (
                 "bg-white dark:bg-gray-800"
             )}
         >
-            <h1
-                className={twMerge("text-2xl font-bold text-black dark:text-white")}
-            >
-                Summary Page
-            </h1>
+            <div className="flex justify-start space-x-2">
+                <h1
+                    className={twMerge("text-2xl font-bold text-black dark:text-white")}
+                >
+                    Summary Page
+                </h1>
+                <SamplingTag sampling={props.data.numsamples >= 0} />
+            </div>
             <div
                 className={twMerge(
                     "grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-4",

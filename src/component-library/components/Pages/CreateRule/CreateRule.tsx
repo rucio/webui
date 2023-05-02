@@ -38,6 +38,7 @@ import {
 } from '../../../../lib/infrastructure/data/view-model/createRule.d';
 import { DIDTypeTag } from '../../Tags/DIDTypeTag';
 import { twMerge } from 'tailwind-merge';
+import { SamplingTag } from '../../Tags/SamplingTag';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
@@ -248,7 +249,7 @@ export const CreateRule = (
                 />
             </div>
             <div className="flex flex-col">
-                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={0} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
                     <Tabs
                         tabs={["DID Search Pattern", "List of DIDs"]}
                         active={Page0State.selectDIDMethod}
@@ -342,7 +343,7 @@ export const CreateRule = (
                         </div>
                     </div>
                 </RulePage>
-                <RulePage pagenum={0} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
                     <div className="flex md:flex-row md:space-x-2 flex-col space-y-2 m-2">
                         <div className="flex flex-col space-y-2 md:w-60 w-full">
                             <div className="w-full">
@@ -373,8 +374,11 @@ export const CreateRule = (
                             </div>
                         </div>
                         <div className="border rounded-md p-2 grow">
-                            <div className="w-24">
-                                <Button label="Advanced" onClick={() => { setPage2State({ ...Page2State, showAdvanced: !Page2State.showAdvanced }) }} />
+                            <div className="flex w-full justify-start space-x-2">
+                                <div className="w-24">
+                                    <Button label="Advanced" onClick={() => { setPage2State({ ...Page2State, showAdvanced: !Page2State.showAdvanced }) }} />
+                                </div>
+                                <SamplingTag sampling={Page2State.takesamples} />
                             </div>
                             <Collapsible showIf={Page2State.showAdvanced}>
                                 <div className="flex flex-col space-y-2 mt-2">
@@ -412,16 +416,6 @@ export const CreateRule = (
                                             Page2State.takesamples ? "bg-teal-300 dark:bg-teal-600" : "bg-gray-100 dark:bg-gray-800"
                                         )}
                                     >
-                                        {/* <CheckBox
-                                            type="checkbox"
-                                            label="Create Sample"
-                                            handleChange={(event: any) => {
-                                                setPage2State({ ...Page2State, takesamples: event.target.checked });
-                                                if (!event.target.checked) {
-                                                    setPage2State({ ...Page2State, numsamples: -1 })
-                                                }
-                                            }}
-                                        /> */}
                                         <div
                                             className="flex flex-row justify-start space-x-2"
                                         >

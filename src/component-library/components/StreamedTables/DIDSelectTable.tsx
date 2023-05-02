@@ -29,7 +29,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Dropdown } from "../Dropdown/Dropdown"
 import { TextInput } from "../Input/TextInput"
 import { FetchstatusIndicator } from "./FetchstatusIndicator"
 
@@ -96,7 +95,7 @@ export const DIDSelectTable = (
             cell: (info) => {
                 return (
                     <div className="flex flex-row items-center justify-center">
-                        <DIDTypeTag type={info.row.original.did_type} />
+                        <DIDTypeTag didtype={info.row.original.did_type} />
                     </div>
                 )
             },
@@ -282,7 +281,7 @@ export const DIDSelectTable = (
                                     <H3>Type</H3>
                                     <span className="h-6">
                                         {
-                                            filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag type={filterType} forcesmall />
+                                            filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag didtype={filterType} forcesmall />
                                         }
                                     </span>
                                 </span>

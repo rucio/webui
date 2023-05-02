@@ -11,5 +11,5 @@ const Template: StoryFn<typeof L> = args => <L {...args} />
 
 export const DIDTypeTag= Template.bind({})
 DIDTypeTag.args = {
-    type: 'Container',
+    didtype: 'Container',
 }
