@@ -13,8 +13,9 @@ export const BoolTag: FC<BoolTagProps>= (
     return (
         <span
             className={twMerge(
-                "mr-2 px-2.5 py-0.5 rounded h-6 w-full text-center",
-                val ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800",
+                "mr-2 px-2.5 py-0.5 rounded h-6 flex w-16 justify-center text-center items-center",
+                val ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" :
+                    "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
                 props.className
             )}
             {...props}
