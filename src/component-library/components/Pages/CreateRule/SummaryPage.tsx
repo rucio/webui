@@ -151,7 +151,7 @@ export const SummaryPage = (
                         </tr>
                         <tr className="border-t dark:border-gray-400">
                             <OptionTD>Group By</OptionTD>
-                            <td><DIDTypeTag type={props.data.groupby}/></td>
+                            <td><DIDTypeTag didtype={props.data.groupby}/></td>
                         </tr>
                         <tr className="border-t dark:border-gray-400">
                             <OptionTD>Number of Copies</OptionTD>
