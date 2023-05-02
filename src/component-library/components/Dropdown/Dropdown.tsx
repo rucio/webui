@@ -1,17 +1,31 @@
-import { useState } from 'react'
+import React, { useEffect, useState, forwardRef, useRef } from 'react'
 import { Button } from '../Button/Button'
 import { Collapsible } from '../Helpers/Collapsible'
 
-export const Dropdown = (
-    props: {
-        label: string,
-        options: Array<string>,
-        handleChange: (args: any) => void,
-        id?: string
-    }
-    ) => {
+export const Dropdown = forwardRef(function Dropdown
+    (
+        props: {
+            label: string,
+            options: Array<string>,
+            handleChange: (args: any) => void,
+            id?: string
+        },
+        outsideref?: React.ForwardedRef<HTMLDivElement>
+    ) {
     const [isActive, setActive] = useState<boolean>(false)
     const [selectedLabel, setSelectedLabel] = useState<string>(props.label)
+
+    const ref = useRef<HTMLDivElement>(null)
+    const buttonRef = useRef<HTMLButtonElement>(null)
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (!ref.current?.contains(event.target) && !buttonRef.current?.contains(event.target)) {
+                setActive(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+    }, [ref])
+
     let icon = () => {
         return (
             <svg
@@ -30,9 +44,9 @@ export const Dropdown = (
     }
     return (
         <div className="w-full relative">
-            <Button label={selectedLabel} onClick={() => {setActive(!isActive)}} icon={icon()} />
+            <Button label={selectedLabel} onClick={() => { setActive(!isActive) }} icon={icon()} ref={buttonRef}/>
             <Collapsible showIf={isActive}>
-                <div className="absolute right-0 mt-2 w-56 rounded border z-[100]">
+                <div className="absolute right-0 mt-2 w-56 rounded border z-[100]" ref={ref}>
                     <div className="p-2 flex flex-col bg-white">
                         <ol>
                             {props.options.map((element: any, index: number) => {
@@ -56,44 +70,4 @@ export const Dropdown = (
             </Collapsible>
         </div>
     )
-}
-
-        // <div classNameName="">
-        //     <div classNameName="dropdown-trigger">
-        //         <button
-        //             classNameName="button"
-        //             aria-haspopup="true"
-        //             aria-controls="dropdown-menu"
-        //             onClick={() => {
-        //                 setActive(!isActive)
-        //             }}
-        //         >
-        //             <span>{selectedlabel}</span>
-        //             <span classNameName="icon is-small">
-        //                 <p>&#9660;</p>
-        //             </span>
-        //         </button>
-        //     </div>
-        //     <div
-        //         classNameName="dropdown-menu"
-        //         id="dropdown-menu"
-        //         role="menu"
-        //         onClick={(event: any) => {
-        //             setActive(false)
-        //             setSelectedLabel(event?.target?.value)
-        //             handleChange?.(event)
-        //         }}
-        //     >
-        //         <div classNameName="dropdown-content">
-        //             {options.map((element: any, index: number) => (
-        //                 <option
-        //                     classNameName={'dropdown-item'}
-        //                     value={element}
-        //                     key={index}
-        //                 >
-        //                     {element}
-        //                 </option>
-        //             ))}
-        //         </div>
-        //     </div>
-        // </div>
+})

@@ -1,21 +1,24 @@
 import { twMerge } from "tailwind-merge"
 import { Collapsible } from "../Helpers/Collapsible"
+import { forwardRef } from "react"
 
 interface ButtonProps {
 }
 
-export const Button = (
-    props: {
-        label?: string
-        icon?: any
-        type?: 'button' | 'submit' | 'reset'
-        disabled?: boolean
-        theme?: 'blue' | 'orange',
-        fullwidth?: boolean
-        onClick?: (args: unknown) => void
-        id?: string
-    }
-) => {
+export const Button = forwardRef(function Button
+    (
+        props: {
+            label?: string
+            icon?: any
+            type?: 'button' | 'submit' | 'reset'
+            disabled?: boolean
+            theme?: 'blue' | 'orange',
+            fullwidth?: boolean
+            onClick?: (args: unknown) => void
+            id?: string
+        },
+        ref?: React.ForwardedRef<HTMLButtonElement>
+    ) {
     const type = props.type ?? "button"
     const theme = props.theme ?? "blue"
     const fullwidth = props.fullwidth ?? true
@@ -39,11 +42,12 @@ export const Button = (
                 )}
                 onClick={handleOnClick}
                 id={props.id}
+                ref={ref}
             >
                 <div className={twMerge(
-                        "flex justify-center",
-                        props.disabled ? "cursor-not-allowed" : "cursor-pointer"
-                    )}
+                    "flex justify-center",
+                    props.disabled ? "cursor-not-allowed" : "cursor-pointer"
+                )}
                 >
                     <label htmlFor={props.id} className={twMerge(
                         props.disabled ? "cursor-not-allowed" : "cursor-pointer"
@@ -73,6 +77,7 @@ export const Button = (
                 )}
                 onClick={handleOnClick}
                 id={props.id}
+                ref={ref}
             >
                 <label htmlFor={props.id} className="flex justify-center cursor-pointer">
                     {props.icon}
@@ -80,4 +85,4 @@ export const Button = (
             </button>
         )
     }
-}
+})
