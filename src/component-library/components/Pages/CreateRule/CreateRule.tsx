@@ -6,7 +6,7 @@ import { Timeline } from '../../Timeline/Timeline';
 import { Collapsible } from '../../Helpers/Collapsible';
 import { Tabs } from '../../Tabs/Tabs';
 import { TextInput } from '../../Input/TextInput';
-import { Dropdown } from '../../Dropdown/Dropdown';
+import { Dropdown } from './GroupingDropdown';
 import { RulePage } from './RulePage';
 import { convertCompilerOptionsFromJson } from 'typescript';
 import { DateInput } from '../../Input/DateInput';
@@ -378,17 +378,15 @@ export const CreateRule = (
                             <Collapsible showIf={Page2State.showAdvanced}>
                                 <div className="flex flex-col space-y-2 mt-2">
                                     <div className="w-full">
-                                        <Label label="groupBy">Group items by</Label>
+                                        <label
+                                            className="hidden"
+                                            htmlFor="item-grouping-dropdown"
+                                        >
+                                            Item Grouping
+                                        </label>
                                         <Dropdown
-                                            label={Page2State.groupBy}
-                                            options={["Dataset", "Container", "Collection", "File"]}
                                             handleChange={(element: any) => { setPage2State({ ...Page2State, groupBy: element }) }}
-                                            nodes={[
-                                                <DIDTypeTag type='Dataset' key={0}/>,
-                                                <DIDTypeTag type='Container' key={1}/>,
-                                                <DIDTypeTag type='Collection' key={2}/>,
-                                                <DIDTypeTag type='File' key={3}/>,
-                                            ]}
+                                            id="item-grouping-dropdown"
                                         />
                                     </div>
                                     <div className="">

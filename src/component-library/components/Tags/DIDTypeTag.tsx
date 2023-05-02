@@ -6,15 +6,20 @@ import { FC } from "react"
 type DIDTypeTagProps = JSX.IntrinsicElements["span"] & {
     didtype: DIDType;
     forcesmall?: boolean;
+    neversmall?: boolean;
 };
 
 export const DIDTypeTag: FC<DIDTypeTagProps> = (
     {
         didtype = "Dataset",
         forcesmall = false,
+        neversmall = false,
         ...props
     }
 ) => {
+
+    // split props into className and rest using spread operator
+    const { className, ...restprops } = props
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
     useEffect(() => {
@@ -44,11 +49,11 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
             className={twMerge(
                 "rounded-full md:rounded w-6 h-6 md:w-24 text-center flex justify-center items-center",
                 colPicker(didtype),
-                props.className
+                className
             )}
-            {...props}
+            {...restprops}
         >
-            {belowMedium ? didtype.slice(0, 1) : didtype }
+            {belowMedium && !neversmall ? didtype.slice(0, 1) : didtype }
         </span>
     )
 }
