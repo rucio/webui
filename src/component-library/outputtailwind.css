@@ -2185,6 +2185,11 @@ video {
     background-color: rgb(30 41 59 / var(--tw-bg-opacity));
   }
 
+  .dark\:bg-stone-900 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(28 25 23 / var(--tw-bg-opacity));
+  }
+
   .dark\:bg-teal-600 {
     --tw-bg-opacity: 1;
     background-color: rgb(13 148 136 / var(--tw-bg-opacity));
@@ -2248,6 +2253,11 @@ video {
   .dark\:text-rose-300 {
     --tw-text-opacity: 1;
     color: rgb(253 164 175 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-stone-300 {
+    --tw-text-opacity: 1;
+    color: rgb(214 211 209 / var(--tw-text-opacity));
   }
 
   .dark\:text-teal-300 {
