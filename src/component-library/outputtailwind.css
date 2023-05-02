@@ -646,6 +646,10 @@ video {
   grid-column: span 2 / span 2;
 }
 
+.row-span-2 {
+  grid-row: span 2 / span 2;
+}
+
 .m-2 {
   margin: 0.5rem;
 }
@@ -1027,6 +1031,10 @@ video {
 
 .list-none {
   list-style-type: none;
+}
+
+.grid-flow-row-dense {
+  grid-auto-flow: row dense;
 }
 
 .grid-cols-3 {
@@ -1964,6 +1972,11 @@ video {
 .hover\:bg-yellow-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
+}
+
+.hover\:text-blue-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
 .hover\:text-gray-400:hover {

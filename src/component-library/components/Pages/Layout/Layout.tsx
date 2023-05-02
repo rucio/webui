@@ -86,9 +86,9 @@ export const Layout = (
         )
     })
 
-    const HeaderLinks : React.FC<JSX.IntrinsicElements["a"]> = (
+    const HeaderLinks: React.FC<JSX.IntrinsicElements["a"]> = (
         {
-            ...props            
+            ...props
         }
     ) => {
         return (
@@ -129,7 +129,13 @@ export const Layout = (
 
     // images to be returned by static nextjs
     return (
-        <div>
+        <div
+            className={twMerge(
+                "dark:bg-gray-900 bg-gray-100",
+                "h-full min-h-screen",
+                "flex flex-col"
+            )}
+        >
             <header
                 className={twMerge(
                     "w-full flex flex-col bg-gray-800 space-y-2 p-2",
@@ -211,13 +217,26 @@ export const Layout = (
             <main
                 className={twMerge(
                     "lg:px-24 xl:px-36 py-4 md:py-8",
-                    "dark:bg-gray-900 bg-gray-100",
-                    "h-full min-h-screen",
+                    "flex flex-col grow",
                     "z-[10]"
                 )}
             >
                 {props.children}
             </main>
+            <footer
+                className={twMerge(
+                    "border-t",
+                    "h-16 p-2",
+                    "text-gray-500",
+                    "grid grid-flow-row-dense grid-cols-3 grid-rows-2"
+                )}
+            >
+                <p className="row-span-2">Rucio Webui, 2023</p>
+                <a href="/docs/api" className="hover:text-blue-500">API</a>
+                <a href="/privacy" className="hover:text-blue-500">Privacy</a>
+                <a href="/docs" className="hover:text-blue-500">Docs</a>
+                <a href="/status" className="hover:text-blue-500">Status</a>
+            </footer>
         </div>
     )
 }
