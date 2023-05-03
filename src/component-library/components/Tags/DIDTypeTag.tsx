@@ -1,44 +1,60 @@
 import { DIDType } from "@/lib/core/data/rucio-dto"
 import { useState, useEffect } from "react"
 import { twMerge } from "tailwind-merge"
+import { FC } from "react"
 
-export const DIDTypeTag = (
-    props: {
-        type: DIDType,
-        forcesmall?: boolean
+type DIDTypeTagProps = JSX.IntrinsicElements["span"] & {
+    didtype: DIDType;
+    forcesmall?: boolean;
+    neversmall?: boolean;
+};
+
+export const DIDTypeTag: FC<DIDTypeTagProps> = (
+    {
+        didtype = "Dataset",
+        forcesmall = false,
+        neversmall = false,
+        ...props
     }
 ) => {
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+    // split props into className and rest using spread operator
+    const { className, ...restprops } = props
+
+    const [windowWidth, setWindowWidth] = useState(720)
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth)
+        handleResize()
         window.addEventListener('resize', handleResize)
     }, [])
-    const belowMedium = (windowWidth < 768) || props.forcesmall
+    const belowMedium = (windowWidth < 768) || forcesmall
 
-    const baseClasses = ["rounded-full md:mr-2 md:px-2.5 md:py-0.5 md:rounded w-6 h-6 md:w-full text-center"]
-    var classes// done this way so tailwind compiles
-    // switch determining the colour depending on the type
-    switch (props.type.toUpperCase()) {
-        case "CONTAINER":
-            return (
-                <span className={twMerge(baseClasses, "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300")}>
-                    {belowMedium ? "C" : "Container"}
-                </span>
-            )
-        case "DATASET":
-            return (
-                <span className={twMerge(baseClasses, "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300")}>
-                    {belowMedium ? "D" : "Dataset"}
-                </span>
-            )
-        case "FILE":
-            return (
-                <span className={twMerge(baseClasses, "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300")}>
-                    {belowMedium ? "F" : "File"}
-                </span>
-            )
-        default:
-            return (<></>)
+    const colPicker = (didtype: DIDType) => {
+        switch (didtype.toUpperCase()) {
+            case "CONTAINER":
+                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300"
+            case "DATASET":
+                return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
+            case "FILE":
+                return "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300"
+            case "COLLECTION":
+                return "bg-stone-100 text-stone-800 dark:bg-stone-900 dark:text-stone-300"
+            default:
+                return ""
+        }
     }
+
+    // switch determining the colour depending on the type
+    return (
+        <span
+            className={twMerge(
+                "rounded-full md:rounded w-6 h-6 md:w-24 text-center flex justify-center items-center",
+                colPicker(didtype),
+                className
+            )}
+            {...restprops}
+        >
+            {belowMedium && !neversmall ? didtype.slice(0, 1) : didtype }
+        </span>
+    )
 }

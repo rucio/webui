@@ -6,7 +6,7 @@ import { Timeline } from '../../Timeline/Timeline';
 import { Collapsible } from '../../Helpers/Collapsible';
 import { Tabs } from '../../Tabs/Tabs';
 import { TextInput } from '../../Input/TextInput';
-import { Dropdown } from '../../Dropdown/Dropdown';
+import { Dropdown } from './GroupingDropdown';
 import { RulePage } from './RulePage';
 import { convertCompilerOptionsFromJson } from 'typescript';
 import { DateInput } from '../../Input/DateInput';
@@ -19,6 +19,7 @@ import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
 import { DIDSelectTable } from '../../StreamedTables/DIDSelectTable';
 import { RSEQuotaTable } from '../../StreamedTables/RSEQuotaTable';
+import { SummaryPage } from './SummaryPage';
 
 var format = require("date-format")
 
@@ -35,10 +36,13 @@ import {
     RSESearchQuery, RSESearchResponse,
 
 } from '../../../../lib/infrastructure/data/view-model/createRule.d';
+import { DIDTypeTag } from '../../Tags/DIDTypeTag';
+import { twMerge } from 'tailwind-merge';
+import { SamplingTag } from '../../Tags/SamplingTag';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
-    didSearch: (didSearchQuery: DIDSearchQuery) => void, 
+    didSearch: (didSearchQuery: DIDSearchQuery) => void,
     didResponse: DIDSearchResponse,
     // Page 0.1 - DID Validation
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
@@ -370,17 +374,24 @@ export const CreateRule = (
                             </div>
                         </div>
                         <div className="border rounded-md p-2 grow">
-                            <div className="w-24">
-                                <Button label="Advanced" onClick={() => { setPage2State({ ...Page2State, showAdvanced: !Page2State.showAdvanced }) }} />
+                            <div className="flex w-full justify-start space-x-2">
+                                <div className="w-24">
+                                    <Button label="Advanced" onClick={() => { setPage2State({ ...Page2State, showAdvanced: !Page2State.showAdvanced }) }} />
+                                </div>
+                                <SamplingTag sampling={Page2State.takesamples} />
                             </div>
                             <Collapsible showIf={Page2State.showAdvanced}>
                                 <div className="flex flex-col space-y-2 mt-2">
                                     <div className="w-full">
-                                        <Label label="groupBy">Group items by</Label>
+                                        <label
+                                            className="hidden"
+                                            htmlFor="item-grouping-dropdown"
+                                        >
+                                            Item Grouping
+                                        </label>
                                         <Dropdown
-                                            label={Page2State.groupBy}
-                                            options={["Dataset", "Container", "Collection", "File"]}
                                             handleChange={(element: any) => { setPage2State({ ...Page2State, groupBy: element }) }}
+                                            id="item-grouping-dropdown"
                                         />
                                     </div>
                                     <div className="">
@@ -400,18 +411,33 @@ export const CreateRule = (
                                             content={Page2State.freeComment}
                                         />
                                     </div>
-                                    <div className="flex flex-col border rounded-sm bg-gray-100 dark:bg-gray-800 p-2">
-                                        <CheckBox
-                                            type="checkbox"
-                                            label="Create Sample"
-                                            handleChange={(event: any) => {
-                                                setPage2State({ ...Page2State, takesamples: event.target.checked });
-                                                if(!event.target.checked) {
-                                                    setPage2State({...Page2State, numsamples: -1})
-                                                }
-                                            }}
-                                            isChecked={Page2State.takesamples}
-                                        />
+                                    <div className={twMerge(
+                                            "flex flex-col border rounded-sm p-2",
+                                            Page2State.takesamples ? "bg-teal-300 dark:bg-teal-600" : "bg-gray-100 dark:bg-gray-800"
+                                        )}
+                                    >
+                                        <div
+                                            className="flex flex-row justify-start space-x-2"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                className=""
+                                                checked={Page2State.takesamples}
+                                                onClick={(event) => {
+                                                    if (Page2State.takesamples) {
+                                                        setPage2State({ ...Page2State, numsamples: -1, takesamples: false})
+                                                    } else {
+                                                        setPage2State({ ...Page2State, numsamples: 1, takesamples: true})
+                                                    }
+                                                }}
+                                            />
+                                            <label
+                                                htmlFor="create-sample"
+                                                className="text-black dark:text-gray-100"
+                                            >
+                                                Create Sample
+                                            </label>
+                                        </div>
                                         <div className="grow flex flex-col justify-end">
                                             <Label label="numSamples">Number of Samples</Label>
                                             <NumInput
@@ -429,69 +455,17 @@ export const CreateRule = (
                     </div>
                 </RulePage>
                 <RulePage pagenum={3} activePage={activePage} onNext={page3submitFunction} onPrev={pagePrevFunction} submit>
-                    <div className="flex flex-col space-y-2 m-2">
-                        <div className="w-full">
-                            <H3>DIDs chosen</H3>
-                            <ul>
-                                {Page0State.typedDIDs.concat(Page0State.chosenDIDs).map((element, index) => {
-                                    return (
-                                        <li key={index}><P>{element}</P></li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                        <div className="w-full">
-                            <H3>Replication to the following RSEs {Page1State.askForApproval ? "(will ask for approval)" : ""}</H3>
-                            <ul>
-                                {Page1State.RSESelection.map((element, index) => {
-                                    return (
-                                        <li key={index}><P>{element}</P></li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                        <div className="w-full">
-                            <table className="w-full text-left">
-                                <thead className="w-full flex hover:cursor-default">
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <th className="w-1/2"><H3>Option</H3></th>
-                                        <th className="w-1/2"><H3>Value</H3></th>
-                                    </tr>
-                                </thead>
-                                <tbody className="w-full overflow-y-auto flex flex-col h-48">
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Expiry Date</P></td>
-                                        <td className="w-1/2"><P>{format("yyyy-MM-dd", Page2State.expiryDate)}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Enable Notifications</P></td>
-                                        <td className="w-1/2"><P>{Page2State.enableNotifications ? "Yes" : "No"}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Asynchronous Mode</P></td>
-                                        <td className="w-1/2"><P>{Page2State.asynchronousMode ? "Yes" : "No"}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Number of Copies</P></td>
-                                        <td className="w-1/2"><P>{Page2State.numcopies}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Number of Samples</P></td>
-                                        <td className="w-1/2"><P>{Page2State.numsamples}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Group By</P></td>
-                                        <td className="w-1/2"><P>{Page2State.groupBy}</P></td>
-                                    </tr>
-                                    <tr className="hover:cursor-default w-full flex">
-                                        <td className="w-1/2"><P>Comment</P></td>
-                                        <td className="w-1/2"><P>{Page2State.freeComment}</P></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
+                    <SummaryPage data={{
+                        DIDList: Page0State.typedDIDs.concat(Page0State.chosenDIDs),
+                        RSEList: Page1State.RSESelection,
+                        expirydate: Page2State.expiryDate,
+                        notifications: Page2State.enableNotifications,
+                        asynchronousMode: Page2State.asynchronousMode,
+                        numcopies: Page2State.numcopies,
+                        numsamples: Page2State.numsamples,
+                        groupby: Page2State.groupBy,
+                        comment: Page2State.freeComment,
+                    }} />
                 </RulePage>
             </div>
         </div>

@@ -29,7 +29,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Dropdown } from "../Dropdown/Dropdown"
 import { TextInput } from "../Input/TextInput"
 import { FetchstatusIndicator } from "./FetchstatusIndicator"
 
@@ -96,7 +95,7 @@ export const DIDSelectTable = (
             cell: (info) => {
                 return (
                     <div className="flex flex-row items-center justify-center">
-                        <DIDTypeTag type={info.row.original.did_type} />
+                        <DIDTypeTag didtype={info.row.original.did_type} />
                     </div>
                 )
             },
@@ -282,7 +281,7 @@ export const DIDSelectTable = (
                                     <H3>Type</H3>
                                     <span className="h-6">
                                         {
-                                            filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag type={filterType} forcesmall />
+                                            filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag didtype={filterType} forcesmall />
                                         }
                                     </span>
                                 </span>
@@ -320,8 +319,11 @@ export const DIDSelectTable = (
                         return (
                             <tr
                                 className={twMerge(
-                                    "w-full border-b dark:border-gray-500 hover:cursor-pointer h-16 md:h-8",
-                                    isDIDSelected ? "bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600" : "hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900",
+                                    "w-full hover:cursor-pointer h-16 md:h-8",
+                                    "bg-white odd:bg-stone-100",
+                                    "dark:bg-gray-700 dark:odd:bg-gray-800",
+                                    isDIDSelected ? "bg-blue-200 odd:bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 odd:dark:bg-blue-500 dark:hover:bg-blue-600 border border-blue-400 dark:border-blue-700" :
+                                        "hover:bg-gray-200 dark:hover:bg-gray-900",
                                 )}
                                 // className={isDIDSelected ? classesSelected : classesNormal}
                                 key={row.id}
@@ -347,7 +349,7 @@ export const DIDSelectTable = (
                     })}
                 </tbody>
             </table>
-            <div className="w-full flex justify-center space-x-2">
+            <div className="w-full flex justify-center space-x-2 pt-2 border-t dark:border-gray-400 dark:border-t-2">
                 <nav className="w-[400px] flex justify-center space-x-2">
                     <span className="w-1/3 flex space-x-2">
                         <Button
