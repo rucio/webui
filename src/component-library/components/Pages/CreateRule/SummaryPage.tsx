@@ -137,34 +137,36 @@ export const SummaryPage = (
                             "text-gray-800 dark:text-gray-100"
                         )}
                     >
-                        <tr className="text-black dark:text-white">
-                            <th className="w-56 pl-2 py-2 text-left">Parameter</th>
-                            <th className="pl-2 py-2 text-left">Value</th>
-                        </tr>
-                        <tr className="border-t dark:border-gray-400">
-                            <OptionTD>Expiry Date</OptionTD>
-                            <td className="select-all py-1">{format("yyyy-MM-dd", props.data.expirydate)}</td>
-                        </tr>
-                        <tr className="border-t dark:border-gray-400">
-                            <OptionTD>Enable Notifications</OptionTD>
-                            <td><BoolTag val={props.data.notifications}/></td>
-                        </tr>
-                        <tr className="border-t dark:border-gray-400">
-                            <OptionTD>Asynchronous Mode</OptionTD>
-                            <td><BoolTag val={props.data.asynchronousMode}/></td>
-                        </tr>
-                        <tr className="border-t dark:border-gray-400">
-                            <OptionTD>Group By</OptionTD>
-                            <td><DIDTypeTag didtype={props.data.groupby}/></td>
-                        </tr>
-                        <tr className="border-t dark:border-gray-400">
-                            <OptionTD>Number of Copies</OptionTD>
-                            <td className="select-all py-1">{props.data.numcopies}</td>
-                        </tr>
-                        <tr className="border-t dark:border-gray-400">
-                            <OptionTD>Comment</OptionTD>
-                            <td className="select-all py-1">{props.data.comment}</td>
-                        </tr>
+                        <tbody>
+                            <tr className="text-black dark:text-white">
+                                <th className="w-56 pl-2 py-2 text-left">Parameter</th>
+                                <th className="pl-2 py-2 text-left">Value</th>
+                            </tr>
+                            <tr className="border-t dark:border-gray-400">
+                                <OptionTD>Expiry Date</OptionTD>
+                                <td className="select-all py-1">{format("yyyy-MM-dd", props.data.expirydate)}</td>
+                            </tr>
+                            <tr className="border-t dark:border-gray-400">
+                                <OptionTD>Enable Notifications</OptionTD>
+                                <td><BoolTag val={props.data.notifications}/></td>
+                            </tr>
+                            <tr className="border-t dark:border-gray-400">
+                                <OptionTD>Asynchronous Mode</OptionTD>
+                                <td><BoolTag val={props.data.asynchronousMode}/></td>
+                            </tr>
+                            <tr className="border-t dark:border-gray-400">
+                                <OptionTD>Group By</OptionTD>
+                                <td><DIDTypeTag didtype={props.data.groupby}/></td>
+                            </tr>
+                            <tr className="border-t dark:border-gray-400">
+                                <OptionTD>Number of Copies</OptionTD>
+                                <td className="select-all py-1">{props.data.numcopies}</td>
+                            </tr>
+                            <tr className="border-t dark:border-gray-400">
+                                <OptionTD>Comment</OptionTD>
+                                <td className="select-all py-1">{props.data.comment}</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div>
