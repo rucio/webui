@@ -6,6 +6,10 @@ import { TextInput } from "../../Input/TextInput"
 import { Button } from "../../Button/Button"
 import { Checkbox } from "../../Checkbox/Checkbox"
 import { DIDListTable } from "./DIDListTable"
+import { BoolTag } from "../../Tags/BoolTag"
+import { DIDTypeTag } from "../../Tags/DIDTypeTag"
+
+var format = require("date-format")
 
 export interface ListDIDPageProps {
     didSearch: (didSearchQuery: DIDSearchQuery) => void,
@@ -19,6 +23,7 @@ export interface ListDIDPageProps {
 export const ListDID = (
     props: ListDIDPageProps
 ) => {
+    const meta = props.didMetaQueryResponse
     const [didSearchQuery, setDidSearchQuery] = useState<string>("")
     const [didTypesAllowed, setDidTypesAllowed] = useState<[boolean, boolean, boolean]>([true, true, false]) // [container, dataset, file]
     const [selectedDID, setSelectedDID] = useState<DIDName | null>(null)
@@ -87,14 +92,14 @@ export const ListDID = (
             </div>
             <div
                 className={twMerge(
-                    "grid grid-cols-3 gap-x-2",
-                    "bg-white border p-2 rounded-md"
+                    "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2",
+                    "bg-white border p-2 rounded-lg"
                 )}
             >
                 <div
                     className={twMerge(
                         "bg-white",
-                        "col-span-2"
+                        "lg:col-span-2"
                     )}
                 >
                     <DIDListTable
@@ -109,10 +114,96 @@ export const ListDID = (
                 </div>
                 <div
                     className={twMerge(
-                        "bg-white"
+                        "bg-stone-100 rounded-md p-2",
                     )}
                 >
-                    Metadata
+                    <div
+                        className={twMerge(
+                            "flex flex-col space-y-2",
+                            selectedDID ? "block" : "hidden",
+                        )}
+                    >
+                        <table className="w-full bg-white">
+                            <tbody className="w-full">
+                                <tr>
+                                    <td className="font-bold">Name</td>
+                                    <td>{meta.name}</td>
+                                </tr>
+                                <tr>
+                                    <td className="font-bold">Scope</td>
+                                    <td>{meta.scope}</td>
+                                </tr>
+                                <tr className="">
+                                    <td className="font-bold">Account</td>
+                                    <td>{meta.account}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table className="w-full bg-white">
+                            <tbody className="w-full">
+                                <tr>
+                                    <td className="font-bold">DID Type</td>
+                                    <td><DIDTypeTag didtype={meta.did_type} neversmall /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table className="w-full bg-white">
+                            <tbody className="w-full">
+                                <tr>
+                                    <td className="font-bold">Created At</td>
+                                    <td>{format("yyyy-MM-dd", meta.created_at)}</td>
+                                </tr>
+                                <tr>
+                                    <td className="font-bold">Updated At</td>
+                                    <td>{format("yyyy-MM-dd", meta.updated_at)}</td>
+                                </tr>
+                                <tr className="">
+                                    <td className="font-bold">Availability</td>
+                                    <td>{meta.availability}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table className="w-full bg-white">
+                            <tbody className="w-full">
+                                <tr>
+                                    <td className="font-bold">Obsolete</td>
+                                    <td><BoolTag val={meta.obsolete} /></td>
+                                </tr>
+                                <tr>
+                                    <td className="font-bold">Hidden</td>
+                                    <td><BoolTag val={meta.hidden} /></td>
+                                </tr>
+                                <tr className="">
+                                    <td className="font-bold">Suppressed</td>
+                                    <td><BoolTag val={meta.suppressed} /></td>
+                                </tr>
+                                <tr className="">
+                                    <td className="font-bold">Purge Replicas</td>
+                                    <td><BoolTag val={meta.purge_replicas} /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table className="w-full bg-white">
+                            <tbody className="w-full">
+                                <tr>
+                                    <td className="font-bold">Is Open</td>
+                                    <td><BoolTag val={meta.is_open} /></td>
+                                </tr>
+                                <tr>
+                                    <td className="font-bold">Monotonic</td>
+                                    <td><BoolTag val={meta.monotonic} /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        className={twMerge(
+                            "text-gray-800 flex flex-col",
+                            !selectedDID ? "block" : "hidden",
+                        )}
+                    >
+                        <i>No DID selected</i>
+                    </div>
                 </div>
             </div>
         </div>
