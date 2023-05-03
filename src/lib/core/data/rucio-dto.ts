@@ -4,6 +4,7 @@ export type RSEDTO = {
 }
 
 export type DIDType = "Dataset" | "Container" | "Collection" | "File";
+export type DIDAvailability = "Available" | "Deleted" | "Lost";
 
 // results of web::flaskapi:v1::rses::RSEAccountUsageLimit::get
 export type RSEAccountUsageLimitDTO = {
@@ -22,4 +23,22 @@ export type DIDDTO = {
     did_type: DIDType;
     bytes: number;
     length: number;
+}
+
+// copied from deployed rucio UI
+export type DIDMeta = {
+    name: string
+    scope: string
+    account: string
+    did_type: DIDType
+    created_at: Date
+    updated_at: Date
+    availability: DIDAvailability // Lost/Deleted/Available
+    obsolete: boolean
+    hidden: boolean
+    suppressed: boolean
+    purge_replicas: boolean
+    is_open: boolean
+    monotonic: false
+    // ... add metadata for files
 }
