@@ -31,7 +31,7 @@ export const Button = forwardRef(function Button
                 type={type}
                 disabled={props.disabled}
                 className={twMerge(
-                    "py-1 px-3 rounded",
+                    "py-1 px-3 h-8 rounded",
                     type === "submit" ? "bg-green-500 hover:bg-green-600 text-white" : "",
                     type === "reset" ? "bg-red-500 hover:bg-red-600 text-white" : "",
                     type === "button" ? "bg-blue-500 hover:bg-blue-600 text-white" : "",
