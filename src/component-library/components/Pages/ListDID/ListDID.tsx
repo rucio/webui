@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge"
 import { TextInput } from "../../Input/TextInput"
 import { Button } from "../../Button/Button"
 import { Checkbox } from "../../Checkbox/Checkbox"
+import { DIDListTable } from "./DIDListTable"
 
 export interface ListDIDPageProps {
     didSearch: (didSearchQuery: DIDSearchQuery) => void,
@@ -20,6 +21,7 @@ export const ListDID = (
 ) => {
     const [didSearchQuery, setDidSearchQuery] = useState<string>("")
     const [didTypesAllowed, setDidTypesAllowed] = useState<[boolean, boolean, boolean]>([true, true, false]) // [container, dataset, file]
+    const [selectedDID, setSelectedDID] = useState<DIDName | null>(null)
     return (
         <div
             className={twMerge(
@@ -53,8 +55,8 @@ export const ListDID = (
                 </form>
                 <div
                     className={twMerge(
-                            "w-full flex flex-col p-2 rounded",
-                            "bg-gray-200",
+                        "w-full flex flex-col p-2 rounded",
+                        "bg-gray-200",
                     )}
                 >
                     <form
@@ -68,17 +70,17 @@ export const ListDID = (
                         <Checkbox
                             label="Containers" type="checkbox" id="did-checkbox-container"
                             isChecked={didTypesAllowed[0]}
-                            handleChange={(event: any) => {setDidTypesAllowed([event.target.checked, didTypesAllowed[1], didTypesAllowed[2]])}}
+                            handleChange={(event: any) => { setDidTypesAllowed([event.target.checked, didTypesAllowed[1], didTypesAllowed[2]]) }}
                         />
                         <Checkbox
                             label="Datasets" type="checkbox" id="did-checkbox-dataset"
                             isChecked={didTypesAllowed[1]}
-                            handleChange={(event: any) => {setDidTypesAllowed([didTypesAllowed[0], event.target.checked, didTypesAllowed[2]])}}
+                            handleChange={(event: any) => { setDidTypesAllowed([didTypesAllowed[0], event.target.checked, didTypesAllowed[2]]) }}
                         />
                         <Checkbox
                             label="Files (Warning: large query)" type="checkbox" id="did-checkbox-file"
                             isChecked={didTypesAllowed[2]}
-                            handleChange={(event: any) => {setDidTypesAllowed([didTypesAllowed[0], didTypesAllowed[1], event.target.checked])}}
+                            handleChange={(event: any) => { setDidTypesAllowed([didTypesAllowed[0], didTypesAllowed[1], event.target.checked]) }}
                         />
                     </form>
                 </div>
@@ -95,7 +97,15 @@ export const ListDID = (
                         "col-span-2"
                     )}
                 >
-                    Table
+                    <DIDListTable
+                        data={props.didResponse.data}
+                        fetchstatus={props.didResponse.fetchStatus}
+                        pageSize={10}
+                        onSelect={(didName: DIDName) => {
+                            setSelectedDID(didName)
+                            props.didMetaQuery(didName)
+                        }}
+                    />
                 </div>
                 <div
                     className={twMerge(
