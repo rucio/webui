@@ -1,4 +1,4 @@
-import { TextInput } from "../../Input/TextInput"
+import Image from "next/image"
 
 import { HiUserCircle, HiBell } from "react-icons/hi2"
 import { HiMenu, HiChevronDown } from "react-icons/hi"
@@ -228,14 +228,29 @@ export const Layout = (
                     "border-t",
                     "h-16 p-2",
                     "text-gray-500",
-                    "grid grid-flow-row-dense grid-cols-3 grid-rows-2"
+                    "flex"
                 )}
             >
-                <p className="row-span-2">Rucio Webui, 2023</p>
-                <a href="/docs/api" className="hover:text-blue-500">API</a>
-                <a href="/privacy" className="hover:text-blue-500">Privacy</a>
-                <a href="/docs" className="hover:text-blue-500">Docs</a>
-                <a href="/status" className="hover:text-blue-500">Status</a>
+                <div
+                    className={twMerge(
+                        "grow",
+                        "flex flex-row space-x-2 items-end"
+                    )}
+                >
+                    <Image src="/logocropped.svg" alt="Cropped Rucio Donkeyhead" width={48} height={48} className="block md:hidden"/>
+                    <p className="hidden md:block">Rucio WebUI, 2023</p>
+                </div>
+                <div
+                    className={twMerge(
+                        "w-72",
+                        "grid grid-flow-col-dense grid-cols-2 grid-rows-2"
+                    )}
+                >
+                    <a href="/docs/api" className="hover:text-blue-500">API</a>
+                    <a href="/privacy" className="hover:text-blue-500">Privacy</a>
+                    <a href="/docs" className="hover:text-blue-500">Docs</a>
+                    <a href="/status" className="hover:text-blue-500">Status</a>
+                </div>
             </footer>
         </div>
     )

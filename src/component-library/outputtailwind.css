@@ -646,10 +646,6 @@ video {
   grid-column: span 2 / span 2;
 }
 
-.row-span-2 {
-  grid-row: span 2 / span 2;
-}
-
 .m-2 {
   margin: 0.5rem;
 }
@@ -904,6 +900,10 @@ video {
   width: 16rem;
 }
 
+.w-72 {
+  width: 18rem;
+}
+
 .w-8 {
   width: 2rem;
 }
@@ -1033,8 +1033,12 @@ video {
   list-style-type: none;
 }
 
-.grid-flow-row-dense {
-  grid-auto-flow: row dense;
+.grid-flow-col-dense {
+  grid-auto-flow: column dense;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .grid-cols-3 {
