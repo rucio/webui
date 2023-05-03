@@ -154,6 +154,34 @@ def listdids():
         return try_stream(generate())
     except Exception as e:
         return flask.Response(status=500, response=str(e))
+
+@app.route('/didmeta')
+def didmeta():
+    didtype = random.choice(["dataset", "container"])
+    firstname, lastname = fake.first_name(), fake.last_name()
+    metadata = {
+        "name": f"{didtype}-{fake.pystr()}",
+        "scope": f"{firstname}.{lastname}",
+        "account": f"{firstname}_{lastname}",
+        "did_type": didtype,
+        "created_at": fake.date_time_this_year(),
+        "updated_at": fake.date_time_this_year(),
+        "availability": random.choice(["LOST", "DELETED", "AVAILABLE"]),
+        "obsolete": random.choice([True, False]),
+        "hidden": random.choice([True, False]),
+        "suppressed": random.choice([True, False]),
+        "purge_replicas": random.choice([True, False]),
+        "is_open": random.choice([True, False]),
+        "monotonic": random.choice([True, False]),
+    }
+    try:
+        def generate():
+            print(f"sending {metadata}")
+            yield render_json(metadata) + '\n'
+            print("sleeping")
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
     
 
 if __name__ == '__main__':
