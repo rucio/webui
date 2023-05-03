@@ -200,7 +200,7 @@ export const CreateRule = (
     *  ================================================= */
     // page 2 state
     const [Page2State, setPage2State] = useState<Page2State>({
-        expiryDate: new Date(),
+        expiryDate: new Date(2025,1,1),
         takesamples: false,
         numsamples: -1,
         enableNotifications: false,
@@ -421,15 +421,16 @@ export const CreateRule = (
                                         >
                                             <input
                                                 type="checkbox"
-                                                className=""
+                                                className="cursor-pointer"
                                                 checked={Page2State.takesamples}
-                                                onClick={(event) => {
+                                                onChange={(event) => {
                                                     if (Page2State.takesamples) {
                                                         setPage2State({ ...Page2State, numsamples: -1, takesamples: false})
                                                     } else {
                                                         setPage2State({ ...Page2State, numsamples: 1, takesamples: true})
                                                     }
                                                 }}
+                                                id="create-sample"
                                             />
                                             <label
                                                 htmlFor="create-sample"
