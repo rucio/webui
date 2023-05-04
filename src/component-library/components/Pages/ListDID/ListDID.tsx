@@ -8,6 +8,7 @@ import { Checkbox } from "../../Checkbox/Checkbox"
 import { DIDListTable } from "./DIDListTable"
 import { BoolTag } from "../../Tags/BoolTag"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
+import { DIDMetaView } from "./DIDMetaView"
 
 var format = require("date-format")
 
@@ -26,7 +27,7 @@ export const ListDID = (
     const meta = props.didMetaQueryResponse
     const [didSearchQuery, setDidSearchQuery] = useState<string>("")
     const [didTypesAllowed, setDidTypesAllowed] = useState<[boolean, boolean, boolean]>([true, true, false]) // [container, dataset, file]
-    const [selectedDID, setSelectedDID] = useState<DIDName | null>(null)
+    const [selectedDID, setSelectedDID] = useState<DIDName | null>("s") // replace back to `null` when done testing
     return (
         <div
             className={twMerge(
@@ -117,85 +118,7 @@ export const ListDID = (
                         "bg-stone-100 rounded-md p-2",
                     )}
                 >
-                    <div
-                        className={twMerge(
-                            "flex flex-col space-y-2",
-                            selectedDID ? "block" : "hidden",
-                        )}
-                    >
-                        <table className="w-full bg-white">
-                            <tbody className="w-full">
-                                <tr>
-                                    <td className="font-bold">Name</td>
-                                    <td>{meta.name}</td>
-                                </tr>
-                                <tr>
-                                    <td className="font-bold">Scope</td>
-                                    <td>{meta.scope}</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="font-bold">Account</td>
-                                    <td>{meta.account}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table className="w-full bg-white">
-                            <tbody className="w-full">
-                                <tr>
-                                    <td className="font-bold">DID Type</td>
-                                    <td><DIDTypeTag didtype={meta.did_type} neversmall /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table className="w-full bg-white">
-                            <tbody className="w-full">
-                                <tr>
-                                    <td className="font-bold">Created At</td>
-                                    <td>{format("yyyy-MM-dd", meta.created_at)}</td>
-                                </tr>
-                                <tr>
-                                    <td className="font-bold">Updated At</td>
-                                    <td>{format("yyyy-MM-dd", meta.updated_at)}</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="font-bold">Availability</td>
-                                    <td>{meta.availability}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table className="w-full bg-white">
-                            <tbody className="w-full">
-                                <tr>
-                                    <td className="font-bold">Obsolete</td>
-                                    <td><BoolTag val={meta.obsolete} /></td>
-                                </tr>
-                                <tr>
-                                    <td className="font-bold">Hidden</td>
-                                    <td><BoolTag val={meta.hidden} /></td>
-                                </tr>
-                                <tr className="">
-                                    <td className="font-bold">Suppressed</td>
-                                    <td><BoolTag val={meta.suppressed} /></td>
-                                </tr>
-                                <tr className="">
-                                    <td className="font-bold">Purge Replicas</td>
-                                    <td><BoolTag val={meta.purge_replicas} /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table className="w-full bg-white">
-                            <tbody className="w-full">
-                                <tr>
-                                    <td className="font-bold">Is Open</td>
-                                    <td><BoolTag val={meta.is_open} /></td>
-                                </tr>
-                                <tr>
-                                    <td className="font-bold">Monotonic</td>
-                                    <td><BoolTag val={meta.monotonic} /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
                     <div
                         className={twMerge(
                             "text-gray-800 flex flex-col",
