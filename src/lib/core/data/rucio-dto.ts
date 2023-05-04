@@ -38,7 +38,12 @@ export type DIDMeta = {
     hidden: boolean
     suppressed: boolean
     purge_replicas: boolean
-    is_open: boolean
-    monotonic: false
-    // ... add metadata for files
+    monotonic: boolean
+    // only for collections
+    is_open: boolean | null
+    // only for files
+    adler32: string | null
+    md5: string | null
+    guid: string | null
+    filesize: number | null
 }
