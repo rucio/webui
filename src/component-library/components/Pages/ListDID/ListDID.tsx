@@ -27,7 +27,7 @@ export const ListDID = (
     const meta = props.didMetaQueryResponse
     const [didSearchQuery, setDidSearchQuery] = useState<string>("")
     const [didTypesAllowed, setDidTypesAllowed] = useState<[boolean, boolean, boolean]>([true, true, false]) // [container, dataset, file]
-    const [selectedDID, setSelectedDID] = useState<DIDName | null>("s") // replace back to `null` when done testing
+    const [selectedDID, setSelectedDID] = useState<DIDName | null>(null) // replace back to `null` when done testing
     return (
         <div
             className={twMerge(
@@ -106,7 +106,7 @@ export const ListDID = (
                     <DIDListTable
                         data={props.didResponse.data}
                         fetchstatus={props.didResponse.fetchStatus}
-                        pageSize={10}
+                        pageSize={15}
                         onSelect={(didName: DIDName) => {
                             setSelectedDID(didName)
                             props.didMetaQuery(didName)
@@ -116,6 +116,7 @@ export const ListDID = (
                 <div
                     className={twMerge(
                         "bg-stone-100 rounded-md p-2",
+                        "flex flex-col space-y-2",
                     )}
                 >
                     <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
@@ -126,6 +127,15 @@ export const ListDID = (
                         )}
                     >
                         <i>No DID selected</i>
+                    </div>
+                    <div className={twMerge(
+                        "flex flex-col space-y-2",
+                        selectedDID ? "block" : "hidden",
+                    )}
+                    >
+                        <Button label="Inspect Rules"/>
+                        <Button label="Inspect Dataset Replicas"/>
+                        <Button label="Inspect File Replica States"/>
                     </div>
                 </div>
             </div>

@@ -56,6 +56,9 @@ export const DIDListTable = (
     useEffect(() => {
         table.setPageIndex(pageIndex)
     }, [pageIndex])
+    useEffect(() => {
+        table.setPageSize(props.pageSize)
+    }, [props.pageSize])
 
     return (
         <div
