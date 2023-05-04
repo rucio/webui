@@ -133,9 +133,9 @@ export const ListDID = (
                         selectedDID ? "block" : "hidden",
                     )}
                     >
-                        <Button label="Inspect Rules"/>
-                        <Button label="Inspect Dataset Replicas"/>
-                        <Button label="Inspect File Replica States"/>
+                        <Button label="Show Rules"/>
+                        <Button label="Show Dataset Replicas"/>
+                        <Button label="Show File Replica States"/>
                     </div>
                 </div>
             </div>
