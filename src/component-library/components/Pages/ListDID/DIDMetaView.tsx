@@ -3,6 +3,7 @@ import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
 import { AvailabilityTag } from "../../Tags/AvailabilityTag"
+import { Number } from "../../Text/Content/Number"
 var format = require("date-format")
 
 export const DIDMetaView = (
@@ -31,6 +32,29 @@ export const DIDMetaView = (
                     </tr>
                 </tbody>
             </table>
+            <table className={twMerge(
+                "w-full bg-white rounded border-separate border-spacing-y-1",
+                meta.did_type === "File" ? "table" : "hidden"
+            )}>
+                <tbody className="w-full">
+                    <tr>
+                        <td className="font-bold w-32 pl-1">Size</td>
+                        <td className="text-right"><Number number={meta.filesize as number} /></td>
+                    </tr>
+                    <tr>
+                        <td className="font-bold pl-1">GUID</td>
+                        <td>{meta.guid as string}</td>
+                    </tr>
+                    <tr>
+                        <td className="font-bold pl-1">Adler32</td>
+                        <td>{meta.adler32 as string}</td>
+                    </tr>
+                    <tr>
+                        <td className="font-bold pl-1">MD5</td>
+                        <td>{meta.md5 as string}</td>
+                    </tr>
+                </tbody>
+            </table>
             <table className="w-full bg-white rounded border-separate border-spacing-y-1">
                 <tbody className="w-full">
                     <tr>
@@ -53,9 +77,11 @@ export const DIDMetaView = (
                         <td className="font-bold pl-1">Account</td>
                         <td className="break-all">{meta.account}</td>
                     </tr>
-                    <tr>
+                    <tr className={twMerge(
+                        meta.did_type === "File" ? "collapse" : "visible"
+                    )}>
                         <td className="font-bold pl-1">Is Open</td>
-                        <td><BoolTag val={meta.is_open} /></td>
+                        <td><BoolTag val={!!meta.is_open} /></td>
                     </tr>
                     <tr>
                         <td className="font-bold pl-1">Monotonic</td>
@@ -83,7 +109,7 @@ export const DIDMetaView = (
                     </tr>
                     <tr className="">
                         <td className="font-bold pl-1">Availability</td>
-                        <td><AvailabilityTag availability={meta.availability}/></td>
+                        <td><AvailabilityTag availability={meta.availability} /></td>
                     </tr>
                 </tbody>
             </table>
