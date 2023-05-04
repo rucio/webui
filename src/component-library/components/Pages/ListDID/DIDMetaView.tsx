@@ -23,11 +23,11 @@ export const DIDMetaView = (
                 <tbody className="w-full">
                     <tr>
                         <td className="font-bold w-32 pl-1">Scope</td>
-                        <td>{meta.scope}</td>
+                        <td className="break-all">{meta.scope}</td>
                     </tr>
                     <tr>
                         <td className="font-bold pl-1">Name</td>
-                        <td>{meta.name}</td>
+                        <td className="break-all">{meta.name}</td>
                     </tr>
                 </tbody>
             </table>
@@ -51,7 +51,7 @@ export const DIDMetaView = (
                     </tr>
                     <tr>
                         <td className="font-bold pl-1">Account</td>
-                        <td>{meta.account}</td>
+                        <td className="break-all">{meta.account}</td>
                     </tr>
                     <tr>
                         <td className="font-bold pl-1">Is Open</td>
