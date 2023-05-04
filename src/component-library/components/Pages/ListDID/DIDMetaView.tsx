@@ -22,24 +22,12 @@ export const DIDMetaView = (
             <table className="w-full bg-white rounded border-separate border-spacing-y-1">
                 <tbody className="w-full">
                     <tr>
-                        <td className="font-bold w-32 pl-1">Name</td>
-                        <td>{meta.name}</td>
-                    </tr>
-                    <tr>
-                        <td className="font-bold pl-1">Scope</td>
+                        <td className="font-bold w-32 pl-1">Scope</td>
                         <td>{meta.scope}</td>
                     </tr>
-                    <tr className="">
-                        <td className="font-bold pl-1">Account</td>
-                        <td>{meta.account}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table className="w-full bg-white rounded border-separate border-spacing-y-1">
-                <tbody className="w-full">
                     <tr>
-                        <td className="font-bold w-32 pl-1">DID Type</td>
-                        <td><DIDTypeTag didtype={meta.did_type} neversmall /></td>
+                        <td className="font-bold pl-1">Name</td>
+                        <td>{meta.name}</td>
                     </tr>
                 </tbody>
             </table>
@@ -53,9 +41,25 @@ export const DIDMetaView = (
                         <td className="font-bold pl-1">Updated At</td>
                         <td>{format("yyyy-MM-dd", meta.updated_at)}</td>
                     </tr>
-                    <tr className="">
-                        <td className="font-bold pl-1">Availability</td>
-                        <td><AvailabilityTag availability={meta.availability}/></td>
+                </tbody>
+            </table>
+            <table className="w-full bg-white rounded border-separate border-spacing-y-1">
+                <tbody className="w-full">
+                    <tr>
+                        <td className="font-bold w-32 pl-1">DID Type</td>
+                        <td><DIDTypeTag didtype={meta.did_type} neversmall /></td>
+                    </tr>
+                    <tr>
+                        <td className="font-bold pl-1">Account</td>
+                        <td>{meta.account}</td>
+                    </tr>
+                    <tr>
+                        <td className="font-bold pl-1">Is Open</td>
+                        <td><BoolTag val={meta.is_open} /></td>
+                    </tr>
+                    <tr>
+                        <td className="font-bold pl-1">Monotonic</td>
+                        <td><BoolTag val={meta.monotonic} /></td>
                     </tr>
                 </tbody>
             </table>
@@ -77,17 +81,9 @@ export const DIDMetaView = (
                         <td className="font-bold pl-1">Purge Replicas</td>
                         <td><BoolTag val={meta.purge_replicas} /></td>
                     </tr>
-                </tbody>
-            </table>
-            <table className="w-full bg-white rounded border-separate border-spacing-y-1">
-                <tbody className="w-full">
-                    <tr>
-                        <td className="font-bold w-40 pl-1">Is Open</td>
-                        <td><BoolTag val={meta.is_open} /></td>
-                    </tr>
-                    <tr>
-                        <td className="font-bold pl-1">Monotonic</td>
-                        <td><BoolTag val={meta.monotonic} /></td>
+                    <tr className="">
+                        <td className="font-bold pl-1">Availability</td>
+                        <td><AvailabilityTag availability={meta.availability}/></td>
                     </tr>
                 </tbody>
             </table>
