@@ -56,7 +56,7 @@ export const ListDID = (
                         />
                     </div>
                     <div className="w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0">
-                        <Button type="submit" label="Search" onClick={(e: any) => { props.didSearch({ DIDSearchString: didSearchQuery }) }} id="did-button-search" />
+                        <Button type="button" label="Search" onClick={(e: any) => { props.didSearch({ DIDSearchString: didSearchQuery }) }} id="did-button-search" />
                     </div>
                 </form>
                 <div

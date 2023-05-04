@@ -137,13 +137,26 @@ export default function ListDID() {
         "filesize": null
     } as DIDMeta
 
+    const DIDSearchComDOM = useComDOM<DIDDTO>(
+        'http://localhost:3000/api/listdids',
+        [],
+        false,
+        Infinity,
+        200,
+        true
+    )
 
     return (
         <ListDIDStory
-            didSearch = {didSearch}
-            didResponse = {didResponse}
-            didMetaQuery = {didMetaQuery}
-            didMetaQueryResponse = {didMetaQueryResponse}
+            didSearch={async (didSearchQuery: DIDSearchQuery) => await DIDSearchComDOM.start()}
+            didResponse={
+                {
+                    data: DIDSearchComDOM.query.data,
+                    fetchStatus: DIDSearchComDOM.query.fetchStatus
+                }
+            }
+            didMetaQuery={didMetaQuery}
+            didMetaQueryResponse={didMetaQueryResponse}
         />
     )
 }
