@@ -1,4 +1,4 @@
-import { TextInput } from "../../Input/TextInput"
+import Image from "next/image"
 
 import { HiUserCircle, HiBell } from "react-icons/hi2"
 import { HiMenu, HiChevronDown } from "react-icons/hi"
@@ -86,9 +86,9 @@ export const Layout = (
         )
     })
 
-    const HeaderLinks : React.FC<JSX.IntrinsicElements["a"]> = (
+    const HeaderLinks: React.FC<JSX.IntrinsicElements["a"]> = (
         {
-            ...props            
+            ...props
         }
     ) => {
         return (
@@ -129,7 +129,13 @@ export const Layout = (
 
     // images to be returned by static nextjs
     return (
-        <div>
+        <div
+            className={twMerge(
+                "dark:bg-gray-900 bg-gray-100",
+                "h-full min-h-screen",
+                "flex flex-col"
+            )}
+        >
             <header
                 className={twMerge(
                     "w-full flex flex-col bg-gray-800 space-y-2 p-2",
@@ -152,7 +158,9 @@ export const Layout = (
                     </span>
 
                     <span className="flex flex-row space-x-2">
-                        <a className="bg-green-500 w-12 h-12" href={props.LVM.rucioProjectLink} />
+                        <a className="bg-white w-12 h-12 rounded" href={props.LVM.rucioProjectLink}>
+                            <Image src="/logocropped.svg" alt="Rucio Logo" width={48} height={48}/>
+                        </a>
                         <a className="bg-purple-500 w-12 h-12" href={props.LVM.experimentProjectLink} />
                     </span>
                     <span className="hidden md:visible md:flex space-x-4 items-center">
@@ -211,13 +219,41 @@ export const Layout = (
             <main
                 className={twMerge(
                     "lg:px-24 xl:px-36 py-4 md:py-8",
-                    "dark:bg-gray-900 bg-gray-100",
-                    "h-full min-h-screen",
+                    "flex flex-col grow",
                     "z-[10]"
                 )}
             >
                 {props.children}
             </main>
+            <footer
+                className={twMerge(
+                    "border-t",
+                    "h-16 p-2",
+                    "text-gray-500",
+                    "flex"
+                )}
+            >
+                <div
+                    className={twMerge(
+                        "grow",
+                        "flex flex-row space-x-2 items-end"
+                    )}
+                >
+                    <Image src="/logocropped.svg" alt="Cropped Rucio Donkeyhead" width={48} height={48} className="block md:hidden"/>
+                    <p className="hidden md:block">Rucio WebUI, 2023</p>
+                </div>
+                <div
+                    className={twMerge(
+                        "w-72",
+                        "grid grid-flow-col-dense grid-cols-2 grid-rows-2"
+                    )}
+                >
+                    <a href="/docs/api" className="hover:text-blue-500">API</a>
+                    <a href="/privacy" className="hover:text-blue-500">Privacy</a>
+                    <a href="/docs" className="hover:text-blue-500">Docs</a>
+                    <a href="/status" className="hover:text-blue-500">Status</a>
+                </div>
+            </footer>
         </div>
     )
 }
