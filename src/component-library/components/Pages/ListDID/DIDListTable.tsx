@@ -50,7 +50,12 @@ export const DIDListTable = (
                             "pr-2"
                         )}
                     >
-                        <p>
+                        <p
+                            className={twMerge(
+                                "cursor-text fle w-fit break-all",
+                                "font-mono dark:text-gray-200"
+                            )}
+                        >
                             {info.getValue()}
                         </p>
                         <DIDTypeTag
@@ -126,7 +131,7 @@ export const DIDListTable = (
     return (
         <div
             className={twMerge(
-                "border dark:border-2 rounded-md",
+                "border dark:border-gray-200 dark:border-2 rounded-md",
                 props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
                 "flex flex-col justify-between space-y-2 pb-2",
                 "bg-white dark:bg-gray-700",

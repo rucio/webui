@@ -12,6 +12,34 @@ export const DIDMetaView = (
         show: boolean
     }
 ) => {
+    const Titletd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
+        const {className, ...otherprops} = props
+        return (
+            <td
+                className={twMerge(
+                    "font-bold w-32 pl-1 dark:text-white",
+                    className ?? ""
+                )}
+                {...otherprops}
+            >
+                {props.children}
+            </td>
+        )
+    }
+    const Contenttd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
+        const {className, ...otherprops} = props
+        return (
+            <td
+                className={twMerge(
+                    "break-all dark:text-gray-100",
+                    className ?? ""
+                )}
+                {...otherprops}
+            >
+                {props.children}
+            </td>
+        )
+    }
     const meta = props.data
     return (
         <div
@@ -20,95 +48,116 @@ export const DIDMetaView = (
                 props.show ? "block" : "hidden",
             )}
         >
-            <table className="w-full bg-white rounded border-separate border-spacing-y-1">
+            <table
+                className={twMerge(
+                    "bg-white dark:bg-gray-700",
+                    "w-full rounded border-separate border-spacing-y-1"
+                )}
+            >
                 <tbody className="w-full">
                     <tr>
-                        <td className="font-bold w-32 pl-1">Scope</td>
-                        <td className="break-all">{meta.scope}</td>
+                        <Titletd>Scope</Titletd>
+                        <Contenttd>{meta.scope}</Contenttd>
                     </tr>
                     <tr>
-                        <td className="font-bold pl-1">Name</td>
-                        <td className="break-all">{meta.name}</td>
+                        <Titletd>Name</Titletd>
+                        <Contenttd>{meta.name}</Contenttd>
                     </tr>
                 </tbody>
             </table>
             <table className={twMerge(
-                "w-full bg-white rounded border-separate border-spacing-y-1",
+                "bg-white dark:bg-gray-700",
+                "w-full rounded border-separate border-spacing-y-1",
                 meta.did_type === "File" ? "table" : "hidden"
             )}>
                 <tbody className="w-full">
                     <tr>
-                        <td className="font-bold w-32 pl-1">Size</td>
-                        <td><Number number={meta.filesize as number} /></td>
+                        <Titletd>Size</Titletd>
+                        <Contenttd><Number number={meta.filesize as number} /></Contenttd>
                     </tr>
                     <tr>
-                        <td className="font-bold pl-1">GUID</td>
-                        <td>{meta.guid as string}</td>
+                        <Titletd>GUID</Titletd>
+                        <Contenttd>{meta.guid as string}</Contenttd>
                     </tr>
                     <tr>
-                        <td className="font-bold pl-1">Adler32</td>
-                        <td>{meta.adler32 as string}</td>
+                        <Titletd>Adler32</Titletd>
+                        <Contenttd>{meta.adler32 as string}</Contenttd>
                     </tr>
                     <tr>
-                        <td className="font-bold pl-1">MD5</td>
-                        <td>{meta.md5 as string}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table className="w-full bg-white rounded border-separate border-spacing-y-1">
-                <tbody className="w-full">
-                    <tr>
-                        <td className="font-bold w-32 pl-1">Created At</td>
-                        <td>{format("yyyy-MM-dd", meta.created_at)}</td>
-                    </tr>
-                    <tr>
-                        <td className="font-bold pl-1">Updated At</td>
-                        <td>{format("yyyy-MM-dd", meta.updated_at)}</td>
+                        <Titletd>MD5</Titletd>
+                        <Contenttd>{meta.md5 as string}</Contenttd>
                     </tr>
                 </tbody>
             </table>
-            <table className="w-full bg-white rounded border-separate border-spacing-y-1">
+            <table
+                className={twMerge(
+                    "bg-white dark:bg-gray-700",
+                    "w-full rounded border-separate border-spacing-y-1"
+                )}
+            >
                 <tbody className="w-full">
                     <tr>
-                        <td className="font-bold w-32 pl-1">DID Type</td>
+                        <Titletd>Created At</Titletd>
+                        <Contenttd>{format("yyyy-MM-dd", meta.created_at)}</Contenttd>
+                    </tr>
+                    <tr>
+                        <Titletd>Updated At</Titletd>
+                        <Contenttd>{format("yyyy-MM-dd", meta.updated_at)}</Contenttd>
+                    </tr>
+                </tbody>
+            </table>
+            <table
+                className={twMerge(
+                    "bg-white dark:bg-gray-700",
+                    "w-full rounded border-separate border-spacing-y-1"
+                )}
+            >
+                <tbody className="w-full">
+                    <tr>
+                        <Titletd>DID Type</Titletd>
                         <td><DIDTypeTag didtype={meta.did_type} neversmall /></td>
                     </tr>
                     <tr>
-                        <td className="font-bold pl-1">Account</td>
-                        <td className="break-all">{meta.account}</td>
+                        <Titletd>Account</Titletd>
+                        <Contenttd>{meta.account}</Contenttd>
                     </tr>
                     <tr className={twMerge(
                         meta.did_type === "File" ? "collapse" : "visible"
                     )}>
-                        <td className="font-bold pl-1">Is Open</td>
+                        <Titletd>Is Open</Titletd>
                         <td><BoolTag val={!!meta.is_open} /></td>
                     </tr>
                     <tr>
-                        <td className="font-bold pl-1">Monotonic</td>
+                        <Titletd>Monotonic</Titletd>
                         <td><BoolTag val={meta.monotonic} /></td>
                     </tr>
                 </tbody>
             </table>
-            <table className="w-full bg-white rounded border-separate border-spacing-y-1">
+            <table
+                className={twMerge(
+                    "bg-white dark:bg-gray-700",
+                    "w-full rounded border-separate border-spacing-y-1"
+                )}
+            >
                 <tbody className="w-full">
                     <tr>
-                        <td className="font-bold w-40 pl-1">Obsolete</td>
+                        <Titletd className="w-40">Obsolete</Titletd>
                         <td><BoolTag val={meta.obsolete} /></td>
                     </tr>
                     <tr>
-                        <td className="font-bold pl-1">Hidden</td>
+                        <Titletd>Hidden</Titletd>
                         <td><BoolTag val={meta.hidden} /></td>
                     </tr>
                     <tr className="">
-                        <td className="font-bold pl-1">Suppressed</td>
+                        <Titletd>Suppressed</Titletd>
                         <td><BoolTag val={meta.suppressed} /></td>
                     </tr>
                     <tr className="">
-                        <td className="font-bold pl-1">Purge Replicas</td>
+                        <Titletd>Purge Replicas</Titletd>
                         <td><BoolTag val={meta.purge_replicas} /></td>
                     </tr>
                     <tr className="">
-                        <td className="font-bold pl-1">Availability</td>
+                        <Titletd>Availability</Titletd>
                         <td><AvailabilityTag availability={meta.availability} /></td>
                     </tr>
                 </tbody>

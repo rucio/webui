@@ -43,9 +43,9 @@ export const ListDID = (
             <div
                 className={twMerge(
                     "rounded-md w-full",
-                    "border p-2",
+                    "border dark:border-2 dark:border-gray-200 p-2",
                     "flex flex-col items-center space-y-2",
-                    "bg-white"
+                    "bg-white dark:bg-gray-800"
                 )}
             >
                 <form
@@ -53,7 +53,15 @@ export const ListDID = (
                         "flex flex-col sm:flex-row sm:space-x-2 sm:items-end w-full",
                     )}
                 >
-                    <label className='w-fit' htmlFor='did-search-pattern'>DID Search Pattern</label>
+                    <label
+                        className={twMerge(
+                            "w-fit",
+                            "text-black dark:text-white"
+                        )}
+                        htmlFor='did-search-pattern'
+                    >
+                        DID Search Pattern
+                    </label>
                     <div className='grow'>
                         <TextInput
                             onBlur={(event: any) => { setDidSearchQuery(event.target.value) }}
@@ -68,13 +76,13 @@ export const ListDID = (
                 <div
                     className={twMerge(
                         "w-full flex flex-col p-2 rounded",
-                        "bg-gray-200",
+                        "bg-gray-200 dark:bg-gray-900",
                     )}
                 >
                     <form
                         className={twMerge(
                             "flex flex-col md:flex-row md:space-x-2 justify-space-between",
-                            "text-gray-800"
+                            "text-gray-800 dark:text-white"
                         )}
                         id="query-for-didtype-form"
                     >
@@ -100,7 +108,8 @@ export const ListDID = (
             <div
                 className={twMerge(
                     "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2",
-                    "bg-white border p-2 rounded-lg"
+                    "bg-white dark:bg-gray-800 border dark:border-gray-200 dark:border-2",
+                    "p-2 rounded-lg"
                 )}
             >
                 <div
@@ -122,7 +131,8 @@ export const ListDID = (
                 </div>
                 <div
                     className={twMerge(
-                        "bg-stone-100 rounded-md p-2",
+                        "bg-stone-100 dark:bg-gray-900",
+                        "rounded-md p-2",
                         "flex flex-col space-y-2",
                     )}
                 >
@@ -133,7 +143,7 @@ export const ListDID = (
                             !selectedDID ? "block" : "hidden",
                         )}
                     >
-                        <i>No DID selected</i>
+                        <i className="dark:text-gray-200">No DID selected</i>
                     </div>
                     <div className={twMerge(
                         "flex flex-col space-y-2",
