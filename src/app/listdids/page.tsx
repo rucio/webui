@@ -7,6 +7,7 @@ import {
     RSESearchQuery
 } from '@/lib/infrastructure/data/view-model/createRule'
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
+import { useState } from "react";
 
 
 export default function ListDID() {
@@ -116,26 +117,51 @@ export default function ListDID() {
         ],
         fetchStatus: "idle",
     } as DIDSearchResponse
-    const didMetaQuery = (did: DIDName) => { }
-    const didMetaQueryResponse = {
-        "name": "dataset-YSytZjXJMdiCsSiiUwXx",
-        "scope": "Lawrence.Myers",
-        "account": "Lawrence_Myers",
-        "did_type": "Dataset",
-        "created_at": new Date(2021, 3),
-        "updated_at": new Date(2022, 10),
-        "availability": "Deleted",
-        "obsolete": false,
-        "hidden": true,
-        "suppressed": true,
-        "purge_replicas": true,
-        "monotonic": true,
-        "is_open": true,
-        "adler32": null,
-        "guid": null,
-        "md5": null,
-        "filesize": null
-    } as DIDMeta
+    
+    // mock: sample random from here
+    const didMetaQueryResponses = [
+        {
+            "name": "dataset-YSytZjXJMdiCsSiiUwXx",
+            "scope": "Lawrence.Myers",
+            "account": "Lawrence_Myers",
+            "did_type": "Dataset",
+            "created_at": new Date(2021, 3),
+            "updated_at": new Date(2022, 10),
+            "availability": "Deleted",
+            "obsolete": false,
+            "hidden": true,
+            "suppressed": true,
+            "purge_replicas": true,
+            "monotonic": true,
+            "is_open": true,
+            "adler32": null,
+            "guid": null,
+            "md5": null,
+            "filesize": null
+        } as DIDMeta,
+        {
+            "name": "dataset-YSytZjXJMdiCsSiiUwXx",
+            "scope": "user.mbarisits",
+            "account": "Martin.Barisits",
+            "did_type": "File",
+            "created_at": new Date(2021, 3),
+            "updated_at": new Date(2022, 10),
+            "availability": "Deleted",
+            "obsolete": false,
+            "hidden": true,
+            "suppressed": true,
+            "purge_replicas": true,
+            "monotonic": true,
+            "is_open": null,
+            "adler32": "1234abcd",
+            "guid": "38e7d733-61ce-430f-bd02-d3fac1cac372",
+            "md5": "60817e52ffaa2a87e33012d2c0cf540f",
+            "filesize": 5_780_003
+        } as DIDMeta,
+    ]
+    const randomItem: () => DIDMeta = () => didMetaQueryResponses[Math.floor(Math.random() * didMetaQueryResponses.length)]
+    const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMeta>(didMetaQueryResponses[0])
+    const didMetaQuery = (did: DIDName) => {setDIDMetaQueryResponse(randomItem())}
 
     const DIDSearchComDOM = useComDOM<DIDDTO>(
         'http://localhost:3000/api/listdids',
@@ -155,8 +181,8 @@ export default function ListDID() {
                     fetchStatus: DIDSearchComDOM.query.fetchStatus
                 }
             }
-            didMetaQuery={didMetaQuery}
-            didMetaQueryResponse={didMetaQueryResponse}
+            didMetaQuery={didMetaQuery}  // TODO: implement
+            didMetaQueryResponse={didMetaQueryResponse}  // TODO: implement
         />
     )
 }

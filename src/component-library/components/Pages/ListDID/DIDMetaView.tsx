@@ -39,7 +39,7 @@ export const DIDMetaView = (
                 <tbody className="w-full">
                     <tr>
                         <td className="font-bold w-32 pl-1">Size</td>
-                        <td className="text-right"><Number number={meta.filesize as number} /></td>
+                        <td className="text-right pr-2"><Number number={meta.filesize as number} /></td>
                     </tr>
                     <tr>
                         <td className="font-bold pl-1">GUID</td>
