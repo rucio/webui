@@ -130,11 +130,20 @@ export const ListDID = (
                     </div>
                     <div className={twMerge(
                         "flex flex-col space-y-2",
-                        selectedDID ? "block" : "hidden",
+                        selectedDID && props.didMetaQueryResponse.did_type !== "File" ? "block" : "hidden",
                     )}
                     >
                         <Button label="Show Rules"/>
                         <Button label="Show Dataset Replicas"/>
+                        <Button label="Show File Replica States"/>
+                    </div>
+                    <div className={twMerge(
+                        "flex flex-col space-y-2",
+                        selectedDID && props.didMetaQueryResponse.did_type === "File" ? "block" : "hidden",
+                    )}
+                    >
+                        <Button label="Show Rules"/>
+                        <Button label="Show Contents"/>
                         <Button label="Show File Replica States"/>
                     </div>
                 </div>
