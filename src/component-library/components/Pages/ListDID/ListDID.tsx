@@ -115,6 +115,7 @@ export const ListDID = (
                 <div
                     className={twMerge(
                         "bg-white",
+                        "min-w-0",
                         "lg:col-span-2"
                     )}
                 >

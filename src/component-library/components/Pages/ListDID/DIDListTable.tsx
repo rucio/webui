@@ -136,7 +136,8 @@ export const DIDListTable = (
                 "flex flex-col justify-between space-y-2 pb-2",
                 "bg-white dark:bg-gray-700",
                 "h-fit min-h-[430px]",
-                "relative"
+                "relative",
+                "min-w-0",
             )}
         >
             <table className="table-fixed w-full text-left">
