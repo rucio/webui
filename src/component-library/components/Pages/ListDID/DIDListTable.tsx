@@ -16,7 +16,8 @@ import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 export const DIDListTable = (
     props: {
         data: any,
-        fetchstatus: FetchStatus
+        fetchstatus: FetchStatus,
+        multipleDidTypes: boolean,
         pageSize: number,
         onSelect: (did: string) => void
     }
@@ -52,7 +53,12 @@ export const DIDListTable = (
                         <p>
                             {info.getValue()}
                         </p>
-                        <DIDTypeTag didtype={info.row.original.did_type} />
+                        <DIDTypeTag
+                            didtype={info.row.original.did_type}
+                            className={twMerge(
+                                props.multipleDidTypes ? "inline-block" : "hidden",
+                            )}
+                        />
                     </span>
                 )
             }

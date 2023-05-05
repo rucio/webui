@@ -1,6 +1,6 @@
 import { DIDMeta } from "@/lib/core/data/rucio-dto"
 import { DIDName, DIDSearchResponse, DIDSearchQuery } from "@/lib/infrastructure/data/view-model/createRule"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 import { TextInput } from "../../Input/TextInput"
 import { Button } from "../../Button/Button"
@@ -27,6 +27,12 @@ export const ListDID = (
     const meta = props.didMetaQueryResponse
     const [didSearchQuery, setDidSearchQuery] = useState<string>("")
     const [didTypesAllowed, setDidTypesAllowed] = useState<[boolean, boolean, boolean]>([true, true, false]) // [container, dataset, file]
+    const [multipleDidTypes, setMultipleDidTypes] = useState<boolean>(true)
+    useEffect(() => {
+        setMultipleDidTypes(
+            didTypesAllowed.reduce((accumulator, currentValue) => accumulator + (currentValue ? 1 : 0), 0) > 1
+        )
+    }, [didTypesAllowed])
     const [selectedDID, setSelectedDID] = useState<DIDName | null>(null) // replace back to `null` when done testing
     return (
         <div
@@ -106,6 +112,7 @@ export const ListDID = (
                     <DIDListTable
                         data={props.didResponse.data}
                         fetchstatus={props.didResponse.fetchStatus}
+                        multipleDidTypes={multipleDidTypes}
                         pageSize={15}
                         onSelect={(didName: DIDName) => {
                             setSelectedDID(didName)
