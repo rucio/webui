@@ -48,7 +48,8 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
     return (
         <span
             className={twMerge(
-                "rounded-full md:rounded w-6 h-6 md:w-24 text-center flex justify-center items-center",
+                "h-6 rounded text-center flex justify-center items-center",
+                !neversmall ? "w-6 md:w-24 rounded-full md:rounded" : "w-24",
                 colPicker(didtype),
                 className
             )}

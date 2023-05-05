@@ -18,7 +18,7 @@ export const AvailabilityTag: (
                     )
                 ),
                 "text-black dark:text-white italic",
-                "w-6 md:w-24 rounded text-center select-none",
+                "w-24 rounded text-center select-none",
                 "flex justify-center items-center",
             )}
         >
