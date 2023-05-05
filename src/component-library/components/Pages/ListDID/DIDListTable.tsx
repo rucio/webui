@@ -2,13 +2,16 @@ import { FetchStatus } from "@tanstack/react-query";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";
 import { twMerge } from "tailwind-merge";
 import { useState, useEffect } from "react";
-import { createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, TableOptions, useReactTable } from "@tanstack/react-table";
+import { createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, TableOptions, useReactTable, Column } from "@tanstack/react-table";
 import { DIDMeta } from "@/lib/core/data/rucio-dto";
 
 import { Button } from "../../Button/Button";
 import { P } from "../../Text/Content/P";
+import { H3 } from "../../Text/Headings/H3";
+import { Filter } from "../../StreamedTables/Filter";
 import { NumInput } from "../../Input/NumInput";
-import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi"
+import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck } from "react-icons/hi"
+import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 
 export const DIDListTable = (
     props: {
@@ -32,6 +35,27 @@ export const DIDListTable = (
         }),
         columnHelper.accessor("scope", {
             id: "scope",
+        }),
+        columnHelper.accessor("did_type", {
+            id: "did_type",
+        }),
+        columnHelper.accessor(row => `${row.scope}:${row.name}`, {
+            id: "did",
+            cell: (info) => {
+                return (
+                    <span
+                        className={twMerge(
+                            "flex flex-row justify-between md:justify-start md:space-x-4",
+                            "pr-2"
+                        )}
+                    >
+                        <p>
+                            {info.getValue()}
+                        </p>
+                        <DIDTypeTag didtype={info.row.original.did_type} />
+                    </span>
+                )
+            }
         })
     ]
 
@@ -43,8 +67,41 @@ export const DIDListTable = (
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
         debugTable: true,
-        state: { columnVisibility: { name: true, scope: false } }
+        state: {
+            columnVisibility: {
+                name: false,
+                scope: false,
+                did: true,
+                did_type: false
+            }
+        }
     } as TableOptions<DIDMeta>)
+
+    // handle window resize
+    const [windowSize, setWindowSize] = useState([
+        1920, 1080
+    ]);
+
+    useEffect(() => {
+        setWindowSize([window.innerWidth, window.innerHeight])
+
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
+    // using the window size to determine whether we shall show the input form with full width
+    const [smallScreenNameFiltering, setSmallScreenNameFiltering] = useState(false)
+    useEffect(() => {
+        if (windowSize[0] > 640) {
+            setSmallScreenNameFiltering(false)
+        }
+    }, [windowSize])
 
     const [selected, setSelected] = useState<string | null>(null)
 
@@ -78,7 +135,39 @@ export const DIDListTable = (
                             "w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
                         )}
                     >
-                        <th className="pl-2 w-full">DID</th>
+                        <th className="pl-2 w-full">
+                            <div className="flex flex-row items-center space-x-8 justify-between">
+                                <span className="shrink-0">
+                                    <H3>DID</H3>
+                                </span>
+                                <span className="hidden sm:flex w-full">
+                                    <Filter column={table.getColumn("did") as Column<DIDMeta, unknown>} table={table} />
+                                </span>
+                                <span className="flex sm:hidden pr-4 relative">
+                                    <button
+                                        onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                    >
+                                        <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
+                                    </button>
+                                </span>
+                            </div>
+                            <div
+                                id="smallScreenNameFiltering"
+                                className={twMerge(
+                                    "absolute inset-0",
+                                    smallScreenNameFiltering ? "flex" : "hidden",
+                                    "bg-white",
+                                    "p-2 flex-row justify-between space-x-2 items-center"
+                                )}
+                            >
+                                <Filter column={table.getColumn("did") as Column<DIDMeta, unknown>} table={table} />
+                                <button
+                                    onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                >
+                                    <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
+                                </button>
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody className="w-full">

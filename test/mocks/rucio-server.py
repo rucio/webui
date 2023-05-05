@@ -157,8 +157,8 @@ def listdids():
 
 @app.route('/didmeta')
 def didmeta():
-    didtype = random.choice(["dataset", "container", "file"])
-    isfile = lambda dtype: dtype == "file"
+    didtype = random.choice(["Dataset", "Container", "File"])
+    isfile = lambda dtype: dtype == "File"
     firstname, lastname = fake.first_name(), fake.last_name()
     metadata = {
         # for all
@@ -168,7 +168,7 @@ def didmeta():
         "did_type": didtype,
         "created_at": fake.date_time_this_year(),
         "updated_at": fake.date_time_this_year(),
-        "availability": random.choice(["LOST", "DELETED", "AVAILABLE"]),
+        "availability": random.choice(["Lost", "Deleted", "Available"]),
         "obsolete": random.choice([True, False]),
         "hidden": random.choice([True, False]),
         "suppressed": random.choice([True, False]),
