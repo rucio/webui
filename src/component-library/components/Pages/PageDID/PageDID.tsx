@@ -7,14 +7,20 @@ import { H3 } from "../../Text/Headings/H3";
 // misc packages, react
 import { twMerge } from "tailwind-merge";
 import React, { useEffect, useState } from "react";
+import { HiArrowCircleLeft } from "react-icons/hi";
+import { FetchStatus } from "@tanstack/react-query";
 
 // DTO etc
 import { DIDMeta } from "@/lib/core/data/rucio-dto";
-import { HiArrowCircleLeft } from "react-icons/hi";
+import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/createRule";
+import { PageDIDParents } from "./PageDIDParents";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
     fromDidList?: string; // if coming from DIDList, this will be the DIDList's query
+    // Parent DIDs [FILE]
+    didParentsSearch: (didSearchQuery: DIDSearchQuery) => void
+    didParentsResponse: { data: any; fetchStatus: FetchStatus}
 }
 
 const SubPage: (
@@ -31,8 +37,6 @@ const SubPage: (
                 className={twMerge(
                     show ? "block" : "hidden",
                     "grow rounded-b-md",
-                    "p-2",
-                    "bg-green-200",
                     className
                 )}
                 {...props}
@@ -101,8 +105,8 @@ export const PageDID = (
                     <Tabs
                         tabs={
                             isFile ?
-                            ["File Replica States", "Parent DIDs"] :
-                            ["Rules", "Dataset Replicas", "File Replica States"]
+                            ["File Replica States", "Parent DIDs", "Metadata"] :
+                            ["Rules", "Dataset Replicas", "File Replica States", "Metadata"]
                         } // remember difference between collections and files
                         active={0}
                         handleClick={(event: any) => { console.log(event.target.dataset.id); setSubpageIndex(Number(event.target.dataset.id)) }}
@@ -129,7 +133,13 @@ export const PageDID = (
                         show={isFile ? subpageIndex === 1 : false}
                         id="subpage-parent-dids"
                     >
-                        Parent DIDs
+                        <PageDIDParents data={props.didParentsResponse.data} fetchStatus={props.didParentsResponse.fetchStatus} pageSize={10}/>
+                    </SubPage>
+                    <SubPage
+                        show={isFile ? subpageIndex === 2 : subpageIndex === 3}
+                        id="subpage-metadata"
+                    >
+                        Metadata
                     </SubPage>
 
                 </div>
