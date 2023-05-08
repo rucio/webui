@@ -20,19 +20,10 @@ const streamRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     const responseStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
     responseStream?.on('data', async (chunk) => {
         res.write(chunk.toString() + '\n')
-        await sleep(1000);
     })
     responseStream?.on('end', async () => {
         res.end()
     })
-    //     res.write(`data: Hello seq ${i}\n\n`);
-    //     await sleep(1000);
-    //   }
-    // res.end('done\n');
-    // res.write(
-    //     '{data: Hello}\n{data: World}\n\n'
-    // )
-    // res.end()
 
 }
 

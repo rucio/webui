@@ -3,6 +3,7 @@ import { useState, useRef, useMemo, useEffect } from 'react'
 import ComDOMWrapper, {
     BatchResponse,
     ComDOMStatus,
+    HTTPRequest,
     IComDOMWrapper,
 } from '../web-worker/comdom-wrapper'
 
@@ -29,9 +30,8 @@ export enum UseComDOMStatus {
 
 /**
  * @description A React hook that fetches data from a ComDOM web worker and updates the corresponding query in the React Query cache.
- * @param url The URL that the ComDOM web worker will fetch data from. This URL must be the same origin as the page that is using this hook. The URL must stream NDJSON events.
  * @param initialData An array of TData type that will be used as the initial data for the query.
- * @param fetchOnCreate If true, the ComDOM web worker will start fetching data immediately after it is created. If false, the ComDOM web worker will not start fetching data until the start() function is called.
+ * @param proactiveRefetch If set to true, the query will automatically refetch data from the ComDOM web worker when the window is re-focused.
  * @param restInterval The time in ms that the query will sleep before checking if new data is available from the ComDOM web worker. Set to Infinity to disable automatic background checking for new data.
  * @param fetchInterval The time in ms that the query will wait before fetching the next batch of data. This is used to prevent the query from fetching data too frequently.
  * @param debug Enable debug logging for the hook, ComDOM wrapper and ComDOM web worker.
@@ -51,38 +51,29 @@ export enum UseComDOMStatus {
  */
 
 export default function useComDOM<TData>(
-    url: string,
+    queryName: string,
     initialData: TData[] = [],
-    fetchOnCreate: boolean = false,
+    proactiveRefetch: boolean = false,
     restInterval: number = Infinity,
     fetchInterval: number = 200,
     debug: boolean = false,
 ) {
-    const requestURL = useMemo(() => new URL(url), [url])
     const dataSink = useRef<TData[]>(initialData)
     const comDOMWrapper: IComDOMWrapper<TData> = useMemo(() => {
-        return new ComDOMWrapper<TData>(requestURL, fetchOnCreate, debug)
-    }, [requestURL, fetchOnCreate, debug])
+        return new ComDOMWrapper<TData>(debug)
+    }, [debug])
     const [comDOMStatus, setComDOMStatus] = useState<ComDOMStatus>(
         ComDOMStatus.UNKNOWN,
     )
 
     const [errors, setErrors] = useState<ComDOMError[]>([])
     const errorId = useRef(0)
-    const [pollInterval, setPollInterval] = useState(
-        fetchOnCreate ? fetchInterval : Infinity,
-    )
+    const [pollInterval, setPollInterval] = useState(Infinity)
     const [status, setStatus] = useState<UseComDOMStatus>(
         UseComDOMStatus.STOPPED,
     )
     const queryClient = useQueryClient()
-    const queryKey = [requestURL.hostname, requestURL.pathname]
-
-    useEffect(() => {
-        if (fetchOnCreate) {
-            start()
-        }
-    }, [fetchOnCreate])
+    const queryKey = useMemo(() => [queryName], [queryName])
 
     const _log = (...args: any[]) => {
         if (debug) {
@@ -125,8 +116,8 @@ export default function useComDOM<TData>(
 
     const queryFn = async () => {
         if (
-            comDOMStatus !== ComDOMStatus.RUNNING &&
-            comDOMStatus !== ComDOMStatus.DONE
+            comDOMStatus == ComDOMStatus.STOPPED ||
+            comDOMStatus == ComDOMStatus.ERROR
         ) {
             _log(
                 'ComDOM Web Worker is not running. The query will not fetch any data',
@@ -160,8 +151,8 @@ export default function useComDOM<TData>(
         queryFn: queryFn,
         initialData: initialData,
         refetchInterval: pollInterval,
-        refetchOnWindowFocus: fetchOnCreate,
-        refetchOnMount: fetchOnCreate,
+        refetchOnWindowFocus: proactiveRefetch,
+        refetchOnMount: proactiveRefetch,
     })
 
     const comDOMStatusQuery = useQuery({
@@ -170,12 +161,20 @@ export default function useComDOM<TData>(
         refetchInterval: pollInterval,
     })
 
-    const start = async (streamURL: string | null = null) => {
+    const start = async (request: HTTPRequest | null = null) => {
         try {
+            if (request == null) {
+                reportError('Attempting to start the background thread without providing a valid HttpRequest', 'Request is null')
+                setStatus(UseComDOMStatus.ERROR)
+                return false
+            }
             _log('Resetting data sink')
             dataSink.current = initialData
-            _log('Starting ComDOM with URL', requestURL.toString())
-            const status = await comDOMWrapper.start()
+            _log('Starting ComDOM with URL', request?.url.toString())
+            if (request == null) {
+                throw new Error('HTTPRequest for streaming is null')
+            }
+            const status = await comDOMWrapper.start(request)
             if (!status) {
                 throw new Error('Error starting ComDOM')
             }
