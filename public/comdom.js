@@ -10,17 +10,13 @@ const Status = {
 
 
 class ComDOM {
-    constructor(url, startFetching = false, verbose = false) {
-        this.url = url;
+    constructor(verbose = false) {
         this.status = Status.STOPPED;
         this.lastBatchID = 0;
         this.batches = [];
         this.buffer = []
         this.textBuffer = '';
         this.verbose = verbose;
-        if(startFetching) {
-            this.run();
-        }
     }
 
     async pushObjectsToBuffer(data, buffer) {
@@ -63,12 +59,24 @@ class ComDOM {
         });
     }
     
-    async run() {
-        const res = await fetch(this.url)
+    async run(request) {
+        this.url = request.url;
+        this.method = request.method;
+        this.body = request.body;
+        this.headers = new Headers();
+        let headersDict = request.headers;
+        for (const key in headersDict) {
+            this.headers.append(key, headersDict[key]);
+        }
+        this.log('fetching', this.method, this.url, 'with headers', this.headers, 'and body', this.body)
+        let fetchDetails = {}
+        fetchDetails['method'] = this.method
+        if(this.headers !== null) fetchDetails['headers'] = this.headers
+        if(this.body !== null) fetchDetails['body'] = JSON.stringify(this.body)
+        const res = await fetch(this.url, fetchDetails);
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         
-        this.log('fetching', this.url)
         while (true) {
             this.status = Status.RUNNING;
             const { done, value } = await reader.read();

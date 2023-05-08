@@ -35,11 +35,21 @@ export type BatchResponse<TData> = {
 }
 
 /**
+ * @description Represents the headers of a HTTP request
+ */
+export type HTTPRequest = {
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+    url: URL | string
+    headers: Headers | { [key: string]: string } | null
+    body: { [key: string]: string } | null
+}
+
+/**
  * @description Represents the ComDOM web worker
  */
 export interface ComDOM<TData> {
-    new(url: string, start_fetching: boolean, verbose: boolean): ComDOM<TData>
-    run: () => Promise<any>
+    new(verbose: boolean): ComDOM<TData>
+    run: (request: HTTPRequest) => Promise<any>
     getNextBatch: () => Promise<BatchResponse<TData> | null>
     isDone: () => Promise<boolean>
     isBatchAvailable: () => Promise<boolean>
@@ -62,7 +72,7 @@ export interface IComDOMWrapper<TData> {
      * @description Starts the ComDOM web worker
      * @returns Promise<boolean> true if worker was successfully started, Promise is rejected otherwise
      * */
-    start: () => Promise<boolean>
+    start: (request: HTTPRequest) => Promise<boolean>
     /**
      * @description Terminates the ComDOM web worker
      * @returns true if worker was successfully terminated, false otherwise
@@ -85,17 +95,13 @@ export interface IComDOMWrapper<TData> {
  * @description This class is the implementation of the {@link IComDOMWrapper} interface
  */
 export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
-    private url: string
     private worker: Worker | null = null
     private verbose: boolean
     private wrappedComDOM: Remote<ComDOM<TData>> | null = null
     private comDOM: Remote<ComDOM<TData>> | undefined
-    private startFetchingOnWorkerCreation: boolean
 
-    constructor(url: URL, start_fetching: boolean = false, verbose: boolean = false) {
-        this.url = url.toString()
+    constructor(verbose: boolean = false) {
         this.verbose = verbose
-        this.startFetchingOnWorkerCreation = start_fetching
     }
    
     log(...args: any[]) {
@@ -111,7 +117,7 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
         }
         this.log('Initializing ComDOM')
         try {
-            this.comDOM = await new this.wrappedComDOM(this.url, this.startFetchingOnWorkerCreation, this.verbose)
+            this.comDOM = await new this.wrappedComDOM(this.verbose)
         } catch (error) {
             this.log('Error initializing ComDOM', error)
             
@@ -120,7 +126,7 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
         this.log('ComDOM initialized')
     }
     
-    async start(): Promise<boolean> {
+    async start(request: HTTPRequest): Promise<boolean> {
         if (!this.comDOM || this.comDOM === undefined) {
             this.log('ComDOM not initialized. Initializing ComDOM...')
             await this.init()
@@ -131,7 +137,16 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
                 return Promise.resolve(false)
             }
             this.log('Starting Fetching of data via ComDOM Web Worker')
-            this.comDOM.run()
+            
+            if ( request.url instanceof URL){
+                request.url = request.url.toString()
+            }
+
+            if ( request.headers instanceof Headers){
+                request.headers = Object.fromEntries(request.headers.entries())
+            }
+            
+            this.comDOM.run(request)
             return Promise.resolve(true)
         } catch (error) {
             Promise.reject(error)
@@ -139,7 +154,7 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
         return Promise.resolve(false)
     }
 
-    
+
     destroy(): boolean {
         try {
             this.comDOM = undefined
