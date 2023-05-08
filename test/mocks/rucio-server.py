@@ -154,6 +154,42 @@ def listdids():
         return try_stream(generate())
     except Exception as e:
         return flask.Response(status=500, response=str(e))
+
+@app.route('/didmeta')
+def didmeta():
+    didtype = random.choice(["Dataset", "Container", "File"])
+    isfile = lambda dtype: dtype == "File"
+    firstname, lastname = fake.first_name(), fake.last_name()
+    metadata = {
+        # for all
+        "name": f"{didtype}-{fake.pystr()}",
+        "scope": f"{firstname}.{lastname}",
+        "account": f"{firstname}_{lastname}",
+        "did_type": didtype,
+        "created_at": fake.date_time_this_year(),
+        "updated_at": fake.date_time_this_year(),
+        "availability": random.choice(["Lost", "Deleted", "Available"]),
+        "obsolete": random.choice([True, False]),
+        "hidden": random.choice([True, False]),
+        "suppressed": random.choice([True, False]),
+        "purge_replicas": random.choice([True, False]),
+        "monotonic": random.choice([True, False]),
+        # begin only for collections
+        "is_open": random.choice([True, False]) if not isfile(didtype) else None,
+        # begin only for files
+        "adler32": fake.hexify(text="^" * 8) if isfile(didtype) else None,
+        "guid": fake.uuid4() if isfile(didtype) else None,
+        "md5": fake.hexify(text="^" * 32) if isfile(didtype) else None,
+        "filesize": random.randint(0, 1e3) * random.choice([1, 1e3, 1e6, 1e9]) if isfile(didtype) else None,
+    }
+    try:
+        def generate():
+            print(f"sending {metadata}")
+            yield render_json(metadata) + '\n'
+            print("sleeping")
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
     
 
 if __name__ == '__main__':

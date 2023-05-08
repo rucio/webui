@@ -1,4 +1,4 @@
-import { useState , useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 interface CheckboxProps {
     label: string
@@ -6,6 +6,7 @@ interface CheckboxProps {
     disabled?: boolean
     handleChange?: (args: any) => void
     type: "checkbox" | "radio"
+    id?: string
 }
 
 export const Checkbox = ({
@@ -13,7 +14,8 @@ export const Checkbox = ({
     isChecked = true,
     disabled = false,
     handleChange,
-    type
+    type,
+    id,
 }: CheckboxProps) => {
     const [checked, setChecked] = useState(isChecked)
     useEffect(() => {
@@ -30,25 +32,24 @@ export const Checkbox = ({
     return (
         <div
             className="flex items-center"
-            onClick={(event: any) => {
-                if (!disabled) {
-                    setChecked(event.target.checked)
-                    handleChange?.(event)
-                }
-            }}
         >
             <input
                 disabled={disabled}
                 type={type}
                 checked={checked}
                 className={inputClasses.join(" ")}
-                onChange= {args => args}
+                onChange={(event: any) => {
+                    setChecked(event.target.checked)
+                    handleChange?.(event)
+                }}
+                id={id}
             />
             <label
                 className={labelClasses.join(" ")}
+                htmlFor={id}
             >
                 {label}
             </label>
-        </div>  
+        </div>
     )
 }

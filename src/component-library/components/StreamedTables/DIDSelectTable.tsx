@@ -95,7 +95,7 @@ export const DIDSelectTable = (
             cell: (info) => {
                 return (
                     <div className="flex flex-row items-center justify-center">
-                        <DIDTypeTag didtype={info.row.original.did_type} />
+                        <DIDTypeTag didtype={info.row.original.did_type}/>
                     </div>
                 )
             },
