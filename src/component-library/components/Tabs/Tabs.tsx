@@ -13,7 +13,7 @@ export const Tabs = (
         setActivestate(props.active.toString())
     }, [props.active])
     var onClick = (event: any) => {
-        setActivestate(event.target.id)
+        setActivestate(event.target.dataset.id)
         props.handleClick(event)
     }
     return (
@@ -29,7 +29,7 @@ export const Tabs = (
                         key={index.toString()}
                     >
                         <a
-                            id={index.toString()}
+                            data-id={index.toString()}
                             className="block border-b-4 text-blue-500 border-blue-500 p-4 hover:bg-gray-100 dark:hover:bg-transparent hover:cursor-pointer"
                         >
                             {element}
@@ -42,7 +42,7 @@ export const Tabs = (
                         key={index.toString()}
                     >
                         <a
-                            id={index.toString()}
+                            data-id={index.toString()}
                             className="block border-b-4 text-gray-600 dark:text-gray-100 border-gray-300 dark:border-gray-100 p-4 hover:bg-gray-100 dark:hover:bg-transparent hover:cursor-pointer"
                         >
                             {element}

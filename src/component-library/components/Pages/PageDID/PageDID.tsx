@@ -6,7 +6,7 @@ import { H3 } from "../../Text/Headings/H3";
 
 // misc packages, react
 import { twMerge } from "tailwind-merge";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // DTO etc
 import { DIDMeta } from "@/lib/core/data/rucio-dto";
@@ -17,9 +17,37 @@ export interface PageDIDPageProps {
     fromDidList?: string; // if coming from DIDList, this will be the DIDList's query
 }
 
+const SubPage: (
+    React.FC<JSX.IntrinsicElements["div"] & { show: boolean; children?: any }>
+) = (
+    {
+        show = false,
+        ...allprops
+    }
+) => {
+        const { className, children, ...props } = allprops
+        return (
+            <div
+                className={twMerge(
+                    show ? "block" : "hidden",
+                    "grow rounded-b-md",
+                    "p-2",
+                    "bg-green-200",
+                    className
+                )}
+                {...props}
+            >
+                {children}
+            </div>
+        )
+    }
+
+
 export const PageDID = (
     props: PageDIDPageProps
 ) => {
+    const [subpageIndex, setSubpageIndex] = useState<number>(0)
+    const isFile = props.didMeta.did_type === "File"
     return (
         <div
             className={twMerge(
@@ -50,7 +78,7 @@ export const PageDID = (
                     href={props.fromDidList ? "/listdids?=" + props.fromDidList : "/"} // TODO connect properly
                     id="back-to-didlist-button"
                 >
-                    <HiArrowCircleLeft className="text-xl"/>
+                    <HiArrowCircleLeft className="text-xl" />
                     <label className="cursor-pointer" htmlFor="back-to-didlist-button">
                         Back to DID List
                     </label>
@@ -71,17 +99,38 @@ export const PageDID = (
                     )}
                 >
                     <Tabs
-                        tabs={["Rules", "Dataset Replicas", "File Replica States"]}
+                        tabs={
+                            isFile ?
+                            ["File Replica States", "Parent DIDs"] :
+                            ["Rules", "Dataset Replicas", "File Replica States"]
+                        } // remember difference between collections and files
                         active={0}
-                        handleClick={(event: any) => { console.log(event) }}
+                        handleClick={(event: any) => { console.log(event.target.dataset.id); setSubpageIndex(Number(event.target.dataset.id)) }}
                     />
-                    <div
-                        className={twMerge(
-                            "grow",
-                        )}
+                    <SubPage
+                        show={isFile ? false : subpageIndex === 0}
+                        id="subpage-rules"
                     >
-                        Content
-                    </div>
+                        Rules
+                    </SubPage>
+                    <SubPage
+                        show={isFile ? false : subpageIndex === 1}
+                        id="subpage-dataset-replicas"
+                    >
+                        Dataset Replicas
+                    </SubPage>
+                    <SubPage
+                        show={isFile ? subpageIndex === 0 : subpageIndex === 2}
+                        id="subpage-file-replica-states"
+                    >
+                        File Replica States
+                    </SubPage>
+                    <SubPage
+                        show={isFile ? subpageIndex === 1 : false}
+                        id="subpage-parent-dids"
+                    >
+                        Parent DIDs
+                    </SubPage>
 
                 </div>
                 <div
