@@ -55,7 +55,7 @@ export const PageDID = (
     props: PageDIDPageProps
 ) => {
     const [subpageIndex, setSubpageIndex] = useState<number>(0)
-    const isFile = props.didMeta.did_type === "File"
+    const didtype = props.didMeta.did_type
     return (
         <div
             className={twMerge(
@@ -108,42 +108,49 @@ export const PageDID = (
                 >
                     <Tabs
                         tabs={
-                            isFile ?
-                            ["File Replica States", "Parent DIDs", "Metadata"] :
-                            ["Rules", "Dataset Replicas", "File Replica States", "Metadata"]
+                            didtype === "File" ? ["File Replica States", "Parent DIDs", "Metadata"] :
+                                (didtype === "Dataset" ? ["Rules", "Dataset Replicas", "File Replica States", "Metadata"] :
+                                    ["Contents", "Rules", "File Replica States", "Metadata"]
+                                )
                         } // remember difference between collections and files
                         active={0}
                         handleClick={(event: any) => { console.log(event.target.dataset.id); setSubpageIndex(Number(event.target.dataset.id)) }}
                     />
                     <SubPage
-                        show={isFile ? false : subpageIndex === 0}
+                        show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 0 : subpageIndex === 1}
                         id="subpage-rules"
                     >
                         Rules
                     </SubPage>
                     <SubPage
-                        show={isFile ? false : subpageIndex === 1}
+                        show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 1 : false}
                         id="subpage-dataset-replicas"
                     >
                         Dataset Replicas
                     </SubPage>
                     <SubPage
-                        show={isFile ? subpageIndex === 0 : subpageIndex === 2}
+                        show={didtype === "File" ? subpageIndex === 0 : didtype === "Dataset" ? subpageIndex === 2 : subpageIndex === 2}
                         id="subpage-file-replica-states"
                     >
                         File Replica States
                     </SubPage>
                     <SubPage
-                        show={isFile ? subpageIndex === 1 : false}
+                        show={didtype === "File" ? subpageIndex === 1 : false}
                         id="subpage-parent-dids"
                     >
                         <PageDIDParents data={props.didParentsResponse.data} fetchStatus={props.didParentsResponse.fetchStatus} pageSize={10}/>
                     </SubPage>
                     <SubPage
-                        show={isFile ? subpageIndex === 2 : subpageIndex === 3}
+                        show={didtype === "File" ? subpageIndex === 2 : didtype === "Dataset" ? subpageIndex === 3 : subpageIndex === 3}
                         id="subpage-metadata"
                     >
                         <PageDIDMetadata data={props.didMetadataResponse.data} fetchStatus={props.didMetadataResponse.fetchStatus} pageSize={10}/>
+                    </SubPage>
+                    <SubPage
+                        show={didtype === "Container" ? subpageIndex === 0 : false}
+                        id="subpage-contents"
+                    >
+                        Contents
                     </SubPage>
 
                 </div>
