@@ -59,3 +59,6 @@ export type RSE = {
     rse_type: string,
     volatile: boolean,
 }
+
+// rucio.db.sqla.constants::ReplicaState
+export type ReplicaState = "Available" | "Unavailable" | "Copying" | "Being_Deleted" | "Bad" | "Temporary_Unavailable"
