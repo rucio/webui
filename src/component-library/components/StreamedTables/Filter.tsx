@@ -5,6 +5,7 @@ export const Filter = (
     props: {
         column: Column<any, any>,
         table: Table<any>
+        placeholder?: string
     }
 ) => {
     const { column, table } = props;
@@ -43,7 +44,7 @@ export const Filter = (
     ) : (
         <span className="w-full pr-4">
             <TextInput
-                placeholder="Filter Results"
+                placeholder={props.placeholder ?? "Filter Results"}
                 onChange={(e) => column.setFilterValue(e.target.value)}
             />
         </span>

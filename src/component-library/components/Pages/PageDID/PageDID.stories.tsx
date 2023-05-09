@@ -139,4 +139,17 @@ PageDID.args = {
         fetchStatus: "idle"
     },
     // DID Metadata
+    didMetadataSearch: (didSearchQuery: DIDSearchQuery) => { console.log(didSearchQuery) },
+    didMetadataResponse: {
+        data: [
+            { key: "bernd", value: "das brot" },
+            { key: "kika", value: "der sender" },
+            { key: "kikaninchen", value: "das tier" },
+            { key: "my birthday", value: new Date(2021, 3) },
+            { key: "am_i_anton", value: false },
+            { key: "R1-tastefactor", value: 3.142 },
+            { key: "hello", value: null },
+        ],
+        fetchStatus: "idle"
+    }
 }

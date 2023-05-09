@@ -14,6 +14,7 @@ import { FetchStatus } from "@tanstack/react-query";
 import { DIDMeta } from "@/lib/core/data/rucio-dto";
 import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/createRule";
 import { PageDIDParents } from "./PageDIDParents";
+import { PageDIDMetadata } from "./PageDIDMetadata";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
@@ -21,6 +22,9 @@ export interface PageDIDPageProps {
     // Parent DIDs [FILE]
     didParentsSearch: (didSearchQuery: DIDSearchQuery) => void
     didParentsResponse: { data: any; fetchStatus: FetchStatus}
+    // Metadata [BOTH]
+    didMetadataSearch: (didSearchQuery: DIDSearchQuery) => void
+    didMetadataResponse: { data: any; fetchStatus: FetchStatus}
 }
 
 const SubPage: (
@@ -139,7 +143,7 @@ export const PageDID = (
                         show={isFile ? subpageIndex === 2 : subpageIndex === 3}
                         id="subpage-metadata"
                     >
-                        Metadata
+                        <PageDIDMetadata data={props.didMetadataResponse.data} fetchStatus={props.didMetadataResponse.fetchStatus} pageSize={10}/>
                     </SubPage>
 
                 </div>
