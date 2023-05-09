@@ -1,9 +1,10 @@
 import { ReplicaState } from "@/lib/core/entity/rucio";
 import { twMerge } from "tailwind-merge";
 
-export const ReplicaStateTag: React.FC<JSX.IntrinsicElements["span"] & {state: ReplicaState}> = (
+export const ReplicaStateTag: React.FC<JSX.IntrinsicElements["span"] & {state: ReplicaState, tiny?: boolean}> = (
     {
         state = "Available",
+        tiny = false,
         ...props
     }
 ) => {
@@ -16,6 +17,14 @@ export const ReplicaStateTag: React.FC<JSX.IntrinsicElements["span"] & {state: R
         "Bad": "Bad",
         "Temporary_Unavailable": "Temp. Unavailable"
     }
+    const stateTiny: Record<ReplicaState, string> = {
+        "Available": "A",
+        "Unavailable": "U",
+        "Copying": "C",
+        "Being_Deleted": "B",
+        "Bad": "D",
+        "Temporary_Unavailable": "T"
+    } // Yes, this is the way Rucio does it!
     const giveStyle = (colour: string) => `bg-${colour}-200 dark:bg-${colour}-700`
     return (
         <span
@@ -32,13 +41,13 @@ export const ReplicaStateTag: React.FC<JSX.IntrinsicElements["span"] & {state: R
                     )
                 ),
                 "text-black dark:text-white italic font-sans",
-                "w-44 rounded border text-center",
+                !tiny ? "w-28 md:w-56 rounded border text-center" : "w-6 h-6 rounded-full border text-center select-none",
                 "flex justify-center items-center",
                 className ?? "",
             )}
             {...otherprops}
         >
-            {stateString[state]}
+            {!tiny ? stateString[state] : stateTiny[state]}
         </span>
     )
 }

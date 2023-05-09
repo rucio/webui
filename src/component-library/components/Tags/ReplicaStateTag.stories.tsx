@@ -10,5 +10,6 @@ const Template: StoryFn<typeof RST> = args => <RST {...args}/>
 
 export const ReplicaStateTag= Template.bind({})
 ReplicaStateTag.args = {
-    state: "Available"
+    state: "Available",
+    tiny: false
 }

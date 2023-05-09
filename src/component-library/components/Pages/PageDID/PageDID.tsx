@@ -15,6 +15,7 @@ import { DIDMeta } from "@/lib/core/data/rucio-dto";
 import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/createRule";
 import { PageDIDParents } from "./PageDIDParents";
 import { PageDIDMetadata } from "./PageDIDMetadata";
+import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
@@ -25,6 +26,9 @@ export interface PageDIDPageProps {
     // Metadata [BOTH]
     didMetadataSearch: (didSearchQuery: DIDSearchQuery) => void
     didMetadataResponse: { data: any; fetchStatus: FetchStatus}
+    // File Replica States [FILE]
+    didFileReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
+    didFileReplicasResponse: { data: any; fetchStatus: FetchStatus}
 }
 
 const SubPage: (
@@ -132,7 +136,9 @@ export const PageDID = (
                         show={didtype === "File" ? subpageIndex === 0 : didtype === "Dataset" ? subpageIndex === 2 : subpageIndex === 2}
                         id="subpage-file-replica-states"
                     >
-                        File Replica States
+                        <div className={twMerge( didtype === "File" ? "block" : "hidden")}>
+                            <PageDIDFilereplicas data={props.didFileReplicasResponse.data} fetchStatus={props.didFileReplicasResponse.fetchStatus} pageSize={10} />
+                        </div>
                     </SubPage>
                     <SubPage
                         show={didtype === "File" ? subpageIndex === 1 : false}

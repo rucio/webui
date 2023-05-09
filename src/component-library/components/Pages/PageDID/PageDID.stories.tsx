@@ -151,5 +151,19 @@ PageDID.args = {
             { key: "hello", value: null },
         ],
         fetchStatus: "idle"
-    }
+    },
+    // Filereplicas
+    didFileReplicasSearch: (didSearchQuery: DIDSearchQuery) => { console.log(didSearchQuery) },
+    didFileReplicasResponse: {
+        data: [
+            { rse: "FRESNO-AWS_SCRATCHDISK", state: "Available" },
+            { rse: "PRAGUELCG2_SCRATCHDISK", state: "Unavailable" },
+            { rse: "BNL-OSG2_SCRATCHDISK", state: "Copying" },
+            { rse: "BNL-OSG2_SCRATCHDISK", state: "Being_Deleted" },
+            { rse: "BNL-OSG2_SCRATCHDISK", state: "Bad" },
+            { rse: "BNL-OSG2_SCRATCHDISK", state: "Temporary_Unavailable" },
+        ],
+        fetchStatus: "idle"
+    },
+
 }
