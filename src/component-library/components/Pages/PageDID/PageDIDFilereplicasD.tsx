@@ -24,30 +24,21 @@ import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRigh
 // Viewmodels etc
 import { RSE, ReplicaState } from "@/lib/core/entity/rucio";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
-import { FilereplicaState } from "./PageDIDFilereplicas";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
+import { FilereplicaStateD } from "@/lib/infrastructure/data/view-model/pagedid";
+import { FilereplicaState } from "@/lib/infrastructure/data/view-model/pagedid";
 
-export type Datasetreplicastate = {
-    scope: string,
-    name: string,
-    Available: number,
-    Unavailable: number,
-    Copying: number,
-    Being_Deleted: number,
-    Bad: number,
-    Temporary_Unavailable: number,
-}
 
 
 export const PageDIDFilereplicasD = (
     props: {
-        datasetTableData: TableData<Datasetreplicastate>,
+        datasetTableData: TableData<FilereplicaStateD>,
         replicaTableData: TableData<FilereplicaState>,
         onChangeDatasetSelection: (selected: string) => void,
     }
 ) => {
     const { datasetTableData, replicaTableData, onChangeDatasetSelection } = props
-    const columnHelper = createColumnHelper<Datasetreplicastate>()
+    const columnHelper = createColumnHelper<FilereplicaStateD>()
     const columns: any[] = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",
@@ -85,7 +76,7 @@ export const PageDIDFilereplicasD = (
         }),
     ]
 
-    const table = useReactTable<Datasetreplicastate>({
+    const table = useReactTable<FilereplicaStateD>({
         data: datasetTableData.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
@@ -93,7 +84,7 @@ export const PageDIDFilereplicasD = (
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
         debugTable: true,
-    } as TableOptions<Datasetreplicastate>)
+    } as TableOptions<FilereplicaStateD>)
 
     // most important part: selecting DIDs (rows)
     // this is handled OUTSIDE of tanstack
@@ -170,7 +161,7 @@ export const PageDIDFilereplicasD = (
                                         <DIDTypeTag didtype="File" className="h-8 text-xl" neversmall />
                                     </span>
                                     <span className="hidden sm:flex w-full">
-                                        <Filter column={table.getColumn("did") as Column<Datasetreplicastate, unknown>} table={table} placeholder="Filter Files by DID" />
+                                        <Filter column={table.getColumn("did") as Column<FilereplicaStateD, unknown>} table={table} placeholder="Filter Files by DID" />
                                     </span>
                                     <span className="flex sm:hidden pr-4 relative">
                                         <button
@@ -189,7 +180,7 @@ export const PageDIDFilereplicasD = (
                                         "p-2 flex-row justify-between space-x-2 items-center"
                                     )}
                                 >
-                                    <Filter column={table.getColumn("did") as Column<Datasetreplicastate, unknown>} table={table} placeholder="Filter Files by DID" />
+                                    <Filter column={table.getColumn("did") as Column<FilereplicaStateD, unknown>} table={table} placeholder="Filter Files by DID" />
                                     <button
                                         onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
                                     >

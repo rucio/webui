@@ -48,6 +48,3 @@ export type DIDMeta = {
     guid: string | null
     filesize: number | null
 }
-
-// these are general key-value pairs including the metadata
-export type DIDKeyValuePairs = {key: string; value: string | number | boolean | Date | null}

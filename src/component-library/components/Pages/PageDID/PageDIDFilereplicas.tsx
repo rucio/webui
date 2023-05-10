@@ -21,15 +21,11 @@ import { FetchStatus } from "@tanstack/react-query";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink } from "react-icons/hi"
 
 // Viewmodels etc
-import { RSE, ReplicaState } from "@/lib/core/entity/rucio";
+import { ReplicaState } from "@/lib/core/entity/rucio";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
+import { FilereplicaState } from "@/lib/infrastructure/data/view-model/pagedid";
 
-
-export type FilereplicaState = {
-    rse: string
-    state: ReplicaState
-}
 
 export const PageDIDFilereplicas = (
     props: {

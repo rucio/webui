@@ -21,7 +21,8 @@ import { FetchStatus } from "@tanstack/react-query";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink } from "react-icons/hi"
 
 // Viewmodels etc
-import { DIDAvailability, DIDKeyValuePairs } from "@/lib/core/data/rucio-dto"
+import { DIDAvailability} from "@/lib/core/data/rucio-dto"
+import { DIDKeyValuePairs } from "@/lib/infrastructure/data/view-model/pagedid";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 
 export const PageDIDMetadata = (
