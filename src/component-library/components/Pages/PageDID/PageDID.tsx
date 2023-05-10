@@ -16,6 +16,7 @@ import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/createRule"
 import { PageDIDParents } from "./PageDIDParents";
 import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
+import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
@@ -29,6 +30,9 @@ export interface PageDIDPageProps {
     // File Replica States [FILE]
     didFileReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
     didFileReplicasResponse: { data: any; fetchStatus: FetchStatus}
+    // File Replica States [DATASET]
+    didDatasetReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
+    didDatasetReplicasResponse: { data: any; fetchStatus: FetchStatus}
 }
 
 const SubPage: (
@@ -138,6 +142,18 @@ export const PageDID = (
                     >
                         <div className={twMerge( didtype === "File" ? "block" : "hidden")}>
                             <PageDIDFilereplicas data={props.didFileReplicasResponse.data} fetchStatus={props.didFileReplicasResponse.fetchStatus} pageSize={10} />
+                        </div>
+                        <div className={twMerge( didtype === "Dataset" ? "block" : "hidden")}>
+                            <PageDIDFilereplicasD
+                                replicaData={props.didFileReplicasResponse.data}
+                                replicaFetchStatus={props.didFileReplicasResponse.fetchStatus}
+                                replicaPageSize={10}
+                                datasetData={props.didDatasetReplicasResponse.data}
+                                datasetFetchStatus={props.didDatasetReplicasResponse.fetchStatus}
+                                datasetPageSize={10}
+                                onChangeDatasetSelection={(dataset: string) => { console.log("datasetSelection", dataset)}}
+                            />
+
                         </div>
                     </SubPage>
                     <SubPage

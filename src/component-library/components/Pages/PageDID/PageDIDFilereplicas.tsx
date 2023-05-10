@@ -45,7 +45,9 @@ export const PageDIDFilereplicas = (
                     <span className="flex flex-row justify-start space-x-2 items-center">
                         <p
                             className={twMerge(
-                                "pl-2 select-all"
+                                "pl-2 select-all",
+                                "dark:text-gray-100",
+                                "break-all"
                             )}
                         >
                             {info.getValue()}
@@ -54,9 +56,10 @@ export const PageDIDFilereplicas = (
                             href={"/rse/" + info.getValue()}
                             className={twMerge(
                                 "text-gray-600 hover:text-blue-600",
+                                "dark:text-gray-400 dark:hover:text-blue-400",
                             )}
                         >
-                            <HiExternalLink className="text-l"/>
+                            <HiExternalLink className="text-l" />
                         </a>
                     </span>
                 )
@@ -210,7 +213,7 @@ export const PageDIDFilereplicas = (
                                 <H3>File Replica State</H3>
                                 <span className="h-6">
                                     {
-                                        filterType === null ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <ReplicaStateTag state={filterType as ReplicaState} tiny/>
+                                        filterType === null ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <ReplicaStateTag state={filterType as ReplicaState} tiny />
                                     }
                                 </span>
                             </span>
