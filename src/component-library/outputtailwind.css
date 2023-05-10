@@ -841,6 +841,10 @@ video {
   height: 100vh;
 }
 
+.min-h-0 {
+  min-height: 0px;
+}
+
 .min-h-\[430px\] {
   min-height: 430px;
 }
@@ -2898,6 +2902,10 @@ video {
 @media (min-width: 1024px) {
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .lg\:grid {
+    display: grid;
   }
 
   .lg\:w-96 {

@@ -102,7 +102,7 @@ export const PageDID = (
             </div>
             <div
                 className={twMerge(
-                    "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2", // maybe use xl or even 2xl
+                    "flex flex-col lg:grid lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2", // maybe use xl or even 2xl
                     "bg-white dark:bg-gray-800 border dark:border-gray-200 dark:border-2",
                     "p-2 rounded-lg"
                 )}
@@ -198,6 +198,7 @@ export const PageDID = (
                         "bg-stone-100 dark:bg-gray-900",
                         "rounded-md p-2",
                         "flex flex-col space-y-2",
+                        "min-h-0"
                     )}
                 >
                     <DIDMetaView data={props.didMeta} show />
