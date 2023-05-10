@@ -31,22 +31,20 @@ import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TextInput } from "../Input/TextInput"
 import { FetchstatusIndicator } from "./FetchstatusIndicator"
+import { PaginationDiv } from "./PaginationDiv"
+import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables"
 
 
 export const DIDSelectTable = (
     props: {
-        data: any,
-        fetchstatus: FetchStatus,
+        tableData: TableData<DIDDTO>,
         onChange: (selected: string[]) => void,
-        pageSize: number,
         selected?: string[],
         useScopenames?: boolean
     }
 ) => {
+    const tableData = props.tableData
     const columnHelper = createColumnHelper<DIDDTO>()
-
-
-
     const columns: any[] = [
         {
             id: 'selection',
@@ -95,7 +93,7 @@ export const DIDSelectTable = (
             cell: (info) => {
                 return (
                     <div className="flex flex-row items-center justify-center">
-                        <DIDTypeTag didtype={info.row.original.did_type}/>
+                        <DIDTypeTag didtype={info.row.original.did_type} />
                     </div>
                 )
             },
@@ -124,7 +122,7 @@ export const DIDSelectTable = (
     )
 
     const table = useReactTable<DIDDTO>({
-        data: props.data || [],
+        data: tableData.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -150,10 +148,10 @@ export const DIDSelectTable = (
     }, [selectedDIDs])
 
     // Page Size: this can be removed if we don't want to allow the user to change the page size
-    const [pageSize, setPageSize] = useState(props.pageSize)
+    const [pageSize, setPageSize] = useState(tableData.pageSize)
     useEffect(() => {
-        setPageSize(props.pageSize)
-    }, [props.pageSize])
+        setPageSize(tableData.pageSize)
+    }, [tableData.pageSize])
     useEffect(() => {
         table.setPageSize(pageSize)
     }, [pageSize])
@@ -200,7 +198,7 @@ export const DIDSelectTable = (
         <div
             className={twMerge(
                 "border dark:border-2 rounded-md",
-                props.fetchstatus === "fetching" ? "hover:cursor-wait" : "",
+                tableData.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
                 "flex flex-col justify-between space-y-2 pb-2",
                 "bg-white dark:bg-gray-700",
                 "h-fit min-h-[430px]",
@@ -349,57 +347,7 @@ export const DIDSelectTable = (
                     })}
                 </tbody>
             </table>
-            <div className="w-full flex justify-center space-x-2 pt-2 border-t dark:border-gray-400 dark:border-t-2">
-                <nav className="w-[400px] flex justify-center space-x-2">
-                    <span className="w-1/3 flex space-x-2">
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(0)
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronDoubleLeft />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.previousPage()
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronLeft />}
-                        />
-                    </span>
-                    <span className="w-1/3 inline-flex space-x-2 items-end">
-                        <NumInput
-                            value={pageIndex + 1}
-                            onChange={(event) => {
-                                setPageIndex(event.target.value - 1)
-                            }}
-                            min={1}
-                            max={table.getPageCount()}
-                        />
-                        <span className="w-full">
-                            <P>
-                                of {table.getPageCount()}
-                            </P>
-                        </span>
-                    </span>
-                    <span className="w-1/3 space-x-2 flex">
-                        <Button
-                            onClick={() => {
-                                table.nextPage()
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronRight />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(table.getPageCount() - 1)
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronDoubleRight />}
-                        />
-                    </span>
-                </nav>
-            </div>
+            <PaginationDiv table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
             <div
                 className={twMerge(
                     "absolute",

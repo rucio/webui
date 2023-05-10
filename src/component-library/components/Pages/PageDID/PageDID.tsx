@@ -141,16 +141,25 @@ export const PageDID = (
                         id="subpage-file-replica-states"
                     >
                         <div className={twMerge( didtype === "File" ? "block" : "hidden")}>
-                            <PageDIDFilereplicas data={props.didFileReplicasResponse.data} fetchStatus={props.didFileReplicasResponse.fetchStatus} pageSize={10} />
+                            <PageDIDFilereplicas tableData={{
+                                data: props.didFileReplicasResponse.data,
+                                fetchStatus: props.didFileReplicasResponse.fetchStatus,
+                                pageSize: 10
+                            }}
+                            />
                         </div>
                         <div className={twMerge( didtype === "Dataset" ? "block" : "hidden")}>
                             <PageDIDFilereplicasD
-                                replicaData={props.didFileReplicasResponse.data}
-                                replicaFetchStatus={props.didFileReplicasResponse.fetchStatus}
-                                replicaPageSize={10}
-                                datasetData={props.didDatasetReplicasResponse.data}
-                                datasetFetchStatus={props.didDatasetReplicasResponse.fetchStatus}
-                                datasetPageSize={10}
+                                replicaTableData={{
+                                    data: props.didFileReplicasResponse.data,
+                                    fetchStatus: props.didFileReplicasResponse.fetchStatus,
+                                    pageSize: 10
+                                }}
+                                datasetTableData={{
+                                    data: props.didDatasetReplicasResponse.data,
+                                    fetchStatus: props.didDatasetReplicasResponse.fetchStatus,
+                                    pageSize: 10
+                                }}
                                 onChangeDatasetSelection={(dataset: string) => { console.log("datasetSelection", dataset)}}
                             />
 
@@ -160,13 +169,21 @@ export const PageDID = (
                         show={didtype === "File" ? subpageIndex === 1 : false}
                         id="subpage-parent-dids"
                     >
-                        <PageDIDParents data={props.didParentsResponse.data} fetchStatus={props.didParentsResponse.fetchStatus} pageSize={10}/>
+                        <PageDIDParents tableData={{
+                            data: props.didParentsResponse.data,
+                            fetchStatus: props.didParentsResponse.fetchStatus,
+                            pageSize: 10
+                        }}/>
                     </SubPage>
                     <SubPage
                         show={didtype === "File" ? subpageIndex === 2 : didtype === "Dataset" ? subpageIndex === 3 : subpageIndex === 3}
                         id="subpage-metadata"
                     >
-                        <PageDIDMetadata data={props.didMetadataResponse.data} fetchStatus={props.didMetadataResponse.fetchStatus} pageSize={10}/>
+                        <PageDIDMetadata tableData={{
+                            data: props.didMetadataResponse.data,
+                            fetchStatus: props.didMetadataResponse.fetchStatus,
+                            pageSize: 10
+                        }}/>
                     </SubPage>
                     <SubPage
                         show={didtype === "Container" ? subpageIndex === 0 : false}

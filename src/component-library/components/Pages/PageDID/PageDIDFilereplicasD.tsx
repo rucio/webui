@@ -12,6 +12,7 @@ import { DateTag } from "../../Tags/DateTag";
 import { NullTag } from "../../Tags/NullTag";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
+import { PaginationDiv } from "../../StreamedTables/PaginationDiv";
 
 // misc packages, react
 import { useEffect, useState } from "react"
@@ -24,6 +25,7 @@ import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRigh
 import { RSE, ReplicaState } from "@/lib/core/entity/rucio";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
 import { FilereplicaState } from "./PageDIDFilereplicas";
+import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 
 export type Datasetreplicastate = {
     scope: string,
@@ -39,15 +41,12 @@ export type Datasetreplicastate = {
 
 export const PageDIDFilereplicasD = (
     props: {
-        datasetData: Datasetreplicastate[],
-        datasetFetchStatus: FetchStatus,
-        datasetPageSize: number,
+        datasetTableData: TableData<Datasetreplicastate>,
+        replicaTableData: TableData<FilereplicaState>,
         onChangeDatasetSelection: (selected: string) => void,
-        replicaData: FilereplicaState[],
-        replicaFetchStatus: FetchStatus,
-        replicaPageSize: number,
     }
 ) => {
+    const { datasetTableData, replicaTableData, onChangeDatasetSelection } = props
     const columnHelper = createColumnHelper<Datasetreplicastate>()
     const columns: any[] = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
@@ -87,7 +86,7 @@ export const PageDIDFilereplicasD = (
     ]
 
     const table = useReactTable<Datasetreplicastate>({
-        data: props.datasetData || [],
+        data: datasetTableData.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -139,8 +138,8 @@ export const PageDIDFilereplicasD = (
         table.setPageIndex(pageIndex)
     }, [pageIndex])
     useEffect(() => {
-        table.setPageSize(props.datasetPageSize)
-    }, [props.datasetPageSize])
+        table.setPageSize(datasetTableData.pageSize)
+    }, [datasetTableData.pageSize])
 
     return (
         <div
@@ -232,68 +231,18 @@ export const PageDIDFilereplicasD = (
                         )}
                     </tbody>
                 </table>
-                <div className="w-full flex justify-center space-x-2 pt-2 border-t dark:border-gray-400 dark:border-t-2">
-                    <nav className="w-[400px] flex justify-center space-x-2">
-                        <span className="w-1/3 flex space-x-2">
-                            <Button
-                                onClick={() => {
-                                    table.setPageIndex(0)
-                                }}
-                                disabled={!table.getCanPreviousPage()}
-                                icon={<HiChevronDoubleLeft />}
-                            />
-                            <Button
-                                onClick={() => {
-                                    table.previousPage()
-                                }}
-                                disabled={!table.getCanPreviousPage()}
-                                icon={<HiChevronLeft />}
-                            />
-                        </span>
-                        <span className="w-1/3 inline-flex space-x-2 items-end">
-                            <NumInput
-                                value={pageIndex + 1}
-                                onChange={(event) => {
-                                    setPageIndex(event.target.value - 1)
-                                }}
-                                min={1}
-                                max={table.getPageCount()}
-                            />
-                            <span className="w-full">
-                                <P>
-                                    of {table.getPageCount()}
-                                </P>
-                            </span>
-                        </span>
-                        <span className="w-1/3 space-x-2 flex">
-                            <Button
-                                onClick={() => {
-                                    table.nextPage()
-                                }}
-                                disabled={!table.getCanNextPage()}
-                                icon={<HiChevronRight />}
-                            />
-                            <Button
-                                onClick={() => {
-                                    table.setPageIndex(table.getPageCount() - 1)
-                                }}
-                                disabled={!table.getCanNextPage()}
-                                icon={<HiChevronDoubleRight />}
-                            />
-                        </span>
-                    </nav>
-                </div>
+                <PaginationDiv table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
                 <div
                     className={twMerge(
                         "absolute",
                         "top-16 sm:top-12 right-2",
                     )}
                 >
-                    <FetchstatusIndicator status={props.datasetFetchStatus} />
+                    <FetchstatusIndicator status={datasetTableData.fetchStatus} />
                 </div>
             </div>
 
-            <PageDIDFilereplicas data={props.replicaData} fetchStatus={props.replicaFetchStatus} pageSize={props.replicaPageSize} />
+            <PageDIDFilereplicas tableData={replicaTableData}/>
         </div>
     )
 }

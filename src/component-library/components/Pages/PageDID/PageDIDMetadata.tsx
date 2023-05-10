@@ -11,6 +11,7 @@ import { DIDType } from "@/lib/core/data/rucio-dto";
 import { DateTag } from "../../Tags/DateTag";
 import { NullTag } from "../../Tags/NullTag";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";
+import { PaginationDiv } from "../../StreamedTables/PaginationDiv";
 
 // misc packages, react
 import { useEffect, useState } from "react"
@@ -21,14 +22,14 @@ import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRigh
 
 // Viewmodels etc
 import { DIDAvailability, DIDKeyValuePairs } from "@/lib/core/data/rucio-dto"
+import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 
 export const PageDIDMetadata = (
     props: {
-        data: DIDKeyValuePairs[], // remember that this is ONLY the custom metadata
-        fetchStatus: FetchStatus,
-        pageSize: number,
+        tableData: TableData<DIDKeyValuePairs> // remember that this is ONLY the custom metadata
     }
 ) => {
+    const tableData = props.tableData
 
     const columnHelper = createColumnHelper<DIDKeyValuePairs>()
     const columns: any[] = [
@@ -70,7 +71,7 @@ export const PageDIDMetadata = (
     ]
 
     const table = useReactTable<DIDKeyValuePairs>({
-        data: props.data || [],
+        data: tableData.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -117,8 +118,8 @@ export const PageDIDMetadata = (
         table.setPageIndex(pageIndex)
     }, [pageIndex])
     useEffect(() => {
-        table.setPageSize(props.pageSize)
-    }, [props.pageSize])
+        table.setPageSize(tableData.pageSize)
+    }, [tableData.pageSize])
 
     return (
         <div
@@ -212,57 +213,7 @@ export const PageDIDMetadata = (
                     )}
                 </tbody>
             </table>
-            <div className="w-full flex justify-center space-x-2 pt-2 border-t dark:border-gray-400 dark:border-t-2">
-                <nav className="w-[400px] flex justify-center space-x-2">
-                    <span className="w-1/3 flex space-x-2">
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(0)
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronDoubleLeft />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.previousPage()
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronLeft />}
-                        />
-                    </span>
-                    <span className="w-1/3 inline-flex space-x-2 items-end">
-                        <NumInput
-                            value={pageIndex + 1}
-                            onChange={(event) => {
-                                setPageIndex(event.target.value - 1)
-                            }}
-                            min={1}
-                            max={table.getPageCount()}
-                        />
-                        <span className="w-full">
-                            <P>
-                                of {table.getPageCount()}
-                            </P>
-                        </span>
-                    </span>
-                    <span className="w-1/3 space-x-2 flex">
-                        <Button
-                            onClick={() => {
-                                table.nextPage()
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronRight />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(table.getPageCount() - 1)
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronDoubleRight />}
-                        />
-                    </span>
-                </nav>
-            </div>
+            <PaginationDiv table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
             <div
                 className={twMerge(
                     "absolute",
@@ -270,7 +221,7 @@ export const PageDIDMetadata = (
                 )}
             // DO WE NEED THIS?
             >
-                <FetchstatusIndicator status={props.fetchStatus} />
+                <FetchstatusIndicator status={tableData.fetchStatus} />
             </div>
         </div>
     )
