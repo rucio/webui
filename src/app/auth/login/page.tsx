@@ -17,7 +17,9 @@ export default function Login() {
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
         const body = {
             username: username,
-            password: password
+            password: password,
+            account: account,
+            vo: vo
         }
         try {
             const res = await fetch('/api/auth/userpass', {

@@ -9,7 +9,7 @@ import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
  * Declares an interface to initiate the UserPassLogin workflow via the {@link UserPassLoginUseCase}
  */
 export interface IUserPassLoginController {
-    handle(username: string, password: string, account: string, session: IronSession, response: NextApiResponse, redirectTo: string): void;
+    handle(username: string, password: string, account: string, vo: string, session: IronSession, response: NextApiResponse, redirectTo: string): void;
 }
 
 /**
@@ -26,12 +26,13 @@ class UserPassLoginController implements IUserPassLoginController {
         this.useCaseFactory = useCaseFactory;
       }
 
-    async handle(username: string, password: string, account: string, session: IronSession, response: NextApiResponse, redirectTo: string) {
+    async handle(username: string, password: string, account: string, vo: string, session: IronSession, response: NextApiResponse, redirectTo: string) {
         this.useCase = this.useCaseFactory(session, response);
         const requestModel: UserpassLoginRequest = {
             username: username,
             password: password,
-            account: 'ddmlab',
+            account: account,
+            vo: vo,
             redirectTo: redirectTo,
         }
         await this.useCase.execute(requestModel);
