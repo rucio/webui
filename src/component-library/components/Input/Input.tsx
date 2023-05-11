@@ -8,6 +8,7 @@ interface TextInputProps {
     placeholder?: string
     show?: "error" | "success" | "standard"
     password?: boolean
+    value?: string
 }
 
 export const Input = ({
@@ -17,6 +18,7 @@ export const Input = ({
     label = "",
     onChange,
     password = false,
+    value = "",
     placeholder = "",
     show,
 }: TextInputProps) => {
@@ -67,6 +69,7 @@ export const Input = ({
                 autoFocus={focusByDefault}
                 disabled={disabled}
                 type={password ? "password" : "text"}
+                value={value}
             >
             </input>
         </div>
