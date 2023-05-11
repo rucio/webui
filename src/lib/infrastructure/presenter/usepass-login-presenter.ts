@@ -1,8 +1,9 @@
 import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login";
+import { SessionUser } from "@/lib/core/entity/auth-models";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
-import { setEmptySession } from "../auth/session-utils";
+import { setActiveSessionUser, setEmptySession } from "../auth/session-utils";
 import type { AuthViewModel } from "../data/auth/auth";
 
 
@@ -29,7 +30,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
         }
 
-        this.session.user = {
+        const sessionUser: SessionUser = {
             rucioIdentity: responseModel.rucioIdentity,
             rucioAccount: responseModel.rucioAccount,
             rucioAuthType: 'userpass',
@@ -39,7 +40,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
         }
         
-        await this.session.save();
+        await setActiveSessionUser(this.session, sessionUser);
 
         this.response.status(200).json(viewModel);
     }

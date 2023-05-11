@@ -15,11 +15,13 @@ export const sessionOptions: IronSessionOptions = {
 /**
  * Extend the default session type with the user property
  * @property user - The current user, if a user is logged in
+ * @property allUsers - All users that are logged in
  * @property redirectAfterLogin - The path to redirect to after login
  */
 declare module 'iron-session' {
     interface IronSessionData {
         user?: SessionUser
+        allUsers?: SessionUser[]
         redirectAfterLogin?: string
     }
 }
