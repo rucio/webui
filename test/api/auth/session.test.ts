@@ -32,6 +32,7 @@ describe('IronSession tests', () => {
             rucioAuthTokenExpires: '2021-09-01T12:00:00Z',
             rucioAuthType: 'userpass',
             rucioOIDCProvider: 'cern',
+            rucioVO: 'def',
             isLoggedIn: true
         }
         await session.save();
@@ -70,6 +71,7 @@ describe('IronSession tests', () => {
             rucioAccount: 'root',
             rucioIdentity: 'ddmlab',
             rucioAuthType: 'userpass',
+            rucioVO: 'def',
             rucioOIDCProvider: null,
             isLoggedIn: true
         }
@@ -80,6 +82,7 @@ describe('IronSession tests', () => {
             rucioAccount: 'root',
             rucioIdentity: 'ddmlab',
             rucioAuthType: 'x509',
+            rucioVO: 'def',
             rucioOIDCProvider: null,
             isLoggedIn: true
         }
@@ -121,6 +124,7 @@ describe('IronSession tests', () => {
             rucioIdentity: 'ddmlab',
             rucioAuthType: 'userpass',
             rucioOIDCProvider: null,
+            rucioVO: 'def',
             isLoggedIn: true
         }
 
@@ -131,6 +135,7 @@ describe('IronSession tests', () => {
             rucioIdentity: 'autre',
             rucioAuthType: 'userpass',
             rucioOIDCProvider: null,
+            rucioVO: 'def',
             isLoggedIn: true
         }
 
