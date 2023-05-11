@@ -9,7 +9,8 @@ export type SessionUser = {
     rucioIdentity: string
     rucioAuthType: 'x509' | 'userpass' | 'oidc' | null
     rucioOIDCProvider: string | null
-    isLoggedIn: boolean
+    rucioVO: string
+    isLoggedIn: boolean,
 }
 
 /**
