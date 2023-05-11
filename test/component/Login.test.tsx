@@ -78,6 +78,14 @@ describe("Login Page Test", () => {
         fireEvent.click(userpassButton)
         expect(loginFormParent.className).toContain('hidden')
 
+        // check only 1 account field is rendered
+        const accountFieldParent = screen.getByTestId('all-accounts')
+        expect(accountFieldParent.className).not.toContain('hidden')
+        fireEvent.click(userpassButton)
+        expect(accountFieldParent.className).toContain('hidden')
+        fireEvent.click(userpassButton)
+        expect(accountFieldParent.className).not.toContain('hidden')
+
         // Check no error message is rendered
         const errorElement = screen.queryByTestId('login-page-error')
         expect(errorElement?.className).toBe('hidden')

@@ -115,7 +115,13 @@ export const Login = ({
                             }}>
                                 <TextInput label="Username" inline onChange={(event) => { setUsername(event.target.value) }} />
                                 <TextInput label="Password" inline password onChange={(event) => { setPassword(event.target.value) }} />
+                                <TextInput value={account? account: ''} label="Account Name (Optional)" inline onChange={(event) => { setAccount(event.target.value) }} />
                             </CredentialInput>
+                        </Collapsible>
+                        <Collapsible showIf={!showUserPassLoginForm} id="all-accounts">
+                            <div className="mb-2 mr-10 ml-10">
+                                <TextInput value={account? account: ''} label="Account Name (Optional)" inline onChange={(event) => { setAccount(event.target.value) }} />
+                            </div>
                         </Collapsible>
                     </div>
                 </div>
