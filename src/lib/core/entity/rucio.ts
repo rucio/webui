@@ -62,3 +62,7 @@ export type RSE = {
 
 // rucio.db.sqla.constants::ReplicaState
 export type ReplicaState = "Available" | "Unavailable" | "Copying" | "Being_Deleted" | "Bad" | "Temporary_Unavailable"
+
+// rucio.db.sqla.constants::RuleState
+// R/O/S/U/W/I
+export type RuleState = "Replicating" | "OK" | "Stuck" | "Suspended" | "Waiting_Approval" | "Inject"

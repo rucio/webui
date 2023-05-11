@@ -1,4 +1,5 @@
 import { ReplicaState } from "@/lib/core/entity/rucio"
+import { RuleState } from "@/lib/core/entity/rucio"
 
 export type FilereplicaStateD = {
     scope: string,
@@ -24,3 +25,12 @@ export type DIDParents = {
 
 // these are general key-value pairs including the metadata
 export type DIDKeyValuePairs = { key: string; value: string | number | boolean | Date | null }
+
+export type DIDRules = {
+    id: string;
+    name: string;
+    state: RuleState;
+    account: string;
+    subscription: {name: string, account: string}; // name and account together are unique for a subscription
+    last_modified: Date;
+}

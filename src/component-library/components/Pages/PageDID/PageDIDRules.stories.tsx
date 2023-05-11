@@ -1,182 +1,16 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { PageDID as PD } from "./PageDID";
-
-import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/createRule";
+import { PageDIDRules as P } from "./PageDIDRules";
 
 export default {
-    title: "Components/Pages/PageDID",
-    component: PD,
-} as Meta<typeof PD>;
+    title: 'components/Pages/PageDID',
+    component: P,
+} as Meta<typeof P>;
 
-const Template: StoryFn<typeof PD> = (args) => <PD {...args} />;
-export const PageDID = Template.bind({});
-PageDID.args = {
-    didMeta: {
-        "name": "dataset-YSytZjXJMdiCsSiiUwXx",
-        "scope": "Lawrence.Myers",
-        "account": "Lawrence_Myers",
-        "did_type": "Dataset",
-        "created_at": new Date(2021, 3),
-        "updated_at": new Date(2022, 10),
-        "availability": "Deleted",
-        "obsolete": false,
-        "hidden": true,
-        "suppressed": true,
-        "purge_replicas": true,
-        "monotonic": true,
-        "is_open": true,
-        "adler32": null,
-        "guid": null,
-        "md5": null,
-        "filesize": null
-    },
-    fromDidList: "yosearch",
-    // Parent DIDs [FILE]
-    didParentsSearch: (didSearchQuery: DIDSearchQuery) => { console.log(didSearchQuery) },
-    didParentsResponse: {
-        data: [
-            { "scope": "user.JonathanPerry", "name": "container-CiFhxTRuwjdvaQQeELSz", "did_type": "Container" },
-            { "scope": "user.KristenRoberts", "name": "container-FBhdaoLCaXWGhkITdZDo", "did_type": "Container" },
-            { "scope": "user.LindsayCunningham", "name": "container-sjtligDkHFzCvTlHHViB", "did_type": "Container" },
-            { "scope": "user.MichelleNelson", "name": "container-ywVaczrfQxnWBKlSWdHS", "did_type": "Dataset" },
-            { "scope": "user.ElizabethWong", "name": "dataset-NOKpAdZHtZJGWXUJZgLL", "did_type": "Container" },
-            { "scope": "user.JasonThompson", "name": "dataset-HvjKaFsxdEfFgtPwJsVN", "did_type": "Container" },
-            { "scope": "user.RobertLewis", "name": "container-ArwcGlrcDYGmQQrUFjvX", "did_type": "Container" },
-            { "scope": "user.TammyWilson", "name": "dataset-VYTPOCwsECetZENrtvET", "did_type": "Container" },
-            { "scope": "user.EmilyPatterson", "name": "container-DuEUODGkTvhhWsoLOZGz", "did_type": "Dataset" },
-            { "scope": "user.BethMontes", "name": "dataset-fFFmkKdGzwrCnZxcgfva", "did_type": "Container" },
-            { "scope": "user.MicheleLee", "name": "container-yDaHisaijzWyJPDCmYKn", "did_type": "Dataset" },
-            { "scope": "user.RyanJenkins", "name": "container-CdWbKaqikyBXDsVhuFps", "did_type": "Dataset" },
-            { "scope": "user.StephanieRice", "name": "container-lNDVuIPsuUMZuTonUszn", "did_type": "Dataset" },
-            { "scope": "user.DennisMejia", "name": "dataset-kYUROcXgfgMlqqhPTzUL", "did_type": "Container" },
-            { "scope": "user.RachelMunoz", "name": "dataset-FhBstRFhkQpothGBrmvZ", "did_type": "Dataset" },
-            { "scope": "user.ZacharyPeterson", "name": "container-LllblDRkBkhikKgvibLy", "did_type": "Container" },
-            { "scope": "user.NicholasMoore", "name": "container-OBWskIpfjLsXcuwUljeA", "did_type": "Container" },
-            { "scope": "user.NathanMartin", "name": "container-xjeeufdwZfyXZFTNLnwK", "did_type": "Dataset" },
-            { "scope": "user.ValerieBrown", "name": "dataset-zmNgBZUyeBPgnzgsyXuA", "did_type": "Dataset" },
-            { "scope": "user.DennisPrice", "name": "dataset-SzdvUGoaSwwRIPpYRoNi", "did_type": "Dataset" },
-            { "scope": "user.BonnieKing", "name": "dataset-DCdMCvRVEKBRfDnyGNmM", "did_type": "Container" },
-            { "scope": "user.JustinKirby", "name": "dataset-muYJhMUhfbXbOORnPsho", "did_type": "Container" },
-            { "scope": "user.PamelaRobbins", "name": "container-bAoZCwskmlyRFInaMxYt", "did_type": "Dataset" },
-            { "scope": "user.CatherineSpencer", "name": "container-TAUKSbZyGLNKVrLJlVIW", "did_type": "Container" },
-            { "scope": "user.SophiaHarris", "name": "dataset-cozvFMvuuHyFVnAKHboi", "did_type": "Dataset" },
-            { "scope": "user.LisaAllen", "name": "dataset-HcndjXlpgWKFeMbBeDql", "did_type": "Container" },
-            { "scope": "user.ChristopherFlowers", "name": "dataset-ZQiLbIEGqJCFArddilDf", "did_type": "Container" },
-            { "scope": "user.KarenRusso", "name": "container-wnWKmRiByhbGlhKwZUiy", "did_type": "Dataset" },
-            { "scope": "user.BrittneyMejia", "name": "dataset-oBqmQaHdqpjkJtKaWOJE", "did_type": "Dataset" },
-            { "scope": "user.SuzanneSmith", "name": "dataset-UYHhwaQlAVXrjOSYjLyl", "did_type": "Container" },
-            { "scope": "user.LisaRowland", "name": "dataset-KxvstUMDvvomIxCwpxky", "did_type": "Container" },
-            { "scope": "user.AlexaMiller", "name": "dataset-TCcJGwSdbIJhHGjyuRAb", "did_type": "Container" },
-            { "scope": "user.JohnWebb", "name": "container-zDHjDueoVabztvUdXCso", "did_type": "Container" },
-            { "scope": "user.PeterBauer", "name": "dataset-hGlqlAFEFKJpUmKrZsUa", "did_type": "Container" },
-            { "scope": "user.JavierRiley", "name": "dataset-RMBaYybySwUuDsUhoUpP", "did_type": "Dataset" },
-            { "scope": "user.TinaSanchez", "name": "dataset-CuSbZNIWBaUJiFiZyIXJ", "did_type": "Container" },
-            { "scope": "user.JohnHo", "name": "container-xesLHpwYmGLGyYLShNjB", "did_type": "Dataset" },
-            { "scope": "user.DorothyVelez", "name": "dataset-XLyjjWEJZxYmBqGrEuEq", "did_type": "Dataset" },
-            { "scope": "user.NatalieDickerson", "name": "container-FhoPFizJEUKTAvsZHKlZ", "did_type": "Dataset" },
-            { "scope": "user.TommyReynolds", "name": "dataset-uUVenbBvzqMqgLjHNqiV", "did_type": "Container" },
-            { "scope": "user.MonicaSanchez", "name": "container-tKaYFFofdbTRZlLLHJEp", "did_type": "Dataset" },
-            { "scope": "user.MatthewCrawford", "name": "container-gJFkhjPsqYXcnEBHraNz", "did_type": "Dataset" },
-            { "scope": "user.TroyGreer", "name": "container-dOmcBYhyvtXWmAOZaFVO", "did_type": "Container" },
-            { "scope": "user.SaraWong", "name": "dataset-VTLgsxDkyeQwxXnBbwPn", "did_type": "Container" },
-            { "scope": "user.NicholeChandler", "name": "container-kinqxtQnYYSuMBqiCBcl", "did_type": "Container" },
-            { "scope": "user.CynthiaLewis", "name": "dataset-kxwpLEdrJsLYkrZvbxZd", "did_type": "Container" },
-            { "scope": "user.JamesPratt", "name": "container-uhQVhcEDCbBogmOljKke", "did_type": "Container" },
-            { "scope": "user.NicholasChase", "name": "container-VBocIpNtSkuvvbNpxhsI", "did_type": "Container" },
-            { "scope": "user.MichaelBlack", "name": "container-HVzdplMhIJoKoLyeEVpT", "did_type": "Container" },
-            { "scope": "user.BeverlyMitchell", "name": "dataset-FcTphEovdbHHAgkqzckp", "did_type": "Dataset" },
-            { "scope": "user.RobertHogan", "name": "container-KmlbKNNBAsbnIIgiGhck", "did_type": "Container" },
-            { "scope": "user.DonnaCaldwell", "name": "dataset-sLZLSijmRkKdPQQtIkTd", "did_type": "Dataset" },
-            { "scope": "user.LisaLarson", "name": "dataset-UYBfijCmuTqOsEosnZiW", "did_type": "Container" },
-            { "scope": "user.DanielLozano", "name": "container-YtszvcuFJkYBsPjrtEKC", "did_type": "Container" },
-            { "scope": "user.JustinYang", "name": "container-VHLnVpXHKhhLCscsdLCz", "did_type": "Container" },
-            { "scope": "user.ChristopherConner", "name": "container-mkxfgftGGotTbGzYidlA", "did_type": "Container" },
-            { "scope": "user.RandyHoward", "name": "dataset-FUClHSeGYPraCwdkdURO", "did_type": "Container" },
-            { "scope": "user.TylerRobbins", "name": "container-egZXJFbEPlhZtDESXGKP", "did_type": "Dataset" },
-            { "scope": "user.RichardBaker", "name": "container-HeRnYBmVFMuoqQiQoNTg", "did_type": "Container" },
-            { "scope": "user.ParkerThomas", "name": "container-SxMhJdjPpowdYnlzPJJp", "did_type": "Container" },
-            { "scope": "user.StephenMcknight", "name": "container-OWwKVnMpCeWFnCamTsck", "did_type": "Container" },
-            { "scope": "user.MargaretRogers", "name": "dataset-PRDcEfPsqMWBDemsbZBV", "did_type": "Container" },
-            { "scope": "user.StephanieMoore", "name": "dataset-wWdqanoWyWZFmtMXONkP", "did_type": "Container" },
-            { "scope": "user.AdamSolis", "name": "dataset-ZKVtNoUwhRkvBOyrkDTN", "did_type": "Container" },
-            { "scope": "user.LauraClark", "name": "dataset-APEiEbweQvWuAqcZBjYX", "did_type": "Container" },
-            { "scope": "user.BrandiTaylor", "name": "dataset-YoGzQvDRmjkpqhpmRNBP", "did_type": "Container" },
-            { "scope": "user.KathleenLin", "name": "container-aMOZOKQoPMXbRxnIFVvq", "did_type": "Dataset" },
-            { "scope": "user.GregoryBurke", "name": "container-PmrbbYgwpkLtMhKCCXTe", "did_type": "Dataset" },
-            { "scope": "user.RebeccaCarter", "name": "container-RMBHQzIAcYdiDqnzjLFC", "did_type": "Dataset" },
-            { "scope": "user.EvanSchneider", "name": "container-xTtElpBaggiYUfrxzDkV", "did_type": "Container" },
-            { "scope": "user.JeremyPatel", "name": "dataset-HNBXPedhYFaBfittJTcQ", "did_type": "Dataset" },
-            { "scope": "user.TamaraPowell", "name": "container-XziLmJOqZUtAETjfGZOa", "did_type": "Dataset" },
-            { "scope": "user.LonnieJones", "name": "dataset-RGzmNpwPdqArCHIYFPUw", "did_type": "Container" },
-            { "scope": "user.JulieBennett", "name": "dataset-ZUlRNGBUJmsauKBWcHas", "did_type": "Container" },
-            { "scope": "user.MichaelBryant", "name": "dataset-qtfuGBAXgvHDKktNTDex", "did_type": "Container" },
-            { "scope": "user.MelindaWade", "name": "dataset-uBGkqMDikoKGlmyneyyu", "did_type": "Container" },
-            { "scope": "user.LoriLewis", "name": "container-jFerYByeDfHsEEzyBMDJ", "did_type": "Container" },
-            { "scope": "user.HeatherBell", "name": "dataset-ZvtQGiAlSFJZNqlKczYm", "did_type": "Dataset" },
-            { "scope": "user.RebeccaRowland", "name": "dataset-jiKtRyCkYIURaYkPtaXT", "did_type": "Dataset" },
-            { "scope": "user.BrendaAlexander", "name": "container-UHDeQjWwxpOSrvaGOOKm", "did_type": "Container" },
-            { "scope": "user.WilliamByrd", "name": "container-usIyRQICDvtJvSPbxgfe", "did_type": "Container" },
-            { "scope": "user.BruceHolloway", "name": "dataset-oSwhbUWHPOmXVdaxTsbQ", "did_type": "Container" },
-            { "scope": "user.SamanthaThompson", "name": "dataset-KwGGRweNamLbZjXRBhXc", "did_type": "Dataset" },
-            { "scope": "user.MarieWilliams", "name": "container-OhpheVMIMCBENPLEAJxO", "did_type": "Container" },
-            { "scope": "user.ReginaldLopez", "name": "container-jNOIrXMOWjcufRGmsKih", "did_type": "Container" },
-            { "scope": "user.TylerCervantes", "name": "container-ePtRRjtOYgnuzEFjcXKO", "did_type": "Container" },
-            { "scope": "user.YvonneBurch", "name": "container-utWSEwtYIFSRqehKsCta", "did_type": "Dataset" },
-            { "scope": "user.StevenEvans", "name": "dataset-XyclDKIZIWEObsetPnUh", "did_type": "Dataset" },
-            { "scope": "user.MelindaHunter", "name": "container-ObLvyUuZBBbZHmBGSNkr", "did_type": "Container" },
-            { "scope": "user.KatrinaJohnson", "name": "container-CycXtGUWyBKZBoSFHkzi", "did_type": "Dataset" },
-            { "scope": "user.TimothyHansen", "name": "dataset-AtEEUPYGaYRBMSdqcMKv", "did_type": "Container" },
-            { "scope": "user.JanetHoffman", "name": "container-mCMgkEhBLUpduwjPSVHM", "did_type": "Dataset" },
-            { "scope": "user.LuisWright", "name": "dataset-mLETNnlzHWJNhWOoVWgX", "did_type": "Container" },
-            { "scope": "user.RobertSmith", "name": "container-QvMVjxggobzWZcxEBEDi", "did_type": "Dataset" },
-            { "scope": "user.KevinMiller", "name": "container-MLSUueVCEfcjrfkYWpmy", "did_type": "Container" },
-            { "scope": "user.BrendaRich", "name": "dataset-aKzqhsRscYRbHQpRekXp", "did_type": "Container" },
-            { "scope": "user.BethanyJames", "name": "container-tMoCTdkePVTrIAjKQXLe", "did_type": "Dataset" },
-            { "scope": "user.WilliamAnderson", "name": "dataset-WVGuXufUnjUPlJZSzuTz", "did_type": "Container" },
-            { "scope": "user.JenniferWise", "name": "dataset-DEVVgemaOOuhMqBawUvL", "did_type": "Dataset" },
-            { "scope": "user.ThomasSmall", "name": "container-YaQGxbdHDdaPRHiMTSgg", "did_type": "Container" }
-        ],
-        fetchStatus: "idle"
-    },
-    // DID Metadata
-    didMetadataSearch: (didSearchQuery: DIDSearchQuery) => { console.log(didSearchQuery) },
-    didMetadataResponse: {
-        data: [
-            { key: "bernd", value: "das brot" },
-            { key: "kika", value: "der sender" },
-            { key: "kikaninchen", value: "das tier" },
-            { key: "my birthday", value: new Date(2021, 3) },
-            { key: "am_i_anton", value: false },
-            { key: "R1-tastefactor", value: 3.142 },
-            { key: "hello", value: null },
-        ],
-        fetchStatus: "idle"
-    },
-    // Filereplicas
-    didFileReplicasSearch: (didSearchQuery: DIDSearchQuery) => { console.log(didSearchQuery) },
-    didFileReplicasResponse: {
-        data: [
-            { rse: "FRESNO-AWS_SCRATCHDISK", state: "Available" },
-            { rse: "PRAGUELCG2_SCRATCHDISK", state: "Unavailable" },
-            { rse: "BNL-OSG2_SCRATCHDISK", state: "Copying" },
-            { rse: "BNL-OSG2_SCRATCHDISK", state: "Being_Deleted" },
-            { rse: "BNL-OSG2_SCRATCHDISK", state: "Bad" },
-            { rse: "BNL-OSG2_SCRATCHDISK", state: "Temporary_Unavailable" },
-        ],
-        fetchStatus: "idle"
-    },
-    didDatasetReplicasSearch: (didSearchQuery: DIDSearchQuery) => { console.log(didSearchQuery) },
-    didDatasetReplicasResponse: {
-        data: [
-            { scope: "mc16_13TeV", name: "DAOD_EXOT12.123456784", Available: 1, Unavailable: 0, Copying: 0, Being_Deleted: 0, Bad: 0, Temporary_Unavailable: 0 },
-            { scope: "mc16_14TeV", name: "DAOD_EXOT12.123456749", Available: 1, Unavailable: 1, Copying: 0, Being_Deleted: 0, Bad: 2, Temporary_Unavailable: 0 },
-            { scope: "mc16_15TeV", name: "DAOD_EXOT12.123456791", Available: 0, Unavailable: 0, Copying: 0, Being_Deleted: 0, Bad: 2, Temporary_Unavailable: 1 },
-            { scope: "mc15_16TeV", name: "DAOD_EXOT12.123456811", Available: 3, Unavailable: 0, Copying: 1, Being_Deleted: 1, Bad: 0, Temporary_Unavailable: 0 },
-        ],
-        fetchStatus: "idle"
-    },
-    didRulesSearch: (didSearchQuery: DIDSearchQuery) => { console.log(didSearchQuery) },
-    didRulesResponse: {
+const Template: StoryFn<typeof P> = (args) => <P {...args} />;
+
+export const PageDIDRules = Template.bind({});
+PageDIDRules.args = {
+    tableData: {
         data: [
             { "id": "02b2007e-dbde-4dd0-ae7d-f1b71e4676d7", "name": "RULE-zTKiSFerUFaqzjsZBMXa", "state": "Suspended", "account": "user.JenniferSteele", "subscription": { "name": "KyFYeASoISJXKvvYMBlo", "account": "user.NormaConley" }, "last_modified": new Date("Fri, 05 May 2023 15:48:41 UTC") },
             { "id": "1c37891c-23b3-4922-8f6d-5132ed8fcb38", "name": "RULE-SrAaQGRrgQGxePeyhAWI", "state": "Replicating", "account": "user.RachelSmith", "subscription": { "name": "gepGcTBEYberbgbFBYso", "account": "user.MicheleValdez" }, "last_modified": new Date("Tue, 18 Apr 2023 09:29:41 UTC") },
@@ -278,8 +112,8 @@ PageDID.args = {
             { "id": "6b9c2fcc-9cf6-4a3d-988e-0b64b44e1cb3", "name": "RULE-jTmhopHyGtFQSchXPMZS", "state": "OK", "account": "user.TommySmith", "subscription": { "name": "hXJdzYfVmbIcFeDQcYUV", "account": "user.EricHughes" }, "last_modified": new Date("Tue, 18 Apr 2023 19:04:50 UTC") },
             { "id": "c8307d59-3d8b-4523-bce8-eb75e928191f", "name": "RULE-OSeZLkFvJGhrqMmRaxdR", "state": "Inject", "account": "user.KeithLawrence", "subscription": { "name": "kGgAFBZFYgymrKigQsyW", "account": "user.RebeccaGilbert" }, "last_modified": new Date("Sun, 05 Mar 2023 13:41:41 UTC") },
             { "id": "77c949c9-d295-45a3-91a1-fff484080d46", "name": "RULE-LGKKKTHNXHDZJLzUFRpJ", "state": "Replicating", "account": "user.ChristopherBrewer", "subscription": { "name": "uNbpZhWNBnYbNzquMeAV", "account": "user.HectorClark" }, "last_modified": new Date("Fri, 03 Feb 2023 10:25:11 UTC") },
-
         ],
-        fetchStatus: "idle"
-    },
-}
+        fetchStatus: "idle",
+        pageSize: 10,
+    }
+};

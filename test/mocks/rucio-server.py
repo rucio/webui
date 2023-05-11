@@ -212,6 +212,29 @@ def didparents():
     except Exception as e:
         return flask.Response(status=500, response=str(e))
 
+@app.route("/didrules")
+def didrules():
+    long_list = [
+        {
+            "id": fake.uuid4(),
+            "name": f"RULE-{fake.pystr()}",
+            "state": random.choice(["Replicating", "OK", "Stuck", "Suspended", "Waiting_Approval", "Inject"]),
+            "account": fake.pystr_format("user.{{first_name}}{{last_name}}"),
+            "subscription": {"name": fake.pystr(), "account": fake.pystr_format("user.{{first_name}}{{last_name}}")},
+            "last_modified": fake.date_time_this_year(),
+        } for _ in range(100)
+    ]
+    try:
+        def generate():
+            for i in long_list:
+                # time.sleep(2)
+                print(f"sending {i}")
+                yield render_json(i) + '\n'
+                print("sleeping")
+
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
 
 
 if __name__ == '__main__':

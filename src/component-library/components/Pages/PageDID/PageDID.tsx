@@ -17,6 +17,7 @@ import { PageDIDParents } from "./PageDIDParents";
 import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
 import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
+import { PageDIDRules } from "./PageDIDRules";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
@@ -33,6 +34,9 @@ export interface PageDIDPageProps {
     // File Replica States [DATASET]
     didDatasetReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
     didDatasetReplicasResponse: { data: any; fetchStatus: FetchStatus}
+    // Rule State [DATASET]
+    didRulesSearch: (didSearchQuery: DIDSearchQuery) => void
+    didRulesResponse: { data: any; fetchStatus: FetchStatus}
 }
 
 const SubPage: (
@@ -128,7 +132,12 @@ export const PageDID = (
                         show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 0 : subpageIndex === 1}
                         id="subpage-rules"
                     >
-                        Rules
+                        <PageDIDRules tableData={{
+                            data: props.didRulesResponse.data,
+                            fetchStatus: props.didRulesResponse.fetchStatus,
+                            pageSize: 10
+                        }}
+                        />
                     </SubPage>
                     <SubPage
                         show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 1 : false}
