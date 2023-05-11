@@ -33,7 +33,7 @@ describe('UserPassLogin API Test', () => {
             method: 'POST',
             body: {
                 username: 'ddmlab',
-                password: 'secret'
+                password: 'secret',
             }
         });
         const session = await getIronSession(req, res, {
@@ -47,7 +47,7 @@ describe('UserPassLogin API Test', () => {
         await setEmptySession(session, true)
 
         const userpassLoginController = appContainer.get<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN)
-        await userpassLoginController.handle(req.body.username, req.body.password, '', session, res as undefined as NextApiResponse, '/dashboard');
+        await userpassLoginController.handle(req.body.username, req.body.password, 'ddmlab', 'def', session, res as undefined as NextApiResponse, '/dashboard');
         expect(res._getStatusCode()).toBe(200);
         const viewModel: AuthViewModel = JSON.parse(res._getData());
         expect(viewModel).toHaveProperty('rucioIdentity');

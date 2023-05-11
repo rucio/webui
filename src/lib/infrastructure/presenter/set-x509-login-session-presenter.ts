@@ -22,6 +22,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
             rucioIdentity: responseModel.rucioIdentity,
             rucioAuthType: 'x509',
+            rucioVO: responseModel.shortVOName,
             rucioAccount: responseModel.rucioAccount,
             rucioOIDCProvider: '',
         }
