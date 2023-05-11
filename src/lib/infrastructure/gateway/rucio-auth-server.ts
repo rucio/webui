@@ -9,7 +9,7 @@ import { injectable } from "inversify";
  */
 @injectable()
 class RucioAuthServer implements AuthServerGatewayOutputPort {
-    async userpassLogin(username: string, password: string, account: string): Promise<UserPassLoginAuthServerDTO> {
+    async userpassLogin(username: string, password: string, account: string, vo: string): Promise<UserPassLoginAuthServerDTO> {
         const authHost = process.env.RUCIO_AUTH_HOST
         const userpassEndpoint = '/auth/userpass'
         const url = authHost + userpassEndpoint
@@ -23,7 +23,8 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 'X-Rucio-AppID': 'webui',
                 'X-Rucio-Username': username,
                 'X-Rucio-Password': password,
-                'X-Rucio-Account': 'root' // TODO: remove this hard-coded value
+                'X-Rucio-Account': account,
+                'X-Rucio-VO': vo,
             },
 
         })

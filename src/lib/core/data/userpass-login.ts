@@ -7,6 +7,7 @@ export type UserpassLoginRequest = {
     username: string;
     password: string;
     account: string;
+    vo: string;
     redirectTo: string;
 }
 
@@ -16,6 +17,7 @@ export type UserpassLoginRequest = {
 export type UserpassLoginResponse = {
     rucioIdentity: string;
     rucioAccount: string;
+    vo: string;
     rucioAuthToken: string;
     rucioAuthTokenExpires: string;
 }
