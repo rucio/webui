@@ -1,16 +1,30 @@
 /**
+ * Representing information about the user that is safe to be shared with the frontend app
+ */
+export type User = {
+    rucioIdentity: string
+    rucioAccount: string
+    rucioVO: string
+    role: "user" | "admin"
+}
+
+/**
  * Rucio User Model obtained after a successful login via any of the supported auth methods
  * This model is stored in the session cookie
+ * @property rucioAuthToken - The Rucio auth token
+ * @property rucioAuthTokenExpires - The Rucio auth token expiration timestamp
+ * @property rucioAccount - The Rucio account
+ * @property rucioIdentity - The Rucio identity
+ * @property rucioAuthType - The Rucio auth type
+ * @property rucioOIDCProvider - The Rucio OIDC provider
+ * @property rucioVO - The Rucio VO (short name)
  */
-export type SessionUser = {
+export interface SessionUser extends User {
     rucioAuthToken: string
     rucioAuthTokenExpires: string
-    rucioAccount: string
-    rucioIdentity: string
     rucioAuthType: 'x509' | 'userpass' | 'oidc' | null
     rucioOIDCProvider: string | null
-    rucioVO: string
-    isLoggedIn: boolean,
+    isLoggedIn: boolean
 }
 
 /**
