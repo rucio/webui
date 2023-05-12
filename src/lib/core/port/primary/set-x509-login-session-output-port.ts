@@ -1,4 +1,4 @@
-import { SetX509LoginSessionError, SetX509LoginSessionResponse } from "../../data/set-x509-login-session";
+import { SetX509LoginSessionError, SetX509LoginSessionResponse } from "../../data/set-x509-login-session-usecase-models";
 
 export default interface SetX509LoginSessionOutputPort<T> {
     response: T;

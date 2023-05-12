@@ -1,4 +1,4 @@
-import { SetX509LoginSessionRequest } from "@/lib/core/data/set-x509-login-session";
+import { SetX509LoginSessionRequest } from "@/lib/core/data/set-x509-login-session-usecase-models";
 import SetX509LoginSessionInputPort from "@/lib/core/port/primary/set-x509-login-session-input-port";
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";

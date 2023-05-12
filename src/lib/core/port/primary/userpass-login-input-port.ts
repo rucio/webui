@@ -1,4 +1,4 @@
-import { UserpassLoginRequest } from "../../data/userpass-login";
+import { UserpassLoginRequest } from "../../data/userpass-login-usecase-models";
 
 /**
  * InputPort for UserPassLogin workflow. This is implemented by {@link UserPassLoginUseCase}

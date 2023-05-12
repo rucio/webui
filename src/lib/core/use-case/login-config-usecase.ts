@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { ConfigNotFound, InvalidConfig } from "../data/env-config-exceptions";
-import { LoginConfigResponse } from "../data/login-config";
+import { LoginConfigResponse } from "../data/login-config-usecase-models";
 import type LoginConfigInputPort from "../port/primary/login-config-input-port";
 import type LoginConfigOutputPort from "../port/primary/login-config-output-port";
 import type EnvConfigGatewayOutputPort from "../port/secondary/env-config-gateway-output-port";

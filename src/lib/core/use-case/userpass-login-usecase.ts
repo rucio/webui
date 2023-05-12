@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { UserpassLoginRequest, UserpassLoginResponse, UserpassLoginError } from "../data/userpass-login";
+import { UserpassLoginRequest, UserpassLoginResponse, UserpassLoginError } from "../data/userpass-login-usecase-models";
 import UserPassLoginInputPort from "../port/primary/userpass-login-input-port";
 import type UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";
 import type AuthServerGatewayOutputPort from "../port/secondary/auth-server-gateway-output-port";

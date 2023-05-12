@@ -1,4 +1,4 @@
-import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login";
+import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login-usecase-models";
 import { SessionUser } from "@/lib/core/entity/auth-models";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 import { IronSession } from "iron-session";

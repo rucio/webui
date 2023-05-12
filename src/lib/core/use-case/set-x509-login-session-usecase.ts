@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { SetX509LoginSessionError, SetX509LoginSessionRequest, SetX509LoginSessionResponse } from "../data/set-x509-login-session";
+import { SetX509LoginSessionError, SetX509LoginSessionRequest, SetX509LoginSessionResponse } from "../data/set-x509-login-session-usecase-models";
 import { VO } from "../entity/auth-models";
 import SetX509LoginSessionInputPort from "../port/primary/set-x509-login-session-input-port";
 import type SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-session-output-port";
