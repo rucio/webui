@@ -37,6 +37,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthToken: responseModel.rucioAuthToken,
             rucioOIDCProvider: null,
             rucioVO: responseModel.vo,
+            role: 'user',
             isLoggedIn: true,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
         }

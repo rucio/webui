@@ -72,6 +72,7 @@ export async function setEmptySession(
         rucioAuthTokenExpires: '',
         rucioOIDCProvider: null,
         rucioVO: '',
+        role: 'user',
         isLoggedIn: false,
     }
     session.user = sessionUser
