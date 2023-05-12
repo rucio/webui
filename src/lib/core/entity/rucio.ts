@@ -66,3 +66,7 @@ export type ReplicaState = "Available" | "Unavailable" | "Copying" | "Being_Dele
 // rucio.db.sqla.constants::RuleState
 // R/O/S/U/W/I
 export type RuleState = "Replicating" | "OK" | "Stuck" | "Suspended" | "Waiting_Approval" | "Inject"
+
+// octal representation of the blockstate
+// read/write/delete
+export type RSEBlockState = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;

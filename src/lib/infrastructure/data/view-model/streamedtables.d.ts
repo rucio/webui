@@ -9,4 +9,4 @@ export interface TableData<T> {
 // a columndef can be extended by an additional meta property
 // this meta property can be used to store additional information,
 // e.g. a style class for the column
-export type StyleMetaColumnDef<T> = ColumnDef<T> & { meta: { style: string } }
+export type StyleMetaColumnDef<T> = ColumnDef<T> & { meta: { style: string, filter?: boolean } }

@@ -15,6 +15,7 @@ import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRigh
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator"
 import { DIDType } from "@/lib/core/data/rucio-dto"
+import { FullFilter } from "../../StreamedTables/FullFilter";
 
 export const PageDIDContents = (
     props: {
@@ -53,44 +54,12 @@ export const PageDIDContents = (
             },
             header: (info) => {
                 return (
-                    <div>
-                        <div className="flex flex-row items-center space-x-8 justify-between">
-                            <span className="shrink-0">
-                                <H3>DID</H3>
-                            </span>
-                            <span className="hidden sm:flex w-full">
-                                <Filter column={table.getColumn("did") as Column<DIDContents, unknown>} table={table} />
-                            </span>
-                            <span className="flex sm:hidden pr-4 relative">
-                                <button
-                                    onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
-                                >
-                                    <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
-                                </button>
-                            </span>
-                        </div>
-                        <div
-                            id="smallScreenNameFiltering"
-                            className={twMerge(
-                                "absolute inset-0",
-                                smallScreenNameFiltering ? "flex" : "hidden",
-                                "bg-white",
-                                "p-2 flex-row justify-between space-x-2 items-center"
-                            )}
-                        >
-                            <Filter column={table.getColumn("did") as Column<DIDContents, unknown>} table={table} />
-                            <button
-                                onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
-                            >
-                                <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
-                            </button>
-                        </div>
-                    </div>
-
+                    <p>Should not be visible</p>
                 )
             },
             meta: {
-                style: "grow pl-2"
+                style: "grow pl-2",
+                filter: true
             }
         }),
         columnHelper.accessor("did_type", {
@@ -186,13 +155,6 @@ export const PageDIDContents = (
             window.removeEventListener('resize', handleWindowResize);
         };
     }, []);
-    // using the window size to determine whether we shall show the input form with full width
-    const [smallScreenNameFiltering, setSmallScreenNameFiltering] = useState(false)
-    useEffect(() => {
-        if (windowSize[0] > 640) {
-            setSmallScreenNameFiltering(false)
-        }
-    }, [windowSize])
 
     // Pagination
     const [pageIndex, setPageIndex] = useState(table.getState().pagination.pageIndex)
@@ -229,7 +191,11 @@ export const PageDIDContents = (
                             table.getLeafHeaders().map((header) => {
                                 return (
                                     <th key={header.id} className={(header.column.columnDef as StyleMetaColumnDef<DIDContents>).meta.style}>
-                                        {flexRender(header.column.columnDef.header, header.getContext())}
+                                        {(header.column.columnDef as StyleMetaColumnDef<DIDContents>).meta.filter ?? false ? (
+                                            <FullFilter columnTitle="DID" column={header.column} table={table}/>
+                                        ) : (
+                                            flexRender(header.column.columnDef.header, header.getContext())
+                                        )}
                                     </th>
                                 )
                             })

@@ -1,5 +1,6 @@
-import { ReplicaState } from "@/lib/core/entity/rucio"
+import { ReplicaState, RSEBlockState } from "@/lib/core/entity/rucio"
 import { RuleState } from "@/lib/core/entity/rucio"
+import { ObjectFlags } from "typescript"
 
 export type FilereplicaStateD = {
     scope: string,
@@ -28,6 +29,16 @@ export type DIDContents = {
     name: string;
     scope: string;
     did_type: DIDType;
+}
+
+export type DIDDatasetReplicas = {
+    rse: string;
+    rseblocked: RSEBlockState;
+    availability: boolean;
+    available_files: number;
+    available_bytes: number;
+    creation_date: Date;
+    last_accessed: Date;
 }
 
 // these are general key-value pairs including the metadata

@@ -5,7 +5,7 @@ export const H3 = (
 ) => {
 
     return (
-        <h3 className="text-xl font-extrabold leading-none dark:text-white">
+        <h3 className="text-lg font-extrabold leading-none dark:text-white">
             {props.children}
         </h3>
     )
