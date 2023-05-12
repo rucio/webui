@@ -55,4 +55,9 @@ export default interface EnvConfigGatewayOutputPort {
      * @throws {@link InvalidConfig} if RUCIO_HOST is empty
      */
     rucioHost(): Promise<string>
+
+    /**
+     * @returns the URL of the VO/Experiment community that maintains the Rucio WebUI instance
+     */
+    communityURL(): Promise<string>
 }
