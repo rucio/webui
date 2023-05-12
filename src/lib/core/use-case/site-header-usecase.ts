@@ -17,7 +17,7 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
         this.envConfigGateway = envConfigGateway;
     }
 
-    async generateSiteHeader(session: IronSession, host: string): Promise<void> {
+    async generateSiteHeader(session: IronSession): Promise<void> {
         let projectURL: string | undefined;
         
         let activeUser: User | undefined;
@@ -52,8 +52,7 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
             })
         }
 
-        const hostname = new URL(host).hostname;
-        const homeUrl = `https://${hostname}/dashboard`;
+        const homeUrl = `/dashboard`;
 
         const baseResponseModel: SiteHeaderResponse = {
             homeUrl: homeUrl,
@@ -63,20 +62,20 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
         }
 
         if(!activeUser){
-            this.presenter.presentError({
+            await this.presenter.presentError({
                 ...baseResponseModel,
                 error: 'no-active-user'
             })
         }
         
         if(!projectURL) {
-            this.presenter.presentError({
+            await this.presenter.presentError({
                 ...baseResponseModel,
                 error: 'project-url-not-found'
             })
         }
         
-        this.presenter.presentSuccess(baseResponseModel);
+        await this.presenter.presentSuccess(baseResponseModel);
     }
 }
 
