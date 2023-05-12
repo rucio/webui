@@ -25,6 +25,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             rucioVO: responseModel.shortVOName,
             rucioAccount: responseModel.rucioAccount,
             rucioOIDCProvider: '',
+            role: 'user',
         }
         await setActiveSessionUser(this.session, sessionUser);
 
