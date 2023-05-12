@@ -84,7 +84,8 @@ appContainer.bind<ISiteHeaderController>(CONTROLLERS.SITE_HEADER).to(SiteHeaderC
 appContainer.bind<interfaces.Factory<SiteHeaderInputPort>>(USECASE_FACTORY.SITE_HEADER).toFactory<SiteHeaderUseCase, [NextApiResponse]>((context: interfaces.Context) =>
     (response: NextApiResponse) => {
         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
-        return new SiteHeaderUseCase(new SiteHeaderPresenter(response), envConfigGateway);
+        const presenter = new SiteHeaderPresenter(response)
+        return new SiteHeaderUseCase(presenter, envConfigGateway);
     }
 );
 
