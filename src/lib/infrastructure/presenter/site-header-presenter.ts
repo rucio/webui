@@ -14,12 +14,15 @@ export default class SiteHeaderPresenter implements SiteHeaderOutputPort<NextApi
     }
 
     async presentSuccess(responseModel: SiteHeaderResponse): Promise<void> {
+        const projectUrl = responseModel.projectURL? responseModel.projectURL : '';
+        
         const viewModel: SiteHeaderViewModel = {
             activeAccount: responseModel.activeUser || undefined,
             availableAccounts: responseModel.availableUsers || [],
             homeUrl: responseModel.homeUrl,
-            projectUrl: responseModel.projectURL
+            projectUrl: projectUrl
         }
+        
         this.response.status(200).json(viewModel);
     }
 
@@ -30,6 +33,7 @@ export default class SiteHeaderPresenter implements SiteHeaderOutputPort<NextApi
         }
         if (errorModel.error === 'no-active-user') {
             this.response.status(418).json(errorModel);
+            return;
         }
     }
     
