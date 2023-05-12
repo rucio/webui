@@ -5,22 +5,21 @@ import { NextApiRequest, NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
 
 export interface ISiteHeaderController {
-    handle(session: IronSession, request: NextApiRequest, response: NextApiResponse): void;
+    handle(session: IronSession, response: NextApiResponse): void;
 }
 
 @injectable()
 class SiteHeaderController implements ISiteHeaderController {
     private useCase: SiteHeaderInputPort | null = null
-    private useCaseFactory: (session: IronSession, response: NextApiResponse) => SiteHeaderInputPort
+    private useCaseFactory: (response: NextApiResponse) => SiteHeaderInputPort
     constructor(
-        @inject(USECASE_FACTORY.SITE_HEADER) useCaseFactory: (session: IronSession, response: NextApiResponse) => SiteHeaderInputPort,
+        @inject(USECASE_FACTORY.SITE_HEADER) useCaseFactory: (response: NextApiResponse) => SiteHeaderInputPort,
     ){
         this.useCaseFactory = useCaseFactory;
     }
-    handle(session: IronSession, request: NextApiRequest, response: NextApiResponse) {
-        this.useCase = this.useCaseFactory(session, response);
-        const hostname = request.headers.host || "";
-        this.useCase.generateSiteHeader(session, hostname)
+    async handle(session: IronSession, response: NextApiResponse) {
+        this.useCase = this.useCaseFactory(response);
+        await this.useCase.generateSiteHeader(session)
     }
 }
 
