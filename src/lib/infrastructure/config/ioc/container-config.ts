@@ -29,6 +29,10 @@ import StreamUseCase from "@/lib/core/use-case/stream-usecase";
 import { RSE } from "@/lib/core/entity/rucio";
 import StreamingController, { IStreamingController } from "../../controller/streaming-controller";
 import StreamPresenter from "../../presenter/stream-presenter";
+import SiteHeaderInputPort from "@/lib/core/port/primary/site-header-input-port";
+import SiteHeaderUseCase from "@/lib/core/use-case/site-header-usecase";
+import SiteHeaderController, { ISiteHeaderController } from "../../controller/site-header-controller";
+import SiteHeaderPresenter from "../../presenter/site-header-presenter";
 
 /**
  * IoC Container configuration for the application.
@@ -74,4 +78,14 @@ appContainer.bind<interfaces.Factory<StreamInputPort<RSE>>>(USECASE_FACTORY.STRE
         return new StreamUseCase(new StreamPresenter(response), streamingGateway);
     }
 );
+
+appContainer.bind<SiteHeaderInputPort>(INPUT_PORT.SITE_HEADER).to(SiteHeaderUseCase).inRequestScope();
+appContainer.bind<ISiteHeaderController>(CONTROLLERS.SITE_HEADER).to(SiteHeaderController);
+appContainer.bind<interfaces.Factory<SiteHeaderInputPort>>(USECASE_FACTORY.SITE_HEADER).toFactory<SiteHeaderUseCase, [NextApiResponse]>((context: interfaces.Context) =>
+    (response: NextApiResponse) => {
+        const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
+        return new SiteHeaderUseCase(new SiteHeaderPresenter(response), envConfigGateway);
+    }
+);
+
 export default appContainer;

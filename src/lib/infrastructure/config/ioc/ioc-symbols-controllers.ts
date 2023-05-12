@@ -5,10 +5,11 @@
  * to execute the use cases.
  */
 const CONTROLLERS = {
-    USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
     LOGIN_CONFIG: Symbol.for("LoginConfigController"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),
-    STREAM: Symbol.for("StreamController")
+    SITE_HEADER: Symbol.for("SiteHeaderController"),
+    STREAM: Symbol.for("StreamController"),
+    USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
 }
 
 export default CONTROLLERS;
