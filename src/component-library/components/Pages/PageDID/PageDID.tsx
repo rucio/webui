@@ -18,6 +18,8 @@ import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
 import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
 import { PageDIDRules } from "./PageDIDRules";
+import { DIDContents } from "@/lib/infrastructure/data/view-model/pagedid";
+import { PageDIDContents } from "./PageDIDContents";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
@@ -37,6 +39,9 @@ export interface PageDIDPageProps {
     // Rule State [DATASET]
     didRulesSearch: (didSearchQuery: DIDSearchQuery) => void
     didRulesResponse: { data: any; fetchStatus: FetchStatus}
+    // Contents [COLLECTION]
+    didContentsSearch: (didSearchQuery: DIDSearchQuery) => void
+    didContentsResponse: { data: DIDContents[]; fetchStatus: FetchStatus}
 }
 
 const SubPage: (
@@ -198,7 +203,11 @@ export const PageDID = (
                         show={didtype === "Container" ? subpageIndex === 0 : false}
                         id="subpage-contents"
                     >
-                        Contents
+                        <PageDIDContents showDIDType tableData={{
+                            data: props.didContentsResponse.data,
+                            fetchStatus: props.didContentsResponse.fetchStatus,
+                            pageSize: 10
+                        }}/>
                     </SubPage>
 
                 </div>

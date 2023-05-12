@@ -6,6 +6,7 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 path=$1
+component_path=$(echo $path | sed 's/.*components\///' | sed 's/.$//')
 component_name=$(echo $2 | sed 's/\b\(.\)/\u\1/g')
 first_letter=$(echo $component_name | cut -c1)
 
@@ -38,7 +39,7 @@ import { StoryFn, Meta } from "@storybook/react";
 import { $component_name as $first_letter } from "./$component_name";
 
 export default {
-    title: '$path',
+    title: 'Components/$component_path',
     component: $first_letter,
 } as Meta<typeof $first_letter>;
 

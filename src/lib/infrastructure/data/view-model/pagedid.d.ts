@@ -23,6 +23,13 @@ export type DIDParents = {
     did_type: DIDType;
 }
 
+// Contents of a container
+export type DIDContents = {
+    name: string;
+    scope: string;
+    did_type: DIDType;
+}
+
 // these are general key-value pairs including the metadata
 export type DIDKeyValuePairs = { key: string; value: string | number | boolean | Date | null }
 
