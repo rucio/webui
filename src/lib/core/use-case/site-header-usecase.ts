@@ -79,3 +79,5 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
         this.presenter.presentSuccess(baseResponseModel);
     }
 }
+
+export default SiteHeaderUseCase;

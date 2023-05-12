@@ -19,7 +19,9 @@ class SiteHeaderController implements ISiteHeaderController {
     }
     handle(session: IronSession, request: NextApiRequest, response: NextApiResponse) {
         this.useCase = this.useCaseFactory(session, response);
-        const hostname = request.headers.host
+        const hostname = request.headers.host || "";
         this.useCase.generateSiteHeader(session, hostname)
     }
 }
+
+export default SiteHeaderController;
