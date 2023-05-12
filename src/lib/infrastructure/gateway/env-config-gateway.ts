@@ -5,6 +5,14 @@ import { injectable } from "inversify";
 
 @injectable()
 class EnvConfigGateway implements EnvConfigGatewayOutputPort {
+    async projectURL(): Promise<string> {
+        const value = await this.get('PROJECT_URL', false)
+        if (value === '' || value === undefined) {
+            throw new InvalidConfig(`PROJECT_URL:${value} is not defined`)
+        }
+        return Promise.resolve(value)
+    }
+
     async rucioHost(): Promise<string> {
         const value = await this.get('RUCIO_HOST', true)
         if (value === '' || value === undefined) {
