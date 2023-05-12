@@ -59,5 +59,5 @@ export default interface EnvConfigGatewayOutputPort {
     /**
      * @returns the URL of the VO/Experiment community that maintains the Rucio WebUI instance
      */
-    communityURL(): Promise<string>
+    projectURL(): Promise<string>
 }
