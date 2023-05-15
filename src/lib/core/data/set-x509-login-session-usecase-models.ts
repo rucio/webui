@@ -1,4 +1,4 @@
-import { VO } from "../entity/auth-models"
+import { Role, VO } from "../entity/auth-models"
 import SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-session-output-port"
 
 /**
@@ -20,11 +20,17 @@ export type SetX509LoginSessionRequest = {
  * @property {boolean} isLoggedIn - true if the user is logged in
  * @property {string} rucioIdentity - Rucio Identity of the user extracted from the token
  * @property {VO} vo - VO to which the user belongs
+ * @property {Role} role - {@link Role} of the user 
+ * @property {string} country - Country of the user
+ * @property {Role} countryRole - {@link Role} of the user in the country
  */
 export interface SetX509LoginSessionResponse extends SetX509LoginSessionRequest {
     isLoggedIn: boolean
     rucioIdentity: string
-    vo: VO
+    vo: VO,
+    role: Role | undefined
+    country?: string
+    countryRole?: Role
 }
 
 /**

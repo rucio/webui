@@ -1,4 +1,4 @@
-import { SessionUser } from '@/lib/core/entity/auth-models'
+import { Role, SessionUser } from '@/lib/core/entity/auth-models'
 import { IronSession, unsealData } from 'iron-session'
 import { withIronSessionApiRoute } from 'iron-session/next'
 import { NextApiHandler } from 'next'
@@ -72,7 +72,7 @@ export async function setEmptySession(
         rucioAuthTokenExpires: '',
         rucioOIDCProvider: null,
         rucioVO: '',
-        role: 'user',
+        role: Role.USER,
         isLoggedIn: false,
     }
     session.user = sessionUser

@@ -5,10 +5,39 @@ import appContainer from "@/lib/infrastructure/config/ioc/container-config";
 import { ISetX509LoginSessionController } from "@/lib/infrastructure/controller/set-x509-login-session-controller";
 import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers";
 import { AuthViewModel } from "@/lib/infrastructure/data/auth/auth";
+import { Role } from "@/lib/core/entity/auth-models";
 
 describe('X509Login API Test', () => {
     beforeEach(() => {
         fetchMock.resetMocks();
+        fetchMock.doMock();
+
+        fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, (req) => {
+            if(req.url.endsWith('/accounts/root/attr')){
+                const rucioToken = req.headers.get('X-Rucio-Auth-Token')
+                if(rucioToken !== 'rucio-/C=GB/O=Isode Limited/CN=Steve Kille-askdjljioj') {
+                    return Promise.resolve({
+                        status: 401,
+                    })
+                }
+                return Promise.resolve({
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify([
+                        {
+                            "key": "admin",
+                            "value": "True"
+                        },
+                        {
+                            "key": "country-tw",
+                            "value": "user"
+                        }
+                    ])
+                })   
+            } 
+        })
     })
     it('should set session user upon successful login via x509 workflow', async () => {
         const { req, res } = createMocks({
@@ -53,7 +82,13 @@ describe('X509Login API Test', () => {
         expect(session.user?.rucioAuthType).toBe('x509');
         expect(session.user).toHaveProperty('rucioAuthTokenExpires')
         expect(session.user?.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
-        
+        expect(session.user).toHaveProperty('role')
+        expect(session.user?.role).toBe(Role.ADMIN);
+        expect(session.user).toHaveProperty('country')
+        expect(session.user?.country).toBe('tw');
+        expect(session.user).toHaveProperty('countryRole')
+        expect(session.user?.countryRole).toBe('user');
+
         const response: AuthViewModel = JSON.parse(res._getData());
         expect(response).toHaveProperty('status');
         expect(response.status).toBe('success');
@@ -67,6 +102,12 @@ describe('X509Login API Test', () => {
         expect(response.rucioAuthToken).toBe('rucio-/C=GB/O=Isode Limited/CN=Steve Kille-askdjljioj');
         expect(response).toHaveProperty('rucioAuthTokenExpires');
         expect(response.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
+        expect(response).toHaveProperty('role');
+        expect(response.role).toBe(Role.ADMIN);
+        expect(response).toHaveProperty('country');
+        expect(response.country).toBe('tw');
+        expect(response).toHaveProperty('countryRole');
+        expect(response.countryRole).toBe('user');
 
     })
 
