@@ -19,7 +19,7 @@ export default function Login() {
             username: username,
             password: password,
             account: account,
-            vo: vo
+            vo: vo.shortName
         }
         try {
             const res = await fetch('/api/auth/userpass', {

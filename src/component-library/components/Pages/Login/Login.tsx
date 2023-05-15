@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Button } from "../../Button/Button";
 import { Tabs } from "../../Tabs/Tabs";
 import { TextInput } from '../../Input/Input.stories';
@@ -21,7 +21,6 @@ export interface LoginPageProps {
     x509SubmitHandler: (vo: VO, loginViewModel: LoginViewModel, account?: string) => Promise<AuthViewModel | undefined>
     x509SessionHandler: (authViewModel: AuthViewModel, rucioAccount: string, shortVoName: string) => void
     oidcSubmitHandler: (oidcProvider: OIDCProvider, vo: VO, account?: string) => void
-
 }
 
 export const Login = ({
@@ -37,6 +36,7 @@ export const Login = ({
     const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false)
 
     const [selectedVOTab, setSelectedVOTab] = useState<number>(1)
+
     const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [account, setAccount] = useState<string | undefined>(undefined)
@@ -109,12 +109,12 @@ export const Login = ({
                                 await handleUserPassSubmit(
                                     username,
                                     password,
-                                    loginViewModel.voList[selectedVOTab - 1],
+                                    loginViewModel.voList[selectedVOTab],
                                     account
                                 )
                             }}>
-                                <TextInput label="Username" inline onChange={(event) => { setUsername(event.target.value) }} />
-                                <TextInput label="Password" inline password onChange={(event) => { setPassword(event.target.value) }} />
+                                <TextInput value={username? username: ''}label="Username" inline onChange={(event) => { setUsername(event.target.value) }} />
+                                <TextInput value={password? password: ''} label="Password" inline password onChange={(event) => { setPassword(event.target.value) }} />
                                 <TextInput value={account? account: ''} label="Account Name (Optional)" inline onChange={(event) => { setAccount(event.target.value) }} />
                             </CredentialInput>
                         </Collapsible>
