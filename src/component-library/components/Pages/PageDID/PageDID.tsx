@@ -20,6 +20,7 @@ import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
 import { PageDIDRules } from "./PageDIDRules";
 import { DIDContents } from "@/lib/infrastructure/data/view-model/pagedid";
 import { PageDIDContents } from "./PageDIDContents";
+import { PageDIDDatasetReplicas } from "./PageDIDDatasetReplicas";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
@@ -34,14 +35,17 @@ export interface PageDIDPageProps {
     didFileReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
     didFileReplicasResponse: { data: any; fetchStatus: FetchStatus}
     // File Replica States [DATASET]
-    didDatasetReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
-    didDatasetReplicasResponse: { data: any; fetchStatus: FetchStatus}
+    didFileReplicasDatasetSearch: (didSearchQuery: DIDSearchQuery) => void
+    didFileReplicasDatasetResponse: { data: any; fetchStatus: FetchStatus}
     // Rule State [DATASET]
     didRulesSearch: (didSearchQuery: DIDSearchQuery) => void
     didRulesResponse: { data: any; fetchStatus: FetchStatus}
     // Contents [COLLECTION]
     didContentsSearch: (didSearchQuery: DIDSearchQuery) => void
     didContentsResponse: { data: DIDContents[]; fetchStatus: FetchStatus}
+    // Dataset Replica States [DATASET]
+    didDatasetReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
+    didDatasetReplicasResponse: { data: any; fetchStatus: FetchStatus}
 }
 
 const SubPage: (
@@ -148,7 +152,11 @@ export const PageDID = (
                         show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 1 : false}
                         id="subpage-dataset-replicas"
                     >
-                        Dataset Replicas
+                        <PageDIDDatasetReplicas tableData={{
+                            data: props.didDatasetReplicasResponse.data,
+                            fetchStatus: props.didDatasetReplicasResponse.fetchStatus,
+                            pageSize: 10
+                        }}/>
                     </SubPage>
                     <SubPage
                         show={didtype === "File" ? subpageIndex === 0 : didtype === "Dataset" ? subpageIndex === 2 : subpageIndex === 2}
@@ -170,8 +178,8 @@ export const PageDID = (
                                     pageSize: 10
                                 }}
                                 datasetTableData={{
-                                    data: props.didDatasetReplicasResponse.data,
-                                    fetchStatus: props.didDatasetReplicasResponse.fetchStatus,
+                                    data: props.didFileReplicasDatasetResponse.data,
+                                    fetchStatus: props.didFileReplicasDatasetResponse.fetchStatus,
                                     pageSize: 10
                                 }}
                                 onChangeDatasetSelection={(dataset: string) => { console.log("datasetSelection", dataset)}}
