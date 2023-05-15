@@ -4,7 +4,7 @@ import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Login as LoginStory } from "@/component-library/components/Pages/Login/Login";
-import { VO } from "@/lib/core/entity/auth-models";
+import { Role, VO } from "@/lib/core/entity/auth-models";
 
 
 export default function Login() {
@@ -80,7 +80,8 @@ export default function Login() {
                 rucioAuthType: '',
                 rucioIdentity: '',
                 rucioAuthToken: '',
-                rucioAuthTokenExpires: ''
+                rucioAuthTokenExpires: '',
+                role: Role.USER
             })
         }
 
@@ -105,7 +106,8 @@ export default function Login() {
                 rucioAuthType: '',
                 rucioIdentity: '',
                 rucioAuthToken: '',
-                rucioAuthTokenExpires: ''
+                rucioAuthTokenExpires: '',
+                role: Role.USER
             }
             if(rucioAuthToken === null) {
                 auth.message = 'Cannot retrieve X-Rucio-Auth-Token from response headers'
@@ -137,7 +139,8 @@ export default function Login() {
                     rucioAuthType: '',
                     rucioIdentity: '',
                     rucioAuthToken: '',
-                    rucioAuthTokenExpires: ''
+                    rucioAuthTokenExpires: '',
+                    role: Role.USER
                 })
             }
             const auth: AuthViewModel = {
@@ -147,7 +150,8 @@ export default function Login() {
                 rucioAuthType: '',
                 rucioIdentity: '',
                 rucioAuthToken: '',
-                rucioAuthTokenExpires: ''
+                rucioAuthTokenExpires: '',
+                role: Role.USER
             }
             return Promise.resolve(auth)
         } else if (res.status === 401) {
@@ -158,7 +162,8 @@ export default function Login() {
                 rucioAuthType: '',
                 rucioIdentity: '',
                 rucioAuthToken: '',
-                rucioAuthTokenExpires: ''
+                rucioAuthTokenExpires: '',
+                role: Role.USER
             }
             return Promise.resolve(auth)
         } else {
@@ -169,7 +174,8 @@ export default function Login() {
                 rucioAuthType: '',
                 rucioIdentity: '',
                 rucioAuthToken: '',
-                rucioAuthTokenExpires: ''
+                rucioAuthTokenExpires: '',
+                role: Role.USER
             }
             return Promise.resolve(auth)
         }

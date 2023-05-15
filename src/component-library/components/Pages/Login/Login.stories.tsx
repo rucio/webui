@@ -1,4 +1,4 @@
-import { OIDCProvider, VO } from '@/lib/core/entity/auth-models'
+import { OIDCProvider, Role, VO } from '@/lib/core/entity/auth-models'
 import { StoryFn, Meta } from '@storybook/react'
 
 import { Login } from './Login'
@@ -67,6 +67,6 @@ LoginPage.args = {
         rucioAuthToken: '',
         rucioAuthType: 'userpass',
         rucioAuthTokenExpires: '',
-
+        role: Role.USER,
     }
 }

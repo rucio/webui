@@ -1,8 +1,10 @@
 import { injectable } from "inversify";
+import { AccountAttributesDTO } from "../data/account-dto";
 import { SetX509LoginSessionError, SetX509LoginSessionRequest, SetX509LoginSessionResponse } from "../data/set-x509-login-session-usecase-models";
-import { VO } from "../entity/auth-models";
+import { Role, VO } from "../entity/auth-models";
 import SetX509LoginSessionInputPort from "../port/primary/set-x509-login-session-input-port";
 import type SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-session-output-port";
+import type AccountGatewayOutputPort from "../port/secondary/account-gateway-output-port";
 import type EnvConfigGatewayOutputPort from "../port/secondary/env-config-gateway-output-port";
 
 @injectable()
@@ -10,9 +12,11 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
     constructor(
         private presenter: SetX509LoginSessionOutputPort<any>,
         private envConfigGateway: EnvConfigGatewayOutputPort,
+        private rucioAccountGateway: AccountGatewayOutputPort,
     ) {
         this.presenter = presenter;
         this.envConfigGateway = envConfigGateway;
+        this.rucioAccountGateway = rucioAccountGateway
     }
 
     async execute(requestModel: SetX509LoginSessionRequest): Promise<void> {
@@ -43,6 +47,31 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
             return;
         }
 
+        let role: Role | undefined;
+        let country: string | undefined;
+        let countryRole: Role | undefined;
+        try {
+            const accountAttrs: AccountAttributesDTO = await this.rucioAccountGateway.listAccountAttributes(rucioAccount, rucioAuthToken)
+            accountAttrs.attributes.forEach((attr) => {
+                if(attr.key == 'admin' && attr.value == 'True') {
+                    role = Role.ADMIN;
+                }
+                if(attr.key.startsWith('country-')) {
+                    country = attr.key.split('-')[1];
+                    if(attr.value == 'admin') {
+                        countryRole = Role.ADMIN;
+                    }else if(attr.value == 'user') {
+                        countryRole = Role.USER;
+                    } else {
+                        countryRole = undefined;
+                    }
+                }
+            })
+        } catch(error: AccountAttributesDTO | any) {
+            role = undefined;
+        }
+
+
         const responseModel: SetX509LoginSessionResponse = {
             rucioIdentity: rucioIdentity,
             isLoggedIn: true,
@@ -51,6 +80,9 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
             rucioAccount: rucioAccount,
             shortVOName: shortVOName,
             rucioAuthTokenExpires: rucioAuthTokenExpires,
+            role: role,
+            country: country,
+            countryRole: countryRole,
         }
         await this.presenter.presentSuccess(responseModel);
     }

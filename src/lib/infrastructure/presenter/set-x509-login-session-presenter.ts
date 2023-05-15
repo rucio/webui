@@ -1,5 +1,5 @@
 import { SetX509LoginSessionError, SetX509LoginSessionResponse } from "@/lib/core/data/set-x509-login-session-usecase-models";
-import { SessionUser } from "@/lib/core/entity/auth-models";
+import { Role, SessionUser } from "@/lib/core/entity/auth-models";
 import SetX509LoginSessionOutputPort from "@/lib/core/port/primary/set-x509-login-session-output-port";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
@@ -25,8 +25,12 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             rucioVO: responseModel.shortVOName,
             rucioAccount: responseModel.rucioAccount,
             rucioOIDCProvider: '',
-            role: 'user',
+            role: responseModel.role || Role.USER,
         }
+        
+        responseModel.country? sessionUser.country = responseModel.country : null;
+        responseModel.countryRole? sessionUser.countryRole = responseModel.countryRole : null;
+
         await setActiveSessionUser(this.session, sessionUser);
 
         const viewModel: AuthViewModel = {
@@ -36,7 +40,12 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             rucioAuthToken: responseModel.rucioAuthToken,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
             rucioIdentity: responseModel.rucioIdentity,
+            role: responseModel.role || Role.USER,
         }
+
+        responseModel.country? viewModel.country = responseModel.country : null;
+        responseModel.countryRole? viewModel.countryRole = responseModel.countryRole : null;
+
         this.response.status(200).json(viewModel);
         return;
     }
@@ -51,6 +60,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             status: 'error',
             message: errorModel.message,
             error_cause: errorModel.type,
+            role: Role.USER,
         }
 
         await setEmptySession(this.session);
