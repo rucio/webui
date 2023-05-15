@@ -38,6 +38,8 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
                 rucioAccount: session.user.rucioAccount,
                 rucioVO: session.user.rucioVO,
                 role: session.user.role,
+                country: session.user.country,
+                countryRole: session.user.countryRole,
             }
         }
 
@@ -48,6 +50,8 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
                     rucioAccount: user.rucioAccount,
                     rucioVO: user.rucioVO,
                     role: user.role,
+                    country: user.country,
+                    countryRole: user.countryRole,
                 })
             })
         }
