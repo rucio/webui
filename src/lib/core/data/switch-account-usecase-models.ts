@@ -13,7 +13,9 @@ export interface SwitchAccountRequest {
 }
 
 
-export interface SwitchAccountResponse extends SwitchAccountRequest {}
+export interface SwitchAccountResponse{
+    redirectTo: string
+}
 
 /**
  * Error Model for {@link SwitchAccountOutputPort}
