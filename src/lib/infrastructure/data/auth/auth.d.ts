@@ -1,5 +1,7 @@
+import { Role } from "@/lib/core/entity/auth-models";
+
 export type AuthViewModel = {
-    status: 'success' | 'error' | 'multiple_accounts';
+    status: 'success' | 'error' | 'multiple_accounts' | 'cannot_determine_account_role';
     message?: string;
     error_cause?: string;
     redirectTo?: string;
@@ -8,6 +10,9 @@ export type AuthViewModel = {
     rucioAuthType: string;
     rucioAuthToken: string;
     rucioAuthTokenExpires: string;
+    role: Role | undefined;
+    country?: string;
+    countryRole?: Role;
 };
 
 export type x509AuthRequestHeaders  = {

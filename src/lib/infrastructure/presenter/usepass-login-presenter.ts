@@ -1,5 +1,5 @@
 import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login-usecase-models";
-import { SessionUser } from "@/lib/core/entity/auth-models";
+import { Role, SessionUser } from "@/lib/core/entity/auth-models";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
@@ -27,7 +27,15 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthType: 'userpass',
             rucioAuthToken: responseModel.rucioAuthToken,
             status: 'success',
+            role: Role.USER,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
+        }
+
+        const role = responseModel.role;
+        if(role) {
+            viewModel.role = role;
+        } else {
+            viewModel.status = 'cannot_determine_account_role'
         }
 
         const sessionUser: SessionUser = {
@@ -37,13 +45,21 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthToken: responseModel.rucioAuthToken,
             rucioOIDCProvider: null,
             rucioVO: responseModel.vo,
-            role: 'user',
+            role: viewModel.role || Role.USER,
             isLoggedIn: true,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
         }
         
-        await setActiveSessionUser(this.session, sessionUser);
+        if(responseModel.country) {
+            viewModel.country = responseModel.country;
+            sessionUser.country = responseModel.country;
+        }
+        if(responseModel.countryRole) {
+            viewModel.countryRole = responseModel.countryRole;
+            sessionUser.countryRole = responseModel.countryRole;
+        }
 
+        await setActiveSessionUser(this.session, sessionUser);
         this.response.status(200).json(viewModel);
     }
 
@@ -55,6 +71,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthToken: '',
             rucioAuthTokenExpires: '',
             status: 'error',
+            role: Role.USER,
             message: error.message,
             error_cause: error.type,
         }
