@@ -63,7 +63,6 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             role: Role.USER,
         }
 
-        await setEmptySession(this.session);
         this.response.status(500).json(viewModel);
         return;
     }
