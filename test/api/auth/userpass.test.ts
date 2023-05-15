@@ -6,12 +6,13 @@ import { NextApiResponse } from 'next';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 import { getIronSession } from 'iron-session';
 import { setEmptySession } from '@/lib/infrastructure/auth/session-utils';
+import { Role } from '@/lib/core/entity/auth-models';
 
 
 describe('UserPassLogin API Test', () => {
     beforeEach(() => {
         fetchMock.doMock();
-        fetchMock.mockIf(/^https?:\/\/rucio-auth-host.com.*$/, (req) => {
+        fetchMock.mockIf(/^https?:\/\/rucio-.*.com.*$/, (req) => {
             if (req.url.endsWith('/auth/userpass')) {
                 return Promise.resolve({
                     status: 200,
@@ -24,6 +25,30 @@ describe('UserPassLogin API Test', () => {
                     body: JSON.stringify({
                     })
                 })
+            }
+            if(req.url.endsWith('/accounts/root/attr')){
+                const rucioToken = req.headers.get('X-Rucio-Auth-Token')
+                if(rucioToken !== 'rucio-ddmlab-askdjljioj') {
+                    return Promise.resolve({
+                        status: 401,
+                    })
+                }
+                return Promise.resolve({
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify([
+                        {
+                            "key": "admin",
+                            "value": "True"
+                        },
+                        {
+                            "key": "country-tw",
+                            "value": "user"
+                        }
+                    ])
+                })   
             }
         })
     })
@@ -47,7 +72,7 @@ describe('UserPassLogin API Test', () => {
         await setEmptySession(session, true)
 
         const userpassLoginController = appContainer.get<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN)
-        await userpassLoginController.handle(req.body.username, req.body.password, 'ddmlab', 'def', session, res as undefined as NextApiResponse, '/dashboard');
+        await userpassLoginController.handle(req.body.username, req.body.password, 'root', 'def', session, res as undefined as NextApiResponse, '/dashboard');
         expect(res._getStatusCode()).toBe(200);
         const viewModel: AuthViewModel = JSON.parse(res._getData());
         expect(viewModel).toHaveProperty('rucioIdentity');
@@ -58,7 +83,13 @@ describe('UserPassLogin API Test', () => {
         expect(viewModel.rucioAccount).toBe('root');
         expect(viewModel).toHaveProperty('rucioAuthTokenExpires');
         expect(viewModel.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
-        
+        expect(viewModel).toHaveProperty('role')
+        expect(viewModel.role).toBe(Role.ADMIN)
+        expect(viewModel).toHaveProperty('country')
+        expect(viewModel.country).toBe('tw')
+        expect(viewModel).toHaveProperty('countryRole')
+        expect(viewModel.countryRole).toBe('user')
+
         expect(session.user).toHaveProperty('rucioIdentity');
         expect(session.user?.rucioIdentity).toBe('ddmlab');
         expect(session.user).toHaveProperty('rucioAuthToken');
@@ -69,6 +100,12 @@ describe('UserPassLogin API Test', () => {
         expect(session.user?.isLoggedIn).toBe(true);
         expect(session.user).toHaveProperty('rucioAuthTokenExpires');
         expect(session.user?.rucioAuthTokenExpires).toBe('2021-09-01T00:00:00.000Z');
+        expect(session.user).toHaveProperty('role')
+        expect(session.user?.role).toBe(Role.ADMIN)
+        expect(session.user).toHaveProperty('country')
+        expect(session.user?.country).toBe('tw')
+        expect(session.user).toHaveProperty('countryRole')
+        expect(session.user?.countryRole).toBe('user')
     });
 
 });

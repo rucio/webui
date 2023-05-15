@@ -1,3 +1,4 @@
+import { Role } from "../entity/auth-models";
 import UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";
 
 /**
@@ -20,6 +21,10 @@ export type UserpassLoginResponse = {
     vo: string;
     rucioAuthToken: string;
     rucioAuthTokenExpires: string;
+    role: Role | undefined;
+    // ATLAS specific, used for country-{} account attribute in Rucio
+    country?: string;
+    countryRole?: Role;
 }
 
 /**

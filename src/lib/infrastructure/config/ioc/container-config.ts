@@ -51,7 +51,8 @@ appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserP
 appContainer.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN).toFactory<UserPassLoginUseCase, [IronSession, NextApiResponse]>((context: interfaces.Context) =>
     (session: IronSession, response: NextApiResponse) => {
         const rucioAuthServer: AuthServerGatewayOutputPort = appContainer.get(GATEWAYS.AUTH_SERVER)
-        return new UserPassLoginUseCase(new UserPassLoginPresenter(session, response), rucioAuthServer);
+        const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT)
+        return new UserPassLoginUseCase(new UserPassLoginPresenter(session, response), rucioAuthServer, rucioAccountGateway);
     }
 );
 

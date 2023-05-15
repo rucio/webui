@@ -1,11 +1,23 @@
 /**
+ * Represents the role of a user in Rucio. If the user has an account attribute 'admin' set to True, the user is an admin.
+ * Otherwise, the user is a regular user.
+ * @property ADMIN - Admin user
+ * @property USER - Regular user
+ */
+export enum Role {
+    ADMIN = "admin",
+    USER = "user",
+}
+/**
  * Representing information about the user that is safe to be shared with the frontend app
  */
 export type User = {
     rucioIdentity: string
     rucioAccount: string
     rucioVO: string
-    role: "user" | "admin"
+    role: Role
+    country?: string
+    countryRole?: Role
 }
 
 /**
