@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
 
 export interface ISiteHeaderController {
-    handle(session: IronSession, response: NextApiResponse): void;
+    handle(session: IronSession, response: NextApiResponse): Promise<void>;
 }
 
 @injectable()

@@ -70,6 +70,7 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
                 ...baseResponseModel,
                 error: 'no-active-user'
             })
+            return;
         }
         
         if(!projectURL) {
@@ -77,6 +78,7 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
                 ...baseResponseModel,
                 error: 'project-url-not-found'
             })
+            return;
         }
         
         await this.presenter.presentSuccess(baseResponseModel);
