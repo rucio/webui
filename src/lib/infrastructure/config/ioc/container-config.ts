@@ -1,6 +1,8 @@
+import "reflect-metadata";
 import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-output-port";
 import StreamingGateway from "../../gateway/streaming-gateway";
-import "reflect-metadata";
+import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
+import RucioAccountGateway from "../../gateway/account-gateway";
 import { Container, interfaces } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
@@ -39,6 +41,7 @@ import SiteHeaderPresenter from "../../presenter/site-header-presenter";
  */
 const appContainer = new Container();
 
+appContainer.bind<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT).to(RucioAccountGateway);
 appContainer.bind<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER).to(RucioAuthServer);
 appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
