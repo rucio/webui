@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { Column, Table } from "@tanstack/react-table";
 import { Filter } from "./Filter";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink } from "react-icons/hi"
+import { H3 } from "../Text/Headings/H3";
 
 type FullFilterProps = JSX.IntrinsicElements["div"] & {
     columnTitle: string,
@@ -33,7 +34,7 @@ export const FullFilter: FC<FullFilterProps> = (
         <div {...props}>
             <div className="flex flex-row items-baseline space-x-8 justify-between">
                 <span className="shrink-0">
-                    <h3 className="text-xl">DID</h3>
+                    <h3 className="text-xl dark:text-white">DID</h3>
                 </span>
                 <span className="hidden sm:flex w-full">
                     <Filter column={column} table={table} />

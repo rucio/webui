@@ -69,7 +69,6 @@ export const PageDIDContents = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-center",
-                            "sm:block sm:pl-2"
                         )}
                     >
                         <DIDTypeTag didtype={info.getValue()} />
@@ -101,12 +100,18 @@ export const PageDIDContents = (
                                 }
                             }
                         }}
+                        className="w-full"
                     >
-                        <span className="flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-4">
+                        <span
+                            className={twMerge(
+                                "flex flex-col items-center space-y-1",
+                                "md:flex-row md:space-y-0 md:space-x-2 md:items-end md:justify-between",
+                            )}
+                        >
                             <H3>Type</H3>
-                            <span className="h-6">
+                            <span className="h-6 md:pr-1">
                                 {
-                                    filterType === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag didtype={filterType} forcesmall />
+                                    filterType === undefined ? <HiDotsHorizontal className={twMerge("text-2xl text-gray-500 dark:text-gray-200 md:pt-1")} /> : <DIDTypeTag didtype={filterType} forcesmall />
                                 }
                             </span>
                         </span>
@@ -114,7 +119,7 @@ export const PageDIDContents = (
                 )
             },
             meta: {
-                style: "w-16 md:w-48 flex-none hover:cursor-pointer select-none pr-2",
+                style: "w-16 md:w-28 flex-none hover:cursor-pointer select-none",
             }
         })
     ]

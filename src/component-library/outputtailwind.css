@@ -1770,11 +1770,6 @@ video {
   line-height: 2.5rem;
 }
 
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -2882,6 +2877,10 @@ video {
     width: 6rem;
   }
 
+  .md\:w-28 {
+    width: 7rem;
+  }
+
   .md\:w-40 {
     width: 10rem;
   }
@@ -2896,6 +2895,10 @@ video {
 
   .md\:w-56 {
     width: 14rem;
+  }
+
+  .md\:w-6 {
+    width: 1.5rem;
   }
 
   .md\:w-60 {
@@ -2953,9 +2956,17 @@ video {
     border-radius: 0.25rem;
   }
 
+  .md\:rounded-full {
+    border-radius: 9999px;
+  }
+
   .md\:py-8 {
     padding-top: 2rem;
     padding-bottom: 2rem;
+  }
+
+  .md\:pr-1 {
+    padding-right: 0.25rem;
   }
 
   .md\:pr-2 {
@@ -2964,6 +2975,10 @@ video {
 
   .md\:pr-4 {
     padding-right: 1rem;
+  }
+
+  .md\:pt-1 {
+    padding-top: 0.25rem;
   }
 
   .md\:text-5xl {
