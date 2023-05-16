@@ -1,5 +1,5 @@
 import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/data/userpass-login-usecase-models";
-import { Role, SessionUser } from "@/lib/core/entity/auth-models";
+import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
@@ -24,7 +24,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
         const viewModel: AuthViewModel = {
             rucioIdentity: responseModel.rucioIdentity,
             rucioAccount: responseModel.rucioAccount,
-            rucioAuthType: 'userpass',
+            rucioAuthType: AuthType.USERPASS,
             rucioAuthToken: responseModel.rucioAuthToken,
             status: 'success',
             role: Role.USER,
@@ -41,7 +41,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
         const sessionUser: SessionUser = {
             rucioIdentity: responseModel.rucioIdentity,
             rucioAccount: responseModel.rucioAccount,
-            rucioAuthType: 'userpass',
+            rucioAuthType: AuthType.USERPASS,
             rucioAuthToken: responseModel.rucioAuthToken,
             rucioOIDCProvider: null,
             rucioVO: responseModel.vo,

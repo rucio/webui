@@ -9,6 +9,7 @@ const USECASE_FACTORY = {
     SET_X509_LOGIN_SESSION: Symbol.for("Factory<SetX509LoginSessionUseCase>"),
     SITE_HEADER: Symbol.for("Factory<SiteHeaderUseCase>"),
     STREAM: Symbol.for("Factory<StreamUseCase>"),
+    SWITCH_ACCOUNT: Symbol.for("Factory<SwitchAccountUseCase>"),
     USERPASS_LOGIN: Symbol.for("Factory<UserPassLoginUseCase>"),
 
 }

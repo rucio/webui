@@ -1,4 +1,15 @@
 /**
+ * Represents the auth type in Rucio. If the auth type is x509, the user is authenticated via x509 certificates.
+ * If the auth type is userpass, the user is authenticated via username and password.
+ * If the auth type is oidc, the user is authenticated via OpenID Connect.
+ */
+export enum AuthType {
+    x509 = "x509",
+    USERPASS = "userpass",
+    OIDC = "oidc",
+}
+
+/**
  * Represents the role of a user in Rucio. If the user has an account attribute 'admin' set to True, the user is an admin.
  * Otherwise, the user is a regular user.
  * @property ADMIN - Admin user
@@ -34,7 +45,7 @@ export type User = {
 export interface SessionUser extends User {
     rucioAuthToken: string
     rucioAuthTokenExpires: string
-    rucioAuthType: 'x509' | 'userpass' | 'oidc' | null
+    rucioAuthType: AuthType
     rucioOIDCProvider: string | null
     isLoggedIn: boolean
 }

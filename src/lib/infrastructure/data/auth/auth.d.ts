@@ -1,4 +1,4 @@
-import { Role } from "@/lib/core/entity/auth-models";
+import { AuthType, Role } from "@/lib/core/entity/auth-models";
 
 export type AuthViewModel = {
     status: 'success' | 'error' | 'multiple_accounts' | 'cannot_determine_account_role';
@@ -7,7 +7,7 @@ export type AuthViewModel = {
     redirectTo?: string;
     rucioIdentity: string;
     rucioAccount: string;
-    rucioAuthType: string;
+    rucioAuthType: AuthType;
     rucioAuthToken: string;
     rucioAuthTokenExpires: string;
     role: Role | undefined;

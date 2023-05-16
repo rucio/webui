@@ -1,10 +1,9 @@
 import { SwitchAccountResponse, SwitchAccountError } from "@/lib/core/data/switch-account-usecase-models";
 import SwitchAccountOutputPort from "@/lib/core/port/primary/switch-account-output-port";
-import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
 
 export default class SwitchAccountPresenter implements SwitchAccountOutputPort<NextApiResponse> {
-    response: NextApiResponse;
+    response: NextApiResponse<any>;
 
     constructor(response: NextApiResponse) {
         this.response = response;
@@ -26,15 +25,16 @@ export default class SwitchAccountPresenter implements SwitchAccountOutputPort<N
             case'bad request':{
                 this.response.status(400).json({
                     error: 'Bad request',
-                    message: error
+                    message: error.message
                 })
                 break;
             }
             case 'cannot_switch_account': {
                 this.response.status(500).json({
-                    error: 'Cannot switch account',
+                    error: 'Cannot switch to non-existing/logged-in account',
                     message: error.message
                 })
+                break;
             }
             default: {
                 this.response.status(500).json({
