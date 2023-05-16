@@ -34,7 +34,7 @@ export const FullFilter: FC<FullFilterProps> = (
         <div {...props}>
             <div className="flex flex-row items-baseline space-x-8 justify-between">
                 <span className="shrink-0">
-                    <h3 className="text-xl dark:text-white">DID</h3>
+                    <H3>{columnTitle}</H3>
                 </span>
                 <span className="hidden sm:flex w-full">
                     <Filter column={column} table={table} />

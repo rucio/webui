@@ -15,6 +15,7 @@ export const RSEBlockTag: React.FC<JSX.IntrinsicElements["span"] & { block: "Rea
         "flex flex-row justify-start items-center space-x-1 w-fit px-1 rounded",
         "bg-black",
         "text-white font-semibold",
+        "dark:border dark:border-white",
         className ?? "",
       )}
       {...otherprops}

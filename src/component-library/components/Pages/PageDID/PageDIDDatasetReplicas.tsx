@@ -10,6 +10,7 @@ import { PaginationDiv } from "../../StreamedTables/PaginationDiv";
 import { Button } from "../../Button/Button";
 import { P } from "../../Text/Content/P";
 import { H3 } from "../../Text/Headings/H3";
+import { H4 } from "../../Text/Headings/H4";
 import { Filter } from "../../StreamedTables/Filter";
 import { NumInput } from "../../Input/NumInput";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink, HiSortAscending, HiSortDescending } from "react-icons/hi"
@@ -24,8 +25,39 @@ import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator"
 import { TextInput } from "../../Input/Input.stories";
 import { RSETag } from "../../Tags/RSETag";
 import { FullFilter } from "../../StreamedTables/FullFilter";
+import { CheckmarkTag } from "../../Tags/CheckmarkTag";
+import { BoolTag } from "../../Tags/BoolTag";
 
 type ReducedReplicaState = "Available" | "Unavailable"
+
+const Titletd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
+    const { className, ...otherprops } = props
+    return (
+        <td
+            className={twMerge(
+                "font-bold w-32 pl-1 dark:text-white",
+                className ?? ""
+            )}
+            {...otherprops}
+        >
+            {props.children}
+        </td>
+    )
+}
+const Contenttd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
+    const { className, ...otherprops } = props
+    return (
+        <td
+            className={twMerge(
+                "break-all dark:text-gray-100",
+                className ?? ""
+            )}
+            {...otherprops}
+        >
+            {props.children}
+        </td>
+    )
+}
 
 export const PageDIDDatasetReplicas = (
     props: {
@@ -47,19 +79,22 @@ export const PageDIDDatasetReplicas = (
             cell: (info) => {
                 return (
                     <span
-                        className="flex flex-row justify-start space-x-2 items-center"
+                        className="flex flex-row justify-between md:justify-start md:space-x-1 items-center pl-1"
                     >
-                        <RSETag name={info.getValue()} blocked={info.row.original.rseblocked}/>
-                        <a
-                            href={"/pagerse/" + info.getValue()}
-                            className={twMerge(
-                                "text-gray-600 hover:text-blue-600",
-                                "dark:text-gray-400 dark:hover:text-blue-400",
-                                "pr-1"
-                            )}
-                        >
-                            <HiExternalLink className="text-l" />
-                        </a>
+                        <RSETag blocked={info.row.original.rseblocked}>
+                            <a
+                                href={"/rse/" + info.getValue()}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={twMerge(
+                                    "dark:text-white",
+                                    "hover:underline"
+                                )}
+                            >
+                                {info.getValue()}
+                            </a>
+                        </RSETag>
+                        {info.row.original.availability ? "" : <ReplicaStateTag state="Unavailable" tiny className="shrink-0 mr-1" />}
                     </span>
                 )
             },
@@ -68,7 +103,7 @@ export const PageDIDDatasetReplicas = (
                 filter: true
             }
         }),
-        columnHelper.accessor("rseblocked", {meta: {style: ""}}),
+        columnHelper.accessor("rseblocked", { meta: { style: "" } }),
         columnHelper.accessor("availability", { // formerly known as `state`
             id: "availability",
             header: (info) => {
@@ -121,7 +156,7 @@ export const PageDIDDatasetReplicas = (
                 return (
                     <span
                         className={twMerge(
-                            "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
+                            "flex flex-col 2xl:flex-row justify-between items-center space-y-1 2xl:pr-2 2xl:space-y-0"
                         )}
                         onClick={(e) => {
                             // create a match statement for the state filter
@@ -138,7 +173,7 @@ export const PageDIDDatasetReplicas = (
                             sortchange(nextRecord[availableFilesSorting] as "asc" | "desc" | "none")
                         }}
                     >
-                        <H3>Available Files</H3>
+                        <H4>Available Files</H4>
                         <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
                             {
                                 {
@@ -155,7 +190,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right",
+                            "font-mono text-right dark:text-white",
                         )}
                     >
                         {info.row.original.available_files}
@@ -163,7 +198,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-44"
+                style: "cursor-pointer w-36 2xl:w-44"
             }
         }),
         columnHelper.accessor("available_bytes", {
@@ -173,7 +208,7 @@ export const PageDIDDatasetReplicas = (
 
                     <span
                         className={twMerge(
-                            "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
+                            "flex flex-col 2xl:flex-row justify-between items-center pr-1 space-y-1 2xl:pr-2 2xl:space-y-0"
                         )}
                         onClick={(e) => {
                             // create a match statement for the state filter
@@ -190,7 +225,7 @@ export const PageDIDDatasetReplicas = (
                             sortchange(nextRecord[availableBytesSorting] as "asc" | "desc" | "none")
                         }}
                     >
-                        <H3>Available Bytes</H3>
+                        <H4>Available Bytes</H4>
                         <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
                             {
                                 {
@@ -206,7 +241,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right",
+                            "font-mono text-right dark:text-white",
                         )}
                     >
                         <Number number={info.row.original.available_bytes} />
@@ -214,7 +249,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-44"
+                style: "cursor-pointer w-36 2xl:w-44"
             }
         }),
         columnHelper.accessor("creation_date", {
@@ -223,7 +258,7 @@ export const PageDIDDatasetReplicas = (
                 return (
                     <span
                         className={twMerge(
-                            "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
+                            "flex flex-col 2xl:flex-row justify-between items-center space-y-1 2xl:pr-2 2xl:space-y-0"
                         )}
                         onClick={(e) => {
                             // create a match statement for the state filter
@@ -240,7 +275,7 @@ export const PageDIDDatasetReplicas = (
                             sortchange(nextRecord[creationDateSorting] as "asc" | "desc" | "none")
                         }}
                     >
-                        <H3>Creation Date</H3>
+                        <H4>Creation Date</H4>
                         <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
                             {
                                 {
@@ -256,7 +291,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right",
+                            "font-mono text-right dark:text-white",
                         )}
                     >
                         <DateTag date={info.row.original.creation_date} />
@@ -264,7 +299,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-44"
+                style: "cursor-pointer w-36 2xl:w-44"
             }
         }),
         columnHelper.accessor("last_accessed", {
@@ -273,7 +308,7 @@ export const PageDIDDatasetReplicas = (
                 return (
                     <span
                         className={twMerge(
-                            "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
+                            "flex flex-col 2xl:flex-row justify-between items-center space-y-1 2xl:pr-2 2xl:space-y-0"
                         )}
                         onClick={(e) => {
                             // create a match statement for the state filter
@@ -290,7 +325,7 @@ export const PageDIDDatasetReplicas = (
                             sortchange(nextRecord[accessedDateSorting] as "asc" | "desc" | "none")
                         }}
                     >
-                        <H3>Last Accessed</H3>
+                        <H4>Last Accessed</H4>
                         <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
                             {
                                 {
@@ -306,7 +341,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right",
+                            "font-mono text-right dark:text-white",
                         )}
                     >
                         <DateTag date={info.row.original.last_accessed} />
@@ -314,7 +349,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-44"
+                style: "cursor-pointer w-36 2xl:w-44"
             }
         }),
     ]
@@ -335,15 +370,17 @@ export const PageDIDDatasetReplicas = (
         state: {
             columnVisibility: {
                 rse: true,
-                availability: windowSize[0] > 768,
-                available_files: windowSize[0] > 768,
-                available_bytes: windowSize[0] > 768,
-                creation_date: windowSize[0] > 768,
-                last_accessed: windowSize[0] > 768,
+                availability: false,
+                available_files: windowSize[0] > 1024,
+                available_bytes: windowSize[0] > 1024,
+                creation_date: windowSize[0] > 1024,
+                last_accessed: windowSize[0] > 1024,
                 rseblocked: false
             }
         }
     } as TableOptions<DIDDatasetReplicas>)
+
+    const [selectedRSE, setSelectedRSE] = useState<DIDDatasetReplicas | null>(null)
 
     // Filter by DID Type
     const [filterType, setFilterType] = useState<"Available" | "Unavailable" | "none">("none")
@@ -403,7 +440,7 @@ export const PageDIDDatasetReplicas = (
                                 return (
                                     <th key={header.id} className={(header.column.columnDef as StyleMetaColumnDef<DIDDatasetReplicas>).meta.style}>
                                         {(header.column.columnDef as StyleMetaColumnDef<DIDDatasetReplicas>).meta.filter ?? false ? (
-                                            <FullFilter columnTitle="RSE" column={header.column} table={table}/>
+                                            <FullFilter columnTitle="RSE" column={header.column} table={table} className="pl-1" />
                                         ) : (
                                             flexRender(header.column.columnDef.header, header.getContext())
                                         )}
@@ -419,11 +456,15 @@ export const PageDIDDatasetReplicas = (
                             <tr
                                 key={row.id}
                                 className={twMerge(
-                                    "w-full hover:cursor-normal h-16 md:h-8",
+                                    "w-full hover:cursor-pointer lg:hover:cursor-normal h-16 md:h-8",
                                     "bg-white odd:bg-stone-100",
                                     "dark:bg-gray-700 dark:odd:bg-gray-800",
                                     "hover:bg-gray-200 dark:hover:bg-gray-900",
                                 )}
+                                onClick={() => {
+                                    if (windowSize[0] > 1024) return
+                                    setSelectedRSE(row.original)
+                                }}
                             >
                                 {row.getVisibleCells().map((cell) => {
                                     return (
@@ -449,6 +490,62 @@ export const PageDIDDatasetReplicas = (
                 )}
             >
                 <FetchstatusIndicator status={tableData.fetchStatus} />
+            </div>
+            <div
+                className={twMerge(
+                    "block lg:hidden",
+                    "mx-2 rounded",
+                    "bg-stone-100"
+                )}
+            >
+                <table>
+                    <tbody>
+                        <tr>
+                            <Titletd>
+                                RSE Name
+                            </Titletd>
+                            <Contenttd>{selectedRSE?.rse ?? "None"}</Contenttd>
+                        </tr>
+                        <tr>
+                            <Titletd>
+                                Availability
+                            </Titletd>
+                            <Contenttd>
+                                <BoolTag val={selectedRSE?.availability ?? false} />
+                            </Contenttd>
+                        </tr>
+                        <tr>
+                            <Titletd>
+                                Available Files
+                            </Titletd>
+                            <Contenttd>{selectedRSE?.available_files ?? 0}</Contenttd>
+                        </tr>
+                        <tr>
+                            <Titletd>
+                                Available Bytes
+                            </Titletd>
+                            <Contenttd>
+                                <Number number={selectedRSE?.available_bytes ?? 0} />
+                            </Contenttd>
+                        </tr>
+                        <tr>
+                            <Titletd>
+                                Creation Date
+                            </Titletd>
+                            <Contenttd>
+                                <DateTag date={selectedRSE?.creation_date ?? new Date()} />
+                            </Contenttd>
+                        </tr>
+                        <tr>
+                            <Titletd>
+                                Last Accessed
+                            </Titletd>
+                            <Contenttd>
+                                <DateTag date={selectedRSE?.last_accessed ?? new Date()} />
+                            </Contenttd>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     )
