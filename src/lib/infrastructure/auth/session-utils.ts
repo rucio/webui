@@ -1,10 +1,12 @@
+import { RucioTokenExpiredError } from '@/lib/core/data/auth-exceptions'
 import { Role, SessionUser } from '@/lib/core/entity/auth-models'
 import { IronSession, unsealData } from 'iron-session'
 import { withIronSessionApiRoute } from 'iron-session/next'
-import { NextApiHandler } from 'next'
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { ReadonlyRequestCookies } from 'next/dist/server/app-render'
 import { RequestCookies } from 'next/dist/server/web/spec-extension/cookies'
 import { sessionOptions } from '../config/session'
+import { validateRucioToken } from './auth-utils'
 
 /**
  * Returns the {@link Ruciouser} object from the iron session
@@ -54,6 +56,52 @@ export const getRucioAuthToken = async (
 export function withSessionRoute(handler: NextApiHandler) {
     return withIronSessionApiRoute(handler, sessionOptions)
 }
+
+/**
+ * A wrapper around Next API routes that require a valid rucioAuthToken
+ * @param handler (req, res, validAuthToken) => Promise<void> or a NEXT.js API route that required a valid rucioAuthToken
+ * @returns the wrapped route with a valid rucioAuthToken injected or returns a HTTP 401 error response
+ */
+export function withAuthenticatedSessionRoute(handler: (req: NextApiRequest, res: NextApiResponse, validAuthToken: string) => Promise<void>) {
+    return withIronSessionApiRoute(async (req, res) => {
+        const session = req.session as IronSession
+        if(!session) {
+            res.status(401).json({ error: 'Unauthorized: Session does not exists' })
+            return
+        }
+        
+        const sessionUser = session.user
+        if(!sessionUser) {
+            res.status(401).json({ error: 'Unauthorized: User does not exist in Session' })
+            return
+        }
+
+        if (!sessionUser.isLoggedIn) {
+            res.status(401).json({ error: 'Unauthorized' })
+            return
+        }
+
+        try {
+            validateRucioToken(sessionUser)
+        } catch(error) {
+            if(error instanceof RucioTokenExpiredError) {
+                res.status(401).json({ error: 'Unauthorized: Rucio Token has expired' })
+                return
+            }
+            res.status(401).json({ error: 'Unauthorized: Rucio Token is invalid' })
+            return
+        }
+
+        const validToken = session.user?.rucioAuthToken
+        if (!validToken) {
+            res.status(401).json({ error: 'Unauthorized: Rucio Token is invalid' })
+            return
+        }
+
+        return handler(req, res, validToken)
+    }, sessionOptions)
+}
+
 
 /**
  * Set am empty {@link SessionUser} object in the iron session if login fails
