@@ -3,6 +3,8 @@ import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-ou
 import StreamingGateway from "../../gateway/streaming-gateway";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import RucioAccountGateway from "../../gateway/account-gateway";
+import DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
+import RucioDIDGateway from "../../gateway/did-gateway";
 import { Container, interfaces } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
@@ -38,8 +40,8 @@ import SiteHeaderPresenter from "../../presenter/site-header-presenter";
 import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input-port";
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
 import SwitchAccountController, { ISwitchAccountController } from "../../controller/switch-account-controller";
-import SwitchAccountOutputPort from "@/lib/core/port/primary/switch-account-output-port";
 import SwitchAccountPresenter from "../../presenter/switch-account-presenter";
+
 
 /**
  * IoC Container configuration for the application.
@@ -48,6 +50,7 @@ const appContainer = new Container();
 
 appContainer.bind<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT).to(RucioAccountGateway);
 appContainer.bind<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER).to(RucioAuthServer);
+appContainer.bind<DIDGatewayOutputPort>(GATEWAYS.DID).to(RucioDIDGateway);
 appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
 
