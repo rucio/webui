@@ -35,6 +35,11 @@ import SiteHeaderInputPort from "@/lib/core/port/primary/site-header-input-port"
 import SiteHeaderUseCase from "@/lib/core/use-case/site-header-usecase";
 import SiteHeaderController, { ISiteHeaderController } from "../../controller/site-header-controller";
 import SiteHeaderPresenter from "../../presenter/site-header-presenter";
+import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input-port";
+import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
+import SwitchAccountController, { ISwitchAccountController } from "../../controller/switch-account-controller";
+import SwitchAccountOutputPort from "@/lib/core/port/primary/switch-account-output-port";
+import SwitchAccountPresenter from "../../presenter/switch-account-presenter";
 
 /**
  * IoC Container configuration for the application.
@@ -91,6 +96,15 @@ appContainer.bind<interfaces.Factory<SiteHeaderInputPort>>(USECASE_FACTORY.SITE_
         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
         const presenter = new SiteHeaderPresenter(response)
         return new SiteHeaderUseCase(presenter, envConfigGateway);
+    }
+);
+
+appContainer.bind<SwitchAccountInputPort>(INPUT_PORT.SWITCH_ACCOUNT).to(SwitchAccountUseCase).inRequestScope();
+appContainer.bind<ISwitchAccountController>(CONTROLLERS.SWITCH_ACCOUNT).to(SwitchAccountController);
+appContainer.bind<interfaces.Factory<SwitchAccountInputPort>>(USECASE_FACTORY.SWITCH_ACCOUNT).toFactory<SwitchAccountUseCase, [NextApiResponse]>((context: interfaces.Context) =>
+    (response: NextApiResponse) => {
+        const switchAccountPresenter = new SwitchAccountPresenter(response)
+        return new SwitchAccountUseCase(switchAccountPresenter);
     }
 );
 

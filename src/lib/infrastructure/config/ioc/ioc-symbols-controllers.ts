@@ -9,6 +9,7 @@ const CONTROLLERS = {
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),
     SITE_HEADER: Symbol.for("SiteHeaderController"),
     STREAM: Symbol.for("StreamController"),
+    SWITCH_ACCOUNT: Symbol.for("SwitchAccountController"),
     USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
 }
 

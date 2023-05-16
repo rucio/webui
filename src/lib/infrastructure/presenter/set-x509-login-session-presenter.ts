@@ -1,5 +1,5 @@
 import { SetX509LoginSessionError, SetX509LoginSessionResponse } from "@/lib/core/data/set-x509-login-session-usecase-models";
-import { Role, SessionUser } from "@/lib/core/entity/auth-models";
+import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
 import SetX509LoginSessionOutputPort from "@/lib/core/port/primary/set-x509-login-session-output-port";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
@@ -21,7 +21,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
             rucioAuthToken: responseModel.rucioAuthToken,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
             rucioIdentity: responseModel.rucioIdentity,
-            rucioAuthType: 'x509',
+            rucioAuthType: AuthType.x509,
             rucioVO: responseModel.shortVOName,
             rucioAccount: responseModel.rucioAccount,
             rucioOIDCProvider: '',
@@ -36,7 +36,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
         const viewModel: AuthViewModel = {
             status: 'success',
             rucioAccount: responseModel.rucioAccount,
-            rucioAuthType: 'x509',
+            rucioAuthType: AuthType.x509,
             rucioAuthToken: responseModel.rucioAuthToken,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
             rucioIdentity: responseModel.rucioIdentity,

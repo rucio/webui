@@ -1,3 +1,5 @@
+import { AuthType } from "../entity/auth-models"
+
 /**
  * Switch Account Use Case Models
  * @property {string} rucioIdentity - Rucio Identity
@@ -8,7 +10,7 @@
 export interface SwitchAccountRequest {
     rucioIdentity: string,
     rucioAccount: string,
-    rucioAuthType: 'userpass' | 'x509' | 'oidc',
+    rucioAuthType: AuthType,
     redirectTo?: string
 }
 
