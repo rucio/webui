@@ -4,7 +4,7 @@ import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Login as LoginStory } from "@/component-library/components/Pages/Login/Login";
-import { Role, VO } from "@/lib/core/entity/auth-models";
+import { AuthType, Role, VO } from "@/lib/core/entity/auth-models";
 
 
 export default function Login() {
@@ -124,7 +124,7 @@ export default function Login() {
             auth.status = 'success'
             auth.message = "Login successful. The session has not been set yet."
             auth.rucioAccount = rucioAccount
-            auth.rucioAuthType = 'x509'
+            auth.rucioAuthType = AuthType.x509
             auth.rucioAuthToken = rucioAuthToken
             auth.rucioAuthTokenExpires = rucioAuthTokenExpires
             return Promise.resolve(auth)

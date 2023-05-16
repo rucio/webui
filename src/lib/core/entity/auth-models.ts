@@ -45,7 +45,7 @@ export type User = {
 export interface SessionUser extends User {
     rucioAuthToken: string
     rucioAuthTokenExpires: string
-    rucioAuthType: AuthType
+    rucioAuthType: AuthType | null
     rucioOIDCProvider: string | null
     isLoggedIn: boolean
 }
