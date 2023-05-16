@@ -133,107 +133,109 @@ export const PageDIDFilereplicasD = (
     }, [datasetTableData.pageSize])
 
     return (
-        <div
-            className={twMerge(
-                "flex flex-col space-y-2"
-            )}
-        >
+        <div className="pt-1">
+            <i>Select a file and view the states of its replicas.</i>
             <div
                 className={twMerge(
-                    "border dark:border-gray-200 dark:border-2 rounded-md",
-                    "flex flex-col justify-between space-y-2 pb-2",
-                    "bg-white dark:bg-gray-700",
-                    "h-fit min-h-[430px]",
-                    "relative",
-                    "min-w-0",
+                    "xl:grid xl:grid-cols-2 xl:gap-4 xl:pt-1",
                 )}
             >
-                <table className="table-fixed w-full text-left">
-                    <thead className="w-full">
-                        <tr
-                            className={twMerge(
-                                "w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
-                            )}
-                        >
-                            <th className="grow pl-2">
-                                <div className="flex flex-row items-center space-x-8 justify-between">
-                                    <span className="shrink-0">
-                                        <DIDTypeTag didtype="File" className="h-8 text-xl" neversmall />
-                                    </span>
-                                    <span className="hidden sm:flex w-full">
+                <div
+                    className={twMerge(
+                        "border dark:border-gray-200 dark:border-2 rounded-md",
+                        "flex flex-col justify-between space-y-2 pb-2",
+                        "bg-white dark:bg-gray-700",
+                        "h-fit min-h-[430px]",
+                        "relative",
+                        "min-w-0",
+                    )}
+                >
+                    <table className="table-fixed w-full text-left">
+                        <thead className="w-full">
+                            <tr
+                                className={twMerge(
+                                    "w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
+                                )}
+                            >
+                                <th className="grow pl-2">
+                                    <div className="flex flex-row items-center space-x-8 justify-between">
+                                        <span className="shrink-0">
+                                            <DIDTypeTag didtype="File" className="h-8 text-xl" neversmall />
+                                        </span>
+                                        <span className="hidden sm:flex w-full">
+                                            <Filter column={table.getColumn("did") as Column<FilereplicaStateD, unknown>} table={table} placeholder="Filter Files by DID" />
+                                        </span>
+                                        <span className="flex sm:hidden pr-4 relative">
+                                            <button
+                                                onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                            >
+                                                <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <div
+                                        id="smallScreenNameFiltering"
+                                        className={twMerge(
+                                            "absolute inset-0",
+                                            smallScreenNameFiltering ? "flex" : "hidden",
+                                            "bg-white",
+                                            "p-2 flex-row justify-between space-x-2 items-center"
+                                        )}
+                                    >
                                         <Filter column={table.getColumn("did") as Column<FilereplicaStateD, unknown>} table={table} placeholder="Filter Files by DID" />
-                                    </span>
-                                    <span className="flex sm:hidden pr-4 relative">
                                         <button
                                             onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
                                         >
-                                            <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
+                                            <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
                                         </button>
-                                    </span>
-                                </div>
-                                <div
-                                    id="smallScreenNameFiltering"
-                                    className={twMerge(
-                                        "absolute inset-0",
-                                        smallScreenNameFiltering ? "flex" : "hidden",
-                                        "bg-white",
-                                        "p-2 flex-row justify-between space-x-2 items-center"
-                                    )}
-                                >
-                                    <Filter column={table.getColumn("did") as Column<FilereplicaStateD, unknown>} table={table} placeholder="Filter Files by DID" />
-                                    <button
-                                        onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="w-full">
+                            {table.getRowModel().rows.map((row) => {
+                                const isSelected = row.getValue("did") === selectedDID
+                                return (
+                                    <tr
+                                        key={row.id}
+                                        className={twMerge(
+                                            "w-full hover:cursor-pointer h-16 md:h-8",
+                                            "bg-white odd:bg-stone-100",
+                                            "dark:bg-gray-700 dark:odd:bg-gray-800",
+                                            isSelected ? "bg-blue-200 odd:bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 odd:dark:bg-blue-500 dark:hover:bg-blue-600 border border-blue-400 dark:border-blue-700" :
+                                                "hover:bg-gray-200 dark:hover:bg-gray-900",
+                                        )}
+                                        onClick={(event) => {
+                                            setSelectedDID(row.getValue("did"))
+                                        }}
                                     >
-                                        <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
-                                    </button>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="w-full">
-                        {table.getRowModel().rows.map((row) => {
-                            const isSelected = row.getValue("did") === selectedDID
-                            return (
-                                <tr
-                                    key={row.id}
-                                    className={twMerge(
-                                        "w-full hover:cursor-pointer h-16 md:h-8",
-                                        "bg-white odd:bg-stone-100",
-                                        "dark:bg-gray-700 dark:odd:bg-gray-800",
-                                        isSelected ? "bg-blue-200 odd:bg-blue-200 hover:bg-blue-300 dark:bg-blue-500 odd:dark:bg-blue-500 dark:hover:bg-blue-600 border border-blue-400 dark:border-blue-700" :
-                                            "hover:bg-gray-200 dark:hover:bg-gray-900",
-                                    )}
-                                    onClick={(event) => {
-                                        setSelectedDID(row.getValue("did"))
-                                    }}
-                                >
-                                    {row.getVisibleCells().map((cell) => {
-                                        return (
-                                            <td
-                                                key={cell.id}
-                                            >
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </td>
-                                        )
-                                    })}
-                                </tr>
-                            )
-                        }
+                                        {row.getVisibleCells().map((cell) => {
+                                            return (
+                                                <td
+                                                    key={cell.id}
+                                                >
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </td>
+                                            )
+                                        })}
+                                    </tr>
+                                )
+                            }
+                            )}
+                        </tbody>
+                    </table>
+                    <PaginationDiv table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+                    <div
+                        className={twMerge(
+                            "absolute",
+                            "top-16 sm:top-12 right-2",
                         )}
-                    </tbody>
-                </table>
-                <PaginationDiv table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
-                <div
-                    className={twMerge(
-                        "absolute",
-                        "top-16 sm:top-12 right-2",
-                    )}
-                >
-                    <FetchstatusIndicator status={datasetTableData.fetchStatus} />
+                    >
+                        <FetchstatusIndicator status={datasetTableData.fetchStatus} />
+                    </div>
                 </div>
+                <PageDIDFilereplicas tableData={replicaTableData}/>
             </div>
-
-            <PageDIDFilereplicas tableData={replicaTableData}/>
         </div>
     )
 }
