@@ -272,10 +272,12 @@ export const CreateRule = (
                                 </div>
                             </div>
                             <DIDSelectTable
-                                data={props.didResponse.data}
-                                fetchstatus={props.didResponse.fetchStatus}
+                                tableData={{
+                                    data: props.didResponse.data,
+                                    fetchStatus: props.didResponse.fetchStatus,
+                                    pageSize: 10,
+                                }}
                                 onChange={(selected: string[]) => { setPage0State({ ...Page0State, chosenDIDs: selected }) }}
-                                pageSize={10}
                                 useScopenames={false}
                             />
                         </div>

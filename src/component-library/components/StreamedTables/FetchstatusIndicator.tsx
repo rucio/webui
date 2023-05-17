@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 
 import { TbLoader2 } from 'react-icons/tb'
 import { FetchStatus } from '@tanstack/react-query'
@@ -55,46 +55,39 @@ export const FetchstatusIndicator = (props: {
             return (
                 <div
                     className={twMerge(
-                        "w-[228px] h-fit",
-                        "absolute"
+                        "flex justify-between items-center border p-1 rounded-md w-32",
+                        "bg-blue-200",
+                        "relative",
+                        "animate-fadeout fill-mode-forwards"
                     )}
                 >
                     <div
                         className={twMerge(
-                            "flex justify-between items-center border p-1 rounded-md w-32",
-                            "bg-blue-200",
-                            "relative",
-                            "animate-floatout fill-mode-forwards"
+                            "h-6 w-6",
                         )}
                     >
-                        <div
+                        <HiMoon
                             className={twMerge(
-                                "h-6 w-6",
+                                "w-full h-full",
+                                "text-blue-800"
                             )}
-                        >
-                            <HiMoon
-                                className={twMerge(
-                                    "w-full h-full",
-                                    "text-blue-800"
-                                )}
-                                id="spinnywheel"
-                            />
-                        </div>
-                        <div
+                            id="spinnywheel"
+                        />
+                    </div>
+                    <div
+                        className={twMerge(
+                            "grow text-center",
+                        )}
+                    >
+                        <label
                             className={twMerge(
-                                "grow text-center",
+                                "text-blue-800",
+                                "font-semibold tracking-wide"
                             )}
+                            htmlFor="spinnywheel"
                         >
-                            <label
-                                className={twMerge(
-                                    "text-blue-800",
-                                    "font-semibold tracking-wide"
-                                )}
-                                htmlFor="spinnywheel"
-                            >
-                                Idle
-                            </label>
-                        </div>
+                            Idle
+                        </label>
                     </div>
                 </div>
             )

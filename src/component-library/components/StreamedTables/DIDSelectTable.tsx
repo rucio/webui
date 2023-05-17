@@ -354,7 +354,7 @@ export const DIDSelectTable = (
                     "top-16 sm:top-12 right-2",
                 )}
             >
-                <FetchstatusIndicator status={props.fetchstatus} />
+                <FetchstatusIndicator status={props.tableData.fetchStatus} />
             </div>
         </div>
     )
