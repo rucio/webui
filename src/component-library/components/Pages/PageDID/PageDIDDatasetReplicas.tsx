@@ -198,7 +198,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44"
+                style: "cursor-pointer w-36 2xl:w-44 pt-2"
             }
         }),
         columnHelper.accessor("available_bytes", {
@@ -249,7 +249,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44"
+                style: "cursor-pointer w-36 2xl:w-44 pt-2"
             }
         }),
         columnHelper.accessor("creation_date", {
@@ -299,7 +299,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44"
+                style: "cursor-pointer w-36 2xl:w-44 pt-2"
             }
         }),
         columnHelper.accessor("last_accessed", {
@@ -349,7 +349,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44"
+                style: "cursor-pointer w-36 2xl:w-44 pt-2"
             }
         }),
     ]
@@ -432,7 +432,7 @@ export const PageDIDDatasetReplicas = (
                 <thead className="w-full">
                     <tr
                         className={twMerge(
-                            "w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 md:h-12"
+                            "w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 md:h-14"
                         )}
                     >
                         {
