@@ -93,11 +93,11 @@ export const PageDID = (
             >
                 <div
                     className={twMerge(
-                        "flex flex-col items-end space-y-2 lg:flex-row lg:justify-between lg:items-baseline lg:space-y-0 w-full",
+                        "flex flex-col space-y-2 lg:flex-row lg:justify-between lg:items-baseline lg:space-y-0 w-full",
                         "bg-white dark:bg-gray-800"
                     )}
                 >
-                    <span className="flex flex-row space-x-4">
+                    <span className="flex flex-row justify-between space-x-4">
                         <H3>DID Page for {props.didMeta.scope}:{props.didMeta.name}</H3>
                         <DIDTypeTag didtype={props.didMeta.did_type} />
                     </span>
@@ -108,7 +108,7 @@ export const PageDID = (
                             "py-1 px-3 h-8 rounded",
                             "font-bold",
                             "cursor-pointer",
-                            "flex-row items-center space-x-2 shrink-0"
+                            "flex-row justify-center lg:justify-end items-center space-x-2 shrink-0"
                         )}
                         href={props.fromDidList ? "/listdids?=" + props.fromDidList : "/"} // TODO connect properly
                         id="back-to-didlist-button"

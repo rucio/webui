@@ -13,6 +13,8 @@ import { twMerge } from "tailwind-merge";
 import { RuleStateTag } from "../../Tags/RuleStateTag";
 import { DateTag } from "../../Tags/DateTag";
 import { RuleState } from "@/lib/core/entity/rucio";
+import { StyleMetaColumnDef } from "@/lib/infrastructure/data/view-model/streamedtables";
+import { FullFilter } from "../../StreamedTables/FullFilter";
 
 export const PageDIDRules = (
     props: {
@@ -26,16 +28,34 @@ export const PageDIDRules = (
             id: "id",
         }),
         columnHelper.accessor("name", {
-            id: "name",
+            id: "Rule",
             cell: (info) => {
                 return (
-                    <p
-                        className={twMerge("break-all pl-1")}
+                    <span
+                        className={twMerge(
+                            "flex flex-row space-x-2"
+                        )}
                     >
-                        {info.getValue()}
-                    </p>
+                        <span
+                            className={twMerge("break-all pl-1 dark:text-white")}
+                        >
+                            {info.getValue()}
+                        </span>
+                        <RuleStateTag
+                            state={info.row.original.state}
+                            tiny
+                            className={windowSize[0] > 1024 ? "hidden" : ""}
+                        />
+                    </span>
                 )
-            }
+            },
+            header: (info) => {
+                return (<p>should never be visible</p>)
+            },
+            meta: {
+                style: "pl-1",
+                filter: true
+            },
         }),
         columnHelper.accessor("state", {
             id: "state",
@@ -43,42 +63,140 @@ export const PageDIDRules = (
                 return (
                     <RuleStateTag state={info.getValue()} />
                 )
-            }
+            },
+            header: (info) => {
+                return (
+                    <span
+                        className={twMerge(
+                            "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2",
+                        )}
+                        onClick={(e) => {
+                            // create a match statement for the state filter
+                            const filterchange = (filterState: RuleState | null) => {
+                                setFilterState(filterState)
+                                var column = table.getColumn("state") as Column<DIDRules, unknown>
+                                column.setFilterValue(filterState ?? "")
+                            }
+                            const nextRecord = {
+                                "null": "Replicating",
+                                "Replicating": "OK",
+                                "OK": "Stuck",
+                                "Stuck": "Suspended",
+                                "Suspended": "Waiting_Approval",
+                                "Waiting_Approval": "Inject",
+                                "Inject": null,
+                            }
+                            filterchange(nextRecord[filterState ?? "null"] as RuleState | null)
+                        }}
+                    >
+                        <H3>State</H3>
+                        <span className="h-6">
+                            {
+                                filterState === null ?
+                                    <HiDotsHorizontal
+                                        className="text-xl text-gray-500 dark:text-gray-200"
+                                    /> :
+                                    <RuleStateTag
+                                        state={filterState}
+                                        tiny
+                                    />
+                            }
+                        </span>
+                    </span>
+                )
+            },
+            meta: {
+                style: "w-28 md:w-44 cursor-pointer select-none",
+            },
         }),
         columnHelper.accessor("account", {
-            id: "account",
+            id: "Account",
             cell: (info) => {
                 return (
                     <p
-                        className={twMerge("break-all pl-1")}
+                        className={twMerge("break-all pl-1 dark:text-white")}
                     >
                         {info.getValue()}
                     </p>
                 )
-            }
+            },
+            header: (info) => {
+                return (<p>should never be visible</p>)
+            },
+            meta: {
+                style: "pl-1",
+                filter: true
+            },
         }),
         columnHelper.accessor("subscription", {
             id: "subscription",
             cell: (info) => {
                 return (
                     <p
-                        className={twMerge("break-all pl-1")}
+                        className={twMerge("break-all pl-1 dark:text-white")}
                     >
                         {info.getValue().name}
                     </p>
                 )
-            }
+            },
+            header: (info) => {
+                return (
+                    <H3>Subscription</H3>
+                )
+            },
+            meta: {
+                style: "",
+            },
         }),
         columnHelper.accessor("last_modified", {
             id: "last_modified",
             cell: (info) => {
                 return (
-                    <DateTag date={info.getValue()} className="pl-1"/>
+                    <DateTag date={info.getValue()} className="pl-1" />
                 )
-            }
+            },
+            header: (info) => {
+                return (
+                    <span
+                        className={twMerge(
+                            "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
+                        )}
+                        onClick={(e) => {
+                            // create a match statement for the state filter
+                            const sortchange = (sortState: "asc" | "desc" | null) => {
+                                setDateSorting(sortState)
+                                var column = table.getColumn("last_modified") as Column<DIDRules, unknown>
+                                column.toggleSorting()
+                            }
+                            const nextRecord = {
+                                "null": "desc",
+                                "desc": "asc",
+                                "asc": null,
+                            }
+                            sortchange(nextRecord[dateSorting ?? "null"] as "asc" | "desc" | null)
+                        }}
+                    >
+                        <H3>Last modified</H3>
+                        <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
+                            {
+                                {
+                                    asc: <HiSortAscending />, desc: <HiSortDescending />, "null": <HiDotsHorizontal />
+                                }[dateSorting as string]
+                            }
+                        </span>
+                    </span>
+                )
+            },
+            meta: {
+                style: "select-none cursor-pointer w-48",
+            },
         }),
     ]
 
+    // handle window resize
+    const [windowSize, setWindowSize] = useState([
+        1920, 1080
+    ]);
 
     const table = useReactTable<DIDRules>({
         data: tableData.data || [],
@@ -91,11 +209,11 @@ export const PageDIDRules = (
         state: {
             columnVisibility: {
                 id: false,
-                name: true,
-                state: true,
-                account: true,
-                subscription: true,
-                last_modified: true,
+                Rule: true,
+                state: windowSize[0] > 1024,
+                Account: true,
+                subscription: windowSize[0] > 1024,
+                last_modified: windowSize[0] > 640,
             },
         }
     } as TableOptions<DIDRules>)
@@ -104,10 +222,6 @@ export const PageDIDRules = (
     const [filterState, setFilterState] = useState<RuleState | null>(null)
     const [dateSorting, setDateSorting] = useState<"asc" | "desc" | null>(null)
 
-    // handle window resize
-    const [windowSize, setWindowSize] = useState([
-        1920, 1080
-    ]);
 
     useEffect(() => {
         setWindowSize([window.innerWidth, window.innerHeight])
@@ -122,13 +236,6 @@ export const PageDIDRules = (
             window.removeEventListener('resize', handleWindowResize);
         };
     }, []);
-    // using the window size to determine whether we shall show the input form with full width
-    const [smallScreenNameFiltering, setSmallScreenNameFiltering] = useState(false)
-    useEffect(() => {
-        if (windowSize[0] > 1080) {
-            setSmallScreenNameFiltering(false)
-        }
-    }, [windowSize])
 
     // Pagination
     const [pageIndex, setPageIndex] = useState(table.getState().pagination.pageIndex)
@@ -160,148 +267,19 @@ export const PageDIDRules = (
                             "w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 sm:h-12"
                         )}
                     >
-                        <th>
-                            <div className="px-1 flex flex-row items-center space-x-4 justify-between">
-                                <span className="shrink-0">
-                                    <H3>Rule Name</H3>
-                                </span>
-                                <span className="hidden xl:flex w-full">
-                                    <Filter column={table.getColumn("name") as Column<DIDRules, unknown>} table={table} placeholder="Filter by Rule Name" />
-                                </span>
-                                <span className="flex xl:hidden pr-4 relative">
-                                    <button
-                                        onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
-                                    >
-                                        <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
-                                    </button>
-                                </span>
-                            </div>
-                            <div
-                                id="smallScreenNameFiltering"
-                                className={twMerge(
-                                    "absolute inset-0",
-                                    smallScreenNameFiltering ? "flex" : "hidden",
-                                    "bg-white",
-                                    "p-2 flex-row justify-between space-x-2 items-center"
-                                )}
-                            >
-                                <Filter column={table.getColumn("name") as Column<DIDRules, unknown>} table={table} placeholder="Filter by Rule" />
-                                <button
-                                    onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
-                                >
-                                    <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
-                                </button>
-                            </div>
-                        </th>
-                        <th
-                            className="w-28 md:w-44 cursor-pointer select-none"
-                            onClick={(e) => {
-                                // create a match statement for the state filter
-                                const filterchange = (filterState: RuleState | null) => {
-                                    setFilterState(filterState)
-                                    var column = table.getColumn("state") as Column<DIDRules, unknown>
-                                    column.setFilterValue(filterState ?? "")
-                                }
-                                const nextRecord = {
-                                    "null": "Replicating",
-                                    "Replicating": "OK",
-                                    "OK": "Stuck",
-                                    "Stuck": "Suspended",
-                                    "Suspended": "Waiting_Approval",
-                                    "Waiting_Approval": "Inject",
-                                    "Inject": null,
-                                }
-                                filterchange(nextRecord[filterState ?? "null"] as RuleState | null)
-                            }}
-                        >
-                            <span
-                                className={twMerge(
-                                    "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
-                                )}
-                            >
-                                <H3>State</H3>
-                                <span className="h-6">
-                                    {
-                                        filterState === null ?
-                                            <HiDotsHorizontal
-                                                className="text-xl text-gray-500 dark:text-gray-200"
-                                            /> :
-                                            <RuleStateTag
-                                                state={filterState}
-                                                tiny
-                                            />
-                                    }
-                                </span>
-                            </span>
-                        </th>
-                        <th>
-                            <div className="px-1 flex flex-row items-center space-x-4 justify-between">
-                                <span className="shrink-0">
-                                    <H3>Account</H3>
-                                </span>
-                                <span className="hidden xl:flex w-full">
-                                    <Filter column={table.getColumn("account") as Column<DIDRules, unknown>} table={table} placeholder="Filter by Rule Account" />
-                                </span>
-                                <span className="flex xl:hidden pr-4 relative">
-                                    <button
-                                        onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
-                                    >
-                                        <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
-                                    </button>
-                                </span>
-                            </div>
-                            <div
-                                id="smallScreenNameFiltering"
-                                className={twMerge(
-                                    "absolute inset-0",
-                                    smallScreenNameFiltering ? "flex" : "hidden",
-                                    "bg-white",
-                                    "p-2 flex-row justify-between space-x-2 items-center"
-                                )}
-                            >
-                                <Filter column={table.getColumn("account") as Column<DIDRules, unknown>} table={table} placeholder="Filter by Account" />
-                                <button
-                                    onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
-                                >
-                                    <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
-                                </button>
-                            </div>
-                        </th>
-                        <th>
-                            <H3>Subscription</H3>
-                        </th>
-                        <th
-                            className="select-none cursor-pointer w-48"
-                            onClick={(e) => {
-                                // create a match statement for the state filter
-                                const sortchange = (sortState: "asc" | "desc" | null) => {
-                                    setDateSorting(sortState)
-                                    var column = table.getColumn("last_modified") as Column<DIDRules, unknown>
-                                    column.toggleSorting()
-                                }
-                                const nextRecord = {
-                                    "null": "desc",
-                                    "desc": "asc",
-                                    "asc": null,
-                                }
-                                sortchange(nextRecord[dateSorting ?? "null"] as "asc" | "desc" | null)
-                            }}
-                        >
-                            <span
-                                className={twMerge(
-                                    "flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
-                                )}
-                            >
-                                <H3>Last modified</H3>
-                                <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
-                                    {
-                                        {
-                                            asc: <HiSortAscending />, desc: <HiSortDescending />, "null": <HiDotsHorizontal />
-                                        }[dateSorting as string]
-                                    }
-                                </span>
-                            </span>
-                        </th>
+                        {
+                            table.getLeafHeaders().map((header) => {
+                                return (
+                                    <th key={header.id} className={(header.column.columnDef as StyleMetaColumnDef<DIDRules>).meta.style}>
+                                        {(header.column.columnDef as StyleMetaColumnDef<DIDRules>).meta.filter ?? false ? (
+                                            <FullFilter columnTitle={header.column.id} column={header.column} table={table} />
+                                        ) : (
+                                            flexRender(header.column.columnDef.header, header.getContext())
+                                        )}
+                                    </th>
+                                )
+                            })
+                        }
                     </tr>
                 </thead>
                 <tbody className="w-full">
