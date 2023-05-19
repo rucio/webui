@@ -1258,6 +1258,11 @@ video {
   border-top-right-radius: 0.25rem;
 }
 
+.rounded-t-md {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
 .border {
   border-width: 1px;
 }

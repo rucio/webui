@@ -3,6 +3,7 @@ import { DIDMetaView } from "@/component-library/components/Pages/ListDID/DIDMet
 import { Tabs } from "../../Tabs/Tabs";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { H3 } from "../../Text/Headings/H3";
+import { SubPage } from "../../Helpers/SubPage";
 
 // misc packages, react
 import { twMerge } from "tailwind-merge";
@@ -48,28 +49,6 @@ export interface PageDIDPageProps {
     didDatasetReplicasResponse: { data: any; fetchStatus: FetchStatus }
 }
 
-const SubPage: (
-    React.FC<JSX.IntrinsicElements["div"] & { show: boolean; children?: any }>
-) = (
-    {
-        show = false,
-        ...allprops
-    }
-) => {
-        const { className, children, ...props } = allprops
-        return (
-            <div
-                className={twMerge(
-                    show ? "block" : "hidden",
-                    "grow rounded-b-md",
-                    className
-                )}
-                {...props}
-            >
-                {children}
-            </div>
-        )
-    }
 
 
 export const PageDID = (

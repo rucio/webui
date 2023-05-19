@@ -50,6 +50,40 @@ export type DIDMeta = {
     filesize: number | null
 }
 
+// copied from deployed rucio UI
+export type RuleMeta = {
+    account: string
+    activity: string // ?
+    copies: number
+    created_at: Date
+    did_type: DIDType
+    expires_at: Date
+    grouping: DIDType // ? but is it extended
+    id: string
+    ignore_account_limit: boolean
+    ignore_availability: boolean
+    locked: boolean
+    locks_ok_cnt: number
+    locks_replicating_cnt: number
+    locks_stuck_cnt: number
+    name: string
+    notification: string // ? or bool
+    priority: number
+    purge_replicas: boolean
+    rse_expression: string
+    scope: string
+    split_container: boolean
+    state: RuleState // ?
+    updated_at: Date
+}
+
+// rucio.db.sqla.constants::LockState
+export enum LockState {
+    Replicating = "R",
+    OK = "O",
+    Stuck = "S",
+}
+
 export type DIDType = "Dataset" | "Container" | "Collection" | "File";
 
 export type RSE = {
