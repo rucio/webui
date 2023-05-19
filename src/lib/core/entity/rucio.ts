@@ -53,12 +53,12 @@ export type DIDMeta = {
 // copied from deployed rucio UI
 export type RuleMeta = {
     account: string
-    activity: string // ?
+    activity: string // VO-specific enums, just show string here.
     copies: number
     created_at: Date
     did_type: DIDType
     expires_at: Date
-    grouping: DIDType // ? but is it extended
+    grouping: DIDType
     id: string
     ignore_account_limit: boolean
     ignore_availability: boolean
@@ -67,13 +67,13 @@ export type RuleMeta = {
     locks_replicating_cnt: number
     locks_stuck_cnt: number
     name: string
-    notification: string // ? or bool
+    notification: RuleNotification
     priority: number
     purge_replicas: boolean
     rse_expression: string
     scope: string
     split_container: boolean
-    state: RuleState // ?
+    state: RuleState
     updated_at: Date
 }
 
@@ -82,6 +82,14 @@ export enum LockState {
     Replicating = "R",
     OK = "O",
     Stuck = "S",
+}
+
+// rucio.db.sqla.constants::RuleNotification
+export enum RuleNotification {
+    Yes = "Y", // notify when the rules state becomes OK
+    No = "N", // no notification
+    Close = "C", // notify when the rules state becomes OK *and* the DID is closed -> least verbose except for "no"
+    Progress = "P", // notify for each chang
 }
 
 export type DIDType = "Dataset" | "Container" | "Collection" | "File";

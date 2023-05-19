@@ -1,4 +1,4 @@
-import { RuleState } from "@/lib/core/entity/rucio";
+import { RuleNotification, RuleState } from "@/lib/core/entity/rucio";
 import { StoryFn, Meta } from "@storybook/react";
 import { PageRule as P } from "./PageRule";
 
@@ -27,7 +27,7 @@ PageRule.args = {
         locks_replicating_cnt: 0,
         locks_stuck_cnt: 0,
         name: "user.mlassnig.pilot.test.single.hits",
-        notification: "NO",
+        notification: RuleNotification.No,
         priority: 3,
         purge_replicas: false,
         rse_expression: "AGLT2_LOCALGROUPDISK",
