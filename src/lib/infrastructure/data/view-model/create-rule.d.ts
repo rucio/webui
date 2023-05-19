@@ -50,10 +50,12 @@ export interface TypedDIDValidationQuery {
     DIDList: Array<DIDName>
 }
 
+// TODO move to a separate file
 export interface DIDSearchQuery {
     DIDSearchString: string
 }
 
+// TODO move to a separate file
 export interface RSESearchQuery {
     RSEExpression: string
 }

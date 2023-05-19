@@ -2,7 +2,11 @@
  * Entity models for Rucio. Please keep the type definitions sorted in alphabetical order.
  */
 
-export type DIDAvailability = "Available" | "Deleted" | "Lost";
+export enum DIDAvailability {
+    Available = "Available",
+    Deleted = "Deleted",
+    Lost = "Lost",
+}
 
 // results of web::flaskapi:v1::rses::RSEAccountUsageLimit::get
 export type RSEAccountUsageLimit = {
@@ -59,3 +63,28 @@ export type RSE = {
     rse_type: string,
     volatile: boolean,
 }
+
+// rucio.db.sqla.constants::ReplicaState
+export enum ReplicaState {
+    Available = "Available",
+    Unavailable = "Unavailable",
+    Copying = "Copying",
+    Being_Deleted = "Being_Deleted",
+    Bad = "Bad",
+    Temporary_Unavailable = "Temporary_Unavailable",
+}
+
+// rucio.db.sqla.constants::RuleState
+// R/O/S/U/W/I
+export enum RuleState {
+    Replicating = "Replicating",
+    OK = "OK",
+    Stuck = "Stuck",
+    Suspended = "Suspended",
+    Waiting_Approval = "Waiting_Approval",
+    Inject = "Inject",
+}
+
+// octal representation of the blockstate
+// read/write/delete
+export type RSEBlockState = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;

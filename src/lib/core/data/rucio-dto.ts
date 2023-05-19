@@ -26,6 +26,7 @@ export type DIDDTO = {
 }
 
 // copied from deployed rucio UI
+// these key value pairs are fixed
 export type DIDMeta = {
     name: string
     scope: string

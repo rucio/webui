@@ -190,7 +190,76 @@ def didmeta():
         return try_stream(generate())
     except Exception as e:
         return flask.Response(status=500, response=str(e))
-    
+
+@app.route('/didparents')
+def didparents():
+    long_list = [
+        {
+            "scope": fake.pystr_format("user.{{first_name}}{{last_name}}"),
+            "name": random.choice(["dataset", "container"]) + "-" + fake.pystr(),
+            "did_type": random.choice(["Dataset", "Container"]),
+        } for _ in range(100)
+    ]
+    try:
+        def generate():
+            for i in long_list:
+                # time.sleep(2)
+                print(f"sending {i}")
+                yield render_json(i) + '\n'
+                print("sleeping")
+
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
+
+@app.route("/didrules")
+def didrules():
+    long_list = [
+        {
+            "id": fake.uuid4(),
+            "name": f"RULE-{fake.pystr()}",
+            "state": random.choice(["Replicating", "OK", "Stuck", "Suspended", "Waiting_Approval", "Inject"]),
+            "account": fake.pystr_format("user.{{first_name}}{{last_name}}"),
+            "subscription": {"name": fake.pystr(), "account": fake.pystr_format("user.{{first_name}}{{last_name}}")},
+            "last_modified": fake.date_time_this_year(),
+        } for _ in range(100)
+    ]
+    try:
+        def generate():
+            for i in long_list:
+                # time.sleep(2)
+                print(f"sending {i}")
+                yield render_json(i) + '\n'
+                print("sleeping")
+
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
+
+@app.route("/datasetreplicas")
+def datasetreplicas():
+    long_list = [
+        {
+            "rse": f"RSE-{fake.pystr()}",
+            "rseblocked": random.choice([*[0]*4, random.randint(0,7)]),
+            "availability": fake.boolean(),
+            "available_files": random.randint(0, 100),
+            "available_bytes": int(random.randint(0, 1e3) * random.choice([1, 1e3, 1e6, 1e9])),
+            "creation_date": fake.date_of_birth(minimum_age=2, maximum_age=8),
+            "last_accessed": fake.date_time_this_year(),
+        } for _ in range(100)
+    ]
+    try:
+        def generate():
+            for i in long_list:
+                # time.sleep(2)
+                print(f"sending {i}")
+                yield render_json(i) + '\n'
+                print("sleeping")
+
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

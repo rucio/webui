@@ -1,4 +1,4 @@
-import { DIDName, DIDSearchResponse } from '@/lib/infrastructure/data/view-model/createRule';
+import { DIDName, DIDSearchResponse } from '@/lib/infrastructure/data/view-model/create-rule';
 
 import { StoryFn, Meta } from '@storybook/react';
 import { ListDID as LD } from './ListDID';

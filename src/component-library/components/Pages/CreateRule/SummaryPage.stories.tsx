@@ -1,4 +1,4 @@
-import { CreateRuleQuery } from '@/lib/infrastructure/data/view-model/createRule'
+import { CreateRuleQuery } from '@/lib/infrastructure/data/view-model/create-rule'
 import { StoryFn, Meta } from '@storybook/react'
 import { SummaryPage as SP } from './SummaryPage'
 

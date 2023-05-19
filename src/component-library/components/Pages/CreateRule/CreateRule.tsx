@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CreateRuleViewModel } from '../../../../lib/infrastructure/data/view-model/createRule.d';
+import { CreateRuleViewModel } from '../../../../lib/infrastructure/data/view-model/create-rule.d';
 import { Button } from '../../Button/Button';
 import { CheckBox } from '../../Checkbox/Checkbox.stories';
 import { Timeline } from '../../Timeline/Timeline';
@@ -35,7 +35,7 @@ import {
     DIDSearchQuery, DIDSearchResponse,
     RSESearchQuery, RSESearchResponse,
 
-} from '../../../../lib/infrastructure/data/view-model/createRule.d';
+} from '../../../../lib/infrastructure/data/view-model/create-rule.d';
 import { DIDTypeTag } from '../../Tags/DIDTypeTag';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
@@ -253,7 +253,7 @@ export const CreateRule = (
                     <Tabs
                         tabs={["DID Search Pattern", "List of DIDs"]}
                         active={Page0State.selectDIDMethod}
-                        handleClick={(event: any) => { console.log(event.target.id); setPage0State({ ...Page0State, selectDIDMethod: Number(event.target.id) }) }}
+                        handleClick={(event: any) => { console.log(event.target.dataset.id); setPage0State({ ...Page0State, selectDIDMethod: Number(event.target.dataset.id) }) }}
                         dataTestid="selectDIDMethod"
                     />
                     <Collapsible showIf={Page0State.selectDIDMethod === 0}>
@@ -272,10 +272,12 @@ export const CreateRule = (
                                 </div>
                             </div>
                             <DIDSelectTable
-                                data={props.didResponse.data}
-                                fetchstatus={props.didResponse.fetchStatus}
+                                tableData={{
+                                    data: props.didResponse.data,
+                                    fetchStatus: props.didResponse.fetchStatus,
+                                    pageSize: 10,
+                                }}
                                 onChange={(selected: string[]) => { setPage0State({ ...Page0State, chosenDIDs: selected }) }}
-                                pageSize={10}
                                 useScopenames={false}
                             />
                         </div>

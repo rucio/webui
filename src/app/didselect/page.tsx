@@ -59,10 +59,12 @@ export default function RSEAccountUsage() {
             </div>
             <div className="p-4">
                 <DIDSelectTable
-                    data={query.data}
-                    fetchstatus={query.fetchStatus}
+                    tableData={{
+                        data: query.data,
+                        fetchStatus: query.fetchStatus,
+                        pageSize: 10
+                    }}
                     onChange={(selected: string[]) => {}}
-                    pageSize={10}
                 />
             </div>
             <P>{query.fetchStatus}. The selection state of the table is printed to the console each time the state changes.</P>

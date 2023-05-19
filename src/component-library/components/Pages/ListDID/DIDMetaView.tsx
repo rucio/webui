@@ -10,6 +10,7 @@ export const DIDMetaView = (
     props: {
         data: DIDMeta
         show: boolean
+        horizontal?: boolean
     }
 ) => {
     const Titletd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
@@ -44,8 +45,8 @@ export const DIDMetaView = (
     return (
         <div
             className={twMerge(
-                "flex flex-col space-y-2",
-                props.show ? "block" : "hidden",
+                !props.horizontal ?? false ? "flex flex-col space-y-2" : "grid grid-cols-1 lg:grid-cols-2 lg:gap-x-2 gap-y-2",
+                props.show ? "" : "hidden",
             )}
         >
             <table

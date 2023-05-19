@@ -8,7 +8,7 @@ import {
     RSESearchQuery,
     DIDSearchResponse,
     RSESearchResponse,
-} from '@/lib/infrastructure/data/view-model/createRule'
+} from '@/lib/infrastructure/data/view-model/create-rule'
 
 export default {
     title: 'Components/Pages/CreateRule',

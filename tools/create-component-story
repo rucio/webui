@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Check if two arguments were passed
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <path> <component_name>"
+  exit 1
+fi
+path=$1
+component_path=$(echo $path | sed 's/.*components\///' | sed 's/.$//')
+component_name=$(echo $2 | sed 's/\b\(.\)/\u\1/g')
+first_letter=$(echo $component_name | cut -c1)
+
+# create files, pipe into them
+touch $path/$component_name.tsx
+mainfile=$(cat << END
+import { twMerge } from "tailwind-merge";
+
+export const $component_name = (
+    props: {
+
+    }
+) => {
+  return (
+    <div className={twMerge("bg-red-500", "text-white")}>
+      $component_name
+    </div>
+  );
+};
+END
+)
+echo "$mainfile" > $path/$component_name.tsx 
+echo "Created $path/$component_name.tsx and wrote to it"
+
+
+
+touch $path/$component_name.stories.tsx
+storyfile=$(cat << END
+import { StoryFn, Meta } from "@storybook/react";
+import { $component_name as $first_letter } from "./$component_name";
+
+export default {
+    title: 'Components/$component_path',
+    component: $first_letter,
+} as Meta<typeof $first_letter>;
+
+const Template: StoryFn<typeof $first_letter> = (args) => <$first_letter {...args} />;
+
+export const $component_name = Template.bind({});
+$component_name.args = {};
+END
+)
+echo "$storyfile" > $path/$component_name.stories.tsx
+echo "Created $path/$component_name.stories.tsx and wrote to it"

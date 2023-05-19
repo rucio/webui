@@ -7,7 +7,7 @@ import {
     CreateRuleQuery, DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
     RSESearchQuery
-} from '@/lib/infrastructure/data/view-model/createRule'
+} from '@/lib/infrastructure/data/view-model/create-rule'
 import { render, act, screen, cleanup, within, fireEvent } from "@testing-library/react";
 import userEvent from '@testing-library/user-event'
 

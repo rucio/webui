@@ -50,6 +50,7 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
             className={twMerge(
                 "h-6 rounded text-center flex justify-center items-center",
                 !neversmall ? "w-6 md:w-24 rounded-full md:rounded" : "w-24",
+                forcesmall ? "w-6 md:w-6 rounded-full md:rounded-full" : "",
                 colPicker(didtype),
                 className
             )}

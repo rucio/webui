@@ -1,16 +1,51 @@
-export const Number = (
-    props: {
-        number: number,
-        decimalPlaces?: number,
+import { twMerge } from "tailwind-merge";
+
+type ByteProps = JSX.IntrinsicElements["span"] & { number: number; decimalPlaces?: number }
+
+export const Number: React.FC<ByteProps> = (
+    {
+        number,
+        decimalPlaces,
+        ...props
     }
 ) => {
-    if (!+props.number) return <span className="text-red-500 text-bold">NaN</span> 
+    const {className, ...otherprops} = props
+    if (number === 0) return (
+        <span
+            className={twMerge(
+                className ?? "",
+            )}
+            {...otherprops}
+        >
+            0
+        </span>
+    )
+    if (!+number) return (
+        <span
+            className={twMerge(
+                className ?? "",
+                "text-red-500 text-bold", // placed here to override all other classes for NaN
+            )}
+            {...otherprops}
+        >
+            NaN
+        </span>
+    )
 
     const base = 1000
-    const dm = props.decimalPlaces ?? 1
+    const dm = decimalPlaces ?? 1
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-    const i = Math.floor(Math.log(props.number) / Math.log(base))
+    const i = Math.floor(Math.log(number) / Math.log(base))
 
-    return <span>{`${parseFloat((props.number/ Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`}</span>
+    return (
+        <span
+            className={twMerge(
+                className ?? "",
+            )}
+            {...otherprops}
+        >
+            {`${parseFloat((number / Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`}
+        </span>
+    )
 }

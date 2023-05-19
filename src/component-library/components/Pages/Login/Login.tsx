@@ -68,7 +68,7 @@ export const Login = ({
 
             <div className="flex flex-col space-y-2">
                 <Collapsible id="vo-tabs" showIf={loginViewModel.multiVOEnabled}>
-                    <Tabs tabs={loginViewModel.voList.map((vo) => vo.name)} active={1} handleClick={(event: any) => { setSelectedVOTab(event.target.id) }} />
+                    <Tabs tabs={loginViewModel.voList.map((vo) => vo.name)} active={1} handleClick={(event: any) => { setSelectedVOTab(event.target.dataset.id) }} />
                 </Collapsible>
 
                 <div className="flex justify-center flex-col space-y-4">

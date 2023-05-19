@@ -17,8 +17,8 @@ export const FetchstatusIndicator = (props: {
             return (
                 <div
                     className={twMerge(
-                        "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
-                        "bg-amber-200 dark:bg-amber-900"
+                        "flex justify-between items-center border p-1 rounded-md w-32",
+                        "bg-amber-200"
                     )}
                 >
                     <div
@@ -29,7 +29,7 @@ export const FetchstatusIndicator = (props: {
                         <TbLoader2
                             className={twMerge(
                                 "w-full h-full animate-slowspin",
-                                "text-amber-800 dark:text-amber-300"
+                                "text-amber-800"
                             )}
                             id="spinnywheel"
                         />
@@ -41,7 +41,7 @@ export const FetchstatusIndicator = (props: {
                     >
                         <label
                             className={twMerge(
-                                "text-amber-800 dark:text-amber-300",
+                                "text-amber-800",
                                 "font-semibold tracking-wide"
                             )}
                             htmlFor="spinnywheel"
@@ -55,8 +55,9 @@ export const FetchstatusIndicator = (props: {
             return (
                 <div
                     className={twMerge(
-                        "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
-                        "bg-blue-200 dark:bg-blue-900",
+                        "flex justify-between items-center border p-1 rounded-md w-32",
+                        "bg-blue-200",
+                        "relative",
                         "animate-fadeout fill-mode-forwards"
                     )}
                 >
@@ -68,7 +69,7 @@ export const FetchstatusIndicator = (props: {
                         <HiMoon
                             className={twMerge(
                                 "w-full h-full",
-                                "text-blue-800 dark:text-blue-300"
+                                "text-blue-800"
                             )}
                             id="spinnywheel"
                         />
@@ -80,7 +81,7 @@ export const FetchstatusIndicator = (props: {
                     >
                         <label
                             className={twMerge(
-                                "text-blue-800 dark:text-blue-300",
+                                "text-blue-800",
                                 "font-semibold tracking-wide"
                             )}
                             htmlFor="spinnywheel"
@@ -94,8 +95,8 @@ export const FetchstatusIndicator = (props: {
             return (
                 <div
                     className={twMerge(
-                        "flex justify-between items-center p-1 rounded-md w-32 shadow-md",
-                        "bg-stone-200 dark:bg-stone-900",
+                        "flex justify-between items-center border p-1 rounded-md w-32",
+                        "bg-stone-200"
                     )}
                 >
                     <div
@@ -106,7 +107,7 @@ export const FetchstatusIndicator = (props: {
                         <HiPause
                             className={twMerge(
                                 "w-full h-full",
-                                "text-stone-800 dark:text-stone-300"
+                                "text-stone-800"
                             )}
                             id="spinnywheel"
                         />
@@ -118,7 +119,7 @@ export const FetchstatusIndicator = (props: {
                     >
                         <label
                             className={twMerge(
-                                "text-stone-800 dark:text-stone-300",
+                                "text-stone-800",
                                 "font-semibold tracking-wide"
                             )}
                             htmlFor="spinnywheel"
