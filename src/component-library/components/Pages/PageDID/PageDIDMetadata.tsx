@@ -22,7 +22,7 @@ import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRigh
 
 // Viewmodels etc
 import { DIDAvailability} from "@/lib/core/data/rucio-dto"
-import { DIDKeyValuePairs } from "@/lib/infrastructure/data/view-model/pagedid";
+import { DIDKeyValuePairs } from "@/lib/infrastructure/data/view-model/page-did";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 
 export const PageDIDMetadata = (

@@ -1,4 +1,4 @@
-import { DIDParents } from "@/lib/infrastructure/data/view-model/pagedid"
+import { DIDParents } from "@/lib/infrastructure/data/view-model/page-did"
 import { FetchStatus } from "@tanstack/react-query"
 import { createColumnHelper, useReactTable, TableOptions, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, Column, flexRender } from "@tanstack/react-table"
 import { twMerge } from "tailwind-merge"

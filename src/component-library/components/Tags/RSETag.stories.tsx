@@ -10,6 +10,5 @@ const Template: StoryFn<typeof R> = (args) => <R {...args} />;
 
 export const RSETag = Template.bind({});
 RSETag.args = {
-    name: "RSE-NAME",
     blocked: 0,
 };

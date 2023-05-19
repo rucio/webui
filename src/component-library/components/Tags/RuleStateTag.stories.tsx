@@ -1,3 +1,4 @@
+import { RuleState } from "@/lib/core/entity/rucio";
 import { StoryFn, Meta } from "@storybook/react";
 import { RuleStateTag as R } from "./RuleStateTag";
 
@@ -10,6 +11,6 @@ const Template: StoryFn<typeof R> = (args) => <R {...args} />;
 
 export const RuleStateTag = Template.bind({});
 RuleStateTag.args = {
-    state: "OK",
+    state: RuleState.OK,
     tiny: false
 };

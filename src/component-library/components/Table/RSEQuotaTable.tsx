@@ -1,4 +1,4 @@
-import { RSEInformation } from "@/lib/infrastructure/data/view-model/createRule"
+import { RSEInformation } from "@/lib/infrastructure/data/view-model/create-rule"
 import { H3 } from "../Text/Headings/H3"
 import { P } from "../Text/Content/P"
 

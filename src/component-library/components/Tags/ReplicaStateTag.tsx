@@ -9,7 +9,7 @@ export const ReplicaStateTag: React.FC<JSX.IntrinsicElements["span"] & {state: R
     }
 ) => {
     const { className, ...otherprops } = props
-    const stateString: Record<ReplicaState, string> = {
+    const stateString: Record<string, string> = {
         "Available": "Available",
         "Unavailable": "Unavailable",
         "Copying": "Copying",
@@ -17,7 +17,7 @@ export const ReplicaStateTag: React.FC<JSX.IntrinsicElements["span"] & {state: R
         "Bad": "Bad",
         "Temporary_Unavailable": "Temp. Unavailable"
     }
-    const stateTiny: Record<ReplicaState, string> = {
+    const stateTiny: Record<string, string> = {
         "Available": "A",
         "Unavailable": "U",
         "Copying": "C",

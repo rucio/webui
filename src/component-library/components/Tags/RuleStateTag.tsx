@@ -11,7 +11,7 @@ export const RuleStateTag: (
     }
 ) => {
         const { className, ...otherprops } = props
-        const stateString: Record<RuleState, string> = {
+        const stateString: Record<string, string> = {
             "Replicating": "Replicating",
             "OK": "OK",
             "Stuck": "Stuck",
@@ -19,7 +19,7 @@ export const RuleStateTag: (
             "Waiting_Approval": "Waiting Approval",
             "Inject": "Inject"
         }
-        const stateTiny: Record<RuleState, string> = {
+        const stateTiny: Record<string, string> = {
             "Replicating": "R",
             "OK": "O",
             "Stuck": "S",

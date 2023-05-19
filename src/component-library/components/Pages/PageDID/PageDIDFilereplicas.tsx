@@ -24,7 +24,7 @@ import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRigh
 import { ReplicaState } from "@/lib/core/entity/rucio";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { FilereplicaState } from "@/lib/infrastructure/data/view-model/pagedid";
+import { FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did";
 
 
 export const PageDIDFilereplicas = (

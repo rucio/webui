@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CreateRuleViewModel } from '../../../../lib/infrastructure/data/view-model/createRule.d';
+import { CreateRuleViewModel } from '../../../../lib/infrastructure/data/view-model/create-rule.d';
 import { Button } from '../../Button/Button';
 import { CheckBox } from '../../Checkbox/Checkbox.stories';
 import { Timeline } from '../../Timeline/Timeline';
@@ -35,7 +35,7 @@ import {
     DIDSearchQuery, DIDSearchResponse,
     RSESearchQuery, RSESearchResponse,
 
-} from '../../../../lib/infrastructure/data/view-model/createRule.d';
+} from '../../../../lib/infrastructure/data/view-model/create-rule.d';
 import { DIDTypeTag } from '../../Tags/DIDTypeTag';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';

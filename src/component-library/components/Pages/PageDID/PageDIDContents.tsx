@@ -1,5 +1,5 @@
 import { StyleMetaColumnDef, TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { DIDContents, DIDParents } from "@/lib/infrastructure/data/view-model/pagedid";
+import { DIDContents, DIDParents } from "@/lib/infrastructure/data/view-model/page-did";
 import { twMerge } from "tailwind-merge";
 import { FetchStatus } from "@tanstack/react-query"
 import { createColumnHelper, useReactTable, TableOptions, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, Column, flexRender } from "@tanstack/react-table"

@@ -1,4 +1,4 @@
-import { CreateRuleQuery } from "@/lib/infrastructure/data/view-model/createRule"
+import { CreateRuleQuery } from "@/lib/infrastructure/data/view-model/create-rule"
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
 import FC from "react"

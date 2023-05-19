@@ -1,3 +1,4 @@
+import { ReplicaState } from "@/lib/core/entity/rucio";
 import { StoryFn, Meta } from "@storybook/react";
 import { ReplicaStateTag as RST } from "./ReplicaStateTag";
 
@@ -10,6 +11,6 @@ const Template: StoryFn<typeof RST> = args => <RST {...args}/>
 
 export const ReplicaStateTag= Template.bind({})
 ReplicaStateTag.args = {
-    state: "Available",
+    state: ReplicaState.Available,
     tiny: false
 }

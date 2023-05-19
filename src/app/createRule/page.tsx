@@ -5,7 +5,7 @@ import {
     CreateRuleQuery, DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
     RSESearchQuery
-} from '@/lib/infrastructure/data/view-model/createRule'
+} from '@/lib/infrastructure/data/view-model/create-rule'
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 
 

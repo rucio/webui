@@ -1,6 +1,6 @@
-import { DIDDatasetReplicas } from "@/lib/infrastructure/data/view-model/pagedid";
+import { DIDDatasetReplicas } from "@/lib/infrastructure/data/view-model/page-did";
 import { StyleMetaColumnDef, TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { DIDContents, DIDParents } from "@/lib/infrastructure/data/view-model/pagedid";
+import { DIDContents, DIDParents } from "@/lib/infrastructure/data/view-model/page-did";
 import { twMerge } from "tailwind-merge";
 import { FetchStatus } from "@tanstack/react-query"
 import { createColumnHelper, useReactTable, TableOptions, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, Column, flexRender } from "@tanstack/react-table"
@@ -94,7 +94,7 @@ export const PageDIDDatasetReplicas = (
                                 {info.getValue()}
                             </a>
                         </RSETag>
-                        {info.row.original.availability ? "" : <ReplicaStateTag state="Unavailable" tiny className="shrink-0 mr-1" />}
+                        {info.row.original.availability ? "" : <ReplicaStateTag state={ReplicaState.Unavailable} tiny className="shrink-0 mr-1" />}
                     </span>
                 )
             },
@@ -141,7 +141,7 @@ export const PageDIDDatasetReplicas = (
             cell: (info) => {
                 return (
                     <ReplicaStateTag
-                        state={info.row.original.availability ? "Available" : "Unavailable"}
+                        state={info.row.original.availability ? ReplicaState.Available : ReplicaState.Unavailable}
                         className="ml-2 md:w-40"
                     />
                 )

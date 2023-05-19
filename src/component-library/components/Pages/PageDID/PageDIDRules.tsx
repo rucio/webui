@@ -6,7 +6,7 @@ import { PaginationDiv } from "../../StreamedTables/PaginationDiv";
 
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink, HiSortAscending, HiSortDescending } from "react-icons/hi"
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { DIDRules } from "@/lib/infrastructure/data/view-model/pagedid";
+import { DIDRules } from "@/lib/infrastructure/data/view-model/page-did";
 import { createColumnHelper, useReactTable, TableOptions, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, Column, flexRender } from "@tanstack/react-table"
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";

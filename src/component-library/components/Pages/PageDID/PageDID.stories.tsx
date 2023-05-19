@@ -1,7 +1,7 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { PageDID as PD } from "./PageDID";
 
-import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/createRule";
+import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule";
 
 export default {
     title: "Components/Pages/PageDID",

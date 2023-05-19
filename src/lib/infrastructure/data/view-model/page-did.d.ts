@@ -2,20 +2,24 @@ import { ReplicaState, RSEBlockState } from "@/lib/core/entity/rucio"
 import { RuleState } from "@/lib/core/entity/rucio"
 import { ObjectFlags } from "typescript"
 
-export type FilereplicaStateD = {
-    scope: string,
-    name: string,
-    Available: number,
-    Unavailable: number,
-    Copying: number,
-    Being_Deleted: number,
-    Bad: number,
-    Temporary_Unavailable: number,
-}
-
+// File replica states for file DIDs
 export type FilereplicaState = {
     rse: string
     state: ReplicaState
+}
+
+// File replica states for dataset DIDs
+// stores summary information on the file replica states of the files within
+// a dataset DID: how many files are in each state
+export type FilereplicaStateD = {
+    scope: string,
+    name: string,
+    available: number,
+    unavailable: number,
+    copying: number,
+    being_deleted: number,
+    bad: number,
+    temporary_unavailable: number,
 }
 
 export type DIDParents = {

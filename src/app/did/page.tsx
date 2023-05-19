@@ -5,8 +5,8 @@ import {
     CreateRuleQuery, DIDSearchQuery, DIDSearchResponse, DIDName,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
     RSESearchQuery
-} from '@/lib/infrastructure/data/view-model/createRule'
-import { DIDContents } from '@/lib/infrastructure/data/view-model/pagedid';
+} from '@/lib/infrastructure/data/view-model/create-rule'
+import { DIDContents } from '@/lib/infrastructure/data/view-model/page-did';
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { FetchStatus } from '@tanstack/react-query';
 import { useState } from "react";
