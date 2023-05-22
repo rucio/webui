@@ -1,6 +1,8 @@
 import { RuleNotification, RuleState } from "@/lib/core/entity/rucio";
+import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { StoryFn, Meta } from "@storybook/react";
-import { PageRule as P } from "./PageRule";
+import { createRandomRulePageLockEntry } from "test/fixtures/table-fixtures";
+import { PageRule as P, RulePageLockEntry } from "./PageRule";
 
 export default {
     title: 'Components/Pages/PageRule',
@@ -35,5 +37,10 @@ PageRule.args = {
         split_container: false,
         state: RuleState.OK,
         updated_at: new Date(2023, 1, 1),
-    }
+    },
+    ruleLocks: {
+        data: Array.from({length: 100}, (_, i) => createRandomRulePageLockEntry()),
+        fetchStatus: "idle",
+        pageSize: 10,
+    } as TableData<RulePageLockEntry>
 };

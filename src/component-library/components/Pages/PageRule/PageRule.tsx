@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 var format = require("date-format")
 
 import { RuleMeta, RuleNotification } from "@/lib/core/entity/rucio";
+import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables.d";
 import { LockState } from "@/lib/core/entity/rucio";
 import { Tabs } from "../../Tabs/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
@@ -13,9 +14,24 @@ import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { RuleStateTag } from "../../Tags/RuleStateTag";
 import { LockStateTag } from "../../Tags/LockStateTag";
 import { RuleNotificationTag } from "../../Tags/RuleNotificationTag";
+import { StreamedTable } from "../../StreamedTables/StreamedTable";
+import { createColumnHelper } from "@tanstack/react-table";
+import { HiExternalLink } from "react-icons/hi";
+import { TableExternalLink } from "../../StreamedTables/TableExternalLink";
+
+
+export interface RulePageLockEntry {
+    scope: string;
+    name: string;
+    rse: string;
+    state: LockState;
+    ddm_link: string;
+    fts_link: string;
+}
 
 export interface PageRulePageProps {
     ruleMeta: RuleMeta;
+    ruleLocks: TableData<RulePageLockEntry>
 }
 
 const Titletd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
@@ -70,6 +86,85 @@ export const PageRule = (
 ) => {
     const [subpageIndex, setSubpageIndex] = useState(0);
     const meta = props.ruleMeta;
+
+    const columnHelper = createColumnHelper<RulePageLockEntry>()
+    const tableColumns = [
+        columnHelper.accessor(row => `${row.scope}:${row.name}`, {
+            id: "did",
+            header: info => {
+                return (
+                    <H3>DID Name</H3>
+                )
+            }
+        }),
+        columnHelper.accessor("rse", {
+            id: "rse",
+            cell: info => <span>{info.getValue()}</span>,
+            header: info => {
+                return (
+                    <H3>RSE</H3>
+                )
+            }
+        }),
+        columnHelper.accessor("state", {
+            id: "state",
+            cell: info => <LockStateTag lockState={info.getValue()} />,
+            header: info => {
+                return (
+                    <span className={twMerge("flex flex-row justify-start")}>
+                        <H3>Lock</H3>
+                    </span>
+                )
+            },
+            meta: {
+                style: "w-32"
+            }
+        }),
+        columnHelper.display({
+            id: "links",
+            header: info => {
+                return (
+                    <span
+                        className={twMerge(
+                            "flex flex-row justify-start"
+                        )}
+                    >
+                        <H3>Links</H3>
+                    </span>
+                )
+            },
+            cell: info => {
+                return (
+                    <span className={twMerge("flex flex-row space-x-1")}>
+                        <TableExternalLink href={info.row.original.ddm_link} label="DDM" />
+                        <TableExternalLink href={info.row.original.fts_link} label="FTS" />
+                    </span>
+                )
+            },
+            meta: {
+                style: "w-32"
+            }
+        })
+    ]
+
+    const [windowSize, setWindowSize] = useState([
+        1920, 1080
+    ]);
+
+    useEffect(() => {
+        setWindowSize([window.innerWidth, window.innerHeight])
+
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
+
     return (
         <div
             className={twMerge(
@@ -112,7 +207,7 @@ export const PageRule = (
                     handleClick={(event: any) => { console.log(event.target.dataset.id); setSubpageIndex(Number(event.target.dataset.id)) }}
                 />
                 <SubPage
-                    show={subpageIndex === 0}
+                    show={subpageIndex === 1}
                     id="subpage-metadata"
                 >
                     <div
@@ -156,7 +251,7 @@ export const PageRule = (
                                 <Titletd>Locks OK</Titletd>
                                 <Contenttd>
                                     <span className="flex flex-row space-x-2 justify-end">
-                                        <LockStateTag lockState={LockState.OK} tiny className={meta.locks_ok_cnt > 0 ? "" : "hidden"}/>
+                                        <LockStateTag lockState={LockState.OK} tiny className={meta.locks_ok_cnt > 0 ? "" : "hidden"} />
                                         <span className="font-mono">{meta.locks_ok_cnt}</span>
                                     </span>
                                 </Contenttd>
@@ -165,7 +260,7 @@ export const PageRule = (
                                 <Titletd>Locks Replicating</Titletd>
                                 <Contenttd>
                                     <span className="flex flex-row space-x-2 justify-end">
-                                        <LockStateTag lockState={LockState.Replicating} tiny className={meta.locks_replicating_cnt > 0 ? "" : "hidden"}/>
+                                        <LockStateTag lockState={LockState.Replicating} tiny className={meta.locks_replicating_cnt > 0 ? "" : "hidden"} />
                                         <span className="font-mono">{meta.locks_replicating_cnt}</span>
                                     </span>
                                 </Contenttd>
@@ -174,7 +269,7 @@ export const PageRule = (
                                 <Titletd>Locks Stuck</Titletd>
                                 <Contenttd>
                                     <span className="flex flex-row space-x-2 justify-end">
-                                        <LockStateTag lockState={LockState.Stuck} tiny className={meta.locks_stuck_cnt > 0 ? "" : "hidden"}/>
+                                        <LockStateTag lockState={LockState.Stuck} tiny className={meta.locks_stuck_cnt > 0 ? "" : "hidden"} />
                                         <span className="font-mono">{meta.locks_stuck_cnt}</span>
                                     </span>
                                 </Contenttd>
@@ -231,7 +326,7 @@ export const PageRule = (
                             </tr>
                             <tr>
                                 <Titletd>Notification</Titletd>
-                                <Contenttd><RuleNotificationTag notificationState={meta.notification}/></Contenttd>
+                                <Contenttd><RuleNotificationTag notificationState={meta.notification} /></Contenttd>
                             </tr>
                         </Ruletable>
                         <Ruletable>
@@ -254,10 +349,15 @@ export const PageRule = (
                     </div></SubPage>
                 <SubPage
 
-                    show={subpageIndex === 1}
+                    show={subpageIndex === 0}
                     id="subpage-locks"
                 >
                     subpage locks
+                    <StreamedTable
+                        tableData={props.ruleLocks}
+                        tableColumns={tableColumns}
+                        tableStyling={{visibility: {"state": windowSize[0] > 768}}}
+                    />
                 </SubPage>
 
             </div>
