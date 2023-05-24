@@ -52,6 +52,7 @@ export const ListDID = (
                     className={twMerge(
                         "flex flex-col sm:flex-row sm:space-x-2 sm:items-end w-full",
                     )}
+                    aria-label="DID Search"
                 >
                     <label
                         className={twMerge(
@@ -85,6 +86,7 @@ export const ListDID = (
                             "text-gray-800 dark:text-white"
                         )}
                         id="query-for-didtype-form"
+                        aria-label="Select DID Types to Query"
                     >
                         <label className={twMerge("mr-2")} htmlFor="query-for-didtype-form">Query for DID Types:</label>
                         <Checkbox
@@ -143,15 +145,17 @@ export const ListDID = (
                             "text-gray-800 flex flex-col",
                             !selectedDID ? "block" : "hidden",
                         )}
+                        aria-label="Notice: No DID selected"
                     >
                         <i className="dark:text-gray-200">No DID selected</i>
                     </div>
-                    <div className={twMerge(
-                        "flex flex-col space-y-2",
-                        selectedDID ? "block" : "hidden",
-                    )}
+                    <div
+                        className={twMerge(
+                            selectedDID ? "block" : "hidden",
+                        )}
+                        aria-label="Go To DID Page"
                     >
-                        <Button label="Go To DID Page"/>
+                        <Button label="Go To DID Page" aria-label="Go To DID Page"/>
                     </div>
                 </div>
             </div>

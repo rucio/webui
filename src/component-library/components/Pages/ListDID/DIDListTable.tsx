@@ -182,7 +182,7 @@ export const DIDListTable = (
                         </th>
                     </tr>
                 </thead>
-                <tbody className="w-full">
+                <tbody className="w-full" aria-label="DID Table Body">
                     {table.getRowModel().rows.map((row) => {
                         const did_scopename = row.original.scope + ":" + row.original.name
                         const isDIDSelected = selected === did_scopename
@@ -200,6 +200,8 @@ export const DIDListTable = (
                                     setSelected(did_scopename)
                                     props.onSelect(did_scopename)
                                 }}
+                                aria-rowindex={row.index}
+                                aria-label="DID Table Row"
                             >
                                 {row.getVisibleCells().map((cell) => {
                                     return (

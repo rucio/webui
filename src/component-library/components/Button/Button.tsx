@@ -2,26 +2,22 @@ import { twMerge } from "tailwind-merge"
 import { Collapsible } from "../Helpers/Collapsible"
 import { forwardRef } from "react"
 
-interface ButtonProps {
+type ButtonProps = JSX.IntrinsicElements["button"] & {
+    label?: string
+    icon?: any
+    type?: 'button' | 'submit' | 'reset'
+    disabled?: boolean
+    theme?: 'blue' | 'orange',
+    fullwidth?: boolean
+    onClick?: (args: unknown) => void
 }
 
-export const Button = forwardRef(function Button
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     (
-        props: {
-            label?: string
-            icon?: any
-            type?: 'button' | 'submit' | 'reset'
-            disabled?: boolean
-            theme?: 'blue' | 'orange',
-            fullwidth?: boolean
-            onClick?: (args: unknown) => void
-            id?: string
-        },
-        ref?: React.ForwardedRef<HTMLButtonElement>
+        props,
+        ref,
     ) {
-    const type = props.type ?? "button"
-    const theme = props.theme ?? "blue"
-    const fullwidth = props.fullwidth ?? true
+    const { className, label, icon, type, disabled, theme, fullwidth, onClick, ...otherprops } = props
 
     const handleOnClick = props.disabled ? undefined : props.onClick
     var classes: string[] = ["font-bold rounded py-1 px-3 cursor-pointer"]
@@ -34,15 +30,17 @@ export const Button = forwardRef(function Button
                     "py-1 px-3 h-8 rounded",
                     type === "submit" ? "bg-green-500 hover:bg-green-600 text-white" : "",
                     type === "reset" ? "bg-red-500 hover:bg-red-600 text-white" : "",
-                    type === "button" ? "bg-blue-500 hover:bg-blue-600 text-white" : "",
-                    theme === "orange" ? "bg-amber-500 hover:bg-amber-600 text-black" : "",
+                    type ?? "button" === "button" ? "bg-blue-500 hover:bg-blue-600 text-white" : "",
+                    theme  === "orange" ? "bg-amber-500 hover:bg-amber-600 text-black" : "",
                     props.disabled ? "cursor-not-allowed bg-gray-500 hover:bg-gray-500 text-gray-200" : "cursor-pointer",
-                    fullwidth ? "w-full" : "",
+                    fullwidth ?? true ? "w-full" : "",
                     "font-bold",
+                    className ?? ""
                 )}
                 onClick={handleOnClick}
                 id={props.id}
                 ref={ref}
+                {...otherprops}
             >
                 <div className={twMerge(
                     "flex justify-center",
@@ -69,15 +67,17 @@ export const Button = forwardRef(function Button
                     "py-1 px-3 rounded",
                     type === "submit" ? "bg-green-500 hover:bg-green-600 text-white" : "",
                     type === "reset" ? "bg-red-500 hover:bg-red-600 text-white" : "",
-                    type === "button" ? "bg-blue-500 hover:bg-blue-600 text-white" : "",
+                    type ?? "button" === "button" ? "bg-blue-500 hover:bg-blue-600 text-white" : "",
                     theme === "orange" ? "bg-amber-500 hover:bg-amber-600 text-black" : "",
                     props.disabled ? "cursor-not-allowed bg-gray-500 hover:bg-gray-500 text-gray-200" : "cursor-pointer",
-                    fullwidth ? "w-full" : "",
+                    fullwidth ?? true ? "w-full" : "",
                     "font-bold",
+                    className ?? ""
                 )}
                 onClick={handleOnClick}
                 id={props.id}
                 ref={ref}
+                {...otherprops}
             >
                 <label htmlFor={props.id} className="flex justify-center cursor-pointer">
                     {props.icon}
