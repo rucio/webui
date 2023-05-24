@@ -142,7 +142,7 @@ export const ListDID = (
                     <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
                     <div
                         className={twMerge(
-                            "text-gray-800 flex flex-col",
+                            "text-gray-800",
                             !selectedDID ? "block" : "hidden",
                         )}
                         aria-label="Notice: No DID selected"
