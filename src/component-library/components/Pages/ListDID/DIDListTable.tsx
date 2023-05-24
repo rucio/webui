@@ -12,6 +12,7 @@ import { Filter } from "../../StreamedTables/Filter";
 import { NumInput } from "../../Input/NumInput";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck } from "react-icons/hi"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
+import { PaginationDiv } from "../../StreamedTables/PaginationDiv";
 
 export const DIDListTable = (
     props: {
@@ -182,7 +183,7 @@ export const DIDListTable = (
                         </th>
                     </tr>
                 </thead>
-                <tbody className="w-full">
+                <tbody className="w-full" aria-label="DID Table Body">
                     {table.getRowModel().rows.map((row) => {
                         const did_scopename = row.original.scope + ":" + row.original.name
                         const isDIDSelected = selected === did_scopename
@@ -200,6 +201,8 @@ export const DIDListTable = (
                                     setSelected(did_scopename)
                                     props.onSelect(did_scopename)
                                 }}
+                                aria-rowindex={row.index}
+                                aria-label="DID Table Row"
                             >
                                 {row.getVisibleCells().map((cell) => {
                                     return (
@@ -219,57 +222,7 @@ export const DIDListTable = (
                     )}
                 </tbody>
             </table>
-            <div className="w-full flex justify-center space-x-2 pt-2 border-t dark:border-gray-400 dark:border-t-2">
-                <nav className="w-[400px] flex justify-center space-x-2">
-                    <span className="w-1/3 flex space-x-2">
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(0)
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronDoubleLeft />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.previousPage()
-                            }}
-                            disabled={!table.getCanPreviousPage()}
-                            icon={<HiChevronLeft />}
-                        />
-                    </span>
-                    <span className="w-1/3 inline-flex space-x-2 items-end">
-                        <NumInput
-                            value={pageIndex + 1}
-                            onChange={(event) => {
-                                setPageIndex(event.target.value - 1)
-                            }}
-                            min={1}
-                            max={table.getPageCount()}
-                        />
-                        <span className="w-full">
-                            <P>
-                                of {table.getPageCount()}
-                            </P>
-                        </span>
-                    </span>
-                    <span className="w-1/3 space-x-2 flex">
-                        <Button
-                            onClick={() => {
-                                table.nextPage()
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronRight />}
-                        />
-                        <Button
-                            onClick={() => {
-                                table.setPageIndex(table.getPageCount() - 1)
-                            }}
-                            disabled={!table.getCanNextPage()}
-                            icon={<HiChevronDoubleRight />}
-                        />
-                    </span>
-                </nav>
-            </div>
+            <PaginationDiv table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
             <div
                 className={twMerge(
                     "absolute",

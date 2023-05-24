@@ -20,6 +20,7 @@ export const FetchstatusIndicator = (props: {
                         "flex justify-between items-center border p-1 rounded-md w-32",
                         "bg-amber-200"
                     )}
+                    aria-label="FetchStatus Indicator: Fetching"
                 >
                     <div
                         className={twMerge(
@@ -60,6 +61,7 @@ export const FetchstatusIndicator = (props: {
                         "relative",
                         "animate-fadeout fill-mode-forwards"
                     )}
+                    aria-label="FetchStatus Indicator: Idle"
                 >
                     <div
                         className={twMerge(
@@ -98,6 +100,7 @@ export const FetchstatusIndicator = (props: {
                         "flex justify-between items-center border p-1 rounded-md w-32",
                         "bg-stone-200"
                     )}
+                    aria-label="FetchStatus Indicator: Paused"
                 >
                     <div
                         className={twMerge(

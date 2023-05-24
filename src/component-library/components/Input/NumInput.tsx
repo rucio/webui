@@ -1,31 +1,20 @@
 import { useState, useEffect } from "react";
 
-export const NumInput = (
-    props: {
-        value: number,
-        children?: any,
-        placeholder?: string,
-        onBlur?: (event: any) => void,
-        onChange?: (event: any) => void,
-        onEnterkey?: (event: any) => void,
-        max?: number,
-        min?: number,
-        id?: string,
-        disabled?: boolean
+export const NumInput: (
+    React.FC<
+        Omit<JSX.IntrinsicElements["input"], "value"> &
+        {value: number, onEnterkey?: (event: any) => void}
+    >
+) = (
+    {
+        value,
+        ...props
     }
 ) => {
-    const [numvalue, setNumvalue] = useState<number>(props.value);
+    const [numvalue, setNumvalue] = useState<number>(value);
     useEffect(() => {
-        setNumvalue(props.value);
-    }, [props.value]);
-    const onBlur = (event: any) => {
-        setNumvalue(event.target.value);
-        props.onBlur?.(event);
-    }
-    const onChange = (event: any) => {
-        setNumvalue(event.target.value);
-        props.onChange?.(event);
-    }
+        setNumvalue(value);
+    }, [value]);
     const onEnterkey = (event: any) => {
         setNumvalue(event.target.value);
         if (event.key === "Enter") {
@@ -36,15 +25,9 @@ export const NumInput = (
         <input
             type="number"
             value={numvalue > 0 ? numvalue : ""}
-            placeholder={props.placeholder}
-            max={props.max ? props.max.toString() : ""}
-            min={props.min ? props.min.toString() : ""}
-            id={props.id}
             className="w-full border dark:border-gray-400 rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white dark:border-2"
-            onBlur={onBlur}
-            onChange={onChange}
             onKeyDown={onEnterkey}
-            disabled={props.disabled}
+            {...props}
         >
             {props.children}
         </input>
