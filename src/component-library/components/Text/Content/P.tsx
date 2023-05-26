@@ -1,21 +1,22 @@
 import {twMerge} from 'tailwind-merge'
 
-export const P = (
-    props: {
-        children: any,
-        mono?: boolean,
-        className?: string
+export const P: React.FC<JSX.IntrinsicElements["p"] & {mono?: boolean}> = (
+    {
+        mono = false,
+        ...props
     }
 ) => {
-
-    const classes = twMerge(`
-        dark:text-white
-        ${props.mono ? "font-mono" : ""}
-        ${props.className ?? ""}
-    `)
+    const {className, ...otherprops} = props
 
     return (
-        <p className={classes}>
+        <p
+            className={twMerge(
+                "dark:text-white",
+                mono ? "font-mono" : "",
+                className ?? "",
+            )}
+            {...otherprops}
+        >
             {props.children}
         </p>
     )

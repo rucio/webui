@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { twMerge } from "tailwind-merge"
 
 export const Tabs = (
     props: {

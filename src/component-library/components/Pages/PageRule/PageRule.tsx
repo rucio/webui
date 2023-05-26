@@ -9,6 +9,7 @@ import { LockState } from "@/lib/core/entity/rucio";
 import { Tabs } from "../../Tabs/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
 import { H3 } from "../../Text/Headings/H3";
+import { P } from "../../Text/Content/P";
 import { BoolTag } from "../../Tags/BoolTag";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { RuleStateTag } from "../../Tags/RuleStateTag";
@@ -16,8 +17,10 @@ import { LockStateTag } from "../../Tags/LockStateTag";
 import { RuleNotificationTag } from "../../Tags/RuleNotificationTag";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { createColumnHelper } from "@tanstack/react-table";
-import { HiExternalLink } from "react-icons/hi";
+import { HiDotsHorizontal, HiExternalLink } from "react-icons/hi";
 import { TableExternalLink } from "../../StreamedTables/TableExternalLink";
+import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
+import { TableFilterString } from "../../StreamedTables/TableFilterString";
 
 
 export interface RulePageLockEntry {
@@ -93,31 +96,49 @@ export const PageRule = (
             id: "did",
             header: info => {
                 return (
-                    <H3>DID Name</H3>
+                    <TableFilterString
+                        column={info.column}
+                        name="DID"
+                    />
+                )
+            },
+            cell: info => {
+                return (
+                    <P className="break-all pr-1">{info.getValue()}</P>
                 )
             }
         }),
         columnHelper.accessor("rse", {
             id: "rse",
-            cell: info => <span>{info.getValue()}</span>,
             header: info => {
                 return (
-                    <H3>RSE</H3>
+                    <TableFilterString
+                        column={info.column}
+                        name="RSE"
+                    />
+                )
+            },
+            cell: info => {
+                return (
+                    <P className="break-all">{info.getValue()}</P>
                 )
             }
         }),
         columnHelper.accessor("state", {
             id: "state",
-            cell: info => <LockStateTag lockState={info.getValue()} />,
+            cell: info => <LockStateTag lockState={info.getValue()} tiny={windowSize[0] <= 768} />,
             header: info => {
                 return (
-                    <span className={twMerge("flex flex-row justify-start")}>
-                        <H3>Lock</H3>
-                    </span>
+                    <TableFilterDiscrete<LockState>
+                        name="Lock"
+                        keys={Object.values(LockState)}
+                        renderFunc={state => state === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <LockStateTag lockState={state} tiny />}
+                        column={info.column}
+                    />
                 )
             },
             meta: {
-                style: "w-32"
+                style: "w-6 sm:w-8 md:w-32"
             }
         }),
         columnHelper.display({
@@ -144,7 +165,7 @@ export const PageRule = (
             meta: {
                 style: "w-32"
             }
-        })
+        }),
     ]
 
     const [windowSize, setWindowSize] = useState([
@@ -196,7 +217,8 @@ export const PageRule = (
                     "min-w-0",
                     "lg:col-span-2",
                     "flex flex-col",
-                    "rounded-md p-2 border"
+                    "rounded-md p-2 border",
+                    "bg-white dark:bg-gray-800"
                 )}
             >
                 <Tabs
@@ -207,12 +229,12 @@ export const PageRule = (
                     handleClick={(event: any) => { console.log(event.target.dataset.id); setSubpageIndex(Number(event.target.dataset.id)) }}
                 />
                 <SubPage
-                    show={subpageIndex === 1}
+                    show={subpageIndex === 0}
                     id="subpage-metadata"
                 >
                     <div
                         className={twMerge(
-                            "bg-stone-100 p-2 mt-2 rounded-md",
+                            "bg-stone-100 dark:bg-gray-900 p-2 mt-2 rounded-md",
                             "flex flex-col space-y-2"
                         )}
                     >
@@ -241,7 +263,7 @@ export const PageRule = (
                                 <Contenttd>
                                     {
                                         format("yyyy-MM-dd", meta.expires_at)
-                                        // add ability to extend lifetime here
+                                        // add ability to extend lifetime here => or maybe not?? i think this might be bad UX
                                     }
                                 </Contenttd>
                             </tr>
@@ -250,28 +272,19 @@ export const PageRule = (
                             <tr>
                                 <Titletd>Locks OK</Titletd>
                                 <Contenttd>
-                                    <span className="flex flex-row space-x-2 justify-end">
-                                        <LockStateTag lockState={LockState.OK} tiny className={meta.locks_ok_cnt > 0 ? "" : "hidden"} />
-                                        <span className="font-mono">{meta.locks_ok_cnt}</span>
-                                    </span>
+                                        <P mono>{meta.locks_ok_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
                                 <Titletd>Locks Replicating</Titletd>
                                 <Contenttd>
-                                    <span className="flex flex-row space-x-2 justify-end">
-                                        <LockStateTag lockState={LockState.Replicating} tiny className={meta.locks_replicating_cnt > 0 ? "" : "hidden"} />
-                                        <span className="font-mono">{meta.locks_replicating_cnt}</span>
-                                    </span>
+                                        <P mono>{meta.locks_replicating_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
                                 <Titletd>Locks Stuck</Titletd>
                                 <Contenttd>
-                                    <span className="flex flex-row space-x-2 justify-end">
-                                        <LockStateTag lockState={LockState.Stuck} tiny className={meta.locks_stuck_cnt > 0 ? "" : "hidden"} />
-                                        <span className="font-mono">{meta.locks_stuck_cnt}</span>
-                                    </span>
+                                        <P mono>{meta.locks_stuck_cnt}</P>
                                 </Contenttd>
                             </tr>
                         </Ruletable>
@@ -349,14 +362,18 @@ export const PageRule = (
                     </div></SubPage>
                 <SubPage
 
-                    show={subpageIndex === 0}
+                    show={subpageIndex === 1}
                     id="subpage-locks"
                 >
-                    subpage locks
                     <StreamedTable
                         tableData={props.ruleLocks}
                         tableColumns={tableColumns}
-                        tableStyling={{visibility: {"state": windowSize[0] > 768}}}
+                        tableStyling={{
+                            visibility: {
+                                // "state": windowSize[0] > 768,
+                                "links": windowSize[0] > 768
+                            },
+                        }}
                     />
                 </SubPage>
 

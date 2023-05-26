@@ -57,7 +57,8 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                 <tr
                     className={twMerge(
                         "h-16 md:h-12",
-                        "bg-white dark:bg-gray-700"
+                        "bg-white dark:bg-gray-700",
+                        "relative"
                     )}
                 >
                     {table.getLeafHeaders().map(header => {
@@ -111,8 +112,6 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     <td colSpan={table.getVisibleLeafColumns().length}>
                         <PaginationDiv
                             table={table}
-                            pageIndex={pageIndex}
-                            setPageIndex={setPageIndex}
                         />
                     </td>
                 </tr>

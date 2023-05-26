@@ -1,6 +1,6 @@
 import { RuleNotification } from "@/lib/core/entity/rucio";
 import { twMerge } from "tailwind-merge";
-import { HiBell } from "react-icons/hi";
+import { HiBellAlert, HiBellSlash, HiBell } from "react-icons/hi2"; // hi does not have the bell decorations
 
 export const RuleNotificationTag: (
     React.FC<JSX.IntrinsicElements["span"] & { notificationState: RuleNotification; tiny?: boolean }>
@@ -21,9 +21,9 @@ export const RuleNotificationTag: (
         return (
             <span
                 className={twMerge(
-                    notificationState === RuleNotification.No? "bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200" : (
-                        notificationState === RuleNotification.Close? "bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200" : (
-                            notificationState === RuleNotification.Yes? "bg-green-300 text-green-800 dark:bg-green-700 dark:text-green-200" : (
+                    notificationState === RuleNotification.No ? "bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200" : (
+                        notificationState === RuleNotification.Close ? "bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200" : (
+                            notificationState === RuleNotification.Yes ? "bg-green-300 text-green-800 dark:bg-green-700 dark:text-green-200" : (
                                 notificationState === RuleNotification.Progress ? "bg-blue-300 text-blue-800 dark:bg-blue-700 dark:text-blue-200" :
                                     ""
                             )
@@ -36,7 +36,13 @@ export const RuleNotificationTag: (
                 )}
                 {...otherprops}
             >
-                <HiBell className={tiny ? "hidden" : "mr-1"}/>
+                {
+                    notificationState === RuleNotification.No ? <HiBellSlash className={tiny ? "hidden" : "mr-1"} /> : (
+                        notificationState === RuleNotification.Progress ? <HiBellAlert className={tiny ? "hidden" : "mr-1"} /> : (
+                            <HiBell className={tiny ? "hidden" : "mr-1"} />
+                        )
+                    )
+                }
                 {!tiny ? stateString[notificationState] : notificationState}
             </span>
         );

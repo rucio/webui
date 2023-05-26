@@ -10,14 +10,19 @@ const Template: StoryFn<typeof PD> = (args) => <PD {...args} />
 
 export const PaginationDiv = Template.bind({})
 PaginationDiv.args = {
-    pageIndex: 0,
-    setPageIndex: () => {},
     table: {
         setPageIndex: () => {},
-        getCanPreviousPage: () => true,
+        getCanPreviousPage: () => false,
         previousPage: () => {},
         getPageCount: () => 1,
         nextPage: () => {},
         getCanNextPage: () => true,
+        getState: () => {
+            return {
+                pagination: {
+                    pageIndex: 0
+                }
+            }
+        }
     }
 }
