@@ -253,8 +253,7 @@ export const CreateRule = (
                     <Tabs
                         tabs={["DID Search Pattern", "List of DIDs"]}
                         active={Page0State.selectDIDMethod}
-                        handleClick={(event: any) => { console.log(event.target.dataset.id); setPage0State({ ...Page0State, selectDIDMethod: Number(event.target.dataset.id) }) }}
-                        dataTestid="selectDIDMethod"
+                        updateActive={(active: number) => { setPage0State({ ...Page0State, selectDIDMethod: active }) }}
                     />
                     <Collapsible showIf={Page0State.selectDIDMethod === 0}>
                         <div className="flex flex-col space-y-2 m-2">

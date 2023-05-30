@@ -126,7 +126,7 @@ export const PageDID = (
                             )
                     } // remember difference between collections and files
                     active={0}
-                    handleClick={(event: any) => { console.log(event.target.dataset.id); setSubpageIndex(Number(event.target.dataset.id)) }}
+                    updateActive={(id: number) => { setSubpageIndex(id) }}
                 />
                 <SubPage
                     show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 0 : subpageIndex === 1}

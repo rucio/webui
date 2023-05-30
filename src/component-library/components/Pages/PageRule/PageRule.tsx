@@ -225,12 +225,16 @@ export const PageRule = (
                     tabs={
                         ["Metadata", "Locks"]
                     } // remember difference between collections and files
+                    _ariaControls={
+                        ["subpage-metadata", "subpage-locks"]
+                    }
                     active={0}
-                    handleClick={(event: any) => { console.log(event.target.dataset.id); setSubpageIndex(Number(event.target.dataset.id)) }}
+                    updateActive={(active) => {setSubpageIndex(active)}}
                 />
                 <SubPage
                     show={subpageIndex === 0}
                     id="subpage-metadata"
+                    aria-labelledby="tab-0"
                 >
                     <div
                         className={twMerge(
@@ -364,6 +368,7 @@ export const PageRule = (
 
                     show={subpageIndex === 1}
                     id="subpage-locks"
+                    aria-labelledby="tab-1"
                 >
                     <StreamedTable
                         tableData={props.ruleLocks}
