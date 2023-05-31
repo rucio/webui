@@ -6,9 +6,9 @@ import { twMerge } from "tailwind-merge";
 import { PaginationDiv } from "./PaginationDiv";
 
 type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
-    tableData: TableData<T>
-    tableColumns: any[] // todo type this
-    tableStyling?: Partial<{
+    tabledata: TableData<T>
+    tablecolumns: any[] // todo type this
+    tablestyling?: Partial<{
         visibility: Record<string, boolean>
     }>
 }
@@ -17,15 +17,15 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     const { className, ...otherprops } = props
 
     const table = useReactTable<T>({
-        data: props.tableData.data || [],
-        columns: props.tableColumns,
+        data: props.tabledata.data || [],
+        columns: props.tablecolumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
         debugTable: true,
         state: {
-            columnVisibility: props.tableStyling?.visibility,
+            columnVisibility: props.tablestyling?.visibility,
         }
     })
 
@@ -38,13 +38,13 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
         table.setPageIndex(pageIndex)
     }, [pageIndex, table])
     useEffect(() => {
-        table.setPageSize(props.tableData.pageSize)
-    }, [props.tableData.pageSize, table])
+        table.setPageSize(props.tabledata.pageSize)
+    }, [props.tabledata.pageSize, table])
 
     return (
         <table
             className={twMerge(
-                props.tableData.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
+                props.tabledata.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
                 "bg-white dark:bg-gray-700",
                 "w-full",
                 "relative",
@@ -80,7 +80,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     "pointer-events-none"
                 )}
             >
-                <FetchstatusIndicator status={props.tableData.fetchStatus} />
+                <FetchstatusIndicator status={props.tabledata.fetchStatus} />
             </div>
             <tbody>
                 {table.getRowModel().rows.map(row => {

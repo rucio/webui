@@ -91,7 +91,7 @@ export const PageRule = (
     const meta = props.ruleMeta;
 
     const columnHelper = createColumnHelper<RulePageLockEntry>()
-    const tableColumns = [
+    const tablecolumns = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",
             header: info => {
@@ -373,9 +373,9 @@ export const PageRule = (
                     role="tabpanel"
                 >
                     <StreamedTable
-                        tableData={props.ruleLocks}
-                        tableColumns={tableColumns}
-                        tableStyling={{
+                        tabledata={props.ruleLocks}
+                        tablecolumns={tablecolumns}
+                        tablestyling={{
                             visibility: {
                                 // "state": windowSize[0] > 768,
                                 "links": windowSize[0] > 768

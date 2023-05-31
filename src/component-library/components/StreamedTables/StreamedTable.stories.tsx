@@ -17,12 +17,12 @@ const columnHelper = createColumnHelper<DIDContents>()
 
 export const StreamedTable = Template.bind({});
 StreamedTable.args = {
-    tableData: {
+    tabledata: {
         data: Array.from({length: 100}, (_, i) => createRandomDIDContents()),
         fetchStatus: "idle",
         pageSize: 10,
     } as TableData<DIDContents>,
-    tableColumns: [
+    tablecolumns: [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",
         }),
