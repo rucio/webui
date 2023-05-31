@@ -235,6 +235,7 @@ export const PageRule = (
                     show={subpageIndex === 0}
                     id="subpage-metadata"
                     aria-labelledby="tab-0"
+                    role="tabpanel"
                 >
                     <div
                         className={twMerge(
@@ -369,6 +370,7 @@ export const PageRule = (
                     show={subpageIndex === 1}
                     id="subpage-locks"
                     aria-labelledby="tab-1"
+                    role="tabpanel"
                 >
                     <StreamedTable
                         tableData={props.ruleLocks}
