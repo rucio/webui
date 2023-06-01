@@ -1,17 +1,19 @@
 module.exports = {
-    content: ["./src/**/*.{html,js,tsx,ts}"],
+    content: {
+        files: ["./src/**/*.{html,js,tsx,ts}"],
+    },
     theme: {
         extend: {
             keyframes: {
                 floatout: {
                     "0%": { opacity: "1", left: "0px", },
-                    "80%": { opacity: "1", left: "0px",},
+                    "80%": { opacity: "1", left: "0px", },
                     "100%": { opacity: "0", left: "100px", }
                 },
                 fadeout: {
-                    "0%": { opacity: "1"},
-                    "80%": { opacity: "1"},
-                    "100%": { opacity: "0"}
+                    "0%": { opacity: "1" },
+                    "80%": { opacity: "1" },
+                    "100%": { opacity: "0" }
                 },
             },
             animation: {

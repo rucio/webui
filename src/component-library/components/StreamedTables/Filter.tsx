@@ -1,5 +1,5 @@
 import { Column, Table } from "@tanstack/react-table";
-import { TextInput } from "../Input/TextInput.stories";
+import { TextInput } from "../Input/TextInput";
 
 export const Filter = (
     props: {

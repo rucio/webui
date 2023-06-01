@@ -51,6 +51,14 @@ describe("ListDID Story Test", () => {
         expect(lastPageButton).toBeDisabled()
     })
     it("Checks render with data and user input", async () => {
+        /*
+            PROBLEM:
+            we make use of `aria-label` to identify the table rows, but the
+            `aria-label` is only for *interactive* elements so we can't use it
+            on the table rows, which are not interactive
+            SOLUTION:
+            remove `aria-label` from the table rows, grab table rows differently.
+        */
         const mockDIDMeta = {
             "name": "dataset-YSytZjXJMdiCsSiiUwXx",
             "scope": "Lawrence.Myers",

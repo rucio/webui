@@ -481,7 +481,7 @@ export const PageDIDDatasetReplicas = (
                     )}
                 </tbody>
             </table>
-            <PaginationDiv table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+            <PaginationDiv table={table}/>
             <div
                 className={twMerge(
                     "absolute",

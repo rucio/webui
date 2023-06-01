@@ -7,13 +7,9 @@ import { twMerge } from "tailwind-merge";
 
 export const PaginationDiv: React.FC<JSX.IntrinsicElements["div"] & {
     table: any;
-    pageIndex: number;
-    setPageIndex: (pageIndex: number) => void;
 }> = (
     {
         table,
-        pageIndex,
-        setPageIndex,
         ...props
     }
 ) => {
@@ -44,9 +40,9 @@ export const PaginationDiv: React.FC<JSX.IntrinsicElements["div"] & {
                     </span>
                     <span className="w-1/3 inline-flex space-x-2 items-end">
                         <NumInput
-                            value={pageIndex + 1}
+                            value={table.getState().pagination.pageIndex + 1}
                             onChange={(event) => {
-                                setPageIndex(Number(event.target.value) - 1)
+                                table.setPageIndex(Number(event.target.value) - 1)
                             }}
                             min={1}
                             max={table.getPageCount()}
