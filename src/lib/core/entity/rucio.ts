@@ -77,6 +77,20 @@ export type RuleMeta = {
     updated_at: Date
 }
 
+export type SubscriptionRuleStates = {
+    name: string
+    state_ok: number
+    state_replicating: number
+    state_stuck: number
+    state_suspended: number
+}
+
+/*
+================================================================================
+============================== ENUMS and TYPES =================================
+================================================================================
+*/
+
 // rucio.db.sqla.constants::LockState
 export enum LockState {
     Replicating = "R",

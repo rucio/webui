@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { DIDContents } from '@/lib/infrastructure/data/view-model/page-did'
 import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule/PageRule'
-import { LockState, RuleMeta, RuleNotification, RuleState } from '@/lib/core/entity/rucio'
+import { LockState, RuleMeta, RuleNotification, RuleState, SubscriptionRuleStates } from '@/lib/core/entity/rucio'
 import { DIDType } from '@/lib/core/data/rucio-dto'
 
 function createRandomScope(): string {
@@ -66,5 +66,15 @@ export function createRuleMeta(): RuleMeta {
         split_container: faker.datatype.boolean(),
         state: randomEnum<RuleState>(RuleState),
         updated_at: faker.date.recent(),
+    }
+}
+
+export function createSubscriptionRuleStates(): SubscriptionRuleStates {
+    return {
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        state_ok: faker.number.int({ min: 0, max: 10 }),
+        state_replicating: faker.number.int({ min: 0, max: 10 }),
+        state_stuck: faker.number.int({ min: 0, max: 10 }),
+        state_suspended: faker.number.int({ min: 0, max: 10 }),
     }
 }

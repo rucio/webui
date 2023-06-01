@@ -1616,6 +1616,10 @@ video {
   background-color: rgb(133 77 14 / var(--tw-bg-opacity));
 }
 
+.p-0 {
+  padding: 0px;
+}
+
 .p-1 {
   padding: 0.25rem;
 }
@@ -2948,6 +2952,10 @@ video {
 
   .md\:rounded-full {
     border-radius: 9999px;
+  }
+
+  .md\:p-2 {
+    padding: 0.5rem;
   }
 
   .md\:py-8 {
