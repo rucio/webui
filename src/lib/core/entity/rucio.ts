@@ -85,6 +85,23 @@ export type SubscriptionRuleStates = {
     state_suspended: number
 }
 
+export type SubscriptionMeta = {
+    account: string
+    comments: string
+    created_at: Date
+    id: string
+    last_processed: Date
+    lifetime: Date
+    name: string
+    policyid: number
+    retroactive: boolean
+    state: SubscriptionState
+    updated_at: Date
+    // more difficult datatypes, cast as string for now:
+    filter: string
+    replication_rules: string
+}
+
 /*
 ================================================================================
 ============================== ENUMS and TYPES =================================
@@ -139,6 +156,14 @@ export enum RuleState {
     Suspended = "Suspended",
     Waiting_Approval = "Waiting_Approval",
     Inject = "Inject",
+}
+
+export enum SubscriptionState {
+    Active = "A",
+    Inactive = "I",
+    New = "N",
+    Updated = "U",
+    Broken = "B",
 }
 
 // octal representation of the blockstate

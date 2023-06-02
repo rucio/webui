@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { DIDContents } from '@/lib/infrastructure/data/view-model/page-did'
 import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule/PageRule'
-import { LockState, RuleMeta, RuleNotification, RuleState, SubscriptionRuleStates } from '@/lib/core/entity/rucio'
+import { LockState, RuleMeta, RuleNotification, RuleState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState } from '@/lib/core/entity/rucio'
 import { DIDType } from '@/lib/core/data/rucio-dto'
 
 function createRandomScope(): string {
@@ -76,5 +76,24 @@ export function createSubscriptionRuleStates(): SubscriptionRuleStates {
         state_replicating: faker.number.int({ min: 0, max: 10 }),
         state_stuck: faker.number.int({ min: 0, max: 10 }),
         state_suspended: faker.number.int({ min: 0, max: 10 }),
+    }
+}
+
+export function createSubscriptionMeta(): SubscriptionMeta {
+    return {
+        account: faker.internet.userName(),
+        comments: faker.lorem.words(10),
+        created_at: faker.date.past(),
+        id: faker.string.uuid(),
+        last_processed: faker.date.recent(),
+        lifetime: faker.date.future(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        policyid: faker.number.int({min: 0, max: 1e5}),
+        retroactive: faker.datatype.boolean(),
+        state: randomEnum<SubscriptionState>(SubscriptionState),
+        updated_at: faker.date.recent(),
+        // more difficult datatypes:
+        filter: "{}",
+        replication_rules: "{}",
     }
 }
