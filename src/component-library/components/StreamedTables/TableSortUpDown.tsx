@@ -9,9 +9,10 @@ export function TableSortUpDown(
         name: string
         column: Column<any, any>
         element?: JSX.Element // to replace name
+        stack?: boolean // whether to use column instead of row
     }
 ): JSX.Element {
-    const { name, column, element, ...otherprops } = props
+    const { name, column, element, stack, ...otherprops } = props
     const { className, ...otherdivprops } = otherprops
     type updown = "null" | "desc" | "asc"
     const [state, setState] = useState<updown>("null")
@@ -23,8 +24,8 @@ export function TableSortUpDown(
     return (
         <div
             className={twMerge(
-                "flex flex-row justify-between space-x-2",
-                "h-6 sm:pr-1",
+                "flex justify-between",
+                !stack ? "flex-row space-x-2 h-6" : "flex-col space-y-1",
                 "items-center",
                 "select-none cursor-pointer",
                 className ?? "",

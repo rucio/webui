@@ -2994,6 +2994,10 @@ video {
     display: none;
   }
 
+  .lg\:w-32 {
+    width: 8rem;
+  }
+
   .lg\:w-96 {
     width: 24rem;
   }

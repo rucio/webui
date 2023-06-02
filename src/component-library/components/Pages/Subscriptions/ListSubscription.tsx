@@ -44,16 +44,18 @@ export const ListSubscription = (
                         column={info.column}
                         element={
                             <RuleStateTag
-                                className={"w-28"}
+                                className={isLg() ? "md:w-28" : ""}
+                                tiny={!isLg()}
                                 state={RuleState.OK}
                             />
                         }
+                        stack
                     />
                 )
             },
-            cell: info => <P mono className="text-right">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
             meta: {
-                style: "w-36",
+                style: "w-12 lg:w-32",
             }
         }),
         columnHelper.accessor("state_replicating", {
@@ -61,15 +63,22 @@ export const ListSubscription = (
             header: info => {
                 return (
                     <TableSortUpDown
-                        name="Repl."
+                        name="Replicating"
                         column={info.column}
-                        element={<RuleStateTag className="w-28" state={RuleState.Replicating} />}
+                        element={
+                            <RuleStateTag
+                                className={isLg() ? "md:w-28" : ""}
+                                tiny={!isLg()}
+                                state={RuleState.Replicating} 
+                            />
+                        }
+                        stack
                     />
                 )
             },
-            cell: info => <P mono className="text-right">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
             meta: {
-                style: "w-36",
+                style: "w-12 lg:w-32",
             }
         }),
         columnHelper.accessor("state_stuck", {
@@ -79,13 +88,20 @@ export const ListSubscription = (
                     <TableSortUpDown
                         name="Stuck"
                         column={info.column}
-                        element={<RuleStateTag className="w-28" state={RuleState.Stuck} />}
+                        element={
+                            <RuleStateTag
+                                className={isLg() ? "md:w-28" : ""}
+                                tiny={!isLg()}
+                                state={RuleState.Stuck} 
+                            />
+                        }
+                        stack
                     />
                 )
             },
-            cell: info => <P mono className="text-right">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
             meta: {
-                style: "w-36",
+                style: "w-12 lg:w-32",
             }
         }),
         columnHelper.accessor("state_suspended", {
@@ -93,22 +109,29 @@ export const ListSubscription = (
             header: info => {
                 return (
                     <TableSortUpDown
-                        name="Susp."
+                        name="Suspended"
                         column={info.column}
-                        element={<RuleStateTag className="w-28" state={RuleState.Suspended} />}
+                        element={
+                            <RuleStateTag
+                                className={isLg() ? "md:w-28" : ""}
+                                tiny={!isLg()}
+                                state={RuleState.Suspended} 
+                            />
+                        }
+                        stack
                     />
                 )
             },
-            cell: info => <P mono className="text-right">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
             meta: {
-                style: "w-36",
+                style: "w-12 lg:w-32",
             }
         }),
         columnHelper.display({
             id: "condensed_states",
             header: info => <H3 className="text-left">States</H3>,
             cell: info => {
-                const MiniState = (props: { state: RuleState, amount: number}) => {
+                const MiniState = (props: { state: RuleState, amount: number }) => {
                     return (
                         <span
                             className={twMerge("flex flex-row space-x-1")}
@@ -156,7 +179,8 @@ export const ListSubscription = (
             window.removeEventListener('resize', handleWindowResize);
         };
     }, []);
-    const isMd = () => windowSize[0] > 768  // 768px is the breakpoint for md => is minimum md sized
+    const isSm = () => windowSize[0] > 640  // 640px is the breakpoint for sm => is minimum sm sized
+    const isLg = () => windowSize[0] > 1024 // 1024px is the breakpoint for lg => is minimum lg sized
 
 
     return (
@@ -198,12 +222,14 @@ export const ListSubscription = (
                     tablecolumns={tablecolumns}
                     tablestyling={{
                         visibility: {
-                            "state_ok": isMd(),
-                            "state_replicating": isMd(),
-                            "state_stuck": isMd(),
-                            "state_suspended": isMd(),
-                            "condensed_states": !isMd(),
-                        }
+                            "state_ok": isSm(),
+                            "state_replicating": isSm(),
+                            "state_stuck": isSm(),
+                            "state_suspended": isSm(),
+                            "condensed_states": !isSm(),
+                        },
+                        tableHeadRowStyle: "md:h-16",
+                        tableBodyRowStyle: "h-8",
                     }}
                 />
 
