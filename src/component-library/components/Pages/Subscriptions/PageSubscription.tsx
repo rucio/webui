@@ -7,6 +7,10 @@ import { Titletd, Contenttd, Generaltable } from "../../Helpers/Metatable";
 import { SubscriptionMeta } from "@/lib/core/entity/rucio";
 import { DateTag } from "../../Tags/DateTag";
 import { BoolTag } from "../../Tags/BoolTag";
+import { SubscriptionStateTag } from "../../Tags/SubscriptionStateTag";
+import { HiChevronDown, HiChevronUp } from "react-icons/hi";
+import { Collapsible } from "../../Helpers/Collapsible";
+import { Accordion } from "../../Helpers/Accordion";
 
 export interface PageSubscriptionPageProps {
     subscriptionMeta: SubscriptionMeta
@@ -16,6 +20,8 @@ export const PageSubscription = (
     props: PageSubscriptionPageProps
 ) => {
     const [subpageIndex, setSubpageIndex] = useState<number>(0);
+    const [filterAccordion, setFilterAccordion] = useState<boolean>(false);
+    const [rulesAccordion, setRulesAccordion] = useState<boolean>(false);
     const meta = props.subscriptionMeta
     return (
         <div
@@ -63,65 +69,76 @@ export const PageSubscription = (
                 >
                     <div
                         className={twMerge(
-                            "bg-stone-100 dark:bg-gray-900 p-2 mt-2 rounded-md",
-                            "flex flex-col space-y-2"
+                            "flex flex-col space-y-2",
+                            "md:grid md:grid-cols-2 md:gap-2",
+                            "w-full",
                         )}
                     >
-                        <Generaltable>
-                            <tr>
-                                <Titletd>Name</Titletd>
-                                <Contenttd>{meta.name}</Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>Account</Titletd>
-                                <Contenttd>{meta.account}</Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>Comments</Titletd>
-                                <Contenttd>{meta.comments}</Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>ID</Titletd>
-                                <Contenttd>{meta.id}</Contenttd>
-                            </tr>
-                        </Generaltable>
-                        <Generaltable>
-                            <tr>
-                                <Titletd>Created At</Titletd>
-                                <Contenttd><DateTag date={meta.created_at}/></Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>Last Processed</Titletd>
-                                <Contenttd><DateTag date={meta.last_processed}/></Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>Updated At</Titletd>
-                                <Contenttd><DateTag date={meta.updated_at}/></Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>Lifetime</Titletd>
-                                <Contenttd><DateTag date={meta.lifetime}/></Contenttd>
-                            </tr>
-                        </Generaltable>
-                        <Generaltable>
-                            <tr>
-                                <Titletd>State</Titletd>
-                                <Contenttd>{meta.state} ... TODO add SubscriptionStateTag</Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>Retroactive</Titletd>
-                                <Contenttd><BoolTag val={meta.retroactive}/></Contenttd>
-                            </tr>
-                            <tr>
-                                <Titletd>Policy ID</Titletd>
-                                <Contenttd>{meta.policyid}</Contenttd>
-                            </tr>
-                        </Generaltable>
-                        <ol>
-                            <li>Add foldable filter</li>
-                            <li>Add foldable replication rules</li>
-                        </ol>
-                        
+                        <div
+                            className={twMerge(
+                                "bg-stone-100 dark:bg-gray-900 p-2 mt-2 rounded-md",
+                                "flex flex-col space-y-2"
+                            )}
+                        >
+                            <Generaltable>
+                                <tr>
+                                    <Titletd>Name</Titletd>
+                                    <Contenttd>{meta.name}</Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>Account</Titletd>
+                                    <Contenttd>{meta.account}</Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>Comments</Titletd>
+                                    <Contenttd>{meta.comments}</Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>ID</Titletd>
+                                    <Contenttd>{meta.id}</Contenttd>
+                                </tr>
+                            </Generaltable>
+                            <Generaltable>
+                                <tr>
+                                    <Titletd>Created At</Titletd>
+                                    <Contenttd><DateTag date={meta.created_at} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>Last Processed</Titletd>
+                                    <Contenttd><DateTag date={meta.last_processed} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>Updated At</Titletd>
+                                    <Contenttd><DateTag date={meta.updated_at} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>Lifetime</Titletd>
+                                    <Contenttd><DateTag date={meta.lifetime} /></Contenttd>
+                                </tr>
+                            </Generaltable>
+                            <Generaltable>
+                                <tr>
+                                    <Titletd>State</Titletd>
+                                    <Contenttd><SubscriptionStateTag state={meta.state} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>Retroactive</Titletd>
+                                    <Contenttd><BoolTag val={meta.retroactive} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titletd>Policy ID</Titletd>
+                                    <Contenttd>{meta.policyid}</Contenttd>
+                                </tr>
+                            </Generaltable>
+                        </div>
+                        <div>
+                            <Accordion name="Filter">
+                                hi
+                            </Accordion>
+                            <Accordion name="Replication Rules">
+                                hi
+                            </Accordion>
+                        </div>
                     </div>
                 </SubPage>
                 <SubPage

@@ -1,8 +1,20 @@
-export const Collapsible = (props: {showIf: boolean, id?: string, children: any,}) => {
+import { twMerge } from "tailwind-merge"
+
+export const Collapsible: (
+    React.FC<JSX.IntrinsicElements["div"] & { showIf: boolean}>
+) = ({showIf, ...props}) => {
     // why hidden instead of collapse (apparently collapsed only removes space on table objects) ? i am confused
+    const { className, children, ...otherprops } = props
     return (
-        <div className={props.showIf ? "" : "hidden"} data-testid={props.id? props.id: undefined }>
-            {props.children}
+        <div
+            className={twMerge(
+                showIf ? "" : "hidden",
+                className ?? ""
+            )}
+            data-testid={props.id? props.id: undefined }
+            {...otherprops}
+        >
+            {children}
         </div>
     )
 }
