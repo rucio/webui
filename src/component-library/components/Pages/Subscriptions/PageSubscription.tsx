@@ -11,6 +11,7 @@ import { SubscriptionStateTag } from "../../Tags/SubscriptionStateTag";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { Collapsible } from "../../Helpers/Collapsible";
 import { Accordion } from "../../Helpers/Accordion";
+import { Code } from "../../Text/Content/Code";
 
 export interface PageSubscriptionPageProps {
     subscriptionMeta: SubscriptionMeta
@@ -20,8 +21,6 @@ export const PageSubscription = (
     props: PageSubscriptionPageProps
 ) => {
     const [subpageIndex, setSubpageIndex] = useState<number>(0);
-    const [filterAccordion, setFilterAccordion] = useState<boolean>(false);
-    const [rulesAccordion, setRulesAccordion] = useState<boolean>(false);
     const meta = props.subscriptionMeta
     return (
         <div
@@ -74,6 +73,18 @@ export const PageSubscription = (
                             "w-full",
                         )}
                     >
+                        <div>
+                            <Accordion name="Filter" className="p-1">
+                                <Code>
+                                    {meta.filter}
+                                </Code>
+                            </Accordion>
+                            <Accordion name="Replication Rules" className="p-1">
+                                <Code>
+                                    {meta.replication_rules}
+                                </Code>
+                            </Accordion>
+                        </div>
                         <div
                             className={twMerge(
                                 "bg-stone-100 dark:bg-gray-900 p-2 mt-2 rounded-md",
@@ -130,14 +141,6 @@ export const PageSubscription = (
                                     <Contenttd>{meta.policyid}</Contenttd>
                                 </tr>
                             </Generaltable>
-                        </div>
-                        <div>
-                            <Accordion name="Filter">
-                                hi
-                            </Accordion>
-                            <Accordion name="Replication Rules">
-                                hi
-                            </Accordion>
                         </div>
                     </div>
                 </SubPage>
