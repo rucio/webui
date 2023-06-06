@@ -2,14 +2,18 @@ import { twMerge } from "tailwind-merge";
 import { Button } from "../../Button/Button";
 import { AreaInput } from "../../Input/AreaInput";
 import { useState, useEffect } from "react";
-import { Static, Type } from "@sinclair/typebox";
 import { Value } from "@sinclair/typebox/value"
+import { Type, Static } from "@sinclair/typebox"
+import { Code } from "../../Text/Content/Code";
+import { Collapsible } from "../../Helpers/Collapsible";
+import { HiQuestionMarkCircle } from "react-icons/hi";
+import { H3 } from "../../Text/Headings/H3";
 
 
 export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] & {
     defaultString: string,
     submit: (json: string) => void,
-    schema: Static<any>
+    schema: any
 }> = (
     {
         defaultString,
@@ -21,6 +25,8 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
         const { className, ...otherprops } = props
         const [json, setJson] = useState<string>(defaultString)
         const [jsonError, setJsonError] = useState<string | null>("") // null means no error, "" means no error but not checked yet
+        const [helpWanted, setHelpWanted] = useState<boolean>(false)
+        const rowNum = defaultString.split(/\n/).length
         return (
             <div
                 className={twMerge(
@@ -30,7 +36,7 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
             >
                 <AreaInput
                     content={json}
-                    rows={defaultString.split(/\n/).length}
+                    rows={rowNum < 16 ? rowNum : 16}
                     className=""
                     onChange={(e) => {
                         setJson(e.target.value)
@@ -61,6 +67,14 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
                         }
                     </div>
                     <div className="flex flex-row space-x-2">
+                        <Button
+                            icon={<HiQuestionMarkCircle/>}
+                            className="w-fit text-2xl"
+                            aria-label="Show schema"
+                            onClick={(e) => {
+                                setHelpWanted(!helpWanted)
+                            }}
+                        />
                         <Button
                             label="Reset"
                             type="reset"
@@ -95,7 +109,12 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
                         <Button label="Commit" type="submit" disabled={jsonError !== null} className="w-28" />
                     </div>
                 </div>
-
+                    <Collapsible showIf={helpWanted}>
+                        <h4 className="text-gray-800 dark:text-gray-100 font-bold">Schema</h4>
+                        <Code className="h-48 overflow-y-auto mt-2">
+                            {JSON.stringify(schema, null, 2)}
+                        </Code>
+                    </Collapsible>
             </div>
         );
     };

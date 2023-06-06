@@ -16,6 +16,7 @@ import { AreaInput } from "../../Input/AreaInput";
 import { Button } from "../../Button/Button";
 import { PageSubscriptionJSONEditor } from "./PageSubscriptionJSONEditor";
 import { Type } from "@sinclair/typebox";
+import { SubscriptionFilter, SubscriptionReplicationRules } from "@/lib/core/entity/subscription";
 
 export interface PageSubscriptionPageProps {
     subscriptionMeta: SubscriptionMeta
@@ -161,27 +162,14 @@ export const PageSubscription = (
                             <PageSubscriptionJSONEditor
                                 defaultString={meta.filter}
                                 submit={props.editFilter}
-                                schema={Type.Object({
-                                    scope: Type.Array(Type.String()),
-                                    project: Type.Array(Type.String()),
-                                    split_rule: Type.Optional(Type.Boolean()),
-                                })}
+                                schema={SubscriptionFilter}
                             />
                         </Accordion>
                         <Accordion name="Replication Rules" className="p-1">
                             <PageSubscriptionJSONEditor
                                 defaultString={meta.replication_rules}
                                 submit={props.editReplicationRules}
-                                schema={Type.Array(
-                                    Type.Object({
-                                        activity: Type.String(),
-                                        rse_expression: Type.String(),
-                                        source_replica_expression: Type.String(),
-                                        copies: Type.Union([Type.Number(), Type.String()]),
-                                        lifetime: Type.Number(),
-                                        comment: Type.String(),
-                                    })
-                                )}
+                                schema={SubscriptionReplicationRules}
                             />
                         </Accordion>
                     </div>
