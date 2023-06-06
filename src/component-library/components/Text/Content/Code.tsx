@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useState, useEffect } from "react";
 
 export const Code: (
-    React.FC<JSX.IntrinsicElements["code"]>
+    React.FC<JSX.IntrinsicElements["body"]>
 ) = (
     { ...props }
 ) => {
@@ -34,7 +34,7 @@ export const Code: (
                         {styles()}
                     </style>
                 </Head>
-                <body>
+                <body className={twMerge(className ?? "")} {...otherprops}>
                     <Highlight className="language-javascript">
                         {props.children}
                     </Highlight>

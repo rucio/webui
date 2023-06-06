@@ -19,6 +19,7 @@
     "@builder.io/partytown": "^0.7.6",
     "@next/font": "13.1.6",
     "@primer/css": "^20.8.2",
+    "@sinclair/typebox": "^0.28.14",
     "@tanstack/react-query": "^4.28.0",
     "@tanstack/react-query-devtools": "^4.28.0",
     "@tanstack/react-table": "^8.8.4",

@@ -12,9 +12,15 @@ import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { Collapsible } from "../../Helpers/Collapsible";
 import { Accordion } from "../../Helpers/Accordion";
 import { Code } from "../../Text/Content/Code";
+import { AreaInput } from "../../Input/AreaInput";
+import { Button } from "../../Button/Button";
+import { PageSubscriptionJSONEditor } from "./PageSubscriptionJSONEditor";
+import { Type } from "@sinclair/typebox";
 
 export interface PageSubscriptionPageProps {
     subscriptionMeta: SubscriptionMeta
+    editFilter: (filter: string) => void
+    editReplicationRules: (rules: string) => void
 }
 
 export const PageSubscription = (
@@ -55,8 +61,8 @@ export const PageSubscription = (
                 )}
             >
                 <Tabs
-                    tabs={["Metadata", "Rule History", "Edit Subscription"]}
-                    _ariaControls={["metadata", "rule-history", "edit-subscription"]}
+                    tabs={["Metadata", "Edit Subscription"]}
+                    _ariaControls={["metadata", "edit-subscription"]}
                     active={0}
                     updateActive={active => { setSubpageIndex(active) }}
                 />
@@ -146,19 +152,39 @@ export const PageSubscription = (
                 </SubPage>
                 <SubPage
                     show={subpageIndex === 1}
-                    id="subpage-rule-history"
+                    id="subpage-edit-subscription"
                     aria-labelledby="tab-1"
                     role="tabpanel"
                 >
-
-                </SubPage>
-                <SubPage
-                    show={subpageIndex === 2}
-                    id="subpage-edit-subscription"
-                    aria-labelledby="tab-2"
-                    role="tabpanel"
-                >
-
+                    <div className="flex flex-col space-y-2">
+                        <Accordion name="Filter" className="p-1">
+                            <PageSubscriptionJSONEditor
+                                defaultString={meta.filter}
+                                submit={props.editFilter}
+                                schema={Type.Object({
+                                    scope: Type.Array(Type.String()),
+                                    project: Type.Array(Type.String()),
+                                    split_rule: Type.Optional(Type.Boolean()),
+                                })}
+                            />
+                        </Accordion>
+                        <Accordion name="Replication Rules" className="p-1">
+                            <PageSubscriptionJSONEditor
+                                defaultString={meta.replication_rules}
+                                submit={props.editReplicationRules}
+                                schema={Type.Array(
+                                    Type.Object({
+                                        activity: Type.String(),
+                                        rse_expression: Type.String(),
+                                        source_replica_expression: Type.String(),
+                                        copies: Type.Union([Type.Number(), Type.String()]),
+                                        lifetime: Type.Number(),
+                                        comment: Type.String(),
+                                    })
+                                )}
+                            />
+                        </Accordion>
+                    </div>
                 </SubPage>
             </div>
         </div>

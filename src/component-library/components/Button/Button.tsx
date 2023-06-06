@@ -30,7 +30,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
                     "py-1 px-3 h-8 rounded",
                     type === "submit" ? "bg-green-500 hover:bg-green-600 text-white" : "",
                     type === "reset" ? "bg-red-500 hover:bg-red-600 text-white" : "",
-                    type ?? "button" === "button" ? "bg-blue-500 hover:bg-blue-600 text-white" : "",
+                    (type === "button") || (type === undefined) ? "bg-blue-500 hover:bg-blue-600 text-white" : "",
                     theme  === "orange" ? "bg-amber-500 hover:bg-amber-600 text-black" : "",
                     props.disabled ? "cursor-not-allowed bg-gray-500 hover:bg-gray-500 text-gray-200" : "cursor-pointer",
                     fullwidth ?? true ? "w-full" : "",
