@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-export const AreaInput = (
-    props: {
-        content?: string,
-        placeholder?: string,
-        onBlur?: (event: any) => void,
-        onChange?: (event: any) => void,
-        onEnterkey?: (event: any) => void,
-        id?: string,
-        rows?: number,
-    }
+export const AreaInput: (
+    React.FC<JSX.IntrinsicElements["textarea"] & {
+        content: string,
+        onEnterkey?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
+    }>
+) = (
+    { ...props }
 ) => {
     const [content, setContent] = useState<string>(props.content ?? "")
     useEffect(() => {

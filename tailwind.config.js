@@ -1,6 +1,11 @@
 module.exports = {
     content: {
         files: ["./src/**/*.{html,js,tsx,ts}"],
+        extract: {
+            columnMetaStyle: (content) => {
+                return content.match(/(?<=meta([:\s{]*)style:\s")[a-zA-Z\-\[\]0-9:\s]*(?=")/)
+            }
+        }
     },
     theme: {
         extend: {

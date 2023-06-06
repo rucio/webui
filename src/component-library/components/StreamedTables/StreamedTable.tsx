@@ -9,7 +9,9 @@ type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
     tabledata: TableData<T>
     tablecolumns: any[] // todo type this
     tablestyling?: Partial<{
-        visibility: Record<string, boolean>
+        visibility?: Record<string, boolean>
+        tableHeadRowStyle?: string
+        tableBodyRowStyle?: string
     }>
 }
 
@@ -58,7 +60,8 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     className={twMerge(
                         "h-16 md:h-12",
                         "bg-white dark:bg-gray-700",
-                        "relative"
+                        "relative",
+                        props.tablestyling?.tableHeadRowStyle ?? "",
                     )}
                 >
                     {table.getLeafHeaders().map(header => {
@@ -92,6 +95,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                                 "bg-white odd:bg-stone-100",
                                 "dark:bg-gray-700 dark:odd:bg-gray-800",
                                 "hover:bg-gray-200 dark:hover:bg-gray-900",
+                                props.tablestyling?.tableBodyRowStyle ?? "",
                             )}
                         >
                             {row.getVisibleCells().map(cell => {

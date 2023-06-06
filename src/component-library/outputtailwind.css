@@ -1279,6 +1279,10 @@ video {
   border-bottom-width: 1px;
 }
 
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
 .border-b-4 {
   border-bottom-width: 4px;
 }
@@ -1364,6 +1368,11 @@ video {
 .border-red-700 {
   --tw-border-opacity: 1;
   border-color: rgb(185 28 28 / var(--tw-border-opacity));
+}
+
+.border-teal-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(15 118 110 / var(--tw-border-opacity));
 }
 
 .bg-amber-100 {
@@ -1546,6 +1555,11 @@ video {
   background-color: rgb(254 202 202 / var(--tw-bg-opacity));
 }
 
+.bg-red-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
+}
+
 .bg-red-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(248 113 113 / var(--tw-bg-opacity));
@@ -1614,6 +1628,10 @@ video {
 .bg-yellow-800 {
   --tw-bg-opacity: 1;
   background-color: rgb(133 77 14 / var(--tw-bg-opacity));
+}
+
+.p-0 {
+  padding: 0px;
 }
 
 .p-1 {
@@ -2343,6 +2361,11 @@ video {
     border-color: rgb(254 202 202 / var(--tw-border-opacity));
   }
 
+  .dark\:border-teal-200 {
+    --tw-border-opacity: 1;
+    border-color: rgb(153 246 228 / var(--tw-border-opacity));
+  }
+
   .dark\:border-white {
     --tw-border-opacity: 1;
     border-color: rgb(255 255 255 / var(--tw-border-opacity));
@@ -2476,6 +2499,11 @@ video {
   .dark\:bg-teal-600 {
     --tw-bg-opacity: 1;
     background-color: rgb(13 148 136 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-teal-700 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(15 118 110 / var(--tw-bg-opacity));
   }
 
   .dark\:text-amber-300 {
@@ -2825,6 +2853,10 @@ video {
     display: flex;
   }
 
+  .md\:grid {
+    display: grid;
+  }
+
   .md\:hidden {
     display: none;
   }
@@ -2897,6 +2929,10 @@ video {
     width: 100%;
   }
 
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .md\:flex-row {
     flex-direction: row;
   }
@@ -2911,6 +2947,10 @@ video {
 
   .md\:justify-between {
     justify-content: space-between;
+  }
+
+  .md\:gap-2 {
+    gap: 0.5rem;
   }
 
   .md\:space-x-1 > :not([hidden]) ~ :not([hidden]) {
@@ -2950,6 +2990,10 @@ video {
     border-radius: 9999px;
   }
 
+  .md\:p-2 {
+    padding: 0.5rem;
+  }
+
   .md\:py-8 {
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -2984,6 +3028,10 @@ video {
 
   .lg\:hidden {
     display: none;
+  }
+
+  .lg\:w-32 {
+    width: 8rem;
   }
 
   .lg\:w-96 {
