@@ -7,11 +7,11 @@ import { twMerge } from "tailwind-merge"
 
 import { useEffect, useState } from "react"
 
-import { DID } from "@/lib/core/entity/rucio"
+import { DIDLong } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row } from "@tanstack/react-table"
 
-const columnHelper = createColumnHelper<DID>()
+const columnHelper = createColumnHelper<DIDLong>()
 
 
 
@@ -31,7 +31,7 @@ export default function RSEAccountUsage() {
         errors,
         resolveError,
         resolveAllErrors
-    } = useComDOM<DID>(
+    } = useComDOM<DIDLong>(
         'http://localhost:3000/api/listdids',
         [],
         false,

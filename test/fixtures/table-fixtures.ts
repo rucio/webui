@@ -1,8 +1,14 @@
 import { faker } from '@faker-js/faker'
-import { DIDContents } from '@/lib/infrastructure/data/view-model/page-did'
 import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule/PageRule'
-import { LockState, RuleMeta, RuleNotification, RuleState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState } from '@/lib/core/entity/rucio'
-import { DIDType } from '@/lib/core/entity/rucio'
+import {
+    LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
+    RSEBlockState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState,
+    DIDAvailability,
+    ReplicaState
+} from '@/lib/core/entity/rucio'
+import {
+    DIDDatasetReplicas, DIDRules, FilereplicaState, FilereplicaStateD
+} from '@/lib/infrastructure/data/view-model/page-did';
 
 var dedent = require('dedent-js');
 
@@ -25,21 +31,30 @@ function createRandomRSE(): string {
 
 function createRSEExpression(): string {
     const creators = faker.helpers.arrayElements([
-        () => {return "type"},
-        () => {return "tier"},
-        () => {return "country"},
-        () => {return "region"},
-    ] as Array<() => string>, {min: 1, max: 4})
+        () => { return "type" },
+        () => { return "tier" },
+        () => { return "country" },
+        () => { return "region" },
+    ] as Array<() => string>, { min: 1, max: 4 })
     const strings = creators.map((creator) => creator())
     return strings.join("&")
 }
 
-export function createRandomDIDContents(): DIDContents {
-    const did_type = faker.helpers.arrayElement(['container', 'dataset', 'file'])
+export function createDID(): DID {
     return {
         scope: createRandomScope(),
-        name: `${did_type}-${faker.string.alphanumeric(10)}`,
-        did_type: did_type.replace(/^\w/, (c) => c.toUpperCase()),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        did_type: randomEnum<DIDType>(DIDType),
+    }
+}
+
+export function createRandomDIDLong(): DIDLong {
+    return {
+        scope: createRandomScope(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        did_type: randomEnum<DIDType>(DIDType),
+        bytes: faker.number.int({ min: 0, max: 1e12 }),
+        length: faker.number.int({ min: 0, max: 1e6 }),
     }
 }
 
@@ -81,6 +96,75 @@ export function createRuleMeta(): RuleMeta {
         updated_at: faker.date.recent(),
     }
 }
+
+export function createDIDMeta(): DIDMeta {
+    const did_type = randomEnum<DIDType>(DIDType)
+    return {
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        scope: createRandomScope(),
+        account: faker.internet.userName(),
+        did_type: did_type,
+        created_at: faker.date.past(),
+        updated_at: faker.date.recent(),
+        availability: randomEnum<DIDAvailability>(DIDAvailability),
+        obsolete: faker.datatype.boolean(),
+        hidden: faker.datatype.boolean(),
+        suppressed: faker.datatype.boolean(),
+        purge_replicas: faker.datatype.boolean(),
+        monotonic: faker.datatype.boolean(),
+        // only for collections
+        is_open: did_type !== DIDType.File ? faker.datatype.boolean() : null,
+        // only for files
+        adler32: did_type === DIDType.File ? faker.string.hexadecimal({ length: 8, prefix: "" }) : null,
+        guid: did_type === DIDType.File ? faker.string.uuid() : null,
+        md5: did_type === DIDType.File ? faker.string.hexadecimal({ length: 32, prefix: "" }) : null,
+        filesize: did_type === DIDType.File ? faker.datatype.number({ min: 0, max: 1e12 }) : null,
+    }
+}
+
+export function createDIDDatasetReplicas(): DIDDatasetReplicas {
+    return {
+        rse: createRandomRSE(),
+        rseblocked: faker.number.int({ min: 0, max: 7 }) as RSEBlockState,
+        availability: faker.datatype.boolean(),
+        available_files: faker.number.int({ min: 0, max: 1e6 }),
+        available_bytes: faker.number.int({ min: 0, max: 1e12 }),
+        creation_date: faker.date.past(),
+        last_accessed: faker.date.recent(),
+    }
+}
+
+export function createDIDRules(): DIDRules {
+    return {
+        id: faker.string.uuid(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        state: randomEnum<RuleState>(RuleState),
+        account: faker.internet.userName(),
+        subscription: { name: faker.lorem.words(3).replace(/\s/g, "."), account: faker.internet.userName() },
+        last_modified: faker.date.recent(),
+    }
+}
+
+export function createFileReplicaState(): FilereplicaState {
+    return {
+        rse: createRandomRSE(),
+        state: randomEnum<ReplicaState>(ReplicaState),
+    }
+}
+
+export function createFileReplicaStateD(): FilereplicaStateD {
+    return {
+        scope: createRandomScope(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        available: faker.number.int({ min: 0, max: 10 }),
+        unavailable: faker.number.int({ min: 0, max: 10 }),
+        copying: faker.number.int({ min: 0, max: 10 }),
+        being_deleted: faker.number.int({ min: 0, max: 10 }),
+        bad: faker.number.int({ min: 0, max: 10 }),
+        temporary_unavailable: faker.number.int({ min: 0, max: 10 }),
+    }
+}
+
 
 export function createSubscriptionRuleStates(): SubscriptionRuleStates {
     return {

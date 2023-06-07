@@ -1,7 +1,7 @@
 'use client';
 import { CreateRule as CreateRuleStory } from "@/component-library/components/Pages/CreateRule/CreateRule";
 import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio";
-import { DID } from "@/lib/core/entity/rucio"
+import { DIDLong } from "@/lib/core/entity/rucio"
 import {
     CreateRuleQuery, DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
@@ -37,7 +37,7 @@ export default function CreateRule() {
     }
 
 
-    const DIDSearchComDOM = useComDOM<DID>(
+    const DIDSearchComDOM = useComDOM<DIDLong>(
         'http://localhost:3000/api/listdids',
         [],
         false,
