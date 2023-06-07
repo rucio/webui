@@ -12,7 +12,7 @@ import { HiArrowCircleLeft } from "react-icons/hi";
 import { FetchStatus } from "@tanstack/react-query";
 
 // DTO etc
-import { DIDMeta } from "@/lib/core/data/rucio-dto";
+import { DIDMeta } from "@/lib/core/entity/rucio";
 import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule";
 import { PageDIDParents } from "./PageDIDParents";
 import { PageDIDMetadata } from "./PageDIDMetadata";

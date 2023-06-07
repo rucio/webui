@@ -7,11 +7,11 @@ import { twMerge } from "tailwind-merge"
 
 import { useEffect, useState } from "react"
 
-import { RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto"
+import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row } from "@tanstack/react-table"
 
-const columnHelper = createColumnHelper<RSEAccountUsageLimitDTO>()
+const columnHelper = createColumnHelper<RSEAccountUsageLimit>()
 
 
 
@@ -31,7 +31,7 @@ export default function RSEAccountUsage() {
         errors,
         resolveError,
         resolveAllErrors
-    } = useComDOM<RSEAccountUsageLimitDTO>(
+    } = useComDOM<RSEAccountUsageLimit>(
         'http://localhost:3000/api/rseaccountusage',
         [],
         false,

@@ -1,4 +1,3 @@
-import { DIDType } from "@/lib/core/data/rucio-dto";
 import { DIDContents } from "@/lib/infrastructure/data/view-model/page-did";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { StoryFn, Meta } from "@storybook/react";

@@ -15,7 +15,6 @@ import { Filter } from "../../StreamedTables/Filter";
 import { NumInput } from "../../Input/NumInput";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink, HiSortAscending, HiSortDescending } from "react-icons/hi"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
-import { DIDType } from "@/lib/core/data/rucio-dto"
 import { DateTag } from "../../Tags/DateTag";
 import { Number } from "../../Text/Content/Number";
 import { AvailabilityTag } from "../../Tags/AvailabilityTag";

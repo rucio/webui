@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { DIDContents } from '@/lib/infrastructure/data/view-model/page-did'
 import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule/PageRule'
 import { LockState, RuleMeta, RuleNotification, RuleState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState } from '@/lib/core/entity/rucio'
-import { DIDType } from '@/lib/core/data/rucio-dto'
+import { DIDType } from '@/lib/core/entity/rucio'
 
 var dedent = require('dedent-js');
 
@@ -60,9 +60,9 @@ export function createRuleMeta(): RuleMeta {
         activity: faker.company.buzzPhrase(),
         copies: faker.number.int({ min: 1, max: 10 }),
         created_at: faker.date.past(),
-        did_type: faker.helpers.arrayElement<DIDType>(['Dataset', 'Container', 'File']),
+        did_type: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
         expires_at: faker.date.future(),
-        grouping: faker.helpers.arrayElement<DIDType>(['Dataset', 'Container', 'File']),
+        grouping: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
         id: faker.string.uuid(),
         ignore_account_limit: faker.datatype.boolean(),
         ignore_availability: faker.datatype.boolean(),

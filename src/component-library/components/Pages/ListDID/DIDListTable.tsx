@@ -3,7 +3,7 @@ import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator"
 import { twMerge } from "tailwind-merge";
 import { useState, useEffect } from "react";
 import { createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, TableOptions, useReactTable, Column } from "@tanstack/react-table";
-import { DIDMeta } from "@/lib/core/data/rucio-dto";
+import { DIDMeta } from "@/lib/core/entity/rucio";
 
 import { Button } from "../../Button/Button";
 import { P } from "../../Text/Content/P";

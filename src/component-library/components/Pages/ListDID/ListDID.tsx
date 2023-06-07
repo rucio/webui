@@ -1,4 +1,4 @@
-import { DIDMeta } from "@/lib/core/data/rucio-dto"
+import { DIDMeta } from "@/lib/core/entity/rucio"
 import { DIDName, DIDSearchResponse, DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule"
 import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"

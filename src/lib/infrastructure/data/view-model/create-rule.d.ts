@@ -1,4 +1,4 @@
-import { DIDDTO, DIDType } from "@/lib/core/data/rucio-dto";
+import { DIDType } from "@/lib/core/entity/rucio";
 import { FetchStatus } from "@tanstack/react-query";
 
 export interface CreateRuleViewModel {

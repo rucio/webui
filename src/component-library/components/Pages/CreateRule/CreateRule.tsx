@@ -26,7 +26,7 @@ var format = require("date-format")
 /* =================================================
 *  Importing Types and Interfaces
 *  ================================================= */
-import { DIDType, RSEAccountUsageLimitDTO } from '@/lib/core/data/rucio-dto';
+import { DIDType } from '@/lib/core/entity/rucio';
 import {
     CreateRuleQuery, CreateRuleResponse,
     DIDName, RSEName,
@@ -205,7 +205,7 @@ export const CreateRule = (
         numsamples: -1,
         enableNotifications: false,
         showAdvanced: false,
-        groupBy: "Dataset",
+        groupBy: DIDType.Dataset,
         asynchronousMode: false,
         numcopies: 1,
         freeComment: "",

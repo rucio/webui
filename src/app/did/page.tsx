@@ -1,6 +1,6 @@
 'use client';
 import { PageDID as PageDIDStory } from '@/component-library/components/Pages/PageDID/PageDID';
-import { DIDDTO, DIDMeta, RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto";
+import { DIDMeta } from "@/lib/core/entity/rucio";
 import {
     CreateRuleQuery, DIDSearchQuery, DIDSearchResponse, DIDName,
     TypedDIDValidationQuery, TypedDIDValidationResponse,

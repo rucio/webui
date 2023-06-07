@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge"
-import { DIDAvailability } from "@/lib/core/data/rucio-dto"
+import { DIDAvailability } from "@/lib/core/entity/rucio"
 
 export const AvailabilityTag: (
     React.FC<JSX.IntrinsicElements["span"] & { availability: DIDAvailability }>
@@ -12,9 +12,9 @@ export const AvailabilityTag: (
     return (
         <span
             className={twMerge(
-                availability === "Available" ? "bg-green-200 dark:bg-green-700" : (
-                    availability === "Deleted" ? "bg-stone-200 dark:bg-stone-700" : (
-                        "bg-purple-200 dark:bg-purple-700"
+                availability === DIDAvailability.Available ? "bg-green-200 dark:bg-green-700" : (
+                    availability === DIDAvailability.Deleted ? "bg-stone-200 dark:bg-stone-700" : (
+                        "bg-purple-200 dark:bg-purple-700" // Lost
                     )
                 ),
                 "text-black dark:text-white italic",

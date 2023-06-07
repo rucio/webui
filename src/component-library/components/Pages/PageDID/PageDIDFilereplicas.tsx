@@ -7,7 +7,6 @@ import { NumInput } from "../../Input/NumInput";
 import { BoolTag } from "../../Tags/BoolTag";
 import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
-import { DIDType } from "@/lib/core/data/rucio-dto";
 import { DateTag } from "../../Tags/DateTag";
 import { NullTag } from "../../Tags/NullTag";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";

@@ -4,7 +4,7 @@ import { HiUserCircle, HiBell } from "react-icons/hi2"
 import { HiMenu, HiChevronDown } from "react-icons/hi"
 import { twMerge } from "tailwind-merge"
 
-import React, { useState, useEffect, useRef, forwardRef } from "react"
+import { useState, useEffect, useRef, forwardRef } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 import { H3 } from "../../Text/Headings/H3"
 import { P } from "../../Text/Content/P"

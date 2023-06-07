@@ -1,4 +1,4 @@
-import { DIDMeta } from "@/lib/core/data/rucio-dto"
+import { DIDMeta } from "@/lib/core/entity/rucio"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
