@@ -7,6 +7,9 @@ export type DID = {
     name: string;
     scope: string;
     did_type: DIDType;
+}
+
+export type DIDLong = DID & {
     bytes: number;
     length: number;
 }

@@ -2,6 +2,7 @@ import { DIDName, DIDSearchResponse } from '@/lib/infrastructure/data/view-model
 
 import { StoryFn, Meta } from '@storybook/react';
 import { ListDID as LD } from './ListDID';
+import { DIDType, DIDAvailability } from '@/lib/core/entity/rucio';
 
 export default {
     title: 'Components/Pages/ListDID',
@@ -124,10 +125,10 @@ ListDID.args = {
         "name": "dataset-YSytZjXJMdiCsSiiUwXx",
         "scope": "Lawrence.Myers",
         "account": "Lawrence_Myers",
-        "did_type": "Dataset",
+        "did_type": DIDType.Dataset,
         "created_at": new Date(2021, 3),
         "updated_at": new Date(2022, 10),
-        "availability": "Deleted",
+        "availability": DIDAvailability.Deleted,
         "obsolete": false,
         "hidden": true,
         "suppressed": true,

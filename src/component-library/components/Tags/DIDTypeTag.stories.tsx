@@ -1,3 +1,4 @@
+import { DIDType } from '@/lib/core/entity/rucio'
 import {StoryFn, Meta} from '@storybook/react'
 
 import {DIDTypeTag as L} from './DIDTypeTag'
@@ -11,5 +12,5 @@ const Template: StoryFn<typeof L> = args => <L {...args} />
 
 export const DIDTypeTag= Template.bind({})
 DIDTypeTag.args = {
-    didtype: 'Container',
+    didtype: DIDType.Dataset,
 }

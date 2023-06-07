@@ -1,8 +1,8 @@
-import { DIDContents } from "@/lib/infrastructure/data/view-model/page-did";
+import { DIDLong } from "@/lib/core/entity/rucio";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { StoryFn, Meta } from "@storybook/react";
 import { createColumnHelper, Column} from "@tanstack/react-table";
-import { createRandomDIDContents } from "test/fixtures/table-fixtures";
+import { createRandomDIDLong } from "test/fixtures/table-fixtures";
 import { StreamedTable as S } from "./StreamedTable";
 
 export default {
@@ -12,15 +12,15 @@ export default {
 
 const Template: StoryFn<typeof S> = (args) => <S {...args} />;
 
-const columnHelper = createColumnHelper<DIDContents>()
+const columnHelper = createColumnHelper<DIDLong>()
 
 export const StreamedTable = Template.bind({});
 StreamedTable.args = {
     tabledata: {
-        data: Array.from({length: 100}, (_, i) => createRandomDIDContents()),
+        data: Array.from({length: 100}, (_, i) => createRandomDIDLong()),
         fetchStatus: "idle",
         pageSize: 10,
-    } as TableData<DIDContents>,
+    } as TableData<DIDLong>,
     tablecolumns: [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",
