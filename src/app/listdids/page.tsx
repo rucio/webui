@@ -1,6 +1,7 @@
 'use client';
 import { ListDID as ListDIDStory } from "@/component-library/components/Pages/ListDID/ListDID";
-import { DIDDTO, DIDMeta, RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto";
+import { DIDMeta } from "@/lib/core/entity/rucio";
+import { DID } from "@/lib/core/entity/rucio"
 import {
     CreateRuleQuery, DIDSearchQuery, DIDSearchResponse, DIDName,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
@@ -163,7 +164,7 @@ export default function ListDID() {
     const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMeta>(didMetaQueryResponses[0])
     const didMetaQuery = (did: DIDName) => {setDIDMetaQueryResponse(randomItem())}
 
-    const DIDSearchComDOM = useComDOM<DIDDTO>(
+    const DIDSearchComDOM = useComDOM<DID>(
         'http://localhost:3000/api/listdids',
         [],
         false,

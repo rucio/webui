@@ -14,7 +14,7 @@ import { NumInput } from "../../Input/NumInput";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink } from "react-icons/hi"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator"
-import { DIDType } from "@/lib/core/data/rucio-dto"
+import { DIDType } from "@/lib/core/entity/rucio"
 import { FullFilter } from "../../StreamedTables/FullFilter";
 
 export const PageDIDContents = (
@@ -87,11 +87,11 @@ export const PageDIDContents = (
                             }
                             switch (filterType) {
                                 case undefined: {
-                                    filterchange("Dataset")
+                                    filterchange(DIDType.Dataset)
                                     break
                                 }
                                 case "Dataset": {
-                                    filterchange("Container")
+                                    filterchange(DIDType.Container)
                                     break
                                 }
                                 case "Container": {

@@ -3,7 +3,7 @@ import { Collapsible } from '../../Helpers/Collapsible'
 import { HiChevronDown } from 'react-icons/hi'
 import { twMerge } from 'tailwind-merge'
 import { DIDTypeTag } from '../../Tags/DIDTypeTag'
-import { DIDType } from '@/lib/core/data/rucio-dto'
+import { DIDType } from '@/lib/core/entity/rucio'
 
 export const Dropdown = forwardRef(function Dropdown
     (
@@ -14,7 +14,7 @@ export const Dropdown = forwardRef(function Dropdown
         outsideref?: React.ForwardedRef<HTMLDivElement>
     ) {
 
-    const options: DIDType[] = ["Dataset", "Container", "Collection", "File"]
+    const options: DIDType[] = Object.values(DIDType)
     const nodes: React.ReactNode[] = [
         <DIDTypeTag didtype='Dataset' neversmall key={0} className="w-full md:w-full" />,
         <DIDTypeTag didtype='Container' neversmall key={1} className="w-full md:w-full" />,
@@ -23,7 +23,7 @@ export const Dropdown = forwardRef(function Dropdown
     ]
 
     const [isActive, setActive] = useState<boolean>(false)
-    const [selectedLabel, setSelectedLabel] = useState<DIDType>("Dataset")
+    const [selectedLabel, setSelectedLabel] = useState<DIDType>(DIDType.Dataset)
 
     const ref = useRef<HTMLDivElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)

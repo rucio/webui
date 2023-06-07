@@ -7,7 +7,6 @@ import { NumInput } from "../../Input/NumInput";
 import { BoolTag } from "../../Tags/BoolTag";
 import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
-import { DIDType } from "@/lib/core/data/rucio-dto";
 import { DateTag } from "../../Tags/DateTag";
 import { NullTag } from "../../Tags/NullTag";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";
@@ -22,7 +21,7 @@ import { FetchStatus } from "@tanstack/react-query";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink } from "react-icons/hi"
 
 // Viewmodels etc
-import { RSE, ReplicaState } from "@/lib/core/entity/rucio";
+import { RSE, ReplicaState, DIDType } from "@/lib/core/entity/rucio";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { FilereplicaStateD } from "@/lib/infrastructure/data/view-model/page-did";
@@ -160,7 +159,7 @@ export const PageDIDFilereplicasD = (
                                 <th className="grow pl-2">
                                     <div className="flex flex-row items-center space-x-8 justify-between">
                                         <span className="shrink-0">
-                                            <DIDTypeTag didtype="File" className="h-8 text-xl" neversmall />
+                                            <DIDTypeTag didtype={DIDType.File} className="h-8 text-xl" neversmall />
                                         </span>
                                         <span className="hidden sm:flex w-full">
                                             <Filter column={table.getColumn("did") as Column<FilereplicaStateD, unknown>} table={table} placeholder="Filter Files by DID" />

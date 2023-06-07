@@ -7,7 +7,7 @@ import { NumInput } from "../../Input/NumInput";
 import { BoolTag } from "../../Tags/BoolTag";
 import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
-import { DIDType } from "@/lib/core/data/rucio-dto";
+import { DIDType } from "@/lib/core/entity/rucio";
 import { DateTag } from "../../Tags/DateTag";
 import { NullTag } from "../../Tags/NullTag";
 import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";
@@ -21,7 +21,7 @@ import { FetchStatus } from "@tanstack/react-query";
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink } from "react-icons/hi"
 
 // Viewmodels etc
-import { DIDAvailability} from "@/lib/core/data/rucio-dto"
+import { DIDAvailability} from "@/lib/core/entity/rucio"
 import { DIDKeyValuePairs } from "@/lib/infrastructure/data/view-model/page-did";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 
@@ -61,7 +61,7 @@ export const PageDIDMetadata = (
                 if (["Available", "Deleted", "Lost"].includes(val as string)) {
                     return <AvailabilityTag availability={val as DIDAvailability} />
                 }
-                if (["Dataset", "Container", "Collection"].includes(val as string)) {
+                if (Object.values(DIDType).includes(val as DIDType)) {
                     return <DIDTypeTag didtype={val as DIDType} />
                 }
                 else {

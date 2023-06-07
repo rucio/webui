@@ -2,22 +2,6 @@
  * Entity models for Rucio. Please keep the type definitions sorted in alphabetical order.
  */
 
-export enum DIDAvailability {
-    Available = "Available",
-    Deleted = "Deleted",
-    Lost = "Lost",
-}
-
-// results of web::flaskapi:v1::rses::RSEAccountUsageLimit::get
-export type RSEAccountUsageLimit = {
-    rse_id: string;
-    rse: string;
-    account: string;
-    used_files: number;
-    used_bytes: number;
-    quota_bytes: number;
-}
-
 // results of core::did::list_dids (with `long` option)
 export type DID = {
     name: string;
@@ -25,6 +9,12 @@ export type DID = {
     did_type: DIDType;
     bytes: number;
     length: number;
+}
+
+export enum DIDAvailability {
+    Available = "Available",
+    Deleted = "Deleted",
+    Lost = "Lost",
 }
 
 // copied from deployed rucio UI
@@ -48,6 +38,16 @@ export type DIDMeta = {
     md5: string | null
     guid: string | null
     filesize: number | null
+}
+
+// results of web::flaskapi:v1::rses::RSEAccountUsageLimit::get
+export type RSEAccountUsageLimit = {
+    rse_id: string;
+    rse: string;
+    account: string;
+    used_files: number;
+    used_bytes: number;
+    quota_bytes: number;
 }
 
 // copied from deployed rucio UI
@@ -77,14 +77,6 @@ export type RuleMeta = {
     updated_at: Date
 }
 
-export type SubscriptionRuleStates = {
-    name: string
-    state_ok: number
-    state_replicating: number
-    state_stuck: number
-    state_suspended: number
-}
-
 export type SubscriptionMeta = {
     account: string
     comments: string
@@ -102,9 +94,17 @@ export type SubscriptionMeta = {
     replication_rules: string
 }
 
+export type SubscriptionRuleStates = {
+    name: string
+    state_ok: number
+    state_replicating: number
+    state_stuck: number
+    state_suspended: number
+}
+
 /*
 ================================================================================
-============================== ENUMS and TYPES =================================
+========================= ENUMS and DISCRETE TYPES =============================
 ================================================================================
 */
 
@@ -123,7 +123,12 @@ export enum RuleNotification {
     Progress = "P", // notify for each chang
 }
 
-export type DIDType = "Dataset" | "Container" | "Collection" | "File";
+export enum DIDType {
+    Dataset = "Dataset",
+    Container = "Container",
+    Collection = "Collection",
+    File = "File",
+}
 
 export type RSE = {
     id: string;

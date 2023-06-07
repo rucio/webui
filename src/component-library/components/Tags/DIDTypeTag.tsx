@@ -1,4 +1,4 @@
-import { DIDType } from "@/lib/core/data/rucio-dto"
+import { DIDType } from "@/lib/core/entity/rucio"
 import { useState, useEffect } from "react"
 import { twMerge } from "tailwind-merge"
 import { FC } from "react"
@@ -11,7 +11,7 @@ type DIDTypeTagProps = JSX.IntrinsicElements["span"] & {
 
 export const DIDTypeTag: FC<DIDTypeTagProps> = (
     {
-        didtype = "Dataset",
+        didtype = DIDType.Dataset,
         forcesmall = false,
         neversmall = false,
         ...props
@@ -30,14 +30,14 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
     const belowMedium = (windowWidth < 768) || forcesmall
 
     const colPicker = (didtype: DIDType) => {
-        switch (didtype.toUpperCase()) {
-            case "CONTAINER":
+        switch (didtype) {
+            case DIDType.Container:
                 return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300"
-            case "DATASET":
+            case DIDType.Dataset:
                 return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
-            case "FILE":
+            case DIDType.File:
                 return "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300"
-            case "COLLECTION":
+            case DIDType.Collection:
                 return "bg-stone-100 text-stone-800 dark:bg-stone-900 dark:text-stone-300"
             default:
                 return ""

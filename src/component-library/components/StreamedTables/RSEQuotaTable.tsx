@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge"
 
 import { useEffect, useState } from "react"
 
-import { RSEAccountUsageLimitDTO } from "@/lib/core/data/rucio-dto"
+import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { FetchStatus } from "@tanstack/react-query"
 import {
@@ -32,9 +32,9 @@ export const RSEQuotaTable = (
         selected?: string[],
     }
 ) => {
-    const columnHelper = createColumnHelper<RSEAccountUsageLimitDTO>()
+    const columnHelper = createColumnHelper<RSEAccountUsageLimit>()
 
-    const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimitDTO>) => {
+    const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimit>) => {
         let noQuota = (row.original.quota_bytes && row.original.quota_bytes < row.original.used_bytes)
         return props.askApproval ? false : noQuota
     }
@@ -169,7 +169,7 @@ export const RSEQuotaTable = (
         }
     )
 
-    const table = useReactTable<RSEAccountUsageLimitDTO>({
+    const table = useReactTable<RSEAccountUsageLimit>({
         data: props.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
@@ -180,7 +180,7 @@ export const RSEQuotaTable = (
         state: {
             columnVisibility: columnVisibility,
         }
-    } as TableOptions<RSEAccountUsageLimitDTO>)
+    } as TableOptions<RSEAccountUsageLimit>)
 
     return (
         <div >
@@ -205,7 +205,7 @@ export const RSEQuotaTable = (
                                             <H3>RSE Name</H3>
                                         </span>
                                         <span className="hidden sm:flex w-full">
-                                            <Filter column={table.getColumn("rse") as Column<RSEAccountUsageLimitDTO, unknown>} table={table} />
+                                            <Filter column={table.getColumn("rse") as Column<RSEAccountUsageLimit, unknown>} table={table} />
                                         </span>
                                         <span className="flex sm:hidden pr-4 relative">
                                             <button
@@ -224,7 +224,7 @@ export const RSEQuotaTable = (
                                             "p-2 flex-row justify-between space-x-2 items-center"
                                         )}
                                     >
-                                        <Filter column={table.getColumn("rse") as Column<RSEAccountUsageLimitDTO, unknown>} table={table} />
+                                        <Filter column={table.getColumn("rse") as Column<RSEAccountUsageLimit, unknown>} table={table} />
                                         <button
                                             onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
                                         >

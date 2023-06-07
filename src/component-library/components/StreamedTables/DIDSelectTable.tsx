@@ -13,7 +13,7 @@ import { twMerge } from "tailwind-merge"
 
 import { useEffect, useState } from "react"
 
-import { DIDDTO, DIDType } from "@/lib/core/data/rucio-dto"
+import { DID, DIDType } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { FetchStatus } from "@tanstack/react-query"
 import {
@@ -37,14 +37,14 @@ import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables"
 
 export const DIDSelectTable = (
     props: {
-        tableData: TableData<DIDDTO>,
+        tableData: TableData<DID>,
         onChange: (selected: string[]) => void,
         selected?: string[],
         useScopenames?: boolean
     }
 ) => {
     const tableData = props.tableData
-    const columnHelper = createColumnHelper<DIDDTO>()
+    const columnHelper = createColumnHelper<DID>()
     const columns: any[] = [
         {
             id: 'selection',
@@ -121,7 +121,7 @@ export const DIDSelectTable = (
         }
     )
 
-    const table = useReactTable<DIDDTO>({
+    const table = useReactTable<DID>({
         data: tableData.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
@@ -133,7 +133,7 @@ export const DIDSelectTable = (
         state: {
             columnVisibility: columnVisibility,
         }
-    } as TableOptions<DIDDTO>)
+    } as TableOptions<DID>)
 
     // most important part: selecting DIDs (rows)
     // this is handled OUTSIDE of tanstack
@@ -219,7 +219,7 @@ export const DIDSelectTable = (
                                         <H3>{props.useScopenames ? "DID" : "DID Name"}</H3>
                                     </span>
                                     <span className="hidden sm:flex w-full">
-                                        <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
+                                        <Filter column={table.getColumn("name") as Column<DID, unknown>} table={table} />
                                     </span>
                                     <span className="flex sm:hidden pr-4 relative">
                                         <button
@@ -238,7 +238,7 @@ export const DIDSelectTable = (
                                         "p-2 flex-row justify-between space-x-2 items-center"
                                     )}
                                 >
-                                    <Filter column={table.getColumn("name") as Column<DIDDTO, unknown>} table={table} />
+                                    <Filter column={table.getColumn("name") as Column<DID, unknown>} table={table} />
                                     <button
                                         onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
                                     >
@@ -252,20 +252,20 @@ export const DIDSelectTable = (
                                     // create a match statement for the filter type
                                     const filterchange = (filterType: DIDType | undefined) => {
                                         setFilterType(filterType)
-                                        var column = table.getColumn("did_type") as Column<DIDDTO, unknown>
+                                        var column = table.getColumn("did_type") as Column<DID, unknown>
                                         column.setFilterValue(filterType ?? "")
                                     }
                                     switch (filterType) {
                                         case undefined: {
-                                            filterchange("File")
+                                            filterchange(DIDType.File)
                                             break
                                         }
                                         case "File": {
-                                            filterchange("Dataset")
+                                            filterchange(DIDType.Dataset)
                                             break
                                         }
                                         case "Dataset": {
-                                            filterchange("Container")
+                                            filterchange(DIDType.Container)
                                             break
                                         }
                                         case "Container": {
