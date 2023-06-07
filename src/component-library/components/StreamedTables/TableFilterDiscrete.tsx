@@ -39,7 +39,7 @@ export function TableFilterDiscrete<T> (
     return (
         <div
             className={twMerge(
-                "flex flex-row justify-between",
+                "flex flex-row justify-center md:justify-between",
                 "h-6 sm:pr-1",
                 "items-center",
                 "select-none cursor-pointer",
