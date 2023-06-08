@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { AccountAttributesDTO } from "../data/account-dto";
+import { AccountAttributesDTO } from "../data/dto/account-dto";
 import { SetX509LoginSessionError, SetX509LoginSessionRequest, SetX509LoginSessionResponse } from "../data/set-x509-login-session-usecase-models";
 import { Role, VO } from "../entity/auth-models";
 import SetX509LoginSessionInputPort from "../port/primary/set-x509-login-session-input-port";

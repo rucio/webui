@@ -1,4 +1,4 @@
-import { DID } from "../entity/rucio";
+import { DID } from "../../entity/rucio";
 import { PassThrough } from 'stream';
 
 export interface ListDIDDTO {
