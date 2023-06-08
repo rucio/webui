@@ -1,4 +1,4 @@
-import { DID } from "../../entity/rucio";
+import { DID } from "@/lib/core/entity/rucio";
 import { PassThrough } from 'stream';
 
 export interface ListDIDDTO {
@@ -14,4 +14,6 @@ export interface DIDDTO extends DID{
     open: boolean;
     monotonic: boolean;
     expired_at: string;
+    bytes: number;
+    length: number;
 }

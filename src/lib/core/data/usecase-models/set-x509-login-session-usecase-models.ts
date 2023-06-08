@@ -1,5 +1,5 @@
-import { Role, VO } from "../entity/auth-models"
-import SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-session-output-port"
+import { Role, VO } from "../../entity/auth-models"
+import SetX509LoginSessionOutputPort from "../../port/primary/set-x509-login-session-output-port"
 
 /**
  * Request Model for {@link SetX509LoginSessionInputPort}

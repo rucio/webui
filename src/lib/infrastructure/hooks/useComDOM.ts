@@ -3,9 +3,10 @@ import { useState, useRef, useMemo, useEffect } from 'react'
 import ComDOMWrapper, {
     BatchResponse,
     ComDOMStatus,
-    HTTPRequest,
     IComDOMWrapper,
-} from '../web-worker/comdom-wrapper'
+} from '@/lib/infrastructure/web-worker/comdom-wrapper'
+
+import { HTTPRequest } from '@/lib/common/stream/http'
 
 export type ComDOMError = {
     id: number

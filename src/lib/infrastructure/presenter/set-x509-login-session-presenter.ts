@@ -1,4 +1,4 @@
-import { SetX509LoginSessionError, SetX509LoginSessionResponse } from "@/lib/core/data/set-x509-login-session-usecase-models";
+import { SetX509LoginSessionError, SetX509LoginSessionResponse } from "@/lib/core/data/usecase-models/set-x509-login-session-usecase-models";
 import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
 import SetX509LoginSessionOutputPort from "@/lib/core/port/primary/set-x509-login-session-output-port";
 import { IronSession } from "iron-session";

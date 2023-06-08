@@ -1,4 +1,4 @@
-import { UserpassLoginError, UserpassLoginResponse } from "../../data/userpass-login-usecase-models";
+import { UserpassLoginError, UserpassLoginResponse } from "../../data/usecase-models/userpass-login-usecase-models";
 
 /**
  * Defines the output port for the userpass login use case. This interface muse be implemented by the

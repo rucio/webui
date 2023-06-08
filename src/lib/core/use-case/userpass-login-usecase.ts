@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { AccountAttributesDTO } from "../data/dto/account-dto";
-import { UserpassLoginRequest, UserpassLoginResponse, UserpassLoginError } from "../data/userpass-login-usecase-models";
+import { UserpassLoginRequest, UserpassLoginResponse, UserpassLoginError } from "../data/usecase-models/userpass-login-usecase-models";
 import { Role } from "../entity/auth-models";
 import UserPassLoginInputPort from "../port/primary/userpass-login-input-port";
 import type UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";

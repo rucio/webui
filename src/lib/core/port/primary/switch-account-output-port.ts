@@ -1,4 +1,4 @@
-import { SwitchAccountError, SwitchAccountResponse } from "../../data/switch-account-usecase-models";
+import { SwitchAccountError, SwitchAccountResponse } from "../../data/usecase-models/switch-account-usecase-models";
 
 export default interface SwitchAccountOutputPort<T>{
     response: T;

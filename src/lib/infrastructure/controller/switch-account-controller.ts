@@ -1,4 +1,4 @@
-import { SwitchAccountRequest } from "@/lib/core/data/switch-account-usecase-models";
+import { SwitchAccountRequest } from "@/lib/core/data/usecase-models/switch-account-usecase-models";
 import { AuthType } from "@/lib/core/entity/auth-models";
 import type SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input-port";
 import { inject, injectable } from "inversify";

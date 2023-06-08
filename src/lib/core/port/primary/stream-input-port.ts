@@ -1,4 +1,3 @@
-import { RSEDTO } from "../../data/rucio-dto";
 /**
  * The StreamOutputPort is the interface that the UseCase will use to communicate with the presenter.
  * @type T represents the type of data that the presenter will receive on each push event

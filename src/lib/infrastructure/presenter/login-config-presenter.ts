@@ -1,4 +1,4 @@
-import { LoginConfigError, LoginConfigResponse } from "@/lib/core/data/login-config-usecase-models";
+import { LoginConfigError, LoginConfigResponse } from "@/lib/core/data/usecase-models/login-config-usecase-models";
 import LoginConfigOutputPort from "@/lib/core/port/primary/login-config-output-port";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";

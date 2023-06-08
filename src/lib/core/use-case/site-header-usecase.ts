@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { IronSession } from "iron-session";
-import { SiteHeaderResponse } from "../data/site-header-usecase-models";
+import { SiteHeaderResponse } from "../data/usecase-models/site-header-usecase-models";
 import type { User } from "../entity/auth-models";
 import SiteHeaderInputPort from "../port/primary/site-header-input-port";
 import type SiteHeaderOutputPort from "../port/primary/site-header-output-port";
