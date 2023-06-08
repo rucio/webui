@@ -1,4 +1,4 @@
-import { DID } from "../entity/rucio";
+import { DID } from "@/lib/core/entity/rucio";
 
 export type ListDIDRequest = {
     query: string;

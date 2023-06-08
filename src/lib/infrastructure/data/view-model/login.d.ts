@@ -1,4 +1,4 @@
-import { LoginConfigResponse } from "@/lib/core/data/login-config-usecase-models"
+import { LoginConfigResponse } from "@/lib/core/data/usecase-models/login-config-usecase-models"
 
 export interface LoginViewModel extends LoginConfigResponse {
     isLoggedIn: boolean;

@@ -1,4 +1,4 @@
-import { SiteHeaderError, SiteHeaderResponse } from "@/lib/core/data/site-header-usecase-models";
+import { SiteHeaderError, SiteHeaderResponse } from "@/lib/core/data/usecase-models/site-header-usecase-models";
 import SiteHeaderOutputPort from "@/lib/core/port/primary/site-header-output-port";
 import { NextApiResponse } from "next";
 import { SiteHeaderViewModel } from "../data/view-model/site-header";

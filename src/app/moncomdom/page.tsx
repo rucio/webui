@@ -81,9 +81,9 @@ export default function RSETable() {
                 const request: HTTPRequest = {
                     url: new URL('http://localhost:3000/api/stream'),
                     method: 'GET',
-                    headers: new Headers({
+                    headers: {
                         'Content-Type': 'application/json'
-                    } as HeadersInit),
+                    },
                     body: null,
                 }
                 await start(request)

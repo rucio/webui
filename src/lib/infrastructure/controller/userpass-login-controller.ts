@@ -1,4 +1,4 @@
-import { UserpassLoginRequest } from "@/lib/core/data/userpass-login-usecase-models";
+import { UserpassLoginRequest } from "@/lib/core/data/usecase-models/userpass-login-usecase-models";
 import UserPassLoginInputPort from "@/lib/core/port/primary/userpass-login-input-port";
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";

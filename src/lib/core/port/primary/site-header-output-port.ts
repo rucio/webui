@@ -1,4 +1,4 @@
-import { SiteHeaderError, SiteHeaderResponse } from "../../data/site-header-usecase-models";
+import { SiteHeaderError, SiteHeaderResponse } from "../../data/usecase-models/site-header-usecase-models";
 
 /**
  * The interface defines a presenter that will generate a ViewModel used by the Site Header component.

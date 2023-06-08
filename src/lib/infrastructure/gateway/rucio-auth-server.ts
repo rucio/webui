@@ -1,4 +1,4 @@
-import type { UserPassLoginAuthServerDTO } from "@/lib/core/data/auth-server-dto";
+import type { UserPassLoginAuthServerDTO } from "@/lib/core/data/dto/auth-server-dto";
 import AuthServerGatewayOutputPort from "@/lib/core/port/secondary/auth-server-gateway-output-port";
 import { injectable } from "inversify";
 
