@@ -43,7 +43,14 @@ export type DIDMeta = {
     filesize: number | null
 }
 
-export type DIDType = "Dataset" | "Container" | "Collection" | "File";
+
+export enum DIDType {
+    DATASET = "DATASET",
+    CONTAINER = "CONTAINER",
+    FILE = "FILE",
+    ALL = "ALL",
+    UNKNOWN = "UNKNOWN"
+}
 
 export type RSE = {
     id: string;
