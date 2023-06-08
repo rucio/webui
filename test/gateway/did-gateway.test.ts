@@ -18,7 +18,9 @@ describe("DID Gateway Tests", () => {
                     })
                 }
                 const stream = Readable.from([
-                    "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00\n",
+                    "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00",
+                    "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01",
+                    "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02",
                 ].join('\n'));
                 return Promise.resolve({
                     status: 200,
@@ -34,7 +36,7 @@ describe("DID Gateway Tests", () => {
         fetchMock.dontMock();
     });
 
-    it("should successfully stream a single DID", async () => {
+    it("should successfully stream DIDs from Newline-Delimitted String to String Array", async () => {
         const rucioDIDGateway:DIDGatewayOutputPort = appContainer.get(GATEWAYS.DID);
         const didDTO: DIDDTO = await rucioDIDGateway.listDIDs('rucio-ddmlab-askdjljioj', 'mc16_13TeV', 'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00', DIDType.DATASET);
         expect(didDTO.status).toBe('success');
@@ -61,7 +63,9 @@ describe("DID Gateway Tests", () => {
         });
 
         expect(receivedData).toEqual([
-            "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00"
+            "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00",
+            "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01",
+            "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02",
         ]);
     });
 });
