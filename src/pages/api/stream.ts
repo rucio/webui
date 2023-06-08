@@ -3,6 +3,8 @@ import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-ou
 import appContainer from "@/lib/infrastructure/config/ioc/container-config";
 import GATEWAYS from "@/lib/infrastructure/config/ioc/ioc-symbols-gateway";
 import { PassThrough } from "node:stream";
+import { HTTPRequest } from "@/lib/common/stream/http";
+import { Response } from "node-fetch";
 // TODO https://2ality.com/2022/06/web-streams-nodejs.html#kinds-of-streams
 // TODO https://soshace.com/node-lessons-writable-res-stream/
 
@@ -11,13 +13,25 @@ export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 const streamRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
     const url = 'http://localhost:8080/stream'
+    const request: HTTPRequest = {
+        url: url,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-json-stream',
+        },
+        body: null,
+    }
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('X-Accel-Buffering', 'no');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Content-Encoding', 'none');
-    const responseStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
+    const responseStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
+    if(responseStream instanceof Response) {
+        res.status(responseStream.status).json(responseStream.statusText)
+        return
+    }
     responseStream?.on('data', async (chunk) => {
         res.write(chunk.toString() + '\n')
     })

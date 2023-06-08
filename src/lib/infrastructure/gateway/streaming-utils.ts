@@ -1,26 +1,61 @@
-import { Transform } from 'node:stream';
-import 'node:stream/promises'
-import 'https';
-import fetch from 'node-fetch';
+import { Transform } from 'stream'
 
-export async function run() {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-}
+export class NewlineDelimittedDataParser extends Transform {
+    buffer: string
 
-export default class JSONStream<T> {
-    url: string
-
-    constructor(url: string, data: T[]) {
-        this.url = url;
+    constructor() {
+        super({ objectMode: true })
+        this.buffer = ''
     }
 
-    async getDataStream(): Promise<NodeJS.ReadableStream> {
-        const res = await fetch(this.url, {
-            method: 'GET',
-        })
-        const stream = res.body;
-        return Promise.resolve(stream);
+    readBuffer() {
+        return this.buffer
     }
-    
+
+    clearBuffer() {
+        this.buffer = ''
+    }
+
+    pushToBuffer(chunk: string) {
+        this.buffer += chunk
+    }
+
+    extractJSONObjects(): string[] {
+        const bufferData = this.readBuffer()
+        const objects = bufferData.split('\n').filter((object) => object.length > 0)
+        if (objects.length === 0) {
+            return []
+        }
+        if(objects.length === 1) {
+            const object = objects[0]
+            this.clearBuffer()
+            return [object]
+        }
+        const lastObject = objects[objects.length - 1]
+        this.clearBuffer()
+        this.pushToBuffer(lastObject)
+        return objects.slice(0, objects.length - 1)
+    }
+
+    _transform(chunk: any, encoding: string, callback: Function) {
+        const data = chunk.toString()
+        this.pushToBuffer(data)
+        try {
+            const objects = this.extractJSONObjects()
+            for (const object of objects) {
+                this.push(JSON.stringify(object))
+            }
+            callback(null)
+        } catch (error) {
+            callback(null)
+        }
+    }
+
+    _flush(callback: Function) {
+        const objects = this.readBuffer().split('\n')
+        for (const object of objects) {
+            this.push(object)
+        }
+        callback(null)
+    }
 }

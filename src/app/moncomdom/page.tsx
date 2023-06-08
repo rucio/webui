@@ -1,9 +1,9 @@
 'use client'
 import { RSE } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
-import { HTTPRequest } from "@/lib/infrastructure/web-worker/comdom-wrapper"
+import { HTTPRequest } from "@/lib/common/stream/http"
 import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable } from "@tanstack/react-table"
-import {ComDOMLifeCycle, ComDOMStatusCard} from "./comdom-status"
+import { ComDOMStatusCard } from "./comdom-status"
 import ErrorList from "./errors"
 import RSEQueryStatus from "./rse-query-status"
 import UseComDOMStatusCard from "./use-comdom-status"
