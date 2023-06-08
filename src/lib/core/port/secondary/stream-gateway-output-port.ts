@@ -4,5 +4,5 @@ import { PassThrough } from 'node:stream';
 
 export default interface StreamGatewayOutputPort {
     getTextStream(request: HTTPRequest): Promise<PassThrough | Response >;
-    getJSONChunks(request: HTTPRequest, ndjson: boolean): Promise<PassThrough | Response >;
+    getJSONChunks(request: HTTPRequest, ndjson: boolean | null): Promise<PassThrough | Response >;
 }
