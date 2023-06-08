@@ -1,10 +1,11 @@
 import 'reflect-metadata'
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port'
 import { injectable } from 'inversify'
-import fetch from 'node-fetch'
+import fetch, { Response } from 'node-fetch'
 import { PassThrough, Transform } from 'node:stream'
 import { TransformCallback } from 'stream'
-import 'ndjson'
+import { HTTPRequest, prepareRequestArgs } from '@/lib/common/stream/http'
+import { NewlineDelimittedDataParser } from './streaming-utils'
 
 class BytesToStringifiedJSONTransform extends Transform {
     buffer: string[]
@@ -171,12 +172,12 @@ export default class StreamingGateway<T> implements StreamGatewayOutputPort {
         },
     })
 
-    async getTextStream(url: string): Promise<PassThrough | null> {
-        const response = await fetch(url, {
-            method: 'GET',
-        })
+    async getTextStream(request: HTTPRequest): Promise<PassThrough | Response> {
+        const { url, requestArgs } = prepareRequestArgs(request)
+        
+        const response = await fetch(url, requestArgs)
         if (!response.ok || response.body === null) {
-            throw new Error(`Failed to fetch stream: ${response.statusText}`)
+            return response
         }
         const responseBody = response.body
         const textStream = new PassThrough()
@@ -184,19 +185,25 @@ export default class StreamingGateway<T> implements StreamGatewayOutputPort {
         return Promise.resolve(textStream)
     }
 
-    async getJSONChunks(url: string): Promise<PassThrough | null> {
-        const response = await fetch(url, {
-            method: 'GET',
-        })
+    async getJSONChunks(request: HTTPRequest, ndjson: boolean = false): Promise<PassThrough | Response> {
+        const { url, requestArgs } = prepareRequestArgs(request)
+        const response = await fetch(url, requestArgs)
+
         if (!response.ok || response.body === null) {
-            throw new Error(`Failed to fetch stream: ${response.statusText}`)
+            return response
         }
+
         const responseBody = response.body
         const jsonStream = new PassThrough()
-        responseBody
-            // .pipe(ndjson.parse())
-            .pipe(new BytesToStringifiedJSONTransform({ objectMode: true }))
-            .pipe(jsonStream)
+        if(ndjson) {
+            responseBody
+                .pipe(new NewlineDelimittedDataParser())
+                .pipe(jsonStream)
+        } else {
+            responseBody
+                .pipe(new BytesToStringifiedJSONTransform({ objectMode: true }))
+                .pipe(jsonStream)
+        }
         return Promise.resolve(jsonStream)
     }
 }

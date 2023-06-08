@@ -1,7 +1,9 @@
+import type { HTTPRequest } from '@/lib/common/stream/http'
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
 import { PassThrough } from 'node:stream'
+import { Response } from 'node-fetch'
 
 describe('Streaming tests for JSON encoded text payloads', () => {
     beforeEach(async () => {
@@ -82,11 +84,22 @@ describe('Streaming tests for JSON encoded text payloads', () => {
     it('should return the mocked chunks as text', async () => {
         const url = 'http://localhost:8080/textstream'
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-        const textStream: PassThrough | null = await streamingGateway.getTextStream(url)
+        const request: HTTPRequest = {
+            url: url,
+            method: 'GET',
+            body: null,
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+        }
+        const textStream: PassThrough | Response = await streamingGateway.getTextStream(request)
         expect(textStream).not.toBeNull()
         // if response is null fail the test
         if(textStream === null) {
             fail('response is null')
+        }
+        if(textStream instanceof Response) {
+            fail('response is not a stream')
         }
         let chunks:string[] = []
         const outputStream = new PassThrough()
@@ -103,14 +116,25 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         }
     })
 
-    it('should return the mocked chunks as JSON', async () => {
+    it('should return the mocked chunks as JSON object', async () => {
         const url = 'http://localhost:8080/goodjsonstream'
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-        const jsonStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
+        const request: HTTPRequest = {
+            url: url,
+            method: 'GET',
+            body: null,
+            headers: {
+                'Content-Type': 'application/x-json-stream',
+            },
+        }
+        const jsonStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
         expect(jsonStream).not.toBeNull()
         // if response is null fail the test
         if(jsonStream === null) {
             fail('response is null')
+        }
+        if(jsonStream instanceof Response) {
+            fail('response is not a stream')
         }
         let chunks: any[] = []
         const outputStream = new PassThrough()
@@ -134,11 +158,22 @@ describe('Streaming tests for JSON encoded text payloads', () => {
     it('should return nested json responses as JSON', async () => {
         const url = 'http://localhost:8080/nestedjsonstream'
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-        const jsonStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
+        const request: HTTPRequest = {
+            url: url,
+            method: 'GET',
+            body: null,
+            headers: {
+                'Content-Type': 'application/x-json-stream',
+            },
+        }
+        const jsonStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
         expect(jsonStream).not.toBeNull()
         // if response is null fail the test
         if(jsonStream === null) {
             fail('response is null')
+        }
+        if(jsonStream instanceof Response) {
+            fail('response is not a stream')
         }
         let chunks: Object[] = []
         const outputStream = new PassThrough()
@@ -167,15 +202,25 @@ describe('Streaming tests for JSON encoded text payloads', () => {
             await new Promise(resolve => setTimeout(resolve, 1000))
         }
     })
+
     it('should return list of objects as JSON', async () => {
         const url = 'http://localhost:8080/listofobjects'
         const streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM)
-        const jsonStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
+        const request: HTTPRequest = {
+            url: url,
+            method: 'GET',
+            body: null,
+            headers: {},
+        }
+        const jsonStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
         
         expect(jsonStream).not.toBeNull()
         // if response is null fail the test
         if(jsonStream === null) {
             fail('response is null')
+        }
+        if(jsonStream instanceof Response) {
+            fail('response is not a stream')
         }
         let chunks:Object[] = []
         const outputStream = new PassThrough()

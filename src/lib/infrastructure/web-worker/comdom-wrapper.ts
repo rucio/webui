@@ -1,4 +1,5 @@
 import { Remote, wrap } from "comlink"
+import type { HTTPRequest } from "@/lib/common/stream/http";
 
 /**
  * @description Represents the status of the ComDOM web worker
@@ -32,16 +33,6 @@ export type BatchResponse<TData> = {
     data: TData[]
     /** @description True if there is another batch available, false otherwise */
     next: boolean
-}
-
-/**
- * @description Represents the headers of a HTTP request
- */
-export type HTTPRequest = {
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-    url: URL | string
-    headers: Headers | { [key: string]: string } | null
-    body: { [key: string]: string } | null
 }
 
 /**
