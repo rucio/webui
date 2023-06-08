@@ -5,8 +5,6 @@ import GATEWAYS from "@/lib/infrastructure/config/ioc/ioc-symbols-gateway";
 import { PassThrough } from "node:stream";
 import { HTTPRequest } from "@/lib/common/stream/http";
 import { Response } from "node-fetch";
-// TODO https://2ality.com/2022/06/web-streams-nodejs.html#kinds-of-streams
-// TODO https://soshace.com/node-lessons-writable-res-stream/
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

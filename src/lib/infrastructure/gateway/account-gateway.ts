@@ -1,4 +1,4 @@
-import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, TAccountAttributes } from "@/lib/core/data/account-dto";
+import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, TAccountAttributes } from "@/lib/core/data/dto/account-dto";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import type EnvConfigGatewayOutputPort from "@/lib/core/port/secondary/env-config-gateway-output-port";
 import { inject, injectable } from "inversify";

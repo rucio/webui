@@ -1,4 +1,4 @@
-import { AccountAttributeErrorTypesDTO, AccountAttributesDTO } from "@/lib/core/data/account-dto";
+import { AccountAttributeErrorTypesDTO, AccountAttributesDTO } from "@/lib/core/data/dto/account-dto";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import appContainer from "@/lib/infrastructure/config/ioc/container-config";
 import GATEWAYS from "@/lib/infrastructure/config/ioc/ioc-symbols-gateway";

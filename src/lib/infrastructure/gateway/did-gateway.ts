@@ -1,6 +1,6 @@
 import { HTTPRequest } from '@/lib/common/stream/http'
 import { Response } from 'node-fetch'
-import { DIDDTO, ListDIDDTO } from '@/lib/core/data/did-dto'
+import { DIDDTO, ListDIDDTO } from '@/lib/core/data/dto/did-dto'
 import { DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port'
