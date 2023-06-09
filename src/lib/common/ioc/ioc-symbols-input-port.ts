@@ -4,6 +4,7 @@
  */
 const INPUT_PORT = {
     LOGIN_CONFIG: Symbol.for("LoginConfigInputPort"),
+    LIST_DIDS: Symbol.for("ListDIDsInputPort"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionInputPort"),
     SITE_HEADER: Symbol.for("SiteHeaderInputPort"),
     STREAM: Symbol.for("StreamInputPort"),
