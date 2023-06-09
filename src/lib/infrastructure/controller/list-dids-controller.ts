@@ -1,3 +1,4 @@
+import { BaseController, IBaseController, TAuthenticatedControllerParameters } from "@/lib/core/base-components/ports";
 import { ListDIDsRequest } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
 import { DIDType } from "@/lib/core/entity/rucio";
 import ListDIDsInputPort from "@/lib/core/port/primary/list-dids-input-port";
@@ -5,24 +6,21 @@ import { injectable, inject } from "inversify";
 import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
 
-export interface IListDIDsController {
-    listDIDs(response: NextApiResponse, rucioAuthToken: string, query: string, type: string): void;
-}
+export interface IListDIDsController extends IBaseController<ListDIDsRequest, ListDIDsControllerParameters>{}
 
+export type ListDIDsControllerParameters = TAuthenticatedControllerParameters & {
+    query: string,
+    type: string
+};
 @injectable()
-class ListDIDsController implements IListDIDsController {
-    private listDIDsUseCase: ListDIDsInputPort | null = null;
-    private listDIDsUseCaseFactory: (response: NextApiResponse) => ListDIDsInputPort;
-
-    public constructor(
+class ListDIDsController extends BaseController<ListDIDsRequest, ListDIDsControllerParameters> {
+    constructor(
         @inject(USECASE_FACTORY.LIST_DIDS) listDIDsUseCaseFactory: (response: NextApiResponse) => ListDIDsInputPort,
-        ) {
-        this.listDIDsUseCaseFactory = listDIDsUseCaseFactory;
+    ) {
+        super(listDIDsUseCaseFactory);
     }
-
-    async listDIDs(response: NextApiResponse, rucioAuthToken: string, query: string, type: string) {
-        this.listDIDsUseCase = this.listDIDsUseCaseFactory(response);
-        type = type.toLowerCase();
+    prepareRequestModel(parameters: ListDIDsControllerParameters): ListDIDsRequest {
+        const type = parameters.type.toLowerCase();
         let did_type = DIDType.ALL;
         switch(type) {
             case 'container': {
@@ -40,12 +38,11 @@ class ListDIDsController implements IListDIDsController {
                 did_type = DIDType.ALL;
             }
         }
-        const requestModel: ListDIDsRequest = {
-            query: query,
+        return {
+            query: parameters.query,
             type: did_type,
-            rucioAuthToken: rucioAuthToken
+            rucioAuthToken: parameters.rucioAuthToken
         }
-        await this.listDIDsUseCase.execute(requestModel);
     }
 }
 
