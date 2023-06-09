@@ -1,6 +1,6 @@
 import StreamingUseCase, { IStreamUseCase } from "@/lib/common/stream/stream-usecase";
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
-import { BaseInputPort } from "../../base-components/ports";
+import { BaseInputPort } from "../../../common/base-components/primary-ports";
 import { ListDIDsRequest, ListDIDsResponse } from "../../data/usecase-models/list-dids-usecase-models";
 
 /**

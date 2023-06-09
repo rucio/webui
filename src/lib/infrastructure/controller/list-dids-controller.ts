@@ -1,4 +1,4 @@
-import { BaseController, IBaseController, TAuthenticatedControllerParameters } from "@/lib/core/base-components/ports";
+import { BaseController, TAuthenticatedControllerParameters } from "@/lib/common/base-components/controller";
 import { ListDIDsRequest } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
 import { DIDType } from "@/lib/core/entity/rucio";
 import ListDIDsInputPort from "@/lib/core/port/primary/list-dids-input-port";
@@ -6,14 +6,12 @@ import { injectable, inject } from "inversify";
 import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
 
-export interface IListDIDsController extends IBaseController<ListDIDsRequest, ListDIDsControllerParameters>{}
-
 export type ListDIDsControllerParameters = TAuthenticatedControllerParameters & {
     query: string,
     type: string
 };
 @injectable()
-class ListDIDsController extends BaseController<ListDIDsRequest, ListDIDsControllerParameters> {
+class ListDIDsController extends BaseController<ListDIDsControllerParameters, ListDIDsRequest> {
     constructor(
         @inject(USECASE_FACTORY.LIST_DIDS) listDIDsUseCaseFactory: (response: NextApiResponse) => ListDIDsInputPort,
     ) {

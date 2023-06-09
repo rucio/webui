@@ -45,7 +45,7 @@ import ListDIDsInputPort from "@/lib/core/port/primary/list-dids-input-port";
 import ListDIDsUseCase from "@/lib/core/use-case/list-dids-usecase";
 import ListDIDsController, { IListDIDsController, ListDIDsControllerParameters } from "../../controller/list-dids-controller";
 import ListDIDsPresenter from "../../presenter/list-dids-presenter";
-import { BaseController, IBaseController } from "@/lib/core/base-components/ports";
+import { BaseController, IBaseController } from "@/lib/common/base-components/primary-ports";
 import { ListDIDsRequest } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
 
 
