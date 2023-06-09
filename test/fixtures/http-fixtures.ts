@@ -1,5 +1,7 @@
 import { getIronSession } from "iron-session";
-import { createMocks } from "node-mocks-http";
+import { createMocks, createResponse, MockResponse } from "node-mocks-http";
+import { EventEmitter } from "stream";
+import { Response } from "express";
 
 export async function createHttpMocks(url?: string, method?: 'GET' | 'POST', body: any = {}){
     const { req, res } = createMocks({
@@ -16,3 +18,18 @@ export async function createHttpMocks(url?: string, method?: 'GET' | 'POST', bod
     })
     return { req, res, session }
 }
+
+export class MockHttpStreamableResponseFactory {
+    static getMockResponse(): MockResponse<Response> {
+        const response = createResponse<Response>({
+            eventEmitter: EventEmitter,
+        })
+        const oldWrite = response.write;
+        response.write = function(data: any, encoding: any, callback?: (error?: Error | null) => void) {
+            oldWrite.call(response, data, encoding, callback)
+            response.emit('data', data)
+            return true;
+        }
+        return response;
+    }
+} 
