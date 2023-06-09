@@ -6,4 +6,4 @@ import { PassThrough } from "stream";
  * @remarks
  * This type can be either a `NextApiResponse` object or a `PassThrough` stream.
  */
-export type TResponse = NextApiResponse | PassThrough
+export type TWebResponse = NextApiResponse | PassThrough

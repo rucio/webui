@@ -1,5 +1,5 @@
 import { PassThrough, Transform } from 'stream'
-import { TResponse } from './web'
+import { TWebResponse } from './web'
 
 /**
  * A base interface for input ports.
@@ -33,7 +33,7 @@ export interface BaseStreamableInputPort<AuthenticatedRequestModel>
  * @typeparam TErrorModel The type of the error model for the output port.
  */
 export interface BaseOutputPort<TResponseModel, TViewModel, TErrorModel> {
-    response: TResponse
+    response: TWebResponse
     presentSuccess(responseModel: TResponseModel): Promise<TViewModel>
     presentError(errorModel: TErrorModel): Promise<TViewModel>
 }
@@ -43,8 +43,9 @@ export interface BaseOutputPort<TResponseModel, TViewModel, TErrorModel> {
  * @typeparam TViewModel The type of the view model for the streaming output port.
  * @typeparam TErrorModel The type of the error model for the streaming output port.
  */
-export interface BaseStreamingOutputPort<TViewModel, TErrorModel> {
-    response: TResponse
-    presentStream(stream: PassThrough): Promise<TViewModel>
-    presentError(errorModel: TErrorModel): Promise<TViewModel>
+export interface BaseStreamingOutputPort<TResponseModel, TViewModel, TErrorModel> {
+    response: TWebResponse
+    presentStream(stream: PassThrough): Promise<void>
+    presentError(errorModel: TErrorModel): Promise<void>
+    convertResponseModelToViewModel(responseModel: TResponseModel): TViewModel
 }

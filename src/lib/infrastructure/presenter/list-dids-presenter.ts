@@ -10,18 +10,8 @@ export default class ListDIDsPresenter implements ListDIDsOutputPort<NextApiResp
         this.response = response;
     }
 
-    writeToResponse(chunk: any) {
-        this.response.write(chunk.toString());
-    }
     async presentStream(stream: PassThrough): Promise<void> {
-        // stream.pipe(this.response);
-        stream.on('data', (chunk) => {
-            console.log(chunk.toString());
-            this.writeToResponse(chunk);
-        });
-        stream.on('end', () => {
-            this.response.end();
-        });
+        stream.pipe(this.response);
     }
 
     async presentError(error: ListDIDsError): Promise<void> {
