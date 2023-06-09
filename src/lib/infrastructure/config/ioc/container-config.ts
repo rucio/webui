@@ -43,8 +43,10 @@ import SwitchAccountController, { ISwitchAccountController } from "../../control
 import SwitchAccountPresenter from "../../presenter/switch-account-presenter";
 import ListDIDsInputPort from "@/lib/core/port/primary/list-dids-input-port";
 import ListDIDsUseCase from "@/lib/core/use-case/list-dids-usecase";
-import ListDIDsController, { IListDIDsController } from "../../controller/list-dids-controller";
+import ListDIDsController, { IListDIDsController, ListDIDsControllerParameters } from "../../controller/list-dids-controller";
 import ListDIDsPresenter from "../../presenter/list-dids-presenter";
+import { BaseController, IBaseController } from "@/lib/core/base-components/ports";
+import { ListDIDsRequest } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
 
 
 /**
@@ -69,7 +71,7 @@ appContainer.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.US
 );
 
 appContainer.bind<ListDIDsInputPort>(INPUT_PORT.LIST_DIDS).to(ListDIDsUseCase).inRequestScope();
-appContainer.bind<IListDIDsController>(CONTROLLERS.LIST_DIDS).to(ListDIDsController);
+appContainer.bind<BaseController<ListDIDsControllerParameters ,ListDIDsRequest>>(CONTROLLERS.LIST_DIDS).to(ListDIDsController);
 appContainer.bind<interfaces.Factory<ListDIDsInputPort>>(USECASE_FACTORY.LIST_DIDS).toFactory<ListDIDsUseCase, [NextApiResponse]>((context: interfaces.Context) =>
     (response: NextApiResponse) => {
         const rucioDIDGateway: DIDGatewayOutputPort = appContainer.get(GATEWAYS.DID)

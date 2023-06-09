@@ -3,12 +3,9 @@ import ListDIDsInputPort from "@/lib/core/port/primary/list-dids-input-port";
 import type ListDIDsOutputPort from "@/lib/core/port/primary/list-dids-output-port";
 import type DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
 import { ListDIDDTO } from "../data/dto/did-dto";
-import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../data/usecase-models/list-dids-usecase-models";
+import { ListDIDsRequest } from "../data/usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
-import StreamingUseCase from "@/lib/common/stream/stream-usecase";
-import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
 import { PassThrough, Transform, TransformCallback } from "node:stream";
-import ListDID from "@/app/did/page";
 
 @injectable()
 class ListDIDsUseCase extends Transform implements ListDIDsInputPort {

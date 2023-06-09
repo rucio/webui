@@ -1,15 +1,17 @@
+import { BaseController, IBaseController } from '@/lib/core/base-components/ports'
+import { ListDIDsRequest } from '@/lib/core/data/usecase-models/list-dids-usecase-models'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers'
-import { IListDIDsController } from '@/lib/infrastructure/controller/list-dids-controller'
+import { IListDIDsController, ListDIDsControllerParameters } from '@/lib/infrastructure/controller/list-dids-controller'
 import { NextApiResponse } from 'next'
 import { Readable } from 'stream'
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
-import MockRucioServerFactory, { Endpoint } from 'test/fixtures/rucio-server'
+import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server'
 
 describe('DID API Tests', () => {
     beforeEach(() => {
         fetchMock.doMock()
-        const listDIDsEndpoint: Endpoint = {
+        const listDIDsEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/test/dids/search`,
             method: 'GET',
             includes: 'test/dids/search',
@@ -28,7 +30,7 @@ describe('DID API Tests', () => {
             },
         }
 
-        const dataset1StatusEndpoint: Endpoint = {
+        const dataset1StatusEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/test/dataset1/status`,
             method: 'GET',
             response: {
@@ -61,14 +63,17 @@ describe('DID API Tests', () => {
 
     it('Should successfully stream DIDs', async () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse()
-        const listDIDsController = appContainer.get<IListDIDsController>(
+        const listDIDsController = appContainer.get<BaseController<ListDIDsRequest, ListDIDsControllerParameters>>(
             CONTROLLERS.LIST_DIDS,
         )
-        await listDIDsController.listDIDs(
-            res as unknown as NextApiResponse,
-            'rucio-ddmlab-askdjljioj',
-            'test:dataset1',
-            'all',
+        const controllerParams: ListDIDsControllerParameters = {
+            response: res as unknown as NextApiResponse,
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            query: "test:dataset1",
+            type: "dataset"
+        }
+        await listDIDsController.execute(
+            controllerParams,
         )
 
         const receivedData: string[] = []
