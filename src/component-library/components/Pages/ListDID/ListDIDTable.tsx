@@ -33,6 +33,11 @@ export const ListDIDTable = (
             tabledata={tableData}
             tablecolumns={tablecolumns}
             tablestyling={{}}
+            tableselecting={{
+                onSelect: (key: string) => {},
+                enableRowSelection: true,
+                enableMultiRowSelection: true,
+            }}
         />
     );
 };
