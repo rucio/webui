@@ -735,10 +735,6 @@ video {
   display: block;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
 .\!inline {
   display: inline !important;
 }
@@ -2951,12 +2947,6 @@ video {
     --tw-space-x-reverse: 0;
     margin-right: calc(0.5rem * var(--tw-space-x-reverse));
     margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
-  }
-
-  .md\:space-x-4 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(1rem * var(--tw-space-x-reverse));
-    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
   .md\:break-normal {
