@@ -16,5 +16,6 @@ ListDIDTable.args = {
         data: Array.from({length: 100}, (_, i) => createRandomDIDLong() as DID),
         fetchStatus: "idle",
         pageSize: 10,
-    }
+    },
+    selectionFunc: (data: DID[]) => {console.info("ListDIDTable", data)}
 };

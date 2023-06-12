@@ -1,5 +1,10 @@
 import { StyleMetaColumnDef, TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import {
+    ColumnDef, createColumnHelper, flexRender, getCoreRowModel,
+    getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
+    RowSelectionState,
+    useReactTable
+} from "@tanstack/react-table";
 import { FetchstatusIndicator } from "./FetchstatusIndicator";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -14,7 +19,7 @@ type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
         tableBodyRowStyle?: string
     }>
     tableselecting?: {
-        onSelect: (key: string) => void
+        handleChange: (data: T[]) => void,
         enableRowSelection: boolean
         enableMultiRowSelection?: boolean
     }
@@ -22,6 +27,8 @@ type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
 
 export function StreamedTable<T>(props: StreamedTableProps<T>) {
     const { className, ...otherprops } = props
+
+    const [ rowSelection, setRowSelection ] = useState<RowSelectionState>({})
 
     const table = useReactTable<T>({
         data: props.tabledata.data || [],
@@ -33,10 +40,18 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
         debugTable: true,
         enableRowSelection: props.tableselecting?.enableRowSelection ?? false,
         enableMultiRowSelection: props.tableselecting?.enableMultiRowSelection ?? false,
+        onRowSelectionChange: setRowSelection,
         state: {
             columnVisibility: props.tablestyling?.visibility,
+            rowSelection: rowSelection
         }
     })
+
+    // https://github.com/TanStack/table/discussions/2155#discussioncomment-6010065
+    useEffect(() => {
+        props.tableselecting?.handleChange(table.getSelectedRowModel().flatRows.map((row) => row.original))
+    }, [rowSelection, table])
+
 
     // Pagination
     const [pageIndex, setPageIndex] = useState(table.getState().pagination.pageIndex)

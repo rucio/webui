@@ -5,11 +5,12 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { P } from "../../Text/Content/P";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
+import { useCallback } from "react";
 
 export const ListDIDTable = (
     props: {
         tableData: TableData<DID>,
-        selectkey?: string
+        selectionFunc: (data: DID[]) => void
     }
 ) => {
     const tableData = props.tableData
@@ -28,15 +29,19 @@ export const ListDIDTable = (
             cell: info => <P className="break-all">{info.getValue()}</P>
         })
     ]
+    const handleChange = useCallback((data: any[]) => {
+        props.selectionFunc(data)
+    }, [props])
+
     return (
         <StreamedTable
             tabledata={tableData}
             tablecolumns={tablecolumns}
             tablestyling={{}}
             tableselecting={{
-                onSelect: (key: string) => {},
+                handleChange: handleChange,
                 enableRowSelection: true,
-                enableMultiRowSelection: true,
+                enableMultiRowSelection: false,
             }}
         />
     );
