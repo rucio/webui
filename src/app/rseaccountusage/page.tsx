@@ -1,7 +1,6 @@
 'use client'
 import { H3 } from "@/component-library/components/Text/Headings/H3"
 import { P } from "@/component-library/components/Text/Content/P"
-import { RSEQuotaTable } from "@/component-library/components/StreamedTables/RSEQuotaTable"
 
 import { twMerge } from "tailwind-merge"
 
@@ -10,6 +9,7 @@ import { useEffect, useState } from "react"
 import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable, Row } from "@tanstack/react-table"
+import { CreateRuleRSETable } from "@/component-library/components/Pages/CreateRule/CreateRuleRSETable"
 
 const columnHelper = createColumnHelper<RSEAccountUsageLimit>()
 
@@ -57,10 +57,13 @@ export default function RSEAccountUsage() {
                 <div className="flex flex-row">Poll Interval: {pollInterval}</div>
             </div>
             <div className="p-4">
-                <RSEQuotaTable
-                    data={query.data}
-                    fetchstatus={query.fetchStatus}
-                    onChange={(selected: string[]) => {console.log(selected)}}
+                <CreateRuleRSETable
+                    tableData={{
+                        data: query.data,
+                        fetchStatus: query.fetchStatus,
+                        pageSize: 10
+                    }}
+                    handleChange={(data: RSEAccountUsageLimit[]) => {console.info(data)}}
                 />
             </div>
             <P>{query.fetchStatus}. The selection state of the table is printed to the console each time the state changes.</P>

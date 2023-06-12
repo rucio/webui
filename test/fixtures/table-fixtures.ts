@@ -3,7 +3,7 @@ import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule
 import {
     LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
     RSEBlockState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState,
-    DIDAvailability,
+    DIDAvailability, RSEAccountUsageLimit,
     ReplicaState
 } from '@/lib/core/entity/rucio'
 import {
@@ -94,6 +94,17 @@ export function createRuleMeta(): RuleMeta {
         split_container: faker.datatype.boolean(),
         state: randomEnum<RuleState>(RuleState),
         updated_at: faker.date.recent(),
+    }
+}
+
+export function createRSEAccountUsageLimit(): RSEAccountUsageLimit {
+    return {
+        rse_id: faker.string.uuid(),
+        rse: createRandomRSE(),
+        account: faker.internet.userName(),
+        used_files: faker.number.int({ min: 0, max: 1e6 }),
+        used_bytes: faker.number.int({ min: 0, max: 1e12 }),
+        quota_bytes: faker.number.int({ min: 0, max: 1e12 }),
     }
 }
 

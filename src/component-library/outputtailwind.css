@@ -2746,10 +2746,6 @@ video {
     display: none;
   }
 
-  .sm\:h-12 {
-    height: 3rem;
-  }
-
   .sm\:w-1\/3 {
     width: 33.333333%;
   }
@@ -2973,10 +2969,6 @@ video {
 
   .md\:pr-2 {
     padding-right: 0.5rem;
-  }
-
-  .md\:pr-4 {
-    padding-right: 1rem;
   }
 
   .md\:text-5xl {
