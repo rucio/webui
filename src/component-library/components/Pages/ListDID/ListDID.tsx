@@ -1,4 +1,4 @@
-import { DIDMeta } from "@/lib/core/entity/rucio"
+import { DID, DIDMeta } from "@/lib/core/entity/rucio"
 import { DIDName, DIDSearchResponse, DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule"
 import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
@@ -9,6 +9,7 @@ import { DIDListTable } from "./DIDListTable"
 import { BoolTag } from "../../Tags/BoolTag"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { DIDMetaView } from "./DIDMetaView"
+import { ListDIDTable } from "./ListDIDTable"
 
 var format = require("date-format")
 
@@ -33,7 +34,20 @@ export const ListDID = (
             didTypesAllowed.reduce((accumulator, currentValue) => accumulator + (currentValue ? 1 : 0), 0) > 1
         )
     }, [didTypesAllowed])
-    const [selectedDID, setSelectedDID] = useState<DIDName | null>(null) // replace back to `null` when done testing
+
+
+    // selection
+    const [selectedDID, setSelectedDID] = useState<DIDName | null>(null) // scope:name taken from table
+    const [selection, setSelection] = useState<DID[]>([]) // list of objects from table
+    useEffect(() => {
+        if (selection.length === 1) {
+            setSelectedDID(selection[0].scope + ":" + selection[0].name)
+        }
+        else {
+            setSelectedDID(null)
+        }
+    }, [selection])
+
     return (
         <div
             className={twMerge(
@@ -121,14 +135,15 @@ export const ListDID = (
                         "lg:col-span-2"
                     )}
                 >
-                    <DIDListTable
-                        data={props.didResponse.data}
-                        fetchstatus={props.didResponse.fetchStatus}
-                        multipleDidTypes={multipleDidTypes}
-                        pageSize={15}
-                        onSelect={(didName: DIDName) => {
-                            setSelectedDID(didName)
-                            props.didMetaQuery(didName)
+                    <ListDIDTable
+                        tableData={{
+                            data: props.didResponse.data,
+                            fetchStatus: "idle",
+                            pageSize: 10,
+                        }}
+                        selectionFunc={(data: DID[]) => {
+                            // pass data from child (table) into the component state
+                            setSelection(data)
                         }}
                     />
                 </div>
@@ -155,7 +170,7 @@ export const ListDID = (
                         )}
                         aria-label="Go To DID Page"
                     >
-                        <Button label="Go To DID Page" aria-label="Go To DID Page"/>
+                        <Button label="Go To DID Page" aria-label="Go To DID Page" />
                     </div>
                 </div>
             </div>
