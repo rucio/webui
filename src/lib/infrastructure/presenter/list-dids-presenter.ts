@@ -1,17 +1,26 @@
-import { ListDIDsError } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
-import ListDIDsOutputPort from "@/lib/core/port/primary/list-dids-output-port";
+import { BaseStreamingOutputPort } from "@/lib/common/base-components/primary-ports";
+import { ListDIDsError, ListDIDsResponse } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
 import { NextApiResponse } from "next";
-import { PassThrough } from "stream";
+import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
+import { BaseStreamingPresenter } from "@/lib/common/base-components/presenter";
 
-export default class ListDIDsPresenter implements ListDIDsOutputPort<NextApiResponse> {
+export default class ListDIDsPresenter extends BaseStreamingPresenter<ListDIDsResponse, ListDIDsViewModel, ListDIDsError> implements BaseStreamingOutputPort<ListDIDsResponse, ListDIDsViewModel, ListDIDsError> {
     response: NextApiResponse<any>;
 
     constructor(response: NextApiResponse) {
+        super(response);
         this.response = response;
     }
 
-    async presentStream(stream: PassThrough): Promise<void> {
-        stream.pipe(this.response);
+    convertResponseModelToViewModel(responseModel: ListDIDsResponse): ListDIDsViewModel {
+        const viewModel: ListDIDsViewModel = {
+            name: responseModel.name,
+            scope: responseModel.scope,
+            did_type: responseModel.did_type,
+            bytes: responseModel.bytes,
+            length: responseModel.length,
+        }
+        return viewModel;
     }
 
     async presentError(error: ListDIDsError): Promise<void> {

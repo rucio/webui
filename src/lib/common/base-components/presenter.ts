@@ -22,14 +22,14 @@ export abstract class BasePresenter<TResponseModel, TViewModel, TErrorModel>
      * @param responseModel The response model to present.
      * @returns A promise that resolves to the view model.
      */
-    abstract presentSuccess(responseModel: TResponseModel): Promise<TViewModel>
+    abstract presentSuccess(responseModel: TResponseModel): Promise<void>
     
     /**
      * Presents an error model.
      * @param errorModel The error model to present.
      * @returns A promise that resolves to the view model.
      */
-    abstract presentError(errorModel: TErrorModel): Promise<TViewModel>
+    abstract presentError(errorModel: TErrorModel): Promise<void>
 }
 
 /**
@@ -86,12 +86,10 @@ export abstract class BaseStreamingPresenter<
         callback: TransformCallback,
     ): void {
         try {
-            const responseModel = JSON.stringify(
-                chunk.toString(),
-            ) as TResponseModel
+            const responseModel: TResponseModel = JSON.parse(chunk.toString())
             const viewModel =
                 this.convertResponseModelToViewModel(responseModel)
-            this.push(viewModel)
+            this.push(JSON.stringify(viewModel))
         } catch (error) {
             this.emit('error', error)
         } finally {

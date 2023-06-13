@@ -3,9 +3,10 @@ import ListDIDsInputPort from "@/lib/core/port/primary/list-dids-input-port";
 import type ListDIDsOutputPort from "@/lib/core/port/primary/list-dids-output-port";
 import type DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
 import { ListDIDDTO } from "../data/dto/did-dto";
-import { ListDIDsRequest } from "../data/usecase-models/list-dids-usecase-models";
+import { ListDIDsRequest, ListDIDsResponse } from "../data/usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
 import { PassThrough, Transform, TransformCallback } from "node:stream";
+import { DIDType } from "../entity/rucio";
 
 @injectable()
 class ListDIDsUseCase extends Transform implements ListDIDsInputPort {
@@ -54,8 +55,16 @@ class ListDIDsUseCase extends Transform implements ListDIDsInputPort {
         await this.presenter.presentStream(viewModelStream);
     }
 
-    _transform(did: any, encoding: BufferEncoding, callback: TransformCallback): void {
-        this.push(did.toString());
+    _transform(did: Buffer, encoding: BufferEncoding, callback: TransformCallback): void {
+        const didName = JSON.parse(did.toString());
+        const responseModel: ListDIDsResponse = {
+            name: didName,
+            scope: didName.split(':')[0],
+            did_type: DIDType.DATASET,
+            length: 0,
+            bytes: 0,
+        }
+        this.push(JSON.stringify(responseModel));
         callback();
     }
 

@@ -1,8 +1,8 @@
-import { BaseController, IBaseController } from '@/lib/common/base-components/primary-ports'
+import { BaseController } from '@/lib/common/base-components/controller'
 import { ListDIDsRequest } from '@/lib/core/data/usecase-models/list-dids-usecase-models'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers'
-import { IListDIDsController, ListDIDsControllerParameters } from '@/lib/infrastructure/controller/list-dids-controller'
+import { ListDIDsControllerParameters } from '@/lib/infrastructure/controller/list-dids-controller'
 import { NextApiResponse } from 'next'
 import { Readable } from 'stream'
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
@@ -20,12 +20,12 @@ describe('DID API Tests', () => {
                 headers: {
                     'Content-Type': 'application/x-json-stream',
                 },
-                body: Readable.from(
+                body: Readable.from(JSON.stringify(
                     [
-                        'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
-                        'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
-                        'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
-                    ].join('\n'),
+                        'test:data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+                        'test:data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
+                        'test:data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+                    ].join('\n')),
                 ),
             },
         }
@@ -63,7 +63,7 @@ describe('DID API Tests', () => {
 
     it('Should successfully stream DIDs', async () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse()
-        const listDIDsController = appContainer.get<BaseController<ListDIDsRequest, ListDIDsControllerParameters>>(
+        const listDIDsController = appContainer.get<BaseController<ListDIDsControllerParameters, ListDIDsRequest>>(
             CONTROLLERS.LIST_DIDS,
         )
         const controllerParams: ListDIDsControllerParameters = {
@@ -77,14 +77,15 @@ describe('DID API Tests', () => {
         )
 
         const receivedData: string[] = []
-        const onData = (data: any) => {
-            receivedData.push(JSON.parse(data.toString()))
+        const onData = (data: Buffer) => {
+            receivedData.push(
+                Buffer.from(JSON.stringify(data)).toString(),
+            )
         }
 
         const done = new Promise<void>((resolve, reject) => {
             res.on('data', onData)
             res.on('end', () => {
-                console.log('end')
                 res.off('data', onData)
                 resolve()
             })
@@ -93,12 +94,38 @@ describe('DID API Tests', () => {
                 reject(err)
             })
         })
-
+        
         await done
+        const str = "test:dataset1"
+        const json1 = JSON.stringify(str)
+        const str2 = JSON.parse(json1)
+        const json2 = JSON.stringify(str2)
+        const str3 = JSON.parse(json2)
+        expect(str3).toEqual("test:dataset1")
+        console.log(str3)
+
         expect(receivedData).toEqual([
-            'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
-            'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
-            'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+            {
+                "name": "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00",
+                "scope": "test",
+                "did_type": "DATASET",
+                "bytes": 0,
+                "length": 0,
+            },
+            {
+                "name": "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01",
+                "scope": "test",
+                "did_type": "DATASET",
+                "bytes": 0,
+                "length": 0,
+            },
+            {
+                "name": "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02",
+                "scope": "test",
+                "did_type": "DATASET",
+                "bytes": 0,
+                "length": 0,
+            }
         ])
     })
 })
