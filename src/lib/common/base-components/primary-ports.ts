@@ -34,8 +34,8 @@ export interface BaseStreamableInputPort<AuthenticatedRequestModel>
  */
 export interface BaseOutputPort<TResponseModel, TViewModel, TErrorModel> {
     response: TWebResponse
-    presentSuccess(responseModel: TResponseModel): Promise<TViewModel>
-    presentError(errorModel: TErrorModel): Promise<TViewModel>
+    presentSuccess(responseModel: TResponseModel): Promise<void>
+    presentError(errorModel: TErrorModel): Promise<void>
 }
 
 /**

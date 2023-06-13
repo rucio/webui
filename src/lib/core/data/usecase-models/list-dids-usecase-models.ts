@@ -6,8 +6,9 @@ export interface ListDIDsRequest extends AuthenticatedUseCaseRequest {
     type: DIDType;
 }
 
-export interface ListDIDsResponse extends AuthenticatedUseCaseResponse {
-
+export interface ListDIDsResponse extends DID {
+    bytes: number;
+    length: number;
 }
 
 export type ListDIDsError = {
