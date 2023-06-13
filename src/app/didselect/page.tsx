@@ -1,7 +1,6 @@
 'use client'
 import { H3 } from "@/component-library/components/Text/Headings/H3"
 import { P } from "@/component-library/components/Text/Content/P"
-import { DIDSelectTable } from "@/component-library/components/StreamedTables/DIDSelectTable"
 
 import { twMerge } from "tailwind-merge"
 

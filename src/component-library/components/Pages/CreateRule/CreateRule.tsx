@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { CreateRuleViewModel } from '../../../../lib/infrastructure/data/view-model/create-rule.d';
 import { Button } from '../../Button/Button';
 import { CheckBox } from '../../Checkbox/Checkbox.stories';
 import { Timeline } from '../../Timeline/Timeline';
@@ -8,12 +7,9 @@ import { Tabs } from '../../Tabs/Tabs';
 import { TextInput } from '../../Input/TextInput';
 import { Dropdown } from './GroupingDropdown';
 import { RulePage } from './RulePage';
-import { convertCompilerOptionsFromJson } from 'typescript';
 import { DateInput } from '../../Input/DateInput';
-import { NumberInput } from '../../Input/NumberInput';
 import { ListInput } from '../../Input/ListInput';
 import { P } from "../../Text/Content/P";
-import { H3 } from "../../Text/Headings/H3";
 import { Label } from "../../Text/Content/Label"
 import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
@@ -34,7 +30,6 @@ import {
     RSESearchQuery, RSESearchResponse,
 
 } from '../../../../lib/infrastructure/data/view-model/create-rule.d';
-import { DIDTypeTag } from '../../Tags/DIDTypeTag';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';

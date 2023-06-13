@@ -3,7 +3,7 @@ import { H3 } from "../../Text/Headings/H3";
 import { HiDotsHorizontal } from "react-icons/hi"
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { DIDRules } from "@/lib/infrastructure/data/view-model/page-did";
-import { createColumnHelper, useReactTable, TableOptions, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, Column, flexRender } from "@tanstack/react-table"
+import { createColumnHelper} from "@tanstack/react-table"
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { RuleStateTag } from "../../Tags/RuleStateTag";

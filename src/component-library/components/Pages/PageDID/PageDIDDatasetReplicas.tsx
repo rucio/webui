@@ -1,31 +1,14 @@
 import { DIDDatasetReplicas } from "@/lib/infrastructure/data/view-model/page-did";
-import { StyleMetaColumnDef, TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { DIDContents, DIDParents } from "@/lib/infrastructure/data/view-model/page-did";
+import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { twMerge } from "tailwind-merge";
-import { FetchStatus } from "@tanstack/react-query"
-import { createColumnHelper, useReactTable, TableOptions, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, Column, flexRender } from "@tanstack/react-table"
+import { createColumnHelper } from "@tanstack/react-table"
 import { useEffect, useState } from "react"
 
-import { PaginationDiv } from "../../StreamedTables/PaginationDiv";
-import { Button } from "../../Button/Button";
-import { P } from "../../Text/Content/P";
-import { H3 } from "../../Text/Headings/H3";
-import { H4 } from "../../Text/Headings/H4";
-import { Filter } from "../../StreamedTables/Filter";
-import { NumInput } from "../../Input/NumInput";
-import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink, HiSortAscending, HiSortDescending } from "react-icons/hi"
-import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { DateTag } from "../../Tags/DateTag";
 import { Number } from "../../Text/Content/Number";
-import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
 import { ReplicaState } from "@/lib/core/entity/rucio";
-import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";
-import { TextInput } from "../../Input/Input.stories";
 import { RSETag } from "../../Tags/RSETag";
-import { FullFilter } from "../../StreamedTables/FullFilter";
-import { CheckmarkTag } from "../../Tags/CheckmarkTag";
-import { BoolTag } from "../../Tags/BoolTag";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
