@@ -265,6 +265,19 @@ export const PageDIDDatasetReplicas = (
                     "rseblocked": false
                 } 
             }}
+            tableselecting={{
+                handleChange: (data: DIDDatasetReplicas[]) => {},
+                enableRowSelection: !isLg(),
+                breakOut: {
+                    breakoutVisibility: !isLg(),
+                    keys: {
+                        "available_files": "Available Files",
+                        "available_bytes": "Available Bytes",
+                        "creation_date": "Creation Date",
+                        "last_accessed": "Last Accessed",
+                    }
+                }
+            }}
         />
     )
 };

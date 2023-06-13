@@ -9,6 +9,7 @@ import { FetchstatusIndicator } from "./FetchstatusIndicator";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { PaginationDiv } from "./PaginationDiv";
+import { TableBreakout } from "./TableBreakout";
 
 type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
     tabledata: TableData<T>
@@ -21,14 +22,18 @@ type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
     tableselecting?: {
         handleChange: (data: T[]) => void,
         enableRowSelection: boolean
-        enableMultiRowSelection?: boolean
+        enableMultiRowSelection?: boolean,
+        breakOut?: {
+            breakoutVisibility: boolean,
+            keys: Record<string, string>, // column id, displayname
+        }
     }
 }
 
 export function StreamedTable<T>(props: StreamedTableProps<T>) {
     const { className, ...otherprops } = props
 
-    const [ rowSelection, setRowSelection ] = useState<RowSelectionState>({})
+    const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
     const table = useReactTable<T>({
         data: props.tabledata.data || [],
@@ -51,6 +56,12 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     useEffect(() => {
         props.tableselecting?.handleChange(table.getSelectedRowModel().flatRows.map((row) => row.original))
     }, [rowSelection, table])
+    // `enableRowSelection` might be subject to change => clear selection if changes to false
+    useEffect(() => {
+        if (props.tableselecting?.enableRowSelection === false) {
+            table.setRowSelection({})
+        }
+    }, [props.tableselecting?.enableRowSelection])
 
 
     // Pagination
@@ -64,6 +75,12 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     useEffect(() => {
         table.setPageSize(props.tabledata.pageSize)
     }, [props.tabledata.pageSize, table])
+
+    // Breakout
+    const [breakoutVisibility, setBreakoutVisibility] = useState(props.tableselecting?.breakOut?.breakoutVisibility ?? false)
+    useEffect(() => {
+        setBreakoutVisibility(props.tableselecting?.breakOut?.breakoutVisibility ?? false)
+    }, [props.tableselecting?.breakOut?.breakoutVisibility])
 
     return (
         <table
@@ -142,6 +159,17 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                 })}
             </tbody>
             <tfoot>
+                <tr>
+                    <td
+                        className={twMerge(breakoutVisibility && Object.keys(rowSelection).length === 1 ? "table-cell" : "hidden")}
+                        colSpan={table.getVisibleLeafColumns().length}
+                    >
+                        <TableBreakout
+                            keys={props.tableselecting?.breakOut?.keys ?? {} as Record<string, string>}
+                            row={table.getSelectedRowModel().flatRows[0]}
+                        />
+                    </td>
+                </tr>
                 <tr>
                     <td colSpan={table.getVisibleLeafColumns().length}>
                         <PaginationDiv
