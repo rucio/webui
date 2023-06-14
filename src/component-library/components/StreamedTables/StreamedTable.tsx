@@ -93,8 +93,20 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                 className
             )}
             {...otherprops}
+            role="grid" // if table maintains selection state or allows 2D nav -> use grid
+            // see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/table_role#description
         >
-            <thead>
+            <caption
+                className={twMerge(
+                    "absolute",
+                    "top-12 right-0 m-2",
+                    "pointer-events-none"
+                )}
+                aria-label="Table Fetch Status"
+            >
+                <FetchstatusIndicator status={props.tabledata.fetchStatus} />
+            </caption>
+            <thead role="rowgroup" aria-label="Table Header">
                 <tr
                     className={twMerge(
                         "h-16 md:h-12",
@@ -102,12 +114,15 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                         "relative",
                         props.tablestyling?.tableHeadRowStyle ?? "",
                     )}
+                    role="row"
                 >
                     {table.getLeafHeaders().map(header => {
                         return (
                             <th
                                 key={header.id}
                                 className={(header.column.columnDef as StyleMetaColumnDef<T>).meta?.style ?? ""}
+                                role="columnheader"
+                                aria-label={header.id}
                             >
                                 {flexRender(header.column.columnDef.header, header.getContext())}
                             </th>
@@ -115,16 +130,10 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     })}
                 </tr>
             </thead>
-            <div
-                className={twMerge(
-                    "absolute",
-                    "top-12 right-0 m-2",
-                    "pointer-events-none"
-                )}
+            <tbody
+                role="rowgroup"
+                aria-label="Table Body"
             >
-                <FetchstatusIndicator status={props.tabledata.fetchStatus} />
-            </div>
-            <tbody>
                 {table.getRowModel().rows.map(row => {
                     const selected = row.getIsSelected()
                     return (
@@ -144,6 +153,8 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                                     row.toggleSelected()
                                 }
                             }}
+                            role="row"
+                            aria-selected={row.getCanSelect() ? selected : undefined} // undefined => not selectable
                         >
                             {row.getVisibleCells().map(cell => {
                                 return (
@@ -158,8 +169,8 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     )
                 })}
             </tbody>
-            <tfoot>
-                <tr>
+            <tfoot role="rowgroup" aria-label="Table Footer">
+                <tr role="row" aria-label="Extra Information">
                     <td
                         className={twMerge(breakoutVisibility && Object.keys(rowSelection).length === 1 ? "table-cell" : "hidden")}
                         colSpan={table.getVisibleLeafColumns().length}
@@ -170,7 +181,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                         />
                     </td>
                 </tr>
-                <tr>
+                <tr role="row" aria-label="Pagination">
                     <td colSpan={table.getVisibleLeafColumns().length}>
                         <PaginationDiv
                             table={table}
