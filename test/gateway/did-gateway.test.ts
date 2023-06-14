@@ -1,5 +1,5 @@
 import { ListDIDDTO, DIDDTO } from '@/lib/core/data/dto/did-dto'
-import { DIDType } from '@/lib/core/entity/rucio'
+import { DID, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
@@ -19,9 +19,9 @@ describe('DID Gateway Tests', () => {
             if (req.url.includes('/mc16_13TeV/dids/search')) {
                 const stream = Readable.from(
                     [
-                        'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
-                        'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
-                        'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+                        'data17_13TeV:00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+                        'data17_13TeV:00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
+                        'data17_13TeV:00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
                     ].join('\n'),
                 )
                 return Promise.resolve({
@@ -61,21 +61,27 @@ describe('DID Gateway Tests', () => {
         const rucioDIDGateway: DIDGatewayOutputPort = appContainer.get(
             GATEWAYS.DID,
         )
-        const didDTO: ListDIDDTO = await rucioDIDGateway.listDIDs(
+        const dto: ListDIDDTO = await rucioDIDGateway.listDIDs(
             'rucio-ddmlab-askdjljioj',
             'mc16_13TeV',
             'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
             DIDType.DATASET,
         )
-        expect(didDTO.status).toBe('success')
-        const didStream: PassThrough | null = didDTO.stream
-        if (!didStream) {
-            fail('Stream is not defined')
+        expect(dto.status).toBe('success')
+        expect(dto.stream).not.toBeUndefined()
+        expect(dto.stream).not.toBeNull()
+        expect(dto.error).not.toBeNull()
+        const didStream = dto.stream
+
+        if(didStream === null || didStream === undefined){
+            fail('didStream is null or undefined')
         }
 
-        const receivedData: any[] = []
+        const receivedData: DID[] = []
+        
         const onData = (data: any) => {
-            receivedData.push(JSON.parse(data.toString()))
+            console.log('data', data)
+            receivedData.push(data)
         }
         await new Promise<void>((resolve, reject) => {
             didStream.on('data', onData)
@@ -91,9 +97,21 @@ describe('DID Gateway Tests', () => {
         })
 
         expect(receivedData).toEqual([
-            'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
-            'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
-            'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+                did_type: 'DATASET',
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
+                did_type: 'DATASET',
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+                did_type: 'DATASET',
+            },
         ])
     })
 

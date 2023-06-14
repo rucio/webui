@@ -4,7 +4,7 @@ import StreamingGateway from "../../gateway/streaming-gateway";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import RucioAccountGateway from "../../gateway/account-gateway";
 import DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
-import RucioDIDGateway from "../../gateway/did-gateway";
+import RucioDIDGateway from "../../gateway/did-gateway/did-gateway";
 import { Container, interfaces } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
