@@ -1,10 +1,10 @@
 import { twMerge } from "tailwind-merge";
 import Highlight from "react-highlight";
-import Head from "next/head";
+import "react-highlight/node_modules/highlight.js/styles/github.css"
 import { useState, useEffect } from "react";
 
 export const Code: (
-    React.FC<JSX.IntrinsicElements["body"]>
+    React.FC<JSX.IntrinsicElements["div"]>
 ) = (
     { ...props }
 ) => {
@@ -28,17 +28,12 @@ export const Code: (
             return base + (dark ? darkTheme : lightTheme)
         }
         return (
-            <html>
-                <Head>
-                    <style>
-                        {styles()}
-                    </style>
-                </Head>
-                <body className={twMerge(className ?? "")} {...otherprops}>
-                    <Highlight className="language-javascript">
-                        {props.children}
-                    </Highlight>
-                </body>
-            </html>
+            <div
+                className={twMerge(className ?? "")}
+                {...otherprops}>
+                <Highlight className="language-json">
+                    {props.children}
+                </Highlight>
+            </div>
         );
     };
