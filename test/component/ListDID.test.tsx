@@ -5,6 +5,7 @@
 import { render, act, screen, cleanup, fireEvent } from "@testing-library/react";
 import { ListDID as ListDIDStory } from "@/component-library/components/Pages/ListDID/ListDID";
 import { DIDMeta } from "@/lib/core/entity/rucio";
+import { createDID } from "test/fixtures/table-fixtures";
 var format = require("date-format")
 
 describe("ListDID Story Test", () => {
@@ -31,7 +32,7 @@ describe("ListDID Story Test", () => {
         const goDIDViewButton = screen.getByText("Go To DID Page").closest("button")
         expect(goDIDViewButton?.parentElement).toHaveClass("hidden")
         // Check that the DID Table Search is empty
-        const didFilterInputs = screen.getAllByPlaceholderText("Filter Results")
+        const didFilterInputs = screen.getAllByPlaceholderText("Filter DID")
         didFilterInputs.map((didFilterInput) => { expect(didFilterInput).toHaveValue("") })
         // Check that we are on page 1 of 0 (I know, technically this is a bug)
         const paginationNav = screen.getByRole("navigation", { name: "Table Pagination" })
@@ -59,6 +60,7 @@ describe("ListDID Story Test", () => {
             SOLUTION:
             remove `aria-label` from the table rows, grab table rows differently.
         */
+        const arrayLength = 5
         const mockDIDMeta = {
             "name": "dataset-YSytZjXJMdiCsSiiUwXx",
             "scope": "Lawrence.Myers",
@@ -82,20 +84,14 @@ describe("ListDID Story Test", () => {
             <ListDIDStory
                 didSearch={jest.fn(x => console.log(x))}
                 didResponse={{
-                    data: [
-                        { "scope": "user.LindaMiller", "name": "dataset-ojTcChlQGtvpWBAnUcNn", "did_type": "Container", "bytes": 57855156, "length": 35878152 },
-                        { "scope": "user.TravisRoberts", "name": "file-DfIbGGDiGWyJhrvRYwtw", "did_type": "Container", "bytes": 42245800, "length": 45289199 },
-                        { "scope": "user.DonnaBennett", "name": "dataset-RiwBaeaxTMYxOHEzAgdG", "did_type": "Container", "bytes": 51337255, "length": 87665604 },
-                        { "scope": "user.DonnaFrazier", "name": "container-gkcouVjJHfbirKsFeruw", "did_type": "File", "bytes": 10559288, "length": 94198083 },
-                        { "scope": "user.NatashaBaker", "name": "dataset-BFesxCNVirxzoXAZZfIo", "did_type": "File", "bytes": 53858564, "length": 53898582 },
-                    ], fetchStatus: "idle"
+                    data: Array.from({length: arrayLength}, (v, k) => createDID()), fetchStatus: "idle"
                 }}
                 didMetaQuery={jest.fn(x => console.log(x))}
                 didMetaQueryResponse={mockDIDMeta}
             />
         ))
-        const tableRows = screen.getAllByRole("row", { name: "DID Table Row" })
-        expect(tableRows).toHaveLength(5)
+        const tableRows = screen.getAllByRole("row", {selected: false})
+        expect(tableRows).toHaveLength(arrayLength)
         expect(tableRows[0]).toBeInTheDocument()
         // check that metaview is still invisible
         const noDIDSelectedDiv = screen.getByText("No DID selected").closest("div")

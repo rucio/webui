@@ -1,31 +1,17 @@
 import { DIDDatasetReplicas } from "@/lib/infrastructure/data/view-model/page-did";
-import { StyleMetaColumnDef, TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { DIDContents, DIDParents } from "@/lib/infrastructure/data/view-model/page-did";
+import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { twMerge } from "tailwind-merge";
-import { FetchStatus } from "@tanstack/react-query"
-import { createColumnHelper, useReactTable, TableOptions, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, Column, flexRender } from "@tanstack/react-table"
+import { createColumnHelper } from "@tanstack/react-table"
 import { useEffect, useState } from "react"
 
-import { PaginationDiv } from "../../StreamedTables/PaginationDiv";
-import { Button } from "../../Button/Button";
-import { P } from "../../Text/Content/P";
-import { H3 } from "../../Text/Headings/H3";
-import { H4 } from "../../Text/Headings/H4";
-import { Filter } from "../../StreamedTables/Filter";
-import { NumInput } from "../../Input/NumInput";
-import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight, HiSearch, HiCheck, HiDotsHorizontal, HiExternalLink, HiSortAscending, HiSortDescending } from "react-icons/hi"
-import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { DateTag } from "../../Tags/DateTag";
 import { Number } from "../../Text/Content/Number";
-import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
 import { ReplicaState } from "@/lib/core/entity/rucio";
-import { FetchstatusIndicator } from "../../StreamedTables/FetchstatusIndicator";
-import { TextInput } from "../../Input/Input.stories";
 import { RSETag } from "../../Tags/RSETag";
-import { FullFilter } from "../../StreamedTables/FullFilter";
-import { CheckmarkTag } from "../../Tags/CheckmarkTag";
-import { BoolTag } from "../../Tags/BoolTag";
+import { StreamedTable } from "../../StreamedTables/StreamedTable";
+import { TableFilterString } from "../../StreamedTables/TableFilterString";
+import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 
 type ReducedReplicaState = "Available" | "Unavailable"
 
@@ -63,16 +49,16 @@ export const PageDIDDatasetReplicas = (
         tableData: TableData<DIDDatasetReplicas>;
     }
 ) => {
-    const tableData = props.tableData
     const columnHelper = createColumnHelper<DIDDatasetReplicas>()
-    const columns: any[] = [
+    const tablecolumns: any[] = [
         columnHelper.accessor("rse", {
             id: "rse",
-            header: (info) => {
+            header: info => {
                 return (
-                    <div>
-                        should never be shown
-                    </div>
+                    <TableFilterString
+                        column={info.column}
+                        name="RSE"
+                    />
                 )
             },
             cell: (info) => {
@@ -105,38 +91,6 @@ export const PageDIDDatasetReplicas = (
         columnHelper.accessor("rseblocked", { meta: { style: "" } }),
         columnHelper.accessor("availability", { // formerly known as `state`
             id: "availability",
-            header: (info) => {
-                return (
-                    <span
-                        className="flex flex-col md:flex-row justify-between items-center pr-1 space-y-1 md:pr-2"
-                        onClick={(e) => {
-                            // create a match statement for the filter type
-                            const filterchange = (filterType: ReducedReplicaState | "none") => {
-                                setFilterType(filterType)
-                                var column = table.getColumn("availability") as Column<DIDDatasetReplicas, boolean>
-                                column.setFilterValue({
-                                    "Available": true,
-                                    "Unavailable": false,
-                                    "none": null,
-                                }[filterType])
-                            }
-                            const nextRecord = {
-                                "none": "Available",
-                                "Available": "Unavailable",
-                                "Unavailable": "none",
-                            }
-                            filterchange(nextRecord[filterType ?? "null"] as ReducedReplicaState | "none")
-                        }}
-                    >
-                        <H3>Availability</H3>
-                        <span className="h-6">
-                            {
-                                filterType === "none" ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <ReplicaStateTag state={filterType as ReplicaState} tiny />
-                            }
-                        </span>
-                    </span>
-                )
-            },
             cell: (info) => {
                 return (
                     <ReplicaStateTag
@@ -151,39 +105,15 @@ export const PageDIDDatasetReplicas = (
         }),
         columnHelper.accessor("available_files", {
             id: "available_files",
-            header: (info) => {
+            header: info => {
                 return (
-                    <span
-                        className={twMerge(
-                            "flex flex-col 2xl:flex-row justify-between items-center space-y-1 2xl:pr-2 2xl:space-y-0"
-                        )}
-                        onClick={(e) => {
-                            // create a match statement for the state filter
-                            const sortchange = (sortState: "asc" | "desc" | "none") => {
-                                setAvailableFilesSorting(sortState)
-                                var column = table.getColumn("available_files") as Column<DIDDatasetReplicas, number>
-                                column.toggleSorting()
-                            }
-                            const nextRecord = {
-                                "none": "desc",
-                                "desc": "asc",
-                                "asc": "none",
-                            }
-                            sortchange(nextRecord[availableFilesSorting] as "asc" | "desc" | "none")
-                        }}
-                    >
-                        <H4>Available Files</H4>
-                        <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
-                            {
-                                {
-                                    asc: <HiSortAscending />, desc: <HiSortDescending />, none: <HiDotsHorizontal />
-                                }[availableFilesSorting]
-                            }
-                        </span>
-                    </span>
+                    <TableSortUpDown
+                        name="Available Files"
+                        column={info.column}
+                        stack
+                    />
                 )
             },
-
             cell: (info) => {
                 return (
                     <span
@@ -197,42 +127,18 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44 pt-2"
+                style: "cursor-pointer w-40 2xl:w-44 pt-2"
             }
         }),
         columnHelper.accessor("available_bytes", {
             id: "available_bytes",
-            header: (info) => {
+            header: info => {
                 return (
-
-                    <span
-                        className={twMerge(
-                            "flex flex-col 2xl:flex-row justify-between items-center pr-1 space-y-1 2xl:pr-2 2xl:space-y-0"
-                        )}
-                        onClick={(e) => {
-                            // create a match statement for the state filter
-                            const sortchange = (sortState: "asc" | "desc" | "none") => {
-                                setAvailableBytesSorting(sortState)
-                                var column = table.getColumn("available_bytes") as Column<DIDDatasetReplicas, number>
-                                column.toggleSorting()
-                            }
-                            const nextRecord = {
-                                "none": "desc",
-                                "desc": "asc",
-                                "asc": "none",
-                            }
-                            sortchange(nextRecord[availableBytesSorting] as "asc" | "desc" | "none")
-                        }}
-                    >
-                        <H4>Available Bytes</H4>
-                        <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
-                            {
-                                {
-                                    asc: <HiSortAscending />, desc: <HiSortDescending />, none: <HiDotsHorizontal />
-                                }[availableBytesSorting]
-                            }
-                        </span>
-                    </span>
+                    <TableSortUpDown
+                        name="Available Bytes"
+                        column={info.column}
+                        stack
+                    />
                 )
             },
             cell: (info) => {
@@ -248,41 +154,18 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44 pt-2"
+                style: "cursor-pointer w-40 2xl:w-44 pt-2"
             }
         }),
         columnHelper.accessor("creation_date", {
             id: "creation_date",
-            header: (info) => {
+            header: info => {
                 return (
-                    <span
-                        className={twMerge(
-                            "flex flex-col 2xl:flex-row justify-between items-center space-y-1 2xl:pr-2 2xl:space-y-0"
-                        )}
-                        onClick={(e) => {
-                            // create a match statement for the state filter
-                            const sortchange = (sortState: "asc" | "desc" | "none") => {
-                                setCreationDateSorting(sortState)
-                                var column = table.getColumn("creation_date") as Column<DIDDatasetReplicas, Date>
-                                column.toggleSorting()
-                            }
-                            const nextRecord = {
-                                "none": "desc",
-                                "desc": "asc",
-                                "asc": "none",
-                            }
-                            sortchange(nextRecord[creationDateSorting] as "asc" | "desc" | "none")
-                        }}
-                    >
-                        <H4>Creation Date</H4>
-                        <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
-                            {
-                                {
-                                    asc: <HiSortAscending />, desc: <HiSortDescending />, none: <HiDotsHorizontal />
-                                }[creationDateSorting]
-                            }
-                        </span>
-                    </span>
+                    <TableSortUpDown
+                        name="Creation Date"
+                        column={info.column}
+                        stack
+                    />
                 )
             },
             cell: (info) => {
@@ -298,41 +181,18 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44 pt-2"
+                style: "cursor-pointer w-40 2xl:w-44 pt-2"
             }
         }),
         columnHelper.accessor("last_accessed", {
             id: "last_accessed",
-            header: (info) => {
+            header: info => {
                 return (
-                    <span
-                        className={twMerge(
-                            "flex flex-col 2xl:flex-row justify-between items-center space-y-1 2xl:pr-2 2xl:space-y-0"
-                        )}
-                        onClick={(e) => {
-                            // create a match statement for the state filter
-                            const sortchange = (sortState: "asc" | "desc" | "none") => {
-                                setAccessedDateSorting(sortState)
-                                var column = table.getColumn("last_accessed") as Column<DIDDatasetReplicas, Date>
-                                column.toggleSorting()
-                            }
-                            const nextRecord = {
-                                "none": "desc",
-                                "desc": "asc",
-                                "asc": "none",
-                            }
-                            sortchange(nextRecord[accessedDateSorting] as "asc" | "desc" | "none")
-                        }}
-                    >
-                        <H4>Last Accessed</H4>
-                        <span className="h-6 text-gray-500 dark:text-gray-200 text-xl">
-                            {
-                                {
-                                    asc: <HiSortAscending />, desc: <HiSortDescending />, none: <HiDotsHorizontal />
-                                }[accessedDateSorting]
-                            }
-                        </span>
-                    </span>
+                    <TableSortUpDown
+                        name="Last Accessed"
+                        column={info.column}
+                        stack
+                    />
                 )
             },
             cell: (info) => {
@@ -348,7 +208,7 @@ export const PageDIDDatasetReplicas = (
                 )
             },
             meta: {
-                style: "cursor-pointer w-36 2xl:w-44 pt-2"
+                style: "cursor-pointer w-40 2xl:w-44 pt-2"
             }
         }),
     ]
@@ -357,38 +217,6 @@ export const PageDIDDatasetReplicas = (
     const [windowSize, setWindowSize] = useState([
         1920, 1080
     ]);
-
-    const table = useReactTable<DIDDatasetReplicas>({
-        data: tableData.data || [],
-        columns: columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        debugTable: true,
-        state: {
-            columnVisibility: {
-                rse: true,
-                availability: false,
-                available_files: windowSize[0] > 1024,
-                available_bytes: windowSize[0] > 1024,
-                creation_date: windowSize[0] > 1024,
-                last_accessed: windowSize[0] > 1024,
-                rseblocked: false
-            }
-        }
-    } as TableOptions<DIDDatasetReplicas>)
-
-    const [selectedRSE, setSelectedRSE] = useState<DIDDatasetReplicas | null>(null)
-
-    // Filter by DID Type
-    const [filterType, setFilterType] = useState<"Available" | "Unavailable" | "none">("none")
-    const [availableFilesSorting, setAvailableFilesSorting] = useState<"asc" | "desc" | "none">("none")
-    const [availableBytesSorting, setAvailableBytesSorting] = useState<"asc" | "desc" | "none">("none")
-    const [creationDateSorting, setCreationDateSorting] = useState<"asc" | "desc" | "none">("none")
-    const [accessedDateSorting, setAccessedDateSorting] = useState<"asc" | "desc" | "none">("none")
-
-
     useEffect(() => {
         setWindowSize([window.innerWidth, window.innerHeight])
 
@@ -402,150 +230,37 @@ export const PageDIDDatasetReplicas = (
             window.removeEventListener('resize', handleWindowResize);
         };
     }, []);
+    const isLg = () => windowSize[0] > 1024 // 1024px is the breakpoint for lg => is minimum lg sized
 
-    // Pagination
-    const [pageIndex, setPageIndex] = useState(table.getState().pagination.pageIndex)
-    useEffect(() => {
-        setPageIndex(table.getState().pagination.pageIndex)
-    }, [table.getState().pagination.pageIndex])
-    useEffect(() => {
-        table.setPageIndex(pageIndex)
-    }, [pageIndex])
-    useEffect(() => {
-        table.setPageSize(tableData.pageSize)
-    }, [tableData.pageSize])
 
     return (
-        <div
-            className={twMerge(
-                "border dark:border-gray-200 dark:border-2 rounded-md",
-                tableData.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
-                "flex flex-col justify-between space-y-2 pb-2",
-                "bg-white dark:bg-gray-700",
-                "h-fit min-h-[430px]",
-                "relative",
-                "min-w-0",
-            )}
-        >
-            <table className="table-fixed w-full text-left">
-                <thead className="w-full">
-                    <tr
-                        className={twMerge(
-                            "w-full flex-row sticky top-0 bg-white dark:bg-gray-700 shadow-md dark:shadow-none h-16 md:h-14"
-                        )}
-                    >
-                        {
-                            table.getLeafHeaders().map((header) => {
-                                return (
-                                    <th key={header.id} className={(header.column.columnDef as StyleMetaColumnDef<DIDDatasetReplicas>).meta.style}>
-                                        {(header.column.columnDef as StyleMetaColumnDef<DIDDatasetReplicas>).meta.filter ?? false ? (
-                                            <FullFilter columnTitle="RSE" column={header.column} table={table} className="pl-1" />
-                                        ) : (
-                                            flexRender(header.column.columnDef.header, header.getContext())
-                                        )}
-                                    </th>
-                                )
-                            })
-                        }
-                    </tr>
-                </thead>
-                <tbody className="w-full">
-                    {table.getRowModel().rows.map((row) => {
-                        return (
-                            <tr
-                                key={row.id}
-                                className={twMerge(
-                                    "w-full hover:cursor-pointer lg:hover:cursor-normal h-16 md:h-8",
-                                    "bg-white odd:bg-stone-100",
-                                    "dark:bg-gray-700 dark:odd:bg-gray-800",
-                                    "hover:bg-gray-200 dark:hover:bg-gray-900",
-                                )}
-                                onClick={() => {
-                                    if (windowSize[0] > 1024) return
-                                    setSelectedRSE(row.original)
-                                }}
-                            >
-                                {row.getVisibleCells().map((cell) => {
-                                    return (
-                                        <td
-                                            key={cell.id}
-                                        >
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </td>
-                                    )
-                                })}
-                            </tr>
-                        )
+        <StreamedTable
+            tabledata={props.tableData}
+            tablecolumns={tablecolumns}
+            tablestyling={{
+                visibility: {
+                    "rse": true,
+                    "availability": false,
+                    "available_files": isLg(),
+                    "available_bytes": isLg(),
+                    "creation_date": isLg(),
+                    "last_accessed": isLg(),
+                    "rseblocked": false
+                } 
+            }}
+            tableselecting={{
+                handleChange: (data: DIDDatasetReplicas[]) => {},
+                enableRowSelection: !isLg(),
+                breakOut: {
+                    breakoutVisibility: !isLg(),
+                    keys: {
+                        "available_files": "Available Files",
+                        "available_bytes": "Available Bytes",
+                        "creation_date": "Creation Date",
+                        "last_accessed": "Last Accessed",
                     }
-                    )}
-                </tbody>
-            </table>
-            <PaginationDiv table={table}/>
-            <div
-                className={twMerge(
-                    "absolute",
-                    "top-16 sm:top-12 right-2",
-                    "pointer-events-none"
-                )}
-            >
-                <FetchstatusIndicator status={tableData.fetchStatus} />
-            </div>
-            <div
-                className={twMerge(
-                    "block lg:hidden",
-                    "mx-2 rounded",
-                    "bg-stone-100"
-                )}
-            >
-                <table>
-                    <tbody>
-                        <tr>
-                            <Titletd>
-                                RSE Name
-                            </Titletd>
-                            <Contenttd>{selectedRSE?.rse ?? "None"}</Contenttd>
-                        </tr>
-                        <tr>
-                            <Titletd>
-                                Availability
-                            </Titletd>
-                            <Contenttd>
-                                <BoolTag val={selectedRSE?.availability ?? false} />
-                            </Contenttd>
-                        </tr>
-                        <tr>
-                            <Titletd>
-                                Available Files
-                            </Titletd>
-                            <Contenttd>{selectedRSE?.available_files ?? 0}</Contenttd>
-                        </tr>
-                        <tr>
-                            <Titletd>
-                                Available Bytes
-                            </Titletd>
-                            <Contenttd>
-                                <Number number={selectedRSE?.available_bytes ?? 0} />
-                            </Contenttd>
-                        </tr>
-                        <tr>
-                            <Titletd>
-                                Creation Date
-                            </Titletd>
-                            <Contenttd>
-                                <DateTag date={selectedRSE?.creation_date ?? new Date()} />
-                            </Contenttd>
-                        </tr>
-                        <tr>
-                            <Titletd>
-                                Last Accessed
-                            </Titletd>
-                            <Contenttd>
-                                <DateTag date={selectedRSE?.last_accessed ?? new Date()} />
-                            </Contenttd>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                }
+            }}
+        />
     )
 };

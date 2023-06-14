@@ -10,6 +10,7 @@ export function TableSortUpDown(
         column: Column<any, any>
         element?: JSX.Element // to replace name
         stack?: boolean // whether to use column instead of row
+        nocollapse?: boolean
     }
 ): JSX.Element {
     const { name, column, element, stack, ...otherprops } = props
@@ -37,7 +38,7 @@ export function TableSortUpDown(
             {...otherdivprops}
         >
             {
-                element ?? <H3 className="hidden md:inline">{name}</H3>
+                element ?? <H3 className={props.nocollapse ? "inline" : "hidden md:inline"}>{name}</H3>
             }
             <span className="text-gray-500 dark:text-gray-200 text-xl h6">
                 {

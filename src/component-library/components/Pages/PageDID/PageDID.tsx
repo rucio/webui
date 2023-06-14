@@ -14,13 +14,12 @@ import { FetchStatus } from "@tanstack/react-query";
 // DTO etc
 import { DIDMeta } from "@/lib/core/entity/rucio";
 import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule";
-import { PageDIDParents } from "./PageDIDParents";
 import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
 import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
 import { PageDIDRules } from "./PageDIDRules";
 import { DIDContents } from "@/lib/infrastructure/data/view-model/page-did";
-import { PageDIDContents } from "./PageDIDContents";
+import { PageDIDByType } from "./PageDIDByType";
 import { PageDIDDatasetReplicas } from "./PageDIDDatasetReplicas";
 
 export interface PageDIDPageProps {
@@ -182,7 +181,7 @@ export const PageDID = (
                     show={didtype === "File" ? subpageIndex === 1 : false}
                     id="subpage-parent-dids"
                 >
-                    <PageDIDParents tableData={{
+                    <PageDIDByType tableData={{
                         data: props.didParentsResponse.data,
                         fetchStatus: props.didParentsResponse.fetchStatus,
                         pageSize: 10
@@ -202,7 +201,7 @@ export const PageDID = (
                     show={didtype === "Container" ? subpageIndex === 0 : false}
                     id="subpage-contents"
                 >
-                    <PageDIDContents showDIDType tableData={{
+                    <PageDIDByType showDIDType tableData={{
                         data: props.didContentsResponse.data,
                         fetchStatus: props.didContentsResponse.fetchStatus,
                         pageSize: 10

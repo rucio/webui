@@ -20,7 +20,7 @@ export const Number: React.FC<ByteProps> = (
             0
         </span>
     )
-    if (!+number) return (
+    if (isNaN(+number)) return (
         <span
             className={twMerge(
                 className ?? "",
@@ -36,7 +36,8 @@ export const Number: React.FC<ByteProps> = (
     const dm = decimalPlaces ?? 1
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-    const i = Math.floor(Math.log(number) / Math.log(base))
+    const absnum = Math.abs(number)
+    const i = Math.floor(Math.log(absnum) / Math.log(base))
 
     return (
         <span
@@ -45,7 +46,7 @@ export const Number: React.FC<ByteProps> = (
             )}
             {...otherprops}
         >
-            {`${parseFloat((number / Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`}
+            {number < 0 ? "-" : ""}{`${parseFloat((absnum / Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`}
         </span>
     )
 }

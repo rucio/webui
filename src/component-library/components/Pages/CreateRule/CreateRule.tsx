@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { CreateRuleViewModel } from '../../../../lib/infrastructure/data/view-model/create-rule.d';
 import { Button } from '../../Button/Button';
 import { CheckBox } from '../../Checkbox/Checkbox.stories';
 import { Timeline } from '../../Timeline/Timeline';
@@ -8,17 +7,12 @@ import { Tabs } from '../../Tabs/Tabs';
 import { TextInput } from '../../Input/TextInput';
 import { Dropdown } from './GroupingDropdown';
 import { RulePage } from './RulePage';
-import { convertCompilerOptionsFromJson } from 'typescript';
 import { DateInput } from '../../Input/DateInput';
-import { NumberInput } from '../../Input/NumberInput';
 import { ListInput } from '../../Input/ListInput';
 import { P } from "../../Text/Content/P";
-import { H3 } from "../../Text/Headings/H3";
 import { Label } from "../../Text/Content/Label"
 import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
-import { DIDSelectTable } from '../../StreamedTables/DIDSelectTable';
-import { RSEQuotaTable } from '../../StreamedTables/RSEQuotaTable';
 import { SummaryPage } from './SummaryPage';
 
 var format = require("date-format")
@@ -26,7 +20,7 @@ var format = require("date-format")
 /* =================================================
 *  Importing Types and Interfaces
 *  ================================================= */
-import { DIDType } from '@/lib/core/entity/rucio';
+import { DIDLong, DIDType, RSEAccountUsageLimit } from '@/lib/core/entity/rucio';
 import {
     CreateRuleQuery, CreateRuleResponse,
     DIDName, RSEName,
@@ -36,9 +30,11 @@ import {
     RSESearchQuery, RSESearchResponse,
 
 } from '../../../../lib/infrastructure/data/view-model/create-rule.d';
-import { DIDTypeTag } from '../../Tags/DIDTypeTag';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
+import { CreateRuleDIDTable } from './CreateRuleDIDTable';
+import { didToScopename } from '../../StreamedTables/helpers';
+import { CreateRuleRSETable } from './CreateRuleRSETable';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
@@ -62,7 +58,7 @@ interface Page0State {
     selectDIDMethod: number
     // selection by search
     selectDIDDataPattern: string
-    chosenDIDs: Array<DIDName>
+    searchDIDSelection: Array<DIDLong>
 
     // Subpage 1: List of DIDs
     // selection via typing
@@ -73,7 +69,7 @@ interface Page0State {
 interface Page1State {
     page1progressBlocked: boolean
     RSEExpression: string
-    RSESelection: Array<RSEName>
+    RSESelection: Array<RSEAccountUsageLimit>
     askForApproval: boolean
 }
 
@@ -110,21 +106,20 @@ export const CreateRule = (
     const [Page0State, setPage0State] = useState<Page0State>({
         selectDIDMethod: 0,
         selectDIDDataPattern: "",
-        chosenDIDs: [],
+        searchDIDSelection: [],
         typedDIDs: [],
         errorDIDs: { ErrorList: [] },
         page0progressBlocked: true
     })
 
     useEffect(() => {
-        // set page0progressblocked to true if chosenDIDs is empty
-        if (Page0State.chosenDIDs.length === 0 && Page0State.typedDIDs.length === 0) {
+        // set page0progressblocked to true if DID selections are empty
+        if (Page0State.searchDIDSelection.length === 0 && Page0State.typedDIDs.length === 0) {
             setPage0State({ ...Page0State, page0progressBlocked: true })
         } else {
             setPage0State({ ...Page0State, page0progressBlocked: false })
         }
-        // need to make decision whether changing tab should empty the chosenDIDs
-    }, [Page0State.typedDIDs, Page0State.chosenDIDs])
+    }, [Page0State.typedDIDs, Page0State.searchDIDSelection])
 
     const page0DIDSearch = (event: any, explicitDIDSearchExpression?: string) => {
         let DIDSearchString = explicitDIDSearchExpression ? explicitDIDSearchExpression : Page0State.selectDIDDataPattern
@@ -200,7 +195,7 @@ export const CreateRule = (
     *  ================================================= */
     // page 2 state
     const [Page2State, setPage2State] = useState<Page2State>({
-        expiryDate: new Date(2025,1,1),
+        expiryDate: new Date(2025, 1, 1),
         takesamples: false,
         numsamples: -1,
         enableNotifications: false,
@@ -218,8 +213,8 @@ export const CreateRule = (
     const page3submitFunction = (event: any) => {
         // build query
         const CreateRuleQuery: CreateRuleQuery = {
-            DIDList: Page0State.typedDIDs.concat(Page0State.chosenDIDs),
-            RSEList: Page1State.RSESelection,
+            DIDList: Page0State.typedDIDs.concat(didToScopename(Page0State.searchDIDSelection)),
+            RSEList: Page1State.RSESelection.map(element => element.rse),
             expirydate: Page2State.expiryDate,
             notifications: Page2State.enableNotifications,
             asynchronousMode: Page2State.asynchronousMode,
@@ -270,14 +265,13 @@ export const CreateRule = (
                                     <Button type="submit" label="Search" onClick={page0DIDSearch} id="page0-search" />
                                 </div>
                             </div>
-                            <DIDSelectTable
+                            <CreateRuleDIDTable
                                 tableData={{
                                     data: props.didResponse.data,
                                     fetchStatus: props.didResponse.fetchStatus,
-                                    pageSize: 10,
+                                    pageSize: 10
                                 }}
-                                onChange={(selected: string[]) => { setPage0State({ ...Page0State, chosenDIDs: selected }) }}
-                                useScopenames={false}
+                                handleChange={(data: DIDLong[]) => {setPage0State({...Page0State, searchDIDSelection: data})}}
                             />
                         </div>
                     </Collapsible>
@@ -327,11 +321,13 @@ export const CreateRule = (
                                 <Button type="submit" label="Search" onClick={page1RSESearch} />
                             </div>
                         </div>
-                        <RSEQuotaTable
-                            data={props.rseResponse.data}
-                            fetchstatus={props.rseResponse.fetchStatus}
-                            selected={Page1State.RSESelection}
-                            onChange={(selected: string[]) => { setPage1State({ ...Page1State, RSESelection: selected }) }}
+                        <CreateRuleRSETable
+                            tableData={{
+                                data: props.rseResponse.data,
+                                fetchStatus: props.rseResponse.fetchStatus,
+                                pageSize: 10
+                            }}
+                            handleChange={(data: RSEAccountUsageLimit[]) => { setPage1State({ ...Page1State, RSESelection: data }) }}
                             askApproval={Page1State.askForApproval}
                         />
                         <div>
@@ -458,8 +454,8 @@ export const CreateRule = (
                 </RulePage>
                 <RulePage pagenum={3} activePage={activePage} onNext={page3submitFunction} onPrev={pagePrevFunction} submit>
                     <SummaryPage data={{
-                        DIDList: Page0State.typedDIDs.concat(Page0State.chosenDIDs),
-                        RSEList: Page1State.RSESelection,
+                        DIDList: Page0State.typedDIDs.concat(didToScopename(Page0State.searchDIDSelection)),
+                        RSEList: Page1State.RSESelection.map(element => element.rse),
                         expirydate: Page2State.expiryDate,
                         notifications: Page2State.enableNotifications,
                         asynchronousMode: Page2State.asynchronousMode,

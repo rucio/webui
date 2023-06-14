@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { HiCheck, HiSearch } from "react-icons/hi";
 
 
-type TableFilterString = JSX.IntrinsicElements["div"] & {
+type TableFilterString = JSX.IntrinsicElements["form"] & {
     column: Column<any, string>,
     name: string,
     placeholder?: string,
@@ -66,12 +66,14 @@ export function TableFilterString(
 
     if (!smallScreenNameFiltering) {
         return (
-            <div
+            <form
                 className={twMerge(
                     "flex flex-row justify-between items-baseline space-x-8",
                     "pr-2",
                     className ?? "",
                 )}
+                role="search"
+                aria-label={`Filter ${name} Column`}
             >
                 <span className="shrink-0">
                     <H3>{name}</H3>
@@ -88,17 +90,19 @@ export function TableFilterString(
                 >
                     <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
                 </button>
-            </div>
+            </form>
         )
     } else {
         return (
-            <div
+            <form
                 className={twMerge(
                     "flex",
                     "bg-white",
                     "absolute inset-0",
                     "p-2 flex-row justify-between space-x-2 items-center"
                 )}
+                role="search"
+                aria-label={`Filter ${name} Column`}
             >
                 <Filter column={column} placeholder={placeholder ?? `Filter ${name}`} />
                 <button
@@ -106,7 +110,7 @@ export function TableFilterString(
                 >
                     <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
                 </button>
-            </div>
+            </form>
         )
     }
 }
