@@ -12,7 +12,7 @@ import { HiArrowCircleLeft } from "react-icons/hi";
 import { FetchStatus } from "@tanstack/react-query";
 
 // DTO etc
-import { DIDMeta } from "@/lib/core/entity/rucio";
+import { DIDMeta, DIDType } from "@/lib/core/entity/rucio";
 import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule";
 import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
@@ -119,16 +119,16 @@ export const PageDID = (
             >
                 <Tabs
                     tabs={
-                        didtype === "File" ? ["File Replica States", "Parent DIDs", "Metadata"] :
-                            (didtype === "Dataset" ? ["Rules", "Dataset Replicas", "File Replica States", "Metadata"] :
-                                ["Contents", "Rules", "File Replica States", "Metadata"]
+                        didtype === DIDType.File ? ["File Replica States", "Parent DIDs", "Metadata"] :
+                            (didtype === DIDType.Dataset ? ["Rules", "Dataset Replicas", "File Replica States", "Metadata"] :
+                                ["Contents", "Rules", "Metadata"]
                             )
                     } // remember difference between collections and files
                     active={0}
                     updateActive={(id: number) => { setSubpageIndex(id) }}
                 />
                 <SubPage
-                    show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 0 : subpageIndex === 1}
+                    show={didtype === DIDType.File ? false : didtype === DIDType.Dataset ? subpageIndex === 0 : subpageIndex === 1}
                     id="subpage-rules"
                 >
                     <PageDIDRules tableData={{
@@ -139,7 +139,7 @@ export const PageDID = (
                     />
                 </SubPage>
                 <SubPage
-                    show={didtype === "File" ? false : didtype === "Dataset" ? subpageIndex === 1 : false}
+                    show={didtype === DIDType.File ? false : didtype === DIDType.Dataset ? subpageIndex === 1 : false}
                     id="subpage-dataset-replicas"
                 >
                     <PageDIDDatasetReplicas tableData={{
@@ -149,10 +149,10 @@ export const PageDID = (
                     }} />
                 </SubPage>
                 <SubPage
-                    show={didtype === "File" ? subpageIndex === 0 : didtype === "Dataset" ? subpageIndex === 2 : subpageIndex === 2}
+                    show={didtype === DIDType.File ? subpageIndex === 0 : didtype === DIDType.Dataset ? subpageIndex === 2 : false}
                     id="subpage-file-replica-states"
                 >
-                    <div className={twMerge(didtype === "File" ? "block" : "hidden")}>
+                    <div className={twMerge(didtype === DIDType.File ? "block" : "hidden")}>
                         <PageDIDFilereplicas tableData={{
                             data: props.didFileReplicasResponse.data,
                             fetchStatus: props.didFileReplicasResponse.fetchStatus,
@@ -160,7 +160,7 @@ export const PageDID = (
                         }}
                         />
                     </div>
-                    <div className={twMerge(didtype === "Dataset" ? "block" : "hidden")}>
+                    <div className={twMerge(didtype === DIDType.Dataset ? "block" : "hidden")}>
                         <PageDIDFilereplicasD
                             replicaTableData={{
                                 data: props.didFileReplicasResponse.data,
@@ -178,7 +178,7 @@ export const PageDID = (
                     </div>
                 </SubPage>
                 <SubPage
-                    show={didtype === "File" ? subpageIndex === 1 : false}
+                    show={didtype === DIDType.File ? subpageIndex === 1 : false}
                     id="subpage-parent-dids"
                 >
                     <PageDIDByType tableData={{
@@ -188,7 +188,7 @@ export const PageDID = (
                     }} />
                 </SubPage>
                 <SubPage
-                    show={didtype === "File" ? subpageIndex === 2 : didtype === "Dataset" ? subpageIndex === 3 : subpageIndex === 3}
+                    show={didtype === DIDType.File ? subpageIndex === 2 : didtype === DIDType.Dataset ? subpageIndex === 3 : subpageIndex === 2}
                     id="subpage-metadata"
                 >
                     <PageDIDMetadata tableData={{
@@ -198,7 +198,7 @@ export const PageDID = (
                     }} />
                 </SubPage>
                 <SubPage
-                    show={didtype === "Container" ? subpageIndex === 0 : false}
+                    show={didtype === DIDType.Container ? subpageIndex === 0 : false}
                     id="subpage-contents"
                 >
                     <PageDIDByType showDIDType tableData={{
