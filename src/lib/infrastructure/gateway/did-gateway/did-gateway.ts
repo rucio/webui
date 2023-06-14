@@ -1,88 +1,43 @@
 import { HTTPRequest } from '@/lib/common/stream/http'
-import { Response } from 'node-fetch'
 import { DIDDTO, ListDIDDTO } from '@/lib/core/data/dto/did-dto'
 import { DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port'
-import type StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port'
-import { inject, injectable } from 'inversify'
-import GATEWAYS from '../config/ioc/ioc-symbols-gateway'
-import { PassThrough } from 'node:stream'
+import { injectable } from 'inversify'
+import ListDIDsEndpoint from './endpoints/list-dids-endpoint'
+
 
 @injectable()
 export default class RucioDIDGateway implements DIDGatewayOutputPort {
-    constructor(
-        @inject(GATEWAYS.ENV_CONFIG)
-        private envConfigGateway: EnvConfigGatewayOutputPort,
-        @inject(GATEWAYS.STREAM)
-        private streamingGateway: StreamGatewayOutputPort,
-    ) {
-        this.envConfigGateway = envConfigGateway
-    }
-
     async listDIDs(
         rucioAuthToken: string,
         scope: string,
         name: string,
         type: DIDType,
     ): Promise<ListDIDDTO> {
-        const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/dids/${scope}/dids/search`
-        const request: HTTPRequest = {
-            method: 'GET',
-            url: endpoint,
-            headers: {
-                'X-Rucio-Auth-Token': rucioAuthToken,
-                'Content-Type': 'application/x-json-stream',
-            },
-            body: null,
-            params: {
-                "name": name,
-                "type": type.toLocaleLowerCase(),
-            }
-        }
-        const response = await this.streamingGateway.getJSONChunks(request, true)
-        if (response instanceof Response) {
-            const errorCode = response.status
-            const dto: ListDIDDTO = {
-                status: 'error',
-                error: 'Unknown Error',
-                stream: null,
-            }
-            switch (errorCode) {
-                case 401:
-                    dto.error = 'Invalid Auth Token'
-                    break
-                case 404:
-                    dto.error = 'Invalid key in filter'
-                    break
-                case 406:
-                    dto.error = 'Not acceptable'
-                    break
-                case 409:
-                    dto.error = 'Wrong did type'
-                    break
-                default:
-                    dto.error = 'Unknown Error'
-                    break
-            }
-        } else if (response instanceof PassThrough) {
+        try {
+            const endpoint = new ListDIDsEndpoint(rucioAuthToken, scope, name, type)
+            await endpoint.fetch()
             const dto: ListDIDDTO = {
                 status: 'success',
-                error: undefined,
-                stream: response,
+                stream: endpoint,
             }
-            return dto
+            return Promise.resolve(dto)
+        } catch (error) {
+            const errorDTO: ListDIDDTO = {
+                status: 'error',
+                error: 'Unknown Error',
+                message: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
         }
-        const dto: ListDIDDTO = {
-            status: 'error',
-            error: 'Unknown Error',
-            stream: null,
-        }
-        return dto
+            
     }
 
-    async getDID(rucioAuthToken: string, scope: string, name: string): Promise<DIDDTO> {
+    async getDID(
+        rucioAuthToken: string,
+        scope: string,
+        name: string,
+    ): Promise<DIDDTO> {
         const rucioHost = await this.envConfigGateway.rucioHost()
         const endpoint = `${rucioHost}/dids/${scope}/${name}/status`
         const request: HTTPRequest = {
@@ -94,7 +49,7 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
             },
             body: null,
         }
-        const response = await fetch(endpoint,  {
+        const response = await fetch(endpoint, {
             method: request.method,
             headers: {
                 'X-Rucio-Auth-Token': rucioAuthToken,
@@ -128,7 +83,7 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
                 length: data.length,
             }
             return dto
-        } 
+        }
         const errorCode = response.status
         const dto: DIDDTO = {
             status: 'error',
