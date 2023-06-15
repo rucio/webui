@@ -3,8 +3,8 @@ import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-ou
 import { injectable } from 'inversify'
 import fetch, { Response } from 'node-fetch'
 import { PassThrough, Transform } from 'node:stream'
-import { HTTPRequest, prepareRequestArgs } from '@/lib/common/stream/http'
-import { BytesToStringifiedJSONTransform, NewlineDelimittedDataParser } from '@/lib/common/stream/stream-transformers'
+import { HTTPRequest, prepareRequestArgs } from '@/lib/common/http'
+import { BytesToStringifiedJSONTransform, NewlineDelimittedDataParser } from '@/lib/common/base-components/stream-transformers'
 @injectable()
 export default class StreamingGateway<T> implements StreamGatewayOutputPort {
     private convertChunkBytesToString = new Transform({

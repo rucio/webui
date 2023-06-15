@@ -1,4 +1,4 @@
-import { HTTPRequest } from "@/lib/common/stream/http"
+import { HTTPRequest } from "@/lib/common/http"
 import { Response } from "node-fetch";
 import { PassThrough } from 'node:stream';
 

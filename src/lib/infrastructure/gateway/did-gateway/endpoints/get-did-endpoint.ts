@@ -1,5 +1,5 @@
 import { BaseEndpoint } from "@/lib/common/base-components/gateway-endpoints"
-import { HTTPRequest } from "@/lib/common/stream/http";
+import { HTTPRequest } from "@/lib/common/http";
 import { DIDDTO } from "@/lib/core/data/dto/did-dto";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { Response } from "node-fetch";

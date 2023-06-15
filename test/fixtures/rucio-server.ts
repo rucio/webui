@@ -1,4 +1,4 @@
-import { HTTPRequest } from '@/lib/common/stream/http'
+import { HTTPRequest } from '@/lib/common/http'
 import { Headers } from 'node-fetch'
 import { Readable } from 'stream'
 

@@ -1,5 +1,5 @@
 import { BaseController } from '@/lib/common/base-components/controller'
-import { ListDIDsRequest } from '@/lib/core/data/usecase-models/list-dids-usecase-models'
+import { ListDIDsRequest } from '@/lib/core/use-case/list-dids/list-dids-usecase-models'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers'
 import { ListDIDsControllerParameters } from '@/lib/infrastructure/controller/list-dids-controller'

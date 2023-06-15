@@ -77,3 +77,11 @@ export type VO = {
     oidcEnabled: boolean;
     oidcProviders: OIDCProvider[];
 }
+
+export const DefaultVO: VO = {
+    name: 'Default',
+    shortName: 'def',
+    logoUrl: '',
+    oidcEnabled: false,
+    oidcProviders: [],
+}

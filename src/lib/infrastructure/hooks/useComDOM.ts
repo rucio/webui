@@ -6,7 +6,7 @@ import ComDOMWrapper, {
     IComDOMWrapper,
 } from '@/lib/infrastructure/web-worker/comdom-wrapper'
 
-import { HTTPRequest } from '@/lib/common/stream/http'
+import { HTTPRequest } from '@/lib/common/http'
 
 export type ComDOMError = {
     id: number

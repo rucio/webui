@@ -1,5 +1,5 @@
 import { Remote, wrap } from "comlink"
-import type { HTTPRequest } from "@/lib/common/stream/http";
+import type { HTTPRequest } from "@/lib/common/http";
 
 /**
  * @description Represents the status of the ComDOM web worker
