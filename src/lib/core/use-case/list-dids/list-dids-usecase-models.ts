@@ -1,8 +1,7 @@
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/common/base-components/usecase-models";
 import { DID, DIDType } from "@/lib/core/entity/rucio";
-import { AuthenticatedUseCaseRequest, AuthenticatedUseCaseResponse } from "../authenticated-use-case-models";
 
-export interface ListDIDsRequest extends AuthenticatedUseCaseRequest {
+export interface ListDIDsRequest {
     query: string;
     type: DIDType;
 }

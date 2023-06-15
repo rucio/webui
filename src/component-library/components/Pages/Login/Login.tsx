@@ -11,8 +11,8 @@ import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 import { MdAccountCircle } from 'react-icons/md';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 import { Alert } from '../../Alert/Alert';
-import DefaultVO from '@/lib/common/default-vo';
 import { LabelledInput } from './LabelledInput';
+import { DefaultVO } from '@/lib/core/entity/auth-models';
 
 export type SupportedAuthWorkflows = "oidc" | "x509" | "userpass" | "none"
 
