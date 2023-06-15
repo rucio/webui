@@ -20,12 +20,12 @@ describe('DID API Tests', () => {
                 headers: {
                     'Content-Type': 'application/x-json-stream',
                 },
-                body: Readable.from(JSON.stringify(
+                body: Readable.from(
                     [
-                        'test:data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
-                        'test:data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
-                        'test:data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
-                    ].join('\n')),
+                        'test:dateset1',
+                        'test:dataset2',
+                        'test:dataset3',
+                    ].join('\n'),
                 ),
             },
         }
@@ -77,9 +77,9 @@ describe('DID API Tests', () => {
         )
 
         const receivedData: string[] = []
-        const onData = (data: Buffer) => {
+        const onData = (data: string) => {
             receivedData.push(
-                Buffer.from(JSON.stringify(data)).toString(),
+                JSON.parse(data)
             )
         }
 
@@ -106,21 +106,21 @@ describe('DID API Tests', () => {
 
         expect(receivedData).toEqual([
             {
-                "name": "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00",
+                "name": "dateset1",
                 "scope": "test",
                 "did_type": "DATASET",
                 "bytes": 0,
                 "length": 0,
             },
             {
-                "name": "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01",
+                "name": "dataset2",
                 "scope": "test",
                 "did_type": "DATASET",
                 "bytes": 0,
                 "length": 0,
             },
             {
-                "name": "data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02",
+                "name": "dataset3",
                 "scope": "test",
                 "did_type": "DATASET",
                 "bytes": 0,

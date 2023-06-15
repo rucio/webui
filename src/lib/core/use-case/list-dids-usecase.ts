@@ -6,7 +6,7 @@ import { ListDIDDTO } from "../data/dto/did-dto";
 import { ListDIDsRequest, ListDIDsResponse } from "../data/usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
 import { PassThrough, Transform, TransformCallback } from "node:stream";
-import { DIDType } from "../entity/rucio";
+import { DID, DIDType } from "../entity/rucio";
 
 @injectable()
 class ListDIDsUseCase extends Transform implements ListDIDsInputPort {
@@ -42,36 +42,35 @@ class ListDIDsUseCase extends Transform implements ListDIDsInputPort {
             return
         }
 
-        if(listDIDDTO.stream === null){
+        if(listDIDDTO.stream === null || listDIDDTO.stream === undefined){
             await this.presenter.presentError({
                 error: 'Unknown Error',
                 message: 'Failed to stream DIDs.',
             })
             return
         }
-        const didStream = listDIDDTO.stream;
+
+        const dtoStream = listDIDDTO.stream;
         const viewModelStream = new PassThrough();
-        didStream.pipe(this).pipe(viewModelStream);
+        dtoStream.pipe(this).pipe(viewModelStream);
         await this.presenter.presentStream(viewModelStream);
     }
 
-    _transform(did: Buffer, encoding: BufferEncoding, callback: TransformCallback): void {
-        const didName = JSON.parse(did.toString());
-        const responseModel: ListDIDsResponse = {
-            name: didName,
-            scope: didName.split(':')[0],
-            did_type: DIDType.DATASET,
-            length: 0,
-            bytes: 0,
+    _transform(did: DID, encoding: BufferEncoding, callback: TransformCallback): void {
+        try {
+            const responseModel: ListDIDsResponse = {
+                name: did.name,
+                scope: did.scope,
+                did_type: did.did_type,
+                length: 0,
+                bytes: 0,
+            }
+            this.push(JSON.stringify(responseModel));
+            callback();
+        } catch (error: unknown) {
+            this.emit('error', error);
         }
-        this.push(JSON.stringify(responseModel));
-        callback();
     }
-
-    _flush(callback: TransformCallback): void {
-        callback();
-    }
-
 }
     
 export default ListDIDsUseCase;
