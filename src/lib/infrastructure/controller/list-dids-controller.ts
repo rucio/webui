@@ -5,19 +5,20 @@ import ListDIDsInputPort from "@/lib/core/use-case/list-dids/list-dids-input-por
 import { injectable, inject } from "inversify";
 import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
+import { AuthenticatedRequestModel } from "@/lib/common/base-components/usecase-models";
 
 export type ListDIDsControllerParameters = TAuthenticatedControllerParameters & {
     query: string,
     type: string
 };
 @injectable()
-class ListDIDsController extends BaseController<ListDIDsControllerParameters, ListDIDsRequest> {
+class ListDIDsController extends BaseController<ListDIDsControllerParameters, AuthenticatedRequestModel<ListDIDsRequest>> {
     constructor(
         @inject(USECASE_FACTORY.LIST_DIDS) listDIDsUseCaseFactory: (response: NextApiResponse) => ListDIDsInputPort,
     ) {
         super(listDIDsUseCaseFactory);
     }
-    prepareRequestModel(parameters: ListDIDsControllerParameters): ListDIDsRequest {
+    prepareRequestModel(parameters: ListDIDsControllerParameters): AuthenticatedRequestModel<ListDIDsRequest> {
         const type = parameters.type.toLowerCase();
         let did_type = DIDType.ALL;
         switch(type) {
