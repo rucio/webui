@@ -106,6 +106,7 @@ describe('DID API Tests', () => {
 
         expect(receivedData).toEqual([
             {
+                "status": "success",
                 "name": "dateset1",
                 "scope": "test",
                 "did_type": "DATASET",
@@ -113,6 +114,7 @@ describe('DID API Tests', () => {
                 "length": 0,
             },
             {
+                "status": "success",
                 "name": "dataset2",
                 "scope": "test",
                 "did_type": "DATASET",
@@ -120,6 +122,7 @@ describe('DID API Tests', () => {
                 "length": 0,
             },
             {
+                "status": "success",
                 "name": "dataset3",
                 "scope": "test",
                 "did_type": "DATASET",

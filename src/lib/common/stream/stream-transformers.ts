@@ -194,6 +194,7 @@ export class BytesToStringifiedJSONTransform extends Transform {
             return jsonObject as Object
         } catch (error) {
             this.emit('error', `Could not convert JSON ${json} to DTO: ${error}`)
+            throw error
         }
     }
 
