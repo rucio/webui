@@ -1,7 +1,8 @@
+import { BaseDTO } from "@/lib/common/base-components/dto";
 import { AuthError, RucioTokenExpiredError } from "@/lib/core/data/auth-exceptions";
 import { SessionUser } from "@/lib/core/entity/auth-models";
 import { IronSession } from "iron-session";
-
+import { Response } from "node-fetch";
 
 /**
  * A decorator for Gateway functions that need to make authenticated calls to Rucio Server
@@ -53,4 +54,21 @@ export function validateRucioToken(user: SessionUser) {
         throw new RucioTokenExpiredError("Rucio Auth Token expired")
     }
     return rucioAuthToken
+}
+
+/**
+ * Parses the response from an API endpoint and returns a `BaseDTO` object if the response status is 401 (Unauthorized).
+ * @param response The response object returned by the API.
+ * @returns A promise that resolves to a `BaseDTO` object if the response status is 401, or `undefined` otherwise.
+ */
+export async function handleAuthErrors(response: Response): Promise<BaseDTO | undefined> {
+    if(response.status === 401) {
+        const message = await response.json()
+        const dto: BaseDTO = {
+            status: 'error',
+            message: message, 
+        }
+        return Promise.resolve(dto)
+    }
+    return Promise.resolve(undefined)
 }
