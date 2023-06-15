@@ -42,7 +42,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        debugTable: true,
+        debugTable: false,
         enableRowSelection: props.tableselecting?.enableRowSelection ?? false,
         enableMultiRowSelection: props.tableselecting?.enableMultiRowSelection ?? false,
         onRowSelectionChange: setRowSelection,

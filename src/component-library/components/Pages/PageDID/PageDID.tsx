@@ -114,7 +114,8 @@ export const PageDID = (
                     "min-w-0",
                     "lg:col-span-2",
                     "flex flex-col",
-                    "rounded-md p-2 border"
+                    "rounded-md p-2 border",
+                    "bg-white dark:bg-gray-800"
                 )}
             >
                 <Tabs

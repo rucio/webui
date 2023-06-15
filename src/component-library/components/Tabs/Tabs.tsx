@@ -48,7 +48,11 @@ export const Tabs: React.FC<JSX.IntrinsicElements["ul"] & {
         } // wrap for event handler
         return (
             <div
-                className="flex flex-col sm:flex-row list-none font-bold"
+                className={twMerge(
+                    "flex flex-col sm:flex-row",
+                    "list-none font-bold",
+                    "bg-white dark:bg-gray-900",
+                )}
                 role="tablist"
             >
                 {tabs.map((element, index) => {
