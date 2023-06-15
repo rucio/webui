@@ -83,9 +83,10 @@ export class NewlineDelimittedDataParser extends Transform {
             for (const object of objects) {
                 this.pushToNextStream(object)
             }
-            callback(null)
+            callback()
         } catch (error) {
-            callback(null)
+            this.emit('error', error)
+            callback()
         }
     }
 
@@ -98,7 +99,7 @@ export class NewlineDelimittedDataParser extends Transform {
         for (const object of objects) {
             this.pushToNextStream(object)
         }
-        callback(null)
+        callback()
     }
 }
 
@@ -192,7 +193,7 @@ export class BytesToStringifiedJSONTransform extends Transform {
             const jsonObject = JSON.parse(json)
             return jsonObject as Object
         } catch (error) {
-            throw new Error(`Could not convert JSON ${json} to DTO: ${error}`)
+            this.emit('error', `Could not convert JSON ${json} to DTO: ${error}`)
         }
     }
 
@@ -233,6 +234,7 @@ export class BytesToStringifiedJSONTransform extends Transform {
             }
             callback(null, jsonObject)
         } catch (error) {
+            this.emit('error', error)
             callback(null)
         }
     }
@@ -253,6 +255,7 @@ export class BytesToStringifiedJSONTransform extends Transform {
                 this.clearBuffer()
                 callback(null, JSON.stringify(dto))
             } catch (error: any) {
+                this.emit('error', error)
                 callback(error as Error)
             }
         } else {

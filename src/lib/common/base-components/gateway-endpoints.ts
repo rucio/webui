@@ -119,7 +119,8 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
             this.push(dto);
             callback();
         } catch (error) {
-            callback(error as Error);
+            this.emit('error', error);
+            callback();
         }
     }
 }

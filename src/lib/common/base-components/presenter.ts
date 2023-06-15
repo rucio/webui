@@ -81,12 +81,12 @@ export abstract class BaseStreamingPresenter<
     }
 
     _transform(
-        chunk: any,
+        chunk: string,
         encoding: BufferEncoding,
         callback: TransformCallback,
     ): void {
         try {
-            const responseModel: TResponseModel = JSON.parse(chunk.toString())
+            const responseModel: TResponseModel = JSON.parse(chunk)
             const viewModel =
                 this.convertResponseModelToViewModel(responseModel)
             this.push(JSON.stringify(viewModel))

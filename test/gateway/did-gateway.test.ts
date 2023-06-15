@@ -3,7 +3,6 @@ import { DID, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
-import { PassThrough } from 'node:stream'
 import { Readable } from 'stream'
 
 describe('DID Gateway Tests', () => {
