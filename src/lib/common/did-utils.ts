@@ -1,10 +1,9 @@
-import { TupleType } from "typescript";
-
 /**
  * A utility function to parse DID strings into their scope and name components.
  * @param didString The query string to parse.
  * @param allowWildcardNames If true, wildcard names are allowed in the name component of the DID string.
  * @returns The scope and name components of the DID string as a tuple
+ * @throws An error if the DID string is invalid.
  */
 export function parseDIDString(didString: string, allowWildcardNames: boolean = true): {scope: string, name: string} {
     const didParts = didString.trim().split(':');

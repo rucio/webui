@@ -1,9 +1,4 @@
-import { ListDIDsResponse, ListDIDsError } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
-import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
-import { PassThrough } from "node:stream";
+import { BaseStreamingOutputPort } from "@/lib/common/base-components/primary-ports";
+import { ListDIDsError, ListDIDsResponse } from "@/lib/core/data/usecase-models/list-dids-usecase-models";
 
-export default interface ListDIDsOutputPort<T> {
-    response: T;
-    presentStream(stream: PassThrough): Promise<void>;
-    presentError(error: ListDIDsError): Promise<void>;
-}
+export default interface ListDIDsOutputPort extends BaseStreamingOutputPort<ListDIDsResponse, ListDIDsError> {}

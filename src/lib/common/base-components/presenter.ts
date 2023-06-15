@@ -1,6 +1,7 @@
 import { TWebResponse } from './web'
 import { Transform, TransformCallback } from 'stream'
 import { BaseOutputPort, BaseStreamingOutputPort } from './primary-ports'
+import { NextApiResponse } from 'next'
 
 /**
  * A base class for presenters.
@@ -8,13 +9,33 @@ import { BaseOutputPort, BaseStreamingOutputPort } from './primary-ports'
  * @typeparam TViewModel The type of the view model to present.
  * @typeparam TErrorModel The type of the error model to present.
  */
-export abstract class BasePresenter<TResponseModel, TViewModel, TErrorModel>
-    implements BaseOutputPort<TResponseModel, TViewModel, TErrorModel>
+export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel>
+    implements BaseOutputPort<TResponseModel, TErrorModel>
 {
-    response: TWebResponse
+    response: NextApiResponse
     
-    constructor(response: TWebResponse) {
+    constructor(response: NextApiResponse) {
         this.response = response
+    }
+
+    /**
+     * Converts a response model to a view model.
+     * @param responseModel The response model to convert.
+     * @returns The view model that represents the response model.
+     */
+    abstract convertResponseModelToViewModel(responseModel: TResponseModel): {
+        viewModel: TViewModel,
+        status: number
+    }
+    
+    /**
+     * Converts an error model to an error view model.
+     * @param errorModel The error model to convert.
+     * @returns The error view model that represents the error model.
+     */
+    abstract convertErrorModelToViewModel(errorModel: TErrorModel): {
+        viewModel: TViewModel,
+        status: number
     }
 
     /**
@@ -22,14 +43,22 @@ export abstract class BasePresenter<TResponseModel, TViewModel, TErrorModel>
      * @param responseModel The response model to present.
      * @returns A promise that resolves to the view model.
      */
-    abstract presentSuccess(responseModel: TResponseModel): Promise<void>
+    async presentSuccess(responseModel: TResponseModel): Promise<void> {
+        const { viewModel, status } = this.convertResponseModelToViewModel(responseModel)
+        await this.response.status(status).json(viewModel)
+        return Promise.resolve()
+    }
     
     /**
      * Presents an error model.
      * @param errorModel The error model to present.
      * @returns A promise that resolves to the view model.
      */
-    abstract presentError(errorModel: TErrorModel): Promise<void>
+    async presentError(errorModel: TErrorModel): Promise<void> {
+        const { status, viewModel } = this.convertErrorModelToViewModel(errorModel)
+        await this.response.status(status).json(viewModel)
+        return Promise.resolve()
+    }
 }
 
 /**
@@ -44,20 +73,35 @@ export abstract class BaseStreamingPresenter<
         TErrorModel,
     >
     extends Transform
-    implements BaseStreamingOutputPort<TResponseModel, TViewModel, TErrorModel>
+    implements BaseStreamingOutputPort<TResponseModel, TErrorModel>
 {
     response: TWebResponse
     constructor(response: TWebResponse) {
         super({ objectMode: true })
         this.response = response
     }
-
+    
+    /**
+     * Converts an error model to view model.
+     * @param errorModel 
+     * @returns The converted view model and the HTTP status code for the final HTTP response.
+     */
+    abstract convertErrorModelToViewModel(errorModel: TErrorModel): {
+        status: number,
+        viewModel: TViewModel
+    }
+    
     /**
      * Presents an error model.
      * @param errorModel The error model to present.
      * @returns A promise that resolves when the error has been presented.
      */
-    abstract presentError(errorModel: TErrorModel): Promise<void>
+    presentError(errorModel: TErrorModel): Promise<void> {
+        const response = this.response as NextApiResponse
+        const { status, viewModel } = this.convertErrorModelToViewModel(errorModel)
+        response.status(status).json(viewModel)
+        return Promise.resolve()
+    }
 
     /**
      * Converts a response model to a view model.
