@@ -1,20 +1,19 @@
 import { Transform, TransformCallback } from 'stream';
-import type{ HTTPRequest} from '@/lib/common/stream/http';
+import{ HTTPRequest, prepareRequestArgs} from '@/lib/common/stream/http';
 import { Response } from 'node-fetch';
-import { injectable } from 'inversify';
 import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway';
 import type StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
 import appContainer from '@/lib/infrastructure/config/ioc/container-config';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
-import { BaseStreamableDTO } from './dto';
-
+import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import { BaseDTO, BaseStreamableDTO } from './dto';
+import fetch from 'node-fetch';
+import { handleAuthErrors } from '@/lib/infrastructure/auth/auth-utils';
 
 /**
  * An abstract class that extends the `Transform` stream class and provides a base implementation for streamable API endpoints.
  * @template TDTO The type of the data transfer object (DTO) that represents the API response.
  * @template TStreamData The type of the data that is streamed in the API response.
  */
-@injectable()
 export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TStreamData> extends Transform {
     /**
      * A boolean value that indicates whether the stream should be formatted as NDJSON (newline-delimited JSON) or not.
@@ -80,6 +79,10 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
         }
         const response = await this.streamingGateway.getJSONChunks(this.request, this.streamAsNDJSON);
         if (response instanceof Response) {
+            const authError = await handleAuthErrors(response);
+            if (authError) {
+                throw authError;
+            }
             const error = await this.reportErrors(response);
             if (error) {
                 throw error;
@@ -117,6 +120,94 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
             callback();
         } catch (error) {
             callback(error as Error);
+        }
+    }
+}
+
+/**
+ * An abstract class that provides a base implementation for a Gateway's API endpoint.
+ * @template TDTO The type of the data transfer object (DTO) that represents the API response.
+ */
+export abstract class BaseEndpoint<TDTO extends BaseDTO> {
+    /**
+     * A boolean value that indicates whether the endpoint has been initialized or not.
+     * This must be explicitly set in the intiialized() function of the subclass.
+     */
+    protected initialized: boolean = false;
+    protected request: HTTPRequest | undefined;
+    protected rucioHost: string = 'http://rucio-host.com';
+    protected envConfigGateway: EnvConfigGatewayOutputPort;
+
+    constructor(
+    ) {
+        this.envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
+    }
+
+    /**
+     * Initializes the endpoint by setting the Rucio host URL.
+     * This function MUST be overriden by subclasses to perform additional initialization steps.
+     * The overriden function MUST call `super.initialize()` before returning.
+     * The overriden function MUST set this.intialized to `true` after performing all initialization steps.
+     * @returns A promise that resolves when the endpoint has been initialized.
+     */
+    async initialize(): Promise<void> {
+        this.rucioHost = await this.envConfigGateway.rucioHost();
+    }
+
+    /**
+     * Reports any errors that occurred during the API request.
+     * @param statusCode The HTTP status code returned by the API.
+     * @param response The response object returned by the API.
+     * @returns A promise that resolves to the API response as a data transfer object (DTO), or `undefined` if an error occurred.
+     */
+    abstract reportErrors(statusCode: number, response: Response): Promise<TDTO | undefined>;
+    
+    /**
+     * Creates a data transfer object (DTO) from the API response.
+     * @param data The response.json() object returned by the API.
+     * @returns The DTO that represents the API response.
+     */
+    abstract createDTO(data: Object): TDTO;
+
+    /**
+     * Sends an HTTP request to the API and returns the response as a data transfer object (DTO).
+     * @returns A promise that resolves to the API response as a DTO.
+     */
+    async fetch(): Promise<TDTO> {
+        if (!this.initialized) {
+            try {
+                await this.initialize();
+            } catch (error) {
+                this.initialized = false;
+            }
+        }
+        if (!this.request) {
+            throw new Error(`Request not initialized for ${this.constructor.name}`);
+        }
+
+        const preparedRequest = prepareRequestArgs(this.request);
+
+        const response: Response = await fetch(
+            preparedRequest.url,
+            preparedRequest.requestArgs
+        )
+        if(!response.ok) {
+            const authError = await handleAuthErrors(response);
+            if (authError) {
+                return authError as TDTO;
+            }
+
+            const error = await this.reportErrors(response.status, response);
+            if (error) {
+                return error;
+            }
+            return {
+                status: 'error',
+                message: `An error occurred while fetching ${this.request.url}`,
+            } as TDTO;
+        } else {
+            const data = await response.json();
+            return this.createDTO(data);
         }
     }
 }
