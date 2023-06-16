@@ -1,0 +1,63 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <path> <component_name>"
+  exit 1
+fi
+path=$1
+component_path=$(echo $path | sed 's/.*components\///' | sed 's/\/$//')
+component_name=$(echo $2 | sed 's/\b\(.\)/\u\1/g')
+first_letter=$(echo $component_name | cut -c1)
+
+# create files, pipe into them
+mkdir $path
+touch "$path/page.tsx"
+touch "$path/layout.tsx"
+pagetext=$(cat << END
+'use client';
+export default function $component_name() {
+    return (
+        <div>
+            $component_name
+        </div>
+    )
+}
+END
+)
+echo "$pagetext" > $path/page.tsx
+echo "Created $path/page.tsx and wrote to it"
+
+
+
+layouttext=$(cat << END
+'use client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import "@/component-library/outputtailwind.css";
+import "reflect-metadata";
+import { Layout as LayoutStory } from "@/component-library/components/Pages/Layout/Layout";
+
+const queryClient = new QueryClient();
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <LayoutStory
+            LVM={{
+                accountActive: "test",
+                accountsPossible: ["test", "test2"],
+                rucioProjectLink: "rucio.cern.ch",
+                experimentProjectLink: "atlas.cern",
+            }}
+        >
+            <QueryClientProvider client={queryClient}>
+                {children}
+            </QueryClientProvider>
+        </LayoutStory>
+    )
+}
+END
+)
+echo "$layouttext" > "$path/layout.tsx"
+echo "Created $path/layout.tsx and wrote to it"

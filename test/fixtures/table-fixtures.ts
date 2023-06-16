@@ -109,7 +109,8 @@ export function createRSEAccountUsageLimit(): RSEAccountUsageLimit {
 }
 
 export function createDIDMeta(): DIDMeta {
-    const did_type = randomEnum<DIDType>(DIDType)
+    // ignore Collections
+    const did_type = faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File])
     return {
         name: faker.lorem.words(3).replace(/\s/g, "."),
         scope: createRandomScope(),

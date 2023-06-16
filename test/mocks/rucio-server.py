@@ -7,6 +7,7 @@ from flask import Flask
 import flask
 import itertools
 import json
+import functools
 
 app = Flask(__name__)
 fake = Faker()
@@ -260,6 +261,58 @@ def datasetreplicas():
         return try_stream(generate())
     except Exception as e:
         return flask.Response(status=500, response=str(e))
+
+@app.route("/subscriptionrulestates")
+def subscriptionrulestates():
+    long_list = [
+        {
+            "name": f"SUBSCRIPTION-{fake.pystr()}",
+            "state_ok": random.randint(0, 100),
+            "state_replicating": random.randint(0, 100),
+            "state_stuck": random.randint(0, 100),
+            "state_suspended": random.randint(0, 100),
+        } for _ in range(100)
+    ]
+    try:
+        def generate():
+            for i in long_list:
+                # time.sleep(2)
+                print(f"sending {i}")
+                yield render_json(i) + '\n'
+                print("sleeping")
+
+        return try_stream(generate())
+    except Exception as e:
+        return flask.Response(status=500, response=str(e))
+
+def output(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        long_list = [func(*args, **kwargs) for _ in range(100)]
+        try:
+            def generate():
+                for i in long_list:
+                    # time.sleep(2)
+                    print(f"sending {i}")
+                    yield render_json(i) + '\n'
+                    print("sleeping")
+
+            return try_stream(generate())
+        except Exception as e:
+            return flask.Response(status=500, response=str(e))
+    return wrapper
+
+@app.route("/rulepagelockentry")
+@output
+def rulepagelockentry():
+    return {
+        "scope": fake.pystr_format("user.{{first_name}}{{last_name}}"),
+        "name": random.choice(["dataset", "container"]) + "-" + fake.pystr(),
+        "rse": f"RSE-{fake.pystr()}",
+        "state": random.choice(["R", "O", "S"]),
+        "ddm_link": fake.url(),
+        "fts_link": fake.url(),
+    }
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
