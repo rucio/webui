@@ -18,6 +18,7 @@ type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
         visibility?: Record<string, boolean>
         tableHeadRowStyle?: string
         tableBodyRowStyle?: string
+        pageSize?: number
     }>
     tableselecting?: {
         handleChange: (data: T[]) => void,
@@ -72,9 +73,10 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     useEffect(() => {
         table.setPageIndex(pageIndex)
     }, [pageIndex, table])
+    // Page number
     useEffect(() => {
-        table.setPageSize(props.tabledata.pageSize)
-    }, [props.tabledata.pageSize, table])
+        table.setPageSize(props.tablestyling?.pageSize ?? 10) // default to 10
+    }, [props.tablestyling?.pageSize, table])
 
     // Breakout
     const [breakoutVisibility, setBreakoutVisibility] = useState(props.tableselecting?.breakOut?.breakoutVisibility ?? false)
