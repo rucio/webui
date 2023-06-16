@@ -35,11 +35,7 @@ export default function PageRule() {
     return (
         <PageRuleStory
             ruleMeta={meta}
-            ruleLocks={{
-                data: comDOM.query.data,
-                fetchStatus: comDOM.query.fetchStatus,
-                pageSize: 10,
-            }}
+            ruleLocks={comDOM}
         />
     )
 }

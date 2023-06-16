@@ -22,6 +22,7 @@ import { TableExternalLink } from "../../StreamedTables/TableExternalLink";
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { Titletd, Contenttd, Generaltable } from "../../Helpers/Metatable";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export interface RulePageLockEntry {
     scope: string;
@@ -34,7 +35,7 @@ export interface RulePageLockEntry {
 
 export interface PageRulePageProps {
     ruleMeta: RuleMeta;
-    ruleLocks: TableData<RulePageLockEntry>
+    ruleLocks: UseComDOM<RulePageLockEntry>
 }
 
 
@@ -327,7 +328,7 @@ export const PageRule = (
                     role="tabpanel"
                 >
                     <StreamedTable
-                        tabledata={props.ruleLocks}
+                        tablecomdom={props.ruleLocks}
                         tablecolumns={tablecolumns}
                         tablestyling={{
                             visibility: {
