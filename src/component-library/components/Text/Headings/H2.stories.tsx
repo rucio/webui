@@ -1,15 +1,15 @@
 import {StoryFn, Meta} from '@storybook/react'
 
-import {H2} from './H2'
+import {H2 as H2Component} from './H2'
 
 export default {
-    title: 'Components/Text/Headings/H2',
-    component: H2,
-} as Meta<typeof H2>
+    title: 'Components/Text/Headings',
+    component: H2Component,
+} as Meta<typeof H2Component>
 
-const Template: StoryFn<typeof H2> = args => <H2 {...args} />
+const Template: StoryFn<typeof H2Component> = args => <H2Component {...args} />
 
-export const Primary = Template.bind({})
-Primary.args = {
+export const H2 = Template.bind({})
+H2.args = {
     children: 'H2',
 }

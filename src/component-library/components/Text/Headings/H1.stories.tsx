@@ -1,15 +1,15 @@
 import {StoryFn, Meta} from '@storybook/react'
 
-import {H1} from './H1'
+import {H1 as H1Component} from './H1'
 
 export default {
-    title: 'Components/Text/Headings/H1',
-    component: H1,
-} as Meta<typeof H1>
+    title: 'Components/Text/Headings',
+    component: H1Component,
+} as Meta<typeof H1Component>
 
-const Template: StoryFn<typeof H1> = args => <H1 {...args} />
+const Template: StoryFn<typeof H1Component> = args => <H1Component {...args} />
 
-export const Primary = Template.bind({})
-Primary.args = {
+export const H1 = Template.bind({})
+H1.args = {
     children: 'H1',
 }

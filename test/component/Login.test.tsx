@@ -71,7 +71,7 @@ describe("Login Page Test", () => {
         expect(userpassButton).toBeInTheDocument()
 
         // check userpass form is collapsed/uncollapsed on click
-        const loginFormParent = screen.getByTestId('userpass-form')
+        const loginFormParent = screen.getByRole("group", {name: "Userpass Login Fields"})
         expect(loginFormParent.className).toContain('hidden')
         fireEvent.click(userpassButton)
         expect(loginFormParent.className).not.toContain('hidden')
@@ -79,7 +79,7 @@ describe("Login Page Test", () => {
         expect(loginFormParent.className).toContain('hidden')
 
         // check only 1 account field is rendered
-        const accountFieldParent = screen.getByTestId('all-accounts')
+        const accountFieldParent = screen.getByRole("group", {name: "Account Fields"})
         expect(accountFieldParent.className).not.toContain('hidden')
         fireEvent.click(userpassButton)
         expect(accountFieldParent.className).toContain('hidden')
