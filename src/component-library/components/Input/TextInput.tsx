@@ -1,33 +1,33 @@
 import { twMerge } from "tailwind-merge"
 
-export const TextInput = (
-    props: {
-        children?: any,
-        placeholder?: string,
-        onBlur?: (event: any) => void,
-        onChange?: (event: any) => void,
-        onEnterkey?: (event: any) => void,
-        id?: string,
-        className?: string
-    },
+type TextInputProps = JSX.IntrinsicElements["input"] & {
+    onEnterkey?: (event: any) => void,
+}
+
+export const TextInput: (
+    React.FC<TextInputProps>
+) = (
+    {
+        onEnterkey,
+        ...props
+    }
 ) => {
+    const { className, children, onKeyDown, ...otherprops } = props
     return (
         <input
-            id={props.id}
-            placeholder={props.placeholder}
             className={twMerge(
                 "w-full border dark:border-gray-400 rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white h-8",
                 props.className ?? ""
             )}
-            onBlur={props.onBlur}
-            onChange={props.onChange}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                    props.onEnterkey?.(e)
+                    onEnterkey?.(e)
                 }
+                onKeyDown?.(e)
             }}
+            {...otherprops}
         >
-            {props.children}
+            {children}
         </input>
     )
 }

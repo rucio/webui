@@ -1,7 +1,8 @@
+import { twMerge } from 'tailwind-merge';
 import { useState, useEffect, useMemo } from 'react'
 import { Button } from "../../Button/Button";
 import { Tabs } from "../../Tabs/Tabs";
-import { TextInput } from '../../Input/Input.stories';
+import { TextInput } from '../../Input/TextInput';
 import { H1 } from '../../Text/Headings/H1';
 import { Collapsible } from '../../Helpers/Collapsible';
 import { CredentialInput } from './CredentialInput';
@@ -11,6 +12,7 @@ import { MdAccountCircle } from 'react-icons/md';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 import { Alert } from '../../Alert/Alert';
 import DefaultVO from '@/lib/common/default-vo';
+import { LabelledInput } from './LabelledInput';
 
 export type SupportedAuthWorkflows = "oidc" | "x509" | "userpass" | "none"
 
@@ -32,7 +34,6 @@ export const Login = ({
     oidcSubmitHandler: handleOIDCSubmit
 }: LoginPageProps) => {
 
-    var mainDivClasses: string[] = ["border-gray-300", "dark:border-white", "border", "dark:border-2", "rounded", "p-4", "flex", "flex-col", "justify-center", "space-y-2"]
     const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false)
 
     const [selectedVOTab, setSelectedVOTab] = useState<number>(1)
@@ -54,7 +55,11 @@ export const Login = ({
     }, [loginViewModel, authViewModel])
 
     return (
-        <div className={mainDivClasses.join(" ")}>
+        <div className={twMerge(
+            "rounded p-4 flex flex-col justify-center space-y-2",
+            "border dark:border-2",
+            "border-gray-300 dark:border-white",
+        )}>
             <Collapsible id='login-page-error' showIf={error !== undefined}>
                 <Alert variant="error" message={error} onClose={
                     () => {
@@ -66,7 +71,9 @@ export const Login = ({
                 <H1>Rucio Login</H1>
             </div>
 
-            <div className="flex flex-col space-y-2">
+            <form
+                className="flex flex-col space-y-2"
+            >
                 <Collapsible id="vo-tabs" showIf={loginViewModel.multiVOEnabled}>
                     <Tabs
                         tabs={loginViewModel.voList.map((vo) => vo.name)}
@@ -108,28 +115,65 @@ export const Login = ({
                         }
                         } />
 
-                        <Collapsible showIf={showUserPassLoginForm} id="userpass-form">
-                            <CredentialInput submitHandler={async () => {
-                                await handleUserPassSubmit(
-                                    username,
-                                    password,
-                                    loginViewModel.voList[selectedVOTab],
-                                    account
-                                )
-                            }}>
-                                <TextInput value={username? username: ''}label="Username" inline onChange={(event) => { setUsername(event.target.value) }} />
-                                <TextInput value={password? password: ''} label="Password" inline password onChange={(event) => { setPassword(event.target.value) }} />
-                                <TextInput value={account? account: ''} label="Account Name (Optional)" inline onChange={(event) => { setAccount(event.target.value) }} />
-                            </CredentialInput>
-                        </Collapsible>
-                        <Collapsible showIf={!showUserPassLoginForm} id="all-accounts">
-                            <div className="mb-2 mr-10 ml-10">
-                                <TextInput value={account? account: ''} label="Account Name (Optional)" inline onChange={(event) => { setAccount(event.target.value) }} />
+                        <fieldset
+                            className={twMerge(
+                                "flex flex-col space-y-2",
+                                "mx-2 md:mx-10",
+                                showUserPassLoginForm ? "" : "hidden",
+                            )}
+                            aria-label="Userpass Login Fields"
+                            id="userpass-form"
+                        >
+                            <div
+                                className={twMerge("flex flex-col space-y-1")}
+                            >
+                                <LabelledInput
+                                    label="Username"
+                                    idinput="username-input"
+                                    updateFunc={(data: string) => { setUsername(data) }}
+                                />
+                                <LabelledInput
+                                    label="Password"
+                                    idinput="password-input"
+                                    updateFunc={(data: string) => { setPassword(data) }}
+                                    password={true}
+                                />
+                                <LabelledInput
+                                    label="Account"
+                                    idinput="account-input"
+                                    updateFunc={(data: string) => { setAccount(data) }}
+                                />
                             </div>
-                        </Collapsible>
+                            <Button
+                                label="Login"
+                                type="submit"
+                                onClick={async () => {
+                                    await handleUserPassSubmit(
+                                        username,
+                                        password,
+                                        loginViewModel.voList[selectedVOTab],
+                                        account
+                                    )
+                                }}
+                            />
+                        </fieldset>
+                        <fieldset
+                            className={twMerge(
+                                "mx-2 md:mx-10",
+                                !showUserPassLoginForm ? "block" : "hidden",
+                            )}
+                            aria-label="Account Fields" // TODO - specify this
+                            id="all-accounts"
+                        >
+                            <LabelledInput
+                                label="Account"
+                                idinput="account-input-nouserpass"
+                                updateFunc={(data: string) => { setAccount(data) }}
+                            />
+                        </fieldset>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }

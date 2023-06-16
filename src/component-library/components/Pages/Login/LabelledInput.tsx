@@ -1,0 +1,46 @@
+import { twMerge } from "tailwind-merge";
+import { TextInput } from "../../Input/TextInput";
+import { P } from "../../Text/Content/P";
+
+type LabelledInputProps = JSX.IntrinsicElements["span"] & {
+    label: string,
+    idinput: string,
+    updateFunc: (data: string) => void,
+    password?: boolean
+}
+
+export const LabelledInput: React.FC<LabelledInputProps> = (
+    {
+        label,
+        idinput,
+        updateFunc,
+        password = false,
+        ...props
+    }
+) => {
+    const { className, ...otherprops } = props
+    return (
+        <span
+            className={twMerge(
+                "flex flex-row space-x-2 items-baseline",
+                className ?? ""
+            )}
+            {...otherprops}
+        >
+            <label
+                htmlFor={idinput}
+                id={idinput + "-label"}
+                className={twMerge(
+                    "w-32 text-right",
+                )}
+            >
+                <P>{label}</P>
+            </label>
+            <TextInput
+                id={idinput}
+                type={password ? "password" : "text"}
+                onChange={(e) => updateFunc(e.target.value)}
+            />
+        </span>
+    );
+};
