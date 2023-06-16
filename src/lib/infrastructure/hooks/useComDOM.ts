@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { DefinedUseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, useRef, useMemo, useEffect } from 'react'
 import ComDOMWrapper, {
     BatchResponse,
@@ -12,6 +12,24 @@ export type ComDOMError = {
     id: number
     message: string
     cause: string
+}
+
+export type UseComDOM<TData> = {
+    query: DefinedUseQueryResult<TData[], unknown>
+    dataSink: React.MutableRefObject<TData[]>
+    status: UseComDOMStatus
+    comDOMStatus: ComDOMStatus
+    pollInterval: number
+    request: React.MutableRefObject<HTTPRequest | null>
+    errors: ComDOMError[]
+    start: (request?: HTTPRequest | null) => Promise<boolean>
+    stop: () => Promise<boolean>
+    pause: () => boolean
+    resume: () => boolean
+    clean: () => boolean
+    resolveError: (id: number) => void
+    resolveAllErrors: () => void
+    setRequest: (req: HTTPRequest) => void
 }
 
 /**
@@ -265,5 +283,5 @@ export default function useComDOM<TData>(
         resolveError,
         resolveAllErrors,
         setRequest,
-    } 
+    } as UseComDOM<TData> 
 }

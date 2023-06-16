@@ -9,8 +9,16 @@ import {
 import {
     DIDDatasetReplicas, DIDRules, FilereplicaState, FilereplicaStateD
 } from '@/lib/infrastructure/data/view-model/page-did';
+import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 
-var dedent = require('dedent-js');
+export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
+    return {
+        query: {
+            data: data,
+            fetchStatus: "idle"
+        }
+    } as UseComDOM<T>
+}
 
 function createRandomScope(): string {
     return `user.${faker.person.firstName()}${faker.person.lastName()}`

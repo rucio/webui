@@ -10,9 +10,10 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { PaginationDiv } from "./PaginationDiv";
 import { TableBreakout } from "./TableBreakout";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
-    tabledata: TableData<T>
+    tablecomdom: UseComDOM<T>
     tablecolumns: any[] // todo type this
     tablestyling?: Partial<{
         visibility?: Record<string, boolean>
@@ -37,7 +38,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
     const table = useReactTable<T>({
-        data: props.tabledata.data || [],
+        data: props.tablecomdom.query.data || [],
         columns: props.tablecolumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -87,7 +88,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     return (
         <table
             className={twMerge(
-                props.tabledata.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
+                props.tablecomdom.query.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
                 "bg-white dark:bg-gray-700",
                 "w-full",
                 "relative",
@@ -106,7 +107,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                 )}
                 aria-label="Table Fetch Status"
             >
-                <FetchstatusIndicator status={props.tabledata.fetchStatus} />
+                <FetchstatusIndicator status={props.tablecomdom.query.fetchStatus} />
             </caption>
             <thead role="rowgroup" aria-label="Table Header">
                 <tr
