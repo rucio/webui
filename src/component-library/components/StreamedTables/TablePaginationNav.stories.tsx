@@ -1,5 +1,6 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { PaginationDiv as PD } from "./PaginationDiv";
+import { TableState, Table } from "@tanstack/react-table";
+import { TablePaginationNav as PD } from "./TablePaginationNav";
 
 export default {
     title: "Components/StreamedTables",
@@ -8,10 +9,10 @@ export default {
 
 const Template: StoryFn<typeof PD> = (args) => <PD {...args} />
 
-export const PaginationDiv = Template.bind({})
-PaginationDiv.args = {
+export const PaginationNav = Template.bind({})
+PaginationNav.args = {
     table: {
-        setPageIndex: () => {},
+        setPageIndex: (num: number) => {},
         getCanPreviousPage: () => false,
         previousPage: () => {},
         getPageCount: () => 1,
@@ -22,7 +23,7 @@ PaginationDiv.args = {
                 pagination: {
                     pageIndex: 0
                 }
-            }
+            } as TableState
         }
-    }
+    } as Table<any>
 }

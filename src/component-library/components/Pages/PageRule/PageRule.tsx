@@ -43,6 +43,15 @@ export const PageRule = (
     props: PageRulePageProps
 ) => {
     const [subpageIndex, setSubpageIndex] = useState(0);
+
+    useEffect(() => {
+        if(subpageIndex === 1 && props.ruleLocks.query.data.length === 0 ) {
+            // Opened locks tab, but no data yet => start load
+            console.log(props.ruleLocks.query.data)
+            props.ruleLocks.start()
+        }
+    }, [subpageIndex])
+
     const meta = props.ruleMeta;
 
     const columnHelper = createColumnHelper<RulePageLockEntry>()

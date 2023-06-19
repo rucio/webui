@@ -5,12 +5,12 @@ import {
     RowSelectionState,
     useReactTable
 } from "@tanstack/react-table";
-import { FetchstatusIndicator } from "./FetchstatusIndicator";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { PaginationDiv } from "./PaginationDiv";
+import { TablePaginationNav } from "./TablePaginationNav";
 import { TableBreakout } from "./TableBreakout";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { TableFooter } from "./TableFooter";
 
 type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
     tablecomdom: UseComDOM<T>
@@ -99,16 +99,6 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
             role="grid" // if table maintains selection state or allows 2D nav -> use grid
             // see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/table_role#description
         >
-            <caption
-                className={twMerge(
-                    "absolute",
-                    "top-12 right-0 m-2",
-                    "pointer-events-none"
-                )}
-                aria-label="Table Fetch Status"
-            >
-                <FetchstatusIndicator status={props.tablecomdom.query.fetchStatus} />
-            </caption>
             <thead role="rowgroup" aria-label="Table Header">
                 <tr
                     className={twMerge(
@@ -172,26 +162,14 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     )
                 })}
             </tbody>
-            <tfoot role="rowgroup" aria-label="Table Footer">
-                <tr role="row" aria-label="Extra Information">
-                    <td
-                        className={twMerge(breakoutVisibility && Object.keys(rowSelection).length === 1 ? "table-cell" : "hidden")}
-                        colSpan={table.getVisibleLeafColumns().length}
-                    >
-                        <TableBreakout
-                            keys={props.tableselecting?.breakOut?.keys ?? {} as Record<string, string>}
-                            row={table.getSelectedRowModel().flatRows[0]}
-                        />
-                    </td>
-                </tr>
-                <tr role="row" aria-label="Pagination">
-                    <td colSpan={table.getVisibleLeafColumns().length}>
-                        <PaginationDiv
-                            table={table}
-                        />
-                    </td>
-                </tr>
-            </tfoot>
+            <TableFooter 
+                table={table}
+                comdom={props.tablecomdom}
+                breakout={{
+                    breakoutVisibility: breakoutVisibility,
+                    keys: props.tableselecting?.breakOut?.keys ?? {} as Record<string, string>,
+                }}
+            />
         </table>
     )
 }
