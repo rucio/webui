@@ -2,6 +2,7 @@ import { TWebResponse } from './web'
 import { Transform, TransformCallback } from 'stream'
 import { BaseOutputPort, BaseStreamingOutputPort } from './primary-ports'
 import { NextApiResponse } from 'next'
+import { IronSession } from 'iron-session'
 
 /**
  * A base class for presenters.
@@ -13,9 +14,11 @@ export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel>
     implements BaseOutputPort<TResponseModel, TErrorModel>
 {
     response: NextApiResponse
+    session: IronSession | undefined
     
-    constructor(response: NextApiResponse) {
+    constructor(response: NextApiResponse, session?: IronSession) {
         this.response = response
+        this.session = session
     }
 
     /**
