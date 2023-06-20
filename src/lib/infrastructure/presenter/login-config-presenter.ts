@@ -1,21 +1,20 @@
 import { LoginConfigError, LoginConfigResponse } from "@/lib/core/usecase-models/login-config-usecase-models";
-import LoginConfigOutputPort from "@/lib/core/port/primary/login-config-output-port";
+import { LoginConfigOutputPort } from "@/lib/core/port/primary/login-config-ports";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
+import { BasePresenter } from "@/lib/sdk/presenter";
 
 
-export default class LoginConfigPresenter implements LoginConfigOutputPort<NextApiResponse> {
-    response: NextApiResponse;
-    session: IronSession;
+export default class LoginConfigPresenter extends BasePresenter<LoginConfigResponse, LoginConfigError, LoginViewModel> implements LoginConfigOutputPort{
 
-    constructor(session: IronSession, response: NextApiResponse) {
-        this.response = response;
-        this.session = session;
+    constructor(response: NextApiResponse, session?: IronSession) {
+        super(response, session)
+        if(!this.session) throw new Error('Session not initialized');
     }
 
-    async presentSuccess(responseModel: LoginConfigResponse) {
-        const user = this.session.user;
+    convertResponseModelToViewModel(responseModel: LoginConfigResponse): { viewModel: LoginViewModel; status: number; } {
+        const user = this.session?.user;
         let loggedIn = false;
         if (user) {
             loggedIn = user.isLoggedIn;
@@ -30,10 +29,10 @@ export default class LoginConfigPresenter implements LoginConfigOutputPort<NextA
             isLoggedIn: loggedIn,
             rucioAuthHost: responseModel.rucioAuthHost,
         }
-        this.response.status(200).json(viewModel);
+        return { viewModel, status: 200 };
     }
 
-    async presentError(error: LoginConfigError) {
+    convertErrorModelToViewModel(errorModel: LoginConfigError): { viewModel: LoginViewModel; status: number; } {
         const viewModel: LoginViewModel = {
             status: 'error',
             x509Enabled: true,
@@ -42,10 +41,9 @@ export default class LoginConfigPresenter implements LoginConfigOutputPort<NextA
             voList: [],
             oidcProviders: [],
             isLoggedIn: false,
-            message: error.message,
+            message: errorModel.message,
             rucioAuthHost: '',
         }
-        
-        this.response.status(500).json(viewModel);
+        return { viewModel, status: 500 };        
     }
 }

@@ -1,7 +1,6 @@
 import { setEmptySession } from "@/lib/infrastructure/auth/session-utils";
 import appContainer from "@/lib/infrastructure/ioc/container-config";
 import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
-import { ILoginConfigController } from "@/lib/infrastructure/controller/login-config-controller";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { getIronSession } from "iron-session";
 import { createMocks } from "node-mocks-http";
@@ -30,7 +29,10 @@ describe('Login Page Config API Test', () => {
         await setEmptySession(session, true)
 
         const loginConfigController = appContainer.get<ILoginConfigController>(CONTROLLERS.LOGIN_CONFIG)
-        await loginConfigController.getLoginViewModel(session, res);
+        await loginConfigController.execute({
+            session: session,
+            response: res
+        });
 
         expect(res._getStatusCode()).toBe(200);
         const viewModel: LoginViewModel = JSON.parse(res._getData());

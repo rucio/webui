@@ -1,28 +1,20 @@
-import { LoginConfigInputPort } from "@/lib/core/port/primary/login-config-ports";
 import { inject, injectable } from "inversify";
-import { IronSession } from "iron-session";
-import { NextApiResponse } from "next";
 import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factory";
+import { BaseController, TSimpleControllerParameters } from "@/lib/sdk/controller";
+import type TUseCaseFactory from "@/lib/sdk/usecase-factory";
 
-export interface ILoginConfigController {
-    getLoginViewModel(session: IronSession, response: NextApiResponse): void;
-}
-
+export type LoginConfigControllerParams = TSimpleControllerParameters
 
 @injectable()
-class LoginConfigController implements ILoginConfigController {
-    private loginConfigUseCase: LoginConfigInputPort | null = null;
-    private loginConfigUseCaseFactory: (session: IronSession, response: NextApiResponse) => LoginConfigInputPort;
-
-    public constructor(
-        @inject(USECASE_FACTORY.LOGIN_CONFIG) loginConfigUseCaseFactory: (session: IronSession, response: NextApiResponse) => LoginConfigInputPort,
-        ) {
-        this.loginConfigUseCaseFactory = loginConfigUseCaseFactory;
+class LoginConfigController extends BaseController<LoginConfigControllerParams, void > {
+    prepareRequestModel(parameters: TSimpleControllerParameters): void {
+        return;
     }
 
-    async getLoginViewModel(session: IronSession, response: NextApiResponse) {
-        this.loginConfigUseCase = this.loginConfigUseCaseFactory(session, response);
-        await this.loginConfigUseCase.execute();
+    public constructor(
+        @inject(USECASE_FACTORY.LOGIN_CONFIG) loginConfigUseCaseFactory: TUseCaseFactory<void>,
+        ) {
+        super(loginConfigUseCaseFactory);
     }
 }
 
