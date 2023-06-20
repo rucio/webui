@@ -41,6 +41,7 @@ export enum UseComDOMStatus {
  * @returns status {@link UseComDOMStatus}The status of the useComDOM hook, derived from the status of the query and the web worker.
  * @returns comDOMStatus {@link ComDOMStatus} The status of the ComDOM web worker.
  * @returns pollInterval The current poll interval of the query in milliseconds.
+ * @returns request The current HTTP request object used by the ComDOM web worker.
  * @returns errors {@link ComDOMError[]} An array of errors that have occurred.
  * @returns start(url: string = {@link @param url}) A function that starts the ComDOM web worker.
  * @returns pause A function that pauses the query.
@@ -48,6 +49,7 @@ export enum UseComDOMStatus {
  * @returns stop A function that stops the ComDOM web worker. This will also stop the query.
  * @returns resolveError A function that removes an error from the errors array, given the error id. The errors are of type {@link ComDOMError}.
  * @returns resolveAllErrors A function that removes all errors from the errors array.
+ * @returns setRequest A function that sets the current HTTP request object used by the ComDOM web worker.
  */
 
 export default function useComDOM<TData>(
@@ -65,6 +67,7 @@ export default function useComDOM<TData>(
     const [comDOMStatus, setComDOMStatus] = useState<ComDOMStatus>(
         ComDOMStatus.UNKNOWN,
     )
+    const request = useRef<HTTPRequest | null>(null)
 
     const [errors, setErrors] = useState<ComDOMError[]>([])
     const errorId = useRef(0)
@@ -74,6 +77,10 @@ export default function useComDOM<TData>(
     )
     const queryClient = useQueryClient()
     const queryKey = useMemo(() => [queryName], [queryName])
+
+    const setRequest = (req: HTTPRequest) => {
+        request.current = req
+    }
 
     const _log = (...args: any[]) => {
         if (debug) {
@@ -161,20 +168,23 @@ export default function useComDOM<TData>(
         refetchInterval: pollInterval,
     })
 
-    const start = async (request: HTTPRequest | null = null) => {
+    const start = async (req: HTTPRequest | null = null) => {
         try {
-            if (request == null) {
+            if (req == null && request.current == null) {
                 reportError('Attempting to start the background thread without providing a valid HttpRequest', 'Request is null')
                 setStatus(UseComDOMStatus.ERROR)
                 return false
             }
+            if( req == null && request.current != null) {
+                req = request.current
+            }
             _log('Resetting data sink')
             dataSink.current = initialData
-            _log('Starting ComDOM with URL', request?.url.toString())
-            if (request == null) {
+            _log('Starting ComDOM with URL', req?.url.toString())
+            if (req == null) {
                 throw new Error('HTTPRequest for streaming is null')
             }
-            const status = await comDOMWrapper.start(request)
+            const status = await comDOMWrapper.start(req)
             if (!status) {
                 throw new Error('Error starting ComDOM')
             }
@@ -245,6 +255,7 @@ export default function useComDOM<TData>(
         comDOMStatus,
         pollInterval,
         errors,
+        request,
         start,
         stop,
         pause,
@@ -252,5 +263,6 @@ export default function useComDOM<TData>(
         clean,
         resolveError,
         resolveAllErrors,
-    }
+        setRequest,
+    } 
 }
