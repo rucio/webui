@@ -8,7 +8,7 @@ import {
     RSESearchQuery
 } from '@/lib/infrastructure/data/view-model/create-rule'
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { HTTPRequest } from "@/lib/infrastructure/web-worker/comdom-wrapper";
+import { HTTPRequest } from "@/lib/common/http";
 import { useState } from "react";
 import { createDIDMeta } from "test/fixtures/table-fixtures";
 
