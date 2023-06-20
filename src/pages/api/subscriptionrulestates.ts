@@ -3,7 +3,8 @@ import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-ou
 import appContainer from "@/lib/infrastructure/config/ioc/container-config";
 import GATEWAYS from "@/lib/infrastructure/config/ioc/ioc-symbols-gateway";
 import { PassThrough } from "node:stream";
-
+import { Response } from "node-fetch";
+import { HTTPRequest } from "@/lib/common/http";
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -16,7 +17,18 @@ const subscriptionRuleStates= async (req: NextApiRequest, res: NextApiResponse) 
     res.setHeader('X-Accel-Buffering', 'no');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Content-Encoding', 'none');
-    const responseStream: PassThrough | null = await streamingGateway.getJSONChunks(url)
+    const request: HTTPRequest = {
+        method: 'GET',
+        url: url,
+        headers: {
+            'Content-Type': 'application/x-json-stream',
+        }
+    }
+    const responseStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
+    if ( responseStream instanceof Response ) {
+        res.status(responseStream.status).json( await responseStream.json() )
+        return
+    }
     responseStream?.on('data', async (chunk) => {
         res.write(chunk.toString() + '\n')
         await sleep(1000);

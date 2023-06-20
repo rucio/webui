@@ -8,7 +8,7 @@ export type HTTPRequest = {
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
     url: URL | string
     params?: { [key: string]: string }
-    headers?: Headers | { [key: string]: string } | NodeFetchHeaders | null
+    headers?: Headers | { [key: string]: string } | NodeFetchHeaders | HeadersInit | null
     body?: { [key: string]: string } | null
 }
 
