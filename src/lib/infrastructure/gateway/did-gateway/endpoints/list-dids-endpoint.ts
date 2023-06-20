@@ -1,4 +1,4 @@
-import { BaseStreamableEndpoint } from "@/lib/common/base-components/gateway-endpoints"
+import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints"
 import { parseDIDString } from "@/lib/common/did-utils"
 import { HTTPRequest } from "@/lib/common/http"
 import { ListDIDDTO } from "@/lib/core/dto/did-dto"

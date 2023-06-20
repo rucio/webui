@@ -5,8 +5,8 @@ import { ListDIDDTO } from "../dto/did-dto";
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
 import { DID } from "../entity/rucio";
-import { BaseStreamingUseCase } from "@/lib/common/base-components/usecase";
-import { AuthenticatedRequestModel } from "@/lib/common/base-components/usecase-models";
+import { BaseStreamingUseCase } from "@/lib/sdk/usecase";
+import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 
 @injectable()
 class ListDIDsUseCase extends BaseStreamingUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DID> implements ListDIDsInputPort {

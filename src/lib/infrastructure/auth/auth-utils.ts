@@ -1,4 +1,4 @@
-import { BaseDTO } from "@/lib/common/base-components/dto";
+import { BaseDTO } from "@/lib/sdk/dto";
 import { AuthError, RucioTokenExpiredError } from "@/lib/core/exceptions/auth-exceptions";
 import { SessionUser } from "@/lib/core/entity/auth-models";
 import { IronSession } from "iron-session";

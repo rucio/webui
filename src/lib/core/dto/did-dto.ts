@@ -1,4 +1,4 @@
-import { BaseStreamableDTO } from '@/lib/common/base-components/dto'
+import { BaseStreamableDTO } from '@/lib/sdk/dto'
 import { DID } from '@/lib/core/entity/rucio'
 /**
  * Data Transfer Object for ListDIDsEndpoint

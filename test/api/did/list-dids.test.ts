@@ -1,4 +1,4 @@
-import { BaseController } from '@/lib/common/base-components/controller'
+import { BaseController } from '@/lib/sdk/controller'
 import { ListDIDsRequest } from '@/lib/core/usecase-models/list-dids-usecase-models'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers'
