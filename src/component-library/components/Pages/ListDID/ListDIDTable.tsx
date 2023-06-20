@@ -37,7 +37,9 @@ export const ListDIDTable = (
         <StreamedTable
             tablecomdom={tableData}
             tablecolumns={tablecolumns}
-            tablestyling={{}}
+            tablestyling={{
+                tableFooterStack: true,
+            }}
             tableselecting={{
                 handleChange: handleChange,
                 enableRowSelection: true,

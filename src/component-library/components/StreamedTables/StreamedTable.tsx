@@ -16,6 +16,7 @@ type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
         tableHeadRowStyle?: string
         tableBodyRowStyle?: string
         pageSize?: number
+        tableFooterStack?: boolean
     }>
     tableselecting?: {
         handleChange: (data: T[]) => void,
@@ -165,6 +166,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     breakoutVisibility: breakoutVisibility,
                     keys: props.tableselecting?.breakOut?.keys ?? {} as Record<string, string>,
                 }}
+                stacked={props.tablestyling?.tableFooterStack ?? false}
             />
         </table>
     )

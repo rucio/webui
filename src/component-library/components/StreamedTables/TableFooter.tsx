@@ -5,6 +5,13 @@ import { TablePaginationNav } from "./TablePaginationNav";
 import { TableFetchstatus } from "./TableFetchstatus";
 import { TableBreakout } from "./TableBreakout";
 
+/**
+ * @param T the type of the data in the table
+ * @param table the table object
+ * @param comdom the comdom object
+ * @param breakout if breakout is defined, the breakout will be shown
+ * @param stacked if true, the pagination and fetchstatus will be stacked vertically
+ */
 type TableFooterProps<T> = JSX.IntrinsicElements["tfoot"] & {
     table: Table<T>,
     comdom: UseComDOM<T>
@@ -12,6 +19,7 @@ type TableFooterProps<T> = JSX.IntrinsicElements["tfoot"] & {
         breakoutVisibility: boolean,
         keys: Record<string, string>,
     }
+    stacked?: boolean // to save horizontal space
 }
 
 export function TableFooter<T>(props: TableFooterProps<T>) {
@@ -47,7 +55,7 @@ export function TableFooter<T>(props: TableFooterProps<T>) {
                     <div
                         className={twMerge(
                             "relative",
-                            "flex flex-col space-y-1 md:space-y-0 items-center",
+                            !props.stacked ? "flex flex-col space-y-1 md:space-y-0 items-center" : "flex flex-col space-y-1 items-center",
                         )}
                     >
                         <div
@@ -59,8 +67,8 @@ export function TableFooter<T>(props: TableFooterProps<T>) {
                         </div>
                         <TableFetchstatus
                             className={twMerge(
-                                "md:absolute md:inset-y-0 md:right-0",
-                                "w-full md:w-36 lg:w-48"
+                                !props.stacked ? "md:absolute md:inset-y-0 md:right-0 md:w-36 lg:w-48" : "md:space-x-2 md:justify-center md:w-[400px]",
+                                "w-full"
                             )}
                             comdom={props.comdom}
                         />
