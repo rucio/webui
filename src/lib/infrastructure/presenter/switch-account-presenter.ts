@@ -1,4 +1,4 @@
-import { SwitchAccountResponse, SwitchAccountError } from "@/lib/core/data/usecase-models/switch-account-usecase-models";
+import { SwitchAccountResponse, SwitchAccountError } from "@/lib/core/usecase-models/switch-account-usecase-models";
 import SwitchAccountOutputPort from "@/lib/core/port/primary/switch-account-output-port";
 import { NextApiResponse } from "next";
 

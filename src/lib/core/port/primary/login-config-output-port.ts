@@ -1,4 +1,4 @@
-import { LoginConfigResponse, LoginConfigError } from "../../data/usecase-models/login-config-usecase-models";
+import { LoginConfigResponse, LoginConfigError } from "../../usecase-models/login-config-usecase-models";
 
 /**
  * Defines the output port for the login config use case. This interface muse be implemented by the

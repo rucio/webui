@@ -1,7 +1,7 @@
 import { getSessionUserIndex } from "@/lib/infrastructure/auth/session-utils";
 import { injectable } from "inversify";
 import { IronSession } from "iron-session";
-import { SwitchAccountRequest, SwitchAccountResponse } from "../data/usecase-models/switch-account-usecase-models";
+import { SwitchAccountRequest, SwitchAccountResponse } from "../usecase-models/switch-account-usecase-models";
 import { Role, SessionUser } from "../entity/auth-models";
 import SwitchAccountInputPort from "../port/primary/switch-account-input-port";
 import type SwitchAccountOutputPort from "../port/primary/switch-account-output-port";

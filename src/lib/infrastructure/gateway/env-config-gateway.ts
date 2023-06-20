@@ -1,4 +1,4 @@
-import { ConfigNotFound, InvalidConfig } from "@/lib/core/data/env-config-exceptions";
+import { ConfigNotFound, InvalidConfig } from "@/lib/core/exceptions/env-config-exceptions";
 import { OIDCProvider, VO } from "@/lib/core/entity/auth-models";
 import EnvConfigGatewayOutputPort from "@/lib/core/port/secondary/env-config-gateway-output-port";
 import { injectable } from "inversify";

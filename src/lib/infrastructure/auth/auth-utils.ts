@@ -1,5 +1,5 @@
 import { BaseDTO } from "@/lib/common/base-components/dto";
-import { AuthError, RucioTokenExpiredError } from "@/lib/core/data/auth-exceptions";
+import { AuthError, RucioTokenExpiredError } from "@/lib/core/exceptions/auth-exceptions";
 import { SessionUser } from "@/lib/core/entity/auth-models";
 import { IronSession } from "iron-session";
 import { Response } from "node-fetch";

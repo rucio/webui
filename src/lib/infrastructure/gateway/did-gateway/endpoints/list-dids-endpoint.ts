@@ -1,7 +1,7 @@
 import { BaseStreamableEndpoint } from "@/lib/common/base-components/gateway-endpoints"
 import { parseDIDString } from "@/lib/common/did-utils"
 import { HTTPRequest } from "@/lib/common/http"
-import { ListDIDDTO } from "@/lib/core/data/dto/did-dto"
+import { ListDIDDTO } from "@/lib/core/dto/did-dto"
 import { DID, DIDType } from "@/lib/core/entity/rucio"
 import { Response } from "node-fetch"
 

@@ -1,7 +1,7 @@
 import { BaseController, TAuthenticatedControllerParameters } from "@/lib/common/base-components/controller";
-import { ListDIDsRequest } from "@/lib/core/use-case/list-dids/list-dids-usecase-models";
+import { ListDIDsRequest } from "@/lib/core/usecase-models/list-dids-usecase-models";
 import { DIDType } from "@/lib/core/entity/rucio";
-import ListDIDsInputPort from "@/lib/core/use-case/list-dids/list-dids-input-port";
+import { ListDIDsInputPort } from "@/lib/core/port/primary/list-dids-ports";
 import { injectable, inject } from "inversify";
 import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";

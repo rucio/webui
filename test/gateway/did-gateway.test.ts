@@ -1,4 +1,4 @@
-import { ListDIDDTO, DIDDTO } from '@/lib/core/data/dto/did-dto'
+import { ListDIDDTO, DIDDTO } from '@/lib/core/dto/did-dto'
 import { DID, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
