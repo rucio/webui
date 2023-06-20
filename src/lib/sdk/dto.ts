@@ -13,6 +13,10 @@ export type BaseDTO = {
      * An optional string that provides additional information about the API response.
      */
     message?: string;
+    /**
+     * An optional string that provides the type of the error that occurred.
+     */
+    type?: string;
 }
 
 /**

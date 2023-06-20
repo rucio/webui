@@ -20,7 +20,7 @@ import UserPassLoginInputPort from "@/lib/core/port/primary/userpass-login-input
 import UserPassLoginUseCase from "@/lib/core/use-case/userpass-login-usecase";
 import UserPassLoginController, {IUserPassLoginController} from "@/lib/infrastructure/controller/userpass-login-controller";
 import UserPassLoginPresenter from "@/lib/infrastructure/presenter/usepass-login-presenter";
-import LoginConfigInputPort from "@/lib/core/port/primary/login-config-input-port";
+import { LoginConfigInputPort } from "@/lib/core/port/primary/login-config-ports";
 import LoginConfigUseCase from "@/lib/core/use-case/login-config-usecase";
 import LoginConfigPresenter from "@/lib/infrastructure/presenter/login-config-presenter";
 import LoginConfigController, {ILoginConfigController} from "@/lib/infrastructure/controller/login-config-controller";

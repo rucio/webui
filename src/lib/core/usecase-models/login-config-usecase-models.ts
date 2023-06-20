@@ -1,5 +1,5 @@
+import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
 import { OIDCProvider, VO } from "../entity/auth-models";
-import LoginConfigOutputPort from "../port/primary/login-config-output-port";
 
 /**
  * Response Model for {@link LoginConfigOutputPort}
@@ -9,7 +9,7 @@ import LoginConfigOutputPort from "../port/primary/login-config-output-port";
  * @property multiVOEnabled: true if multi vo login is enabled
  * @property voList: List of VOs
  */
-export type LoginConfigResponse = {
+export interface LoginConfigResponse extends BaseResponseModel {
     x509Enabled: boolean;
     oidcEnabled: boolean;
     oidcProviders: OIDCProvider[];
@@ -26,7 +26,7 @@ export type LoginConfigResponse = {
  * 'UnknownError': If the error is not one of the above
  * @property {string} message - Error message
  */
-export type LoginConfigError = {
+export interface LoginConfigError extends BaseErrorResponseModel {
     type: 'InvalidConfig' | 'ConfigNotFound' | 'UnknownError';
     message: string;
 }

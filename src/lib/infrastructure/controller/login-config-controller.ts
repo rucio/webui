@@ -1,4 +1,4 @@
-import LoginConfigInputPort from "@/lib/core/port/primary/login-config-input-port";
+import { LoginConfigInputPort } from "@/lib/core/port/primary/login-config-ports";
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
