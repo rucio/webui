@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { AccountAttributesDTO } from "../data/dto/account-dto";
-import { SetX509LoginSessionError, SetX509LoginSessionRequest, SetX509LoginSessionResponse } from "../data/usecase-models/set-x509-login-session-usecase-models";
+import { AccountAttributesDTO } from "../dto/account-dto";
+import { SetX509LoginSessionError, SetX509LoginSessionRequest, SetX509LoginSessionResponse } from "../usecase-models/set-x509-login-session-usecase-models";
 import { Role, VO } from "../entity/auth-models";
 import SetX509LoginSessionInputPort from "../port/primary/set-x509-login-session-input-port";
 import type SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-session-output-port";

@@ -41,11 +41,11 @@ import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
 import SwitchAccountController, { ISwitchAccountController } from "../../controller/switch-account-controller";
 import SwitchAccountPresenter from "../../presenter/switch-account-presenter";
-import ListDIDsInputPort from "@/lib/core/use-case/list-dids/list-dids-input-port";
-import ListDIDsUseCase from "@/lib/core/use-case/list-dids/list-dids-usecase";
+import { ListDIDsInputPort } from "@/lib/core/port/primary/list-dids-ports";
+import ListDIDsUseCase from "@/lib/core/use-case/list-dids-usecase";
 import ListDIDsController, { ListDIDsControllerParameters } from "../../controller/list-dids-controller";
 import ListDIDsPresenter from "../../presenter/list-dids-presenter";
-import { ListDIDsRequest } from "@/lib/core/use-case/list-dids/list-dids-usecase-models";
+import { ListDIDsRequest } from "@/lib/core/usecase-models/list-dids-usecase-models";
 import { BaseController } from "@/lib/common/base-components/controller";
 
 

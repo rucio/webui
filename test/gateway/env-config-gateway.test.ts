@@ -1,4 +1,4 @@
-import { ConfigNotFound, InvalidConfig } from '@/lib/core/data/env-config-exceptions'
+import { ConfigNotFound, InvalidConfig } from '@/lib/core/exceptions/env-config-exceptions'
 import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port'
 import appContainer from '@/lib/infrastructure/config/ioc/container-config'
 import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'

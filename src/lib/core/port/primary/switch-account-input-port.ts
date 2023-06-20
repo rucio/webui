@@ -1,5 +1,5 @@
 import { IronSession } from "iron-session";
-import { SwitchAccountRequest } from "../../data/usecase-models/switch-account-usecase-models";
+import { SwitchAccountRequest } from "../../usecase-models/switch-account-usecase-models";
 
 /**
  * Provides an interface for the {@link SwitchAccountUseCase}.

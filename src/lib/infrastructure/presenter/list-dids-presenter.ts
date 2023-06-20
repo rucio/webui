@@ -1,12 +1,12 @@
 import {
     ListDIDsError,
     ListDIDsResponse,
-} from '@/lib/core/use-case/list-dids/list-dids-usecase-models'
+} from '@/lib/core/usecase-models/list-dids-usecase-models'
 import { NextApiResponse } from 'next'
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did'
 import { BaseStreamingPresenter } from '@/lib/common/base-components/presenter'
 import { DIDType } from '@/lib/core/entity/rucio'
-import ListDIDsOutputPort from '@/lib/core/use-case/list-dids/list-dids-output-port'
+import { ListDIDsOutputPort } from '@/lib/core/port/primary/list-dids-ports'
 
 export default class ListDIDsPresenter extends BaseStreamingPresenter<ListDIDsResponse, ListDIDsViewModel, ListDIDsError> implements ListDIDsOutputPort {
     response: NextApiResponse<any>

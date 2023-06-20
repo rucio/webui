@@ -1,11 +1,10 @@
 import { injectable } from "inversify";
-import ListDIDsInputPort from "@/lib/core/use-case/list-dids/list-dids-input-port";
-import type ListDIDsOutputPort from "@/lib/core/use-case/list-dids/list-dids-output-port";
+import type { ListDIDsInputPort, ListDIDsOutputPort } from "@/lib/core/port/primary/list-dids-ports";
 import type DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
-import { ListDIDDTO } from "../../data/dto/did-dto";
-import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "./list-dids-usecase-models";
+import { ListDIDDTO } from "../dto/did-dto";
+import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
-import { DID } from "../../entity/rucio";
+import { DID } from "../entity/rucio";
 import { BaseStreamingUseCase } from "@/lib/common/base-components/usecase";
 import { AuthenticatedRequestModel } from "@/lib/common/base-components/usecase-models";
 

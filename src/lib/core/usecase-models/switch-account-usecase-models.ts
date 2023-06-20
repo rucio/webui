@@ -1,4 +1,4 @@
-import { AuthType } from "../../entity/auth-models"
+import { AuthType } from "../entity/auth-models"
 
 /**
  * Switch Account Use Case Models

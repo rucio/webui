@@ -1,4 +1,4 @@
-import { User } from "../../entity/auth-models"
+import { User } from "../entity/auth-models"
 
 /**
  * Response model for SiteHeaderUseCase {@link SiteHeaderUseCase}

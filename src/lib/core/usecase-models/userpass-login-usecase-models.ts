@@ -1,5 +1,5 @@
-import { Role } from "../../entity/auth-models";
-import UserPassLoginOutputPort from "../../port/primary/userpass-login-output-port";
+import { Role } from "../entity/auth-models";
+import UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";
 
 /**
  * RequestModel for {@link UserPassLoginInputPort}

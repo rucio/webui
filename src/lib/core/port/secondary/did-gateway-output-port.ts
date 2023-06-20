@@ -1,4 +1,4 @@
-import { ListDIDDTO, DIDDTO } from "../../data/dto/did-dto";
+import { ListDIDDTO, DIDDTO } from "../../dto/did-dto";
 import { DIDType } from "../../entity/rucio";
 
 

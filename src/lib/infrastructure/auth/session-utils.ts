@@ -1,4 +1,4 @@
-import { RucioTokenExpiredError } from '@/lib/core/data/auth-exceptions'
+import { RucioTokenExpiredError } from '@/lib/core/exceptions/auth-exceptions'
 import { Role, SessionUser } from '@/lib/core/entity/auth-models'
 import { IronSession, unsealData } from 'iron-session'
 import { withIronSessionApiRoute } from 'iron-session/next'
