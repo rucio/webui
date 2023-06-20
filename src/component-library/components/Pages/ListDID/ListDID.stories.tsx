@@ -2,8 +2,7 @@ import { DIDName, DIDSearchResponse } from '@/lib/infrastructure/data/view-model
 
 import { StoryFn, Meta } from '@storybook/react';
 import { ListDID as LD } from './ListDID';
-import { DID } from '@/lib/core/entity/rucio';
-import { createDIDMeta, createRandomDIDLong } from 'test/fixtures/table-fixtures';
+import { createDIDMeta, createDID, mockUseComDOM } from 'test/fixtures/table-fixtures';
 
 export default {
     title: 'Components/Pages/ListDID',
@@ -14,11 +13,7 @@ const Template: StoryFn<typeof LD> = (args) => <LD {...args} />;
 
 export const ListDID = Template.bind({});
 ListDID.args = {
-    didSearch: (didSearchQuery: any) => { },
-    didResponse: {
-        data: Array.from({length: 100}, (_, i) => createRandomDIDLong() as DID),
-        fetchStatus: "idle",
-    } as DIDSearchResponse,
+    comdom: mockUseComDOM(Array.from({length: 100}, () => createDID())),
     didMetaQuery: (did: DIDName) => { },
     didMetaQueryResponse: createDIDMeta()
 }
