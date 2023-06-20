@@ -8,6 +8,8 @@ import {
     RSESearchQuery
 } from '@/lib/infrastructure/data/view-model/create-rule'
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
+import { HTTPRequest } from "@/lib/infrastructure/web-worker/comdom-wrapper";
+import { useEffect } from "react";
 
 
 export default function CreateRule() {
@@ -38,40 +40,29 @@ export default function CreateRule() {
 
 
     const DIDSearchComDOM = useComDOM<DIDLong>(
-        'http://localhost:3000/api/listdids',
+        'create-rule-page-did-query',
         [],
         false,
         Infinity,
-        200,
+        50,
         true
     )
 
     const RSEComDOM = useComDOM<RSEAccountUsageLimit>(
-        'http://localhost:3000/api/rseaccountusage',
+        'create-rule-page-rse-query',
         [],
         false,
         Infinity,
-        200,
+        50,
         true
     )
-
 
     return (
         <CreateRuleStory
             onSubmit={onSubmit}
-            didSearch={async (didSearchQuery: DIDSearchQuery) => await DIDSearchComDOM.start()}
-            didResponse={
-                {
-                    data: DIDSearchComDOM.query.data,
-                    fetchStatus: DIDSearchComDOM.query.fetchStatus
-                }
-            }
             didValidation={didValidation}
-            rseSearch={async (rseSearchQuery: RSESearchQuery) => await RSEComDOM.start()}
-            rseResponse={{
-                data: RSEComDOM.query.data,
-                fetchStatus: RSEComDOM.query.fetchStatus
-            }}
+            didListComDOM={DIDSearchComDOM}
+            rseListComDOM={RSEComDOM}
         />
     )
 }

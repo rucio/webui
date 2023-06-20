@@ -14,6 +14,7 @@ import { Label } from "../../Text/Content/Label"
 import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
 import { SummaryPage } from './SummaryPage';
+import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 
 var format = require("date-format")
 
@@ -35,16 +36,15 @@ import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';
 import { didToScopename } from '../../StreamedTables/helpers';
 import { CreateRuleRSETable } from './CreateRuleRSETable';
+import { HTTPRequest } from '@/lib/infrastructure/web-worker/comdom-wrapper';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
-    didSearch: (didSearchQuery: DIDSearchQuery) => void,
-    didResponse: DIDSearchResponse,
+    didListComDOM: UseComDOM<DIDLong>,
     // Page 0.1 - DID Validation
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
     // Page 1 - RSE Selection
-    rseSearch: (rseSearchQuery: RSESearchQuery) => void,
-    rseResponse: RSESearchResponse,
+    rseListComDOM: UseComDOM<RSEAccountUsageLimit>,
     // Page 3 - Sendoff
     onSubmit: (createRuleQuery: CreateRuleQuery) => Promise<CreateRuleResponse>
 }
@@ -121,16 +121,20 @@ export const CreateRule = (
         }
     }, [Page0State.typedDIDs, Page0State.searchDIDSelection])
 
-    const page0DIDSearch = (event: any, explicitDIDSearchExpression?: string) => {
+    const page0DIDSearch = async (event: any, explicitDIDSearchExpression?: string) => {
         let DIDSearchString = explicitDIDSearchExpression ? explicitDIDSearchExpression : Page0State.selectDIDDataPattern
-
-        // build query
-        const DIDSearchQuery: DIDSearchQuery = {
-            DIDSearchString: DIDSearchString,
+        // build request for comdom
+        const request: HTTPRequest = {
+            url: new URL("http://localhost:3000/api/listdids"),
+            method: "GET",
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            } as HeadersInit),
+            body: null,
         }
-
-        // execute query
-        const DIDSearchResponse = props.didSearch(DIDSearchQuery)
+        // run query
+        await props.didListComDOM.setRequest(request)
+        await props.didListComDOM.start()
     }
 
     const page0nextFunction = (event: any) => {
@@ -179,15 +183,21 @@ export const CreateRule = (
         }
     }, [Page1State.RSESelection])
 
-    const page1RSESearch = (event: any, explicitRSEExpression?: string) => {
+    const page1RSESearch = async (event: any, explicitRSEExpression?: string) => {
         // sometimes the state has not updated yet, so use explicitly passed RSEExpr
         var RSEExpression = explicitRSEExpression ? explicitRSEExpression : Page1State.RSEExpression
-        // build query
-        const RSESearchQuery: RSESearchQuery = {
-            RSEExpression: RSEExpression
+        // build request for comdom
+        const request: HTTPRequest = {
+            url: new URL("http://localhost:3000/api/rseaccountusage"),
+            method: "GET",
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            } as HeadersInit),
+            body: null,
         }
-        // execute query
-        const RSESearchResponse = props.rseSearch(RSESearchQuery)
+        // run query
+        await props.rseListComDOM.setRequest(request)
+        await props.rseListComDOM.start()
     }
 
     /* =================================================
@@ -266,11 +276,7 @@ export const CreateRule = (
                                 </div>
                             </div>
                             <CreateRuleDIDTable
-                                tableData={{
-                                    data: props.didResponse.data,
-                                    fetchStatus: props.didResponse.fetchStatus,
-                                    pageSize: 10
-                                }}
+                                comdom={props.didListComDOM}
                                 handleChange={(data: DIDLong[]) => {setPage0State({...Page0State, searchDIDSelection: data})}}
                             />
                         </div>
@@ -322,11 +328,7 @@ export const CreateRule = (
                             </div>
                         </div>
                         <CreateRuleRSETable
-                            tableData={{
-                                data: props.rseResponse.data,
-                                fetchStatus: props.rseResponse.fetchStatus,
-                                pageSize: 10
-                            }}
+                            comdom={props.rseListComDOM}
                             handleChange={(data: RSEAccountUsageLimit[]) => { setPage1State({ ...Page1State, RSESelection: data }) }}
                             askApproval={Page1State.askForApproval}
                         />

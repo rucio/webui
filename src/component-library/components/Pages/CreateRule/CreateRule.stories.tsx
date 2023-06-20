@@ -1,6 +1,6 @@
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models'
 import { StoryFn, Meta } from '@storybook/react'
-import { createRandomDIDLong, createRSEAccountUsageLimit } from 'test/fixtures/table-fixtures'
+import { createRandomDIDLong, createRSEAccountUsageLimit, mockUseComDOM } from 'test/fixtures/table-fixtures'
 
 import { CreateRule } from './CreateRule'
 import {
@@ -25,13 +25,7 @@ CreateRulePage.args = {
             success: true,
         })
     },
-    didSearch: (query: DIDSearchQuery) => {
-        console.log(query)
-    },
-    didResponse: {
-        data: Array.from({ length: 100 }, (_, i) => createRandomDIDLong()),
-        fetchStatus: "idle",
-    } as DIDSearchResponse,
+    didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => createRandomDIDLong())),
     didValidation: (query: TypedDIDValidationQuery) => {
         // if the DID contains the string "error", it will be added to the error list
         var localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] }
@@ -48,11 +42,5 @@ CreateRulePage.args = {
             return Promise.reject(localErrorDIDs)
         }
     },
-    rseSearch: (query: RSESearchQuery) => {
-        console.log("RSE Search Query: ", query)
-    },
-    rseResponse: {
-        data: Array.from({ length: 100 }, (_, i) => createRSEAccountUsageLimit()),
-        fetchStatus: "idle",
-    } as RSESearchResponse,
+    rseListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => createRSEAccountUsageLimit())),
 }
