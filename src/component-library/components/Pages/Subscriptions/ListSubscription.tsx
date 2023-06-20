@@ -1,9 +1,7 @@
 import { SubscriptionRuleStates } from "@/lib/core/entity/rucio";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { twMerge } from "tailwind-merge";
 import { H3 } from "../../Text/Headings/H3";
 import { P } from "../../Text/Content/P";
-import { Tabs } from "../../Tabs/Tabs";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
@@ -11,9 +9,10 @@ import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { RuleStateTag } from "../../Tags/RuleStateTag";
 import { RuleState } from "@/lib/core/entity/rucio";
 import { useState, useEffect } from "react";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export interface ListSubscriptionProps {
-    subscriptions: TableData<SubscriptionRuleStates>
+    comdom: UseComDOM<SubscriptionRuleStates>
 }
 
 export const ListSubscription = (
@@ -218,7 +217,7 @@ export const ListSubscription = (
                 )}
             >
                 <StreamedTable<SubscriptionRuleStates>
-                    tabledata={props.subscriptions}
+                    tablecomdom={props.comdom}
                     tablecolumns={tablecolumns}
                     tablestyling={{
                         visibility: {
