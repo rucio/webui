@@ -4,7 +4,7 @@ import type SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
-import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
+import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
 export interface ISwitchAccountController {
     handle(session: IronSession, response: NextApiResponse, rucioIdentity: string, rucioAccount: string, rucioAuthType: AuthType, redirectTo: string): Promise<void>;

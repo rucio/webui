@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http';
-import appContainer from '@/lib/infrastructure/config/ioc/container-config';
+import appContainer from '@/lib/infrastructure/ioc/container-config';
 import { IUserPassLoginController } from '@/lib/infrastructure/controller/userpass-login-controller';
-import CONTROLLERS from '@/lib/infrastructure/config/ioc/ioc-symbols-controllers';
+import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { NextApiResponse } from 'next';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 import { getIronSession } from 'iron-session';

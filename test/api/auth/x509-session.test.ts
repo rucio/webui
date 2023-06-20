@@ -1,9 +1,9 @@
 import { setEmptySession } from "@/lib/infrastructure/auth/session-utils";
 import { getIronSession } from "iron-session";
 import { createMocks } from "node-mocks-http";
-import appContainer from "@/lib/infrastructure/config/ioc/container-config";
+import appContainer from "@/lib/infrastructure/ioc/container-config";
 import { ISetX509LoginSessionController } from "@/lib/infrastructure/controller/set-x509-login-session-controller";
-import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers";
+import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
 import { AuthViewModel } from "@/lib/infrastructure/data/auth/auth";
 import { Role } from "@/lib/core/entity/auth-models";
 

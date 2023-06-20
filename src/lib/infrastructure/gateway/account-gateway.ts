@@ -2,7 +2,7 @@ import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, TAccountAttributes
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import type EnvConfigGatewayOutputPort from "@/lib/core/port/secondary/env-config-gateway-output-port";
 import { inject, injectable } from "inversify";
-import GATEWAYS from "../config/ioc/ioc-symbols-gateway";
+import GATEWAYS from "../ioc/ioc-symbols-gateway";
 
 @injectable()
 export default class RucioAccountGateway implements AccountGatewayOutputPort {

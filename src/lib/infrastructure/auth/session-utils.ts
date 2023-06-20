@@ -5,7 +5,7 @@ import { withIronSessionApiRoute } from 'iron-session/next'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { ReadonlyRequestCookies } from 'next/dist/server/app-render'
 import { RequestCookies } from 'next/dist/server/web/spec-extension/cookies'
-import { sessionOptions } from '../config/session'
+import { sessionOptions } from './session'
 import { validateRucioToken } from './auth-utils'
 
 /**

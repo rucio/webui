@@ -1,9 +1,9 @@
 import "reflect-metadata"
 import { NextApiRequest, NextApiResponse } from "next"
 import { withSessionRoute } from "@/lib/infrastructure/auth/session-utils"
-import appContainer from "@/lib/infrastructure/config/ioc/container-config"
+import appContainer from "@/lib/infrastructure/ioc/container-config"
 import { IUserPassLoginController } from "@/lib/infrastructure/controller/userpass-login-controller"
-import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers"
+import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers"
 
 async function userpassAuthRoute(req: NextApiRequest, res: NextApiResponse) {
     const { username, password, account, vo } = req.body

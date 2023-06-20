@@ -1,4 +1,4 @@
-import { SessionUser } from "@/lib/core/entity/auth-models";
+import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
 import { addOrUpdateSessionUser, removeSessionUser, setActiveSessionUser, setEmptySession } from "@/lib/infrastructure/auth/session-utils";
 import { getIronSession, IronSession } from "iron-session";
 import { createMocks } from "node-mocks-http";
@@ -30,7 +30,8 @@ describe('IronSession tests', () => {
             rucioAccount: 'root',
             rucioAuthToken: 'rucio-ddmlab-askdjljioj',
             rucioAuthTokenExpires: '2021-09-01T12:00:00Z',
-            rucioAuthType: 'userpass',
+            rucioAuthType: AuthType.x509,
+            role: Role.ADMIN,
             rucioOIDCProvider: 'cern',
             rucioVO: 'def',
             isLoggedIn: true
@@ -70,7 +71,8 @@ describe('IronSession tests', () => {
             rucioAuthTokenExpires: '2021-09-01T12:00:00Z',
             rucioAccount: 'root',
             rucioIdentity: 'ddmlab',
-            rucioAuthType: 'userpass',
+            rucioAuthType: AuthType.USERPASS,
+            role: Role.ADMIN,
             rucioVO: 'def',
             rucioOIDCProvider: null,
             isLoggedIn: true
@@ -81,7 +83,8 @@ describe('IronSession tests', () => {
             rucioAuthTokenExpires: '2022-10-01T12:00:00Z',
             rucioAccount: 'root',
             rucioIdentity: 'ddmlab',
-            rucioAuthType: 'x509',
+            rucioAuthType: AuthType.x509,
+            role: Role.ADMIN,
             rucioVO: 'def',
             rucioOIDCProvider: null,
             isLoggedIn: true
@@ -122,7 +125,8 @@ describe('IronSession tests', () => {
             rucioAuthTokenExpires: '2021-09-01T12:00:00Z',
             rucioAccount: 'root',
             rucioIdentity: 'ddmlab',
-            rucioAuthType: 'userpass',
+            rucioAuthType: AuthType.USERPASS,
+            role: Role.USER,
             rucioOIDCProvider: null,
             rucioVO: 'def',
             isLoggedIn: true
@@ -133,7 +137,8 @@ describe('IronSession tests', () => {
             rucioAuthTokenExpires: '2022-11-01T12:00:00Z',
             rucioAccount: 'root',
             rucioIdentity: 'autre',
-            rucioAuthType: 'userpass',
+            rucioAuthType: AuthType.USERPASS,
+            role: Role.USER,
             rucioOIDCProvider: null,
             rucioVO: 'def',
             isLoggedIn: true

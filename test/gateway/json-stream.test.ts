@@ -1,7 +1,7 @@
 import type { HTTPRequest } from '@/lib/common/http'
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port'
-import appContainer from '@/lib/infrastructure/config/ioc/container-config'
-import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
+import appContainer from '@/lib/infrastructure/ioc/container-config'
+import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway'
 import { PassThrough } from 'node:stream'
 import { Response } from 'node-fetch'
 

@@ -1,6 +1,6 @@
 import { setEmptySession } from "@/lib/infrastructure/auth/session-utils";
-import appContainer from "@/lib/infrastructure/config/ioc/container-config";
-import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers";
+import appContainer from "@/lib/infrastructure/ioc/container-config";
+import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
 import { ILoginConfigController } from "@/lib/infrastructure/controller/login-config-controller";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { getIronSession } from "iron-session";
