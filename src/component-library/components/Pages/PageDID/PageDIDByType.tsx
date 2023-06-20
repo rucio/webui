@@ -1,4 +1,3 @@
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { DIDContents } from "@/lib/infrastructure/data/view-model/page-did";
 import { twMerge } from "tailwind-merge";
 import { createColumnHelper } from "@tanstack/react-table"
@@ -10,14 +9,14 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { HiDotsHorizontal } from "react-icons/hi"
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const PageDIDByType = (
     props: {
-        tableData: TableData<DIDContents>,
+        comdom: UseComDOM<DIDContents>,
         showDIDType?: boolean,
     }
 ) => {
-    const tableData = props.tableData
     const columnHelper = createColumnHelper<DIDContents>()
     const tablecolumns: any[] = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
@@ -57,7 +56,7 @@ export const PageDIDByType = (
 
     return (
         <StreamedTable
-            tabledata={tableData}
+            tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{}}
         />

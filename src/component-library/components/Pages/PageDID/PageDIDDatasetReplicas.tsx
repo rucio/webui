@@ -1,5 +1,4 @@
 import { DIDDatasetReplicas } from "@/lib/infrastructure/data/view-model/page-did";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { twMerge } from "tailwind-merge";
 import { createColumnHelper } from "@tanstack/react-table"
 import { useEffect, useState } from "react"
@@ -12,41 +11,11 @@ import { RSETag } from "../../Tags/RSETag";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
-
-type ReducedReplicaState = "Available" | "Unavailable"
-
-const Titletd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
-    const { className, ...otherprops } = props
-    return (
-        <td
-            className={twMerge(
-                "font-bold w-32 pl-1 dark:text-white",
-                className ?? ""
-            )}
-            {...otherprops}
-        >
-            {props.children}
-        </td>
-    )
-}
-const Contenttd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
-    const { className, ...otherprops } = props
-    return (
-        <td
-            className={twMerge(
-                "break-all dark:text-gray-100",
-                className ?? ""
-            )}
-            {...otherprops}
-        >
-            {props.children}
-        </td>
-    )
-}
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const PageDIDDatasetReplicas = (
     props: {
-        tableData: TableData<DIDDatasetReplicas>;
+        comdom: UseComDOM<DIDDatasetReplicas>;
     }
 ) => {
     const columnHelper = createColumnHelper<DIDDatasetReplicas>()
@@ -234,8 +203,8 @@ export const PageDIDDatasetReplicas = (
 
 
     return (
-        <StreamedTable
-            tabledata={props.tableData}
+        <StreamedTable<DIDDatasetReplicas>
+            tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{
                 visibility: {

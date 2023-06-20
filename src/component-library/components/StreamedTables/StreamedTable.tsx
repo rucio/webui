@@ -1,14 +1,10 @@
-import { StyleMetaColumnDef, TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
+import { StyleMetaColumnDef } from "@/lib/infrastructure/data/view-model/streamedtables";
 import {
-    ColumnDef, createColumnHelper, flexRender, getCoreRowModel,
-    getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-    RowSelectionState,
-    useReactTable
+    flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
+    getSortedRowModel, RowSelectionState, useReactTable
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { TablePaginationNav } from "./TablePaginationNav";
-import { TableBreakout } from "./TableBreakout";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { TableFooter } from "./TableFooter";
 
@@ -97,7 +93,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
             )}
             {...otherprops}
             role="grid" // if table maintains selection state or allows 2D nav -> use grid
-            // see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/table_role#description
+        // see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/table_role#description
         >
             <thead role="rowgroup" aria-label="Table Header">
                 <tr
@@ -162,7 +158,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     )
                 })}
             </tbody>
-            <TableFooter 
+            <TableFooter
                 table={table}
                 comdom={props.tablecomdom}
                 breakout={{

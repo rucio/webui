@@ -13,13 +13,13 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown.stories";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const PageDIDRules = (
     props: {
-        tableData: TableData<DIDRules>
+        comdom: UseComDOM<DIDRules>
     }
 ) => {
-    const tableData = props.tableData
     const columnHelper = createColumnHelper<DIDRules>()
     const tablecolumns: any[] = [
         columnHelper.accessor("id", {
@@ -166,7 +166,7 @@ export const PageDIDRules = (
 
     return (
         <StreamedTable<DIDRules>
-            tabledata={tableData}
+            tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{
                 visibility: {

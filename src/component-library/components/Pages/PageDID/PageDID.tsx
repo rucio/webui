@@ -18,34 +18,31 @@ import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
 import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
 import { PageDIDRules } from "./PageDIDRules";
-import { DIDContents } from "@/lib/infrastructure/data/view-model/page-did";
+import {
+    DIDContents, DIDDatasetReplicas, DIDKeyValuePairs, DIDParents, DIDRules,
+    FilereplicaState, FilereplicaStateD
+} from "@/lib/infrastructure/data/view-model/page-did";
 import { PageDIDByType } from "./PageDIDByType";
 import { PageDIDDatasetReplicas } from "./PageDIDDatasetReplicas";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export interface PageDIDPageProps {
     didMeta: DIDMeta;
     fromDidList?: string; // if coming from DIDList, this will be the DIDList's query
     // Parent DIDs [FILE]
-    didParentsSearch: (didSearchQuery: DIDSearchQuery) => void
-    didParentsResponse: { data: any; fetchStatus: FetchStatus }
+    didParentsComDOM: UseComDOM<DIDParents>
     // Metadata [BOTH]
-    didMetadataSearch: (didSearchQuery: DIDSearchQuery) => void
-    didMetadataResponse: { data: any; fetchStatus: FetchStatus }
+    didMetadataComDOM: UseComDOM<DIDKeyValuePairs>
     // File Replica States [FILE]
-    didFileReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
-    didFileReplicasResponse: { data: any; fetchStatus: FetchStatus }
+    didFileReplicasComDOM: UseComDOM<FilereplicaState>
     // File Replica States [DATASET]
-    didFileReplicasDatasetSearch: (didSearchQuery: DIDSearchQuery) => void
-    didFileReplicasDatasetResponse: { data: any; fetchStatus: FetchStatus }
+    didFileReplicasDComDOM: UseComDOM<FilereplicaStateD>
     // Rule State [DATASET]
-    didRulesSearch: (didSearchQuery: DIDSearchQuery) => void
-    didRulesResponse: { data: any; fetchStatus: FetchStatus }
+    didRulesComDOM: UseComDOM<DIDRules>
     // Contents [COLLECTION]
-    didContentsSearch: (didSearchQuery: DIDSearchQuery) => void
-    didContentsResponse: { data: DIDContents[]; fetchStatus: FetchStatus }
+    didContentsComDOM: UseComDOM<DIDContents>
     // Dataset Replica States [DATASET]
-    didDatasetReplicasSearch: (didSearchQuery: DIDSearchQuery) => void
-    didDatasetReplicasResponse: { data: any; fetchStatus: FetchStatus }
+    didDatasetReplicasComDOM: UseComDOM<DIDDatasetReplicas>
 }
 
 
@@ -132,47 +129,25 @@ export const PageDID = (
                     show={didtype === DIDType.File ? false : didtype === DIDType.Dataset ? subpageIndex === 0 : subpageIndex === 1}
                     id="subpage-rules"
                 >
-                    <PageDIDRules tableData={{
-                        data: props.didRulesResponse.data,
-                        fetchStatus: props.didRulesResponse.fetchStatus,
-                        pageSize: 10
-                    }}
-                    />
+                    <PageDIDRules comdom={props.didRulesComDOM} />
                 </SubPage>
                 <SubPage
                     show={didtype === DIDType.File ? false : didtype === DIDType.Dataset ? subpageIndex === 1 : false}
                     id="subpage-dataset-replicas"
                 >
-                    <PageDIDDatasetReplicas tableData={{
-                        data: props.didDatasetReplicasResponse.data,
-                        fetchStatus: props.didDatasetReplicasResponse.fetchStatus,
-                        pageSize: 10
-                    }} />
+                    <PageDIDDatasetReplicas comdom={props.didDatasetReplicasComDOM} />
                 </SubPage>
                 <SubPage
                     show={didtype === DIDType.File ? subpageIndex === 0 : didtype === DIDType.Dataset ? subpageIndex === 2 : false}
                     id="subpage-file-replica-states"
                 >
                     <div className={twMerge(didtype === DIDType.File ? "block" : "hidden")}>
-                        <PageDIDFilereplicas tableData={{
-                            data: props.didFileReplicasResponse.data,
-                            fetchStatus: props.didFileReplicasResponse.fetchStatus,
-                            pageSize: 10
-                        }}
-                        />
+                        <PageDIDFilereplicas comdom={props.didFileReplicasComDOM} />
                     </div>
                     <div className={twMerge(didtype === DIDType.Dataset ? "block" : "hidden")}>
                         <PageDIDFilereplicasD
-                            replicaTableData={{
-                                data: props.didFileReplicasResponse.data,
-                                fetchStatus: props.didFileReplicasResponse.fetchStatus,
-                                pageSize: 10
-                            }}
-                            datasetTableData={{
-                                data: props.didFileReplicasDatasetResponse.data,
-                                fetchStatus: props.didFileReplicasDatasetResponse.fetchStatus,
-                                pageSize: 10
-                            }}
+                            replicaComDOM={props.didFileReplicasComDOM}
+                            datasetComDOM={props.didFileReplicasDComDOM}
                             onChangeDatasetSelection={(dataset: string) => { console.log("datasetSelection", dataset) }}
                         />
 
@@ -182,31 +157,19 @@ export const PageDID = (
                     show={didtype === DIDType.File ? subpageIndex === 1 : false}
                     id="subpage-parent-dids"
                 >
-                    <PageDIDByType tableData={{
-                        data: props.didParentsResponse.data,
-                        fetchStatus: props.didParentsResponse.fetchStatus,
-                        pageSize: 10
-                    }} />
+                    <PageDIDByType comdom={props.didParentsComDOM} />
                 </SubPage>
                 <SubPage
                     show={didtype === DIDType.File ? subpageIndex === 2 : didtype === DIDType.Dataset ? subpageIndex === 3 : subpageIndex === 2}
                     id="subpage-metadata"
                 >
-                    <PageDIDMetadata tableData={{
-                        data: props.didMetadataResponse.data,
-                        fetchStatus: props.didMetadataResponse.fetchStatus,
-                        pageSize: 10
-                    }} />
+                    <PageDIDMetadata comdom={props.didMetadataComDOM} />
                 </SubPage>
                 <SubPage
                     show={didtype === DIDType.Container ? subpageIndex === 0 : false}
                     id="subpage-contents"
                 >
-                    <PageDIDByType showDIDType tableData={{
-                        data: props.didContentsResponse.data,
-                        fetchStatus: props.didContentsResponse.fetchStatus,
-                        pageSize: 10
-                    }} />
+                    <PageDIDByType showDIDType comdom={props.didContentsComDOM} />
                 </SubPage>
 
             </div>

@@ -7,22 +7,22 @@ import { createColumnHelper } from "@tanstack/react-table"
 import { twMerge } from "tailwind-merge"
 
 // Viewmodels etc
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { FilereplicaStateD } from "@/lib/infrastructure/data/view-model/page-did";
 import { FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 
 
 export const PageDIDFilereplicasD = (
     props: {
-        datasetTableData: TableData<FilereplicaStateD>,
-        replicaTableData: TableData<FilereplicaState>,
+        datasetComDOM: UseComDOM<FilereplicaStateD>,
+        replicaComDOM: UseComDOM<FilereplicaState>,
         onChangeDatasetSelection: (selected: string) => void,
     }
 ) => {
-    const { datasetTableData, replicaTableData, onChangeDatasetSelection } = props
+    const { datasetComDOM, replicaComDOM, onChangeDatasetSelection } = props
     const columnHelper = createColumnHelper<FilereplicaStateD>()
     const tablecolumns: any[] = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
@@ -52,7 +52,7 @@ export const PageDIDFilereplicasD = (
                 )}
             >
                 <StreamedTable
-                    tabledata={datasetTableData}
+                    tablecomdom={datasetComDOM}
                     tablecolumns={tablecolumns}
                     tablestyling={{}}
                     tableselecting={{
@@ -61,7 +61,7 @@ export const PageDIDFilereplicasD = (
                         enableMultiRowSelection: false
                     }}
                 />
-                <PageDIDFilereplicas tableData={replicaTableData} />
+                <PageDIDFilereplicas comdom={replicaComDOM} />
             </div>
         </div>
     )

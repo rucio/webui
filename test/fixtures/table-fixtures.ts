@@ -17,6 +17,7 @@ export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
             data: data,
             fetchStatus: "idle",
         },
+        start: () => { },
         resume: () => { },
         pause: () => { },
     } as UseComDOM<T>
