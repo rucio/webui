@@ -4,7 +4,7 @@ import {
 } from '@/lib/core/usecase-models/list-dids-usecase-models'
 import { NextApiResponse } from 'next'
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did'
-import { BaseStreamingPresenter } from '@/lib/common/base-components/presenter'
+import { BaseStreamingPresenter } from '@/lib/sdk/presenter'
 import { DIDType } from '@/lib/core/entity/rucio'
 import { ListDIDsOutputPort } from '@/lib/core/port/primary/list-dids-ports'
 

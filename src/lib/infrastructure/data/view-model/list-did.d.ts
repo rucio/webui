@@ -1,4 +1,4 @@
-import { BaseViewModel } from "@/lib/common/base-components/view-models";
+import { BaseViewModel } from "@/lib/sdk/view-models";
 import { ListDIDsResponse } from "@/lib/core/usecase-models/list-dids-usecase-models";
 import { DID } from "@/lib/core/entity/rucio";
 

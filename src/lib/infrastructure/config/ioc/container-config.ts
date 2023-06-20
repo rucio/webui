@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-output-port";
-import StreamingGateway from "../../../common/base-components/streaming-gateway";
+import StreamingGateway from "../../../sdk/streaming-gateway";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import RucioAccountGateway from "../../gateway/account-gateway";
 import DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
@@ -46,7 +46,7 @@ import ListDIDsUseCase from "@/lib/core/use-case/list-dids-usecase";
 import ListDIDsController, { ListDIDsControllerParameters } from "../../controller/list-dids-controller";
 import ListDIDsPresenter from "../../presenter/list-dids-presenter";
 import { ListDIDsRequest } from "@/lib/core/usecase-models/list-dids-usecase-models";
-import { BaseController } from "@/lib/common/base-components/controller";
+import { BaseController } from "@/lib/sdk/controller";
 
 
 /**
