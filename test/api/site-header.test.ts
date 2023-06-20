@@ -1,7 +1,7 @@
 import { SessionUser } from "@/lib/core/entity/auth-models";
 import { addOrUpdateSessionUser, setEmptySession } from "@/lib/infrastructure/auth/session-utils";
-import appContainer from "@/lib/infrastructure/config/ioc/container-config";
-import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers";
+import appContainer from "@/lib/infrastructure/ioc/container-config";
+import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
 import { ISiteHeaderController } from "@/lib/infrastructure/controller/site-header-controller";
 import { SiteHeaderViewModel } from "@/lib/infrastructure/data/view-model/site-header";
 import { getIronSession } from "iron-session";

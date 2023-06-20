@@ -3,7 +3,7 @@ import UserPassLoginInputPort from "@/lib/core/port/primary/userpass-login-input
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
-import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
+import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
 /**
  * Declares an interface to initiate the UserPassLogin workflow via the {@link UserPassLoginUseCase}

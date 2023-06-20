@@ -1,8 +1,8 @@
 import { ListDIDDTO, DIDDTO } from '@/lib/core/dto/did-dto'
 import { DID, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
-import appContainer from '@/lib/infrastructure/config/ioc/container-config'
-import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
+import appContainer from '@/lib/infrastructure/ioc/container-config'
+import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway'
 import { Readable } from 'stream'
 
 describe('DID Gateway Tests', () => {

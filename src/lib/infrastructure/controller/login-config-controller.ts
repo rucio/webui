@@ -2,7 +2,7 @@ import LoginConfigInputPort from "@/lib/core/port/primary/login-config-input-por
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
-import USECASE_FACTORY from "@/lib/infrastructure/config/ioc/ioc-symbols-usecase-factory";
+import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factory";
 
 export interface ILoginConfigController {
     getLoginViewModel(session: IronSession, response: NextApiResponse): void;

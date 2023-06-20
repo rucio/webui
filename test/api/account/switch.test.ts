@@ -1,7 +1,7 @@
 import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
 import { addOrUpdateSessionUser } from "@/lib/infrastructure/auth/session-utils";
-import appContainer from "@/lib/infrastructure/config/ioc/container-config";
-import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers";
+import appContainer from "@/lib/infrastructure/ioc/container-config";
+import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
 import { ISwitchAccountController } from "@/lib/infrastructure/controller/switch-account-controller";
 import { getIronSession } from "iron-session";
 import { createMocks } from "node-mocks-http";

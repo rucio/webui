@@ -1,4 +1,3 @@
-import { HTTPRequest } from '@/lib/common/http'
 import { DIDDTO, ListDIDDTO } from '@/lib/core/dto/did-dto'
 import { DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'

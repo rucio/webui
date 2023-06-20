@@ -1,7 +1,7 @@
 import { AccountAttributeErrorTypesDTO, AccountAttributesDTO } from "@/lib/core/dto/account-dto";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
-import appContainer from "@/lib/infrastructure/config/ioc/container-config";
-import GATEWAYS from "@/lib/infrastructure/config/ioc/ioc-symbols-gateway";
+import appContainer from "@/lib/infrastructure/ioc/container-config";
+import GATEWAYS from "@/lib/infrastructure/ioc/ioc-symbols-gateway";
 import { getIronSession } from "iron-session";
 import { createMocks } from "node-mocks-http";
 

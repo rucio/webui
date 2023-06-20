@@ -2,7 +2,7 @@ import SiteHeaderInputPort from "@/lib/core/port/primary/site-header-input-port"
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiRequest, NextApiResponse } from "next";
-import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
+import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
 export interface ISiteHeaderController {
     handle(session: IronSession, response: NextApiResponse): Promise<void>;

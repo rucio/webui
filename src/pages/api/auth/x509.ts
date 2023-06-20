@@ -1,6 +1,6 @@
 import { withSessionRoute } from "@/lib/infrastructure/auth/session-utils";
-import appContainer from "@/lib/infrastructure/config/ioc/container-config";
-import CONTROLLERS from "@/lib/infrastructure/config/ioc/ioc-symbols-controllers";
+import appContainer from "@/lib/infrastructure/ioc/container-config";
+import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
 import { ISetX509LoginSessionController } from "@/lib/infrastructure/controller/set-x509-login-session-controller";
 import { NextApiRequest, NextApiResponse } from "next";
 

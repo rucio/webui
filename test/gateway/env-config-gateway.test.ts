@@ -1,7 +1,7 @@
 import { ConfigNotFound, InvalidConfig } from '@/lib/core/exceptions/env-config-exceptions'
 import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port'
-import appContainer from '@/lib/infrastructure/config/ioc/container-config'
-import GATEWAYS from '@/lib/infrastructure/config/ioc/ioc-symbols-gateway'
+import appContainer from '@/lib/infrastructure/ioc/container-config'
+import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway'
 import { createOIDCProviders, deleteOIDCProviders } from 'test/fixtures/oidc-provider-config'
 
 

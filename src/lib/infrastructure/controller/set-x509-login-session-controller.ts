@@ -3,7 +3,7 @@ import SetX509LoginSessionInputPort from "@/lib/core/port/primary/set-x509-login
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";
 import { NextApiResponse } from "next";
-import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
+import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
 export interface ISetX509LoginSessionController {
     handle(session: IronSession, response: NextApiResponse, rucioAuthToken: string, rucioAccount: string, shortVOName: string, rucioTokenExpiry: string): void;

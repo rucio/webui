@@ -4,7 +4,7 @@ import { DIDType } from "@/lib/core/entity/rucio";
 import { ListDIDsInputPort } from "@/lib/core/port/primary/list-dids-ports";
 import { injectable, inject } from "inversify";
 import { NextApiResponse } from "next";
-import USECASE_FACTORY from "../config/ioc/ioc-symbols-usecase-factory";
+import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 
 export type ListDIDsControllerParameters = TAuthenticatedControllerParameters & {
