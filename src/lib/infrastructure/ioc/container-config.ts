@@ -20,9 +20,6 @@ import UserPassLoginInputPort from "@/lib/core/port/primary/userpass-login-input
 import UserPassLoginUseCase from "@/lib/core/use-case/userpass-login-usecase";
 import UserPassLoginController, {IUserPassLoginController} from "@/lib/infrastructure/controller/userpass-login-controller";
 import UserPassLoginPresenter from "@/lib/infrastructure/presenter/usepass-login-presenter";
-import LoginConfigUseCase from "@/lib/core/use-case/login-config-usecase";
-import LoginConfigPresenter from "@/lib/infrastructure/presenter/login-config-presenter";
-import LoginConfigController from "@/lib/infrastructure/controller/login-config-controller";
 import SetX509LoginSessionInputPort from "@/lib/core/port/primary/set-x509-login-session-input-port";
 import SetX509LoginSessionUseCase from "@/lib/core/use-case/set-x509-login-session-usecase";
 import SetX509LoginSessionController, { ISetX509LoginSessionController } from "../controller/set-x509-login-session-controller";
@@ -46,16 +43,13 @@ import ListDIDsController, { ListDIDsControllerParameters } from "../controller/
 import ListDIDsPresenter from "../presenter/list-dids-presenter";
 import { ListDIDsRequest } from "@/lib/core/usecase-models/list-dids-usecase-models";
 import { BaseController } from "@/lib/sdk/controller";
-import { createIOCBindings, IOCSymbols } from "@/lib/sdk/ioc-helpers";
+import { loadFeatures } from "@/lib/sdk/ioc-helpers";
 
 
 /**
  * IoC Container configuration for the application.
  */
 const appContainer = new Container();
-// const INPUT_PORT = getInputPorts();
-// console.log(INPUT_PORT)
-// console.log(CONTROLLERS)
 appContainer.bind<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT).to(RucioAccountGateway);
 appContainer.bind<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER).to(RucioAuthServer);
 appContainer.bind<DIDGatewayOutputPort>(GATEWAYS.DID).to(RucioDIDGateway);
@@ -81,23 +75,7 @@ appContainer.bind<interfaces.Factory<ListDIDsInputPort>>(USECASE_FACTORY.LIST_DI
     }
 );
 
-// appContainer.bind<LoginConfigInputPort>(INPUT_PORT.LOGIN_CONFIG).to(LoginConfigUseCase).inRequestScope();
-// appContainer.bind<ILoginConfigController>(CONTROLLERS.LOGIN_CONFIG).to(LoginConfigController);
-// appContainer.bind<interfaces.Factory<LoginConfigInputPort>>(USECASE_FACTORY.LOGIN_CONFIG).toFactory<LoginConfigUseCase, [IronSession, NextApiResponse]>((context: interfaces.Context) =>
-//     (session: IronSession, response: NextApiResponse) => {
-//         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
-//         return new LoginConfigUseCase(new LoginConfigPresenter(session, response), envConfigGateway);
-//     }
-// );
-createIOCBindings(appContainer, LoginConfigController, LoginConfigUseCase, [
-    appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG)
-], LoginConfigPresenter, true, {
-    CONTROLLER: CONTROLLERS.LOGIN_CONFIG,
-    INPUT_PORT: INPUT_PORT.LOGIN_CONFIG,
-    USECASE_FACTORY: USECASE_FACTORY.LOGIN_CONFIG,
-    
-} as IOCSymbols)
-
+loadFeatures(appContainer)
 
 appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionUseCase).inRequestScope();
 appContainer.bind<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionController);
