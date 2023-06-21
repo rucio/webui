@@ -9,8 +9,8 @@ export default {
 
 const Template: StoryFn<typeof PD> = (args) => <PD {...args} />
 
-export const PaginationNav = Template.bind({})
-PaginationNav.args = {
+export const TablePaginationNav = Template.bind({})
+TablePaginationNav.args = {
     table: {
         setPageIndex: (num: number) => {},
         getCanPreviousPage: () => false,
