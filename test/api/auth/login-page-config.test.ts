@@ -84,8 +84,11 @@ describe('Login Page Config API Test', () => {
         process.env['VO_VO2_NAME'] = 'vo2'
 
 
-        const loginConfigController = appContainer.get<ILoginConfigController>(CONTROLLERS.LOGIN_CONFIG)
-        await loginConfigController.getLoginViewModel(session, res);
+        const loginConfigController = appContainer.get<BaseController<LoginConfigControllerParams, void>>(CONTROLLERS.LOGIN_CONFIG)
+        await loginConfigController.execute({
+            session: session,
+            response: res as any,
+        });
 
         expect(res._getStatusCode()).toBe(200);
         const viewModel: LoginViewModel = JSON.parse(res._getData());
@@ -133,8 +136,11 @@ describe('Login Page Config API Test', () => {
         
         delete process.env['OIDC_PROVIDERS']
         
-        const loginConfigController = appContainer.get<ILoginConfigController>(CONTROLLERS.LOGIN_CONFIG)
-        await loginConfigController.getLoginViewModel(session, res);
+        const loginConfigController = appContainer.get<BaseController<LoginConfigControllerParams, void>>(CONTROLLERS.LOGIN_CONFIG)
+        await loginConfigController.execute({
+            session: session,
+            response: res as any,
+        });
 
         expect(res._getStatusCode()).toBe(500);
         const viewModel: LoginViewModel = JSON.parse(res._getData());
