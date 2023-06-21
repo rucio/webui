@@ -314,5 +314,27 @@ def rulepagelockentry():
         "fts_link": fake.url(),
     }
 
+@app.route("/filereplicastate")
+@output
+def filereplicastate():
+    return {
+        "rse": f"RSE-{fake.pystr()}",
+        "state": random.choice(["Available", "Unavailable", "Copying", "Being_Deleted", "Bad", "Temporary_Unavailable"]),
+    }
+
+@app.route("/filereplicastate-d")
+@output
+def filereplicastate_d():
+    return {
+        "scope": fake.pystr_format("user.{{first_name}}{{last_name}}"),
+        "name": "dataset-" + fake.pystr(),
+        "available": random.randint(0, 100),
+        "unavailable": random.randint(0, 100),
+        "copying": random.randint(0, 100),
+        "being_deleted": random.randint(0, 100),
+        "bad": random.randint(0, 100),
+        "temporary_unavailable": random.randint(0, 100),
+    }
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

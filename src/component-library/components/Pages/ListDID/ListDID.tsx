@@ -1,5 +1,5 @@
 import { DID, DIDMeta } from "@/lib/core/entity/rucio"
-import { DIDName, DIDSearchResponse, DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule"
+import { DIDName } from "@/lib/infrastructure/data/view-model/create-rule"
 import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 import { TextInput } from "../../Input/TextInput"
@@ -85,10 +85,11 @@ export const ListDID = (
                         <Button
                             type="button"
                             label="Search"
-                            onClick={(e: any) => {
+                            onClick={async (e: any) => {
                                 // deal with comDOM here
                                 // call `props.comDOM.setQuery` with the query
                                 // and start query
+                                props.comdom.start()
                             }}
                             id="did-button-search"
                         />

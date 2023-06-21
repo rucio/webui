@@ -50,8 +50,45 @@ export interface PageDIDPageProps {
 export const PageDID = (
     props: PageDIDPageProps
 ) => {
-    const [subpageIndex, setSubpageIndex] = useState<number>(0)
     const didtype = props.didMeta.did_type
+    const [subpageIndex, setSubpageIndex] = useState<number>(0)
+    const showPageBools: Record<string, () => boolean> = {
+        "subpage-metadata": () => {
+            if (didtype === DIDType.File) {
+                return subpageIndex === 2
+            } else if (didtype === DIDType.Dataset) {
+                return subpageIndex === 3
+            } else if (didtype === DIDType.Container) {
+                return subpageIndex === 2
+            } else {
+                return false
+            }
+        },
+        "subpage-contents": () => {
+            return didtype === DIDType.Container && subpageIndex === 0
+        },
+        "subpage-parent-dids": () => {
+            return didtype === DIDType.File && subpageIndex === 1
+        },
+        "subpage-rules": () => {
+            if (didtype === DIDType.Dataset) {
+                return subpageIndex === 0
+            } else if (didtype === DIDType.Container) {
+                return subpageIndex === 1
+            } else {
+                return false
+            }
+        },
+        "subpage-dataset-replicas": () => {
+            return didtype === DIDType.Dataset && subpageIndex === 1
+        },
+        "subpage-file-replica-states": () => {
+            return didtype === DIDType.File && subpageIndex === 0
+        },
+        "subpage-file-replica-states-d": () => {
+            return didtype === DIDType.Dataset && subpageIndex === 2
+        }
+    }
     return (
         <div
             className={twMerge(
@@ -126,7 +163,7 @@ export const PageDID = (
                     updateActive={(id: number) => { setSubpageIndex(id) }}
                 />
                 <SubPage
-                    show={didtype === DIDType.File ? false : didtype === DIDType.Dataset ? subpageIndex === 0 : subpageIndex === 1}
+                    show={showPageBools["subpage-rules"]()}
                     id="subpage-rules"
                 >
                     <PageDIDRules comdom={props.didRulesComDOM} />
@@ -138,35 +175,42 @@ export const PageDID = (
                     <PageDIDDatasetReplicas comdom={props.didDatasetReplicasComDOM} />
                 </SubPage>
                 <SubPage
-                    show={didtype === DIDType.File ? subpageIndex === 0 : didtype === DIDType.Dataset ? subpageIndex === 2 : false}
+                    show={showPageBools["subpage-file-replica-states"]()}
+                    run={() => { if (props.didFileReplicasComDOM.query.data.length === 0) { props.didFileReplicasComDOM.start() } }}
                     id="subpage-file-replica-states"
                 >
-                    <div className={twMerge(didtype === DIDType.File ? "block" : "hidden")}>
-                        <PageDIDFilereplicas comdom={props.didFileReplicasComDOM} />
-                    </div>
-                    <div className={twMerge(didtype === DIDType.Dataset ? "block" : "hidden")}>
-                        <PageDIDFilereplicasD
-                            replicaComDOM={props.didFileReplicasComDOM}
-                            datasetComDOM={props.didFileReplicasDComDOM}
-                            onChangeDatasetSelection={(dataset: string) => { console.log("datasetSelection", dataset) }}
-                        />
-
-                    </div>
+                    <PageDIDFilereplicas comdom={props.didFileReplicasComDOM} />
                 </SubPage>
                 <SubPage
-                    show={didtype === DIDType.File ? subpageIndex === 1 : false}
+                    show={showPageBools["subpage-file-replica-states-d"]()}
+                    run={() => { if (props.didFileReplicasDComDOM.query.data.length === 0) { props.didFileReplicasDComDOM.start() } }}
+                    id="subpage-file-replica-states-d"
+                >
+                    <PageDIDFilereplicasD
+                        replicaComDOM={props.didFileReplicasComDOM}
+                        datasetComDOM={props.didFileReplicasDComDOM}
+                        onChangeDatasetSelection={() => {
+                            // TODO set query
+                            // run query for file replicas
+                        }}
+                    />
+                </SubPage>
+                <SubPage
+                    show={showPageBools["subpage-parent-dids"]()}
+                    run={() => { if (props.didParentsComDOM.query.data.length === 0) { props.didParentsComDOM.start() } }}
                     id="subpage-parent-dids"
                 >
                     <PageDIDByType comdom={props.didParentsComDOM} />
                 </SubPage>
                 <SubPage
-                    show={didtype === DIDType.File ? subpageIndex === 2 : didtype === DIDType.Dataset ? subpageIndex === 3 : subpageIndex === 2}
+                    show={showPageBools["subpage-metadata"]()}
                     id="subpage-metadata"
                 >
                     <PageDIDMetadata comdom={props.didMetadataComDOM} />
                 </SubPage>
                 <SubPage
-                    show={didtype === DIDType.Container ? subpageIndex === 0 : false}
+                    show={showPageBools["subpage-contents"]()}
+                    run={() => { if (props.didContentsComDOM.query.data.length === 0) { props.didContentsComDOM.start() } }}
                     id="subpage-contents"
                 >
                     <PageDIDByType showDIDType comdom={props.didContentsComDOM} />
