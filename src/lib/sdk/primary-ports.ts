@@ -30,7 +30,6 @@ export interface BaseStreamableInputPort<AuthenticatedRequestModel>
 /**
  * A base interface for output ports.
  * @typeparam TResponseModel The type of the response model for the output port.
- * @typeparam TViewModel The type of the view model for the output port.
  * @typeparam TErrorModel The type of the error model for the output port.
  */
 export interface BaseOutputPort<TResponseModel, TErrorModel> {

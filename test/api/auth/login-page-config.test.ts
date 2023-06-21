@@ -5,6 +5,8 @@ import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
 import { getIronSession } from "iron-session";
 import { createMocks } from "node-mocks-http";
 import { createOIDCProviders, deleteOIDCProviders } from "test/fixtures/oidc-provider-config";
+import { BaseController } from "@/lib/sdk/controller";
+import { LoginConfigControllerParams } from "@/lib/infrastructure/controller/login-config-controller";
 
 describe('Login Page Config API Test', () => {
     beforeEach(() => {
@@ -28,10 +30,10 @@ describe('Login Page Config API Test', () => {
         })
         await setEmptySession(session, true)
 
-        const loginConfigController = appContainer.get<ILoginConfigController>(CONTROLLERS.LOGIN_CONFIG)
+        const loginConfigController = appContainer.get<BaseController<LoginConfigControllerParams, void>>(CONTROLLERS.LOGIN_CONFIG)
         await loginConfigController.execute({
             session: session,
-            response: res
+            response: res as any,
         });
 
         expect(res._getStatusCode()).toBe(200);
