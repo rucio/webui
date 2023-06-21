@@ -120,8 +120,7 @@ TControllerParams extends TParameters,
             (response: NextApiResponse) => {
                 const presenter = new Presenter(response);
                 return new UseCase(presenter, ...useCaseContructorArgs);
-            }
-        );
+            });
         }
     }
 }
