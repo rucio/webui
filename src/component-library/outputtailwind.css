@@ -1083,6 +1083,14 @@ html {
   gap: 1rem;
 }
 
+.gap-y-0 {
+  row-gap: 0px;
+}
+
+.gap-y-1 {
+  row-gap: 0.25rem;
+}
+
 .gap-y-2 {
   row-gap: 0.5rem;
 }
