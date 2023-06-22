@@ -82,6 +82,7 @@ export const Tabs: React.FC<JSX.IntrinsicElements["ul"] & {
 
                         >
                             <span
+                                className="pointer-events-none"
                             >
                                 {element}
                             </span>
@@ -110,6 +111,7 @@ export const Tabs: React.FC<JSX.IntrinsicElements["ul"] & {
                             }}
                         >
                             <span
+                                className="pointer-events-none"
                             >
                                 {element}
                             </span>
