@@ -4,10 +4,12 @@ import { IronSession } from 'iron-session';
 import { NextApiResponse } from 'next';
 import path from 'path';
 import { BaseController, TParameters } from './controller';
-import { BasePresenter } from './presenter';
-import type { BaseInputPort, BaseOutputPort } from './primary-ports';
+import { BasePresenter, BaseStreamingPresenter } from './presenter';
+import type { BaseInputPort, BaseOutputPort, BaseStreamingOutputPort } from './primary-ports';
 import { TUseCase } from './usecase';
 import TUseCaseFactory from './usecase-factory';
+import { BaseResponseModel } from './usecase-models';
+import { BaseViewModel } from './view-models';
 
 /**
  * An object that contains symbols for the different types of dependencies in an IoC container.
@@ -126,6 +128,100 @@ TControllerParams extends TParameters,
 }
 
 /**
+ * A base class for streamable features in a web application.
+ * @template TControllerParams The type of the parameters for the controller.
+ * @template TRequestModel The type of the request model for the use case.
+ * @template TResponseModel The type of the response model for the use case.
+ * @template TErrorModel The type of the error model for the use case.
+ * @template TViewModel The type of the view model for the presenter.
+ */
+export class BaseStreamableFeature<
+    TControllerParams extends TParameters,
+    TRequestModel,
+    TResponseModel extends BaseResponseModel,
+    TErrorModel,
+    TViewModel extends BaseViewModel,
+> {
+    /**
+     * Creates a new instance of the `BaseStreamableFeature` class.
+     * @param appContainer The IoC container for the application.
+     * @param Controller The controller class for the feature.
+     * @param UseCase The use case class for the feature.
+     * @param useCaseContructorArgs The arguments to pass to the use case constructor.
+     * @param Presenter The presenter class for the feature.
+     * @param passSessionToPresenter Whether to pass the session to the presenter.
+     * @param symbols An object that contains symbols for the different types of dependencies in the IoC container.
+     */
+    constructor(
+        appContainer: Container,
+        Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
+        UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
+        useCaseContructorArgs: any[] = [],
+        Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TViewModel, TErrorModel>,
+        passSessionToPresenter: boolean = false,
+        symbols: IOCSymbols,
+    ) {
+        this.createIOCBindings<TControllerParams, TRequestModel, TResponseModel, TErrorModel, TViewModel>(
+            appContainer,
+            Controller,
+            UseCase,
+            useCaseContructorArgs,
+            Presenter,
+            passSessionToPresenter,
+            symbols,
+        )
+    }
+
+    /**
+     * Creates the IoC bindings for the streamable feature.
+     * @param appContainer The IoC container for the application.
+     * @param Controller The controller class for the feature.
+     * @param UseCase The use case class for the feature.
+     * @param useCaseContructorArgs The arguments to pass to the use case constructor.
+     * @param Presenter The presenter class for the feature.
+     * @param passSessionToPresenter Whether to pass the session to the presenter.
+     * @param symbols An object that contains symbols for the different types of dependencies in the IoC container.
+     */
+    createIOCBindings<
+    TControllerParams extends TParameters,
+    TRequestModel,
+    TResponseModel extends BaseResponseModel,
+    TErrorModel,
+    TViewModel extends BaseViewModel,
+    >(
+        appContainer: Container,
+        Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
+        UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
+        useCaseContructorArgs: any[] = [],
+        Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TViewModel, TErrorModel>,
+        passSessionToPresenter: boolean = false,
+        symbols: IOCSymbols,
+    ) {
+        const symbolInputPort = symbols.INPUT_PORT
+        const symbolController = symbols.CONTROLLER
+        const symbolUseCaseFactory = symbols.USECASE_FACTORY
+
+        appContainer.bind<BaseInputPort<TRequestModel>>(symbolInputPort).to(UseCase).inRequestScope();
+        appContainer.bind<BaseController<TControllerParams, TRequestModel>>(symbolController).to(Controller).inRequestScope();
+
+        if(passSessionToPresenter){
+        appContainer.bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory).toFactory<TUseCase<TRequestModel>, [response: NextApiResponse, session: IronSession]>((context: interfaces.Context) =>
+            (response: NextApiResponse, session: IronSession) => {
+                const presenter = new Presenter(response, session);
+                return new UseCase(presenter, ...useCaseContructorArgs);
+            }
+        );
+        } else {
+            appContainer.bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory).toFactory<TUseCase<TRequestModel>, [response: NextApiResponse]>((context: interfaces.Context) =>
+            (response: NextApiResponse) => {
+                const presenter = new Presenter(response);
+                return new UseCase(presenter, ...useCaseContructorArgs);
+            });
+        }
+    }
+}
+
+/**
  * Loads features from the features directory into the IoC Container.
  * @param appContainer The IoC container for the application.
  * @param featuresDir The directory to load features from. Defaults to `src/lib/infrastructure/ioc/features`.
@@ -144,9 +240,10 @@ export async function loadFeatures(appContainer: Container, featuresDir?: string
         if (!featureClass) {
             throw new Error(`Feature ${featureName} has no default export`)
         }
-        // if default export is not a subclass of BaseFeature, throw error
-        if (!(featureClass.prototype instanceof BaseFeature)) {
-            throw new Error(`Feature ${featureName} is not a subclass of BaseFeature`)
+        // if default export is not a subclass of BaseFeature or BaseStreambleFeature, throw error
+        if (!(featureClass.prototype instanceof BaseFeature) &&
+         !(featureClass.prototype instanceof BaseStreamableFeature)) {
+            throw new Error(`Feature ${featureName} is not a subclass of BaseFeature or BaseStreamableFeature`)
         }
         // if constructor signature of default export is not new (appContainer: Container) => BaseFeature, throw error
         if (featureClass.length !== 1) {
