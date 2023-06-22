@@ -37,12 +37,6 @@ import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
 import SwitchAccountController, { ISwitchAccountController } from "../controller/switch-account-controller";
 import SwitchAccountPresenter from "../presenter/switch-account-presenter";
-import { ListDIDsInputPort } from "@/lib/core/port/primary/list-dids-ports";
-import ListDIDsUseCase from "@/lib/core/use-case/list-dids-usecase";
-import ListDIDsController, { ListDIDsControllerParameters } from "../controller/list-dids-controller";
-import ListDIDsPresenter from "../presenter/list-dids-presenter";
-import { ListDIDsRequest } from "@/lib/core/usecase-models/list-dids-usecase-models";
-import { BaseController } from "@/lib/sdk/controller";
 import { loadFeatures } from "@/lib/sdk/ioc-helpers";
 
 
@@ -56,6 +50,8 @@ appContainer.bind<DIDGatewayOutputPort>(GATEWAYS.DID).to(RucioDIDGateway);
 appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
 
+loadFeatures(appContainer)
+
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
 appContainer.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN).toFactory<UserPassLoginUseCase, [IronSession, NextApiResponse]>((context: interfaces.Context) =>
@@ -65,17 +61,6 @@ appContainer.bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.US
         return new UserPassLoginUseCase(new UserPassLoginPresenter(session, response), rucioAuthServer, rucioAccountGateway);
     }
 );
-
-appContainer.bind<ListDIDsInputPort>(INPUT_PORT.LIST_DIDS).to(ListDIDsUseCase).inRequestScope();
-appContainer.bind<BaseController<ListDIDsControllerParameters ,ListDIDsRequest>>(CONTROLLERS.LIST_DIDS).to(ListDIDsController);
-appContainer.bind<interfaces.Factory<ListDIDsInputPort>>(USECASE_FACTORY.LIST_DIDS).toFactory<ListDIDsUseCase, [NextApiResponse]>((context: interfaces.Context) =>
-    (response: NextApiResponse) => {
-        const rucioDIDGateway: DIDGatewayOutputPort = appContainer.get(GATEWAYS.DID)
-        return new ListDIDsUseCase(new ListDIDsPresenter(response), rucioDIDGateway);
-    }
-);
-
-loadFeatures(appContainer)
 
 appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionUseCase).inRequestScope();
 appContainer.bind<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionController);
