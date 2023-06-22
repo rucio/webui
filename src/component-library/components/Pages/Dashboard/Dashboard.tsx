@@ -3,6 +3,9 @@ import { H3 } from "../../Text/Headings/H3";
 import { H4 } from "../../Text/Headings/H4";
 import { P } from "../../Text/Content/P";
 import { Checkbox } from "../../Button/Checkbox";
+import { WidgetOngoingrules } from "./Widgets/WidgetOngoingrules";
+import { RoleTag } from "../../Tags/RoleTag";
+import { Role } from "@/lib/core/entity/account";
 
 interface PageDashboardProps {
     linkrecord: Record<string, string>
@@ -33,7 +36,7 @@ export const Dashboard = (
                         <H3>Dashboard for {props.accountname}</H3>
                     </div>
                     <div>
-                        <span className="bg-green-200 rounded">Tags for account/identity/role</span>
+                        <RoleTag role={Role.ADMIN} />
                     </div>
                 </div>
             </div>
@@ -66,35 +69,29 @@ export const Dashboard = (
                         )
                     })}
                 </div>
-                <div
+                <WidgetOngoingrules data={[{rulename: "testrule", percentage: 30}]} />
+                <form
                     className={twMerge(
-                        "flex flex-col space-y-2",
+                        "bg-stone-100 dark:bg-gray-900 p-2 rounded-md",
                     )}
+                    aria-label="Select Widgets"
+                    id="select-widgets-panel"
                 >
-                    <H4>Widgets</H4>
-                    <form
+                    <label htmlFor="select-widget-panel">
+                        <P className="font-bold">Select Widgets</P>
+                    </label>
+                    <div
                         className={twMerge(
-                            "bg-stone-100 dark:bg-gray-900 p-2 rounded-md",
+                            "grid gap-y-0",
+                            "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                         )}
-                        aria-label="Select Widgets"
-                        id="select-widgets-panel"
                     >
-                        <label htmlFor="select-widget-panel">
-                            <P className="font-bold">Select Widgets</P>
-                        </label>
-                        <div
-                            className={twMerge(
-                                "grid gap-y-0",
-                                "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                            )}
-                        >
-                            <Checkbox label="Ongoing Rules" />
-                            <Checkbox label="Top Quota Overview" />
-                        </div>
+                        <Checkbox label="Ongoing Rules" />
+                        <Checkbox label="Top Quota Overview" />
+                    </div>
 
-                    </form>
+                </form>
 
-                </div>
             </div>
 
         </div>
