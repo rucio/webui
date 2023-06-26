@@ -106,10 +106,17 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
             ]
         }
         return (
-            <Bar
-                options={options}
-                data={data}
-                aria-label="Ongoing Rules Widget"
-            />
+            <div
+                className={twMerge(
+                    "relative",
+                    className ?? "",
+                )}
+            >
+                <Bar
+                    options={options}
+                    data={data}
+                    aria-label="Ongoing Rules Widget"
+                />
+            </div>
         );
     };

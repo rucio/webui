@@ -86,6 +86,7 @@ export const WidgetUsedquota: React.FC<JSX.IntrinsicElements["div"] & {
         ...props
     }
 ) => {
+        const { className, ...otherprops } = props
         const [windowSize, setWindowSize] = useState([
             1920, 1080
         ]);
@@ -110,7 +111,9 @@ export const WidgetUsedquota: React.FC<JSX.IntrinsicElements["div"] & {
             <div
                 className={twMerge(
                     "flex flex-col justify-center items-center space-y-2 p-2",
+                    className ?? "",
                 )}
+                {...otherprops}
             >
                 <div>
                     <H4 className="font-bold">Top Used RSEs</H4>

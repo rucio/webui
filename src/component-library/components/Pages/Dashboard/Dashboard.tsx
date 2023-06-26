@@ -8,6 +8,7 @@ import { RoleTag } from "../../Tags/RoleTag";
 import { Role } from "@/lib/core/entity/account";
 import { Ongoingrules, Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
 import { WidgetUsedquota } from "./Widgets/WidgetUsedquota";
+import { useState, useEffect } from "react";
 
 interface PageDashboardProps {
     accountname: string;
@@ -16,9 +17,18 @@ interface PageDashboardProps {
     inputUsedquota: Usedquota[];
 }
 
+type WidgetVisibility = {
+    ongoingrules: boolean;
+    usedquota: boolean;
+}
+
 export const Dashboard = (
     props: PageDashboardProps
 ) => {
+    const [widgetVisibility, setWidgetVisibility] = useState<WidgetVisibility>({
+        ongoingrules: true,
+        usedquota: true
+    })
     return (
         <div
             className={twMerge("flex flex-col space-y-2 w-full")}
@@ -51,8 +61,19 @@ export const Dashboard = (
                     "bg-white dark:bg-gray-800"
                 )}
             >
-                <WidgetOngoingrules input={props.inputOngoingrules} />
-                <WidgetUsedquota input={props.inputUsedquota} />
+                <div
+                    aria-label="Widgets"
+                    className="flex flex-col space-y-2"
+                >
+                    <WidgetOngoingrules
+                        input={props.inputOngoingrules}
+                        className={widgetVisibility.ongoingrules ? "" : "hidden"}
+                    />
+                    <WidgetUsedquota
+                        input={props.inputUsedquota}
+                        className={widgetVisibility.usedquota ? "" : "hidden"}
+                    />
+                </div>
                 <form
                     className={twMerge(
                         "bg-stone-100 dark:bg-gray-900 p-2 rounded-md",
@@ -69,8 +90,16 @@ export const Dashboard = (
                             "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                         )}
                     >
-                        <Checkbox label="Ongoing Rules" />
-                        <Checkbox label="Top Quota Overview" />
+                        <Checkbox
+                            label="Ongoing Rules"
+                            checked={widgetVisibility.ongoingrules}
+                            onChange={(e) => {setWidgetVisibility({...widgetVisibility, ongoingrules: e.target.checked})}}
+                        />
+                        <Checkbox
+                            label="Top Quota Overview"
+                            checked={widgetVisibility.usedquota}
+                            onChange={(e) => {setWidgetVisibility({...widgetVisibility, usedquota: e.target.checked})}}
+                        />
                     </div>
 
                 </form>
