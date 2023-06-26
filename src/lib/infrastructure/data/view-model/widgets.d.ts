@@ -4,3 +4,11 @@ export type Ongoingrules = {
     ok: number;
     stuck: number;
 }
+
+export type Usedquota = {
+    rse: string;
+    used: number;
+    quota: number;
+    total: number
+    exceedPermission: boolean;
+}
