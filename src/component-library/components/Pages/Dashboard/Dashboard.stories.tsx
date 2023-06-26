@@ -1,4 +1,6 @@
+import { Role } from "@/lib/core/entity/account";
 import { StoryFn, Meta } from "@storybook/react";
+import { fixtureOngoingrules, fixtureUsedquota } from "test/fixtures/widget-fixtures";
 import { Dashboard as D } from "./Dashboard";
 
 export default {
@@ -11,11 +13,7 @@ const Template: StoryFn<typeof D> = (args) => <D {...args} />;
 export const Dashboard = Template.bind({});
 Dashboard.args = {
     accountname: "test",
-    linkrecord: {
-        "List DIDs": "/list/dids",
-        "List RSEs": "/list/rses",
-        "List Rules":"/list/rules",
-        "List Subscriptions": "/list/subscriptions",
-        "Create Rule": "/create/rule",
-    }
+    accountrole: Role.ADMIN,
+    inputOngoingrules: Array.from({length: 20}, (v,k) => fixtureOngoingrules()),
+    inputUsedquota: Array.from({length: 20}, (v,k) => fixtureUsedquota())
 };

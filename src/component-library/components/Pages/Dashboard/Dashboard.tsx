@@ -6,10 +6,14 @@ import { Checkbox } from "../../Button/Checkbox";
 import { WidgetOngoingrules } from "./Widgets/WidgetOngoingrules";
 import { RoleTag } from "../../Tags/RoleTag";
 import { Role } from "@/lib/core/entity/account";
+import { Ongoingrules, Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
+import { WidgetUsedquota } from "./Widgets/WidgetUsedquota";
 
 interface PageDashboardProps {
-    linkrecord: Record<string, string>
-    accountname: string
+    accountname: string;
+    accountrole: Role;
+    inputOngoingrules: Ongoingrules[];
+    inputUsedquota: Usedquota[];
 }
 
 export const Dashboard = (
@@ -36,7 +40,7 @@ export const Dashboard = (
                         <H3>Dashboard for {props.accountname}</H3>
                     </div>
                     <div>
-                        <RoleTag role={Role.ADMIN} />
+                        <RoleTag role={props.accountrole} />
                     </div>
                 </div>
             </div>
@@ -47,29 +51,8 @@ export const Dashboard = (
                     "bg-white dark:bg-gray-800"
                 )}
             >
-                <div
-                    className={twMerge(
-                        "bg-stone-100 dark:bg-gray-900 p-2 rounded-md",
-                        "grid grid-cols-2 gap-y-1"
-                    )}
-                >
-                    {Object.entries(props.linkrecord).map(([key, value]) => {
-                        return (
-                            <a
-                                href={value}
-                                key={key}
-                                className={twMerge(
-                                    "hover:underline cursor-pointer",
-                                    "hover:text-blue-600",
-                                    "dark:text-white dark:hover:text-blue-400",
-                                )}
-                            >
-                                {key}
-                            </a>
-                        )
-                    })}
-                </div>
-                <WidgetOngoingrules data={[{rulename: "testrule", percentage: 30}]} />
+                <WidgetOngoingrules input={props.inputOngoingrules} />
+                <WidgetUsedquota input={props.inputUsedquota} />
                 <form
                     className={twMerge(
                         "bg-stone-100 dark:bg-gray-900 p-2 rounded-md",
