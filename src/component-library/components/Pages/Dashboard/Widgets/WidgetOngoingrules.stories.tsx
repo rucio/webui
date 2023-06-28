@@ -11,5 +11,5 @@ const Template: StoryFn<typeof W> = (args) => <W {...args} />;
 
 export const WidgetOngoingrules = Template.bind({});
 WidgetOngoingrules.args = {
-    input: Array.from({length: 20}, (v,k) => fixtureOngoingrules())
+    input: Array.from({length: 10}, (v,k) => fixtureOngoingrules())
 };
