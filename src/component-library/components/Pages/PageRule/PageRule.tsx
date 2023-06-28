@@ -221,17 +221,17 @@ export const PageRule = (
                         <Generaltable>
                             <tr>
                                 <Titletd>Created At</Titletd>
-                                <Contenttd>{format("yyyy-MM-dd", meta.created_at)}</Contenttd>
+                                <Contenttd>{format("yyyy-MM-dd", new Date(meta.created_at))}</Contenttd>
                             </tr>
                             <tr>
                                 <Titletd>Updated At</Titletd>
-                                <Contenttd>{format("yyyy-MM-dd", meta.updated_at)}</Contenttd>
+                                <Contenttd>{format("yyyy-MM-dd", new Date(meta.updated_at))}</Contenttd>
                             </tr>
                             <tr>
                                 <Titletd>Expires At</Titletd>
                                 <Contenttd>
                                     {
-                                        format("yyyy-MM-dd", meta.expires_at)
+                                        format("yyyy-MM-dd", new Date(meta.expires_at))
                                         // add ability to extend lifetime here => or maybe not?? i think this might be bad UX
                                     }
                                 </Contenttd>

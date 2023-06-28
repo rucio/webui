@@ -55,9 +55,6 @@ export const PageDIDMetadata = (
                 if (val === null) {
                     return <NullTag />
                 }
-                if (val instanceof Date) {
-                    return <DateTag date={val} dateFormat="yyyy-MM-dd hh:mm:ss" />
-                }
                 if (["Available", "Deleted", "Lost"].includes(val as string)) {
                     return <AvailabilityTag availability={val as DIDAvailability} />
                 }

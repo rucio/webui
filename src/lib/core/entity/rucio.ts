@@ -1,3 +1,5 @@
+export type DateISO = string
+
 /**
  * Entity models for Rucio. Please keep the type definitions sorted in alphabetical order.
  */
@@ -27,8 +29,8 @@ export type DIDMeta = {
     scope: string
     account: string
     did_type: DIDType
-    created_at: Date
-    updated_at: Date
+    created_at: DateISO
+    updated_at: DateISO
     availability: DIDAvailability // Lost/Deleted/Available
     obsolete: boolean
     hidden: boolean
@@ -67,9 +69,9 @@ export type RuleMeta = {
     account: string
     activity: string // VO-specific enums, just show string here.
     copies: number
-    created_at: Date
+    created_at: DateISO
     did_type: DIDType
-    expires_at: Date
+    expires_at: DateISO
     grouping: DIDType
     id: string
     ignore_account_limit: boolean
@@ -86,21 +88,21 @@ export type RuleMeta = {
     scope: string
     split_container: boolean
     state: RuleState
-    updated_at: Date
+    updated_at: DateISO
 }
 
 export type SubscriptionMeta = {
     account: string
     comments: string
-    created_at: Date
+    created_at: DateISO
     id: string
-    last_processed: Date
-    lifetime: Date
+    last_processed: DateISO
+    lifetime: DateISO
     name: string
     policyid: number
     retroactive: boolean
     state: SubscriptionState
-    updated_at: Date
+    updated_at: DateISO
     // more difficult datatypes, cast as string for now:
     filter: string
     replication_rules: string

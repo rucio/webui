@@ -85,9 +85,9 @@ export function createRuleMeta(): RuleMeta {
         account: faker.internet.userName(),
         activity: faker.company.buzzPhrase(),
         copies: faker.number.int({ min: 1, max: 10 }),
-        created_at: faker.date.past(),
+        created_at: faker.date.past().toISOString(),
         did_type: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
-        expires_at: faker.date.future(),
+        expires_at: faker.date.future().toISOString(),
         grouping: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
         id: faker.string.uuid(),
         ignore_account_limit: faker.datatype.boolean(),
@@ -104,7 +104,7 @@ export function createRuleMeta(): RuleMeta {
         scope: createRandomScope(),
         split_container: faker.datatype.boolean(),
         state: randomEnum<RuleState>(RuleState),
-        updated_at: faker.date.recent(),
+        updated_at: faker.date.recent().toISOString(),
     }
 }
 
@@ -127,8 +127,8 @@ export function createDIDMeta(): DIDMeta {
         scope: createRandomScope(),
         account: faker.internet.userName(),
         did_type: did_type,
-        created_at: faker.date.past(),
-        updated_at: faker.date.recent(),
+        created_at: faker.date.past().toISOString(),
+        updated_at: faker.date.recent().toISOString(),
         availability: randomEnum<DIDAvailability>(DIDAvailability),
         obsolete: faker.datatype.boolean(),
         hidden: faker.datatype.boolean(),
@@ -152,8 +152,8 @@ export function createDIDDatasetReplicas(): DIDDatasetReplicas {
         availability: faker.datatype.boolean(),
         available_files: faker.number.int({ min: 0, max: 1e6 }),
         available_bytes: faker.number.int({ min: 0, max: 1e12 }),
-        creation_date: faker.date.past(),
-        last_accessed: faker.date.recent(),
+        creation_date: faker.date.past().toISOString(),
+        last_accessed: faker.date.recent().toISOString(),
     }
 }
 
@@ -164,7 +164,7 @@ export function createDIDRules(): DIDRules {
         state: randomEnum<RuleState>(RuleState),
         account: faker.internet.userName(),
         subscription: { name: faker.lorem.words(3).replace(/\s/g, "."), account: faker.internet.userName() },
-        last_modified: faker.date.recent(),
+        last_modified: faker.date.recent().toISOString(),
     }
 }
 
@@ -203,15 +203,15 @@ export function createSubscriptionMeta(): SubscriptionMeta {
     return {
         account: faker.internet.userName(),
         comments: faker.lorem.words(10),
-        created_at: faker.date.past(),
+        created_at: faker.date.past().toISOString(),
         id: faker.string.uuid(),
-        last_processed: faker.date.recent(),
-        lifetime: faker.date.future(),
+        last_processed: faker.date.recent().toISOString(),
+        lifetime: faker.date.future().toISOString(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         policyid: faker.number.int({ min: 0, max: 1e5 }),
         retroactive: faker.datatype.boolean(),
         state: randomEnum<SubscriptionState>(SubscriptionState),
-        updated_at: faker.date.recent(),
+        updated_at: faker.date.recent().toISOString(),
         // more difficult datatypes:
         filter: JSON.stringify({
             "scope": [

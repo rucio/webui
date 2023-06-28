@@ -127,7 +127,7 @@ export const PageDIDRules = (
             id: "last_modified",
             cell: (info) => {
                 return (
-                    <DateTag date={info.getValue()} className="pl-1" />
+                    <DateTag date={new Date(info.getValue())} className="pl-1" />
                 )
             },
             header: info => {

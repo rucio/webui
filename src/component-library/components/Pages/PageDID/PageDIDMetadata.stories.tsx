@@ -15,7 +15,7 @@ PageDIDMetadata.args = {
         { key: "bernd", value: "das brot" },
         { key: "kika", value: "der sender" },
         { key: "kikaninchen", value: "das tier" },
-        { key: "my birthday", value: new Date(2021, 3) },
+        { key: "my birthday", value: (new Date(2021, 3)).toISOString() },
         { key: "am_i_anton", value: false },
         { key: "R1-tastefactor", value: 3.142 },
         { key: "hello", value: null },

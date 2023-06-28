@@ -119,19 +119,19 @@ export const PageSubscription = (
                             <Generaltable>
                                 <tr>
                                     <Titletd>Created At</Titletd>
-                                    <Contenttd><DateTag date={meta.created_at} /></Contenttd>
+                                    <Contenttd><DateTag date={new Date(meta.created_at)} /></Contenttd>
                                 </tr>
                                 <tr>
                                     <Titletd>Last Processed</Titletd>
-                                    <Contenttd><DateTag date={meta.last_processed} /></Contenttd>
+                                    <Contenttd><DateTag date={new Date(meta.last_processed)} /></Contenttd>
                                 </tr>
                                 <tr>
                                     <Titletd>Updated At</Titletd>
-                                    <Contenttd><DateTag date={meta.updated_at} /></Contenttd>
+                                    <Contenttd><DateTag date={new Date(meta.updated_at)} /></Contenttd>
                                 </tr>
                                 <tr>
                                     <Titletd>Lifetime</Titletd>
-                                    <Contenttd><DateTag date={meta.lifetime} /></Contenttd>
+                                    <Contenttd><DateTag date={new Date(meta.lifetime)} /></Contenttd>
                                 </tr>
                             </Generaltable>
                             <Generaltable>

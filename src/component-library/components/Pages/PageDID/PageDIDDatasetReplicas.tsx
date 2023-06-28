@@ -145,7 +145,7 @@ export const PageDIDDatasetReplicas = (
                             "font-mono text-right dark:text-white",
                         )}
                     >
-                        <DateTag date={info.row.original.creation_date} />
+                        <DateTag date={new Date(info.row.original.creation_date)} />
                     </span>
                 )
             },
@@ -172,7 +172,7 @@ export const PageDIDDatasetReplicas = (
                             "font-mono text-right dark:text-white",
                         )}
                     >
-                        <DateTag date={info.row.original.last_accessed} />
+                        <DateTag date={new Date(info.row.original.last_accessed)} />
                     </span>
                 )
             },
