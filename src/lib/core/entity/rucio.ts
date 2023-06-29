@@ -116,6 +116,15 @@ export type SubscriptionRuleStates = {
     state_suspended: number
 }
 
+export type RSE = {
+    id: string;
+    name: string;
+    rse_type: RSEType;
+    volatile: boolean;
+    deterministic: boolean;
+    staging_area: boolean;
+}
+
 /*
 ================================================================================
 ========================= ENUMS and DISCRETE TYPES =============================
@@ -144,7 +153,8 @@ export enum DIDType {
     File = "File",
 }
 
-export type RSE = {
+// replace this!
+export type RSEOld = {
     id: string;
     name: string;
     city: string,
@@ -154,6 +164,11 @@ export type RSE = {
     longitude: number,
     rse_type: string,
     volatile: boolean,
+}
+
+export enum RSEType {
+    Disk = "DISK",
+    Tape = "TAPE",
 }
 
 // rucio.db.sqla.constants::ReplicaState

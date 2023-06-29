@@ -1,10 +1,10 @@
-import { RSE } from "../entity/rucio";
+import { RSEOld } from "../entity/rucio";
 import StreamInputPort from "../port/primary/stream-input-port";
 import type StreamOutputPort from "../port/primary/stream-output-port";
 import StreamGatewayOutputPort from "../port/secondary/stream-gateway-output-port";
 
-export default class StreamUseCase implements StreamInputPort<RSE> {
-    bufferedData: RSE[];
+export default class StreamUseCase implements StreamInputPort<RSEOld> {
+    bufferedData: RSEOld[];
     presenter: StreamOutputPort<any>;
     streamGateway: StreamGatewayOutputPort
     

@@ -1,5 +1,5 @@
 'use client'
-import { RSE } from "@/lib/core/entity/rucio"
+import { RSEOld } from "@/lib/core/entity/rucio"
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM"
 import { HTTPRequest } from "@/lib/common/http"
 import { createColumnHelper, flexRender, getCoreRowModel, TableOptions, useReactTable } from "@tanstack/react-table"
@@ -8,7 +8,7 @@ import ErrorList from "./errors"
 import RSEQueryStatus from "./rse-query-status"
 import UseComDOMStatusCard from "./use-comdom-status"
 
-const columnHelper = createColumnHelper<RSE>()
+const columnHelper = createColumnHelper<RSEOld>()
 
 const columns: any[] = [
     columnHelper.accessor('id', {
@@ -58,7 +58,7 @@ export default function RSETable() {
         errors,
         resolveError,
         resolveAllErrors
-    } = useComDOM<RSE>(
+    } = useComDOM<RSEOld>(
         'mock-rse-query',
         [],
         false,
@@ -67,12 +67,12 @@ export default function RSETable() {
         true
     )
     
-    const table = useReactTable<RSE>({
+    const table = useReactTable<RSEOld>({
         data: query.data || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         debugTable: true,
-    } as TableOptions<RSE>)
+    } as TableOptions<RSEOld>)
 
     return ( 
         <div className="bg-slate-800">

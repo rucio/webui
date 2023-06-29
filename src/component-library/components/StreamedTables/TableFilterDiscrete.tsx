@@ -8,16 +8,16 @@ type TableFilterDiscrete<T> = JSX.IntrinsicElements["div"] & {
     keys: T[],
     renderFunc: (key: T | undefined) => JSX.Element,
     column: Column<any, T>, // to be a tanstack column
+    stack?: boolean // whether to use column instead of row
 }
 
-export function TableFilterDiscrete<T> (
+export function TableFilterDiscrete<T>(
     props: TableFilterDiscrete<T>
-): JSX.Element
-{
+): JSX.Element {
     // split up props
-    const { name, keys, renderFunc, column, ...otherprops } = props
+    const { name, keys, renderFunc, column, stack, ...otherprops } = props
     const { className, ...otherdivprops } = otherprops
-    
+
     /* create a map of next values
     supposed to be cyclic "undefined" (string) -> keys (T) -> undefined
     using undefined as a key is not allowed, so we use "undefined" (string) instead
@@ -39,8 +39,8 @@ export function TableFilterDiscrete<T> (
     return (
         <div
             className={twMerge(
-                "flex flex-row justify-center md:justify-between",
-                "h-6 sm:pr-1",
+                "flex justify-between",
+                !stack ? "flex-row space-x-2 h-6" : "flex-col space-y-1",
                 "items-center",
                 "select-none cursor-pointer",
                 className ?? "",

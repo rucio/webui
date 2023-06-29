@@ -4,7 +4,8 @@ import {
     LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
     RSEBlockState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState,
     DIDAvailability, RSEAccountUsageLimit,
-    ReplicaState
+    ReplicaState,
+    RSE, RSEType
 } from '@/lib/core/entity/rucio'
 import {
     DIDDatasetReplicas, DIDRules, FilereplicaState, FilereplicaStateD
@@ -31,7 +32,7 @@ function randomEnum<T>(e: any): T {
     return faker.helpers.arrayElement(Object.values(e)) as T
 }
 
-function createRandomRSE(): string {
+function createRSEName(): string {
     return (
         "RSE-" +
         faker.location.country().toUpperCase().replace(/\s/g, "-").replace(/[^a-zA-Z\d\s]/g, "") +
@@ -73,7 +74,7 @@ export function createRandomRulePageLockEntry(): RulePageLockEntry {
     return {
         scope: createRandomScope(),
         name: faker.string.alphanumeric(10),
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         state: faker.helpers.arrayElement(['R', 'O', 'S']) as LockState,
         ddm_link: faker.internet.url(),
         fts_link: faker.internet.url(),
@@ -100,7 +101,7 @@ export function createRuleMeta(): RuleMeta {
         notification: randomEnum<RuleNotification>(RuleNotification),
         priority: faker.number.int({ min: 0, max: 3 }),
         purge_replicas: faker.datatype.boolean(),
-        rse_expression: createRandomRSE(),
+        rse_expression: createRSEName(),
         scope: createRandomScope(),
         split_container: faker.datatype.boolean(),
         state: randomEnum<RuleState>(RuleState),
@@ -111,11 +112,22 @@ export function createRuleMeta(): RuleMeta {
 export function createRSEAccountUsageLimit(): RSEAccountUsageLimit {
     return {
         rse_id: faker.string.uuid(),
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         account: faker.internet.userName(),
         used_files: faker.number.int({ min: 0, max: 1e6 }),
         used_bytes: faker.number.int({ min: 0, max: 1e12 }),
         quota_bytes: faker.number.int({ min: 0, max: 1e12 }),
+    }
+}
+
+export function createRSE(): RSE {
+    return {
+        id: faker.string.uuid(),
+        name: createRSEName(),
+        rse_type: randomEnum<RSEType>(RSEType),
+        deterministic: faker.datatype.boolean(),
+        volatile: faker.datatype.boolean(),
+        staging_area: faker.datatype.boolean(),
     }
 }
 
@@ -147,7 +159,7 @@ export function createDIDMeta(): DIDMeta {
 
 export function createDIDDatasetReplicas(): DIDDatasetReplicas {
     return {
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         rseblocked: faker.number.int({ min: 0, max: 7 }) as RSEBlockState,
         availability: faker.datatype.boolean(),
         available_files: faker.number.int({ min: 0, max: 1e6 }),
@@ -170,7 +182,7 @@ export function createDIDRules(): DIDRules {
 
 export function createFileReplicaState(): FilereplicaState {
     return {
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         state: randomEnum<ReplicaState>(ReplicaState),
     }
 }

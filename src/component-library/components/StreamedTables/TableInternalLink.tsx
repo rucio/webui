@@ -1,0 +1,26 @@
+import { twMerge } from "tailwind-merge";
+
+type TableInternalLinkProps = JSX.IntrinsicElements["a"]
+
+export const TableInternalLink: React.FC<TableInternalLinkProps> = (
+    {
+        ...props
+    }
+) => {
+    const { className, children, ...otherprops } = props
+    return (
+        <a
+            className={twMerge(
+                "pl-1",
+                "break-all",
+                "hover:underline",
+                "hover:text-blue-600",
+                "dark:text-white dark:hover:text-blue-400",
+                "cursor-pointer",
+            )}
+            {...otherprops}
+        >
+            {children}
+        </a>
+    );
+};

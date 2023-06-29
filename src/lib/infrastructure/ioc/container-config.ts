@@ -26,7 +26,7 @@ import SetX509LoginSessionController, { ISetX509LoginSessionController } from ".
 import SetX509LoginSessionPresenter from "../presenter/set-x509-login-session-presenter";
 import StreamInputPort from "@/lib/core/port/primary/stream-input-port";
 import StreamUseCase from "@/lib/core/use-case/stream-usecase";
-import { RSE } from "@/lib/core/entity/rucio";
+import { RSEOld } from "@/lib/core/entity/rucio";
 import StreamingController, { IStreamingController } from "../controller/streaming-controller";
 import StreamPresenter from "../presenter/stream-presenter";
 import SiteHeaderInputPort from "@/lib/core/port/primary/site-header-input-port";
@@ -77,9 +77,9 @@ appContainer.bind<interfaces.Factory<SetX509LoginSessionInputPort>>(USECASE_FACT
     }
 );
 
-appContainer.bind<StreamInputPort<RSE>>(INPUT_PORT.STREAM).to(StreamUseCase).inRequestScope();
+appContainer.bind<StreamInputPort<RSEOld>>(INPUT_PORT.STREAM).to(StreamUseCase).inRequestScope();
 appContainer.bind<IStreamingController>(CONTROLLERS.STREAM).to(StreamingController);
-appContainer.bind<interfaces.Factory<StreamInputPort<RSE>>>(USECASE_FACTORY.STREAM).toFactory<StreamUseCase, [NextApiResponse]>((context: interfaces.Context) =>
+appContainer.bind<interfaces.Factory<StreamInputPort<RSEOld>>>(USECASE_FACTORY.STREAM).toFactory<StreamUseCase, [NextApiResponse]>((context: interfaces.Context) =>
     (response: NextApiResponse) => {
         const streamingGateway: StreamGatewayOutputPort = appContainer.get(GATEWAYS.STREAM)
         return new StreamUseCase(new StreamPresenter(response), streamingGateway);
