@@ -1,4 +1,3 @@
-import { ProgressBar } from "@/component-library/components/Helpers/ProgressBar";
 import { H3 } from "@/component-library/components/Text/Headings/H3.stories";
 import { P } from "@/component-library/components/Text/Content/P";
 import { twMerge } from "tailwind-merge";
@@ -12,10 +11,11 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { faker } from '@faker-js/faker'
-import { createRandomRSE } from "test/fixtures/table-fixtures";
-import { Ongoingrules } from "@/lib/infrastructure/data/view-model/widgets";
-import { createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable, Row, Column, getSortedRowModel } from "@tanstack/react-table";
+import { ChartData, Ongoingrules } from "@/lib/infrastructure/data/view-model/widgets";
+import {
+    createColumnHelper, getCoreRowModel, getPaginationRowModel, useReactTable,
+    Row, Column, getSortedRowModel
+} from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { TableSortUpDown } from "@/component-library/components/StreamedTables/TableSortUpDown.stories";
 
@@ -31,12 +31,8 @@ ChartJS.register(
 ChartJS.defaults.font.size = 14
 ChartJS.defaults.font.family = "mono"
 
-type ChartData = {
-    labels: string[],
-    datasets: ChartDataset[]
-}
 
-type ChartDataset = {
+type ChartDataNumeric = {
     label: string,
     backgroundColor: string, // Hex
     data: number[]
@@ -82,7 +78,7 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
         * The colours correspond to those used in the LockStateTag.
         */
         const { className, ...otherprops } = props
-        const [data, setData] = useState<ChartData>({
+        const [data, setData] = useState<ChartData<ChartDataNumeric>>({
             labels: [],
             datasets: []
         })
@@ -172,7 +168,7 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
                         backgroundColor: "#f87171"
                     }
                 ]
-            } as ChartData
+            } as ChartData<ChartDataNumeric>
         }
 
         useEffect(() => {
