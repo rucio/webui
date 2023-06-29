@@ -20,6 +20,20 @@ export type IOCSymbols = {
     INPUT_PORT: symbol, // A symbol for the input port dependency.
 }
 
+
+/**
+ * A base interface for loadable features in the web application.
+ */
+export interface IFeature{
+    name: string
+    /**
+     * Load the feature into the IoC container.
+     * @param appContainer The IoC container for the application.
+     */
+    load(appContainer: Container): void;
+}
+
+
 /**
  * A base class for features in a web application. The IOC bindings for the clean architecture components 
  * of the feature are generated automatically.
@@ -36,7 +50,7 @@ TControllerParams extends TParameters,
     TErrorModel,
     TViewModel,
     > 
-{
+implements IFeature {
     /**
      * Creates a new instance of the `BaseFeature` class.
      * @template TControllerParams The type of the parameters for the controller.
@@ -53,22 +67,28 @@ TControllerParams extends TParameters,
      * @param symbols An object that contains symbols for the different types of dependencies in the IoC container.
      */
     public constructor(
-        appContainer: Container,
-        Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
-        UseCase: new (presenter: BaseOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>, 
-        useCaseContructorArgs: any[] = [],
-        Presenter: new (response: NextApiResponse, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
-        passSessionToPresenter: boolean = false,
-        symbols: IOCSymbols,
-    ) {
+        public name: string,
+        private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
+        private UseCase: new (presenter: BaseOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>, 
+        private useCaseContructorArgs: any[] = [],
+        private Presenter: new (response: NextApiResponse, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
+        private passSessionToPresenter: boolean = false,
+        private symbols: IOCSymbols,
+    ) {}
+
+    /**
+     * Load this feature into the IoC container.
+     * @param appContainer The IoC container for the application.
+     */
+    load(appContainer: Container): void {
         this.createIOCBindings<TControllerParams, TRequestModel, TResponseModel, TErrorModel, TViewModel>(
             appContainer,
-            Controller,
-            UseCase,
-            useCaseContructorArgs,
-            Presenter,
-            passSessionToPresenter,
-            symbols,
+            this.Controller,
+            this.UseCase,
+            this.useCaseContructorArgs,
+            this.Presenter,
+            this.passSessionToPresenter,
+            this.symbols,
         )
     }
 
@@ -141,7 +161,7 @@ export class BaseStreamableFeature<
     TResponseModel extends BaseResponseModel,
     TErrorModel,
     TViewModel extends BaseViewModel,
-> {
+> implements IFeature{
     /**
      * Creates a new instance of the `BaseStreamableFeature` class.
      * @param appContainer The IoC container for the application.
@@ -153,22 +173,28 @@ export class BaseStreamableFeature<
      * @param symbols An object that contains symbols for the different types of dependencies in the IoC container.
      */
     constructor(
-        appContainer: Container,
-        Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
-        UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
-        useCaseContructorArgs: any[] = [],
-        Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TViewModel, TErrorModel>,
-        passSessionToPresenter: boolean = false,
-        symbols: IOCSymbols,
-    ) {
+        public name: string,
+        private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
+        private UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
+        private useCaseContructorArgs: any[] = [],
+        private Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TViewModel, TErrorModel>,
+        private passSessionToPresenter: boolean = false,
+        private symbols: IOCSymbols,
+    ) {}
+    
+    /**
+     * Load this feature into the IoC container.
+     * @param appContainer The IoC container for the application.
+     */
+    public load(appContainer: Container): void {
         this.createIOCBindings<TControllerParams, TRequestModel, TResponseModel, TErrorModel, TViewModel>(
             appContainer,
-            Controller,
-            UseCase,
-            useCaseContructorArgs,
-            Presenter,
-            passSessionToPresenter,
-            symbols,
+            this.Controller,
+            this.UseCase,
+            this.useCaseContructorArgs,
+            this.Presenter,
+            this.passSessionToPresenter,
+            this.symbols,
         )
     }
 
@@ -225,6 +251,9 @@ export class BaseStreamableFeature<
  * Loads features from the features directory into the IoC Container.
  * @param appContainer The IoC container for the application.
  * @param featuresDir The directory to load features from. Defaults to `src/lib/infrastructure/ioc/features`.
+ * @deprecated NextJS Compiler does not support server side dynamic imports. 
+ * The modules cannot be found at runtime as .next directory contains its own dynnamic file structure.
+ * Use loadFeaturesSync instead.
  */
 export async function loadFeatures(appContainer: Container, featuresDir?: string) {
     const FEATURES_PATH = featuresDir || path.join(process.cwd(), 'src', 'lib', 'infrastructure', 'ioc', 'features');
@@ -254,6 +283,19 @@ export async function loadFeatures(appContainer: Container, featuresDir?: string
             const featureInstance = new featureClass(appContainer);
         } catch (error) {
             console.error(`Error loading feature ${featureName}: ${error}`)
+            throw error;
+        }
+    }
+}
+
+export function loadFeaturesSync(appContainer: Container, features: IFeature[]) {
+    console.log(`Loading ${features.length} features`)
+    for ( const feature of features ) {
+        try {
+            console.log(`Loading feature ${feature.name}`)
+            feature.load(appContainer);
+        } catch (error) {
+            console.error(`Error loading feature ${feature.name}: ${error}`)
             throw error;
         }
     }

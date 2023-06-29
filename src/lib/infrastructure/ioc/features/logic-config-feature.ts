@@ -19,10 +19,7 @@ export default class LoginConfigFeature extends BaseFeature<
     LoginConfigError,
     LoginViewModel
 > {
-    constructor(
-        appContainer: Container,
-
-    ) {
+    constructor(appContainer: Container) {
         const envGateway: EnvConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG)
         const symbols: IOCSymbols = {
             CONTROLLER: CONTROLLERS.LOGIN_CONFIG,
@@ -30,7 +27,7 @@ export default class LoginConfigFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.LOGIN_CONFIG,
         }
         super(
-            appContainer,
+            "LoginConfig",
             LoginConfigController,
             LoginConfigUseCase,
             [

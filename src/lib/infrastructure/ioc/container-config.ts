@@ -37,7 +37,9 @@ import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
 import SwitchAccountController, { ISwitchAccountController } from "../controller/switch-account-controller";
 import SwitchAccountPresenter from "../presenter/switch-account-presenter";
-import { loadFeatures } from "@/lib/sdk/ioc-helpers";
+import { loadFeatures, loadFeaturesSync } from "@/lib/sdk/ioc-helpers";
+import ListDidsFeature from "./features/list-dids-feature";
+import LoginConfigFeature from "./features/logic-config-feature";
 
 
 /**
@@ -50,7 +52,10 @@ appContainer.bind<DIDGatewayOutputPort>(GATEWAYS.DID).to(RucioDIDGateway);
 appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
 
-loadFeatures(appContainer)
+loadFeaturesSync(appContainer, [
+    new ListDidsFeature(appContainer),
+    new LoginConfigFeature(appContainer)
+])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
