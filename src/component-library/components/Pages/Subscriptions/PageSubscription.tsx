@@ -3,7 +3,7 @@ import { H3 } from "../../Text/Headings/H3";
 import { Tabs } from "../../Tabs/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
 import { useState } from "react";
-import { Titletd, Contenttd, Generaltable } from "../../Helpers/Metatable";
+import { Titleth, Contenttd, Generaltable } from "../../Helpers/Metatable";
 import { SubscriptionMeta } from "@/lib/core/entity/rucio";
 import { DateTag } from "../../Tags/DateTag";
 import { BoolTag } from "../../Tags/BoolTag";
@@ -100,51 +100,51 @@ export const PageSubscription = (
                         >
                             <Generaltable>
                                 <tr>
-                                    <Titletd>Name</Titletd>
+                                    <Titleth>Name</Titleth>
                                     <Contenttd>{meta.name}</Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>Account</Titletd>
+                                    <Titleth>Account</Titleth>
                                     <Contenttd>{meta.account}</Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>Comments</Titletd>
+                                    <Titleth>Comments</Titleth>
                                     <Contenttd>{meta.comments}</Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>ID</Titletd>
+                                    <Titleth>ID</Titleth>
                                     <Contenttd>{meta.id}</Contenttd>
                                 </tr>
                             </Generaltable>
                             <Generaltable>
                                 <tr>
-                                    <Titletd>Created At</Titletd>
+                                    <Titleth>Created At</Titleth>
                                     <Contenttd><DateTag date={new Date(meta.created_at)} /></Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>Last Processed</Titletd>
+                                    <Titleth>Last Processed</Titleth>
                                     <Contenttd><DateTag date={new Date(meta.last_processed)} /></Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>Updated At</Titletd>
+                                    <Titleth>Updated At</Titleth>
                                     <Contenttd><DateTag date={new Date(meta.updated_at)} /></Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>Lifetime</Titletd>
+                                    <Titleth>Lifetime</Titleth>
                                     <Contenttd><DateTag date={new Date(meta.lifetime)} /></Contenttd>
                                 </tr>
                             </Generaltable>
                             <Generaltable>
                                 <tr>
-                                    <Titletd>State</Titletd>
+                                    <Titleth>State</Titleth>
                                     <Contenttd><SubscriptionStateTag state={meta.state} /></Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>Retroactive</Titletd>
+                                    <Titleth>Retroactive</Titleth>
                                     <Contenttd><BoolTag val={meta.retroactive} /></Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titletd>Policy ID</Titletd>
+                                    <Titleth>Policy ID</Titleth>
                                     <Contenttd>{meta.policyid}</Contenttd>
                                 </tr>
                             </Generaltable>

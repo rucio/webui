@@ -5,7 +5,7 @@ import {
     RSEBlockState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState,
     DIDAvailability, RSEAccountUsageLimit,
     ReplicaState,
-    RSE, RSEType
+    RSE, RSEType, Rule
 } from '@/lib/core/entity/rucio'
 import {
     DIDDatasetReplicas, DIDRules, FilereplicaState, FilereplicaStateD
@@ -128,6 +128,21 @@ export function createRSE(): RSE {
         deterministic: faker.datatype.boolean(),
         volatile: faker.datatype.boolean(),
         staging_area: faker.datatype.boolean(),
+    }
+}
+
+export function createRule(): Rule {
+    return {
+        id: faker.string.uuid(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        account: faker.internet.userName(),
+        rse_expression: createRSEExpression(),
+        created_at: faker.date.past().toISOString(),
+        remaining_lifetime: faker.number.int({ min: 0, max: 1e6 }),
+        state: randomEnum<RuleState>(RuleState),
+        locks_ok_cnt: faker.number.int({ min: 0, max: 10 }),
+        locks_replicating_cnt: faker.number.int({ min: 0, max: 10 }),
+        locks_stuck_cnt: faker.number.int({ min: 0, max: 10 }),
     }
 }
 

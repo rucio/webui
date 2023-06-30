@@ -91,6 +91,19 @@ export type RuleMeta = {
     updated_at: DateISO
 }
 
+export type Rule = {
+    id: string;
+    name: string;
+    account: string;
+    rse_expression: string;
+    created_at: DateISO;
+    remaining_lifetime: number;
+    state: RuleState;
+    locks_ok_cnt: number;
+    locks_replicating_cnt: number;
+    locks_stuck_cnt: number;
+}
+
 export type SubscriptionMeta = {
     account: string
     comments: string

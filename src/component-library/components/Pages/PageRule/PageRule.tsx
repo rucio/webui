@@ -21,7 +21,7 @@ import { HiDotsHorizontal, HiExternalLink } from "react-icons/hi";
 import { TableExternalLink } from "../../StreamedTables/TableExternalLink";
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
-import { Titletd, Contenttd, Generaltable } from "../../Helpers/Metatable";
+import { Titleth, Contenttd, Generaltable } from "../../Helpers/Metatable";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export interface RulePageLockEntry {
@@ -210,25 +210,25 @@ export const PageRule = (
 
                         <Generaltable>
                             <tr>
-                                <Titletd>Scope</Titletd>
+                                <Titleth>Scope</Titleth>
                                 <Contenttd>{meta.scope}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Name</Titletd>
+                                <Titleth>Name</Titleth>
                                 <Contenttd>{meta.name}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titletd>Created At</Titletd>
+                                <Titleth>Created At</Titleth>
                                 <Contenttd>{format("yyyy-MM-dd", new Date(meta.created_at))}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Updated At</Titletd>
+                                <Titleth>Updated At</Titleth>
                                 <Contenttd>{format("yyyy-MM-dd", new Date(meta.updated_at))}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Expires At</Titletd>
+                                <Titleth>Expires At</Titleth>
                                 <Contenttd>
                                     {
                                         format("yyyy-MM-dd", new Date(meta.expires_at))
@@ -239,19 +239,19 @@ export const PageRule = (
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titletd>Locks OK</Titletd>
+                                <Titleth>Locks OK</Titleth>
                                 <Contenttd>
                                         <P mono>{meta.locks_ok_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Locks Replicating</Titletd>
+                                <Titleth>Locks Replicating</Titleth>
                                 <Contenttd>
                                         <P mono>{meta.locks_replicating_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Locks Stuck</Titletd>
+                                <Titleth>Locks Stuck</Titleth>
                                 <Contenttd>
                                         <P mono>{meta.locks_stuck_cnt}</P>
                                 </Contenttd>
@@ -259,71 +259,71 @@ export const PageRule = (
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titletd>Purge Replicas</Titletd>
+                                <Titleth>Purge Replicas</Titleth>
                                 <Contenttd>{<BoolTag val={meta.purge_replicas} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Split Container</Titletd>
+                                <Titleth>Split Container</Titleth>
                                 <Contenttd>{<BoolTag val={meta.split_container} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Ignore Account Limit</Titletd>
+                                <Titleth>Ignore Account Limit</Titleth>
                                 <Contenttd>{<BoolTag val={meta.ignore_account_limit} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Ignore Availability</Titletd>
+                                <Titleth>Ignore Availability</Titleth>
                                 <Contenttd>{<BoolTag val={meta.ignore_availability} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Locked</Titletd>
+                                <Titleth>Locked</Titleth>
                                 <Contenttd>{<BoolTag val={meta.locked} />}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titletd>Copies</Titletd>
+                                <Titleth>Copies</Titleth>
                                 <Contenttd>{meta.copies}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>ID</Titletd>
+                                <Titleth>ID</Titleth>
                                 <Contenttd className="font-mono">{meta.id}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>DID Type</Titletd>
+                                <Titleth>DID Type</Titleth>
                                 <Contenttd><DIDTypeTag didtype={meta.did_type} /></Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Grouping</Titletd>
+                                <Titleth>Grouping</Titleth>
                                 <Contenttd><DIDTypeTag didtype={meta.grouping} /></Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Priority</Titletd>
+                                <Titleth>Priority</Titleth>
                                 <Contenttd>{meta.priority}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titletd>RSE Expression</Titletd>
+                                <Titleth>RSE Expression</Titleth>
                                 <Contenttd className="font-mono">{meta.rse_expression}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Notification</Titletd>
+                                <Titleth>Notification</Titleth>
                                 <Contenttd><RuleNotificationTag notificationState={meta.notification} /></Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titletd>Account</Titletd>
+                                <Titleth>Account</Titleth>
                                 <Contenttd>{meta.account}</Contenttd>
                             </tr>
                             <tr>
-                                <Titletd>Activity</Titletd>
+                                <Titleth>Activity</Titleth>
                                 <Contenttd>{meta.activity}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titletd>State</Titletd>
+                                <Titleth>State</Titleth>
                                 <Contenttd><RuleStateTag state={meta.state} /></Contenttd>
                             </tr>
                         </Generaltable>

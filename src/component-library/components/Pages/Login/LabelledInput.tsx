@@ -31,7 +31,7 @@ export const LabelledInput: React.FC<LabelledInputProps> = (
                 htmlFor={idinput}
                 id={idinput + "-label"}
                 className={twMerge(
-                    "w-32 text-right",
+                    "w-32 text-right flex-none",
                 )}
             >
                 <P>{label}</P>

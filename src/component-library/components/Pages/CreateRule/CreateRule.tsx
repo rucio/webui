@@ -348,9 +348,9 @@ export const CreateRule = (
                             <div className="w-full">
                                 <Label label="expiryDate">Expiry Date</Label>
                                 <DateInput
-                                    startDate={Page2State.expiryDate}
+                                    initialdate={Page2State.expiryDate}
                                     placeholder="Rule Expiry Date"
-                                    onChange={(date: Date) => { setPage2State({ ...Page2State, expiryDate: date }) }}
+                                    onchange={(date: Date) => { setPage2State({ ...Page2State, expiryDate: date }) }}
                                     id="expiryDate"
                                 />
                             </div>

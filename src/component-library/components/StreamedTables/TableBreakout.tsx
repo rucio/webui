@@ -1,7 +1,7 @@
 import { flexRender, Row } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { Contenttd, Generaltable, Titletd } from "../Helpers/Metatable";
+import { Contenttd, Generaltable, Titleth } from "../Helpers/Metatable";
 
 
 type TableBreakout<T> = JSX.IntrinsicElements["div"] & {
@@ -26,7 +26,7 @@ export const TableBreakout = <T,>(
                 {Object.keys(props.keys).map((key, index) => {
                     return (
                         <tr key={index}>
-                            <Titletd>{props.keys[key]}</Titletd>
+                            <Titleth>{props.keys[key]}</Titleth>
                             <Contenttd>
                             {
                                 row ? flexRender(
