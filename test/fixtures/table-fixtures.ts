@@ -10,6 +10,7 @@ import {
 import {
     DIDDatasetReplicas, DIDRules, FilereplicaState, FilereplicaStateD
 } from '@/lib/infrastructure/data/view-model/page-did';
+import { RSEAttribute, RSEProtocol } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 
 export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
@@ -128,6 +129,45 @@ export function createRSE(): RSE {
         deterministic: faker.datatype.boolean(),
         volatile: faker.datatype.boolean(),
         staging_area: faker.datatype.boolean(),
+    }
+}
+
+export function createRSEProtocol(): RSEProtocol {
+    return {
+        rseid: faker.string.uuid(),
+        scheme: faker.helpers.arrayElement(["srm", "gsiftp", "root", "davs", "s3", "file"]),
+        hostname: faker.internet.ip(),
+        port: faker.number.int({ min: 0, max: 1e4 }),
+        prefix: faker.lorem.words(3).replace(/\s/g, "."),
+        impl: "rucio.rse.protocols.gfal.Default",
+        priorities_lan: {
+            read: faker.number.int({ min: 0, max: 10 }),
+            write: faker.number.int({ min: 0, max: 10 }),
+            delete: faker.number.int({ min: 0, max: 10 }),
+        },
+        priorities_wan: {
+            read: faker.number.int({ min: 0, max: 10 }),
+            write: faker.number.int({ min: 0, max: 10 }),
+            delete: faker.number.int({ min: 0, max: 10 }),
+            tpc: faker.number.int({ min: 0, max: 10 }),
+            tpcwrite: faker.number.int({ min: 0, max: 10 }),
+            tpcread: faker.number.int({ min: 0, max: 10 }),
+        },
+        updated_at: faker.date.recent().toISOString(),
+        created_at: faker.date.past().toISOString(),
+    }
+}
+
+export function createRSEAttribute(): RSEAttribute {
+    return {
+        key: faker.lorem.words(2).replace(/\s/g, "-"),
+        value: faker.helpers.arrayElement([
+            faker.lorem.words(3),
+            faker.date.past().toISOString(),
+            faker.number.int({ min: 0, max: 1e6 }),
+            faker.datatype.boolean(),
+            null,
+        ]),
     }
 }
 
