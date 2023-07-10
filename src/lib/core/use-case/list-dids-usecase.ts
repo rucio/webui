@@ -64,6 +64,7 @@ class ListDIDsUseCase extends BaseStreamingUseCase<ListDIDsRequest, ListDIDsResp
             length: 0,
             bytes: 0,
         }
+        this.didGateway.getDID()
         return {
             data: responseModel,
             status: 'success',
