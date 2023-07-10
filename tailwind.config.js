@@ -4,7 +4,10 @@ module.exports = {
         extract: {
             columnMetaStyle: (content) => {
                 return content.match(/(?<=meta([:\s{]*)style:\s")[a-zA-Z\-\[\]0-9:\s]*(?=")/)
-            }
+            },
+            reactModalStyle: (content) => {
+                return content.match(/(?<=overlayClassName=")[a-zA-Z\-\[\]0-9:\s]*(?=")/)
+            },
         }
     },
     theme: {

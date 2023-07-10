@@ -148,10 +148,12 @@ describe("Login Page Test", () => {
             status: "error",
             message: "Invalid Credentials",
             rucioAccount: "",
+            rucioMultiAccount: "",
             rucioAuthType: "",
             rucioAuthToken: "",
             rucioIdentity: "",
             rucioAuthTokenExpires: "",
+            role: undefined,
         }
 
         await act( async () => render(<LoginStory
@@ -190,10 +192,12 @@ describe("Login Page Test", () => {
             status: "error",
             message: "Invalid Credentials",
             rucioAccount: "",
+            rucioMultiAccount: "",
             rucioAuthType: "",
             rucioAuthToken: "",
             rucioIdentity: "",
             rucioAuthTokenExpires: "",
+            role: undefined,
         }
 
         await act( async () => render(<LoginStory
