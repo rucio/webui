@@ -32,7 +32,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                 if(attr.key == 'admin' && attr.value == 'True') {
                     role = Role.ADMIN;
                 }
-                if(attr.key.startsWith('country-')) {
+                else if(attr.key.startsWith('country-')) {
                     country = attr.key.split('-')[1];
                     if(attr.value == 'admin') {
                         countryRole = Role.ADMIN;
@@ -41,6 +41,8 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                     } else {
                         countryRole = undefined;
                     }
+                }else {
+                    role = Role.USER;
                 }
             })
         } catch(error: AccountAttributesDTO | any) {
