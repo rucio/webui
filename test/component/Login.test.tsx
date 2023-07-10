@@ -53,7 +53,7 @@ describe("Login Page Test", () => {
             const OIDCButton = screen.getByText(provider.name)
             expect(OIDCButton).toBeInTheDocument()
         })
-        const oidcParent = screen.getByTestId('oidc-buttons')
+        const oidcParent = screen.getByRole('generic', {name: /OIDC Login Buttons/})
         expect(oidcParent.className).not.toContain('hidden')
 
         // Check VO tabs are rendered
@@ -79,7 +79,7 @@ describe("Login Page Test", () => {
         expect(loginFormParent.className).toContain('hidden')
 
         // check only 1 account field is rendered
-        const accountFieldParent = screen.getByRole("group", {name: "Account Fields"})
+        const accountFieldParent = screen.getByRole("group", {name: /Choose Account Name/})
         expect(accountFieldParent.className).not.toContain('hidden')
         fireEvent.click(userpassButton)
         expect(accountFieldParent.className).toContain('hidden')
@@ -107,7 +107,7 @@ describe("Login Page Test", () => {
         await act( async () => render(<Login/>))
 
         // Check OIDC buttons: 2 pieces and collapsed
-        const oidcParent = screen.getByTestId('oidc-buttons')
+        const oidcParent = screen.getByRole('generic', {name: /OIDC Login Buttons/})
         expect(oidcParent.className).toContain('hidden')
         
     })

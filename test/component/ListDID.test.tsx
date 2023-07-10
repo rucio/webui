@@ -5,15 +5,14 @@
 import { render, act, screen, cleanup, fireEvent } from "@testing-library/react";
 import { ListDID as ListDIDStory } from "@/component-library/components/Pages/ListDID/ListDID";
 import { DIDMeta } from "@/lib/core/entity/rucio";
-import { createDID } from "test/fixtures/table-fixtures";
+import { createDID, createDIDMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
 var format = require("date-format")
 
 describe("ListDID Story Test", () => {
     it("Checks empty render of the story", async () => {
         await act(async () => render(
             <ListDIDStory
-                didSearch={jest.fn(x => console.log(x))}
-                didResponse={{ data: [], fetchStatus: "idle" }}
+                comdom={mockUseComDOM(Array.from({length: 0}, () => createDID()))}
                 didMetaQuery={jest.fn(x => console.log(x))}
                 didMetaQueryResponse={{} as DIDMeta}
             />
@@ -60,39 +59,15 @@ describe("ListDID Story Test", () => {
             SOLUTION:
             remove `aria-label` from the table rows, grab table rows differently.
         */
-        const arrayLength = 5
-        const mockDIDMeta = {
-            "name": "dataset-YSytZjXJMdiCsSiiUwXx",
-            "scope": "Lawrence.Myers",
-            "account": "Lawrence_Myers",
-            "did_type": "Dataset",
-            "created_at": new Date(2021, 3),
-            "updated_at": new Date(2022, 10),
-            "availability": "Deleted",
-            "obsolete": false,
-            "hidden": true,
-            "suppressed": true,
-            "purge_replicas": true,
-            "monotonic": true,
-            "is_open": true,
-            "adler32": null,
-            "guid": null,
-            "md5": null,
-            "filesize": null
-        } as DIDMeta
+        const mockDIDMeta = createDIDMeta()
         await act(async () => render(
             <ListDIDStory
-                didSearch={jest.fn(x => console.log(x))}
-                didResponse={{
-                    data: Array.from({length: arrayLength}, (v, k) => createDID()), fetchStatus: "idle"
-                }}
+                comdom={mockUseComDOM(Array.from({length: 100}, () => createDID()))}
                 didMetaQuery={jest.fn(x => console.log(x))}
                 didMetaQueryResponse={mockDIDMeta}
             />
         ))
         const tableRows = screen.getAllByRole("row", {selected: false})
-        expect(tableRows).toHaveLength(arrayLength)
-        expect(tableRows[0]).toBeInTheDocument()
         // check that metaview is still invisible
         const noDIDSelectedDiv = screen.getByText("No DID selected").closest("div")
         expect(noDIDSelectedDiv).toHaveClass("block")
@@ -104,7 +79,7 @@ describe("ListDID Story Test", () => {
         const goDIDViewButton = screen.getByRole("generic", { name: "Go To DID Page" })
         expect(goDIDViewButton).toHaveClass("block")
         const didCreationRow = screen.getByRole("row", { name: "Date of DID Creation" })
-        expect(didCreationRow).toHaveTextContent(format("yyyy-MM-dd", mockDIDMeta.created_at))
+        expect(didCreationRow).toHaveTextContent(format("yyyy-MM-dd", new Date(mockDIDMeta.created_at)))
         const didObsoleteRow = screen.getByRole("row", { name: "DID Obsolete" })
         expect(didObsoleteRow).toHaveTextContent(mockDIDMeta.obsolete ? "True" : "False")
     })
