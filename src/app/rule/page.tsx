@@ -5,7 +5,7 @@ import { createRuleMeta } from "test/fixtures/table-fixtures";
 import { useState, useEffect } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { LockStateTag } from "@/component-library/components/Tags/LockStateTag";
-import { HTTPRequest } from "@/lib/infrastructure/web-worker/comdom-wrapper";
+import { HTTPRequest } from "@/lib/common/http";
 
 export default function PageRule() {
     const comDOM = useComDOM<RulePageLockEntry>(

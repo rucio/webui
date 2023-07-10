@@ -12,7 +12,7 @@ import { FetchStatus } from '@tanstack/react-query';
 import { useEffect, useState } from "react";
 import { createDID, createDIDDatasetReplicas, createDIDMeta, createDIDRules, createFileReplicaState, createFileReplicaStateD, mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { DID } from '@/lib/core/entity/rucio';
-import { HTTPRequest } from '@/lib/infrastructure/web-worker/comdom-wrapper';
+import { HTTPRequest } from "@/lib/common/http";
 
 
 export default function PageDID() {

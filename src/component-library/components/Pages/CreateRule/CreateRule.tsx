@@ -15,6 +15,7 @@ import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
 import { SummaryPage } from './SummaryPage';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
+import { HTTPRequest } from "@/lib/common/http";
 
 var format = require("date-format")
 
@@ -36,7 +37,6 @@ import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';
 import { didToScopename } from '../../StreamedTables/helpers';
 import { CreateRuleRSETable } from './CreateRuleRSETable';
-import { HTTPRequest } from '@/lib/infrastructure/web-worker/comdom-wrapper';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`

@@ -7,10 +7,8 @@ import {
     TypedDIDValidationQuery, TypedDIDValidationResponse,
     RSESearchQuery
 } from '@/lib/infrastructure/data/view-model/create-rule'
+import { HTTPRequest } from "@/lib/common/http";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { HTTPRequest } from "@/lib/infrastructure/web-worker/comdom-wrapper";
-import { useEffect } from "react";
-
 
 export default function CreateRule() {
 
