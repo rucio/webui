@@ -1,4 +1,4 @@
-import { ReplicaState, RSEBlockState } from "@/lib/core/entity/rucio"
+import { DateISO, ReplicaState, RSEBlockState } from "@/lib/core/entity/rucio"
 import { RuleState } from "@/lib/core/entity/rucio"
 import { ObjectFlags } from "typescript"
 
@@ -41,12 +41,12 @@ export type DIDDatasetReplicas = {
     availability: boolean;
     available_files: number;
     available_bytes: number;
-    creation_date: Date;
-    last_accessed: Date;
+    creation_date: DateISO;
+    last_accessed: DateISO;
 }
 
 // these are general key-value pairs including the metadata
-export type DIDKeyValuePairs = { key: string; value: string | number | boolean | Date | null }
+export type DIDKeyValuePairs = { key: string; value: string | number | boolean | null }
 
 export type DIDRules = {
     id: string;
@@ -54,5 +54,5 @@ export type DIDRules = {
     state: RuleState;
     account: string;
     subscription: {name: string, account: string}; // name and account together are unique for a subscription
-    last_modified: Date;
+    last_modified: DateISO;
 }

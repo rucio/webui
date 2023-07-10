@@ -4,13 +4,26 @@ import {
     LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
     RSEBlockState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState,
     DIDAvailability, RSEAccountUsageLimit,
-    ReplicaState
+    ReplicaState,
+    RSE, RSEType, Rule
 } from '@/lib/core/entity/rucio'
 import {
     DIDDatasetReplicas, DIDRules, FilereplicaState, FilereplicaStateD
 } from '@/lib/infrastructure/data/view-model/page-did';
+import { RSEAttribute, RSEProtocol } from '@/lib/infrastructure/data/view-model/rse';
+import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 
-var dedent = require('dedent-js');
+export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
+    return {
+        query: {
+            data: data,
+            fetchStatus: "idle",
+        },
+        start: () => { },
+        resume: () => { },
+        pause: () => { },
+    } as UseComDOM<T>
+}
 
 function createRandomScope(): string {
     return `user.${faker.person.firstName()}${faker.person.lastName()}`
@@ -20,7 +33,7 @@ function randomEnum<T>(e: any): T {
     return faker.helpers.arrayElement(Object.values(e)) as T
 }
 
-function createRandomRSE(): string {
+function createRSEName(): string {
     return (
         "RSE-" +
         faker.location.country().toUpperCase().replace(/\s/g, "-").replace(/[^a-zA-Z\d\s]/g, "") +
@@ -62,7 +75,7 @@ export function createRandomRulePageLockEntry(): RulePageLockEntry {
     return {
         scope: createRandomScope(),
         name: faker.string.alphanumeric(10),
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         state: faker.helpers.arrayElement(['R', 'O', 'S']) as LockState,
         ddm_link: faker.internet.url(),
         fts_link: faker.internet.url(),
@@ -74,9 +87,9 @@ export function createRuleMeta(): RuleMeta {
         account: faker.internet.userName(),
         activity: faker.company.buzzPhrase(),
         copies: faker.number.int({ min: 1, max: 10 }),
-        created_at: faker.date.past(),
+        created_at: faker.date.past().toISOString(),
         did_type: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
-        expires_at: faker.date.future(),
+        expires_at: faker.date.future().toISOString(),
         grouping: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
         id: faker.string.uuid(),
         ignore_account_limit: faker.datatype.boolean(),
@@ -89,22 +102,87 @@ export function createRuleMeta(): RuleMeta {
         notification: randomEnum<RuleNotification>(RuleNotification),
         priority: faker.number.int({ min: 0, max: 3 }),
         purge_replicas: faker.datatype.boolean(),
-        rse_expression: createRandomRSE(),
+        rse_expression: createRSEName(),
         scope: createRandomScope(),
         split_container: faker.datatype.boolean(),
         state: randomEnum<RuleState>(RuleState),
-        updated_at: faker.date.recent(),
+        updated_at: faker.date.recent().toISOString(),
     }
 }
 
 export function createRSEAccountUsageLimit(): RSEAccountUsageLimit {
     return {
         rse_id: faker.string.uuid(),
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         account: faker.internet.userName(),
         used_files: faker.number.int({ min: 0, max: 1e6 }),
         used_bytes: faker.number.int({ min: 0, max: 1e12 }),
         quota_bytes: faker.number.int({ min: 0, max: 1e12 }),
+    }
+}
+
+export function createRSE(): RSE {
+    return {
+        id: faker.string.uuid(),
+        name: createRSEName(),
+        rse_type: randomEnum<RSEType>(RSEType),
+        deterministic: faker.datatype.boolean(),
+        volatile: faker.datatype.boolean(),
+        staging_area: faker.datatype.boolean(),
+    }
+}
+
+export function createRSEProtocol(): RSEProtocol {
+    return {
+        rseid: faker.string.uuid(),
+        scheme: faker.helpers.arrayElement(["srm", "gsiftp", "root", "davs", "s3", "file"]),
+        hostname: faker.internet.ip(),
+        port: faker.number.int({ min: 0, max: 1e4 }),
+        prefix: faker.lorem.words(3).replace(/\s/g, "."),
+        impl: "rucio.rse.protocols.gfal.Default",
+        priorities_lan: {
+            read: faker.number.int({ min: 0, max: 10 }),
+            write: faker.number.int({ min: 0, max: 10 }),
+            delete: faker.number.int({ min: 0, max: 10 }),
+        },
+        priorities_wan: {
+            read: faker.number.int({ min: 0, max: 10 }),
+            write: faker.number.int({ min: 0, max: 10 }),
+            delete: faker.number.int({ min: 0, max: 10 }),
+            tpc: faker.number.int({ min: 0, max: 10 }),
+            tpcwrite: faker.number.int({ min: 0, max: 10 }),
+            tpcread: faker.number.int({ min: 0, max: 10 }),
+        },
+        updated_at: faker.date.recent().toISOString(),
+        created_at: faker.date.past().toISOString(),
+    }
+}
+
+export function createRSEAttribute(): RSEAttribute {
+    return {
+        key: faker.lorem.words(2).replace(/\s/g, "-"),
+        value: faker.helpers.arrayElement([
+            faker.lorem.words(3),
+            faker.date.past().toISOString(),
+            faker.number.int({ min: 0, max: 1e6 }),
+            faker.datatype.boolean(),
+            null,
+        ]),
+    }
+}
+
+export function createRule(): Rule {
+    return {
+        id: faker.string.uuid(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        account: faker.internet.userName(),
+        rse_expression: createRSEExpression(),
+        created_at: faker.date.past().toISOString(),
+        remaining_lifetime: faker.number.int({ min: 0, max: 1e6 }),
+        state: randomEnum<RuleState>(RuleState),
+        locks_ok_cnt: faker.number.int({ min: 0, max: 10 }),
+        locks_replicating_cnt: faker.number.int({ min: 0, max: 10 }),
+        locks_stuck_cnt: faker.number.int({ min: 0, max: 10 }),
     }
 }
 
@@ -116,8 +194,8 @@ export function createDIDMeta(): DIDMeta {
         scope: createRandomScope(),
         account: faker.internet.userName(),
         did_type: did_type,
-        created_at: faker.date.past(),
-        updated_at: faker.date.recent(),
+        created_at: faker.date.past().toISOString(),
+        updated_at: faker.date.recent().toISOString(),
         availability: randomEnum<DIDAvailability>(DIDAvailability),
         obsolete: faker.datatype.boolean(),
         hidden: faker.datatype.boolean(),
@@ -136,13 +214,13 @@ export function createDIDMeta(): DIDMeta {
 
 export function createDIDDatasetReplicas(): DIDDatasetReplicas {
     return {
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         rseblocked: faker.number.int({ min: 0, max: 7 }) as RSEBlockState,
         availability: faker.datatype.boolean(),
         available_files: faker.number.int({ min: 0, max: 1e6 }),
         available_bytes: faker.number.int({ min: 0, max: 1e12 }),
-        creation_date: faker.date.past(),
-        last_accessed: faker.date.recent(),
+        creation_date: faker.date.past().toISOString(),
+        last_accessed: faker.date.recent().toISOString(),
     }
 }
 
@@ -153,13 +231,13 @@ export function createDIDRules(): DIDRules {
         state: randomEnum<RuleState>(RuleState),
         account: faker.internet.userName(),
         subscription: { name: faker.lorem.words(3).replace(/\s/g, "."), account: faker.internet.userName() },
-        last_modified: faker.date.recent(),
+        last_modified: faker.date.recent().toISOString(),
     }
 }
 
 export function createFileReplicaState(): FilereplicaState {
     return {
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         state: randomEnum<ReplicaState>(ReplicaState),
     }
 }
@@ -192,15 +270,15 @@ export function createSubscriptionMeta(): SubscriptionMeta {
     return {
         account: faker.internet.userName(),
         comments: faker.lorem.words(10),
-        created_at: faker.date.past(),
+        created_at: faker.date.past().toISOString(),
         id: faker.string.uuid(),
-        last_processed: faker.date.recent(),
-        lifetime: faker.date.future(),
+        last_processed: faker.date.recent().toISOString(),
+        lifetime: faker.date.future().toISOString(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         policyid: faker.number.int({ min: 0, max: 1e5 }),
         retroactive: faker.datatype.boolean(),
         state: randomEnum<SubscriptionState>(SubscriptionState),
-        updated_at: faker.date.recent(),
+        updated_at: faker.date.recent().toISOString(),
         // more difficult datatypes:
         filter: JSON.stringify({
             "scope": [

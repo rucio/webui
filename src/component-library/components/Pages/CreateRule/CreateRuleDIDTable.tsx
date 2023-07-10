@@ -1,7 +1,6 @@
 import { DIDLong, DIDType } from "@/lib/core/entity/rucio";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { twMerge } from "tailwind-merge";
-import { createColumnHelper, RowSelection } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { Number } from "../../Text/Content/Number";
 import { P } from "../../Text/Content/P";
@@ -9,12 +8,12 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { HiDotsHorizontal } from "react-icons/hi";
-import { H3 } from "../../Text/Headings/H3";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const CreateRuleDIDTable = (
     props: {
-        tableData: TableData<DIDLong>,
+        comdom: UseComDOM<DIDLong>,
         handleChange: (data: DIDLong[]) => void,
     }
 ) => {
@@ -91,7 +90,7 @@ export const CreateRuleDIDTable = (
     ]
     return (
         <StreamedTable
-            tabledata={props.tableData}
+            tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tableselecting={{
                 handleChange: props.handleChange,

@@ -1,5 +1,5 @@
 import { DID, DIDMeta } from "@/lib/core/entity/rucio"
-import { DIDName, DIDSearchResponse, DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule"
+import { DIDName } from "@/lib/infrastructure/data/view-model/create-rule"
 import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 import { TextInput } from "../../Input/TextInput"
@@ -7,12 +7,12 @@ import { Button } from "../../Button/Button"
 import { Checkbox } from "../../Checkbox/Checkbox"
 import { DIDMetaView } from "./DIDMetaView"
 import { ListDIDTable } from "./ListDIDTable"
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM"
 
 var format = require("date-format")
 
 export interface ListDIDPageProps {
-    didSearch: (didSearchQuery: DIDSearchQuery) => void,
-    didResponse: DIDSearchResponse,
+    comdom: UseComDOM<DID>,
     didMetaQuery: (did: DIDName) => void,
     didMetaQueryResponse: DIDMeta,
 }
@@ -82,7 +82,17 @@ export const ListDID = (
                         />
                     </div>
                     <div className="w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0">
-                        <Button type="button" label="Search" onClick={(e: any) => { props.didSearch({ DIDSearchString: didSearchQuery }) }} id="did-button-search" />
+                        <Button
+                            type="button"
+                            label="Search"
+                            onClick={async (e: any) => {
+                                // deal with comDOM here
+                                // call `props.comDOM.setQuery` with the query
+                                // and start query
+                                props.comdom.start()
+                            }}
+                            id="did-button-search"
+                        />
                     </div>
                 </form>
                 <div
@@ -133,11 +143,7 @@ export const ListDID = (
                     )}
                 >
                     <ListDIDTable
-                        tableData={{
-                            data: props.didResponse.data,
-                            fetchStatus: "idle",
-                            pageSize: 10,
-                        }}
+                        comdom={props.comdom}
                         selectionFunc={(data: DID[]) => {
                             // pass data from child (table) into the component state
                             setSelection(data)

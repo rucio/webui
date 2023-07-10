@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { ListDIDTable as L } from "./ListDIDTable";
-import { createRandomDIDLong } from "test/fixtures/table-fixtures";
+import { createDID, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { DID } from "@/lib/core/entity/rucio";
 
 export default {
@@ -12,10 +12,6 @@ const Template: StoryFn<typeof L> = (args) => <L {...args} />;
 
 export const ListDIDTable = Template.bind({});
 ListDIDTable.args = {
-    tableData: {
-        data: Array.from({length: 100}, (_, i) => createRandomDIDLong() as DID),
-        fetchStatus: "idle",
-        pageSize: 10,
-    },
+    comdom: mockUseComDOM(Array.from({length: 100}, () => createDID())),
     selectionFunc: (data: DID[]) => {console.info("ListDIDTable", data)}
 };

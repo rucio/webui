@@ -30,11 +30,7 @@ export default function ListSubscription() {
     return (
         <div>
             <ListSubscriptionStory
-                subscriptions={{
-                    data: ComDOM.query.data,
-                    fetchStatus: ComDOM.query.fetchStatus,
-                    pageSize: 10,
-                }}
+                comdom={ComDOM}
             />
         </div>
     )

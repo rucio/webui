@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { createDIDDatasetReplicas } from "test/fixtures/table-fixtures";
+import { createDIDDatasetReplicas, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { PageDIDDatasetReplicas as P } from "./PageDIDDatasetReplicas";
 
 export default {
@@ -11,9 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageDIDDatasetReplicas = Template.bind({});
 PageDIDDatasetReplicas.args = {
-	tableData: {
-		data: Array.from({length: 100}, (_, i) => createDIDDatasetReplicas()),
-		fetchStatus: "idle",
-		pageSize: 10
-	}
+	comdom: mockUseComDOM(Array.from({ length: 100 }, (_, i) => createDIDDatasetReplicas()))
 };

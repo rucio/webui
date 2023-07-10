@@ -1,23 +1,22 @@
-import { StyleMetaColumnDef, TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
+import { StyleMetaColumnDef } from "@/lib/infrastructure/data/view-model/streamedtables";
 import {
-    ColumnDef, createColumnHelper, flexRender, getCoreRowModel,
-    getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-    RowSelectionState,
-    useReactTable
+    flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
+    getSortedRowModel, RowSelectionState, useReactTable
 } from "@tanstack/react-table";
-import { FetchstatusIndicator } from "./FetchstatusIndicator";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { PaginationDiv } from "./PaginationDiv";
-import { TableBreakout } from "./TableBreakout";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { TableFooter } from "./TableFooter";
 
 type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
-    tabledata: TableData<T>
+    tablecomdom: UseComDOM<T>
     tablecolumns: any[] // todo type this
     tablestyling?: Partial<{
         visibility?: Record<string, boolean>
         tableHeadRowStyle?: string
         tableBodyRowStyle?: string
+        pageSize?: number
+        tableFooterStack?: boolean
     }>
     tableselecting?: {
         handleChange: (data: T[]) => void,
@@ -36,7 +35,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
     const table = useReactTable<T>({
-        data: props.tabledata.data || [],
+        data: props.tablecomdom.query.data || [],
         columns: props.tablecolumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -72,9 +71,10 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     useEffect(() => {
         table.setPageIndex(pageIndex)
     }, [pageIndex, table])
+    // Page number
     useEffect(() => {
-        table.setPageSize(props.tabledata.pageSize)
-    }, [props.tabledata.pageSize, table])
+        table.setPageSize(props.tablestyling?.pageSize ?? 10) // default to 10
+    }, [props.tablestyling?.pageSize, table])
 
     // Breakout
     const [breakoutVisibility, setBreakoutVisibility] = useState(props.tableselecting?.breakOut?.breakoutVisibility ?? false)
@@ -85,7 +85,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
     return (
         <table
             className={twMerge(
-                props.tabledata.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
+                props.tablecomdom.query.fetchStatus === "fetching" ? "hover:cursor-wait" : "",
                 "bg-white dark:bg-gray-700",
                 "w-full",
                 "relative",
@@ -94,18 +94,8 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
             )}
             {...otherprops}
             role="grid" // if table maintains selection state or allows 2D nav -> use grid
-            // see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/table_role#description
+        // see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/table_role#description
         >
-            <caption
-                className={twMerge(
-                    "absolute",
-                    "top-12 right-0 m-2",
-                    "pointer-events-none"
-                )}
-                aria-label="Table Fetch Status"
-            >
-                <FetchstatusIndicator status={props.tabledata.fetchStatus} />
-            </caption>
             <thead role="rowgroup" aria-label="Table Header">
                 <tr
                     className={twMerge(
@@ -169,26 +159,15 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
                     )
                 })}
             </tbody>
-            <tfoot role="rowgroup" aria-label="Table Footer">
-                <tr role="row" aria-label="Extra Information">
-                    <td
-                        className={twMerge(breakoutVisibility && Object.keys(rowSelection).length === 1 ? "table-cell" : "hidden")}
-                        colSpan={table.getVisibleLeafColumns().length}
-                    >
-                        <TableBreakout
-                            keys={props.tableselecting?.breakOut?.keys ?? {} as Record<string, string>}
-                            row={table.getSelectedRowModel().flatRows[0]}
-                        />
-                    </td>
-                </tr>
-                <tr role="row" aria-label="Pagination">
-                    <td colSpan={table.getVisibleLeafColumns().length}>
-                        <PaginationDiv
-                            table={table}
-                        />
-                    </td>
-                </tr>
-            </tfoot>
+            <TableFooter
+                table={table}
+                comdom={props.tablecomdom}
+                breakout={{
+                    breakoutVisibility: breakoutVisibility,
+                    keys: props.tableselecting?.breakOut?.keys ?? {} as Record<string, string>,
+                }}
+                stacked={props.tablestyling?.tableFooterStack ?? false}
+            />
         </table>
     )
 }

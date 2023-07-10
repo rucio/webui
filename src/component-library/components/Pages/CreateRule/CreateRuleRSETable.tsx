@@ -1,5 +1,4 @@
 import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { twMerge } from "tailwind-merge";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { createColumnHelper, Row } from "@tanstack/react-table";
@@ -9,10 +8,11 @@ import { Number } from "../../Text/Content/Number";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { useState, useEffect } from "react";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const CreateRuleRSETable = (
     props: {
-        tableData: TableData<RSEAccountUsageLimit>,
+        comdom: UseComDOM<RSEAccountUsageLimit>,
         handleChange: (data: RSEAccountUsageLimit[]) => void,
         askApproval?: boolean
     }
@@ -158,7 +158,7 @@ export const CreateRuleRSETable = (
 
     return (
         <StreamedTable
-            tabledata={props.tableData}
+            tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tableselecting={{
                 handleChange: props.handleChange,

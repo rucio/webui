@@ -5,6 +5,7 @@ import { createRuleMeta } from "test/fixtures/table-fixtures";
 import { useState, useEffect } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { LockStateTag } from "@/component-library/components/Tags/LockStateTag";
+import { HTTPRequest } from "@/lib/common/http";
 
 export default function PageRule() {
     const comDOM = useComDOM<RulePageLockEntry>(
@@ -21,25 +22,22 @@ export default function PageRule() {
     }, [])
     useEffect(() => {
         const runQuery = async () => {
-            await comDOM.start({
+            const request: HTTPRequest = {
                 url: new URL("http://localhost:3000/api/rulepagelockentry"),
                 method: "GET",
                 headers: new Headers({
                     'Content-Type': 'application/json'
                 } as HeadersInit),
                 body: null,
-            })
+            }
+            await comDOM.setRequest(request)
         }
         runQuery()
     }, [])
     return (
         <PageRuleStory
             ruleMeta={meta}
-            ruleLocks={{
-                data: comDOM.query.data,
-                fetchStatus: comDOM.query.fetchStatus,
-                pageSize: 10,
-            }}
+            ruleLocks={comDOM}
         />
     )
 }

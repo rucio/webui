@@ -1,19 +1,19 @@
 import { twMerge } from "tailwind-merge";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { DID } from "@/lib/core/entity/rucio";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { P } from "../../Text/Content/P";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { useCallback } from "react";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const ListDIDTable = (
     props: {
-        tableData: TableData<DID>,
+        comdom: UseComDOM<DID>,
         selectionFunc: (data: DID[]) => void
     }
 ) => {
-    const tableData = props.tableData
+    const tableData = props.comdom
     const columnHelper = createColumnHelper<DID>()
     const tablecolumns = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
@@ -35,9 +35,11 @@ export const ListDIDTable = (
 
     return (
         <StreamedTable
-            tabledata={tableData}
+            tablecomdom={tableData}
             tablecolumns={tablecolumns}
-            tablestyling={{}}
+            tablestyling={{
+                tableFooterStack: true,
+            }}
             tableselecting={{
                 handleChange: handleChange,
                 enableRowSelection: true,

@@ -108,11 +108,11 @@ export const DIDMetaView = (
                 <tbody className="w-full" aria-label="Date Information">
                     <tr aria-label="Date of DID Creation">
                         <Titletd>Created At</Titletd>
-                        <Contenttd>{format("yyyy-MM-dd", meta.created_at)}</Contenttd>
+                        <Contenttd>{format("yyyy-MM-dd", new Date(meta.created_at))}</Contenttd>
                     </tr>
                     <tr aria-label="Last Updated at">
                         <Titletd>Updated At</Titletd>
-                        <Contenttd>{format("yyyy-MM-dd", meta.updated_at)}</Contenttd>
+                        <Contenttd>{format("yyyy-MM-dd", new Date(meta.updated_at))}</Contenttd>
                     </tr>
                 </tbody>
             </table>

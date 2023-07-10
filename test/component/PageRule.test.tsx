@@ -5,7 +5,7 @@
 import { render, act, screen, cleanup, fireEvent, getByRole } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { PageRule as PageRuleStory } from "@/component-library/components/Pages/PageRule/PageRule";
-import { createRuleMeta } from "test/fixtures/table-fixtures";
+import { createRandomRulePageLockEntry, createRuleMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
 var format = require("date-format")
 
 const ruleMeta = createRuleMeta()
@@ -15,11 +15,7 @@ describe("PageRule Story Test", () => {
         await act(async () => render(
             <PageRuleStory
                 ruleMeta={ruleMeta}
-                ruleLocks={{
-                    data: [],
-                    fetchStatus: "idle",
-                    pageSize: 10,
-                }}
+                ruleLocks={mockUseComDOM(Array.from({length: 100}, (v,k) => createRandomRulePageLockEntry()))}
             />
         ))
         const user = userEvent.setup()

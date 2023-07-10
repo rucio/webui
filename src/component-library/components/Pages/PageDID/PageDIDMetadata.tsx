@@ -15,15 +15,14 @@ import { twMerge } from "tailwind-merge"
 // Viewmodels etc
 import { DIDAvailability } from "@/lib/core/entity/rucio"
 import { DIDKeyValuePairs } from "@/lib/infrastructure/data/view-model/page-did";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const PageDIDMetadata = (
     props: {
-        tableData: TableData<DIDKeyValuePairs> // remember that this is ONLY the custom metadata
+        comdom: UseComDOM<DIDKeyValuePairs> // remember that this is ONLY the custom metadata
     }
 ) => {
-    const tableData = props.tableData
 
     const columnHelper = createColumnHelper<DIDKeyValuePairs>()
     const tablecolumns: any[] = [
@@ -56,9 +55,6 @@ export const PageDIDMetadata = (
                 if (val === null) {
                     return <NullTag />
                 }
-                if (val instanceof Date) {
-                    return <DateTag date={val} dateFormat="yyyy-MM-dd hh:mm:ss" />
-                }
                 if (["Available", "Deleted", "Lost"].includes(val as string)) {
                     return <AvailabilityTag availability={val as DIDAvailability} />
                 }
@@ -79,7 +75,7 @@ export const PageDIDMetadata = (
 
     return (
         <StreamedTable<DIDKeyValuePairs>
-            tabledata={tableData}
+            tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{}}
         />

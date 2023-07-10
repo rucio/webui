@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 
-export const Tabs: React.FC<JSX.IntrinsicElements["ul"] & {
+export const Tabs: React.FC<JSX.IntrinsicElements["div"] & {
     tabs: string[],
     _ariaControls?: string[],
     active: number,
@@ -52,8 +52,10 @@ export const Tabs: React.FC<JSX.IntrinsicElements["ul"] & {
                     "flex flex-col sm:flex-row",
                     "list-none font-bold",
                     "bg-white dark:bg-gray-900",
+                    className ?? "",
                 )}
                 role="tablist"
+                aria-label="Select Virtual Organisation"
             >
                 {tabs.map((element, index) => {
                     return index === Number(activestate) ? (
@@ -82,6 +84,7 @@ export const Tabs: React.FC<JSX.IntrinsicElements["ul"] & {
 
                         >
                             <span
+                                className="pointer-events-none"
                             >
                                 {element}
                             </span>
@@ -110,6 +113,7 @@ export const Tabs: React.FC<JSX.IntrinsicElements["ul"] & {
                             }}
                         >
                             <span
+                                className="pointer-events-none"
                             >
                                 {element}
                             </span>

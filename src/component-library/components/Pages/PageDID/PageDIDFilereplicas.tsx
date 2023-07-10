@@ -2,25 +2,25 @@
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 
 // misc packages, react
-import { createColumnHelper} from "@tanstack/react-table"
+import { createColumnHelper } from "@tanstack/react-table"
 import { twMerge } from "tailwind-merge"
 import { HiDotsHorizontal } from "react-icons/hi"
 
 // Viewmodels etc
 import { ReplicaState } from "@/lib/core/entity/rucio";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
 
 
 export const PageDIDFilereplicas = (
     props: {
-        tableData: TableData<FilereplicaState>,
+        comdom: UseComDOM<FilereplicaState>,
     }
 ) => {
-    const tableData = props.tableData
     const columnHelper = createColumnHelper<FilereplicaState>()
     const tablecolumns: any[] = [
         columnHelper.accessor("rse", {
@@ -28,18 +28,9 @@ export const PageDIDFilereplicas = (
             cell: (info) => {
                 // perhaps use this as a basis for links in tables
                 return (
-                    <a
-                        href={"/rse/" + info.getValue()}
-                        className={twMerge(
-                            "pl-1",
-                            "break-all",
-                            "hover:underline",
-                            "hover:text-blue-600",
-                            "dark:text-white dark:hover:text-blue-400",
-                        )}
-                    >
+                    <TableInternalLink href={"/rse/" + info.getValue()}>
                         {info.getValue()}
-                    </a>
+                    </TableInternalLink>
                 )
             },
             header: info => {
@@ -78,7 +69,7 @@ export const PageDIDFilereplicas = (
     ]
     return (
         <StreamedTable<FilereplicaState>
-            tabledata={tableData}
+            tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{}}
         />

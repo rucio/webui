@@ -1,17 +1,18 @@
 import { twMerge } from "tailwind-merge"
 
-export const Titletd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
-    const { className, ...otherprops } = props
+export const Titleth: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {
+    const { className, scope, ...otherprops } = props
     return (
-        <td
+        <th
             className={twMerge(
                 "font-bold w-28 md:w-48 pl-1 dark:text-white",
                 className ?? ""
             )}
+            scope={scope ?? "row"}
             {...otherprops}
         >
             {props.children}
-        </td>
+        </th>
     )
 }
 export const Contenttd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => {

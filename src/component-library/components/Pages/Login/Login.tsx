@@ -71,107 +71,113 @@ export const Login = ({
 
             <form
                 className="flex flex-col space-y-2"
+                onSubmit={e => { e.preventDefault() }} // TODO handle proper submit!
             >
-                <Collapsible id="vo-tabs" showIf={loginViewModel.multiVOEnabled}>
-                    <Tabs
-                        tabs={loginViewModel.voList.map((vo) => vo.name)}
-                        active={1}
-                        updateActive={(active: number) => { setSelectedVOTab(active) }}
-                    />
-                </Collapsible>
+                <Tabs
+                    tabs={loginViewModel.voList.map((vo) => vo.name)}
+                    active={1}
+                    updateActive={(active: number) => { setSelectedVOTab(active) }}
+                    className={twMerge(loginViewModel.multiVOEnabled ? "" : "hidden")}
+                />
 
-                <div className="flex justify-center flex-col space-y-4">
-                    <Collapsible id="oidc-buttons" showIf={loginViewModel.oidcEnabled}>
-                        <div className="flex flex-row justify-center space-x-2">
-                            {loginViewModel.oidcProviders.map((provider: OIDCProvider, index: number) => {
-                                return (<Button theme='orange' label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />)
-                            })}
-                        </div>
-                    </Collapsible>
+                <div
+                    className="flex justify-center flex-col space-y-4"
+                    aria-label="Choose Login Method"
+                >
+                    <div
+                        className={twMerge(
+                            "flex flex-row justify-center space-x-2",
+                            loginViewModel.oidcEnabled ? "" : "hidden"
+                        )}
+                        aria-label="OIDC Login Buttons"
+                    >
+                        {loginViewModel.oidcProviders.map((provider: OIDCProvider, index: number) => {
+                            return (<Button theme='orange' label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />)
+                        })}
+                    </div>
 
-                    <div className="flex flex-col space-y-4">
-                        <Collapsible showIf={loginViewModel.x509Enabled}>
-                            <Button label="x509" onClick={async () => {
-                                const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
+                    <Button
+                        label="x509"
+                        onClick={async () => {
+                            const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
 
-                                const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
+                            const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
 
-                                if (x509AuthViewModel) {
-                                    if (x509AuthViewModel.status === 'error') {
-                                        setError(x509AuthViewModel.message)
-                                        return
-                                    }
-                                    console.log("x509AuthViewModel", x509AuthViewModel)
-                                    console.log("voName", vo.shortName)
-                                    await handleX509Session(x509AuthViewModel, account || "", vo.shortName)
+                            if (x509AuthViewModel) {
+                                if (x509AuthViewModel.status === 'error') {
+                                    setError(x509AuthViewModel.message)
+                                    return
                                 }
-                            }} />
-                        </Collapsible>
+                                console.log("x509AuthViewModel", x509AuthViewModel)
+                                console.log("voName", vo.shortName)
+                                await handleX509Session(x509AuthViewModel, account || "", vo.shortName)
+                            }
+                        }}
+                    />
 
-                        <Button label="Userpass" onClick={() => {
-                            setShowUserPassLoginForm(!showUserPassLoginForm)
-                        }
-                        } />
+                    <Button label="Userpass" onClick={() => {
+                        setShowUserPassLoginForm(!showUserPassLoginForm)
+                    }
+                    } />
 
-                        <fieldset
-                            className={twMerge(
-                                "flex flex-col space-y-2",
-                                "mx-2 md:mx-10",
-                                showUserPassLoginForm ? "" : "hidden",
-                            )}
-                            aria-label="Userpass Login Fields"
-                            id="userpass-form"
-                        >
-                            <div
-                                className={twMerge("flex flex-col space-y-1")}
-                            >
-                                <LabelledInput
-                                    label="Username"
-                                    idinput="username-input"
-                                    updateFunc={(data: string) => { setUsername(data) }}
-                                />
-                                <LabelledInput
-                                    label="Password"
-                                    idinput="password-input"
-                                    updateFunc={(data: string) => { setPassword(data) }}
-                                    password={true}
-                                />
-                                <LabelledInput
-                                    label="Account"
-                                    idinput="account-input"
-                                    updateFunc={(data: string) => { setAccount(data) }}
-                                />
-                            </div>
-                            <Button
-                                label="Login"
-                                type="submit"
-                                onClick={async () => {
-                                    await handleUserPassSubmit(
-                                        username,
-                                        password,
-                                        loginViewModel.voList[selectedVOTab],
-                                        account
-                                    )
-                                }}
-                            />
-                        </fieldset>
-                        <fieldset
-                            className={twMerge(
-                                "mx-2 md:mx-10",
-                                !showUserPassLoginForm ? "block" : "hidden",
-                            )}
-                            aria-label="Account Fields" // TODO - specify this
-                            id="all-accounts"
+                    <fieldset
+                        className={twMerge(
+                            "flex flex-col space-y-2",
+                            "mx-2 md:mx-10",
+                            showUserPassLoginForm ? "" : "hidden",
+                        )}
+                        aria-label="Userpass Login Fields"
+                        id="userpass-form"
+                    >
+                        <div
+                            className={twMerge("flex flex-col space-y-1")}
                         >
                             <LabelledInput
+                                label="Username"
+                                idinput="username-input"
+                                updateFunc={(data: string) => { setUsername(data) }}
+                            />
+                            <LabelledInput
+                                label="Password"
+                                idinput="password-input"
+                                updateFunc={(data: string) => { setPassword(data) }}
+                                password={true}
+                            />
+                            <LabelledInput
                                 label="Account"
-                                idinput="account-input-nouserpass"
+                                idinput="account-input"
                                 updateFunc={(data: string) => { setAccount(data) }}
                             />
-                        </fieldset>
-                    </div>
+                        </div>
+                        <Button
+                            label="Login"
+                            type="submit"
+                            onClick={async () => {
+                                await handleUserPassSubmit(
+                                    username,
+                                    password,
+                                    loginViewModel.voList[selectedVOTab],
+                                    account
+                                )
+                            }}
+                        />
+                    </fieldset>
+                    <fieldset
+                        className={twMerge(
+                            "mx-2 md:mx-10",
+                            !showUserPassLoginForm ? "block" : "hidden",
+                        )}
+                        aria-label="Choose Account Name"
+                        id="all-accounts"
+                    >
+                        <LabelledInput
+                            label="Account"
+                            idinput="account-input-nouserpass"
+                            updateFunc={(data: string) => { setAccount(data) }}
+                        />
+                    </fieldset>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     )
 }

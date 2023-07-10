@@ -40,7 +40,7 @@ export function TableSortUpDown(
             {
                 element ?? <H3 className={props.nocollapse ? "inline" : "hidden md:inline"}>{name}</H3>
             }
-            <span className="text-gray-500 dark:text-gray-200 text-xl h6">
+            <span className="text-gray-500 dark:text-gray-200 text-2xl h6">
                 {
                     {
                         asc: <HiSortAscending />, desc: <HiSortDescending />, "null": <HiDotsHorizontal />
