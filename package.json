@@ -12,6 +12,7 @@
     "test:api": "jest --testPathPattern=test/api --projects test/api/jest.api.config.js",
     "test:component": "jest --testPathPattern=test/component --projects test/component/jest.component.config.js",
     "test:gateway": "jest --testPathPattern=test/gateway --projects test/gateway/jest.gateway.config.js",
+    "test:sdk": "jest --testPathPattern=test/sdk --projects test/sdk/jest.sdk.config.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build-tailwind": "tailwindcss -i src/component-library/tailwind.css -o src/component-library/outputtailwind.css"

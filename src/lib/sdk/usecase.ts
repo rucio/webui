@@ -1,6 +1,7 @@
 import {
     BaseAuthenticatedInputPort,
     BaseInputPort,
+    BaseMultiCallStreamableInputPort,
     BaseOutputPort,
     BaseStreamableInputPort,
     BaseStreamingOutputPort,
@@ -8,6 +9,8 @@ import {
 import { AuthenticatedRequestModel, BaseErrorResponseModel, BaseResponseModel } from './usecase-models'
 import { Transform, TransformCallback } from 'stream'
 import { BaseDTO, BaseStreamableDTO } from './dto'
+import { BaseMultiCallUseCasePipelineElement } from './usecase-stream-element'
+import { BaseStreamingPresenter } from './presenter'
 
 /**
  * A type that represents a simple use case that does not require authentication.
@@ -232,6 +235,72 @@ export abstract class BaseStreamingUseCase<TRequestModel,
         } else {
             const errorModel = data as TErrorModel
             this.emit('error', JSON.stringify(errorModel))
+        }
+        callback()
+    }
+}
+
+
+export abstract class BaseMultiCallStreamableUseCase<TRequestModel, 
+TResponseModel extends BaseResponseModel, 
+TErrorModel extends BaseErrorResponseModel,
+TStreamData> 
+extends Transform implements BaseMultiCallStreamableInputPort<AuthenticatedRequestModel<TRequestModel>, TResponseModel, TErrorModel> {
+    protected presenter: BaseStreamingPresenter<TResponseModel, TStreamData, TErrorModel>
+    protected pipelineElements: BaseMultiCallUseCasePipelineElement<AuthenticatedRequestModel<TRequestModel>, TResponseModel, TErrorModel, any>[] = []
+    constructor(
+        presenter: BaseStreamingPresenter<TResponseModel, TStreamData, TErrorModel>,
+        pipelineElements: BaseMultiCallUseCasePipelineElement<AuthenticatedRequestModel<TRequestModel>, TResponseModel, TErrorModel, any>[]
+    ) {
+        super({ objectMode: true })
+        this.presenter = presenter
+        this.pipelineElements = pipelineElements
+    }
+
+    abstract validateRequestModel(requestModel: TRequestModel): TErrorModel | undefined;
+
+    setupPipeline(pipelineElements: BaseMultiCallUseCasePipelineElement<AuthenticatedRequestModel<TRequestModel>, TResponseModel, TErrorModel, any>[]): void {
+        // loop over pipeline elements and pipe them together. Pipe the last element to this object
+        // for validation and pipe this to presenter
+        for (let i = 0; i < pipelineElements.length; i++) {
+            const pipelineElement = pipelineElements[i]
+            if(i === pipelineElements.length - 1) {
+                pipelineElement.on('error', (error) => this.handleError(error))
+                .pipe(this.presenter)
+            }
+            else {
+                const previousPipelineElement = pipelineElements[i - 1]
+                previousPipelineElement.pipe(pipelineElement)
+            }
+        }
+    }
+    abstract validateFinalResponseModel(responseModel: TResponseModel): { isValid: boolean; errorModel?: TErrorModel | undefined }
+    abstract handleError(error: Error): void
+
+    async execute(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<void> {
+        const validationError = this.validateRequestModel(requestModel)
+        if (validationError) {
+            this.presenter.presentError(validationError)
+        }
+        try {
+            this.setupPipeline(this.pipelineElements)
+        } catch (error: any) {
+            // TODO here we catch any critical errors that occur during pipeline setup or execution
+            const errorModel = error as TErrorModel
+
+            this.presenter.presentError(error)
+        }
+    }
+
+    _transform(chunk: any, encoding: BufferEncoding, callback: TransformCallback): void {
+        const data = JSON.parse(chunk)
+        const {requestModel, responseModel, errorModel} = data
+        const { isValid, errorModel: finalErrorModel } = this.validateFinalResponseModel(responseModel)
+        if(isValid) {
+            this.push(JSON.stringify(responseModel))
+        }
+        else {
+            this.emit('error', JSON.stringify(finalErrorModel))
         }
         callback()
     }
