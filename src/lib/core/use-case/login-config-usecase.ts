@@ -97,7 +97,7 @@ class LoginConfigUseCase extends BaseUseCase<void, LoginConfigResponse, LoginCon
                 voList: dto.voList,
                 oidcProviders: dto.oidcProviders,
                 rucioAuthHost: dto.rucioAuthHost,
-            },
+            } as LoginConfigResponse,
             status: 'success',
         }
     }

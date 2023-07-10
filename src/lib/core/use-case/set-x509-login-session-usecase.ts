@@ -56,7 +56,7 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
                 if(attr.key == 'admin' && attr.value == 'True') {
                     role = Role.ADMIN;
                 }
-                if(attr.key.startsWith('country-')) {
+                else if(attr.key.startsWith('country-')) {
                     country = attr.key.split('-')[1];
                     if(attr.value == 'admin') {
                         countryRole = Role.ADMIN;
@@ -65,6 +65,8 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
                     } else {
                         countryRole = undefined;
                     }
+                } else {
+                    role = Role.USER;
                 }
             })
         } catch(error: AccountAttributesDTO | any) {
