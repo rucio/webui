@@ -3,13 +3,9 @@ import { BaseDTO } from './dto';
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 
 export abstract class BaseMultiCallUseCasePipelineElement<TRequestModel, TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TDTO extends BaseDTO> extends Transform {
-    protected requestModel: TRequestModel
-    protected responseModel: TResponseModel
 
-    constructor(requestModel: TRequestModel, responseModel: TResponseModel) {
+    constructor() {
         super({ objectMode: true });
-        this.requestModel = requestModel
-        this.responseModel = responseModel
     }
 
     /**
@@ -62,19 +58,21 @@ export abstract class BaseMultiCallUseCasePipelineElement<TRequestModel, TRespon
         return errorModel
     }
 
-    async exceute(): Promise<TResponseModel | TErrorModel> {
-        const dto = await this.makeGatewayRequest(this.requestModel)
+    async exceute(requestModel: TRequestModel, responseModel: TResponseModel): Promise<TResponseModel | TErrorModel> {
+        const dto = await this.makeGatewayRequest(requestModel)
         const data: TResponseModel | TErrorModel = this.processGatewayResponse(dto)
         if(data.status === 'error') {
             return Promise.reject(data)
         }
-        const transformedResponseModel = this.transformResponseModel(this.responseModel, dto)
+        const transformedResponseModel = this.transformResponseModel(responseModel, dto)
         return Promise.resolve(transformedResponseModel)
     }
 
-    _transform(chunk: TResponseModel, encoding: BufferEncoding, callback: (error?: Error, data?: TResponseModel | TErrorModel) => void): void {
-        this.responseModel = chunk
-        this.exceute().then((data) => {
+    _transform(chunk: any, encoding: BufferEncoding, callback: (error?: Error, data?: any | TErrorModel) => void): void {
+        const parsedChunk = JSON.parse(chunk)
+        const requestModel = parsedChunk.requestModel as TRequestModel
+        const responseModel = parsedChunk.responseModel as TResponseModel // TODO create responseModel if not provided
+        this.exceute(requestModel, responseModel).then((data) => {
             this.push(data)
             callback(undefined, data) // TODO check if data is not pushed twice
         }).catch((error) => {
