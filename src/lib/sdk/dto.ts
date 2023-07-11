@@ -1,4 +1,4 @@
-import { Transform, PassThrough } from 'stream';
+import { Transform, PassThrough, Readable } from 'stream';
 
 
 /**
@@ -26,5 +26,5 @@ export type BaseStreamableDTO = BaseDTO & {
     /**
      * An optional property that can be used to represent a streamable response from an API endpoint. It can be either a `Transform` stream, a `PassThrough` stream, or `null`.
      */
-    stream?: Transform | PassThrough | null;
+    stream?: Transform | PassThrough | Readable | null;
 }
