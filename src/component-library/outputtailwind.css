@@ -579,6 +579,10 @@ video {
   position: static;
 }
 
+.fixed {
+  position: fixed;
+}
+
 .absolute {
   position: absolute;
 }
@@ -592,6 +596,11 @@ video {
   right: 0px;
   bottom: 0px;
   left: 0px;
+}
+
+.inset-x-32 {
+  left: 8rem;
+  right: 8rem;
 }
 
 .bottom-0 {
@@ -612,6 +621,14 @@ video {
 
 .top-10 {
   top: 2.5rem;
+}
+
+.top-32 {
+  top: 8rem;
+}
+
+.z-0 {
+  z-index: 0;
 }
 
 .z-10 {
@@ -1169,6 +1186,10 @@ video {
   border-width: 0px;
 }
 
+.border-2 {
+  border-width: 2px;
+}
+
 .border-x {
   border-left-width: 1px;
   border-right-width: 1px;
@@ -1521,6 +1542,10 @@ video {
 .bg-teal-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(94 234 212 / var(--tw-bg-opacity));
+}
+
+.bg-transparent {
+  background-color: transparent;
 }
 
 .bg-white {

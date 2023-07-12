@@ -64,6 +64,7 @@ LoginPage.args = {
         message: 'Invalid Login Credentials',
         rucioIdentity: '',
         rucioAccount: '',
+        rucioMultiAccount: '',
         rucioAuthToken: '',
         rucioAuthType: AuthType.USERPASS,
         rucioAuthTokenExpires: '',

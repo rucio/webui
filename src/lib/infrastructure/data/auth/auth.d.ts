@@ -7,6 +7,7 @@ export type AuthViewModel = {
     redirectTo?: string;
     rucioIdentity: string;
     rucioAccount: string;
+    rucioMultiAccount?: string;
     rucioAuthType: AuthType | '';
     rucioAuthToken: string;
     rucioAuthTokenExpires: string;
