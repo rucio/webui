@@ -167,6 +167,7 @@ describe("Login Page Test", () => {
             }
             x509SessionHandler = {(authViewModel) => {}}
         />))
+        expect(screen.queryByRole("dialog", {name: /Multiaccount Modal/})).not.toBeInTheDocument()
         const userPassButton = screen.getByRole('button', {name: /Userpass/})
         fireEvent.click(userPassButton)
         const loginButton = screen.getByRole('button', {name: /Login/})
@@ -174,6 +175,48 @@ describe("Login Page Test", () => {
         const alert = screen.getByTestId('login-page-error')
         expect(alert).toBeInTheDocument()
         expect(alert.textContent).toContain("Invalid Credentials")
+    })
+   
+    it('test if modal will show if user has multiple accounts', async () => {
+        const loginViewModel: LoginViewModel = {
+            x509Enabled: true,
+            oidcEnabled: false,
+            oidcProviders: getSampleOIDCProviders(),
+            multiVOEnabled: true,
+            voList: getSampleVOs(),
+            isLoggedIn: false,
+            status: "success",
+            rucioAuthHost: "https://rucio-auth.cern.ch",
+        }
+        const authViewModel: AuthViewModel = {
+            status: "success",
+            message: "",
+            rucioAccount: "",
+            rucioMultiAccount: "account1,account2",
+            rucioAuthType: "",
+            rucioAuthToken: "",
+            rucioIdentity: "",
+            rucioAuthTokenExpires: "",
+            role: undefined,
+        }
+        await act( async () => render(<LoginStory
+            loginViewModel={loginViewModel}
+            authViewModel={authViewModel}
+            userPassSubmitHandler = {() => {}}
+            oidcSubmitHandler = {() => {}}
+            x509SubmitHandler = {() => {
+                return Promise.resolve(authViewModel)}
+            }
+            x509SessionHandler = {(authViewModel) => {}}
+        />))
+
+
+        const userPassButton = screen.getByRole('button', {name: /Userpass/})
+        fireEvent.click(userPassButton)
+        const loginButton = screen.getByRole('button', {name: /Login/})
+        fireEvent.click(loginButton)
+        const modal = screen.getByRole("dialog", {name: /Multiaccount Modal/})
+        expect(modal).toBeInTheDocument()
     })
    
     it('should show error alert if login fails, user closes alert, and login fails again', async () => {
