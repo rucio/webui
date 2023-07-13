@@ -3,6 +3,32 @@ import { BaseDTO } from './dto';
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 import { TransformCallback } from 'stream';
 
+export abstract class BasePostProcessingPipelineElement<TRequestModel, TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TDTO extends BaseDTO> {
+    
+    abstract makeGatewayRequest(requestModel: TRequestModel, responseModel: TResponseModel): Promise<TDTO>
+    abstract validateDTO(dto: TDTO): {
+        status: 'success' | 'error' | 'critical'
+        data: TDTO | TErrorModel
+    }
+    
+    abstract handleGatewayError(error: TDTO): TErrorModel
+    abstract transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel
+
+    async execute(requestModel: TRequestModel, responseModel: TResponseModel): Promise<TResponseModel | TErrorModel> {
+        const dto = await this.makeGatewayRequest(requestModel, responseModel)
+        if (dto.status === 'error') {
+            return this.handleGatewayError(dto)
+        }
+        const { status, data } = this.validateDTO(dto)
+        if(status === 'error') {
+            return data as TErrorModel
+        }
+
+        const transformedResponseModel = this.transformResponseModel(responseModel, dto)
+        return transformedResponseModel
+    }
+
+}
 
 /**
  * A base class for post-processing pipeline elements in a streaming use case.
@@ -32,7 +58,7 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
      */
     abstract processDTO(dto: TDTO): {
         status: 'success' | 'error' | 'critical'
-        data: TResponseModel | TErrorModel
+        data: undefined | TErrorModel
     }
 
     /**

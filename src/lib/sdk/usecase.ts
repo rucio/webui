@@ -13,7 +13,7 @@ import {
 } from './usecase-models'
 import { Transform, TransformCallback, PassThrough, Readable } from 'stream'
 import { BaseDTO, BaseStreamableDTO } from './dto'
-import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement } from './postprocessing-pipeline-elements'
+import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { BaseStreamingPresenter } from './presenter'
 
 /**
@@ -131,25 +131,79 @@ export abstract class BaseUseCase<
         const validationError: TErrorModel | undefined =
             this.validateRequestModel(requestModel)
         if (validationError) {
-            this.presenter.presentError(validationError)
+            await this.presenter.presentError(validationError)
         }
         return this.makeGatewayRequest(requestModel)
-            .then((response: TDTO) => {
+            .then(async (response: TDTO) => {
                 const data: TResponseModel | TErrorModel =
                     this.processGatewayResponse(response)
                 if (data.status === 'success') {
-                    this.presenter.presentSuccess(data)
+                    await this.presenter.presentSuccess(data)
                 } else {
-                    this.presenter.presentError(data)
+                    await this.presenter.presentError(data)
                 }
             })
-            .catch((error: TDTO) => {
+            .catch(async (error: TDTO) => {
                 const errorModel: TErrorModel = this.handleGatewayError(error)
-                this.presenter.presentError(errorModel)
+                await this.presenter.presentError(errorModel)
             })
     }
 }
 
+export abstract class BasePostProcessingPipelineUseCase<TRequestModel,
+TResponseModel extends BaseResponseModel,
+TErrorModel extends BaseErrorResponseModel,
+TDTO extends BaseDTO,
+> extends BaseUseCase<
+TRequestModel,
+TResponseModel,
+TErrorModel,
+TDTO
+> {
+    protected postProcessingPipelineElements: BasePostProcessingPipelineElement<TRequestModel, TResponseModel, TErrorModel, any>[] = []
+
+    constructor(presenter: BaseOutputPort<TResponseModel, TErrorModel>, postProcessingPipelineElements: BasePostProcessingPipelineElement<TRequestModel, TResponseModel, TErrorModel, any>[]) {
+        super(presenter)
+        this.postProcessingPipelineElements = postProcessingPipelineElements
+    }
+
+    abstract validateFinalResponseModel(responseModel: TResponseModel): {
+        isValid: boolean,
+        errorModel?: TErrorModel
+    }
+
+    async execute(requestModel: TRequestModel): Promise<void> {
+        const validationError: TErrorModel | undefined =
+            this.validateRequestModel(requestModel)
+        if (validationError) {
+            await this.presenter.presentError(validationError)
+        }
+        const dto = await this.makeGatewayRequest(requestModel)
+        const data: TResponseModel | TErrorModel = this.processGatewayResponse(dto)
+        if (data.status === 'error') {
+            await this.presenter.presentError(data)
+            return
+        }
+
+        let currentResponseModel = data as TResponseModel
+        for (let i = 0; i < this.postProcessingPipelineElements.length; i++) {
+            const element = this.postProcessingPipelineElements[i];
+            const response: TResponseModel | TErrorModel = await element.execute(requestModel, currentResponseModel);
+            if (response.status === 'error') {
+                await this.presenter.presentError(response as TErrorModel);
+                return;
+            }
+            currentResponseModel = response as TResponseModel;
+        }
+        const { isValid, errorModel } = this.validateFinalResponseModel(currentResponseModel)
+        if (!isValid) {
+            await this.presenter.presentError(errorModel as TErrorModel)
+            return
+        }
+        await this.presenter.presentSuccess(currentResponseModel)
+    }
+    
+}
 export abstract class BaseStreamingUseCase<
         TRequestModel,
         TResponseModel extends BaseResponseModel,
@@ -244,12 +298,12 @@ export abstract class BaseStreamingUseCase<
         const validationError: TErrorModel | undefined =
             this.validateRequestModel(this.requestModel)
         if (validationError) {
-            this.presenter.presentError(validationError)
+            await this.presenter.presentError(validationError)
         }
         const dto: TDTO = await this.makeGatewayRequest(this.requestModel)
         const error = this.processGatewayResponse(dto)
         if (error) {
-            this.presenter.presentError(error as TErrorModel)
+            await this.presenter.presentError(error as TErrorModel)
         }
     }
 
