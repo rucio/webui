@@ -1,7 +1,16 @@
-import { Transform, Readable, PassThrough } from 'stream';
-import { BaseDTO, BaseStreamableDTO } from './dto';
+import { Transform } from 'stream';
+import { BaseDTO } from './dto';
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 import { TransformCallback } from 'stream';
+
+
+/**
+ * A base class for post-processing pipeline elements in a streaming use case.
+ * @typeparam TRequestModel The type of the request model for the use case.
+ * @typeparam TResponseModel The type of the response model for the use case.
+ * @typeparam TErrorModel The type of the error model for the use case.
+ * @typeparam TDTO The type of the data transfer object for the use case.
+ */
 export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TDTO extends BaseDTO> extends Transform {
 
     constructor() {
@@ -68,7 +77,10 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
 }
 
 
-export class ResponseModelValidatorPipelineElement<TResponseModel extends BaseResponseModel, TErrorModel> extends Transform {
+/**
+ * A base class for the final validation stage in a post processing streaming pipeline.
+ */
+export class BaseResponseModelValidatorPipelineElement<TResponseModel extends BaseResponseModel, TErrorModel> extends Transform {
     protected validatorFn: {(responseModel: TResponseModel): {isValid: boolean, errorModel?: TErrorModel | undefined}}
 
     constructor(validatorFn:{(responseModel: TResponseModel): {isValid: boolean, errorModel?: TErrorModel | undefined}}) {
