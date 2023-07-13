@@ -12,6 +12,13 @@ module.exports = {
     },
     theme: {
         extend: {
+            fontFamily: {
+                sans: ["monospace"],
+                mono: ["monospace"],
+                serif: ["monospace"],
+                forcesans: ["sans-serif"],
+                forceserif: ["serif"],
+            },
             keyframes: {
                 floatout: {
                     "0%": { opacity: "1", left: "0px", },
