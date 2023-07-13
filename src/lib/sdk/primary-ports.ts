@@ -1,7 +1,7 @@
 import { PassThrough, Transform } from 'stream'
 import { BaseDTO } from './dto'
 import { AuthenticatedRequestModel, BaseErrorResponseModel, BaseResponseModel } from './usecase-models'
-import { BaseMultiCallUseCasePipelineElement } from './usecase-stream-element'
+import { BaseStreamingPostProcessingPipelineElement } from './usecase-stream-element'
 import { TWebResponse } from './web'
 
 /**
@@ -30,7 +30,7 @@ export interface BaseStreamableInputPort<AuthenticatedRequestModel>
 }
 
 /**
- * A base interface for multi-call streamable input ports. A streamable input port provides a pipeline of {@link BaseMultiCallUseCasePipelineElement} elements that are used to process the request model.
+ * A base interface for multi-call streamable input ports. A streamable input port provides a pipeline of {@link BaseStreamingPostProcessingPipelineElement} elements that are used to process the request model.
  * These pipeline elements recieve the request model and the latest response model and return a new response model.
  * The pipeline elements are executed in the order they are provided.
  * @typeparam AuthenticatedRequestModel The type of the authenticated request model for the input port.
@@ -64,8 +64,8 @@ export interface BaseOutputPort<TResponseModel, TErrorModel> {
  * @typeparam TViewModel The type of the view model for the streaming output port.
  * @typeparam TErrorModel The type of the error model for the streaming output port.
  */
-export interface BaseStreamingOutputPort<TResponseModel, TErrorModel> {
+export interface BaseStreamingOutputPort<TResponseModel, TErrorModel> extends Transform{
     response: TWebResponse
-    presentStream(stream: PassThrough): Promise<void>
-    presentError(errorModel: TErrorModel): Promise<void>
+    presentStream(stream: PassThrough): void
+    presentError(errorModel: TErrorModel): void
 }

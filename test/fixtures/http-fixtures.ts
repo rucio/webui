@@ -50,6 +50,6 @@ export class MockHttpStreamableResponseFactory {
             response.emit('data', data)
             return true;
         }
-        return response;
+        return response
     }
 } 

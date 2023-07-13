@@ -1,9 +1,9 @@
-import { BaseMultiCallUseCasePipelineElement } from "@/lib/sdk/usecase-stream-element";
+import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/usecase-stream-element";
 import { inject } from "inversify";
 import { ListDIDDTO } from "../dto/did-dto";
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../usecase-models/list-dids-usecase-models";
 
-class ListDIDsGetListOfDIDs extends BaseMultiCallUseCasePipelineElement<
+class ListDIDsGetListOfDIDs extends BaseStreamingPostProcessingPipelineElement<
     ListDIDsRequest,
     ListDIDsResponse,
     ListDIDsError,
