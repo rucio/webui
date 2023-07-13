@@ -99,11 +99,11 @@ export abstract class BaseStreamingPresenter<
      * @param errorModel The error model to present.
      * @returns A promise that resolves when the error has been presented.
      */
-    presentError(errorModel: TErrorModel): Promise<void> {
+    presentError(errorModel: TErrorModel): void {
         const response = this.response as NextApiResponse
         const { status, viewModel } = this.convertErrorModelToViewModel(errorModel)
         response.status(status).json(viewModel)
-        return Promise.resolve()
+        return;
     }
 
     /**
@@ -118,29 +118,34 @@ export abstract class BaseStreamingPresenter<
         responseModel: TResponseModel,
     ): TViewModel
 
+    handleStreamError(error: TErrorModel){
+        this.emit('error', error)
+        throw error
+    }
     /**
      * Presents a stream of response models.
      * @param stream The stream of response models to present.
      * @returns A promise that resolves when the stream has been fully presented.
      */
-    async presentStream(stream: TWebResponse): Promise<void> {
-        stream.pipe(this).pipe(this.response)
+    presentStream(stream: TWebResponse) {
+        stream.on('error', (error) => { this.handleStreamError(error as TErrorModel) })
+        .pipe(this).on('error', (error) => { this.handleStreamError(error as TErrorModel) })
+        .pipe(this.response)
     }
 
     _transform(
-        chunk: string,
+        chunk: TResponseModel,
         encoding: BufferEncoding,
         callback: TransformCallback,
     ): void {
         try {
-            const responseModel: TResponseModel = JSON.parse(chunk)
+            const responseModel: TResponseModel = chunk
             const viewModel =
                 this.convertResponseModelToViewModel(responseModel)
-            this.push(JSON.stringify(viewModel))
+            callback(undefined, viewModel)
         } catch (error) {
             this.emit('error', error)
-        } finally {
-            callback()
+            callback(error as Error)
         }
     }
 
