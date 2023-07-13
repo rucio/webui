@@ -13,7 +13,7 @@ import {
 } from './usecase-models'
 import { Transform, TransformCallback, PassThrough, Readable } from 'stream'
 import { BaseDTO, BaseStreamableDTO } from './dto'
-import { BaseStreamingPostProcessingPipelineElement, ResponseModelValidatorPipelineElement } from './usecase-stream-element'
+import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement } from './postprocessing-pipeline-elements'
 import { BaseStreamingPresenter } from './presenter'
 
 /**
@@ -270,6 +270,15 @@ export abstract class BaseStreamingUseCase<
     }
 }
 
+
+/**
+ * A base class for multi-call streamable use cases that provide a post-processing pipeline for the streamed elements.
+ * @typeparam TRequestModel The type of the request model for the use case.
+ * @typeparam TResponseModel The type of the response model for the use case.
+ * @typeparam TErrorModel The type of the error model for the use case.
+ * @typeparam TDTO The type of the data transfer object for the use case.
+ * @typeparam TStreamData The type of the streamed data for the use case.
+ */
 export abstract class BaseMultiCallStreamableUseCase<
         TRequestModel,
         TResponseModel extends BaseResponseModel,
@@ -291,13 +300,26 @@ export abstract class BaseMultiCallStreamableUseCase<
             TErrorModel
         >
 {
+    /**
+     * The list of {@link BaseStreamingPostProcessingPipelineElement} that will be used to process the stream.
+     */
     protected postProcessingPipelineElements: BaseStreamingPostProcessingPipelineElement<
         AuthenticatedRequestModel<TRequestModel>,
         TResponseModel,
         TErrorModel,
         any
     >[] = []
+
+    /**
+     * The final pipeline element that validates the final response model.
+     */
     protected finalResponseValidationTransform: Transform
+    
+    /**
+     * Instantiates a new instance of the {@link BaseMultiCallStreamableUseCase} class.
+     * @param presenter The {@link BaseStreamingPresenter} for this use case
+     * @param postProcessingPipelineElements The list of {@link BaseStreamingPostProcessingPipelineElement} that will be used to process the stream.
+     */
     constructor(
         presenter: BaseStreamingPresenter<
             TResponseModel,
@@ -313,7 +335,7 @@ export abstract class BaseMultiCallStreamableUseCase<
     ) {
         super(presenter)
         this.postProcessingPipelineElements = postProcessingPipelineElements
-        this.finalResponseValidationTransform = new ResponseModelValidatorPipelineElement<TResponseModel, TErrorModel>(this.validateFinalResponseModel)
+        this.finalResponseValidationTransform = new BaseResponseModelValidatorPipelineElement<TResponseModel, TErrorModel>(this.validateFinalResponseModel)
     }
 
     /**
@@ -342,14 +364,34 @@ export abstract class BaseMultiCallStreamableUseCase<
         this.presenter.presentStream(this.finalResponseValidationTransform)
     }
 
+    /**
+     * Convert the chunk returned from the gateway's stream to a DTO that will be passed forward in the current pipeline.
+     * @param streamedChunk The chunk returned from the gateway's stream
+     */
     abstract chunkToDTO(streamedChunk: string): TStreamData
+
+    /**
+     * Validates the final response model after execution of all post processing pipeline elements.
+     * @param responseModel The response model to validate.
+     */
     abstract validateFinalResponseModel(responseModel: TResponseModel): {
         isValid: boolean
         errorModel?: TErrorModel | undefined
     }
 
+    /**
+     * Handles an error that occurs in the streaming pipeline.
+     * @param error The error that occurred.
+     * @remarks This method is called when an error occurs in the streaming pipeline.
+     */
     abstract handleStreamError(error: TErrorModel): void
 
+    /**
+     * Processes the individial stream element and pushes it to the next element in the pipeline.
+     * @param chunk 
+     * @param encoding 
+     * @param callback 
+     */
     _transform(
         chunk: any,
         encoding: BufferEncoding,

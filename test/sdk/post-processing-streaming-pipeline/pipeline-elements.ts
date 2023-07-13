@@ -1,6 +1,6 @@
 import { BaseDTO } from "@/lib/sdk/dto"
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models"
-import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/usecase-stream-element"
+import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements"
 import { RequestModel, TResponseModel } from "./models"
 
 export class FirstPipelineElement extends BaseStreamingPostProcessingPipelineElement<

@@ -1,7 +1,7 @@
 import { PassThrough, Transform } from 'stream'
 import { BaseDTO } from './dto'
 import { AuthenticatedRequestModel, BaseErrorResponseModel, BaseResponseModel } from './usecase-models'
-import { BaseStreamingPostProcessingPipelineElement } from './usecase-stream-element'
+import { BaseStreamingPostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { TWebResponse } from './web'
 
 /**

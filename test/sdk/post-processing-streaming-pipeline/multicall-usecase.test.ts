@@ -6,7 +6,7 @@ import {
     BaseErrorResponseModel,
     BaseResponseModel,
 } from '@/lib/sdk/usecase-models'
-import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/usecase-stream-element'
+import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements'
 import { Readable, Transform, PassThrough } from 'stream'
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
 import { RequestModel, StreamData, TResponseModel } from './models'
