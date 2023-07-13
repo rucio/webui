@@ -22,6 +22,8 @@ import { Contenttd, Generaltable, Titleth } from "../../Helpers/Metatable";
 import { Dropdown } from "../../Input/Dropdown";
 import { DateInput } from "../../Input/DateInput";
 import { useState } from "react";
+import { Heading } from "../Helpers/Heading";
+import { Body } from "../Helpers/Body";
 
 type ListRuleUserDefineQuery = Partial<{
     account: string
@@ -208,24 +210,9 @@ export const ListRule = (
                 "flex flex-col space-y-2 w-full"
             )}
         >
-            <div
-                className={twMerge(
-                    "rounded-md w-full",
-                    "border dark:border-2 dark:border-gray-200 p-2",
-                    "flex flex-col items-start space-y-2",
-                    "bg-white dark:bg-gray-800"
-                )}
+            <Heading
+                title="List Rules"
             >
-                <div
-                    className={twMerge(
-                        "flex flex-col space-y-2 md:flex-row md:justify-between md:items-baseline md:space-y-0 w-full",
-                        "bg-white dark:bg-gray-800"
-                    )}
-                >
-                    <span className="flex flex-row justify-between space-x-4">
-                        <H3>List Rules</H3>
-                    </span>
-                </div>
                 <form
                     className={twMerge(
                         "w-full rounded flex flex-col space-y-2 items-center",
@@ -246,7 +233,7 @@ export const ListRule = (
                                 <Titleth>Account</Titleth>
                                 <Contenttd>
                                     <TextInput
-                                        onChange={e => setUserdefinequery({ ...userdefinequery, account: e.target.value})}
+                                        onChange={e => setUserdefinequery({ ...userdefinequery, account: e.target.value })}
                                     />
                                 </Contenttd>
                             </tr>
@@ -254,7 +241,7 @@ export const ListRule = (
                                 <Titleth>RSE Expression</Titleth>
                                 <Contenttd>
                                     <TextInput
-                                        onChange={e => setUserdefinequery({ ...userdefinequery, rse_expression: e.target.value})}
+                                        onChange={e => setUserdefinequery({ ...userdefinequery, rse_expression: e.target.value })}
                                     />
                                 </Contenttd>
                             </tr>
@@ -262,7 +249,7 @@ export const ListRule = (
                                 <Titleth>Activity</Titleth>
                                 <Contenttd>
                                     <TextInput
-                                        onChange={e => setUserdefinequery({ ...userdefinequery, activity: e.target.value})}
+                                        onChange={e => setUserdefinequery({ ...userdefinequery, activity: e.target.value })}
                                     />
                                 </Contenttd>
                             </tr>
@@ -274,7 +261,7 @@ export const ListRule = (
                                         renderFunc={key => key ?
                                             <RuleStateTag state={key} className="w-44" /> : <span>UNDEFINED</span>
                                         }
-                                        handleChange={key => {setUserdefinequery({...userdefinequery, state: key}) }}
+                                        handleChange={key => { setUserdefinequery({ ...userdefinequery, state: key }) }}
                                     />
                                 </Contenttd>
                             </tr>
@@ -292,14 +279,14 @@ export const ListRule = (
                                         <div className="flex flex-row space-x-1 items-baseline">
                                             <label className="flex-none" htmlFor="from-date">From</label>
                                             <DateInput
-                                                onchange={date => {setUserdefinequery({...userdefinequery, from_date: date})}}
+                                                onchange={date => { setUserdefinequery({ ...userdefinequery, from_date: date }) }}
                                                 id="from-date"
                                             />
                                         </div>
                                         <div className="flex flex-row space-x-1 items-baseline">
                                             <label className="flex-none" htmlFor="to-date">to</label>
                                             <DateInput
-                                                onchange={date => {setUserdefinequery({...userdefinequery, to_date: date})}}
+                                                onchange={date => { setUserdefinequery({ ...userdefinequery, to_date: date }) }}
                                                 id="to-date"
                                             />
                                         </div>
@@ -314,15 +301,9 @@ export const ListRule = (
                         onClick={(e: any) => { e.preventDefault(); console.log(userdefinequery) }}
                     />
                 </form>
+            </Heading>
 
-            </div>
-            <div
-                className={twMerge(
-                    "p-0 md:p-2",
-                    "rounded-md border",
-                    "bg-white dark:bg-gray-800",
-                )}
-            >
+            <Body>
                 <StreamedTable<Rule>
                     tablecomdom={props.comdom}
                     tablecolumns={tablecolumns}
@@ -330,7 +311,7 @@ export const ListRule = (
                         tableHeadRowStyle: "md:h-16",
                     }}
                 />
-            </div>
+            </Body>
         </div>
     );
 };

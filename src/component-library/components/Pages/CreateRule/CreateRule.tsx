@@ -16,20 +16,17 @@ import { AreaInput } from '../../Input/AreaInput';
 import { SummaryPage } from './SummaryPage';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 import { HTTPRequest } from "@/lib/common/http";
+import { Heading } from '../Helpers/Heading';
+import { Body } from '../Helpers/Body';
 
-var format = require("date-format")
 
 /* =================================================
 *  Importing Types and Interfaces
 *  ================================================= */
 import { DIDLong, DIDType, RSEAccountUsageLimit } from '@/lib/core/entity/rucio';
 import {
-    CreateRuleQuery, CreateRuleResponse,
-    DIDName, RSEName,
-    DIDElement, DIDQueryError, RSEInformation,
-    TypedDIDValidationQuery, TypedDIDValidationResponse,
-    DIDSearchQuery, DIDSearchResponse,
-    RSESearchQuery, RSESearchResponse,
+    CreateRuleQuery, CreateRuleResponse, DIDName, TypedDIDValidationQuery,
+    TypedDIDValidationResponse,
 
 } from '../../../../lib/infrastructure/data/view-model/create-rule.d';
 import { twMerge } from 'tailwind-merge';
@@ -245,15 +242,22 @@ export const CreateRule = (
     *  Building the page
     *  ================================================= */
     return (
-        <div data-testid="create-rule-root">
-            <div className="m-2" data-testid="timeline">
+        <div
+            data-testid="create-rule-root"
+            className={twMerge(
+                "flex flex-col space-y-2 w-full"
+            )}
+        >
+            <Heading
+                title="Create Rule"
+            >
                 <Timeline
                     steps={["DIDs", "RSEs", "Options", "Summary"]}
                     active={activePage}
                     onJump={(goal: number) => { setActivePage(goal) }}
                 />
-            </div>
-            <div className="flex flex-col">
+            </Heading>
+            <Body>
                 <RulePage pagenum={0} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
                     <Tabs
                         tabs={["DID Search Pattern", "List of DIDs"]}
@@ -277,7 +281,7 @@ export const CreateRule = (
                             </div>
                             <CreateRuleDIDTable
                                 comdom={props.didListComDOM}
-                                handleChange={(data: DIDLong[]) => {setPage0State({...Page0State, searchDIDSelection: data})}}
+                                handleChange={(data: DIDLong[]) => { setPage0State({ ...Page0State, searchDIDSelection: data }) }}
                             />
                         </div>
                     </Collapsible>
@@ -411,9 +415,9 @@ export const CreateRule = (
                                         />
                                     </div>
                                     <div className={twMerge(
-                                            "flex flex-col border rounded-sm p-2",
-                                            Page2State.takesamples ? "bg-teal-300 dark:bg-teal-600" : "bg-gray-100 dark:bg-gray-800"
-                                        )}
+                                        "flex flex-col border rounded-sm p-2",
+                                        Page2State.takesamples ? "bg-teal-300 dark:bg-teal-600" : "bg-gray-100 dark:bg-gray-800"
+                                    )}
                                     >
                                         <div
                                             className="flex flex-row justify-start space-x-2"
@@ -424,9 +428,9 @@ export const CreateRule = (
                                                 checked={Page2State.takesamples}
                                                 onChange={(event) => {
                                                     if (Page2State.takesamples) {
-                                                        setPage2State({ ...Page2State, numsamples: -1, takesamples: false})
+                                                        setPage2State({ ...Page2State, numsamples: -1, takesamples: false })
                                                     } else {
-                                                        setPage2State({ ...Page2State, numsamples: 1, takesamples: true})
+                                                        setPage2State({ ...Page2State, numsamples: 1, takesamples: true })
                                                     }
                                                 }}
                                                 id="create-sample"
@@ -467,7 +471,7 @@ export const CreateRule = (
                         comment: Page2State.freeComment,
                     }} />
                 </RulePage>
-            </div>
+            </Body>
         </div>
     )
 }

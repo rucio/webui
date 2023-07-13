@@ -8,6 +8,8 @@ import { Checkbox } from "../../Checkbox/Checkbox"
 import { DIDMetaView } from "./DIDMetaView"
 import { ListDIDTable } from "./ListDIDTable"
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM"
+import { Heading } from "../Helpers/Heading"
+import { Body } from "../Helpers/Body"
 
 var format = require("date-format")
 
@@ -51,13 +53,8 @@ export const ListDID = (
                 "flex flex-col space-y-2 w-full"
             )}
         >
-            <div
-                className={twMerge(
-                    "rounded-md w-full",
-                    "border dark:border-2 dark:border-gray-200 p-2",
-                    "flex flex-col items-center space-y-2",
-                    "bg-white dark:bg-gray-800"
-                )}
+            <Heading
+                title="List DIDs"
             >
                 <form
                     className={twMerge(
@@ -127,56 +124,54 @@ export const ListDID = (
                         />
                     </form>
                 </div>
-            </div>
-            <div
-                className={twMerge(
-                    "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2",
-                    "bg-white dark:bg-gray-800 border dark:border-gray-200 dark:border-2",
-                    "p-2 rounded-lg"
-                )}
-            >
-                <div
+            </Heading>
+                <Body
                     className={twMerge(
-                        "bg-white",
-                        "min-w-0",
-                        "lg:col-span-2"
+                        "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2",
                     )}
                 >
-                    <ListDIDTable
-                        comdom={props.comdom}
-                        selectionFunc={(data: DID[]) => {
-                            // pass data from child (table) into the component state
-                            setSelection(data)
-                        }}
-                    />
-                </div>
-                <div
-                    className={twMerge(
-                        "bg-stone-100 dark:bg-gray-900",
-                        "rounded-md p-2",
-                        "flex flex-col space-y-2",
-                    )}
-                >
-                    <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
                     <div
                         className={twMerge(
-                            "text-gray-800",
-                            !selectedDID ? "block" : "hidden",
+                            "bg-white",
+                            "min-w-0",
+                            "lg:col-span-2"
                         )}
-                        aria-label="Notice: No DID selected"
                     >
-                        <i className="dark:text-gray-200">No DID selected</i>
+                        <ListDIDTable
+                            comdom={props.comdom}
+                            selectionFunc={(data: DID[]) => {
+                                // pass data from child (table) into the component state
+                                setSelection(data)
+                            }}
+                        />
                     </div>
                     <div
                         className={twMerge(
-                            selectedDID ? "block" : "hidden",
+                            "bg-stone-100 dark:bg-gray-900",
+                            "rounded-md p-2",
+                            "flex flex-col space-y-2",
                         )}
-                        aria-label="Go To DID Page"
                     >
-                        <Button label="Go To DID Page" aria-label="Go To DID Page" />
+                        <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
+                        <div
+                            className={twMerge(
+                                "text-gray-800",
+                                !selectedDID ? "block" : "hidden",
+                            )}
+                            aria-label="Notice: No DID selected"
+                        >
+                            <i className="dark:text-gray-200">No DID selected</i>
+                        </div>
+                        <div
+                            className={twMerge(
+                                selectedDID ? "block" : "hidden",
+                            )}
+                            aria-label="Go To DID Page"
+                        >
+                            <Button label="Go To DID Page" aria-label="Go To DID Page" />
+                        </div>
                     </div>
-                </div>
-            </div>
+                </Body>
         </div>
     )
 }

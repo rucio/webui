@@ -23,6 +23,8 @@ import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { Titleth, Contenttd, Generaltable } from "../../Helpers/Metatable";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { Heading } from "../Helpers/Heading";
+import { Body } from "../Helpers/Body";
 
 export interface RulePageLockEntry {
     scope: string;
@@ -45,7 +47,7 @@ export const PageRule = (
     const [subpageIndex, setSubpageIndex] = useState(0);
 
     useEffect(() => {
-        if(subpageIndex === 1 && props.ruleLocks.query.data.length === 0 ) {
+        if (subpageIndex === 1 && props.ruleLocks.query.data.length === 0) {
             // Opened locks tab, but no data yet => start load
             console.log(props.ruleLocks.query.data)
             props.ruleLocks.start()
@@ -156,35 +158,11 @@ export const PageRule = (
                 "flex flex-col space-y-2 w-full"
             )}
         >
-            <div
-                className={twMerge(
-                    "rounded-md w-full",
-                    "border dark:border-2 dark:border-gray-200 p-2",
-                    "flex flex-col items-start space-y-2",
-                    "bg-white dark:bg-gray-800"
-                )}
-            >
-                <div
-                    className={twMerge(
-                        "flex flex-col space-y-2 lg:flex-row lg:justify-between lg:items-baseline lg:space-y-0 w-full",
-                        "bg-white dark:bg-gray-800"
-                    )}
-                >
-                    <span className="flex flex-row justify-between space-x-4">
-                        <H3>Rule Page for {props.ruleMeta.scope}:{props.ruleMeta.name}</H3>
-                    </span>
-                </div>
-
-            </div>
-            <div
-                className={twMerge(
-                    "min-w-0",
-                    "lg:col-span-2",
-                    "flex flex-col",
-                    "rounded-md p-2 border",
-                    "bg-white dark:bg-gray-800"
-                )}
-            >
+            <Heading
+                title="View Rule"
+                subtitle={`For rule ${props.ruleMeta.scope}:${props.ruleMeta.name}`}
+            />
+            <Body>
                 <Tabs
                     tabs={
                         ["Metadata", "Locks"]
@@ -193,7 +171,7 @@ export const PageRule = (
                         ["subpage-metadata", "subpage-locks"]
                     }
                     active={0}
-                    updateActive={(active) => {setSubpageIndex(active)}}
+                    updateActive={(active) => { setSubpageIndex(active) }}
                 />
                 <SubPage
                     show={subpageIndex === 0}
@@ -207,7 +185,6 @@ export const PageRule = (
                             "flex flex-col space-y-2"
                         )}
                     >
-
                         <Generaltable>
                             <tr>
                                 <Titleth>Scope</Titleth>
@@ -241,19 +218,19 @@ export const PageRule = (
                             <tr>
                                 <Titleth>Locks OK</Titleth>
                                 <Contenttd>
-                                        <P mono>{meta.locks_ok_cnt}</P>
+                                    <P mono>{meta.locks_ok_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
                                 <Titleth>Locks Replicating</Titleth>
                                 <Contenttd>
-                                        <P mono>{meta.locks_replicating_cnt}</P>
+                                    <P mono>{meta.locks_replicating_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
                                 <Titleth>Locks Stuck</Titleth>
                                 <Contenttd>
-                                        <P mono>{meta.locks_stuck_cnt}</P>
+                                    <P mono>{meta.locks_stuck_cnt}</P>
                                 </Contenttd>
                             </tr>
                         </Generaltable>
@@ -327,10 +304,8 @@ export const PageRule = (
                                 <Contenttd><RuleStateTag state={meta.state} /></Contenttd>
                             </tr>
                         </Generaltable>
-
                     </div></SubPage>
                 <SubPage
-
                     show={subpageIndex === 1}
                     id="subpage-locks"
                     aria-labelledby="tab-1"
@@ -347,8 +322,8 @@ export const PageRule = (
                         }}
                     />
                 </SubPage>
+            </Body >
 
-            </div>
         </div>
 
     );

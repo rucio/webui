@@ -31,12 +31,12 @@ describe("PageRule Story Test", () => {
 
         // assert header is properly done
         expect(
-            screen.getByRole("heading", { name: /Rule Page for/})
+            screen.getByRole("heading", { name: /For rule/})
         ).toHaveTextContent(
             `${ruleMeta.scope}:${ruleMeta.name}`
         )
         // click on header
-        await user.click(screen.getByRole("heading", { name: /Rule Page for/}))
+        await user.click(screen.getByRole("heading", { name: /For rule/}))
         selectedTabExpect().not.toHaveFocus()
         // tab to focus the `locks` tab
         await user.tab()

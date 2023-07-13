@@ -17,7 +17,7 @@ export const Timeline = (
     )
     
     return (
-        <div className='rounded-md p-2 border dark:border-2 bg-white dark:bg-gray-800'>
+        <div className='rounded-md p-2  bg-white dark:bg-gray-800'>
             <div
                 className="relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100 dark:after:bg-gray-600"
             >
