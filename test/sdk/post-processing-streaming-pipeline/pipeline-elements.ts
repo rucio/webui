@@ -19,16 +19,13 @@ export class FirstPipelineElement extends BaseStreamingPostProcessingPipelineEle
         }
         return Promise.resolve(dto)
     }
-    processDTO(dto: BaseDTO): {
-        data: TResponseModel | BaseErrorResponseModel
+    validateDTO(dto: BaseDTO): {
+        data: BaseDTO | BaseErrorResponseModel
         status: 'success' | 'error'
     } {
         return {
             status: 'success',
-            data: {
-                status: 'success',
-                message: dto.message,
-            } as TResponseModel,
+            data: dto
         }
     }
 
@@ -65,16 +62,13 @@ export class SecondPipelineElement extends BaseStreamingPostProcessingPipelineEl
         }
         return Promise.resolve(dto)
     }
-    processDTO(dto: BaseDTO): {
-        data: TResponseModel | BaseErrorResponseModel
+    validateDTO(dto: BaseDTO): {
+        data:  BaseDTO | BaseErrorResponseModel
         status: 'success' | 'error'
     } {
         return {
             status: 'success',
-            data: {
-                status: 'success',
-                message: dto.message,
-            } as TResponseModel,
+            data: dto
         }
     }
 
