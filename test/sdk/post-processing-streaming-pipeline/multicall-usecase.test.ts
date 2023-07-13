@@ -1,0 +1,196 @@
+import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto'
+import { BaseStreamingPresenter } from '@/lib/sdk/presenter'
+import { BaseMultiCallStreamableUseCase } from '@/lib/sdk/usecase'
+import {
+    AuthenticatedRequestModel,
+    BaseErrorResponseModel,
+    BaseResponseModel,
+} from '@/lib/sdk/usecase-models'
+import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/usecase-stream-element'
+import { Readable, Transform, PassThrough } from 'stream'
+import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
+import { RequestModel, StreamData, TResponseModel } from './models'
+import {
+    FirstPipelineElement,
+    SecondPipelineElement,
+} from './pipeline-elements'
+import { TestPresenter } from './presenter'
+
+describe('BaseMultiCallStreamableUseCase', () => {
+    class TestMultiCallPipelineUseCase extends BaseMultiCallStreamableUseCase<
+        RequestModel,
+        TResponseModel,
+        BaseErrorResponseModel,
+        BaseStreamableDTO,
+        StreamData
+    > {
+        constructor(response: any) {
+            const firstPipelineElement = new FirstPipelineElement()
+            const secondPipelineElement = new SecondPipelineElement()
+            const presenter = new TestPresenter(response)
+            super(presenter, [firstPipelineElement, secondPipelineElement])
+        }
+
+        validateRequestModel(
+            requestModel: RequestModel,
+        ): BaseErrorResponseModel | undefined {
+            return undefined
+        }
+
+        makeGatewayRequest(requestModel: {
+            rucioAuthToken: string
+        }): Promise<BaseStreamableDTO> {
+            const dto: BaseStreamableDTO = {
+                status: 'success',
+                stream: Readable.from(['root_element_1', 'root_element_2']),
+            }
+            return Promise.resolve(dto)
+        }
+
+        handleGatewayError(error: BaseStreamableDTO): BaseErrorResponseModel {
+            throw new Error('Method not implemented.')
+        }
+        
+        chunkToDTO(streamedChunk: string): StreamData {
+            return {
+                title: streamedChunk,
+            } as StreamData
+        }
+
+        processStreamedData(dto: StreamData): {
+            data: TResponseModel | BaseErrorResponseModel
+            status: 'success' | 'error'
+        } {
+            const responseModel: TResponseModel = {
+                status: 'success',
+                message: dto.title,
+            }
+            return {
+                status: 'success',
+                data: responseModel,
+            }
+        }
+
+        handleStreamError(error: BaseErrorResponseModel): void {
+            throw new Error('handleError: found something!' + error.message)
+        }
+
+        
+
+        validateFinalResponseModel(responseModel: BaseResponseModel): {
+            isValid: boolean
+            errorModel?: BaseErrorResponseModel | undefined
+        } {
+            const isValid = responseModel.status === 'success'
+            const errorModel: BaseErrorResponseModel = {
+                name: 'Validation Error',
+                status: 'error',
+                message: 'responseModel is not valid',
+            }
+            return {
+                isValid: isValid,
+                errorModel: isValid ? undefined : errorModel,
+            }
+        }
+
+        
+    }
+
+    it('should execute successfully', async () => {
+        const res = MockHttpStreamableResponseFactory.getMockResponse()
+        const useCase = new TestMultiCallPipelineUseCase(res)
+
+        const requestModel: RequestModel = {
+            rucioAuthToken: 'does-not-matter',
+        }
+
+        await useCase.execute(requestModel)
+
+        const receivedData: any[] = []
+        const onData = (data: string) => {
+            receivedData.push(data)
+        }
+
+        const done = new Promise<void>((resolve, reject) => {
+            res.on('data', onData)
+            res.on('end', () => {
+                res.off('data', onData)
+                resolve()
+            })
+            res.on('error', err => {
+                res.off('data', onData)
+                reject(err)
+            })
+        })
+
+        await done
+        expect(receivedData).toEqual([
+            {
+                title: 'success: root_element_1 pipeline element 1 transformed pipeline element 2 transformed',
+            },
+            {
+                title: 'success: root_element_2 pipeline element 1 transformed pipeline element 2 transformed',
+            },
+        ])
+    })
+
+    class Validator extends Transform {
+        constructor() {
+            super({ objectMode: true })
+        }
+        _transform(
+            chunk: any,
+            encoding: BufferEncoding,
+            callback: (error?: Error, data?: any) => void,
+        ): void {
+            console.log('validating chunk: ' + chunk)
+            this.push(chunk)
+            callback()
+        }
+    }
+    it('tests piping', async () => {
+        const baseStream = Readable.from(['root_element_1', 'root_element_2'])
+
+        const firstPipelineElement = new PassThrough({ objectMode: true })
+        const secondPipelineElement = new PassThrough({ objectMode: true })
+        const validator = new Validator()
+
+        const res = new Transform({
+            objectMode: true,
+            transform: (chunk, encoding, callback) => {
+                console.log('transforming chunk: ' + chunk)
+                callback(undefined, chunk)
+            },
+        })
+
+        baseStream
+            .on('error', error => console.log(error))
+            .pipe(firstPipelineElement)
+        firstPipelineElement
+            .on('error', error => console.log(error))
+            .pipe(secondPipelineElement)
+        secondPipelineElement.pipe(validator)
+        validator.on('error', error => console.log(error)).pipe(res)
+
+        const receivedData: string[] = []
+        const onData = (data: string) => {
+            receivedData.push(data.toString())
+        }
+
+        const done = new Promise<void>((resolve, reject) => {
+            res.on('data', onData)
+            res.on('end', () => {
+                res.off('data', onData)
+                resolve()
+            })
+            res.on('error', err => {
+                res.off('data', onData)
+                reject(err)
+            })
+        })
+
+        await done
+
+        expect(receivedData).toEqual(['root_element_1', 'root_element_2'])
+    })
+})
