@@ -13,7 +13,7 @@ import {
 } from './usecase-models'
 import { Transform, TransformCallback, PassThrough, Readable } from 'stream'
 import { BaseDTO, BaseStreamableDTO } from './dto'
-import { BaseStreamingPostProcessingPipelineElement } from './usecase-stream-element'
+import { BaseStreamingPostProcessingPipelineElement, ResponseModelValidatorPipelineElement } from './usecase-stream-element'
 import { BaseStreamingPresenter } from './presenter'
 
 /**
@@ -270,38 +270,6 @@ export abstract class BaseStreamingUseCase<
     }
 }
 
-export class ResponseModelValidatorPipelineElement<TResponseModel extends BaseResponseModel, TErrorModel> extends Transform {
-    constructor() {
-        super({ objectMode: true })
-    }
-
-    validateResponseModel(responseModel: TResponseModel): {
-        isValid: boolean
-        errorModel?: TErrorModel | undefined
-    } {
-        const isValid = responseModel.status === 'success'
-        const errorModel: TErrorModel = {
-            name: 'Validation Error',
-            status: 'error',
-            message: 'responseModel is not valid',
-        } as TErrorModel
-        return {
-            isValid: isValid,
-            errorModel: isValid ? undefined : errorModel,
-        }
-    } 
-
-    _transform(chunk: any, encoding: BufferEncoding, callback: TransformCallback): void {
-        const { responseModel } = chunk
-        const validationResult = this.validateResponseModel(responseModel)
-        if (validationResult.isValid) {
-            callback(undefined, responseModel)
-        } else {
-            this.emit('error', validationResult.errorModel)
-            callback(validationResult.errorModel as Error)
-        }
-    }
-}
 export abstract class BaseMultiCallStreamableUseCase<
         TRequestModel,
         TResponseModel extends BaseResponseModel,
@@ -345,7 +313,7 @@ export abstract class BaseMultiCallStreamableUseCase<
     ) {
         super(presenter)
         this.postProcessingPipelineElements = postProcessingPipelineElements
-        this.finalResponseValidationTransform = new ResponseModelValidatorPipelineElement<TResponseModel, TErrorModel>()
+        this.finalResponseValidationTransform = new ResponseModelValidatorPipelineElement<TResponseModel, TErrorModel>(this.validateFinalResponseModel)
     }
 
     /**
@@ -374,21 +342,24 @@ export abstract class BaseMultiCallStreamableUseCase<
         this.presenter.presentStream(this.finalResponseValidationTransform)
     }
 
+    abstract chunkToDTO(streamedChunk: string): TStreamData
     abstract validateFinalResponseModel(responseModel: TResponseModel): {
         isValid: boolean
         errorModel?: TErrorModel | undefined
     }
+
     abstract handleStreamError(error: TErrorModel): void
 
     _transform(
-        dto: TStreamData,
+        chunk: any,
         encoding: BufferEncoding,
         callback: TransformCallback,
     ): void {
+        const dto = this.chunkToDTO(chunk)
         const { status, data } = this.processStreamedData(dto)
         if (status === 'success') {
             const responseModel = data as TResponseModel
-            this.push(
+            callback(undefined,
                 {
                     requestModel: this.requestModel,
                     responseModel: responseModel,
@@ -397,7 +368,7 @@ export abstract class BaseMultiCallStreamableUseCase<
         } else {
             const errorModel = data as TErrorModel
             this.emit('error', errorModel)
+            callback(errorModel)
         }
-        callback()
     }
 }

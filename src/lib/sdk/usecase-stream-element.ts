@@ -1,7 +1,7 @@
 import { Transform, Readable, PassThrough } from 'stream';
 import { BaseDTO, BaseStreamableDTO } from './dto';
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
-
+import { TransformCallback } from 'stream';
 export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TDTO extends BaseDTO> extends Transform {
 
     constructor() {
@@ -56,11 +56,6 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
                 callback(data as Error)
             }
             const transformedResponseModel = this.transformResponseModel(responseModel, dto)
-            // this.push({
-            //         requestModel: requestModel,
-            //         responseModel: transformedResponseModel
-            //     }
-            // )
             callback(undefined, {
                 requestModel: requestModel,
                 responseModel: transformedResponseModel
@@ -68,6 +63,34 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
         } catch (error: Error | any) {
             this.emit('Unknown error with Gateway Request: ', error)
             callback(error? error: undefined)
+        }
+    }
+}
+
+
+export class ResponseModelValidatorPipelineElement<TResponseModel extends BaseResponseModel, TErrorModel> extends Transform {
+    protected validatorFn: {(responseModel: TResponseModel): {isValid: boolean, errorModel?: TErrorModel | undefined}}
+
+    constructor(validatorFn:{(responseModel: TResponseModel): {isValid: boolean, errorModel?: TErrorModel | undefined}}) {
+        super({ objectMode: true })
+        this.validatorFn = validatorFn
+    }
+
+    validateResponseModel(responseModel: TResponseModel): {
+        isValid: boolean
+        errorModel?: TErrorModel | undefined
+    } {
+        return this.validatorFn(responseModel)
+    } 
+
+    _transform(chunk: any, encoding: BufferEncoding, callback: TransformCallback): void {
+        const { responseModel } = chunk
+        const validationResult = this.validateResponseModel(responseModel)
+        if (validationResult.isValid) {
+            callback(undefined, responseModel)
+        } else {
+            this.emit('error', validationResult.errorModel)
+            callback(validationResult.errorModel as Error)
         }
     }
 }
