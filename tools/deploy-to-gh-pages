@@ -25,7 +25,7 @@ git reset --hard origin/master
 # delete everything on the directory
 # ignore the docs folder
 
-find * -maxdepth 0 -name 'docs' -prune -o -exec rm -rf '{}' ';'
+find * -maxdepth 0 -not -name 'storybook-static' -exec rm -rf '{}' ';'
 
 # remove some folders additionally
 
@@ -34,7 +34,7 @@ rm -rf .husky .storybook
 # move the docs folder content
 # explode in the repository root
 
-mv ./docs/* .
+mv ./storybook-static/* .
 
 # deletes the git cache
 # push the new content to gh-pages
