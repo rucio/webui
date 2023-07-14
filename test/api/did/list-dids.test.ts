@@ -22,9 +22,9 @@ describe('DID API Tests', () => {
                 },
                 body: Readable.from(
                     [
-                        'test:dataset1',
-                        'test:dataset2',
-                        'test:dataset3',
+                        '"dataset1"',
+                        '"dataset2"',
+                        '"dataset3"',
                     ].join('\n'),
                 ),
             },
@@ -124,7 +124,7 @@ describe('DID API Tests', () => {
 
         const receivedData: any[] = []
         const onData = (data: any) => {
-            receivedData.push(data)
+            receivedData.push(JSON.parse(data))
         }
 
         const done = new Promise<void>((resolve, reject) => {

@@ -21,6 +21,7 @@ export default async function DashboardLayout({
   return (
     <div>
     <h3>You are logged in as {sessionUser?.rucioIdentity}</h3>
+    <h3>Your rucio auth token is {rucioAuthToken}</h3>
         {children}
     </div>
   )
