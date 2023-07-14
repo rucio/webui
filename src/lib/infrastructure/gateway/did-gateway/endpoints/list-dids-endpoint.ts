@@ -1,5 +1,4 @@
 import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints"
-import { parseDIDString } from "@/lib/common/did-utils"
 import { HTTPRequest } from "@/lib/common/http"
 import { ListDIDDTO } from "@/lib/core/dto/did-dto"
 import { DID, DIDType } from "@/lib/core/entity/rucio"
@@ -83,11 +82,10 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
 
     /** @implements */
     createDTO(chunk: Buffer): DID {
-        const didName = JSON.parse(chunk.toString())
-        const parsedDID = parseDIDString(didName)
+        const didName = JSON.parse(chunk.toString()).split('"')[1]
         const did: DID = {
-            name: parsedDID.name,
-            scope: parsedDID.scope,
+            name: didName,
+            scope: this.scope,
             did_type: this.type,
         }
         return did

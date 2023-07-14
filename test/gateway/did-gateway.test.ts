@@ -15,12 +15,12 @@ describe('DID Gateway Tests', () => {
                     status: 401,
                 })
             }
-            if (req.url.includes('/mc16_13TeV/dids/search')) {
+            if (req.url.includes('/data17_13TeV/dids/search')) {
                 const stream = Readable.from(
                     [
-                        'data17_13TeV:00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
-                        'data17_13TeV:00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
-                        'data17_13TeV:00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+                        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00"',
+                        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01"',
+                        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02"',
                     ].join('\n'),
                 )
                 return Promise.resolve({
@@ -62,8 +62,8 @@ describe('DID Gateway Tests', () => {
         )
         const dto: ListDIDDTO = await rucioDIDGateway.listDIDs(
             'rucio-ddmlab-askdjljioj',
-            'mc16_13TeV',
-            'data17_13TeV.00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+            'data17_13TeV',
+            '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
             DIDType.DATASET,
         )
         expect(dto.status).toBe('success')
