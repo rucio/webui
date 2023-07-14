@@ -46,14 +46,6 @@ export type DIDMeta = {
     filesize: number | null
 }
 
-export enum DIDType {
-    DATASET = "DATASET",
-    CONTAINER = "CONTAINER",
-    FILE = "FILE",
-    ALL = "ALL",
-    UNKNOWN = "UNKNOWN"
-}
-
 // results of web::flaskapi:v1::rses::RSEAccountUsageLimit::get
 export type RSEAccountUsageLimit = {
     rse_id: string;
@@ -160,10 +152,12 @@ export enum RuleNotification {
 }
 
 export enum DIDType {
-    Dataset = "Dataset",
-    Container = "Container",
-    Collection = "Collection",
-    File = "File",
+    DATASET = "Dataset",
+    CONTAINER = "Container",
+    COLLECTION = "Collection",
+    FILE = "File",
+    ALL = "All",
+    UNKNOWN = "Unknown",
 }
 
 // replace this!

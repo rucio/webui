@@ -17,6 +17,8 @@ import { Button } from "../../Button/Button";
 import { PageSubscriptionJSONEditor } from "./PageSubscriptionJSONEditor";
 import { Type } from "@sinclair/typebox";
 import { SubscriptionFilter, SubscriptionReplicationRules } from "@/lib/core/entity/subscription";
+import { Heading } from "../Helpers/Heading";
+import { Body } from "../Helpers/Body";
 
 export interface PageSubscriptionPageProps {
     subscriptionMeta: SubscriptionMeta
@@ -33,34 +35,11 @@ export const PageSubscription = (
         <div
             className={twMerge("flex flex-col space-y-2 w-full")}
         >
-            <div
-                className={twMerge(
-                    "rounded-md w-full",
-                    "border dark:border-2 dark:border-gray-200 p-2",
-                    "flex flex-col items-start space-y-2",
-                    "bg-white dark:bg-gray-800"
-                )}
-            >
-                <div
-                    className={twMerge(
-                        "flex flex-col space-y-2 lg:flex-row lg:justify-between lg:items-baseline lg:space-y-0 w-full",
-                        "bg-white dark:bg-gray-800"
-                    )}
-                >
-                    <span className="flex flex-row justify-between space-x-4">
-                        <H3>Subscription Page for {props.subscriptionMeta.name}</H3>
-                    </span>
-                </div>
-            </div>
-            <div
-                className={twMerge(
-                    "min-w-0",
-                    "lg:col-span-2",
-                    "flex flex-col",
-                    "rounded-md p-2 border",
-                    "bg-white dark:bg-gray-800"
-                )}
-            >
+            <Heading
+                title="View Subscription"
+                subtitle={`For subscription ${props.subscriptionMeta.name}`}
+            />
+            <Body>
                 <Tabs
                     tabs={["Metadata", "Edit Subscription"]}
                     _ariaControls={["metadata", "edit-subscription"]}
@@ -174,7 +153,7 @@ export const PageSubscription = (
                         </Accordion>
                     </div>
                 </SubPage>
-            </div>
+            </Body>
         </div>
     );
 };

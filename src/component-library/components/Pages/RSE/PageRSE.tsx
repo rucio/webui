@@ -12,6 +12,8 @@ import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { PageRSEProtocols } from "./PageRSEProtocols";
 import { PageRSEAttributes } from "./PageRSEAttributes";
 import { H2 } from "../../Text/Headings/H2";
+import { Body } from "../Helpers/Body";
+import { Heading } from "../Helpers/Heading";
 
 type PageRSEProps = {
     rse: RSE
@@ -28,41 +30,10 @@ export const PageRSE = (
         <div
             className={twMerge("flex flex-col space-y-2 w-full")}
         >
-            <div
-                className={twMerge(
-                    "rounded-md w-full",
-                    "border dark:border-2 dark:border-gray-200 p-2",
-                    "flex flex-col items-start space-y-2",
-                    "bg-white dark:bg-gray-800"
-                )}
+            <Heading
+                title="View RSE"
+                subtitle={`For RSE ${props.rse.name}`}
             >
-                <div
-                    className={twMerge(
-                        "flex w-full",
-                        "flex-col space-y-2 md:space-y-0 justify-start",
-                        "md:flex-row md:justify-between space-x-2"
-                    )}
-                >
-                    <H1>RSE Page for {props.rse.name}</H1>
-                    <a
-                        className={twMerge(
-                            props.fromrselist ? "flex" : "hidden",
-                            "bg-blue-500 hover:bg-blue-600 text-white",
-                            "py-1 px-3 h-8 rounded",
-                            "font-bold",
-                            "cursor-pointer",
-                            "flex-row justify-center lg:justify-end items-center space-x-2 shrink-0"
-                        )}
-                        href={props.fromrselist ? "/listdids?=" + props.fromrselist: "/"} // TODO connect properly
-                        id="back-to-rselist-button"
-                    >
-                        <HiArrowCircleLeft className="text-xl" />
-                        <label className="cursor-pointer" htmlFor="back-to-rselist-button">
-                            Back to RSE List
-                        </label>
-                    </a>
-                </div>
-
                 <div
                     className={twMerge(
                         "bg-stone-100 dark:bg-gray-900",
@@ -100,15 +71,8 @@ export const PageRSE = (
                         </tr>
                     </Generaltable>
                 </div>
-            </div>
-            <div
-                className={twMerge(
-                    "flex flex-col space-y-2 w-full",
-                    "p-0 md:p-2",
-                    "rounded-md border",
-                    "bg-white dark:bg-gray-800",
-                )}
-            >
+            </Heading>
+            <Body>
                 <div
                     className={twMerge(
                         "flex flex-col space-y-2 w-full",
@@ -127,7 +91,7 @@ export const PageRSE = (
                     <H2>RSE Attributes</H2>
                     <PageRSEAttributes comdom={props.attributescomdom} />
                 </div>
-            </div>
+            </Body>
         </div>
     );
 };

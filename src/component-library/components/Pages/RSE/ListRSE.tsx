@@ -12,7 +12,8 @@ import { RSETypeTag } from "../../Tags/RSETypeTag";
 import { TableFilterBoolean } from "../../StreamedTables/TableFilterBoolean";
 import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
 import useReponsiveHook from "../../Helpers/ResponsiveHook";
-import { Button } from "../../Button/Button";
+import { Body } from "../Helpers/Body";
+import { Heading } from "../Helpers/Heading";
 
 export const ListRSE = (
     props: {
@@ -117,33 +118,10 @@ export const ListRSE = (
                 "flex flex-col space-y-2 w-full"
             )}
         >
-            <div
-                className={twMerge(
-                    "rounded-md w-full",
-                    "border dark:border-2 dark:border-gray-200 p-2",
-                    "flex flex-col items-start space-y-2",
-                    "bg-white dark:bg-gray-800"
-                )}
-            >
-                <div
-                    className={twMerge(
-                        "flex flex-col space-y-2 md:flex-row md:justify-between md:items-baseline md:space-y-0 w-full",
-                        "bg-white dark:bg-gray-800"
-                    )}
-                >
-                    <span className="flex flex-row justify-between space-x-4">
-                        <H3>List RSEs</H3>
-                    </span>
-                </div>
-
-            </div>
-            <div
-                className={twMerge(
-                    "p-0 md:p-2",
-                    "rounded-md border",
-                    "bg-white dark:bg-gray-800",
-                )}
-            >
+            <Heading
+                title="List RSEs"
+            />
+            <Body>
                 <StreamedTable<RSE>
                     tablecomdom={props.comdom}
                     tablecolumns={tablecolumns}
@@ -156,7 +134,7 @@ export const ListRSE = (
                         }
                     }}
                 />
-            </div>
+            </Body>
         </div>
     );
 };

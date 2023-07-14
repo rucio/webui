@@ -41,7 +41,7 @@ export const PageDIDByType = (
                 return (
                     <TableFilterDiscrete<DIDType>
                         name="DID Type"
-                        keys={[DIDType.Container, DIDType.Dataset, DIDType.File]}
+                        keys={[DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]}
                         renderFunc={state => state === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag didtype={state} forcesmall/>}
                         column={info.column}
                     />

@@ -88,9 +88,9 @@ export function createRuleMeta(): RuleMeta {
         activity: faker.company.buzzPhrase(),
         copies: faker.number.int({ min: 1, max: 10 }),
         created_at: faker.date.past().toISOString(),
-        did_type: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
+        did_type: faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]),
         expires_at: faker.date.future().toISOString(),
-        grouping: faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File]),
+        grouping: faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]),
         id: faker.string.uuid(),
         ignore_account_limit: faker.datatype.boolean(),
         ignore_availability: faker.datatype.boolean(),
@@ -188,7 +188,7 @@ export function createRule(): Rule {
 
 export function createDIDMeta(): DIDMeta {
     // ignore Collections
-    const did_type = faker.helpers.arrayElement<DIDType>([DIDType.Container, DIDType.Dataset, DIDType.File])
+    const did_type = faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE])
     return {
         name: faker.lorem.words(3).replace(/\s/g, "."),
         scope: createRandomScope(),
@@ -203,12 +203,12 @@ export function createDIDMeta(): DIDMeta {
         purge_replicas: faker.datatype.boolean(),
         monotonic: faker.datatype.boolean(),
         // only for collections
-        is_open: did_type !== DIDType.File ? faker.datatype.boolean() : null,
+        is_open: did_type !== DIDType.FILE ? faker.datatype.boolean() : null,
         // only for files
-        adler32: did_type === DIDType.File ? faker.string.hexadecimal({ length: 8, prefix: "" }) : null,
-        guid: did_type === DIDType.File ? faker.string.uuid() : null,
-        md5: did_type === DIDType.File ? faker.string.hexadecimal({ length: 32, prefix: "" }) : null,
-        filesize: did_type === DIDType.File ? faker.datatype.number({ min: 0, max: 1e12 }) : null,
+        adler32: did_type === DIDType.FILE ? faker.string.hexadecimal({ length: 8, prefix: "" }) : null,
+        guid: did_type === DIDType.FILE ? faker.string.uuid() : null,
+        md5: did_type === DIDType.FILE ? faker.string.hexadecimal({ length: 32, prefix: "" }) : null,
+        filesize: did_type === DIDType.FILE ? faker.datatype.number({ min: 0, max: 1e12 }) : null,
     }
 }
 

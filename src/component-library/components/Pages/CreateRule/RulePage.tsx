@@ -17,7 +17,7 @@ export const RulePage = (
         <Collapsible showIf={props.activePage === props.pagenum}>
             <div
                 className={twMerge(
-                    "m-2 p-4 border rounded-md dark:border-2 flex flex-col space-y-2",
+                    "flex flex-col space-y-2",
                     "bg-white dark:bg-gray-800"
                 )}
                 data-testid={`rule-page-${props.pagenum}`}
