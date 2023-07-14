@@ -342,7 +342,6 @@ export abstract class BaseMultiCallStreamableUseCase<
         TResponseModel extends BaseResponseModel,
         TErrorModel extends BaseErrorResponseModel,
         TDTO extends BaseStreamableDTO,
-        TStreamData,
         TStreamDTO extends BaseDTO,
         TViewModel extends BaseViewModel
     >

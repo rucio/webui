@@ -7,8 +7,6 @@ export interface TResponseModel extends BaseResponseModel {
         message: string
 }
 
-export type StreamData = string
-
 export interface StreamDTO extends BaseDTO {
     status: 'success' | 'error'
     title: string

@@ -9,7 +9,7 @@ import {
 import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements'
 import { Readable, Transform, PassThrough } from 'stream'
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
-import { RequestModel, StreamData, StreamDTO, TResponseModel } from './models'
+import { RequestModel, StreamDTO, TResponseModel } from './models'
 import {
     FirstPipelineElement,
     SecondPipelineElement,
@@ -23,7 +23,6 @@ describe('BaseMultiCallStreamableUseCase', () => {
         TResponseModel,
         BaseErrorResponseModel,
         BaseStreamableDTO,
-        StreamData,
         StreamDTO,
         BaseViewModel
     > {
@@ -45,18 +44,21 @@ describe('BaseMultiCallStreamableUseCase', () => {
         makeGatewayRequest(requestModel: {
             rucioAuthToken: string
         }): Promise<BaseStreamableDTO> {
+            const mockDTOs: StreamDTO[] = [
+                {
+                    status: 'success',
+                    title: 'root_element_1',
+                },
+                {
+                    status: 'success',
+                    title: 'root_element_2',
+                },
+            ]
             const dto: BaseStreamableDTO = {
                 status: 'success',
-                stream: Readable.from(['root_element_1', 'root_element_2']),
+                stream: Readable.from(mockDTOs),
             }
             return Promise.resolve(dto)
-        }
-
-        streamDataToStreamDTO(streamedData: StreamData, requestModel?: { rucioAuthToken: string } | undefined): StreamDTO {
-            return {
-                status: 'success',
-                title: streamedData,
-            }
         }
 
         handleGatewayError(error: BaseStreamableDTO): BaseErrorResponseModel {
