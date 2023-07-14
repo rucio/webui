@@ -5,7 +5,7 @@ export const Titleth: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => 
     return (
         <th
             className={twMerge(
-                "font-bold w-28 md:w-48 pl-1 dark:text-white",
+                "font-bold w-28 md:w-48 pl-1 dark:text-white text-left",
                 className ?? ""
             )}
             scope={scope ?? "row"}
