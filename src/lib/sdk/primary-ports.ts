@@ -3,6 +3,7 @@ import { BaseDTO } from './dto'
 import { AuthenticatedRequestModel, BaseErrorResponseModel, BaseResponseModel } from './usecase-models'
 import { BaseStreamingPostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { TWebResponse } from './web'
+import { BaseViewModel } from './view-models'
 
 /**
  * A base interface for input ports.
@@ -64,8 +65,20 @@ export interface BaseOutputPort<TResponseModel, TErrorModel> {
  * @typeparam TViewModel The type of the view model for the streaming output port.
  * @typeparam TErrorModel The type of the error model for the streaming output port.
  */
-export interface BaseStreamingOutputPort<TResponseModel, TErrorModel> extends Transform{
+export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TViewModel extends BaseViewModel> extends Transform{
     response: TWebResponse
     presentStream(stream: PassThrough): void
+    
     presentError(errorModel: TErrorModel): void
+    
+    convertErrorModelToViewModel(errorModel: TErrorModel): {
+        status: number,
+        viewModel: TViewModel
+    }
+    
+    convertResponseModelToViewModel(
+        responseModel: TResponseModel,
+    ): TViewModel
+
+    handleStreamError(error: TErrorModel): void
 }
