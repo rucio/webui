@@ -67,6 +67,7 @@ class LoginConfigUseCase extends BaseUseCase<void, LoginConfigResponse, LoginCon
         if (error.type === 'ConfigNotFound') {
             return {
                 status: 'error',
+                name: 'ConfigNotFound',
                 type: 'ConfigNotFound',
                 message: error.message? error.message : 'Configuration not found on the server.',
             }
@@ -74,6 +75,7 @@ class LoginConfigUseCase extends BaseUseCase<void, LoginConfigResponse, LoginCon
         else if (error.type === 'InvalidConfig') {
             return {
                 status: 'error',
+                name: 'InvalidConfig',
                 type: 'InvalidConfig',
                 message: error.message? error.message : 'Invalid configuration found on the server.',
             }
@@ -81,6 +83,7 @@ class LoginConfigUseCase extends BaseUseCase<void, LoginConfigResponse, LoginCon
         else {
             return {
                 status: 'error',
+                name: 'UnknownError',
                 type: 'UnknownError',
                 message: 'An unknown error occurred while fetching the configuration of login page from the server.',
             }

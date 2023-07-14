@@ -17,8 +17,7 @@ import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port'
 import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory'
 import { Container } from 'inversify'
 import ListDIDsController from '@/lib/infrastructure/controller/list-dids-controller'
-// import ListDIDsUseCase from '@/lib/core/use-case/list-dids-usecase'
-import ListDIDsUseCase from '@/lib/core/use-case/list-dids/list-dids-usecase2'
+import ListDIDsUseCase from '@/lib/core/use-case/list-dids/list-dids-usecase'
 import ListDIDsPresenter from '../../presenter/list-dids-presenter'
 
 export default class ListDidsFeature extends BaseStreamableFeature<

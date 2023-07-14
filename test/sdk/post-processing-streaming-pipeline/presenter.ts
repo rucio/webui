@@ -1,6 +1,6 @@
 import { BaseStreamingPresenter } from "@/lib/sdk/presenter"
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models"
-import { StreamData, TResponseModel, ViewModel } from "./models"
+import { TResponseModel, ViewModel } from "./models"
 
 export class TestPresenter extends BaseStreamingPresenter<
         BaseResponseModel,
