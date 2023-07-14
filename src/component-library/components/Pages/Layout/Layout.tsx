@@ -6,8 +6,6 @@ import { twMerge } from "tailwind-merge"
 
 import { useState, useEffect, useRef, forwardRef } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
-import { H3 } from "../../Text/Headings/H3"
-import { P } from "../../Text/Content/P"
 import { AccountDropdown } from "./AccountDropdown"
 
 export interface LayoutViewModel {

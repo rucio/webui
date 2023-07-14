@@ -16,14 +16,14 @@ export const Dropdown = forwardRef(function Dropdown
 
     const options: DIDType[] = Object.values(DIDType)
     const nodes: React.ReactNode[] = [
-        <DIDTypeTag didtype={DIDType.Dataset} neversmall key={0} className="w-full md:w-full" />,
-        <DIDTypeTag didtype={DIDType.Container} neversmall key={1} className="w-full md:w-full" />,
-        <DIDTypeTag didtype={DIDType.Collection} neversmall key={2} className="w-full md:w-full" />,
-        <DIDTypeTag didtype={DIDType.File} neversmall key={3} className="w-full md:w-full" />,
+        <DIDTypeTag didtype={DIDType.DATASET} neversmall key={0} className="w-full md:w-full" />,
+        <DIDTypeTag didtype={DIDType.CONTAINER} neversmall key={1} className="w-full md:w-full" />,
+        <DIDTypeTag didtype={DIDType.COLLECTION} neversmall key={2} className="w-full md:w-full" />,
+        <DIDTypeTag didtype={DIDType.FILE} neversmall key={3} className="w-full md:w-full" />,
     ]
 
     const [isActive, setActive] = useState<boolean>(false)
-    const [selectedLabel, setSelectedLabel] = useState<DIDType>(DIDType.Dataset)
+    const [selectedLabel, setSelectedLabel] = useState<DIDType>(DIDType.DATASET)
 
     const ref = useRef<HTMLDivElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)

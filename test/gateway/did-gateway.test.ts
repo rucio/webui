@@ -99,17 +99,17 @@ describe('DID Gateway Tests', () => {
             {
                 scope: 'data17_13TeV',
                 name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
-                did_type: 'DATASET',
+                did_type: 'Dataset',
             },
             {
                 scope: 'data17_13TeV',
                 name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
-                did_type: 'DATASET',
+                did_type: 'Dataset',
             },
             {
                 scope: 'data17_13TeV',
                 name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
-                did_type: 'DATASET',
+                did_type: 'Dataset',
             },
         ])
     })

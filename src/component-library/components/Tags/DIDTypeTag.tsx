@@ -11,7 +11,7 @@ type DIDTypeTagProps = JSX.IntrinsicElements["span"] & {
 
 export const DIDTypeTag: FC<DIDTypeTagProps> = (
     {
-        didtype = DIDType.Dataset,
+        didtype = DIDType.DATASET,
         forcesmall = false,
         neversmall = false,
         ...props
@@ -31,13 +31,13 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
 
     const colPicker = (didtype: DIDType) => {
         switch (didtype) {
-            case DIDType.Container:
+            case DIDType.CONTAINER:
                 return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300"
-            case DIDType.Dataset:
+            case DIDType.DATASET:
                 return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
-            case DIDType.File:
+            case DIDType.FILE:
                 return "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300"
-            case DIDType.Collection:
+            case DIDType.COLLECTION:
                 return "bg-stone-100 text-stone-800 dark:bg-stone-900 dark:text-stone-300"
             default:
                 return ""

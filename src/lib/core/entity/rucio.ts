@@ -152,10 +152,12 @@ export enum RuleNotification {
 }
 
 export enum DIDType {
-    Dataset = "Dataset",
-    Container = "Container",
-    Collection = "Collection",
-    File = "File",
+    DATASET = "Dataset",
+    CONTAINER = "Container",
+    COLLECTION = "Collection",
+    FILE = "File",
+    ALL = "All",
+    UNKNOWN = "Unknown",
 }
 
 // replace this!

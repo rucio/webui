@@ -15,6 +15,6 @@ export const Heading = Template.bind({});
 Heading.args = {
     title: "Hello",
     subtitle: "Subtitle!!! Look at this",
-    tag: <DIDTypeTag didtype={DIDType.Dataset} />,
+    tag: <DIDTypeTag didtype={DIDType.DATASET} />,
     children: <div>World</div>
 };

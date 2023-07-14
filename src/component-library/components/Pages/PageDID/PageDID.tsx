@@ -56,39 +56,39 @@ export const PageDID = (
     const [subpageIndex, setSubpageIndex] = useState<number>(0)
     const showPageBools: Record<string, () => boolean> = {
         "subpage-metadata": () => {
-            if (didtype === DIDType.File) {
+            if (didtype === DIDType.FILE) {
                 return subpageIndex === 2
-            } else if (didtype === DIDType.Dataset) {
+            } else if (didtype === DIDType.DATASET) {
                 return subpageIndex === 3
-            } else if (didtype === DIDType.Container) {
+            } else if (didtype === DIDType.CONTAINER) {
                 return subpageIndex === 2
             } else {
                 return false
             }
         },
         "subpage-contents": () => {
-            return didtype === DIDType.Container && subpageIndex === 0
+            return didtype === DIDType.CONTAINER && subpageIndex === 0
         },
         "subpage-parent-dids": () => {
-            return didtype === DIDType.File && subpageIndex === 1
+            return didtype === DIDType.FILE && subpageIndex === 1
         },
         "subpage-rules": () => {
-            if (didtype === DIDType.Dataset) {
+            if (didtype === DIDType.DATASET) {
                 return subpageIndex === 0
-            } else if (didtype === DIDType.Container) {
+            } else if (didtype === DIDType.CONTAINER) {
                 return subpageIndex === 1
             } else {
                 return false
             }
         },
         "subpage-dataset-replicas": () => {
-            return didtype === DIDType.Dataset && subpageIndex === 1
+            return didtype === DIDType.DATASET && subpageIndex === 1
         },
         "subpage-file-replica-states": () => {
-            return didtype === DIDType.File && subpageIndex === 0
+            return didtype === DIDType.FILE && subpageIndex === 0
         },
         "subpage-file-replica-states-d": () => {
-            return didtype === DIDType.Dataset && subpageIndex === 2
+            return didtype === DIDType.DATASET && subpageIndex === 2
         }
     }
     return (
@@ -117,8 +117,8 @@ export const PageDID = (
             <Body>
                 <Tabs
                     tabs={
-                        didtype === DIDType.File ? ["File Replica States", "Parent DIDs", "Metadata"] :
-                            (didtype === DIDType.Dataset ? ["Rules", "Dataset Replicas", "File Replica States", "Metadata"] :
+                        didtype === DIDType.FILE ? ["File Replica States", "Parent DIDs", "Metadata"] :
+                            (didtype === DIDType.DATASET ? ["Rules", "Dataset Replicas", "File Replica States", "Metadata"] :
                                 ["Contents", "Rules", "Metadata"]
                             )
                     } // remember difference between collections and files
@@ -132,7 +132,7 @@ export const PageDID = (
                     <PageDIDRules comdom={props.didRulesComDOM} />
                 </SubPage>
                 <SubPage
-                    show={didtype === DIDType.File ? false : didtype === DIDType.Dataset ? subpageIndex === 1 : false}
+                    show={didtype === DIDType.FILE ? false : didtype === DIDType.DATASET ? subpageIndex === 1 : false}
                     id="subpage-dataset-replicas"
                 >
                     <PageDIDDatasetReplicas comdom={props.didDatasetReplicasComDOM} />

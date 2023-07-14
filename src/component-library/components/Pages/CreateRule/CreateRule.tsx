@@ -207,7 +207,7 @@ export const CreateRule = (
         numsamples: -1,
         enableNotifications: false,
         showAdvanced: false,
-        groupBy: DIDType.Dataset,
+        groupBy: DIDType.DATASET,
         asynchronousMode: false,
         numcopies: 1,
         freeComment: "",
