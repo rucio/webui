@@ -8,7 +8,7 @@ import { BasePresenter, BaseStreamingPresenter } from './presenter';
 import type { BaseInputPort, BaseOutputPort, BaseStreamingOutputPort } from './primary-ports';
 import { TUseCase } from './usecase';
 import TUseCaseFactory from './usecase-factory';
-import { BaseResponseModel } from './usecase-models';
+import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 import { BaseViewModel } from './view-models';
 
 /**
@@ -159,7 +159,7 @@ export class BaseStreamableFeature<
     TControllerParams extends TParameters,
     TRequestModel,
     TResponseModel extends BaseResponseModel,
-    TErrorModel,
+    TErrorModel extends BaseErrorResponseModel,
     TViewModel extends BaseViewModel,
 > implements IFeature{
     /**
@@ -175,9 +175,9 @@ export class BaseStreamableFeature<
     constructor(
         public name: string,
         private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
-        private UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
+        private UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>, ...args: any[]) => TUseCase<TRequestModel>,
         private useCaseContructorArgs: any[] = [],
-        private Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TViewModel, TErrorModel>,
+        private Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
     ) {}
@@ -212,14 +212,14 @@ export class BaseStreamableFeature<
     TControllerParams extends TParameters,
     TRequestModel,
     TResponseModel extends BaseResponseModel,
-    TErrorModel,
+    TErrorModel extends BaseErrorResponseModel,
     TViewModel extends BaseViewModel,
     >(
         appContainer: Container,
         Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
-        UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
+        UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>, ...args: any[]) => TUseCase<TRequestModel>,
         useCaseContructorArgs: any[] = [],
-        Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TViewModel, TErrorModel>,
+        Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
         passSessionToPresenter: boolean = false,
         symbols: IOCSymbols,
     ) {

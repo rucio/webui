@@ -8,7 +8,7 @@ import { BaseStreamingPresenter } from '@/lib/sdk/presenter'
 import { DIDType } from '@/lib/core/entity/rucio'
 import { ListDIDsOutputPort } from '@/lib/core/port/primary/list-dids-ports'
 
-export default class ListDIDsPresenter extends BaseStreamingPresenter<ListDIDsResponse, ListDIDsViewModel, ListDIDsError> implements ListDIDsOutputPort {
+export default class ListDIDsPresenter extends BaseStreamingPresenter<ListDIDsResponse, ListDIDsError, ListDIDsViewModel> implements ListDIDsOutputPort {
     response: NextApiResponse<any>
 
     constructor(response: NextApiResponse) {

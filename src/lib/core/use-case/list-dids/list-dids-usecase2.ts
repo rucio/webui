@@ -1,24 +1,26 @@
 import { injectable } from "inversify";
 import type { ListDIDsInputPort, ListDIDsOutputPort } from "@/lib/core/port/primary/list-dids-ports";
 import type DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
-import { ListDIDDTO, ListDIDsStreamData } from "../dto/did-dto";
-import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../usecase-models/list-dids-usecase-models";
+import { DIDDTO, ListDIDDTO, ListDIDsStreamData } from "../../dto/did-dto";
+import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../../usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
-import { DID } from "../entity/rucio";
-import { BaseStreamingUseCase } from "@/lib/sdk/usecase";
+import { BaseMultiCallStreamableUseCase, BaseStreamingUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
+import GetDIDsPipelineElement from "./pipeline-element-get-did";
 
 @injectable()
-class ListDIDsUseCase extends BaseStreamingUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, ListDIDsStreamData, ListDIDsViewModel> implements ListDIDsInputPort {
+class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, ListDIDsStreamData, DIDDTO, ListDIDsViewModel> implements ListDIDsInputPort {
+    
     constructor(
         protected presenter: ListDIDsOutputPort,
         private didGateway: DIDGatewayOutputPort,
     ) {
-        super(presenter)
+        const getDIDPipelineElement = new GetDIDsPipelineElement(didGateway);
+        super(presenter, [getDIDPipelineElement])
         this.didGateway = didGateway;
     }
-
+   
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): ListDIDsError | undefined {
         let scope: string;
         let name: string;
@@ -56,7 +58,16 @@ class ListDIDsUseCase extends BaseStreamingUseCase<ListDIDsRequest, ListDIDsResp
         } as ListDIDsError
     }
 
-    processStreamedData(dto: DID): { data: ListDIDsResponse | ListDIDsError; status: "success" | "error"; } {
+    streamDataToStreamDTO(streamedChunk: ListDIDsStreamData, requestModel: ListDIDsRequest): DIDDTO {
+        const { scope, name } = parseDIDString(streamedChunk);
+        return {
+            name: name, 
+            scope: scope,
+            did_type: requestModel.type,
+        } as DIDDTO
+    }
+
+    processStreamedData(dto: DIDDTO): { data: ListDIDsResponse | ListDIDsError; status: "success" | "error"; } {
         const responseModel: ListDIDsResponse = {
             status: 'success',
             name: dto.name,
@@ -65,12 +76,30 @@ class ListDIDsUseCase extends BaseStreamingUseCase<ListDIDsRequest, ListDIDsResp
             length: 0,
             bytes: 0,
         }
-        this.didGateway.getDID()
         return {
             data: responseModel,
             status: 'success',
         }
     }
+
+    handleStreamError(error: ListDIDsError): void {
+        this.emit('error', error)
+    }
+
+    validateFinalResponseModel(responseModel: ListDIDsResponse): { isValid: boolean; errorModel?: ListDIDsError | undefined; } {
+        return {
+            isValid: true,
+        }
+    }
+    
+    
+
+    
+
+    
+    
+
+   
 }
     
 export default ListDIDsUseCase;
