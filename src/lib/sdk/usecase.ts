@@ -334,6 +334,7 @@ export abstract class BaseStreamingUseCase<
  * @typeparam TErrorModel The type of the error model for the use case.
  * @typeparam TDTO The type of the data transfer object for the use case.
  * @typeparam TStreamData The type of the streamed data for the use case.
+ * @typeparam TStreamDTO The type of the data transfer object for the streamed data for the use case.
  * @typeparam TViewModel The type of the view model for the use case.
  */
 export abstract class BaseMultiCallStreamableUseCase<
@@ -429,7 +430,7 @@ export abstract class BaseMultiCallStreamableUseCase<
      * @param streamedData The chunk returned from the gateway's stream
      * @param requestModel The request model that was used to make the gateway request.
      */
-    abstract streamDataToStreamDTO(streamedData: TStreamData, requestModel?: AuthenticatedRequestModel<TRequestModel>): TStreamDTO
+    abstract streamDataToStreamDTO(streamedData: TStreamData, requestModel?: TRequestModel): TStreamDTO
 
     /**
      * Validates the final response model after execution of all post processing pipeline elements.
@@ -458,7 +459,7 @@ export abstract class BaseMultiCallStreamableUseCase<
         encoding: BufferEncoding,
         callback: TransformCallback,
     ): void {
-        const dto = this.streamDataToStreamDTO(chunk, this.requestModel)
+        const dto = chunk as TStreamDTO
         const { status, data } = this.processStreamedData(dto)
         if (status === 'success') {
             const responseModel = data as TResponseModel

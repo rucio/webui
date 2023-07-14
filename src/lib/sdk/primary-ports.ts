@@ -62,8 +62,9 @@ export interface BaseOutputPort<TResponseModel, TErrorModel> {
 
 /**
  * A base interface for streaming output ports.
- * @typeparam TViewModel The type of the view model for the streaming output port.
+ * @typeparam TResponseModel The type of the response model for the streaming output port.
  * @typeparam TErrorModel The type of the error model for the streaming output port.
+ * @typeparam TViewModel The type of the view model for the streaming output port.
  */
 export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TViewModel extends BaseViewModel> extends Transform{
     response: TWebResponse

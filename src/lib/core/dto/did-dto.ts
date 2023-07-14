@@ -13,6 +13,11 @@ export interface ListDIDDTO extends BaseStreamableDTO {
 }
 
 /**
+ * Represents the individual data items in the stream
+ */
+export type ListDIDsStreamData = string
+
+/**
  * Data Transfer Object for GetDIDEndpoint
  */
 export interface DIDDTO extends DID {
@@ -24,6 +29,7 @@ export interface DIDDTO extends DID {
         | 'Scope Not Found'
         | 'Unknown Error'
         | null
+    message?: string
     account: string
     open: boolean
     monotonic: boolean
