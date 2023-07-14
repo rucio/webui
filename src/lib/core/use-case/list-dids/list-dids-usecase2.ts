@@ -58,15 +58,6 @@ class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, Li
         } as ListDIDsError
     }
 
-    streamDataToStreamDTO(streamedChunk: ListDIDsStreamData, requestModel: ListDIDsRequest): DIDDTO {
-        const { scope, name } = parseDIDString(streamedChunk);
-        return {
-            name: name, 
-            scope: scope,
-            did_type: requestModel.type,
-        } as DIDDTO
-    }
-
     processStreamedData(dto: DIDDTO): { data: ListDIDsResponse | ListDIDsError; status: "success" | "error"; } {
         const responseModel: ListDIDsResponse = {
             status: 'success',
