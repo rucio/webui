@@ -3,6 +3,8 @@ import { Transform, TransformCallback } from 'stream'
 import { BaseOutputPort, BaseStreamingOutputPort } from './primary-ports'
 import { NextApiResponse } from 'next'
 import { IronSession } from 'iron-session'
+import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models'
+import { BaseViewModel } from './view-models'
 
 /**
  * A base class for presenters.
@@ -71,12 +73,12 @@ export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel>
  * @typeparam TErrorModel The type of the error model to present.
  */
 export abstract class BaseStreamingPresenter<
-        TResponseModel,
-        TViewModel,
-        TErrorModel,
+        TResponseModel extends BaseResponseModel,
+        TErrorModel extends BaseErrorResponseModel,
+        TViewModel extends BaseViewModel,
     >
     extends Transform
-    implements BaseStreamingOutputPort<TResponseModel, TErrorModel>
+    implements BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>
 {
     response: TWebResponse
     constructor(response: TWebResponse) {

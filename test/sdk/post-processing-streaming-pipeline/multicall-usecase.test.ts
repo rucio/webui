@@ -9,12 +9,13 @@ import {
 import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements'
 import { Readable, Transform, PassThrough } from 'stream'
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
-import { RequestModel, StreamData, TResponseModel } from './models'
+import { RequestModel, StreamData, StreamDTO, TResponseModel } from './models'
 import {
     FirstPipelineElement,
     SecondPipelineElement,
 } from './pipeline-elements'
 import { TestPresenter } from './presenter'
+import { BaseViewModel } from '@/lib/sdk/view-models'
 
 describe('BaseMultiCallStreamableUseCase', () => {
     class TestMultiCallPipelineUseCase extends BaseMultiCallStreamableUseCase<
@@ -22,8 +23,12 @@ describe('BaseMultiCallStreamableUseCase', () => {
         TResponseModel,
         BaseErrorResponseModel,
         BaseStreamableDTO,
-        StreamData
+        StreamData,
+        StreamDTO,
+        BaseViewModel
     > {
+        
+
         constructor(response: any) {
             const firstPipelineElement = new FirstPipelineElement()
             const secondPipelineElement = new SecondPipelineElement()
@@ -47,17 +52,19 @@ describe('BaseMultiCallStreamableUseCase', () => {
             return Promise.resolve(dto)
         }
 
+        streamDataToStreamDTO(streamedData: StreamData, requestModel?: { rucioAuthToken: string } | undefined): StreamDTO {
+            return {
+                status: 'success',
+                title: streamedData,
+            }
+        }
+
         handleGatewayError(error: BaseStreamableDTO): BaseErrorResponseModel {
             throw new Error('Method not implemented.')
         }
         
-        chunkToDTO(streamedChunk: string): StreamData {
-            return {
-                title: streamedChunk,
-            } as StreamData
-        }
 
-        processStreamedData(dto: StreamData): {
+        processStreamedData(dto: StreamDTO): {
             data: TResponseModel | BaseErrorResponseModel
             status: 'success' | 'error'
         } {
@@ -126,9 +133,11 @@ describe('BaseMultiCallStreamableUseCase', () => {
         await done
         expect(receivedData).toEqual([
             {
+                status: 'success',
                 title: 'success: root_element_1 pipeline element 1 transformed pipeline element 2 transformed',
             },
             {
+                status: 'success',
                 title: 'success: root_element_2 pipeline element 1 transformed pipeline element 2 transformed',
             },
         ])
