@@ -144,7 +144,7 @@ export abstract class BaseStreamingPresenter<
             const responseModel: TResponseModel = chunk
             const viewModel =
                 this.convertResponseModelToViewModel(responseModel)
-            callback(undefined, viewModel)
+            callback(undefined, JSON.stringify(viewModel))
         } catch (error) {
             this.emit('error', error)
             callback(error as Error)

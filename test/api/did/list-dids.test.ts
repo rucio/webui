@@ -124,7 +124,7 @@ describe('DID API Tests', () => {
 
         const receivedData: any[] = []
         const onData = (data: any) => {
-            receivedData.push(data)
+            receivedData.push(JSON.parse(data))
         }
 
         const done = new Promise<void>((resolve, reject) => {

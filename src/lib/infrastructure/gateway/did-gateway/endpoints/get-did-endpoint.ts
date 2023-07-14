@@ -5,7 +5,6 @@ import { DIDType } from "@/lib/core/entity/rucio";
 import { Response } from "node-fetch";
 
 export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
-    private url = `${this.rucioHost}/dids/${this.scope}/${this.name}/status`
 
     constructor(
         private rucioAuthToken: string,
@@ -19,6 +18,7 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
      */
     async initialize(): Promise<void> {
         await super.initialize()
+        this.url = `${this.rucioHost}/dids/${this.scope}/${this.name}/status`
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,

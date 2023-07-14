@@ -137,8 +137,9 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
     protected initialized: boolean = false;
     protected request: HTTPRequest | undefined;
     protected rucioHost: string = 'https://rucio-host.com';
+    protected url: string = '';
     protected envConfigGateway: EnvConfigGatewayOutputPort;
-
+    
     constructor(
     ) {
         this.envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
