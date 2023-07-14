@@ -10,7 +10,7 @@ import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did
 import GetDIDsPipelineElement from "./pipeline-element-get-did";
 
 @injectable()
-class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, ListDIDsStreamData, DIDDTO, ListDIDsViewModel> implements ListDIDsInputPort {
+class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDDTO, ListDIDsViewModel> implements ListDIDsInputPort {
     
     constructor(
         protected presenter: ListDIDsOutputPort,
