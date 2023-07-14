@@ -33,7 +33,7 @@ function randomEnum<T>(e: any): T {
     return faker.helpers.arrayElement(Object.values(e)) as T
 }
 
-function createRSEName(): string {
+export function createRSEName(): string {
     return (
         "RSE-" +
         faker.location.country().toUpperCase().replace(/\s/g, "-").replace(/[^a-zA-Z\d\s]/g, "") +

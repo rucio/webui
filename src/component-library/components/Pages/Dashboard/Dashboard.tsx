@@ -9,6 +9,8 @@ import { Role } from "@/lib/core/entity/account";
 import { Ongoingrules, Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
 import { WidgetUsedquota } from "./Widgets/WidgetUsedquota";
 import { useState, useEffect } from "react";
+import { Heading } from "../Helpers/Heading";
+import { Body } from "../Helpers/Body"
 
 interface PageDashboardProps {
     accountname: string;
@@ -33,27 +35,11 @@ export const Dashboard = (
         <div
             className={twMerge("flex flex-col space-y-2 w-full")}
         >
-            <div
-                className={twMerge(
-                    "flex flex-col",
-                    "rounded-md p-2 border",
-                    "bg-white dark:bg-gray-800"
-                )}
-            >
-                <div
-                    className={twMerge(
-                        "flex flex-col space-y-2",
-                        "md:flex-row md:justify-between md:space-y-0"
-                    )}
-                >
-                    <div>
-                        <H3>Dashboard for {props.accountname}</H3>
-                    </div>
-                    <div>
-                        <RoleTag role={props.accountrole} />
-                    </div>
-                </div>
-            </div>
+            <Heading
+                title="Dashboard"
+                subtitle={`Overview for ${props.accountname}`}
+                tag={<RoleTag role={props.accountrole} />}
+            />
             <div
                 className={twMerge(
                     "flex flex-col space-y-2",

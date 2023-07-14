@@ -1,10 +1,10 @@
 import { Ongoingrules, Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
 import { faker } from "@faker-js/faker";
-import { createRandomRSE } from "./table-fixtures";
+import { createRSEName } from "./table-fixtures";
 
 export function fixtureOngoingrules(): Ongoingrules {
     return {
-        rulename: createRandomRSE(),
+        rulename: createRSEName(),
         replicating: faker.number.int({ min: 0, max: 100 }),
         ok: faker.number.int({ min: 0, max: 100 }),
         stuck: faker.number.int({ min: 0, max: 100 }),
@@ -16,7 +16,7 @@ export function fixtureUsedquota(): Usedquota {
     const quota = faker.number.int({min: used, max: used + 100})
     const total = faker.number.int({min: quota, max: quota + 100})
     return {
-        rse: createRandomRSE(),
+        rse: createRSEName(),
         used: used,
         quota: quota,
         total: total,
