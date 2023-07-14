@@ -117,7 +117,7 @@ describe('BaseMultiCallStreamableUseCase', () => {
 
         const receivedData: any[] = []
         const onData = (data: string) => {
-            receivedData.push(data)
+            receivedData.push(JSON.parse(data))
         }
 
         const done = new Promise<void>((resolve, reject) => {
