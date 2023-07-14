@@ -12,7 +12,7 @@ describe('DID API Tests', () => {
     beforeEach(() => {
         fetchMock.doMock()
         const listDIDsEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/test/dids/search`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dids/search`,
             method: 'GET',
             includes: 'test/dids/search',
             response: {
@@ -22,7 +22,7 @@ describe('DID API Tests', () => {
                 },
                 body: Readable.from(
                     [
-                        'test:dateset1',
+                        'test:dataset1',
                         'test:dataset2',
                         'test:dataset3',
                     ].join('\n'),
@@ -31,7 +31,7 @@ describe('DID API Tests', () => {
         }
 
         const dataset1StatusEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/test/dataset1/status`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/status`,
             method: 'GET',
             response: {
                 status: 200,
@@ -46,8 +46,52 @@ describe('DID API Tests', () => {
                     open: true,
                     monotonic: false,
                     expired_at: null,
-                    length: null,
-                    bytes: null,
+                    length: 0,
+                    bytes: 0,
+                }),
+            },
+        }
+
+        const dataset2StatusEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset2/status`,
+            method: 'GET',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    scope: 'test',
+                    name: 'dataset2',
+                    type: 'DATASET',
+                    account: 'root',
+                    open: true,
+                    monotonic: false,
+                    expired_at: null,
+                    bytes: 123,
+                    length: 456,
+                }),
+            },
+        }
+
+        const dataset3StatusEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset3/status`,
+            method: 'GET',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    scope: 'test',
+                    name: 'dataset3',
+                    type: 'DATASET',
+                    account: 'root',
+                    open: true,
+                    monotonic: false,
+                    expired_at: null,
+                    bytes: 456,
+                    length: 789,
                 }),
             },
         }
@@ -55,6 +99,8 @@ describe('DID API Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [
             listDIDsEndpoint,
             dataset1StatusEndpoint,
+            dataset2StatusEndpoint,
+            dataset3StatusEndpoint,
         ])
     })
     afterEach(() => {
@@ -76,11 +122,9 @@ describe('DID API Tests', () => {
             controllerParams,
         )
 
-        const receivedData: string[] = []
-        const onData = (data: string) => {
-            receivedData.push(
-                JSON.parse(data)
-            )
+        const receivedData: any[] = []
+        const onData = (data: any) => {
+            receivedData.push(data)
         }
 
         const done = new Promise<void>((resolve, reject) => {
@@ -96,18 +140,12 @@ describe('DID API Tests', () => {
         })
         
         await done
-        const str = "test:dataset1"
-        const json1 = JSON.stringify(str)
-        const str2 = JSON.parse(json1)
-        const json2 = JSON.stringify(str2)
-        const str3 = JSON.parse(json2)
-        expect(str3).toEqual("test:dataset1")
-        console.log(str3)
+
 
         expect(receivedData).toEqual([
             {
                 "status": "success",
-                "name": "dateset1",
+                "name": "dataset1",
                 "scope": "test",
                 "did_type": "Dataset",
                 "bytes": 0,
@@ -118,16 +156,16 @@ describe('DID API Tests', () => {
                 "name": "dataset2",
                 "scope": "test",
                 "did_type": "Dataset",
-                "bytes": 0,
-                "length": 0,
+                "bytes": 123,
+                "length": 456,
             },
             {
                 "status": "success",
                 "name": "dataset3",
                 "scope": "test",
                 "did_type": "Dataset",
-                "bytes": 0,
-                "length": 0,
+                "bytes": 456,
+                "length": 789,
             }
         ])
     })

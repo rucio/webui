@@ -425,12 +425,6 @@ export abstract class BaseMultiCallStreamableUseCase<
         this.presenter.presentStream(this.finalResponseValidationTransform)
     }
 
-    /**
-     * Convert the chunk returned from the gateway's stream to a DTO that will be passed forward in the current pipeline.
-     * @param streamedData The chunk returned from the gateway's stream
-     * @param requestModel The request model that was used to make the gateway request.
-     */
-    abstract streamDataToStreamDTO(streamedData: TStreamData, requestModel?: TRequestModel): TStreamDTO
 
     /**
      * Validates the final response model after execution of all post processing pipeline elements.
