@@ -7,6 +7,7 @@ import appContainer from '@/lib/infrastructure/ioc/container-config';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import { BaseDTO, BaseStreamableDTO } from './dto';
 import fetch from 'node-fetch';
+import { BaseHttpErrorTypes } from './http';
 
 /**
  * An abstract class that extends the `Transform` stream class and provides a base implementation for streamable API endpoints.
@@ -214,48 +215,6 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             const data = await response.json();
             return this.createDTO(data);
         }
-    }
-}
-
-/**
- * A type that represents an error that occurred making a {@link BaseEndpoint} request.
- */
-export type BaseGatewayEndpointError = {
-    errorCode: number;
-    errorMessage: string;
-}
-
-/**
- * A string literal type that represents the type of an error that occurred making a {@link HTTPRequest}.
- */
-export class BaseHttpErrorTypes {
-    static BAD_REQUEST: BaseGatewayEndpointError = {
-        errorCode: 400,
-        errorMessage: 'Bad Request'
-    };
-    static INVALID_AUTH_TOKEN: BaseGatewayEndpointError = {
-        errorCode: 401,
-        errorMessage: 'Invalid Auth Token'
-    };
-    static FORBIDDEN: BaseGatewayEndpointError = {
-        errorCode: 403,
-        errorMessage: 'Forbidden'
-    };
-    static NOT_FOUND: BaseGatewayEndpointError = {
-        errorCode: 404,
-        errorMessage: 'Not Found'
-    };
-    static NOT_ACCEPTABLE: BaseGatewayEndpointError = {
-        errorCode: 406,
-        errorMessage: 'Not Acceptable'
-    };
-    static SERVER_ERROR: BaseGatewayEndpointError = {
-        errorCode: 500,
-        errorMessage: 'Server Error'
-    }
-    static UNKNOWN_ERROR: BaseGatewayEndpointError = {
-        errorCode: 0,
-        errorMessage: 'Unknown Error'
     }
 }
 

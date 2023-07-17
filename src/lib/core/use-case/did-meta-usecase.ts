@@ -1,4 +1,4 @@
-import { BaseHttpErrorTypes } from "@/lib/sdk/gateway-endpoints";
+import { BaseHttpErrorTypes } from "@/lib/sdk/http";
 import { BaseUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { de } from "@faker-js/faker";

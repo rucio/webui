@@ -1,4 +1,5 @@
-import { BaseHttpErrorTypes, BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints"
+import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints"
+import { BaseHttpErrorTypes } from "@/lib/sdk/http"
 import { HTTPRequest } from "@/lib/common/http"
 import { ListDIDDTO } from "@/lib/core/dto/did-dto"
 import { DID, DIDType } from "@/lib/core/entity/rucio"
