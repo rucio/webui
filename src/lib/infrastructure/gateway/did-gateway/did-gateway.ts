@@ -73,7 +73,7 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         } catch (error) {
             const errorDTO: ListDIDDTO = {
                 status: 'error',
-                error: 'Unknown Error',
+                error: BaseHttpErrorTypes.UNKNOWN_ERROR,
                 message: error?.toString(),
             }
             return Promise.resolve(errorDTO)

@@ -45,13 +45,13 @@ class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, Li
 
     handleGatewayError(error: ListDIDDTO): ListDIDsError {
         let errorType = 'Unknown Error'
-        if(error.error === 'Invalid Auth Token') {
+        let message = error.error?.errorMessage
+        if(message === 'Invalid Auth Token') {
             errorType = 'Invalid Request'
         }
-        else if(error.error !== 'Unknown Error') {
+        else if(message !== 'Unknown Error') {
             errorType = 'Invalid DID Query'
         }
-        
         return {
             error: errorType,
             message: `${error.error}: ${error.message}`,
