@@ -5,6 +5,7 @@
  * to execute the use cases.
  */
 const CONTROLLERS = {
+    DID_META: Symbol.for("DIDMetaController"),
     LOGIN_CONFIG: Symbol.for("LoginConfigController"),
     LIST_DIDS: Symbol.for("ListDIDsController"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),

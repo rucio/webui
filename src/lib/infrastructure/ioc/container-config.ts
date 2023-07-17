@@ -40,6 +40,7 @@ import SwitchAccountPresenter from "../presenter/switch-account-presenter";
 import { loadFeatures, loadFeaturesSync } from "@/lib/sdk/ioc-helpers";
 import ListDidsFeature from "./features/list-dids-feature";
 import LoginConfigFeature from "./features/logic-config-feature";
+import DIDMetaFeature from "./features/did-meta-feature";
 
 
 /**
@@ -54,7 +55,8 @@ appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway)
 
 loadFeaturesSync(appContainer, [
     new ListDidsFeature(appContainer),
-    new LoginConfigFeature(appContainer)
+    new LoginConfigFeature(appContainer),
+    new DIDMetaFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
