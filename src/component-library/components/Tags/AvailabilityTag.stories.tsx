@@ -12,5 +12,5 @@ const Template: StoryFn<typeof A> = args => <A {...args} />
 
 export const AvailabilityTag= Template.bind({})
 AvailabilityTag.args = {
-    availability: DIDAvailability.Available
+    availability: DIDAvailability.AVAILABLE
 }

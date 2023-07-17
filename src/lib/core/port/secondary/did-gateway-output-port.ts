@@ -1,8 +1,24 @@
-import { ListDIDDTO, DIDDTO } from "../../dto/did-dto";
+import { ListDIDDTO, DIDDTO, DIDMetaDTO } from "../../dto/did-dto";
 import { DIDType } from "../../entity/rucio";
 
 
 export default interface DIDGatewayOutputPort {
+    /**
+     * 
+     * @param rucioAuthToken A valid rucio auth token
+     * @param scope The scope of the DID
+     * @param name The exact name of the DID
+     */
+    getDID(rucioAuthToken: string, scope: string, name: string): Promise<DIDDTO>
+    
+    /**
+     * 
+     * @param rucioAuthToken A valid rucio auth token
+     * @param scope The scope of the DID
+     * @param name The name of the DID
+     */
+    getDIDMeta(rucioAuthToken: string, scope: string, name: string): Promise<DIDMetaDTO>
+    
     /**
      * Searches Rucio Server for expressions that match the scope:name pattern provided.
      * @param rucioAuthToken A valid rucio auth token
@@ -12,11 +28,4 @@ export default interface DIDGatewayOutputPort {
      */
     listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO>
 
-    /**
-     * 
-     * @param rucioAuthToken A valid rucio auth token
-     * @param scope The scope of the DID
-     * @param name The exact name of the DID
-     */
-    getDID(rucioAuthToken: string, scope: string, name: string): Promise<DIDDTO>
 }

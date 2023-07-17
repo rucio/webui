@@ -69,6 +69,10 @@ export default class MockRucioServerFactory {
                 if (rucioToken !== MockRucioServerFactory.VALID_RUCIO_TOKEN) {
                     return Promise.resolve({
                         status: 401,
+                        body: JSON.stringify({
+                            "ExceptionClass": "CannotAuthenticate",
+                            "ExceptionMessage": "Cannot authenticate with given credentials"
+                        })
                     })
                 }
             }

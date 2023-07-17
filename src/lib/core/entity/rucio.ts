@@ -17,9 +17,10 @@ export type DIDLong = DID & {
 }
 
 export enum DIDAvailability {
-    Available = "Available",
-    Deleted = "Deleted",
-    Lost = "Lost",
+    AVAILABLE = "Available",
+    DELETED = "Deleted",
+    LOST = "Lost",
+    UNKNOWN = "Unknown",
 }
 
 

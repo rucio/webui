@@ -1,5 +1,5 @@
-import { BaseStreamableDTO } from '@/lib/sdk/dto'
-import { DID } from '@/lib/core/entity/rucio'
+import { BaseDTO, BaseHttpErrorTypes, BaseStreamableDTO } from '@/lib/sdk/dto'
+import { DID, DIDMeta } from '@/lib/core/entity/rucio'
 /**
  * Data Transfer Object for ListDIDsEndpoint
  */
@@ -37,3 +37,8 @@ export interface DIDDTO extends DID {
     bytes: number
     length: number
 }
+
+/**
+ * Data Transfer Object for DIDMeta Endpoint
+ */
+export interface DIDMetaDTO extends BaseDTO, DIDMeta {}

@@ -1,4 +1,5 @@
 import { Transform, PassThrough, Readable } from 'stream';
+import { BaseGatewayEndpointError } from './gateway-endpoints';
 
 
 /**
@@ -17,6 +18,11 @@ export type BaseDTO = {
      * An optional string that provides the type of the error that occurred.
      */
     type?: string;
+
+    /**
+     * An optional property that can be used to represent an error response from an API endpoint. It can be either a `BaseHttpErrorTypes` enum value, a string, or `null`.
+     */
+    error?: BaseGatewayEndpointError | null;
 }
 
 /**

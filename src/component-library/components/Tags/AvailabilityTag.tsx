@@ -12,8 +12,8 @@ export const AvailabilityTag: (
     return (
         <span
             className={twMerge(
-                availability === DIDAvailability.Available ? "bg-green-200 dark:bg-green-700" : (
-                    availability === DIDAvailability.Deleted ? "bg-stone-200 dark:bg-stone-700" : (
+                availability === DIDAvailability.AVAILABLE ? "bg-green-200 dark:bg-green-700" : (
+                    availability === DIDAvailability.DELETED ? "bg-stone-200 dark:bg-stone-700" : (
                         "bg-purple-200 dark:bg-purple-700" // Lost
                     )
                 ),
