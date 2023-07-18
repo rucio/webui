@@ -66,12 +66,14 @@ describe("Subscription API Tests", () => {
         expect(subscription.state).toEqual(SubscriptionState.UPDATED);
         expect(subscription.account).toEqual('ddmadmin');
         expect(subscription.lifetime).toEqual('Sun, 25 May 2042 15:41:54 UTC');
-        expect(subscription.replication_rules.length).toEqual(3);
-        expect(subscription.replication_rules[0].activity).toEqual('Functional Test');
-        expect(subscription.replication_rules[0].rse_expression).toEqual('tier=1&type=DATADISK');
-        expect(subscription.replication_rules[0].source_replica_expression).toEqual('CERN-PROD_DATADISK');
-        expect(subscription.replication_rules[0].copies).toEqual('*');
-        expect(subscription.replication_rules[0].lifetime).toEqual(172800);
-        expect(subscription.replication_rules[0].comments).toEqual('Functional tests from Tier-0 to Tier-1s');
+
+        const replicationRules = JSON.parse(subscription.replication_rules);
+        expect(replicationRules.length).toEqual(3);
+        expect(replicationRules[0].activity).toEqual('Functional Test');
+        expect(replicationRules[0].rse_expression).toEqual('tier=1&type=DATADISK');
+        expect(replicationRules[0].source_replica_expression).toEqual('CERN-PROD_DATADISK');
+        expect(replicationRules[0].copies).toEqual('*');
+        expect(replicationRules[0].lifetime).toEqual(172800);
+        expect(replicationRules[0].comments).toEqual('Functional tests from Tier-0 to Tier-1s');
     });
 });
