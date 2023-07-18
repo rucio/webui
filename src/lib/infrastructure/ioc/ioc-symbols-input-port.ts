@@ -4,6 +4,7 @@
  */
 const INPUT_PORT = {
     DID_META: Symbol.for("DIDMetaInputPort"),
+    GET_SUBSCRIPTION: Symbol.for("GetSubscriptionInputPort"),
     LOGIN_CONFIG: Symbol.for("LoginConfigInputPort"),
     LIST_DIDS: Symbol.for("ListDIDsInputPort"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionInputPort"),

@@ -5,7 +5,7 @@ export const SubscriptionStateTag: (
     React.FC<JSX.IntrinsicElements["span"] & { state: SubscriptionState; tiny?: boolean }>
 ) = (
     {
-        state = SubscriptionState.Active,
+        state = SubscriptionState.ACTIVE,
         tiny = false,
         ...props
     }
@@ -29,19 +29,20 @@ export const SubscriptionStateTag: (
         */
         const { className, ...otherprops } = props
         const stateStrings: {[K in SubscriptionState]: string[]} = {
-            [SubscriptionState.Active]: ["Active", "A"],
-            [SubscriptionState.Inactive]: ["Inactive", "I"],
-            [SubscriptionState.New]: ["New", "N"],
-            [SubscriptionState.Updated]: ["Updated", "U"],
-            [SubscriptionState.Broken]: ["Broken", "B"]
+            [SubscriptionState.ACTIVE]: ["Active", "A"],
+            [SubscriptionState.INACTIVE]: ["Inactive", "I"],
+            [SubscriptionState.NEW]: ["New", "N"],
+            [SubscriptionState.UPDATED]: ["Updated", "U"],
+            [SubscriptionState.BROKEN]: ["Broken", "B"],
+            [SubscriptionState.UNKNOWN]: ["Unknown", "?"],
         }
         return (
             <span
                 className={twMerge(
-                    state === SubscriptionState.Active ? "bg-blue-300 border-blue-700 dark:bg-blue-700 dark:border-blue-200" : (
-                        state === SubscriptionState.Inactive ? "bg-gray-300 border-gray-700 dark:bg-gray-700 dark:border-gray-200" : (
-                            state === SubscriptionState.New ? "bg-teal-300 border-teal-700 dark:bg-teal-700 dark:border-teal-200" : (
-                                state === SubscriptionState.Updated ? "bg-green-300 border-green-700 dark:bg-green-700 dark:border-green-200" :
+                    state === SubscriptionState.ACTIVE ? "bg-blue-300 border-blue-700 dark:bg-blue-700 dark:border-blue-200" : (
+                        state === SubscriptionState.INACTIVE ? "bg-gray-300 border-gray-700 dark:bg-gray-700 dark:border-gray-200" : (
+                            state === SubscriptionState.NEW ? "bg-teal-300 border-teal-700 dark:bg-teal-700 dark:border-teal-200" : (
+                                state === SubscriptionState.UPDATED ? "bg-green-300 border-green-700 dark:bg-green-700 dark:border-green-200" :
                                     "bg-red-300 border-red-700 dark:bg-red-700 dark:border-red-200" // broken
 
                             )

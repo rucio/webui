@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule/PageRule'
 import {
     LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
-    RSEBlockState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState,
+    RSEBlockState, Subscription, SubscriptionRuleStates, SubscriptionState,
     DIDAvailability, RSEAccountUsageLimit,
     ReplicaState,
     RSE, RSEType, Rule
@@ -266,10 +266,9 @@ export function createSubscriptionRuleStates(): SubscriptionRuleStates {
     }
 }
 
-export function createSubscriptionMeta(): SubscriptionMeta {
+export function createSubscriptionMeta(): Subscription {
     return {
         account: faker.internet.userName(),
-        comments: faker.lorem.words(10),
         created_at: faker.date.past().toISOString(),
         id: faker.string.uuid(),
         last_processed: faker.date.recent().toISOString(),

@@ -17,9 +17,11 @@ export type BaseResponseModel = {
 /**
  * A base type for error response models.
  * @property status A string that indicates the status of the error response model. Must be `'error'` or `'critical'`, the latter indicating that the further requests in a pipeline must be canceled.
- * @property message A string that provides additional information about the error.
+ * @property message An object of type { code: number, message: string} or a string that provides additional information about the error.
+ * @remarks The `message` property in the object form should be used when the response code from gateway should be forwarded to the view models.
+ * @remarks The `message` property in the string form should be used if manual handling of errors must be done in the use case and presenter.
  */
-export interface BaseErrorResponseModel extends Error {
+export interface BaseErrorResponseModel {
     status: 'error' | 'critical';
-    message: string;
+    message: { code: number; message: string; } | string;
 }
