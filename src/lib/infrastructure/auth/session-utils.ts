@@ -59,10 +59,10 @@ export function withSessionRoute(handler: NextApiHandler) {
 
 /**
  * A wrapper around Next API routes that require a valid rucioAuthToken
- * @param handler (req, res, validAuthToken) => Promise<void> or a NEXT.js API route that required a valid rucioAuthToken
+ * @param handler (req, res, validAuthToken, sessionUser?) => Promise<void> or a NEXT.js API route that required a valid rucioAuthToken
  * @returns the wrapped route with a valid rucioAuthToken injected or returns a HTTP 401 error response
  */
-export function withAuthenticatedSessionRoute(handler: (req: NextApiRequest, res: NextApiResponse, validAuthToken: string) => Promise<void>) {
+export function withAuthenticatedSessionRoute(handler: (req: NextApiRequest, res: NextApiResponse, validAuthToken: string, sessionUser?: SessionUser) => Promise<void>) {
     return withIronSessionApiRoute(async (req, res) => {
         const session = req.session as IronSession
         if(!session) {
@@ -98,7 +98,7 @@ export function withAuthenticatedSessionRoute(handler: (req: NextApiRequest, res
             return
         }
 
-        return handler(req, res, validToken)
+        return handler(req, res, validToken, sessionUser)
     }, sessionOptions)
 }
 
