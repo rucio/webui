@@ -125,7 +125,7 @@ export type Subscription = {
     updated_at: DateISO
     // more difficult datatypes, cast as string for now:
     filter: string
-    replication_rules: SubscriptionReplicationRule[] | string
+    replication_rules: SubscriptionReplicationRule[]
 }
 
 export type SubscriptionRuleStates = {

@@ -5,7 +5,10 @@ import { SubscriptionViewModel } from "../data/view-model/subscriptions";
 
 export default class GetSubscriptionPresenter extends BasePresenter<GetSubscriptionResponse, GetSubscriptionError, SubscriptionViewModel> {
     convertResponseModelToViewModel(responseModel: GetSubscriptionResponse): { viewModel: SubscriptionViewModel; status: number; } {
-        const viewModel: SubscriptionViewModel = responseModel;
+        const viewModel: SubscriptionViewModel = {
+            ...responseModel,
+            replication_rules: JSON.stringify(responseModel.replication_rules),
+        }
         return {
             status: 200,
             viewModel: viewModel
@@ -26,7 +29,7 @@ export default class GetSubscriptionPresenter extends BasePresenter<GetSubscript
             state: SubscriptionState.UNKNOWN,
             updated_at: '',
             filter: '',
-            replication_rules: [],
+            replication_rules: '',
         }
         let status = 400;
         switch (errorModel.error) {

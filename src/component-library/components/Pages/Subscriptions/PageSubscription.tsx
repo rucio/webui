@@ -1,27 +1,21 @@
 import { twMerge } from "tailwind-merge";
-import { H3 } from "../../Text/Headings/H3";
 import { Tabs } from "../../Tabs/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
 import { useState } from "react";
 import { Titleth, Contenttd, Generaltable } from "../../Helpers/Metatable";
-import { Subscription } from "@/lib/core/entity/rucio";
 import { DateTag } from "../../Tags/DateTag";
 import { BoolTag } from "../../Tags/BoolTag";
 import { SubscriptionStateTag } from "../../Tags/SubscriptionStateTag";
-import { HiChevronDown, HiChevronUp } from "react-icons/hi";
-import { Collapsible } from "../../Helpers/Collapsible";
 import { Accordion } from "../../Helpers/Accordion";
 import { Code } from "../../Text/Content/Code";
-import { AreaInput } from "../../Input/AreaInput";
-import { Button } from "../../Button/Button";
 import { PageSubscriptionJSONEditor } from "./PageSubscriptionJSONEditor";
-import { Type } from "@sinclair/typebox";
 import { SubscriptionFilter, SubscriptionReplicationRules } from "@/lib/core/entity/subscription";
 import { Heading } from "../Helpers/Heading";
 import { Body } from "../Helpers/Body";
+import { SubscriptionViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
 
 export interface PageSubscriptionPageProps {
-    subscriptionMeta: Subscription
+    subscriptionViewModel: SubscriptionViewModel
     editFilter: (filter: string) => void
     editReplicationRules: (rules: string) => void
 }
@@ -30,14 +24,14 @@ export const PageSubscription = (
     props: PageSubscriptionPageProps
 ) => {
     const [subpageIndex, setSubpageIndex] = useState<number>(0);
-    const meta = props.subscriptionMeta
+    const meta = props.subscriptionViewModel
     return (
         <div
             className={twMerge("flex flex-col space-y-2 w-full")}
         >
             <Heading
                 title="View Subscription"
-                subtitle={`For subscription ${props.subscriptionMeta.name}`}
+                subtitle={`For subscription ${props.subscriptionViewModel.name}`}
             />
             <Body>
                 <Tabs
@@ -85,10 +79,6 @@ export const PageSubscription = (
                                 <tr>
                                     <Titleth>Account</Titleth>
                                     <Contenttd>{meta.account}</Contenttd>
-                                </tr>
-                                <tr>
-                                    <Titleth>Comments</Titleth>
-                                    <Contenttd>{meta.comments}</Contenttd>
                                 </tr>
                                 <tr>
                                     <Titleth>ID</Titleth>

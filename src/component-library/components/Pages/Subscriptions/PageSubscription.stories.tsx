@@ -11,5 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageSubscription = Template.bind({});
 PageSubscription.args = {
-    subscriptionMeta: createSubscriptionMeta()
+    subscriptionViewModel: createSubscriptionMeta()
 };

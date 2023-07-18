@@ -12,6 +12,7 @@ import {
 } from '@/lib/infrastructure/data/view-model/page-did';
 import { RSEAttribute, RSEProtocol } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
+import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 
 export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
     return {
@@ -266,8 +267,9 @@ export function createSubscriptionRuleStates(): SubscriptionRuleStates {
     }
 }
 
-export function createSubscriptionMeta(): Subscription {
+export function createSubscriptionMeta(): SubscriptionViewModel {
     return {
+        status: 'success',
         account: faker.internet.userName(),
         created_at: faker.date.past().toISOString(),
         id: faker.string.uuid(),
