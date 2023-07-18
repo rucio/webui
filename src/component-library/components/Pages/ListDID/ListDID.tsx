@@ -14,7 +14,7 @@ var format = require("date-format")
 
 export interface ListDIDPageProps {
     comdom: UseComDOM<DIDViewModel>,
-    didMetaQuery: (did: string) => void,
+    didMetaQuery: (scope: string, name: string) => void,
     didMetaQueryResponse: DIDMetaViewModel,
 }
 
@@ -40,6 +40,7 @@ export const ListDID = (
     useEffect(() => {
         if (selection.length === 1) {
             setSelectedDID(selection[0].scope + ":" + selection[0].name)
+            props.didMetaQuery(selection[0].scope, selection[0].name)
         }
         else {
             setSelectedDID(null)
@@ -124,53 +125,53 @@ export const ListDID = (
                     </form>
                 </div>
             </Heading>
-                <Body
+            <Body
+                className={twMerge(
+                    "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2",
+                )}
+            >
+                <div
                     className={twMerge(
-                        "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2",
+                        "bg-white",
+                        "min-w-0",
+                        "lg:col-span-2"
                     )}
                 >
+                    <ListDIDTable
+                        comdom={props.comdom}
+                        selectionFunc={(data: DIDViewModel[]) => {
+                            // pass data from child (table) into the component state
+                            setSelection(data)
+                        }}
+                    />
+                </div>
+                <div
+                    className={twMerge(
+                        "bg-stone-100 dark:bg-gray-900",
+                        "rounded-md p-2",
+                        "flex flex-col space-y-2",
+                    )}
+                >
+                    <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
                     <div
                         className={twMerge(
-                            "bg-white",
-                            "min-w-0",
-                            "lg:col-span-2"
+                            "text-gray-800",
+                            !selectedDID ? "block" : "hidden",
                         )}
+                        aria-label="Notice: No DID selected"
                     >
-                        <ListDIDTable
-                            comdom={props.comdom}
-                            selectionFunc={(data: DIDViewModel[]) => {
-                                // pass data from child (table) into the component state
-                                setSelection(data)
-                            }}
-                        />
+                        <i className="dark:text-gray-200">No DID selected</i>
                     </div>
                     <div
                         className={twMerge(
-                            "bg-stone-100 dark:bg-gray-900",
-                            "rounded-md p-2",
-                            "flex flex-col space-y-2",
+                            selectedDID ? "block" : "hidden",
                         )}
+                        aria-label="Go To DID Page"
                     >
-                        <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
-                        <div
-                            className={twMerge(
-                                "text-gray-800",
-                                !selectedDID ? "block" : "hidden",
-                            )}
-                            aria-label="Notice: No DID selected"
-                        >
-                            <i className="dark:text-gray-200">No DID selected</i>
-                        </div>
-                        <div
-                            className={twMerge(
-                                selectedDID ? "block" : "hidden",
-                            )}
-                            aria-label="Go To DID Page"
-                        >
-                            <Button label="Go To DID Page" aria-label="Go To DID Page" />
-                        </div>
+                        <Button label="Go To DID Page" aria-label="Go To DID Page" />
                     </div>
-                </Body>
+                </div>
+            </Body>
         </div>
     )
 }

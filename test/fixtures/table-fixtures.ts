@@ -208,7 +208,7 @@ export function createDIDMeta(): DIDMeta {
         adler32: did_type === DIDType.FILE ? faker.string.hexadecimal({ length: 8, prefix: "" }) : null,
         guid: did_type === DIDType.FILE ? faker.string.uuid() : null,
         md5: did_type === DIDType.FILE ? faker.string.hexadecimal({ length: 32, prefix: "" }) : null,
-        filesize: did_type === DIDType.FILE ? faker.datatype.number({ min: 0, max: 1e12 }) : null,
+        filesize: did_type === DIDType.FILE ? faker.number.int({ min: 0, max: 1e12 }) : null,
     }
 }
 
