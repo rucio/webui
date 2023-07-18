@@ -7,6 +7,7 @@ const GATEWAYS = {
     DID: Symbol.for("RucioDIDGateway"),
     ENV_CONFIG: Symbol.for("EnvConfigGateway"),
     STREAM: Symbol.for("StreamGateway"),
+    SUBSCRIPTION: Symbol.for("SubscriptionGateway"),
 }
 
 export default GATEWAYS;

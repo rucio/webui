@@ -97,9 +97,23 @@ export type Rule = {
     locks_stuck_cnt: number;
 }
 
-export type SubscriptionMeta = {
+/**
+ * Represents the replication rule metadata avilable for a rule in a subscription.
+ */
+export type SubscriptionReplicationRule = {
+    activity: string;
+    rse_expression: string;
+    source_replica_expression?: string;
+    copies: string;
+    lifetime: number;
+    comments?: string;
+};
+
+/**
+ * Represents a subscription in Rucio.
+ */
+export type Subscription = {
     account: string
-    comments: string
     created_at: DateISO
     id: string
     last_processed: DateISO
@@ -111,7 +125,7 @@ export type SubscriptionMeta = {
     updated_at: DateISO
     // more difficult datatypes, cast as string for now:
     filter: string
-    replication_rules: string
+    replication_rules: SubscriptionReplicationRule[]
 }
 
 export type SubscriptionRuleStates = {
@@ -201,11 +215,12 @@ export enum RuleState {
 }
 
 export enum SubscriptionState {
-    Active = "A",
-    Inactive = "I",
-    New = "N",
-    Updated = "U",
-    Broken = "B",
+    ACTIVE = "A",
+    INACTIVE = "I",
+    NEW = "N",
+    UPDATED = "U",
+    BROKEN = "B",
+    UNKNOWN = "UNKNOWN",
 }
 
 // octal representation of the blockstate

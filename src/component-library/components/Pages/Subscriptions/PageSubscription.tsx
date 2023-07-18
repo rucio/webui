@@ -4,7 +4,7 @@ import { Tabs } from "../../Tabs/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
 import { useState } from "react";
 import { Titleth, Contenttd, Generaltable } from "../../Helpers/Metatable";
-import { SubscriptionMeta } from "@/lib/core/entity/rucio";
+import { Subscription } from "@/lib/core/entity/rucio";
 import { DateTag } from "../../Tags/DateTag";
 import { BoolTag } from "../../Tags/BoolTag";
 import { SubscriptionStateTag } from "../../Tags/SubscriptionStateTag";
@@ -21,7 +21,7 @@ import { Heading } from "../Helpers/Heading";
 import { Body } from "../Helpers/Body";
 
 export interface PageSubscriptionPageProps {
-    subscriptionMeta: SubscriptionMeta
+    subscriptionMeta: Subscription
     editFilter: (filter: string) => void
     editReplicationRules: (rules: string) => void
 }

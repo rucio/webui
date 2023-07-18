@@ -41,6 +41,8 @@ import { loadFeatures, loadFeaturesSync } from "@/lib/sdk/ioc-helpers";
 import ListDidsFeature from "./features/list-dids-feature";
 import LoginConfigFeature from "./features/logic-config-feature";
 import DIDMetaFeature from "./features/did-meta-feature";
+import SubscriptionGatewayOutputPort from "@/lib/core/port/secondary/subscription-gateway-output-port";
+import SubscriptionGateway from "../gateway/subscription-gateway/subscription-gateway";
 
 
 /**
@@ -52,6 +54,8 @@ appContainer.bind<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER).to(RucioAut
 appContainer.bind<DIDGatewayOutputPort>(GATEWAYS.DID).to(RucioDIDGateway);
 appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
+appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
+
 
 loadFeaturesSync(appContainer, [
     new ListDidsFeature(appContainer),
