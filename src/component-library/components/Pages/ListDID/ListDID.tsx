@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 import { TextInput } from "../../Input/TextInput"
 import { Button } from "../../Button/Button"
-import { Checkbox } from "../../Checkbox/Checkbox"
 import { DIDMetaView } from "./DIDMetaView"
 import { ListDIDTable } from "./ListDIDTable"
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM"
 import { Heading } from "../Helpers/Heading"
 import { Body } from "../Helpers/Body"
+import { DIDType } from "@/lib/core/entity/rucio"
 
 var format = require("date-format")
 
@@ -107,21 +107,9 @@ export const ListDID = (
                         aria-label="Select DID Types to Query"
                     >
                         <label className={twMerge("mr-2")} htmlFor="query-for-didtype-form">Query for DID Types:</label>
-                        <Checkbox
-                            label="Containers" type="checkbox" id="did-checkbox-container"
-                            isChecked={didTypesAllowed[0]}
-                            handleChange={(event: any) => { setDidTypesAllowed([event.target.checked, didTypesAllowed[1], didTypesAllowed[2]]) }}
-                        />
-                        <Checkbox
-                            label="Datasets" type="checkbox" id="did-checkbox-dataset"
-                            isChecked={didTypesAllowed[1]}
-                            handleChange={(event: any) => { setDidTypesAllowed([didTypesAllowed[0], event.target.checked, didTypesAllowed[2]]) }}
-                        />
-                        <Checkbox
-                            label="Files (Warning: large query)" type="checkbox" id="did-checkbox-file"
-                            isChecked={didTypesAllowed[2]}
-                            handleChange={(event: any) => { setDidTypesAllowed([didTypesAllowed[0], didTypesAllowed[1], event.target.checked]) }}
-                        />
+                    <label htmlFor=""><input type="radio" name="didtype" id={DIDType.CONTAINER} />Container</label>
+                    <label htmlFor=""><input type="radio" name="didtype" id={DIDType.DATASET} />Dataset</label>
+                    <label htmlFor=""><input type="radio" name="didtype" id={DIDType.FILE} />File</label>
                     </form>
                 </div>
             </Heading>
