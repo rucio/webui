@@ -1,6 +1,7 @@
 'use client';
 import { ListDID as ListDIDStory } from "@/component-library/components/Pages/ListDID/ListDID";
-import { DIDMeta, DIDType } from "@/lib/core/entity/rucio";
+import { DIDType } from "@/lib/core/entity/rucio";
+import { DIDMetaViewModel, DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
 import { DIDLong } from "@/lib/core/entity/rucio"
 import { DIDName } from '@/lib/infrastructure/data/view-model/create-rule'
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
@@ -11,8 +12,8 @@ import { createDIDMeta } from "test/fixtures/table-fixtures";
 
 export default function ListDID() {
 
-    const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMeta>({} as DIDMeta)
-    const didMetaQuery = (did: DIDName) => { setDIDMetaQueryResponse(createDIDMeta()) }
+    const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMetaViewModel>({} as DIDMetaViewModel)
+    const didMetaQuery = (did: DIDName) => { setDIDMetaQueryResponse({status: 'success', ...createDIDMeta()}) }
 
     const DIDSearchComDOM = useComDOM<DIDLong>(
         'list-did-query',
@@ -23,7 +24,7 @@ export default function ListDID() {
         true
     )
     useEffect(() => {
-        setDIDMetaQueryResponse(createDIDMeta())
+        setDIDMetaQueryResponse({status: 'success', ...createDIDMeta()})
     }, [])
     useEffect(() => {
         const setRequest = async () => {

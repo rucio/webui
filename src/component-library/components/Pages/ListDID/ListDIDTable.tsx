@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { DID } from "@/lib/core/entity/rucio";
+import { DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { P } from "../../Text/Content/P";
@@ -9,12 +9,12 @@ import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 
 export const ListDIDTable = (
     props: {
-        comdom: UseComDOM<DID>,
-        selectionFunc: (data: DID[]) => void
+        comdom: UseComDOM<DIDViewModel>,
+        selectionFunc: (data: DIDViewModel[]) => void
     }
 ) => {
     const tableData = props.comdom
-    const columnHelper = createColumnHelper<DID>()
+    const columnHelper = createColumnHelper<DIDViewModel>()
     const tablecolumns = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",

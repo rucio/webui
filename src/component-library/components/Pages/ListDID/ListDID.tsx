@@ -1,5 +1,4 @@
-import { DID, DIDMeta } from "@/lib/core/entity/rucio"
-import { DIDName } from "@/lib/infrastructure/data/view-model/create-rule"
+import { DIDViewModel, DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did"
 import { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 import { TextInput } from "../../Input/TextInput"
@@ -14,9 +13,9 @@ import { Body } from "../Helpers/Body"
 var format = require("date-format")
 
 export interface ListDIDPageProps {
-    comdom: UseComDOM<DID>,
-    didMetaQuery: (did: DIDName) => void,
-    didMetaQueryResponse: DIDMeta,
+    comdom: UseComDOM<DIDViewModel>,
+    didMetaQuery: (did: string) => void,
+    didMetaQueryResponse: DIDMetaViewModel,
 }
 
 
@@ -36,8 +35,8 @@ export const ListDID = (
 
 
     // selection
-    const [selectedDID, setSelectedDID] = useState<DIDName | null>(null) // scope:name taken from table
-    const [selection, setSelection] = useState<DID[]>([]) // list of objects from table
+    const [selectedDID, setSelectedDID] = useState<string | null>(null) // scope:name taken from table
+    const [selection, setSelection] = useState<DIDViewModel[]>([]) // list of objects from table
     useEffect(() => {
         if (selection.length === 1) {
             setSelectedDID(selection[0].scope + ":" + selection[0].name)
@@ -139,7 +138,7 @@ export const ListDID = (
                     >
                         <ListDIDTable
                             comdom={props.comdom}
-                            selectionFunc={(data: DID[]) => {
+                            selectionFunc={(data: DIDViewModel[]) => {
                                 // pass data from child (table) into the component state
                                 setSelection(data)
                             }}
