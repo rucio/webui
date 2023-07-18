@@ -36,6 +36,21 @@ export default function ListDID() {
         setDIDMetaQueryResponse({status: 'success', ... await res.json()})
     }
 
+    const didQuery = async (query: string, type: DIDType) => {
+        const request: HTTPRequest = {
+            url: new URL('http://localhost:3000/api/dids'),
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            } as HeadersInit),
+            body: {
+                "query": query,
+                "type": type
+            },
+        }
+        await DIDSearchComDOM.setRequest(request)
+    }
+
     const DIDSearchComDOM = useComDOM<DIDViewModel>(
         'list-did-query',
         [],
@@ -67,6 +82,7 @@ export default function ListDID() {
     return (
         <ListDIDStory
             comdom={DIDSearchComDOM}
+            didQuery={didQuery}
             didMetaQuery={didMetaQuery}  // TODO: implement
             didMetaQueryResponse={didMetaQueryResponse}  // TODO: implement
         />

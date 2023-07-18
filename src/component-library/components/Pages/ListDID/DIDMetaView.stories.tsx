@@ -10,6 +10,6 @@ export default {
 const Template: StoryFn<typeof DM> = (args) => <DM {...args} />;
 export const DIDMetaView = Template.bind({});
 DIDMetaView.args = {
-    data: createDIDMeta(),
+    data: {status: "success", ...createDIDMeta()},
     show: true,
 }

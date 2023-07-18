@@ -15,6 +15,7 @@ var format = require("date-format")
 
 export interface ListDIDPageProps {
     comdom: UseComDOM<DIDViewModel>,
+    didQuery: (query: string, type: DIDType) => void,
     didMetaQuery: (scope: string, name: string) => void,
     didMetaQueryResponse: DIDMetaViewModel,
 }
@@ -79,6 +80,7 @@ export const ListDID = (
                             onClick={async (e: any) => {
                                 // deal with comDOM here
                                 // call `props.comDOM.setQuery` with the query
+                                await props.didQuery(didSearchQuery, didTypeAllowed)
                                 // and start query
                                 props.comdom.start()
                             }}

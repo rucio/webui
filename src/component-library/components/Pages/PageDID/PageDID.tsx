@@ -110,7 +110,7 @@ export const PageDID = (
                         "min-h-0 w-full"
                     )}
                 >
-                    <DIDMetaView data={props.didMeta} show horizontal />
+                    <DIDMetaView data={{status: "success", ...props.didMeta}} show horizontal />
                 </div>
             </Heading>
 

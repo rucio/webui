@@ -6,6 +6,7 @@ import { render, act, screen, cleanup, fireEvent } from "@testing-library/react"
 import { ListDID as ListDIDStory } from "@/component-library/components/Pages/ListDID/ListDID";
 import { DIDMeta } from "@/lib/core/entity/rucio";
 import { createDID, createDIDMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did";
 var format = require("date-format")
 
 describe("ListDID Story Test", () => {
@@ -13,17 +14,18 @@ describe("ListDID Story Test", () => {
         await act(async () => render(
             <ListDIDStory
                 comdom={mockUseComDOM(Array.from({length: 0}, () => createDID()))}
+                didQuery={jest.fn(x => console.log(x))}
                 didMetaQuery={jest.fn(x => console.log(x))}
-                didMetaQueryResponse={{} as DIDMeta}
+                didMetaQueryResponse={{} as DIDMetaViewModel}
             />
         ))
         // check if DID Search Pattern Input exists
         const searchPatternInput = screen.getByLabelText("DID Search Pattern")
         expect(searchPatternInput).toHaveValue("")
         // check if query is set to Containers and Datasets
-        const containersButton = screen.getByLabelText("Containers")
-        const filesButton = screen.getByLabelText("Files (Warning: large query)")
-        expect(containersButton).toBeChecked()
+        const datasetButton= screen.getByLabelText("Dataset")
+        expect(datasetButton).toBeChecked()
+        const filesButton = screen.getByLabelText("File")
         expect(filesButton).not.toBeChecked()
         // Check that `No DID selected` is shown instead of the DIDMetaView, etc
         const noDIDSelectedDiv = screen.getByText("No DID selected").closest("div")
