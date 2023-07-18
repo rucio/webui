@@ -9,6 +9,7 @@ import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM"
 import { Heading } from "../Helpers/Heading"
 import { Body } from "../Helpers/Body"
 import { DIDType } from "@/lib/core/entity/rucio"
+import { Checkbox } from "../../Button/Checkbox"
 
 var format = require("date-format")
 
@@ -25,14 +26,7 @@ export const ListDID = (
 ) => {
     const meta = props.didMetaQueryResponse
     const [didSearchQuery, setDidSearchQuery] = useState<string>("")
-    const [didTypesAllowed, setDidTypesAllowed] = useState<[boolean, boolean, boolean]>([true, true, false]) // [container, dataset, file]
-    const [multipleDidTypes, setMultipleDidTypes] = useState<boolean>(true)
-    useEffect(() => {
-        setMultipleDidTypes(
-            didTypesAllowed.reduce((accumulator, currentValue) => accumulator + (currentValue ? 1 : 0), 0) > 1
-        )
-    }, [didTypesAllowed])
-
+    const [didTypeAllowed, setDidTypeAllowed] = useState<DIDType>(DIDType.DATASET) // [container, dataset, file]
 
     // selection
     const [selectedDID, setSelectedDID] = useState<string | null>(null) // scope:name taken from table
@@ -100,16 +94,35 @@ export const ListDID = (
                 >
                     <form
                         className={twMerge(
-                            "flex flex-col md:flex-row md:space-x-2 justify-space-between",
+                            "flex flex-col md:flex-row md:space-x-4 justify-space-between",
                             "text-gray-800 dark:text-white"
                         )}
                         id="query-for-didtype-form"
                         aria-label="Select DID Types to Query"
                     >
                         <label className={twMerge("mr-2")} htmlFor="query-for-didtype-form">Query for DID Types:</label>
-                    <label htmlFor=""><input type="radio" name="didtype" id={DIDType.CONTAINER} />Container</label>
-                    <label htmlFor=""><input type="radio" name="didtype" id={DIDType.DATASET} />Dataset</label>
-                    <label htmlFor=""><input type="radio" name="didtype" id={DIDType.FILE} />File</label>
+                        <Checkbox
+                            label="Container"
+                            type="radio"
+                            name="query-for-didtype-form"
+                            onChange={(e: any) => {setDidTypeAllowed(e.target.id as DIDType)}}
+                            id={DIDType.CONTAINER}
+                        />
+                        <Checkbox
+                            label="Dataset"
+                            type="radio"
+                            name="query-for-didtype-form"
+                            onChange={(e: any) => {setDidTypeAllowed(e.target.id as DIDType)}}
+                            checked // default to dataset
+                            id={DIDType.DATASET}
+                        />
+                        <Checkbox
+                            label="File"
+                            type="radio"
+                            name="query-for-didtype-form"
+                            onChange={(e: any) => {setDidTypeAllowed(e.target.id as DIDType)}}
+                            id={DIDType.FILE}
+                        />
                     </form>
                 </div>
             </Heading>
