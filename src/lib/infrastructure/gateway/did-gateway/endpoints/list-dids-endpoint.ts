@@ -1,4 +1,5 @@
 import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints"
+import { BaseHttpErrorTypes } from "@/lib/sdk/http"
 import { HTTPRequest } from "@/lib/common/http"
 import { ListDIDDTO } from "@/lib/core/dto/did-dto"
 import { DID, DIDType } from "@/lib/core/entity/rucio"
@@ -57,24 +58,18 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
 
         const dto: ListDIDDTO = {
             status: 'error',
-            error: 'Unknown Error',
+            error: BaseHttpErrorTypes.UNKNOWN_ERROR,
             stream: null,
         }
         switch (statusCode) {
-            case 401:
-                dto.error = 'Invalid Auth Token'
-                break
-            case 404:
-                dto.error = 'Invalid key in filter'
-                break
-            case 406:
-                dto.error = 'Not acceptable'
-                break
             case 409:
-                dto.error = 'Wrong did type'
+                dto.error = {
+                    errorCode: 409,
+                    errorMessage: 'Wrong DID type',
+                }
                 break
             default:
-                dto.error = 'Unknown Error'
+                dto.error = BaseHttpErrorTypes.UNKNOWN_ERROR
                 break
         }
         return Promise.resolve(dto)

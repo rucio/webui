@@ -7,7 +7,7 @@ import appContainer from '@/lib/infrastructure/ioc/container-config';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import { BaseDTO, BaseStreamableDTO } from './dto';
 import fetch from 'node-fetch';
-import { handleAuthErrors } from '@/lib/infrastructure/auth/auth-utils';
+import { BaseHttpErrorTypes } from './http';
 
 /**
  * An abstract class that extends the `Transform` stream class and provides a base implementation for streamable API endpoints.
@@ -79,10 +79,11 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
         }
         const response = await this.streamingGateway.getJSONChunks(this.request, this.streamAsNDJSON);
         if (response instanceof Response) {
-            const authError = await handleAuthErrors(response);
-            if (authError) {
-                throw authError;
+            const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response)
+            if (commonErrors) {
+                return commonErrors as TDTO;
             }
+            
             const error = await this.reportErrors(response);
             if (error) {
                 throw error;
@@ -162,9 +163,10 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
      * Reports any errors that occurred during the API request.
      * @param statusCode The HTTP status code returned by the API.
      * @param response The response object returned by the API.
-     * @returns A promise that resolves to the API response as a data transfer object (DTO), or `undefined` if an error occurred.
+     * @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error, 
+     * or `undefined` if the error could not be identified clearly.
      */
-    abstract reportErrors(statusCode: number, response: Response): Promise<TDTO | undefined>;
+    abstract reportErrors(statusCode: number, response: Response): Promise<TDTO | undefined> 
     
     /**
      * Creates a data transfer object (DTO) from the API response.
@@ -196,9 +198,9 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             preparedRequest.requestArgs
         )
         if(!response.ok) {
-            const authError = await handleAuthErrors(response);
-            if (authError) {
-                return authError as TDTO;
+            const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response)
+            if (commonErrors) {
+                return commonErrors as TDTO;
             }
 
             const error = await this.reportErrors(response.status, response);
@@ -214,4 +216,33 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             return this.createDTO(data);
         }
     }
+}
+
+/**
+* Reports any common errors that occurred during the Gateway request.
+*/
+async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCode: number, response: Response): Promise<TDTO | undefined> {
+    const dto: TDTO = {
+        status: 'error',
+        error: BaseHttpErrorTypes.UNKNOWN_ERROR,
+    } as TDTO;
+
+    let error = ''
+    try {
+        const errorDetails: string = await response.json()
+        dto.message = errorDetails
+    } catch(error : any) {
+
+    }
+    switch(statusCode) {
+        case 400:
+            dto.error = BaseHttpErrorTypes.NOT_FOUND;
+            break;
+        case 401:
+            dto.error = BaseHttpErrorTypes.INVALID_AUTH_TOKEN;
+            break;
+        case 500:
+            dto.error = BaseHttpErrorTypes.UNKNOWN_ERROR;    
+    }
+    return dto;
 }

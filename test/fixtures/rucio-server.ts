@@ -63,6 +63,8 @@ export default class MockRucioServerFactory {
      * @param endpoints The endpoints to match against incoming requests.
      */
     static createMockRucioServer(checkAuth: boolean = true, endpoints: MockEndpoint[]) {
+        //disable eslint
+        // eslint-disable-next-line
         fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, req => {
             if (checkAuth) {
                 const rucioToken = req.headers.get('X-Rucio-Auth-Token')

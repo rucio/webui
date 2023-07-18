@@ -90,10 +90,14 @@ export abstract class BaseUseCase<
     /**
      * Handles a gateway error by converting it to an error model.
      * This method is called when the gateway returns a DTO with a status of `error`.
+     * This method is called only if the gateway returned an error which was not
+     * processed by {@link handleCommonGatewayErrors}
      * @param error The DTO returned by the gateway.
      * @returns An error model that represents the gateway error.
      */
-    abstract handleGatewayError(error: TDTO): TErrorModel
+    abstract handleGatewayError(error: TDTO): TErrorModel;
+
+    
 
     /**
      * Handles the DTO returned by the gateway.
@@ -119,8 +123,21 @@ export abstract class BaseUseCase<
             }
             return data as TErrorModel
         }
+        const commonError: BaseErrorResponseModel | undefined = handleCommonGatewayErrors<TDTO>(response)
+        if(commonError) {
+            return commonError as TErrorModel
+        }
+
         const errorModel: TErrorModel = this.handleGatewayError(response)
-        return errorModel
+        if(errorModel) {
+            return errorModel
+        }
+        
+        return {
+            status: 'error',
+            message: 'Unknown Error',
+        } as TErrorModel
+        
     }
 
     /**
@@ -285,6 +302,10 @@ export abstract class BaseStreamingUseCase<
                 } as TErrorModel
             }
         } else {
+            const commonError: BaseErrorResponseModel | undefined = handleCommonGatewayErrors<TDTO>(response)
+            if(commonError) {
+                return commonError as TErrorModel
+            }
             const errorModel: TErrorModel = this.handleGatewayError(response)
             return errorModel
         }
@@ -468,4 +489,24 @@ export abstract class BaseMultiCallStreamableUseCase<
             callback(errorModel)
         }
     }
+}
+
+
+/**
+ * Handles common gateway errors described in {@link handleCommonGatewayEndpointErrors}
+ * @param error the DTO returned by the gateway containing the error
+ * @returns {@link BaseResponseModel} that represents the generic error
+ */
+function handleCommonGatewayErrors<TDTO extends BaseDTO>(error: TDTO): BaseErrorResponseModel | undefined {
+    const endpointError = error.error
+    if(!endpointError) {
+        return undefined
+    }
+    const endpointErrorMessage = endpointError?.errorMessage
+    return {
+        status: 'error',
+        message: error.message,
+        name: endpointErrorMessage,
+        error: endpointErrorMessage,
+    } as BaseErrorResponseModel
 }

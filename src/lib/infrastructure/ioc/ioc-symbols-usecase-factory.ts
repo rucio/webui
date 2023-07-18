@@ -5,6 +5,7 @@
  * They inject the response object into the presenter used by the use case.
  */
 const USECASE_FACTORY = {
+    DID_META: Symbol.for("Factory<DIDMetaUseCase>"),
     LOGIN_CONFIG: Symbol.for("Factory<LoginConfigUseCase>"),
     LIST_DIDS: Symbol.for("Factory<ListDIDsUseCase>"),
     SET_X509_LOGIN_SESSION: Symbol.for("Factory<SetX509LoginSessionUseCase>"),

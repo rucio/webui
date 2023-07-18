@@ -17,7 +17,10 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
         } catch (error: any) {
             const errorDTO: DIDDTO = {
                 status: 'error',
-                error: 'Invalid Parameters',
+                error: {
+                    errorMessage: 'Invalid Parameters',
+                    errorCode: 400
+                },
                 message: (error as Error).message,
                 name: requestModel.query,
                 scope: requestModel.query,
@@ -35,7 +38,7 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
 
     handleGatewayError(dto: DIDDTO): ListDIDsError {
         let error: 'Unknown Error' | 'Invalid DID Query' | 'Invalid Request' = 'Unknown Error';
-        switch(dto.error) {
+        switch(dto.error?.errorMessage) {
             case 'Invalid Auth Token':
                 error = 'Invalid Request';
                 break;

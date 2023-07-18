@@ -3,6 +3,7 @@
  * @description This file contains the symbols for the input ports. Input ports are implemented by the use cases.
  */
 const INPUT_PORT = {
+    DID_META: Symbol.for("DIDMetaInputPort"),
     LOGIN_CONFIG: Symbol.for("LoginConfigInputPort"),
     LIST_DIDS: Symbol.for("ListDIDsInputPort"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionInputPort"),

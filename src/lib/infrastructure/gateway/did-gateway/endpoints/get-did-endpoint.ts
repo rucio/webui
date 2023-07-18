@@ -1,4 +1,5 @@
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints"
+import { BaseHttpErrorTypes } from "@/lib/sdk/http"
 import { HTTPRequest } from "@/lib/common/http";
 import { DIDDTO } from "@/lib/core/dto/did-dto";
 import { DIDType } from "@/lib/core/entity/rucio";
@@ -38,7 +39,7 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
     async reportErrors(statusCode: number, response: Response): Promise<DIDDTO | undefined> {
         const dto: DIDDTO = {
             status: 'error',
-            error: 'Unknown Error',
+            error: BaseHttpErrorTypes.UNKNOWN_ERROR,
             name: this.name,
             scope: this.scope,
             did_type: DIDType.UNKNOWN,
@@ -49,21 +50,26 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
             bytes: 0,
             length: 0,
         }
+        let error = {
+            errorMessage: '',
+            errorCode: statusCode
+        }
+        dto.error = error
         switch (statusCode) {
             case 400:
-                dto.error = 'Invalid Parameters'
+                dto.error.errorMessage = 'Invalid Parameters'
                 break;
             case 404:
                 const error = await response.json()
                 if (error.exception === 'DataIdentifierNotFound') {
-                    dto.error = 'Data Identifier Not Found'
+                    dto.error.errorMessage = 'Data Identifier Not Found'
                 }
                 if (error.exception === 'ScopeNotFound') {
-                    dto.error = 'Scope Not Found'
+                    dto.error.errorMessage = 'Scope Not Found'
                 }
                 break
             default:
-                dto.error = 'Unknown Error'
+                dto.error.errorMessage = 'Unknown Error'
                 break
         }
         return dto
