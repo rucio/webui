@@ -6,7 +6,7 @@ import { Code } from "@/component-library/components/Text/Content/Code";
 export default function PageSubscription() {
     return (
         <PageSubscriptionStory
-            subscriptionMeta={createSubscriptionMeta()}
+            subscriptionViewModel={createSubscriptionMeta()}
             editFilter={(filter: string) => { }}
             editReplicationRules={(rules: string) => { }}
         />

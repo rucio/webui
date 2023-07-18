@@ -1,7 +1,5 @@
-import { BaseHttpErrorTypes } from "@/lib/sdk/http";
 import { BaseUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { de } from "@faker-js/faker";
 import { injectable } from "inversify";
 import { DIDMetaDTO } from "../dto/did-dto";
 import { DIDMetaInputPort, type DIDMetaOutputPort } from "../port/primary/did-meta-ports";

@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule/PageRule'
 import {
     LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
-    RSEBlockState, SubscriptionMeta, SubscriptionRuleStates, SubscriptionState,
+    RSEBlockState, Subscription, SubscriptionRuleStates, SubscriptionState,
     DIDAvailability, RSEAccountUsageLimit,
     ReplicaState,
     RSE, RSEType, Rule
@@ -12,6 +12,7 @@ import {
 } from '@/lib/infrastructure/data/view-model/page-did';
 import { RSEAttribute, RSEProtocol } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
+import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 
 export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
     return {
@@ -266,10 +267,10 @@ export function createSubscriptionRuleStates(): SubscriptionRuleStates {
     }
 }
 
-export function createSubscriptionMeta(): SubscriptionMeta {
+export function createSubscriptionMeta(): SubscriptionViewModel {
     return {
+        status: 'success',
         account: faker.internet.userName(),
-        comments: faker.lorem.words(10),
         created_at: faker.date.past().toISOString(),
         id: faker.string.uuid(),
         last_processed: faker.date.recent().toISOString(),
