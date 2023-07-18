@@ -1,14 +1,14 @@
-import { DIDMeta } from "@/lib/core/entity/rucio"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
 import { AvailabilityTag } from "../../Tags/AvailabilityTag"
 import { Number } from "../../Text/Content/Number"
+import { DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did"
 var format = require("date-format")
 
 export const DIDMetaView = (
     props: {
-        data: DIDMeta
+        data: DIDMetaViewModel
         show: boolean
         horizontal?: boolean
     }

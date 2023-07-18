@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../../Button/Button';
-import { CheckBox } from '../../Checkbox/Checkbox.stories';
+import { Checkbox } from '../../Button/Checkbox';
 import { Timeline } from '../../Timeline/Timeline';
 import { Collapsible } from '../../Helpers/Collapsible';
 import { Tabs } from '../../Tabs/Tabs';
@@ -337,11 +337,11 @@ export const CreateRule = (
                             askApproval={Page1State.askForApproval}
                         />
                         <div>
-                            <CheckBox
+                            <Checkbox
                                 label="Ask for Approval"
                                 type="checkbox"
-                                handleChange={(event: any) => { setPage1State({ ...Page1State, askForApproval: event.target.checked }) }}
-                                isChecked={Page1State.askForApproval}
+                                onChange={(event: any) => { setPage1State({ ...Page1State, askForApproval: event.target.checked }) }}
+                                checked={Page1State.askForApproval}
                             />
                         </div>
                     </div>
@@ -368,11 +368,11 @@ export const CreateRule = (
                                 />
                             </div>
                             <div className="w-full">
-                                <CheckBox
+                                <Checkbox
                                     type="checkbox"
                                     label="Enable Notifications"
-                                    handleChange={(event: any) => { setPage2State({ ...Page2State, enableNotifications: event.target.checked }) }}
-                                    isChecked={Page2State.enableNotifications}
+                                    onChange={(event: any) => { setPage2State({ ...Page2State, enableNotifications: event.target.checked }) }}
+                                    checked={Page2State.enableNotifications}
                                 />
                             </div>
                         </div>
@@ -398,11 +398,11 @@ export const CreateRule = (
                                         />
                                     </div>
                                     <div className="">
-                                        <CheckBox
+                                        <Checkbox
                                             type="checkbox"
                                             label="Asynchronous Mode"
-                                            handleChange={(event: any) => { setPage2State({ ...Page2State, asynchronousMode: event.target.checked }) }}
-                                            isChecked={Page2State.asynchronousMode}
+                                            onChange={(event: any) => { setPage2State({ ...Page2State, asynchronousMode: event.target.checked }) }}
+                                            checked={Page2State.asynchronousMode}
                                         />
                                     </div>
                                     <div className="w-full">
