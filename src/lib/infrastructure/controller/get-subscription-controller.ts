@@ -8,6 +8,7 @@ import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 export type GetSubscriptionControllerParameters = TAuthenticatedControllerParameters & {
     name: string;
     account: string;
+    sessionAccount: string;
 }
 
 @injectable()
@@ -23,6 +24,7 @@ export default class GetSubscriptionController extends BaseController<GetSubscri
         return {
             name: parameters.name,
             account: parameters.account,
+            sessionAccount: parameters.sessionAccount,
             rucioAuthToken: parameters.rucioAuthToken
         } as GetSubscriptionRequest;
     }

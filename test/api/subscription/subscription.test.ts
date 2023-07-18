@@ -53,6 +53,7 @@ describe("Subscription API Tests", () => {
         const getSubscriptionControllerParams: GetSubscriptionControllerParameters = {
             name: '*Functional Test',
             account: 'ddmadmin',
+            sessionAccount: 'ddmadmin',
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
             response: res as unknown as NextApiResponse
         }

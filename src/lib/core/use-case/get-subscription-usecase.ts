@@ -22,6 +22,14 @@ class GetSubscriptionUseCase extends BaseUseCase<AuthenticatedRequestModel<GetSu
                 message: 'Account is required',
             } as GetSubscriptionError
         }
+
+        if(requestModel.sessionAccount !== requestModel.account) {
+            return {
+                error: 'INVALID_ACCOUNT',
+                message: 'Account specified in the request is not same as the account present in the session',
+            } as GetSubscriptionError
+        }
+        
         if(requestModel.name === '' || requestModel.name === undefined) {
             return {
                 error: 'INVALID_REQUEST',
