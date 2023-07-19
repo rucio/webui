@@ -1,5 +1,5 @@
 'use client';
-import { ListDID as ListDIDStory } from "@/component-library/components/Pages/ListDID/ListDID";
+import { ListDID as ListDIDStory } from "@/component-library/Pages/DID/ListDID";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { DIDMetaViewModel, DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";

@@ -1,16 +1,10 @@
 'use client';
-import { PageDID as PageDIDStory } from '@/component-library/components/Pages/PageDID/PageDID';
+import { PageDID as PageDIDStory } from '@/component-library/Pages/DID/PageDID';
 import { DIDMeta } from "@/lib/core/entity/rucio";
-import {
-    CreateRuleQuery, DIDSearchQuery, DIDSearchResponse, DIDName,
-    TypedDIDValidationQuery, TypedDIDValidationResponse,
-    RSESearchQuery
-} from '@/lib/infrastructure/data/view-model/create-rule'
-import { DIDContents, FilereplicaState, FilereplicaStateD } from '@/lib/infrastructure/data/view-model/page-did';
+import { FilereplicaState, FilereplicaStateD } from '@/lib/infrastructure/data/view-model/page-did';
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { FetchStatus } from '@tanstack/react-query';
 import { useEffect, useState } from "react";
-import { createDID, createDIDDatasetReplicas, createDIDMeta, createDIDRules, createFileReplicaState, createFileReplicaStateD, mockUseComDOM } from 'test/fixtures/table-fixtures';
+import { createDIDDatasetReplicas, createDIDMeta, createDIDRules, mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { DID } from '@/lib/core/entity/rucio';
 import { HTTPRequest } from "@/lib/common/http";
 

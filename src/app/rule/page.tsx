@@ -1,10 +1,9 @@
 'use client';
-import { PageRule as PageRuleStory, RulePageLockEntry } from "@/component-library/components/Pages/PageRule/PageRule";
-import { LockState, RuleMeta } from "@/lib/core/entity/rucio";
+import { PageRule as PageRuleStory, RulePageLockEntry } from "@/component-library/Pages/Rule/PageRule";
+import { RuleMeta } from "@/lib/core/entity/rucio";
 import { createRuleMeta } from "test/fixtures/table-fixtures";
 import { useState, useEffect } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { LockStateTag } from "@/component-library/components/Tags/LockStateTag";
 import { HTTPRequest } from "@/lib/common/http";
 
 export default function PageRule() {

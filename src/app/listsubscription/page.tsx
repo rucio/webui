@@ -1,6 +1,6 @@
 'use client';
 import { SubscriptionRuleStates } from "@/lib/core/entity/rucio";
-import { ListSubscription as ListSubscriptionStory } from "@/component-library/components/Pages/Subscriptions/ListSubscription";
+import { ListSubscription as ListSubscriptionStory } from "@/component-library/Pages/Subscriptions/ListSubscription";
 import { Component, useEffect, useState } from "react";
 import { createSubscriptionRuleStates } from "test/fixtures/table-fixtures";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";

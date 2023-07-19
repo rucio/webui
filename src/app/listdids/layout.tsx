@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "@/component-library/outputtailwind.css";
 import "reflect-metadata";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Layout as LayoutStory } from '@/component-library/components/Pages/Layout/Layout';
+import { Layout as LayoutStory } from '@/component-library/Pages/Layout/Layout';
 
 
 const queryClient = new QueryClient();

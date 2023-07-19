@@ -3,7 +3,7 @@
  */
 
 import { render, act, screen, cleanup, fireEvent } from "@testing-library/react";
-import { ListDID as ListDIDStory } from "@/component-library/components/Pages/ListDID/ListDID";
+import { ListDID as ListDIDStory } from "@/component-library/Pages/DID/ListDID";
 import { DIDMeta } from "@/lib/core/entity/rucio";
 import { createDID, createDIDMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did";

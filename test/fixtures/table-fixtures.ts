@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { RulePageLockEntry } from '@/component-library/components/Pages/PageRule/PageRule'
+import { RulePageLockEntry } from '@/component-library/Pages/Rule/PageRule'
 import {
     LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
     RSEBlockState, Subscription, SubscriptionRuleStates, SubscriptionState,
