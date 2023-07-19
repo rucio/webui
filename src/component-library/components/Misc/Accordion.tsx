@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { useState } from "react";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
-import { Collapsible } from "./Collapsible";
+import { Collapsible } from "../Helpers/Collapsible";
 
 export const Accordion: (
     React.FC<JSX.IntrinsicElements["div"] & {name: string}>

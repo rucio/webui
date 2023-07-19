@@ -2,7 +2,7 @@ import { StoryFn, Meta } from "@storybook/react";
 import { ProgressBar as P } from "./ProgressBar";
 
 export default {
-    title: 'Components/Helpers',
+    title: 'Components/Misc',
     component: P,
 } as Meta<typeof P>;
 

@@ -1,14 +1,14 @@
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect, useMemo } from 'react'
 import { Button } from "../../Button/Button";
-import { Tabs } from "../../Tabs/Tabs";
+import { Tabs } from "../../Misc/Tabs";
 import { H1 } from '../../Text/Headings/H1';
 import { Collapsible } from '../../Helpers/Collapsible';
 import { LoginViewModel } from '../../../../lib/infrastructure/data/view-model/login.d';
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 import { MdAccountCircle } from 'react-icons/md';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
-import { Alert } from '../../Alert/Alert';
+import { Alert } from '../../Misc/Alert';
 import { LabelledInput } from './LabelledInput';
 import { DefaultVO } from '@/lib/core/entity/auth-models';
 import Modal from "react-modal";

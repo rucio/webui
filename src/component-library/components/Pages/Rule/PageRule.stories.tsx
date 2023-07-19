@@ -1,11 +1,9 @@
-import { RuleNotification, RuleState } from "@/lib/core/entity/rucio";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { StoryFn, Meta } from "@storybook/react";
 import { createRandomRulePageLockEntry, createRuleMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { PageRule as P, RulePageLockEntry } from "./PageRule";
 
 export default {
-    title: 'Components/Pages/PageRule',
+    title: 'Components/Pages/Rule',
     component: P,
 } as Meta<typeof P>;
 

@@ -1,12 +1,12 @@
 import { twMerge } from "tailwind-merge";
-import { Tabs } from "../../Tabs/Tabs";
+import { Tabs } from "../../Misc/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
 import { useState } from "react";
 import { Titleth, Contenttd, Generaltable } from "../../Helpers/Metatable";
 import { DateTag } from "../../Tags/DateTag";
 import { BoolTag } from "../../Tags/BoolTag";
 import { SubscriptionStateTag } from "../../Tags/SubscriptionStateTag";
-import { Accordion } from "../../Helpers/Accordion";
+import { Accordion } from "../../Misc/Accordion";
 import { Code } from "../../Text/Content/Code";
 import { PageSubscriptionJSONEditor } from "./PageSubscriptionJSONEditor";
 import { SubscriptionFilter, SubscriptionReplicationRules } from "@/lib/core/entity/subscription";

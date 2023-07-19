@@ -2,7 +2,7 @@ import { StoryFn, Meta } from "@storybook/react";
 import { Accordion as A } from "./Accordion";
 
 export default {
-    title: 'Components/Helpers',
+    title: 'Components/Misc',
     component: A,
 } as Meta<typeof A>;
 

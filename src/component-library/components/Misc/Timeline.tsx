@@ -1,4 +1,4 @@
-import { TimelineLiSpan } from './Helpers/TimelineLiSpan'
+import { TimelineLiSpan } from './TimelineLiSpan'
 import { H3 } from '../Text/Headings/H3'
 import { twMerge } from 'tailwind-merge'
 

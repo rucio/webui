@@ -6,7 +6,7 @@ var format = require("date-format")
 import { RuleMeta, RuleNotification } from "@/lib/core/entity/rucio";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables.d";
 import { LockState } from "@/lib/core/entity/rucio";
-import { Tabs } from "../../Tabs/Tabs";
+import { Tabs } from "../../Misc/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
 import { H3 } from "../../Text/Headings/H3";
 import { P } from "../../Text/Content/P";

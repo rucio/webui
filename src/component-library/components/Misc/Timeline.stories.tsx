@@ -3,7 +3,7 @@ import { StoryFn ,Meta } from '@storybook/react'
 import { Timeline as T} from './Timeline'
 
 export default {
-    title: 'Components/Timeline',
+    title: 'Components/Misc',
     component: T
 } as Meta<typeof T>
 

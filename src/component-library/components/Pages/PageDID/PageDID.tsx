@@ -1,6 +1,6 @@
 // components
 import { DIDMetaView } from "@/component-library/components/Pages/ListDID/DIDMetaView";
-import { Tabs } from "../../Tabs/Tabs";
+import { Tabs } from "../../Misc/Tabs";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { H3 } from "../../Text/Headings/H3";
 import { SubPage } from "../../Helpers/SubPage";

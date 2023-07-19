@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../../Button/Button';
 import { Checkbox } from '../../Button/Checkbox';
-import { Timeline } from '../../Timeline/Timeline';
+import { Timeline } from '../../Misc/Timeline';
 import { Collapsible } from '../../Helpers/Collapsible';
-import { Tabs } from '../../Tabs/Tabs';
+import { Tabs } from '../../Misc/Tabs';
 import { TextInput } from '../../Input/TextInput';
 import { Dropdown } from './GroupingDropdown';
 import { RulePage } from './RulePage';
