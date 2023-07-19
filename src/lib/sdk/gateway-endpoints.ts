@@ -84,7 +84,7 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
                 return commonErrors as TDTO;
             }
             
-            const error = await this.reportErrors(response);
+            const error = await this.reportErrors(response.status, response);
             if (error) {
                 throw error;
             }
@@ -96,10 +96,11 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
      /**
      * Reports any errors that occurred during the API request.
      * The implementation must check the response status code and return a suitable data transfer object (DTO) if an error occurred.
+     * @param statusCode The HTTP status code returned by the API.
      * @param response The response object returned by the API.
      * @returns A promise that resolves to a data transfer object (DTO) containing the error, or `undefined` if no error occurred.
      */
-    abstract reportErrors(response: Response): Promise<TDTO | undefined>;
+    abstract reportErrors(statusCode: number, response: Response): Promise<TDTO | undefined>;
 
     /**
      * Creates a data transfer object (DTO) from the streamed data returned by the API.
