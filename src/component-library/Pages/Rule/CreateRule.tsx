@@ -28,7 +28,7 @@ import {
     CreateRuleQuery, CreateRuleResponse, DIDName, TypedDIDValidationQuery,
     TypedDIDValidationResponse,
 
-} from '../../../../lib/infrastructure/data/view-model/create-rule.d';
+} from '@/lib/infrastructure/data/view-model/create-rule.d';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';

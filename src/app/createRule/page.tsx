@@ -1,11 +1,10 @@
 'use client';
-import { CreateRule as CreateRuleStory } from "@/component-library/components/Pages/CreateRule/CreateRule";
+import { CreateRule as CreateRuleStory } from "@/component-library/Pages/Rule/CreateRule";
 import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio";
 import { DIDLong } from "@/lib/core/entity/rucio"
 import {
-    CreateRuleQuery, DIDSearchQuery,
+    CreateRuleQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
-    RSESearchQuery
 } from '@/lib/infrastructure/data/view-model/create-rule'
 import { HTTPRequest } from "@/lib/common/http";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";

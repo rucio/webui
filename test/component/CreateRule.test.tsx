@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { CreateRule } from "@/component-library/components/Pages/CreateRule/CreateRule";
+import { CreateRule } from "@/component-library/Pages/Rule/CreateRule";
 import {
     CreateRuleQuery, DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
