@@ -23,7 +23,7 @@ type TableFooterProps<T> = JSX.IntrinsicElements["tfoot"] & {
 }
 
 export function TableFooter<T>(props: TableFooterProps<T>) {
-    const { className, ...otherprops } = props
+    const { stacked, className, ...otherprops } = props
 
     return (
         <tfoot
