@@ -1,7 +1,9 @@
-import { SubscriptionDTO } from "@/lib/core/dto/subscription-dto";
+import { ListSubscriptionsDTO, SubscriptionDTO } from "@/lib/core/dto/subscription-dto";
 import SubscriptionGatewayOutputPort from "@/lib/core/port/secondary/subscription-gateway-output-port";
+import { BaseHTTPError } from "@/lib/sdk/http";
 import { injectable } from "inversify";
 import GetSubscriptionEndpoint from "./endpoints/get-subscription-endpoint";
+import ListSubscriptionsEndpoint from "./endpoints/list-subscriptions-endpoint";
 
 @injectable()
 export default class SubscriptionGateway implements SubscriptionGatewayOutputPort {
@@ -9,5 +11,25 @@ export default class SubscriptionGateway implements SubscriptionGatewayOutputPor
         const endpoint: GetSubscriptionEndpoint = new GetSubscriptionEndpoint(rucioAuthToken, account, name)
         const dto: SubscriptionDTO = await endpoint.fetch()
         return dto
+    
+    }
+
+    async list(rucioAuthToken: string, account: string): Promise<ListSubscriptionsDTO> {
+        try {
+            const endpoint: ListSubscriptionsEndpoint = new ListSubscriptionsEndpoint(rucioAuthToken, account)
+            await endpoint.fetch()
+            const dto: ListSubscriptionsDTO = {
+                status: 'success',
+                stream: endpoint
+            }
+            return Promise.resolve(dto)
+        } catch(error) {
+            const errorDTO: ListSubscriptionsDTO = {
+                status: 'error',
+                error: error as BaseHTTPError,
+                message: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
     }
 }

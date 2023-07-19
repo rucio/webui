@@ -1,6 +1,9 @@
 import { SubscriptionDTO } from "@/lib/core/dto/subscription-dto";
 import { SubscriptionReplicationRule, SubscriptionState } from "@/lib/core/entity/rucio";
 
+/**
+ * Represents the data returned by Rucio Server for a subscription.
+ */
 export type TRucioSubscription = {
     id: string;
     name: string;
