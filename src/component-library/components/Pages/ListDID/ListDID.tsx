@@ -78,10 +78,8 @@ export const ListDID = (
                             type="button"
                             label="Search"
                             onClick={async (e: any) => {
-                                // deal with comDOM here
-                                // call `props.comDOM.setQuery` with the query
+                                e.preventDefault()
                                 await props.didQuery(didSearchQuery, didTypeAllowed)
-                                // and start query
                                 props.comdom.start()
                             }}
                             id="did-button-search"
@@ -115,7 +113,7 @@ export const ListDID = (
                             type="radio"
                             name="query-for-didtype-form"
                             onChange={(e: any) => {setDidTypeAllowed(e.target.id as DIDType)}}
-                            checked // default to dataset
+                            checked={didTypeAllowed === DIDType.DATASET} // default to dataset
                             id={DIDType.DATASET}
                         />
                         <Checkbox
