@@ -1,7 +1,7 @@
 import { SubscriptionState } from "@/lib/core/entity/rucio";
 import { GetSubscriptionError, GetSubscriptionResponse } from "@/lib/core/usecase-models/get-subscription-usecase-models";
 import { BasePresenter } from "@/lib/sdk/presenter";
-import { SubscriptionViewModel } from "../data/view-model/subscriptions";
+import { getEmptySubscriptionViewModel, SubscriptionViewModel } from "../data/view-model/subscriptions";
 
 export default class GetSubscriptionPresenter extends BasePresenter<GetSubscriptionResponse, GetSubscriptionError, SubscriptionViewModel> {
     convertResponseModelToViewModel(responseModel: GetSubscriptionResponse): { viewModel: SubscriptionViewModel; status: number; } {
@@ -15,22 +15,7 @@ export default class GetSubscriptionPresenter extends BasePresenter<GetSubscript
         }
     }
     convertErrorModelToViewModel(errorModel: GetSubscriptionError): { viewModel: SubscriptionViewModel; status: number; } {
-        const viewModel: SubscriptionViewModel = {
-            status: 'error',
-            message: `Error: ${errorModel.error}: ${errorModel.message}`,
-            account: '',
-            created_at: '',
-            id: '',
-            last_processed: '',
-            lifetime: '',
-            name: '',
-            policyid: 0,
-            retroactive: false,
-            state: SubscriptionState.UNKNOWN,
-            updated_at: '',
-            filter: '',
-            replication_rules: '',
-        }
+        const viewModel: SubscriptionViewModel = getEmptySubscriptionViewModel();
         let status = 400;
         switch (errorModel.error) {
             case 'SUBSCRIPTION_NOT_FOUND':

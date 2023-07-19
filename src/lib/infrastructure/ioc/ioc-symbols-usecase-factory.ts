@@ -9,6 +9,7 @@ const USECASE_FACTORY = {
     GET_SUBSCRIPTION: Symbol.for("Factory<GetSubscriptionUseCase>"),
     LOGIN_CONFIG: Symbol.for("Factory<LoginConfigUseCase>"),
     LIST_DIDS: Symbol.for("Factory<ListDIDsUseCase>"),
+    LIST_SUBSCRIPTIONS: Symbol.for("Factory<ListSubscriptionsUseCase>"),
     SET_X509_LOGIN_SESSION: Symbol.for("Factory<SetX509LoginSessionUseCase>"),
     SITE_HEADER: Symbol.for("Factory<SiteHeaderUseCase>"),
     STREAM: Symbol.for("Factory<StreamUseCase>"),

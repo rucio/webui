@@ -9,7 +9,7 @@ import { NextApiResponse } from "next";
 import { createHttpMocks } from "test/fixtures/http-fixtures";
 import MockRucioServerFactory, { MockEndpoint } from "test/fixtures/rucio-server";
 
-describe("Subscription API Tests", () => {
+describe("GET Subscription Feature Tests", () => {
     beforeEach(() => {
         fetchMock.doMock()
         const getSubscriptionEndpoint: MockEndpoint = {

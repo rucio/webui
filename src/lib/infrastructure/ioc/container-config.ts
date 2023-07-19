@@ -44,6 +44,7 @@ import DIDMetaFeature from "./features/did-meta-feature";
 import SubscriptionGatewayOutputPort from "@/lib/core/port/secondary/subscription-gateway-output-port";
 import SubscriptionGateway from "../gateway/subscription-gateway/subscription-gateway";
 import GetSubscriptionFeature from "./features/get-subscription-feature";
+import ListSubscriptionsFeature from "./features/list-subscriptions-feature";
 
 
 /**
@@ -59,10 +60,11 @@ appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(Subsc
 
 
 loadFeaturesSync(appContainer, [
-    new ListDidsFeature(appContainer),
-    new LoginConfigFeature(appContainer),
     new DIDMetaFeature(appContainer),
     new GetSubscriptionFeature(appContainer),
+    new ListDidsFeature(appContainer),
+    new ListSubscriptionsFeature(appContainer),
+    new LoginConfigFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
