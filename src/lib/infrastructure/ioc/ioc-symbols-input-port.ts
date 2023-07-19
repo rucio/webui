@@ -7,6 +7,7 @@ const INPUT_PORT = {
     GET_SUBSCRIPTION: Symbol.for("GetSubscriptionInputPort"),
     LOGIN_CONFIG: Symbol.for("LoginConfigInputPort"),
     LIST_DIDS: Symbol.for("ListDIDsInputPort"),
+    LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsInputPort"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionInputPort"),
     SITE_HEADER: Symbol.for("SiteHeaderInputPort"),
     STREAM: Symbol.for("StreamInputPort"),

@@ -106,6 +106,7 @@ export type SubscriptionReplicationRule = {
     source_replica_expression?: string;
     copies: string;
     lifetime: number;
+    weight: number;
     comments?: string;
 };
 

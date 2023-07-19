@@ -36,6 +36,7 @@ export function parseReplicationRules(replicationRules: string): SubscriptionRep
             copies: rule.copies,
             lifetime: rule.lifetime,
             comments: rule.comments,
+            weight: rule.weight,
         }
         rules.push(r)
     }
@@ -93,7 +94,7 @@ export function convertToSubscriptionDTO(data: TRucioSubscription, account: stri
 /**
  * @returns Base {@link SubscriptionDTO} object with all fields set to empty values.
  */
-export function getEmptyErrorSubscriptionDTO(status: 'success' | 'error'): SubscriptionDTO {
+export function getEmptySubscriptionDTO(status: 'success' | 'error'): SubscriptionDTO {
     return {
         status: status,
         account: "",

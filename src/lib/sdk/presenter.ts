@@ -69,16 +69,16 @@ export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel>
 /**
  * A base class for streaming presenters.
  * @typeparam TResponseModel The type of the response model to present.
- * @typeparam TViewModel The type of the view model to present.
  * @typeparam TErrorModel The type of the error model to present.
+ * @typeparam TStreamViewModel The type of the view model to present.
  */
 export abstract class BaseStreamingPresenter<
         TResponseModel extends BaseResponseModel,
         TErrorModel extends BaseErrorResponseModel,
-        TViewModel extends BaseViewModel,
+        TStreamViewModel extends BaseViewModel,
     >
     extends Transform
-    implements BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>
+    implements BaseStreamingOutputPort<TResponseModel, TErrorModel, TStreamViewModel>
 {
     response: TWebResponse
     constructor(response: TWebResponse) {
@@ -93,7 +93,7 @@ export abstract class BaseStreamingPresenter<
      */
     abstract convertErrorModelToViewModel(errorModel: TErrorModel): {
         status: number,
-        viewModel: TViewModel
+        viewModel: TStreamViewModel
     }
     
     /**
@@ -118,7 +118,7 @@ export abstract class BaseStreamingPresenter<
      */
     abstract convertResponseModelToViewModel(
         responseModel: TResponseModel,
-    ): TViewModel
+    ): TStreamViewModel
 
     handleStreamError(error: TErrorModel){
         this.emit('error', error)
@@ -141,6 +141,7 @@ export abstract class BaseStreamingPresenter<
         callback: TransformCallback,
     ): void {
         try {
+            if(typeof chunk === 'string') chunk = JSON.parse(chunk)
             const responseModel: TResponseModel = chunk
             const viewModel =
                 this.convertResponseModelToViewModel(responseModel)

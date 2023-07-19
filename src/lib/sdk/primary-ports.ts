@@ -24,6 +24,7 @@ export interface BaseAuthenticatedInputPort<TRequestModel> {
 /**
  * A base interface for streamable input ports.
  * @typeparam AuthenticatedRequestModel The type of the authenticated request model for the input port.
+ * @deprecated Primary Input Ports should not be streamable!! Use {@link BaseAuthenticatedInputPort} instead.
  */
 export interface BaseStreamableInputPort<AuthenticatedRequestModel>
     extends Transform {
@@ -64,9 +65,9 @@ export interface BaseOutputPort<TResponseModel, TErrorModel> {
  * A base interface for streaming output ports.
  * @typeparam TResponseModel The type of the response model for the streaming output port.
  * @typeparam TErrorModel The type of the error model for the streaming output port.
- * @typeparam TViewModel The type of the view model for the streaming output port.
+ * @typeparam TStreamViewModel The type of the view model for the streamed data.
  */
-export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TViewModel extends BaseViewModel> extends Transform{
+export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TStreamViewModel extends BaseViewModel> extends Transform{
     response: TWebResponse
     presentStream(stream: PassThrough): void
     
@@ -74,12 +75,12 @@ export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseMode
     
     convertErrorModelToViewModel(errorModel: TErrorModel): {
         status: number,
-        viewModel: TViewModel
+        viewModel: TStreamViewModel
     }
     
     convertResponseModelToViewModel(
         responseModel: TResponseModel,
-    ): TViewModel
+    ): TStreamViewModel
 
     handleStreamError(error: TErrorModel): void
 }

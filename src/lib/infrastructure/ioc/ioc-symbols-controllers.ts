@@ -9,6 +9,7 @@ const CONTROLLERS = {
     GET_SUBSCRIPTION: Symbol.for("GetSubscriptionController"),
     LOGIN_CONFIG: Symbol.for("LoginConfigController"),
     LIST_DIDS: Symbol.for("ListDIDsController"),
+    LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsController"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),
     SITE_HEADER: Symbol.for("SiteHeaderController"),
     STREAM: Symbol.for("StreamController"),

@@ -228,17 +228,17 @@ export abstract class BaseStreamingUseCase<
         TErrorModel extends BaseErrorResponseModel,
         TDTO extends BaseStreamableDTO,
         TStreamDTO,
-        TViewModel extends BaseViewModel
+        TStreamViewModel extends BaseViewModel
     >
     extends Transform
     implements
         BaseStreamableInputPort<AuthenticatedRequestModel<TRequestModel>>
 {
-    protected presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>
+    protected presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TStreamViewModel>
     protected requestModel: AuthenticatedRequestModel<TRequestModel> | undefined
 
     constructor(
-        presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>,
+        presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TStreamViewModel>,
     ) {
         super({ objectMode: true })
         this.presenter = presenter

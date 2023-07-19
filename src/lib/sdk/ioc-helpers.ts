@@ -153,7 +153,7 @@ implements IFeature {
  * @template TRequestModel The type of the request model for the use case.
  * @template TResponseModel The type of the response model for the use case.
  * @template TErrorModel The type of the error model for the use case.
- * @template TViewModel The type of the view model for the presenter.
+ * @template TViewModel The type of the view model for the stream.
  */
 export class BaseStreamableFeature<
     TControllerParams extends TParameters,
