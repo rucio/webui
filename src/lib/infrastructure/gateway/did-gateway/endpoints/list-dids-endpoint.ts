@@ -49,9 +49,7 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
     }
 
     /** @implements */
-    reportErrors(response: Response): Promise<ListDIDDTO | undefined> {
-        const statusCode = response.status
-        
+    reportErrors(statusCode: number, response: Response): Promise<ListDIDDTO | undefined> {
         if(statusCode === 200) {
             return Promise.resolve(undefined)
         }
