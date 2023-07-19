@@ -1,11 +1,11 @@
-import { H4 } from "@/component-library/components/Text/Headings/H4";
+import { H4 } from "@/component-library/Text/Headings/H4";
 import { Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
 import { twMerge } from "tailwind-merge";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { BoolTag } from "@/component-library/components/Tags/BoolTag";
-import { Number } from "@/component-library/components/Text/Content/Number";
-import { Contenttd, Generaltable, Titleth } from "@/component-library/components/Helpers/Metatable";
+import { BoolTag } from "@/component-library/Tags/BoolTag";
+import { Number } from "@/component-library/Text/Content/Number";
+import { Contenttd, Generaltable, Titleth } from "@/component-library/Helpers/Metatable";
 import { useEffect, useState } from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);

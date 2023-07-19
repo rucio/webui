@@ -1,5 +1,5 @@
-import { H3 } from "@/component-library/components/Text/Headings/H3.stories";
-import { P } from "@/component-library/components/Text/Content/P";
+import { H3 } from "@/component-library/Text/Headings/H3.stories";
+import { P } from "@/component-library/Text/Content/P";
 import { twMerge } from "tailwind-merge";
 import { Bar } from "react-chartjs-2";
 import {
@@ -17,7 +17,7 @@ import {
     Row, Column, getSortedRowModel
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { TableSortUpDown } from "@/component-library/components/StreamedTables/TableSortUpDown.stories";
+import { TableSortUpDown } from "@/component-library/StreamedTables/TableSortUpDown.stories";
 
 ChartJS.register(
     CategoryScale,
