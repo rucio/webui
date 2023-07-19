@@ -3,7 +3,7 @@ import { mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { PageDIDMetadata as P } from "./PageDIDMetadata"
 
 export default {
-    title: "Components/Pages/PageDID",
+    title: "Components/Pages/DID",
     component: P,
 } as Meta<typeof P>;
 

@@ -3,7 +3,7 @@ import { createDIDDatasetReplicas, mockUseComDOM } from "test/fixtures/table-fix
 import { PageDIDDatasetReplicas as P } from "./PageDIDDatasetReplicas";
 
 export default {
-	title: 'Components/Pages/PageDID',
+	title: 'Components/Pages/DID',
 	component: P,
 } as Meta<typeof P>;
 

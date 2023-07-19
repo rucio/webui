@@ -1,12 +1,10 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { PageDID as PD } from "./PageDID";
 
-import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule";
-import { DIDType, DIDAvailability } from '@/lib/core/entity/rucio';
 import { createDIDMeta, mockUseComDOM, createDIDRules, createDID, createDIDDatasetReplicas, createFileReplicaState, createFileReplicaStateD } from "test/fixtures/table-fixtures";
 
 export default {
-    title: "Components/Pages/PageDID",
+    title: "Components/Pages/DID",
     component: PD,
 } as Meta<typeof PD>;
 

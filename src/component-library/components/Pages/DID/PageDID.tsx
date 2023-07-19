@@ -1,8 +1,7 @@
 // components
-import { DIDMetaView } from "@/component-library/components/Pages/ListDID/DIDMetaView";
+import { DIDMetaView } from "./DIDMetaView";
 import { Tabs } from "../../Misc/Tabs";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
-import { H3 } from "../../Text/Headings/H3";
 import { SubPage } from "../../Helpers/SubPage";
 import { Heading } from "../Helpers/Heading";
 import { Body } from "../Helpers/Body";
@@ -10,12 +9,9 @@ import { Body } from "../Helpers/Body";
 // misc packages, react
 import { twMerge } from "tailwind-merge";
 import React, { useEffect, useState } from "react";
-import { HiArrowCircleLeft } from "react-icons/hi";
-import { FetchStatus } from "@tanstack/react-query";
 
 // DTO etc
 import { DIDMeta, DIDType } from "@/lib/core/entity/rucio";
-import { DIDSearchQuery } from "@/lib/infrastructure/data/view-model/create-rule";
 import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
 import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";

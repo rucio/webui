@@ -4,7 +4,7 @@ import { DIDLong } from "@/lib/core/entity/rucio";
 import { createRandomDIDLong, mockUseComDOM } from "test/fixtures/table-fixtures";
 
 export default {
-    title: 'Components/Pages/CreateRule',
+    title: 'Components/Pages/Rule',
     component: C,
 } as Meta<typeof C>;
 

@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react'
 import { SummaryPage as SP } from './SummaryPage'
 
 export default {
-    title: 'Components/Pages/CreateRule/Components',
+    title: 'Components/Pages/Rule/Components',
     component: SP,
 } as Meta<typeof SP>
 

@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react'
 import { Dropdown as D } from './GroupingDropdown'
 
 export default {
-    title: 'Components/Pages/CreateRule/Components',
+    title: 'Components/Pages/Rule/Components',
     component: D,
 } as Meta<typeof D>
 

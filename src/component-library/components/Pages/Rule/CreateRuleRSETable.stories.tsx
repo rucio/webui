@@ -4,7 +4,7 @@ import { createRSEAccountUsageLimit, mockUseComDOM } from "test/fixtures/table-f
 import { CreateRuleRSETable as C } from "./CreateRuleRSETable";
 
 export default {
-    title: 'Components/Pages/CreateRule',
+    title: 'Components/Pages/Rule',
     component: C,
 } as Meta<typeof C>;
 

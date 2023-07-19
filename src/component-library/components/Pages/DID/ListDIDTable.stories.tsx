@@ -4,7 +4,7 @@ import { createDID, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { DID } from "@/lib/core/entity/rucio";
 
 export default {
-    title: 'Components/Pages/ListDID',
+    title: 'Components/Pages/DID',
     component: L,
 } as Meta<typeof L>;
 

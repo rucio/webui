@@ -1,25 +1,21 @@
-import { OIDCProvider, VO } from '@/lib/core/entity/auth-models'
 import { StoryFn, Meta } from '@storybook/react'
 import { createRandomDIDLong, createRSEAccountUsageLimit, mockUseComDOM } from 'test/fixtures/table-fixtures'
 
-import { CreateRule } from './CreateRule'
+import { CreateRule as CR } from './CreateRule'
 import {
-    CreateRuleQuery, DIDSearchQuery,
+    CreateRuleQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
-    RSESearchQuery,
-    DIDSearchResponse,
-    RSESearchResponse,
 } from '@/lib/infrastructure/data/view-model/create-rule'
 
 export default {
-    title: 'Components/Pages/CreateRule',
-    component: CreateRule,
-} as Meta<typeof CreateRule>
+    title: 'Components/Pages/Rule',
+    component: CR,
+} as Meta<typeof CR>
 
-const Template: StoryFn<typeof CreateRule> = args => <CreateRule {...args} />
+const Template: StoryFn<typeof CR> = args => <CR {...args} />
 
-export const CreateRulePage = Template.bind({})
-CreateRulePage.args = {
+export const CreateRule = Template.bind({})
+CreateRule.args = {
     onSubmit: (query: CreateRuleQuery) => {
         return Promise.resolve({
             success: true,

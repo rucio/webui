@@ -3,7 +3,7 @@ import { ListDID as LD } from './ListDID';
 import { createDIDMeta, createDID, mockUseComDOM } from 'test/fixtures/table-fixtures';
 
 export default {
-    title: 'Components/Pages/ListDID',
+    title: 'Components/Pages/DID',
     component: LD,
 } as Meta<typeof LD>;
 

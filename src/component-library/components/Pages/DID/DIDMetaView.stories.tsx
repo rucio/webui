@@ -3,7 +3,7 @@ import { DIDMetaView as DM } from "./DIDMetaView";
 import { createDIDMeta } from "test/fixtures/table-fixtures";
 
 export default {
-    title: "Components/Pages/ListDID",
+    title: "Components/Pages/DID",
     component: DM,
 } as Meta<typeof DM>;
 

@@ -4,7 +4,7 @@ import { ReplicaState } from '@/lib/core/entity/rucio';
 import { createFileReplicaState, mockUseComDOM } from 'test/fixtures/table-fixtures';
 
 export default {
-    title: "Components/Pages/PageDID",
+    title: "Components/Pages/DID",
     component: PDF,
 } as Meta<typeof PDF>;
 
