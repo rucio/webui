@@ -1,7 +1,7 @@
 import { DIDDTO, DIDMetaDTO, ListDIDDTO } from '@/lib/core/dto/did-dto'
 import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
-import { BaseHttpErrorTypes } from '@/lib/sdk/http'
+import { BaseHTTPError, BaseHttpErrorTypes } from '@/lib/sdk/http'
 import { injectable } from 'inversify'
 import GetDIDEndpoint from './endpoints/get-did-endpoint'
 import GetDIDMetaEndpoint from './endpoints/get-did-meta-endpoint'
@@ -73,7 +73,7 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         } catch (error) {
             const errorDTO: ListDIDDTO = {
                 status: 'error',
-                error: BaseHttpErrorTypes.UNKNOWN_ERROR,
+                error: error as BaseHTTPError,
                 message: error?.toString(),
             }
             return Promise.resolve(errorDTO)
