@@ -131,6 +131,9 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
             
             if ( request.url instanceof URL){
                 request.url = request.url.toString()
+                if(request.params) {
+                    request.url = request.url + '?' + new URLSearchParams(request.params).toString()
+                }
             }
 
             if ( request.headers instanceof Headers){
