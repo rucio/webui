@@ -6,16 +6,16 @@ import { ListDIDsControllerParameters } from "@/lib/infrastructure/controller/li
 import { withAuthenticatedSessionRoute } from "@/lib/infrastructure/auth/session-utils";
 
 async function listDIDs(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string) {
-    if(req.method === 'GET') {
+    if(req.method !== 'GET') {
         res.status(405).json({ error: 'Method Not Allowed' })
         return
     }
-    const { query, type } = req.body
-    if(!query) {
+    const { query , type } = req.query
+    if(!query || typeof query !== 'string') {
         res.status(400).json({ error: 'Missing query parameter' })
         return
     }
-    if(!type) {
+    if(!type || typeof type !== 'string') {
         res.status(400).json({ error: 'Missing type parameter' })
         return
     }
