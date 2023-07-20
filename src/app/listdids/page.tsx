@@ -66,11 +66,11 @@ export default function ListDID() {
         const setRequest = async () => {
             const request: HTTPRequest = {
                 url: new URL('http://localhost:3000/api/dids'),
-                method: 'POST',
+                method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json',
                 } as HeadersInit),
-                body: {
+                params: {
                     "query": "test:*",
                     "type": DIDType.DATASET
                 },
