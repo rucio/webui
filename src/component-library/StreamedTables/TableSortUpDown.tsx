@@ -13,7 +13,7 @@ export function TableSortUpDown(
         nocollapse?: boolean
     }
 ): JSX.Element {
-    const { name, column, element, stack, ...otherprops } = props
+    const { name, column, element, stack, nocollapse, ...otherprops } = props
     const { className, ...otherdivprops } = otherprops
     type updown = "null" | "desc" | "asc"
     const [state, setState] = useState<updown>("null")
