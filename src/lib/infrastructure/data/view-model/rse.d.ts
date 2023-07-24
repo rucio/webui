@@ -1,4 +1,6 @@
 import { DateISO } from "@/lib/core/entity/rucio"
+import { BaseViewModel } from "@/lib/sdk/view-models"
+import { RSE } from "@/lib/core/entity/rucio"
 
 export type RSEProtocol = {
     rseid: string,
@@ -28,3 +30,5 @@ export type RSEAttribute = {
     key: string,
     value: string| DateISO | number | boolean | null,
 }
+
+export interface RSEViewModel extends RSE, BaseViewModel {}

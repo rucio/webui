@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { HTTPRequest } from "@/lib/sdk/http";
 
-export default function PageRule() {
+export default function PageRule({ params }: { params: { id: string } }) {
     const comDOM = useComDOM<RulePageLockEntry>(
         "rule-page-lock-query",
         [],
@@ -17,7 +17,7 @@ export default function PageRule() {
     )
     const [meta, setMeta] = useState<RuleMeta>({} as RuleMeta)
     useEffect(() => {
-        setMeta(createRuleMeta())
+        setMeta({...createRuleMeta(), id: params.id})
     }, [])
     useEffect(() => {
         const runQuery = async () => {
