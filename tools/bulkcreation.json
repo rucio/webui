@@ -1,0 +1,69 @@
+{
+    "contents": [
+        {
+            "name": "auth",
+            "contents": []
+        },
+        {
+            "name": "rucio",
+            "contents": [
+                {
+                    "name": "dashboard",
+                    "contents": []
+                },
+                {
+                    "name": "rse",
+                    "contents": [
+                        {
+                            "name": "list",
+                            "contents": []
+                        },
+                        {
+                            "name": "page",
+                            "contents": []
+                        }
+                    ]
+                },
+                {
+                    "name": "did",
+                    "contents": [
+                        {
+                            "name": "list",
+                            "contents": []
+                        },
+                        {
+                            "name": "page",
+                            "contents": []
+                        }
+                    ]
+                },
+                {
+                    "name": "subscription",
+                    "contents": [
+                        {
+                            "name": "list",
+                            "contents": []
+                        },
+                        {
+                            "name": "page",
+                            "contents": []
+                        }
+                    ]
+                },
+                {
+                    "name": "rule",
+                    "contents": [
+                        {
+                            "name": "list",
+                            "contents": []
+                        },
+                        {
+                            "name": "page",
+                            "contents": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
