@@ -77,6 +77,7 @@ export const Login = ({
                 "rounded p-4 flex flex-col justify-center space-y-2",
                 "border dark:border-2",
                 "border-gray-300 dark:border-white",
+                "bg-white dark:bg-gray-800",
             )}
             id="root"
         >
@@ -115,7 +116,7 @@ export const Login = ({
                 } />
             </Collapsible>
             <div className="text-center dark:text-white">
-                <H1>Rucio Login</H1>
+                <H1 className="mt-4 mb-2">Rucio Login</H1>
             </div>
 
             <form

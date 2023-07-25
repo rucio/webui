@@ -52,6 +52,7 @@ export const Tabs: React.FC<JSX.IntrinsicElements["div"] & {
                     "flex flex-col sm:flex-row",
                     "list-none font-bold",
                     "bg-white dark:bg-gray-900",
+                    "border-0 dark:border-2 dark:rounded-md dark:bg-clip-content",
                     className ?? "",
                 )}
                 role="tablist"
@@ -65,7 +66,8 @@ export const Tabs: React.FC<JSX.IntrinsicElements["div"] & {
                             className={twMerge(
                                 "flex-1 p-4 hover:cursor-pointer",
                                 "border-b-4 border-blue-500",
-                                "text-blue-500 hover:bg-gray-100 dark:hover:bg-transparent"
+                                "text-blue-500 hover:bg-gray-100 dark:hover:bg-transparent",
+                                "dark:rounded-b-sm"
                             )}
                             key={index.toString()} // required by react
                             role="tab"
