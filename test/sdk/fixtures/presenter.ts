@@ -7,10 +7,10 @@ export class TestPresenter extends BaseStreamingPresenter<
         BaseErrorResponseModel,
         ViewModel
     > {
-        streamErrorModelToViewModel(error: BaseErrorResponseModel, streamElement: string): ViewModel {
+        streamErrorModelToViewModel(error: BaseErrorResponseModel): ViewModel {
             const viewModel: ViewModel = {
                 status: 'error',
-                title: 'failed: ' + error.message + ' for stream element: ' + streamElement,
+                title: 'failed: ' + error.message,
             }
             return viewModel
         }

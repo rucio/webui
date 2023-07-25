@@ -20,7 +20,7 @@ export default class ListSubscriptionsPresenter extends BaseStreamingPresenter<L
         return viewModel;
     }
 
-    streamErrorModelToViewModel(error: ListSubscriptionsError, streamElement: string): SubscriptionViewModel {
+    streamErrorModelToViewModel(error: ListSubscriptionsError): SubscriptionViewModel {
         const viewModel: SubscriptionViewModel = getEmptySubscriptionViewModel();
         viewModel.message = error.message;
         viewModel.status = 'error';

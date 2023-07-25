@@ -124,6 +124,6 @@ describe("Stream Error Handling", () => {
         await done
         expect(receivedData.length).toBe(3)
         expect(receivedData[2].status).toBe('error')
-        expect(receivedData[2].title).toBe('failed: Failed to process data for stream element: Presenter')
+        expect(receivedData[2].title).toBe('failed: Failed to process data')
     })
 });
