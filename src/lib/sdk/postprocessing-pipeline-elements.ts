@@ -21,20 +21,35 @@ export abstract class BasePostProcessingPipelineElement<TRequestModel, TResponse
     abstract makeGatewayRequest(requestModel: TRequestModel, responseModel: TResponseModel): Promise<TDTO>
     
     /**
-     * Validate the DTO returned by the gateway.
-     * @param dto The DTO returned by the gateway.
-     * @returns An object that contains the status of the DTO and the DTO itself or an error model.
-     */
-    abstract validateDTO(dto: TDTO): {
-        status: 'success' | 'error' | 'critical'
-        data: TDTO | TErrorModel
-    }
-    
-    /**
      * Handle a gateway error by converting it to an error model.
      * @param error The DTO returned by the gateway.
      */
     abstract handleGatewayError(error: TDTO): TErrorModel
+
+    /**
+     * Processes the response and DTO returned by the gateway.
+     * @param dto The DTO returned by the gateway.
+     * @returns The ResponseModel or ErrorModel returned, based on processing of the DTO.
+     */
+    processGatewayResponse(responseModel: TResponseModel, dto: TDTO): TResponseModel | TErrorModel {
+        if (dto.status === 'success') {
+            return responseModel
+        }
+        const commonError: BaseErrorResponseModel | undefined = handleCommonGatewayErrors<TDTO>(dto)
+        if(commonError) {
+            return commonError as TErrorModel
+        }
+
+        const errorModel: TErrorModel = this.handleGatewayError(dto)
+        if(errorModel) {
+            return errorModel
+        }
+        return {
+            status: 'error',
+            message: 'Unknown Error in pipeline element',
+        } as TErrorModel
+        
+    }
 
     /**
      * Modifies the response model of the use case with the data returned by the gateway.
@@ -42,18 +57,18 @@ export abstract class BasePostProcessingPipelineElement<TRequestModel, TResponse
      * @param dto The valid DTO returned by the gateway.
      * @returns The transformed response model.
      */
-    abstract transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel
+    abstract transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel | TErrorModel
 
-    async execute(requestModel: TRequestModel, responseModel: TResponseModel): Promise<TResponseModel | TErrorModel> {
+    async execute(requestModel: TRequestModel, responseModel: TResponseModel | TErrorModel): Promise<TResponseModel | TErrorModel> {
+        if(responseModel.status === 'error') {
+            return responseModel as TErrorModel
+        }
+        responseModel = responseModel as TResponseModel
         const dto = await this.makeGatewayRequest(requestModel, responseModel)
-        if (dto.status === 'error') {
-            return this.handleGatewayError(dto)
+        const response: TResponseModel | TErrorModel = this.processGatewayResponse(responseModel, dto)
+        if(response.status === 'error') {
+            return response as TErrorModel
         }
-        const { status, data } = this.validateDTO(dto)
-        if(status === 'error') {
-            return data as TErrorModel
-        }
-
         const transformedResponseModel = this.transformResponseModel(responseModel, dto)
         return transformedResponseModel
     }
