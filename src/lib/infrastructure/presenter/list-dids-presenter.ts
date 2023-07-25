@@ -30,7 +30,7 @@ export default class ListDIDsPresenter extends BaseStreamingPresenter<ListDIDsRe
         return viewModel
     }
 
-    streamErrorModelToViewModel(error: ListDIDsError, streamElement: string): ListDIDsViewModel {
+    streamErrorModelToViewModel(error: ListDIDsError): ListDIDsViewModel {
         return {
             status: 'error',
             message: error.message,

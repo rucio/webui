@@ -157,24 +157,7 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
             requestModel: requestModel,
             responseModel: response,
         })
-        // try {
-        //     if (dto.status === 'error') {
-        //         const errorModel: TErrorModel = this.handleGatewayError(dto)
-        //         this.emit('error', errorModel)
-        //         callback()
-        //     }
-        //     const { status, data } = this.validateDTO(dto)
-        //     if(status === 'error') {
-        //         this.emit('error', data)
-        //         callback(data as Error)
-        //     }
-        //     const transformedResponseModel = this.transformResponseModel(responseModel, dto)
-        //     callback(undefined, {
-        //         requestModel: requestModel,
-        //         responseModel: transformedResponseModel
-        //     })
         } catch (error: Error | any) {
-            // this.emit('Unknown error with Gateway Request: ', error)
             const errorModel: TErrorModel = {
                 status: 'error',
                 message: `Unknown Error in pipeline element ${this.constructor.name}`,

@@ -123,7 +123,17 @@ describe("Post Processing Streaming Pipeline Error Handling", () => {
         })
 
         await done
-        console.log(receivedData)        
+        console.log(receivedData)
+        expect (receivedData).toEqual([
+            {
+                status: 'error',
+                title: 'failed: Failed to authenticate user',
+            },
+            {
+                status: 'error',
+                title: 'failed: Failed to authenticate user'
+            },
+        ])       
 
     })
 })

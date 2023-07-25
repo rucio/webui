@@ -124,7 +124,7 @@ export abstract class BaseStreamingPresenter<
      * Convert an error that occurred for a given stream element to a view model.
      * @param error An ErrorResponseModel that represents the error that occurred for a given stream element.
      */
-    abstract streamErrorModelToViewModel(error: TErrorModel, streamElement: string): TStreamViewModel
+    abstract streamErrorModelToViewModel(error: TErrorModel): TStreamViewModel
     
     /**
      * Presents a stream of response models.
@@ -156,12 +156,15 @@ export abstract class BaseStreamingPresenter<
                 this.streamResponseModelToViewModel(responseModel)
                 callback(null, JSON.stringify(viewModel))
             } else {
-                const viewModel = this.streamErrorModelToViewModel(responseModel as unknown as TErrorModel, "Presenter")
+                const viewModel = this.streamErrorModelToViewModel(responseModel as unknown as TErrorModel)
                 callback(null, JSON.stringify(viewModel))
             }
         } catch (error) {
             // If an error occurs while processing response or error models, we need to handle it here.
-            callback(error as Error)      
+            callback(null, {
+                status: 'error',
+                message: `The presenter returned with an error while in pipeline element ${this.constructor.name}. Error: ${error}}`,
+            } as TStreamViewModel)      
         }
     }
 

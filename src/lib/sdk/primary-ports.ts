@@ -83,5 +83,5 @@ export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseMode
         responseModel: TResponseModel,
     ): TStreamViewModel
 
-    streamErrorModelToViewModel(error: TErrorModel, streamElement: string): TStreamViewModel
+    streamErrorModelToViewModel(error: TErrorModel): TStreamViewModel
 }
