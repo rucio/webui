@@ -1,6 +1,5 @@
 import { ListSubscriptionsDTO, SubscriptionDTO } from "@/lib/core/dto/subscription-dto";
 import SubscriptionGatewayOutputPort from "@/lib/core/port/secondary/subscription-gateway-output-port";
-import { BaseHTTPError } from "@/lib/sdk/http";
 import { injectable } from "inversify";
 import GetSubscriptionEndpoint from "./endpoints/get-subscription-endpoint";
 import ListSubscriptionsEndpoint from "./endpoints/list-subscriptions-endpoint";
@@ -26,8 +25,9 @@ export default class SubscriptionGateway implements SubscriptionGatewayOutputPor
         } catch(error) {
             const errorDTO: ListSubscriptionsDTO = {
                 status: 'error',
-                error: error as BaseHTTPError,
-                message: error?.toString(),
+                errorName: 'Exception occurred while fetching subscriptions',
+                errorType: 'gateway_endpoint_error',
+                errorMessage: error?.toString(),
             }
             return Promise.resolve(errorDTO)
         }

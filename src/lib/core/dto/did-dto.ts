@@ -16,7 +16,7 @@ export type ListDIDsStreamData = string
  */
 export interface DIDDTO extends DID, BaseDTO {
     status: 'success' | 'error'
-    message?: string
+    errorMessage?: string
     account: string
     open: boolean
     monotonic: boolean

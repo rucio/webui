@@ -7,6 +7,14 @@ export class TestPresenter extends BaseStreamingPresenter<
         BaseErrorResponseModel,
         ViewModel
     > {
+        streamErrorModelToViewModel(error: BaseErrorResponseModel, streamElement: string): ViewModel {
+            const viewModel: ViewModel = {
+                status: 'error',
+                title: 'failed: ' + error.message + ' for stream element: ' + streamElement,
+            }
+            return viewModel
+        }
+        
         constructor(response: any) {
             super(response)
         }
@@ -15,14 +23,14 @@ export class TestPresenter extends BaseStreamingPresenter<
             viewModel: ViewModel
         } {
             return {
-                status: 200,
+                status: errorModel.code || 500,
                 viewModel: {
                     status: 'error',
                     title: 'failed: ' + errorModel.message,
                 },
             }
         }
-        convertResponseModelToViewModel(
+        streamResponseModelToViewModel(
             responseModel: TResponseModel,
         ): ViewModel {
             return {

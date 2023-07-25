@@ -1,5 +1,4 @@
-import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto'
-import { BaseStreamingPresenter } from '@/lib/sdk/presenter'
+import { BaseStreamableDTO } from '@/lib/sdk/dto'
 import { BaseMultiCallStreamableUseCase } from '@/lib/sdk/usecase'
 import {
     AuthenticatedRequestModel,
@@ -9,17 +8,17 @@ import {
 import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements'
 import { Readable, Transform, PassThrough } from 'stream'
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
-import { RequestModel, StreamDTO, TResponseModel } from './models'
+import { TRequestModel as TRequestModel, StreamDTO, TResponseModel } from '../fixtures/models'
 import {
     FirstPipelineElement,
     SecondPipelineElement,
-} from './pipeline-elements'
-import { TestPresenter } from './presenter'
+} from '../fixtures/pipeline-elements'
+import { TestPresenter } from '../fixtures/presenter'
 import { BaseViewModel } from '@/lib/sdk/view-models'
 
 describe('BaseMultiCallStreamableUseCase', () => {
     class TestMultiCallPipelineUseCase extends BaseMultiCallStreamableUseCase<
-        RequestModel,
+        TRequestModel,
         TResponseModel,
         BaseErrorResponseModel,
         BaseStreamableDTO,
@@ -36,7 +35,7 @@ describe('BaseMultiCallStreamableUseCase', () => {
         }
 
         validateRequestModel(
-            requestModel: RequestModel,
+            requestModel: TRequestModel,
         ): BaseErrorResponseModel | undefined {
             return undefined
         }
@@ -92,6 +91,7 @@ describe('BaseMultiCallStreamableUseCase', () => {
         } {
             const isValid = responseModel.status === 'success'
             const errorModel: BaseErrorResponseModel = {
+                code: 400,
                 name: 'Validation Error',
                 status: 'error',
                 message: 'responseModel is not valid',
@@ -109,7 +109,7 @@ describe('BaseMultiCallStreamableUseCase', () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse()
         const useCase = new TestMultiCallPipelineUseCase(res)
 
-        const requestModel: RequestModel = {
+        const requestModel: TRequestModel = {
             rucioAuthToken: 'does-not-matter',
         }
 

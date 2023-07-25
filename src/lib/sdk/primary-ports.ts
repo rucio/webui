@@ -69,7 +69,8 @@ export interface BaseOutputPort<TResponseModel, TErrorModel> {
  */
 export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TStreamViewModel extends BaseViewModel> extends Transform{
     response: TWebResponse
-    presentStream(stream: PassThrough): void
+    
+    setupStream(stream: PassThrough): void
     
     presentError(errorModel: TErrorModel): void
     
@@ -78,9 +79,9 @@ export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseMode
         viewModel: TStreamViewModel
     }
     
-    convertResponseModelToViewModel(
+    streamResponseModelToViewModel(
         responseModel: TResponseModel,
     ): TStreamViewModel
 
-    handleStreamError(error: TErrorModel): void
+    streamErrorModelToViewModel(error: TErrorModel, streamElement: string): TStreamViewModel
 }

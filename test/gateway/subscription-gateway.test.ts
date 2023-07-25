@@ -68,7 +68,7 @@ describe('SubscriptionGateway', () => {
         const subscriptionGateway: SubscriptionGatewayOutputPort = appContainer.get<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION);
         const subscription = await subscriptionGateway.get(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'ddmadmin', '*Functional Test');
         expect(subscription.id).toEqual('bccaabb5877a443abd6c56f3271557df');
-        expect(subscription.name).toEqual('*Functional Test');
+        expect(subscription.errorName).toEqual('*Functional Test');
         expect(subscription.state).toEqual(SubscriptionState.UPDATED);
         expect(subscription.account).toEqual('ddmadmin');
         expect(subscription.lifetime).toEqual('Sun, 25 May 2042 15:41:54 UTC');

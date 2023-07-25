@@ -96,10 +96,15 @@ export class NewlineDelimittedDataParser extends Transform {
      */
     _flush(callback: TransformCallback) {
         const objects = this.readBuffer().split('\n')
-        for (const object of objects) {
-            this.pushToNextStream(object)
+        try{
+            for (const object of objects) {
+                this.pushToNextStream(object)
+            }
+            callback()
+        } catch(error) {
+            this.emit('error', error)
+            callback()
         }
-        callback()
     }
 }
 

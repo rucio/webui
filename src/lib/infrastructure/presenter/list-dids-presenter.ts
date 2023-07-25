@@ -16,8 +16,8 @@ export default class ListDIDsPresenter extends BaseStreamingPresenter<ListDIDsRe
         this.response = response
     }
 
-    convertResponseModelToViewModel(
-        responseModel: ListDIDsResponse,
+    streamResponseModelToViewModel(
+    responseModel: ListDIDsResponse,
     ): ListDIDsViewModel {
         const viewModel: ListDIDsViewModel = {
             status: 'success',
@@ -28,6 +28,18 @@ export default class ListDIDsPresenter extends BaseStreamingPresenter<ListDIDsRe
             length: responseModel.length,
         }
         return viewModel
+    }
+
+    streamErrorModelToViewModel(error: ListDIDsError, streamElement: string): ListDIDsViewModel {
+        return {
+            status: 'error',
+            message: error.message,
+            name: error.name,
+            bytes: 0,
+            length: 0,
+            scope: '',
+            did_type: DIDType.UNKNOWN,
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ import { RequestInit, Headers } from 'node-fetch'
 import { Agent } from 'https'
 /**
  * @description Represents the headers of a HTTP request
+ * @deprecated Use {@link HTTPRequest} from sdk instead.
  */
 export type HTTPRequest = {
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -17,6 +18,7 @@ export type HTTPRequest = {
 * @param {HTTPRequest} request - The HTTP request to prepare arguments for.
 * @param {boolean} disableSSL - A boolean value that indicates whether SSL should be disabled.
 * @returns {{ url: string | URL; requestArgs: RequestInit }} - An object containing the URL and request arguments.
+* @deprecated Use {@link prepareRequestArgs} from sdk instead.
 */
 export function prepareRequestArgs(request: HTTPRequest, disableSSL: boolean = false): { url: string | URL; requestArgs: RequestInit } {
     if (request.params) {

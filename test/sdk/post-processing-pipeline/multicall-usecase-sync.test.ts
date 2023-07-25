@@ -7,9 +7,11 @@ import {
     BaseResponseModel,
 } from '@/lib/sdk/usecase-models'
 import { BaseViewModel } from '@/lib/sdk/view-models'
+import { NextApiResponse } from 'next'
 import { createHttpMocks } from 'test/fixtures/http-fixtures'
 
 type RequestModel = {}
+type DTO = BaseDTO & { message: string }
 interface TResponseModel extends BaseResponseModel {
     message: string
 }
@@ -18,32 +20,32 @@ class FirstPipelineElement extends BasePostProcessingPipelineElement<
     RequestModel,
     TResponseModel,
     BaseErrorResponseModel,
-    BaseDTO
+    DTO
 > {
     makeGatewayRequest(
         requestModel: RequestModel,
         responseModel: TResponseModel,
-    ): Promise<BaseDTO> {
+    ): Promise<DTO> {
         return Promise.resolve({
             status: 'success',
             message: '_pipeline_element_1',
         })
     }
-    validateDTO(dto: BaseDTO): {
+    validateDTO(dto: DTO): {
         status: 'error' | 'success' | 'critical'
-        data: BaseErrorResponseModel | BaseDTO
+        data: BaseErrorResponseModel | DTO
     } {
         return {
             status: 'success',
             data: dto,
         }
     }
-    handleGatewayError(error: BaseDTO): BaseErrorResponseModel {
+    handleGatewayError(error: DTO): BaseErrorResponseModel {
         throw new Error('Method not implemented.')
     }
     transformResponseModel(
         responseModel: TResponseModel,
-        dto: BaseDTO,
+        dto: DTO,
     ): TResponseModel {
         responseModel.message = responseModel.message + dto.message + '_transformed'
         return responseModel
@@ -68,7 +70,7 @@ class TestMultiCallUseCase extends BasePostProcessingPipelineUseCase<
     RequestModel,
     TResponseModel,
     BaseErrorResponseModel,
-    BaseDTO> {
+    BaseDTO & {message: string}> {
 
     constructor(presenter: BasePresenter<TResponseModel, BaseErrorResponseModel, BaseViewModel>) {
         const firstPipelineElement = new FirstPipelineElement()
@@ -84,7 +86,7 @@ class TestMultiCallUseCase extends BasePostProcessingPipelineUseCase<
         return undefined
     }
 
-    makeGatewayRequest(requestModel: RequestModel): Promise<BaseDTO> {
+    makeGatewayRequest(requestModel: RequestModel): Promise<DTO> {
         return Promise.resolve({
             status: 'success',
             message: 'root_element',
@@ -94,10 +96,10 @@ class TestMultiCallUseCase extends BasePostProcessingPipelineUseCase<
     handleGatewayError(error: BaseDTO): BaseErrorResponseModel {
         throw new Error('Method not implemented.')
     }
-    processDTO(dto: BaseDTO): { data: TResponseModel | BaseErrorResponseModel; status: 'success' | 'error' } {
+    processDTO(dto: DTO): { data: TResponseModel | BaseErrorResponseModel; status: 'success' | 'error' } {
         const responseModel: TResponseModel = {
             status: 'success',
-            message: dto.message? dto.message : '',
+            message: dto.message,
         }
         return {
             data: responseModel,
@@ -109,7 +111,7 @@ class TestMultiCallUseCase extends BasePostProcessingPipelineUseCase<
 describe('BaseMultiCallStreamableUseCase', () => {
     it('Should pass', async() => {
         const { req, res, session } = await createHttpMocks()
-        const useCase = new TestMultiCallUseCase(new TestPresenter(res))
+        const useCase = new TestMultiCallUseCase(new TestPresenter(res as unknown as NextApiResponse))
         await useCase.execute({})
         const response = res._getJSONData()
         expect(response).toEqual({

@@ -4,6 +4,7 @@ import { NextApiResponse } from "next";
 import { getEmptySubscriptionViewModel, SubscriptionViewModel } from "../data/view-model/subscriptions";
 
 export default class ListSubscriptionsPresenter extends BaseStreamingPresenter<ListSubscriptionsResponse, ListSubscriptionsError, SubscriptionViewModel> {
+    
     response: NextApiResponse<any>;
 
     constructor(response: NextApiResponse) {
@@ -11,7 +12,7 @@ export default class ListSubscriptionsPresenter extends BaseStreamingPresenter<L
         this.response = response;
     }
     
-    convertResponseModelToViewModel(responseModel: ListSubscriptionsResponse): SubscriptionViewModel {
+    streamResponseModelToViewModel(responseModel: ListSubscriptionsResponse): SubscriptionViewModel {
         const viewModel: SubscriptionViewModel = {
             ...responseModel,
             replication_rules: JSON.stringify(responseModel.replication_rules),
@@ -19,6 +20,13 @@ export default class ListSubscriptionsPresenter extends BaseStreamingPresenter<L
         return viewModel;
     }
 
+    streamErrorModelToViewModel(error: ListSubscriptionsError, streamElement: string): SubscriptionViewModel {
+        const viewModel: SubscriptionViewModel = getEmptySubscriptionViewModel();
+        viewModel.message = error.message;
+        viewModel.status = 'error';
+        return viewModel;
+    }
+    
     convertErrorModelToViewModel(errorModel: ListSubscriptionsError): { status: number; viewModel: SubscriptionViewModel; } {
         const viewModel: SubscriptionViewModel = getEmptySubscriptionViewModel();
         const error = errorModel.error;

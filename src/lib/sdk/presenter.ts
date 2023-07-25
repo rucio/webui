@@ -5,7 +5,7 @@ import { NextApiResponse } from 'next'
 import { IronSession } from 'iron-session'
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models'
 import { BaseViewModel } from './view-models'
-
+import { pipeline } from 'stream'
 /**
  * A base class for presenters.
  * @typeparam TResponseModel The type of the response model to present.
@@ -116,23 +116,30 @@ export abstract class BaseStreamingPresenter<
      * @remarks This method is called for each response model in a stream.
      * @remarks This method is called by the `_transform` method.
      */
-    abstract convertResponseModelToViewModel(
+    abstract streamResponseModelToViewModel(
         responseModel: TResponseModel,
     ): TStreamViewModel
 
-    handleStreamError(error: TErrorModel){
-        this.emit('error', error)
-        throw error
-    }
+    /**
+     * Convert an error that occurred for a given stream element to a view model.
+     * @param error An ErrorResponseModel that represents the error that occurred for a given stream element.
+     */
+    abstract streamErrorModelToViewModel(error: TErrorModel, streamElement: string): TStreamViewModel
+    
     /**
      * Presents a stream of response models.
      * @param stream The stream of response models to present.
      * @returns A promise that resolves when the stream has been fully presented.
      */
-    presentStream(stream: TWebResponse) {
-        stream.on('error', (error) => { this.handleStreamError(error as TErrorModel) })
-        .pipe(this).on('error', (error) => { this.handleStreamError(error as TErrorModel) })
-        .pipe(this.response)
+    setupStream(stream: TWebResponse) {
+        // pipeline(stream as Transform, this, (error) => {
+        //     throw new Error("Not Implemented. Expose error as a ViewModel instead.")
+        // })
+
+        // pipeline(this, this.response, (error) => {
+        //     throw new Error("Not Implemented. Expose error as a ViewModel instead.")
+        // })
+        stream.pipe(this).pipe(this.response)
     }
 
     _transform(
@@ -142,13 +149,19 @@ export abstract class BaseStreamingPresenter<
     ): void {
         try {
             if(typeof chunk === 'string') chunk = JSON.parse(chunk)
-            const responseModel: TResponseModel = chunk
-            const viewModel =
-                this.convertResponseModelToViewModel(responseModel)
-            callback(undefined, JSON.stringify(viewModel))
+            
+            const responseModel: TResponseModel | TErrorModel = chunk
+            if(responseModel.status === 'success'){
+                const viewModel =
+                this.streamResponseModelToViewModel(responseModel)
+                callback(null, JSON.stringify(viewModel))
+            } else {
+                const viewModel = this.streamErrorModelToViewModel(responseModel as unknown as TErrorModel, "Presenter")
+                callback(null, JSON.stringify(viewModel))
+            }
         } catch (error) {
-            this.emit('error', error)
-            callback(error as Error)
+            // If an error occurs while processing response or error models, we need to handle it here.
+            callback(error as Error)      
         }
     }
 

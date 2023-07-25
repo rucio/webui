@@ -8,6 +8,7 @@ import { BaseMultiCallStreamableUseCase, BaseStreamingUseCase } from "@/lib/sdk/
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
 import GetDIDsPipelineElement from "./pipeline-element-get-did";
+import { DID } from "../../entity/rucio";
 
 @injectable()
 class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDDTO, ListDIDsViewModel> implements ListDIDsInputPort {
@@ -45,7 +46,7 @@ class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, Li
 
     handleGatewayError(error: ListDIDDTO): ListDIDsError {
         let errorType = 'Unknown Error'
-        let message = error.error?.errorMessage
+        let message = error.errorMessage
         if(message === 'Invalid Auth Token') {
             errorType = 'Invalid Request'
         }
@@ -54,11 +55,24 @@ class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, Li
         }
         return {
             error: errorType,
-            message: `${error.error}: ${error.message}`,
+            message: `${error.errorCode}: ${error.errorMessage}`,
         } as ListDIDsError
     }
 
-    processStreamedData(dto: DIDDTO): { data: ListDIDsResponse | ListDIDsError; status: "success" | "error"; } {
+    processStreamedData(dto: DID): { data: ListDIDsResponse | ListDIDsError; status: "success" | "error"; } {
+        const errorModel: ListDIDsError = {
+            status: 'error',
+            code: 400,
+            error: 'Invalid DID Query',
+            message: 'Gateway recieved an invalid (undefined) DID for the query',
+            name: 'Gateway Error: Undefined DID in stream',
+        }
+        if(dto.name === undefined) {
+            return {
+                status: 'error',
+                data: errorModel,
+            }
+        }
         const responseModel: ListDIDsResponse = {
             status: 'success',
             name: dto.name,
@@ -74,7 +88,7 @@ class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, Li
     }
 
     handleStreamError(error: ListDIDsError): void {
-        this.emit('error', error)
+        console.log(error)
     }
 
     validateFinalResponseModel(responseModel: ListDIDsResponse): { isValid: boolean; errorModel?: ListDIDsError | undefined; } {

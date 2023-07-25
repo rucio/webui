@@ -121,8 +121,12 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
             this.push(dto);
             callback();
         } catch (error) {
-            this.emit('error', error);
-            callback();
+            const dto: TDTO = {
+                status: 'error',
+                errorType: 'gateway_endpoint_error',
+                errorMessage: `${error}}`,
+            } as TDTO;
+            callback(null, dto);
         }
     }
 }
@@ -210,7 +214,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             }
             return {
                 status: 'error',
-                message: `An error occurred while fetching ${this.request.url}`,
+                errorMessage: `An error occurred while fetching ${this.request.url}`,
             } as TDTO;
         } else {
             const data = await response.json();
@@ -221,29 +225,36 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
 
 /**
 * Reports any common errors that occurred during the Gateway request.
+* Handles HTTP status codes 400, 401, and 500.
 */
 async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCode: number, response: Response): Promise<TDTO | undefined> {
     const dto: TDTO = {
         status: 'error',
-        error: BaseHttpErrorTypes.UNKNOWN_ERROR,
+        errorName: BaseHttpErrorTypes.UNKNOWN_ERROR.errorName,
+        errorCode: statusCode,
+        errorType: 'gateway_endpoint_error',
+        errorMessage: `An error occurred while fetching ${response.url}`,
     } as TDTO;
 
-    let error = ''
     try {
         const errorDetails: string = await response.json()
-        dto.message = errorDetails
+        dto.errorMessage = errorDetails
     } catch(error : any) {
-
+        // do nothing
     }
     switch(statusCode) {
         case 400:
-            dto.error = BaseHttpErrorTypes.NOT_FOUND;
+            dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
+            dto.errorMessage = `The requested resource was not found at ${response.url}`
             break;
         case 401:
-            dto.error = BaseHttpErrorTypes.INVALID_AUTH_TOKEN;
+            dto.errorName = BaseHttpErrorTypes.INVALID_AUTH_TOKEN.errorName;
+            dto.errorMessage = `The provided authentication token is invalid or has expired`;
             break;
         case 500:
-            dto.error = BaseHttpErrorTypes.UNKNOWN_ERROR;    
+            dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName;    
+            dto.errorMessage = `An unknown server side error occurred while fetching ${response.url}`;
+            break;
     }
     return dto;
 }

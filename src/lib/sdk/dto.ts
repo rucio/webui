@@ -10,19 +10,25 @@ export type BaseDTO = {
      * A string literal type that indicates the status of the API response. It can be either `'success'` or `'error'`.
      */
     status: 'success' | 'error';
-    /**
-     * An optional string that provides additional information about the API response.
-     */
-    message?: string;
-    /**
-     * An optional string that provides the type of the error that occurred.
-     */
-    type?: string;
 
     /**
-     * An optional property that can be used to represent an error response from an API endpoint. It can be either a `BaseHttpErrorTypes` enum value, a string, or `null`.
+     * An optional number that indicates the error code. Usually contains an HTTP status code.
      */
-    error?: BaseHTTPError | null;
+    errorCode?: number;
+    
+    /**
+     * An optional string that provides additional information about the API response. Usually contains the error message.
+     */
+    errorMessage?: string;
+    /**
+     * An optional string that provides the name of the error that occurred.
+     */
+    errorName?: string;
+
+    /**
+     * An optional string that provides the type of the error that occurred. Usually contains the name and src of the error
+     */
+    errorType?: 'gateway_endpoint_error' | string;
 }
 
 /**

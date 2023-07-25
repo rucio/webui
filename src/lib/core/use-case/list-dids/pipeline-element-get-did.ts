@@ -1,7 +1,5 @@
-import { parseDIDString } from "@/lib/common/did-utils";
 import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { inject } from "inversify";
 import { DIDDTO } from "../../dto/did-dto";
 import DIDGatewayOutputPort from "../../port/secondary/did-gateway-output-port";
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../../usecase-models/list-dids-usecase-models";
@@ -17,11 +15,8 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
         } catch (error: any) {
             const errorDTO: DIDDTO = {
                 status: 'error',
-                error: {
-                    errorMessage: 'Invalid Parameters',
-                    errorCode: 400
-                },
-                message: (error as Error).message,
+                errorName: 'Unknown Error',
+                errorMessage: (error as Error).message,
                 name: requestModel.query,
                 scope: requestModel.query,
                 did_type: requestModel.type,
@@ -38,7 +33,7 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
 
     handleGatewayError(dto: DIDDTO): ListDIDsError {
         let error: 'Unknown Error' | 'Invalid DID Query' | 'Invalid Request' = 'Unknown Error';
-        switch(dto.error?.errorMessage) {
+        switch(dto.errorMessage) {
             case 'Invalid Auth Token':
                 error = 'Invalid Request';
                 break;
@@ -63,7 +58,8 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
             status: 'error',
             name: dto.name,
             error: error,
-            message: dto.error + ': ' + dto.message + ' for DID ' + dto.scope + ':' + dto.name,
+            code: dto.errorCode? dto.errorCode : 400,
+            message: dto.errorName + ': ' + dto.errorMessage + ' for DID ' + dto.scope + ':' + dto.name,
         }
         return errorModel;
     }
