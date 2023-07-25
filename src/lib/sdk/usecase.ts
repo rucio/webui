@@ -437,19 +437,19 @@ export abstract class BaseMultiCallStreamableUseCase<
         for (let i = 1; i < pipelineElements.length; i++) {
             const pipelineElement = pipelineElements[i]
             const prevPipelineElement = pipelineElements[i - 1]
-            // prevPipelineElement
-            //     .on('error', error =>
-            //         this.handleStreamError(error as TErrorModel),
-            //     )
-            //     .on('end', () => {
-            //         console.log("********** Pipeline element ended **********");
-            //     })
-            //     .pipe(pipelineElement)
-            pipeline(prevPipelineElement, pipelineElement, (error) => {
-                console.log("********** Pipeline element ERRRORRROROROROROROROR **********");
-                console.log(`${prevPipelineElement.constructor.name} -> ${pipelineElement.constructor.name} error: ${error?.message}`)
-                console.log('---------------------------------------------------------------')
-            })
+            prevPipelineElement
+                // .on('error', error =>
+                //     this.handleStreamError(error as TErrorModel),
+                // )
+                .on('end', () => {
+                    console.log("********** Pipeline element ended **********");
+                })
+                .pipe(pipelineElement)
+            // pipeline(prevPipelineElement, pipelineElement, (error) => {
+            //     console.log("********** Pipeline element ERRRORRROROROROROROROR **********");
+            //     console.log(`${prevPipelineElement.constructor.name} -> ${pipelineElement.constructor.name} error: ${error?.message}`)
+            //     console.log('---------------------------------------------------------------')
+            // })
         }
         this.presenter.setupStream(this.finalResponseValidationTransform)
     }
@@ -488,6 +488,7 @@ export abstract class BaseMultiCallStreamableUseCase<
             const responseModel = data as TResponseModel
             callback(undefined,
                 {
+                    status: 'success',
                     requestModel: this.requestModel,
                     responseModel: responseModel,
                 },
@@ -495,7 +496,11 @@ export abstract class BaseMultiCallStreamableUseCase<
         } else {
             const errorModel = data as TErrorModel
             // this.emit('error', errorModel)
-            callback(null)
+            callback(null, {
+                status: 'error',
+                requestModel: this.requestModel,
+                errorModel: errorModel,
+            })
         }
     }
 }
@@ -506,13 +511,14 @@ export abstract class BaseMultiCallStreamableUseCase<
  * @param error the DTO returned by the gateway containing the error
  * @returns {@link BaseResponseModel} that represents the generic error
  */
-function handleCommonGatewayErrors<TDTO extends BaseDTO>(error: TDTO): BaseErrorResponseModel | undefined {
+export function handleCommonGatewayErrors<TDTO extends BaseDTO>(error: TDTO): BaseErrorResponseModel | undefined {
     if(!error) {
         return undefined
     }
+
     if(error.errorType !== 'gateway_endpoint_error') {
         return undefined
-    }
+    } 
     
     return {
         status: 'error',

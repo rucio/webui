@@ -1,7 +1,6 @@
 import { BaseStreamableDTO } from '@/lib/sdk/dto'
 import { BaseMultiCallStreamableUseCase } from '@/lib/sdk/usecase'
 import {
-    AuthenticatedRequestModel,
     BaseErrorResponseModel,
     BaseResponseModel,
 } from '@/lib/sdk/usecase-models'
@@ -204,4 +203,5 @@ describe('BaseMultiCallStreamableUseCase', () => {
 
         expect(receivedData).toEqual(['root_element_1', 'root_element_2'])
     })
+    
 })

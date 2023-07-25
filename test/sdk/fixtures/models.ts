@@ -15,3 +15,5 @@ export interface StreamDTO extends BaseDTO {
 export interface ViewModel extends  BaseViewModel {
     title: string
 }
+
+export type TDTO = BaseDTO & {message: string}
