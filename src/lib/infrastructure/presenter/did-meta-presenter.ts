@@ -33,7 +33,7 @@ export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DID
         }
     }
     convertErrorModelToViewModel(errorModel: DIDMetaError): { viewModel: DIDMetaViewModel; status: number; } {
-        const status = 400; // TODO: check error type
+        const status = errorModel.code; // TODO: check error type
         const message = errorModel.message ? errorModel.message.toString() : errorModel.error;
         const viewModel: DIDMetaViewModel = {
             status: 'error',

@@ -433,7 +433,7 @@ export abstract class BaseMultiCallStreamableUseCase<
             ...this.postProcessingPipelineElements,
             this.finalResponseValidationTransform,
         ]
-
+        // TODO: cleanup
         for (let i = 1; i < pipelineElements.length; i++) {
             const pipelineElement = pipelineElements[i]
             const prevPipelineElement = pipelineElements[i - 1]
@@ -441,9 +441,9 @@ export abstract class BaseMultiCallStreamableUseCase<
                 // .on('error', error =>
                 //     this.handleStreamError(error as TErrorModel),
                 // )
-                .on('end', () => {
-                    console.log("********** Pipeline element ended **********");
-                })
+                // .on('end', () => {
+                //     console.log("********** Pipeline element ended **********");
+                // })
                 .pipe(pipelineElement)
             // pipeline(prevPipelineElement, pipelineElement, (error) => {
             //     console.log("********** Pipeline element ERRRORRROROROROROROROR **********");
