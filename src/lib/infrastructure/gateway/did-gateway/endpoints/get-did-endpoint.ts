@@ -39,7 +39,8 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
     async reportErrors(statusCode: number, response: Response): Promise<DIDDTO | undefined> {
         const dto: DIDDTO = {
             status: 'error',
-            error: BaseHttpErrorTypes.UNKNOWN_ERROR,
+            errorCode: statusCode,
+            errorType: 'gateway_endpoint_error',
             name: this.name,
             scope: this.scope,
             did_type: DIDType.UNKNOWN,
@@ -50,26 +51,22 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
             bytes: 0,
             length: 0,
         }
-        let error = {
-            errorMessage: '',
-            errorCode: statusCode
-        }
-        dto.error = error
+
         switch (statusCode) {
             case 400:
-                dto.error.errorMessage = 'Invalid Parameters'
+                dto.errorMessage = 'Invalid Parameters'
                 break;
             case 404:
                 const error = await response.json()
                 if (error.exception === 'DataIdentifierNotFound') {
-                    dto.error.errorMessage = 'Data Identifier Not Found'
+                    dto.errorMessage = 'Data Identifier Not Found'
                 }
                 if (error.exception === 'ScopeNotFound') {
-                    dto.error.errorMessage = 'Scope Not Found'
+                    dto.errorMessage = 'Scope Not Found'
                 }
                 break
             default:
-                dto.error.errorMessage = 'Unknown Error'
+                dto.errorMessage = 'Unknown Error'
                 break
         }
         return dto
@@ -101,7 +98,6 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
 
         const dto: DIDDTO = {
             status: 'success',
-            error: null,
             name: this.name,
             scope: this.scope,
             did_type: did_type,

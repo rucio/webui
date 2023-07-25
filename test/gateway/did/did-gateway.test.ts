@@ -69,7 +69,6 @@ describe('DID Gateway Tests', () => {
         expect(dto.status).toBe('success')
         expect(dto.stream).not.toBeUndefined()
         expect(dto.stream).not.toBeNull()
-        expect(dto.error).not.toBeNull()
         const didStream = dto.stream
 
         if(didStream === null || didStream === undefined){
@@ -124,7 +123,6 @@ describe('DID Gateway Tests', () => {
             'dataset1',
         )
         expect(didDTO.status).toBe('success')
-        expect(didDTO.error).toBeNull()
         expect(didDTO.account).toBe('root')
         expect(didDTO.open).toBe(true)
         expect(didDTO.monotonic).toBe(false)

@@ -1,21 +1,21 @@
 import { BaseDTO } from "@/lib/sdk/dto"
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models"
 import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements"
-import { RequestModel, TResponseModel } from "./models"
+import { TRequestModel, TResponseModel } from "./models"
 
 export class FirstPipelineElement extends BaseStreamingPostProcessingPipelineElement<
-    RequestModel,
+    TRequestModel,
     TResponseModel,
     BaseErrorResponseModel,
     BaseDTO
 > {
     makeGatewayRequest(
-        requestModel: RequestModel,
+        requestModel: TRequestModel,
         responseModel: TResponseModel,
     ): Promise<BaseDTO> {
         const dto: BaseDTO = {
             status: 'success',
-            message: 'pipeline element 1',
+            errorMessage: 'pipeline element 1',
         }
         return Promise.resolve(dto)
     }
@@ -37,7 +37,7 @@ export class FirstPipelineElement extends BaseStreamingPostProcessingPipelineEle
         responseModel: TResponseModel,
         dto: BaseDTO,
     ): TResponseModel {
-        const message = responseModel.message + ' ' + dto.message + ' transformed '
+        const message = responseModel.message + ' ' + dto.errorMessage + ' transformed '
         const transformedResponse: TResponseModel = {
             status: 'success',
             message: message,
@@ -47,18 +47,18 @@ export class FirstPipelineElement extends BaseStreamingPostProcessingPipelineEle
 }
 
 export class SecondPipelineElement extends BaseStreamingPostProcessingPipelineElement<
-    RequestModel,
+    TRequestModel,
     TResponseModel,
     BaseErrorResponseModel,
     BaseDTO
 > {
     makeGatewayRequest(
-        requestModel: RequestModel,
+        requestModel: TRequestModel,
         responseModel: TResponseModel,
     ): Promise<BaseDTO> {
         const dto: BaseDTO = {
             status: 'success',
-            message: 'pipeline element 2',
+            errorMessage: 'pipeline element 2',
         }
         return Promise.resolve(dto)
     }
@@ -80,7 +80,7 @@ export class SecondPipelineElement extends BaseStreamingPostProcessingPipelineEl
         responseModel: TResponseModel,
         dto: BaseDTO,
     ): TResponseModel {
-        const message = responseModel.message + dto.message + ' transformed'
+        const message = responseModel.message + dto.errorMessage + ' transformed'
         const transformedResponse: TResponseModel = {
             status: 'success',
             message: message,

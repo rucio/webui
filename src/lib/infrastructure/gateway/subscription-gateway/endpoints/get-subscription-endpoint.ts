@@ -31,22 +31,26 @@ export default class GetSubscriptionEndpoint extends BaseEndpoint<SubscriptionDT
         this.request = request
         this.initialized = true
     }
-    reportErrors(statusCode: number, response: Response): Promise<SubscriptionDTO | undefined> {
+    async reportErrors(statusCode: number, response: Response): Promise<SubscriptionDTO | undefined> {
         const dto: SubscriptionDTO = getEmptySubscriptionDTO('error')
+        dto.errorCode = statusCode
+        dto.errorType = 'gateway_endpoint_error'
+        let message = ''
+        try {
+            message = await response.json()
+        }catch(e) {
+            // do nothing
+        }
+        
+        dto.errorMessage = message
         switch(statusCode) {
             case 404:
-                dto.error = {
-                    errorMessage: 'Subscription not found',
-                    errorCode: statusCode
-                }
+                dto.errorName = 'Subscription not found'
                 break;
             case 406:
-                dto.error = {
-                    errorMessage: 'Not Acceptable',
-                    errorCode: statusCode
-                }
+                dto.errorName = "Not Acceptable"
             default:
-                dto.error = BaseHttpErrorTypes.UNKNOWN_ERROR
+                dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName
         }
         return Promise.resolve(dto)
     }

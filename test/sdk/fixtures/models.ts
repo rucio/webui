@@ -2,7 +2,7 @@ import { BaseDTO } from "@/lib/sdk/dto"
 import { AuthenticatedRequestModel, BaseResponseModel } from "@/lib/sdk/usecase-models"
 import { BaseViewModel } from "@/lib/sdk/view-models"
 
-export type RequestModel = AuthenticatedRequestModel<{}>
+export type TRequestModel = AuthenticatedRequestModel<{}>
 export interface TResponseModel extends BaseResponseModel {
         message: string
 }

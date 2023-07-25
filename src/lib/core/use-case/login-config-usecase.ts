@@ -50,8 +50,8 @@ class LoginConfigUseCase extends BaseUseCase<void, LoginConfigResponse, LoginCon
             }
             const errorDTO: LoginConfigDTO = {
                 status: 'error',
-                message: (error as Error).message,
-                type: type,
+                errorMessage: (error as Error).message,
+                errorName: type,
                 x509Enabled: false,
                 oidcEnabled: false,
                 multiVOEnabled: false,
@@ -64,25 +64,28 @@ class LoginConfigUseCase extends BaseUseCase<void, LoginConfigResponse, LoginCon
     }
 
     handleGatewayError(error: LoginConfigDTO): LoginConfigError {
-        if (error.type === 'ConfigNotFound') {
+        if (error.errorName === 'ConfigNotFound') {
             return {
                 status: 'error',
+                code: error.errorCode? error.errorCode : 500,
                 name: 'ConfigNotFound',
                 type: 'ConfigNotFound',
-                message: error.message? error.message : 'Configuration not found on the server.',
+                message: error.errorMessage? error.errorMessage : 'Configuration not found on the server.',
             }
         }
-        else if (error.type === 'InvalidConfig') {
+        else if (error.errorName === 'InvalidConfig') {
             return {
                 status: 'error',
+                code: error.errorCode? error.errorCode : 500,
                 name: 'InvalidConfig',
                 type: 'InvalidConfig',
-                message: error.message? error.message : 'Invalid configuration found on the server.',
+                message: error.errorMessage? error.errorMessage : 'Invalid configuration found on the server.',
             }
         }
         else {
             return {
                 status: 'error',
+                code: error.errorCode? error.errorCode : 500,
                 name: 'UnknownError',
                 type: 'UnknownError',
                 message: 'An unknown error occurred while fetching the configuration of login page from the server.',

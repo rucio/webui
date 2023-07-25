@@ -59,10 +59,10 @@ class ListSubscriptionsUseCase extends BaseStreamingUseCase<
     handleGatewayError(error: ListSubscriptionsDTO): ListSubscriptionsError {
         return {
             status: 'error',
-            error: `Gateway retuned with ${error.error?.errorCode}: ${error.error?.errorMessage}`,
-            message: error.message? error.message : 'Gateway Error',
+            error: `Gateway retuned with ${error.errorCode}: ${error.errorMessage}`,
+            message: error.errorMessage? error.errorMessage : 'Gateway Error',
             name: `Gateway Error`,
-            code: error.error?.errorCode,
+            code: error.errorCode,
         } as ListSubscriptionsError
     }
 

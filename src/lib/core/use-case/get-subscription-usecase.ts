@@ -53,8 +53,8 @@ class GetSubscriptionUseCase extends BaseUseCase<AuthenticatedRequestModel<GetSu
     handleGatewayError(error: SubscriptionDTO): GetSubscriptionError {
         return {
             status: 'error',
-            error: error.message,
-            message: `Gateway responded with ${error.error?.errorCode}, ${error.error?.errorMessage}`
+            error: error.errorMessage,
+            message: `Gateway responded with ${error.errorCode}, ${error.errorMessage}`
         } as GetSubscriptionError
     }
 

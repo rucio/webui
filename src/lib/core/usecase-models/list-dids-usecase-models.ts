@@ -13,5 +13,5 @@ export interface ListDIDsResponse extends DID, BaseResponseModel {
 
 export interface ListDIDsError extends BaseErrorResponseModel {
     name: string;
-    error: 'Invalid DID Query' | 'Unknown Error' | 'Invalid Request' ;
+    error: 'Invalid DID Query' | 'Unknown Error' | 'Invalid Request' | string;
 }

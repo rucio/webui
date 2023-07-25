@@ -21,5 +21,4 @@ export interface ListSubscriptionsResponse extends Subscription, BaseResponseMod
  */
 export interface ListSubscriptionsError extends BaseErrorResponseModel {
     error: 'INVALID_ACCOUNT' | string
-    code: number | undefined;
 }

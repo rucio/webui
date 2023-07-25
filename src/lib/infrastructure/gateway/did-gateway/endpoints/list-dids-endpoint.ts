@@ -56,18 +56,19 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
 
         const dto: ListDIDDTO = {
             status: 'error',
-            error: BaseHttpErrorTypes.UNKNOWN_ERROR,
+            errorCode: statusCode,
+            errorName: 'Unknown Error',
+            errorType: 'gateway_endpoint_error',
+            errorMessage: 'Unknown Error',
             stream: null,
         }
         switch (statusCode) {
             case 409:
-                dto.error = {
-                    errorCode: 409,
-                    errorMessage: 'Wrong DID type',
-                }
+                dto.errorName = 'Invalid Parameters'
+                dto.errorMessage = 'Wrong DID type'
                 break
             default:
-                dto.error = BaseHttpErrorTypes.UNKNOWN_ERROR
+                dto.errorMessage = 'Unknown Error'
                 break
         }
         return Promise.resolve(dto)

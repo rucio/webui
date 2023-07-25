@@ -16,6 +16,7 @@ import { BaseDTO, BaseStreamableDTO } from './dto'
 import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { BaseStreamingPresenter } from './presenter'
 import { BaseViewModel } from './view-models'
+import { pipeline } from 'stream'
 
 /**
  * A type that represents a simple use case that does not require authentication.
@@ -281,7 +282,7 @@ export abstract class BaseStreamingUseCase<
 
     setupStreamingPipeline(stream: Transform | Readable | PassThrough): void {
         stream.pipe(this)
-        this.presenter.presentStream(this)
+        this.presenter.setupStream(this)
     }
 
     /**
@@ -338,12 +339,11 @@ export abstract class BaseStreamingUseCase<
         const { status, data } = this.processStreamedData(dto)
         if (status === 'success') {
             const responseModel = data as TResponseModel
-            this.push(JSON.stringify(responseModel))
+            callback(null, responseModel)
         } else {
             const errorModel = data as TErrorModel
-            this.emit('error', JSON.stringify(errorModel))
+            callback(null, errorModel)
         }
-        callback()
     }
 }
 
@@ -427,22 +427,31 @@ export abstract class BaseMultiCallStreamableUseCase<
     setupStreamingPipeline(stream: Transform): void {
         // loop over pipeline elements and pipe them together. Pipe the last element to this object
         // for validation and pipe this to presenter
-        const pipeline = [
+        const pipelineElements = [
             stream,
             this,
             ...this.postProcessingPipelineElements,
             this.finalResponseValidationTransform,
         ]
-        for (let i = 1; i < pipeline.length; i++) {
-            const pipelineElement = pipeline[i]
-            const prevPipelineElement = pipeline[i - 1]
-            prevPipelineElement
-                .on('error', error =>
-                    this.handleStreamError(error as TErrorModel),
-                )
-                .pipe(pipelineElement)
+
+        for (let i = 1; i < pipelineElements.length; i++) {
+            const pipelineElement = pipelineElements[i]
+            const prevPipelineElement = pipelineElements[i - 1]
+            // prevPipelineElement
+            //     .on('error', error =>
+            //         this.handleStreamError(error as TErrorModel),
+            //     )
+            //     .on('end', () => {
+            //         console.log("********** Pipeline element ended **********");
+            //     })
+            //     .pipe(pipelineElement)
+            pipeline(prevPipelineElement, pipelineElement, (error) => {
+                console.log("********** Pipeline element ERRRORRROROROROROROROR **********");
+                console.log(`${prevPipelineElement.constructor.name} -> ${pipelineElement.constructor.name} error: ${error?.message}`)
+                console.log('---------------------------------------------------------------')
+            })
         }
-        this.presenter.presentStream(this.finalResponseValidationTransform)
+        this.presenter.setupStream(this.finalResponseValidationTransform)
     }
 
 
@@ -485,8 +494,8 @@ export abstract class BaseMultiCallStreamableUseCase<
             )
         } else {
             const errorModel = data as TErrorModel
-            this.emit('error', errorModel)
-            callback(errorModel)
+            // this.emit('error', errorModel)
+            callback(null)
         }
     }
 }
@@ -498,15 +507,17 @@ export abstract class BaseMultiCallStreamableUseCase<
  * @returns {@link BaseResponseModel} that represents the generic error
  */
 function handleCommonGatewayErrors<TDTO extends BaseDTO>(error: TDTO): BaseErrorResponseModel | undefined {
-    const endpointError = error.error
-    if(!endpointError) {
+    if(!error) {
         return undefined
     }
-    const endpointErrorMessage = endpointError?.errorMessage
+    if(error.errorType !== 'gateway_endpoint_error') {
+        return undefined
+    }
+    
     return {
         status: 'error',
-        message: error.message,
-        name: endpointErrorMessage,
-        error: endpointErrorMessage,
+        code: error.errorCode,
+        message: error.errorMessage,
+        name: error.errorName,
     } as BaseErrorResponseModel
 }

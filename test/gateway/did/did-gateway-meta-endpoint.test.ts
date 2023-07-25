@@ -81,6 +81,7 @@ describe("DID Gateway Meta Endpoint Tests", () => {
         const didGateway: DIDGatewayOutputPort = appContainer.get(GATEWAYS.DID);
         const dto: DIDMetaDTO = await didGateway.getDIDMeta("gfhfgsjiyug", "test", "dataset1");
         expect(dto.status).toEqual("error")
-        expect(dto.error?.errorMessage).toEqual("Invalid Auth Token")
+        expect(dto.errorName).toEqual("Invalid Auth Token")
+        expect(dto.errorMessage).toEqual("The provided authentication token is invalid or has expired")
     })
 });

@@ -75,19 +75,19 @@ export function convertToSubscriptionDTO(data: TRucioSubscription, account: stri
     const rules = parseReplicationRules(data.replication_rules)
     return {
         status: 'success',
-            error: null,
-            account: account,
-            created_at: data.created_at,
-            id: data.id,
-            last_processed: data.last_processed,
-            lifetime: data.lifetime,
-            name: data.name,
-            policyid: data.policyid,
-            retroactive: data.retroactive,
-            state: state,
-            updated_at: data.updated_at,
-            filter: data.filter,
-            replication_rules: rules,
+        name: data.name,
+        account: account,
+        created_at: data.created_at,
+        id: data.id,
+        last_processed: data.last_processed,
+        lifetime: data.lifetime,
+        errorName: data.name,
+        policyid: data.policyid,
+        retroactive: data.retroactive,
+        state: state,
+        updated_at: data.updated_at,
+        filter: data.filter,
+        replication_rules: rules,
     }
 }
 
@@ -97,12 +97,13 @@ export function convertToSubscriptionDTO(data: TRucioSubscription, account: stri
 export function getEmptySubscriptionDTO(status: 'success' | 'error'): SubscriptionDTO {
     return {
         status: status,
+        name: "",
         account: "",
         created_at: "",
         id: "",
         last_processed: "",
         lifetime: "",
-        name: "",
+        errorName: "",
         policyid: 0,
         retroactive: false,
         state: SubscriptionState.INACTIVE,

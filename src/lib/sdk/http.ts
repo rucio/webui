@@ -43,7 +43,7 @@ export function prepareRequestArgs(request: HTTPRequest): { url: string | URL; r
  */
 export type BaseHTTPError = {
     errorCode: number;
-    errorMessage: string;
+    errorName: string;
 }
 
 /**
@@ -52,30 +52,30 @@ export type BaseHTTPError = {
 export class BaseHttpErrorTypes {
     static BAD_REQUEST: BaseHTTPError = {
         errorCode: 400,
-        errorMessage: 'Bad Request'
+        errorName: 'Bad Request'
     };
     static INVALID_AUTH_TOKEN: BaseHTTPError = {
         errorCode: 401,
-        errorMessage: 'Invalid Auth Token'
+        errorName: 'Invalid Auth Token'
     };
     static FORBIDDEN: BaseHTTPError = {
         errorCode: 403,
-        errorMessage: 'Forbidden'
+        errorName: 'Forbidden'
     };
     static NOT_FOUND: BaseHTTPError = {
         errorCode: 404,
-        errorMessage: 'Not Found'
+        errorName: 'Not Found'
     };
     static NOT_ACCEPTABLE: BaseHTTPError = {
         errorCode: 406,
-        errorMessage: 'Not Acceptable'
+        errorName: 'Not Acceptable'
     };
     static SERVER_ERROR: BaseHTTPError = {
         errorCode: 500,
-        errorMessage: 'Server Error'
+        errorName: 'Server Error'
     }
     static UNKNOWN_ERROR: BaseHTTPError = {
         errorCode: 0,
-        errorMessage: 'Unknown Error'
+        errorName: 'Unknown Error'
     }
 }

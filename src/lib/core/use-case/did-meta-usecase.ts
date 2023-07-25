@@ -44,7 +44,7 @@ class DIDMetaUseCase extends BaseUseCase<AuthenticatedRequestModel<DIDMetaReques
     handleGatewayError(error: DIDMetaDTO): DIDMetaError {
         return {
             status: 'error',
-            error: error.message
+            error: error.errorMessage
         } as DIDMetaError
     }
 
