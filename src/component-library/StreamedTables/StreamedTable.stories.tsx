@@ -17,7 +17,7 @@ const columnHelper = createColumnHelper<DIDLong>()
 
 export const StreamedTable = Template.bind({});
 StreamedTable.args = {
-    tablecomdom: mockUseComDOM<DIDLong>(Array.from({length: 100}, () => createRandomDIDLong())),
+    tablecomdom: mockUseComDOM<DIDLong>(Array.from({length: 5}, () => createRandomDIDLong())),
     tablecolumns: [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",

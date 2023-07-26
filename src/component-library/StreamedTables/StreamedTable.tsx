@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { TableFooter } from "./TableFooter";
+import { BaseViewModel } from "@/lib/sdk/view-models";
 
 type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
     tablecomdom: UseComDOM<T>
@@ -29,7 +30,7 @@ type StreamedTableProps<T> = JSX.IntrinsicElements["table"] & {
     }
 }
 
-export function StreamedTable<T>(props: StreamedTableProps<T>) {
+export function StreamedTable<T extends BaseViewModel>(props: StreamedTableProps<T>) {
     const { className, ...otherprops } = props
 
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({})

@@ -13,6 +13,7 @@ import {
 import { RSEAttribute, RSEProtocol } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
+import { BaseViewModel } from '@/lib/sdk/view-models';
 
 export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
     return {
@@ -24,6 +25,16 @@ export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
         resume: () => { },
         pause: () => { },
     } as UseComDOM<T>
+}
+
+export function mockBaseVM(fail?: "none" | "some" | "all"): BaseViewModel {
+    const setting = fail ?? "none"
+    return {
+        status: setting === "none" ? "success" : (
+            setting === "some" ? faker.helpers.arrayElement(["success", "error"]) : "error"
+        ),
+        message: faker.lorem.words(3),
+    }
 }
 
 function createRandomScope(): string {
