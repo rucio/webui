@@ -34,7 +34,7 @@ export const LabelledInput: React.FC<LabelledInputProps> = (
                     "w-32 text-right flex-none",
                 )}
             >
-                <P>{label}</P>
+                <P className="dark:font-bold">{label}</P>
             </label>
             <TextInput
                 id={idinput}
