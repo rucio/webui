@@ -9,19 +9,19 @@ import { HiDotsHorizontal } from "react-icons/hi"
 // Viewmodels etc
 import { ReplicaState } from "@/lib/core/entity/rucio";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
-import { FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
+import { FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 
 export const PageDIDFilereplicas = (
     props: {
-        comdom: UseComDOM<FilereplicaState>,
+        comdom: UseComDOM<FilereplicaStateViewModel>,
     }
 ) => {
-    const columnHelper = createColumnHelper<FilereplicaState>()
+    const columnHelper = createColumnHelper<FilereplicaStateViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor("rse", {
             id: "rse",
@@ -68,7 +68,7 @@ export const PageDIDFilereplicas = (
         })
     ]
     return (
-        <StreamedTable<FilereplicaState>
+        <StreamedTable<FilereplicaStateViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{}}

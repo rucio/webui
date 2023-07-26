@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { createRSEAttribute, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureRSEAttributeViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { PageRSEAttributes as P } from "./PageRSEAttributes";
 
 export default {
@@ -11,5 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageRSEAttributes = Template.bind({});
 PageRSEAttributes.args = {
-    comdom: mockUseComDOM(Array.from({ length: 20 }, (_, i) => createRSEAttribute()))
+    comdom: mockUseComDOM(Array.from({ length: 20 }, (_, i) => fixtureRSEAttributeViewModel()))
 };

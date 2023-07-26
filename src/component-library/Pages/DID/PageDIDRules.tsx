@@ -2,7 +2,6 @@
 import { H3 } from "../../Text/Headings/H3";
 import { HiDotsHorizontal } from "react-icons/hi"
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { DIDRules } from "@/lib/infrastructure/data/view-model/page-did";
 import { createColumnHelper} from "@tanstack/react-table"
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -14,13 +13,14 @@ import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown.stories";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { DIDRulesViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 export const PageDIDRules = (
     props: {
-        comdom: UseComDOM<DIDRules>
+        comdom: UseComDOM<DIDRulesViewModel>
     }
 ) => {
-    const columnHelper = createColumnHelper<DIDRules>()
+    const columnHelper = createColumnHelper<DIDRulesViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor("id", {
             id: "id",
@@ -165,7 +165,7 @@ export const PageDIDRules = (
 
 
     return (
-        <StreamedTable<DIDRules>
+        <StreamedTable<DIDRulesViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{

@@ -1,9 +1,11 @@
-import { Subscription, SubscriptionReplicationRule, SubscriptionState } from "@/lib/core/entity/rucio";
+import { Subscription, SubscriptionReplicationRule, SubscriptionState, SubscriptionRuleStates } from "@/lib/core/entity/rucio";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 
 export interface SubscriptionViewModel extends BaseViewModel, Omit<Subscription, 'replication_rules'> {
     replication_rules: string
 }
+
+export interface SubscriptionRuleStatesViewModel extends BaseViewModel, SubscriptionRuleStates {}
 
 /**
  * A utility function to retrieve an empty {@link SubscriptionViewModel}.

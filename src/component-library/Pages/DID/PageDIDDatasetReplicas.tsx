@@ -1,4 +1,3 @@
-import { DIDDatasetReplicas } from "@/lib/infrastructure/data/view-model/page-did";
 import { twMerge } from "tailwind-merge";
 import { createColumnHelper } from "@tanstack/react-table"
 import { useEffect, useState } from "react"
@@ -12,13 +11,14 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { DIDDatasetReplicasViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 export const PageDIDDatasetReplicas = (
     props: {
-        comdom: UseComDOM<DIDDatasetReplicas>;
+        comdom: UseComDOM<DIDDatasetReplicasViewModel>;
     }
 ) => {
-    const columnHelper = createColumnHelper<DIDDatasetReplicas>()
+    const columnHelper = createColumnHelper<DIDDatasetReplicasViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor("rse", {
             id: "rse",
@@ -203,7 +203,7 @@ export const PageDIDDatasetReplicas = (
 
 
     return (
-        <StreamedTable<DIDDatasetReplicas>
+        <StreamedTable<DIDDatasetReplicasViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{
@@ -218,7 +218,7 @@ export const PageDIDDatasetReplicas = (
                 } 
             }}
             tableselecting={{
-                handleChange: (data: DIDDatasetReplicas[]) => {},
+                handleChange: (data: DIDDatasetReplicasViewModel[]) => {},
                 enableRowSelection: !isLg(),
                 breakOut: {
                     breakoutVisibility: !isLg(),

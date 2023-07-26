@@ -1,6 +1,7 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { createRandomRulePageLockEntry, createRuleMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
-import { PageRule as P, RulePageLockEntry } from "./PageRule";
+import { fixtureRulePageLockEntryViewModel, fixtureRuleMetaViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { PageRule as P } from "./PageRule";
+import { RulePageLockEntryViewModel } from "@/lib/infrastructure/data/view-model/rule";
 
 export default {
     title: 'Components/Pages/Rule',
@@ -11,6 +12,6 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageRule = Template.bind({});
 PageRule.args = {
-    ruleMeta: createRuleMeta(),
-    ruleLocks: mockUseComDOM<RulePageLockEntry>(Array.from({length: 100}, () => createRandomRulePageLockEntry())),
+    ruleMeta: fixtureRuleMetaViewModel(),
+    ruleLocks: mockUseComDOM<RulePageLockEntryViewModel>(Array.from({length: 100}, () => fixtureRulePageLockEntryViewModel())),
 };

@@ -1,4 +1,4 @@
-import { DIDLong, DIDType } from "@/lib/core/entity/rucio";
+import { DIDType } from "@/lib/core/entity/rucio";
 import { twMerge } from "tailwind-merge";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
@@ -10,14 +10,15 @@ import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { DIDLongViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 export const CreateRuleDIDTable = (
     props: {
-        comdom: UseComDOM<DIDLong>,
-        handleChange: (data: DIDLong[]) => void,
+        comdom: UseComDOM<DIDLongViewModel>,
+        handleChange: (data: DIDLongViewModel[]) => void,
     }
 ) => {
-    const columnHelper = createColumnHelper<DIDLong>()
+    const columnHelper = createColumnHelper<DIDLongViewModel>()
     const tablecolumns: any[] = [
         columnHelper.display({
             id: "selection",

@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { PageDIDRules as P } from "./PageDIDRules";
-import { createDIDRules, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureDIDRulesViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 
 export default {
     title: 'Components/Pages/DID',
@@ -11,5 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageDIDRules = Template.bind({});
 PageDIDRules.args = {
-    comdom: mockUseComDOM(Array.from({length: 100}, (_, i) => createDIDRules())),
+    comdom: mockUseComDOM(Array.from({length: 100}, (_, i) => fixtureDIDRulesViewModel())),
 };

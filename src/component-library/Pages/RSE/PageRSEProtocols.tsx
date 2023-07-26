@@ -1,4 +1,3 @@
-import { RSEProtocol } from "@/lib/infrastructure/data/view-model/rse";
 import { createColumnHelper } from "@tanstack/react-table";
 import { P } from "../../Text/Content/P";
 import { twMerge } from "tailwind-merge";
@@ -7,16 +6,17 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable.stories";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { H3 } from "../../Text/Headings/H3";
+import { RSEProtocolViewModel } from "@/lib/infrastructure/data/view-model/rse";
 
 export const PageRSEProtocols = (
     props: {
-        comdom: UseComDOM<RSEProtocol>
+        comdom: UseComDOM<RSEProtocolViewModel>
     }
 ) => {
     const shortstyle = { style: "w-20" }
     const shortstyleblue = { style: "w-20 bg-blue-100"}
     const shortstylepink = { style: "w-20 bg-pink-100"}
-    const columnHelper = createColumnHelper<RSEProtocol>()
+    const columnHelper = createColumnHelper<RSEProtocolViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor("scheme", {
             id: "scheme",

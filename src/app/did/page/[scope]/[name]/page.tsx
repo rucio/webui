@@ -1,30 +1,28 @@
 'use client';
 import { PageDID as PageDIDStory } from '@/component-library/Pages/DID/PageDID';
-import { DIDMeta } from "@/lib/core/entity/rucio";
-import { FilereplicaState, FilereplicaStateD } from '@/lib/infrastructure/data/view-model/page-did';
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { useEffect, useState } from "react";
-import { createDIDDatasetReplicas, createDIDMeta, createDIDRules, mockUseComDOM } from 'test/fixtures/table-fixtures';
-import { DID } from '@/lib/core/entity/rucio';
+import { fixtureDIDDatasetReplicasViewModel, fixtureDIDMetaViewModel, fixtureDIDRulesViewModel, mockUseComDOM, fixtureDIDKeyValuePairsViewModel } from 'test/fixtures/table-fixtures';
 import { HTTPRequest } from "@/lib/sdk/http";
+import { DIDMetaViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 
 export default function Page({ params }: { params: { scope: string, name: string } }) {
-    const [didMeta, setDIDMeta] = useState<DIDMeta>({} as DIDMeta)
+    const [didMeta, setDIDMeta] = useState<DIDMetaViewModel>({} as DIDMetaViewModel)
     const [fromDidList, setFromDidList] = useState<string>("yosearch")
     useEffect(() => {
-        setDIDMeta({ ...createDIDMeta(), name: params.name, scope: params.scope, } as DIDMeta)
+        setDIDMeta(fixtureDIDMetaViewModel())
     }, [])
 
-    const didParentsComDOM = useComDOM<DID>(
+    const didParentsComDOM = useComDOM<DIDViewModel>(
         'page-did-parents-query', [], false, Infinity, 200, true
     )
-    const didContentsComDOM = useComDOM<DID>(
+    const didContentsComDOM = useComDOM<DIDViewModel>(
         'page-did-contents-query', [], false, Infinity, 200, true
     )
-    const didFileReplicasComDOM = useComDOM<FilereplicaState>(
+    const didFileReplicasComDOM = useComDOM<FilereplicaStateViewModel>(
         'page-did-filereplicas-query', [], false, Infinity, 200, true
     )
-    const didFileReplicasDComDOM = useComDOM<FilereplicaStateD>(
+    const didFileReplicasDComDOM = useComDOM<FilereplicaStateDViewModel>(
         'page-did-filereplicas-d-query', [], false, Infinity, 200, true
     )
     useEffect(() => {
@@ -68,17 +66,9 @@ export default function Page({ params }: { params: { scope: string, name: string
         }
         setRequests()
     }, [])
-    const didMetadataComDOM = mockUseComDOM([
-        { key: "bernd", value: "das brot" },
-        { key: "kika", value: "der sender" },
-        { key: "kikaninchen", value: "das tier" },
-        { key: "my birthday", value: (new Date(2021, 3)).toISOString() },
-        { key: "am_i_anton", value: false },
-        { key: "R1-tastefactor", value: 3.142 },
-        { key: "hello", value: null },
-    ])
-    const didRulesComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => createDIDRules()))
-    const didDatasetReplicasComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => createDIDDatasetReplicas()))
+    const didMetadataComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDKeyValuePairsViewModel()))
+    const didRulesComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDRulesViewModel()))
+    const didDatasetReplicasComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDDatasetReplicasViewModel()))
     return (
         <PageDIDStory
             didMeta={didMeta}

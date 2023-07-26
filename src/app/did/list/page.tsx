@@ -6,7 +6,7 @@ import { DIDMetaViewModel, DIDViewModel } from "@/lib/infrastructure/data/view-m
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 import { useEffect, useState } from "react";
-import { createDIDMeta } from "test/fixtures/table-fixtures";
+import { fixtureDIDMetaViewModel } from "test/fixtures/table-fixtures";
 
 export default function Page() {
     const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMetaViewModel>({} as DIDMetaViewModel)
@@ -59,7 +59,7 @@ export default function Page() {
         true
     )
     useEffect(() => {
-        setDIDMetaQueryResponse({ status: 'success', ...createDIDMeta() })
+        setDIDMetaQueryResponse(fixtureDIDMetaViewModel())
     }, [])
     useEffect(() => {
         const setRequest = async () => {

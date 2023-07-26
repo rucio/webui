@@ -24,6 +24,7 @@ import { DateInput } from "../../Input/DateInput";
 import { useState } from "react";
 import { Heading } from "../Helpers/Heading";
 import { Body } from "../Helpers/Body";
+import { RuleViewModel } from "@/lib/infrastructure/data/view-model/rule";
 
 type ListRuleUserDefineQuery = Partial<{
     account: string
@@ -36,7 +37,7 @@ type ListRuleUserDefineQuery = Partial<{
 
 export const ListRule = (
     props: {
-        comdom: UseComDOM<Rule>
+        comdom: UseComDOM<RuleViewModel>
     }
 ) => {
     const columnHelper = createColumnHelper<Rule>()
@@ -304,7 +305,7 @@ export const ListRule = (
             </Heading>
 
             <Body>
-                <StreamedTable<Rule>
+                <StreamedTable<RuleViewModel>
                     tablecomdom={props.comdom}
                     tablecolumns={tablecolumns}
                     tablestyling={{

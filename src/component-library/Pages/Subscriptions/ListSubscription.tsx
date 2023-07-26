@@ -1,4 +1,3 @@
-import { SubscriptionRuleStates } from "@/lib/core/entity/rucio";
 import { twMerge } from "tailwind-merge";
 import { H3 } from "../../Text/Headings/H3";
 import { P } from "../../Text/Content/P";
@@ -12,15 +11,16 @@ import { useState, useEffect } from "react";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { Body } from "../Helpers/Body";
 import { Heading } from "../Helpers/Heading";
+import { SubscriptionRuleStatesViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
 
 export interface ListSubscriptionProps {
-    comdom: UseComDOM<SubscriptionRuleStates>
+    comdom: UseComDOM<SubscriptionRuleStatesViewModel>
 }
 
 export const ListSubscription = (
     props: ListSubscriptionProps
 ) => {
-    const columnHelper = createColumnHelper<SubscriptionRuleStates>()
+    const columnHelper = createColumnHelper<SubscriptionRuleStatesViewModel>()
     const tablecolumns = [
         columnHelper.accessor("name", {
             id: "name",
@@ -192,7 +192,7 @@ export const ListSubscription = (
         >
             <Heading title="List Subscriptions" />
             <Body>
-                <StreamedTable<SubscriptionRuleStates>
+                <StreamedTable<SubscriptionRuleStatesViewModel>
                     tablecomdom={props.comdom}
                     tablecolumns={tablecolumns}
                     tablestyling={{

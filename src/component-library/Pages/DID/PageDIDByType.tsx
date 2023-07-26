@@ -1,4 +1,3 @@
-import { DIDContents } from "@/lib/infrastructure/data/view-model/page-did";
 import { twMerge } from "tailwind-merge";
 import { createColumnHelper } from "@tanstack/react-table"
 
@@ -10,14 +9,15 @@ import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { HiDotsHorizontal } from "react-icons/hi"
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 export const PageDIDByType = (
     props: {
-        comdom: UseComDOM<DIDContents>,
+        comdom: UseComDOM<DIDViewModel>,
         showDIDType?: boolean,
     }
 ) => {
-    const columnHelper = createColumnHelper<DIDContents>()
+    const columnHelper = createColumnHelper<DIDViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",
@@ -55,7 +55,7 @@ export const PageDIDByType = (
     ]
 
     return (
-        <StreamedTable
+        <StreamedTable<DIDViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{}}

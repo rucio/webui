@@ -1,12 +1,11 @@
 'use client';
-import { SubscriptionRuleStates } from "@/lib/core/entity/rucio";
 import { ListSubscription as ListSubscriptionStory } from "@/component-library/Pages/Subscriptions/ListSubscription";
 import { Component, useEffect, useState } from "react";
-import { createSubscriptionRuleStates } from "test/fixtures/table-fixtures";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
+import { SubscriptionRuleStatesViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
 
 export default function ListSubscription({ params }: { params: { account: string }}) {
-    const ComDOM = useComDOM<SubscriptionRuleStates>(
+    const ComDOM = useComDOM<SubscriptionRuleStatesViewModel>(
         "subscription-rule-states-query",
         [],
         false,

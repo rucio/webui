@@ -14,13 +14,14 @@ import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
 import useReponsiveHook from "../../Helpers/ResponsiveHook";
 import { Body } from "../Helpers/Body";
 import { Heading } from "../Helpers/Heading";
+import { RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
 
 export const ListRSE = (
     props: {
-        comdom: UseComDOM<RSE>
+        comdom: UseComDOM<RSEViewModel>
     }
 ) => {
-    const columnHelper = createColumnHelper<RSE>()
+    const columnHelper = createColumnHelper<RSEViewModel>()
     const tablecolumns = [
         columnHelper.accessor("name", {
             id: "name",
@@ -122,7 +123,7 @@ export const ListRSE = (
                 title="List RSEs"
             />
             <Body>
-                <StreamedTable<RSE>
+                <StreamedTable<RSEViewModel>
                     tablecomdom={props.comdom}
                     tablecolumns={tablecolumns}
                     tablestyling={{

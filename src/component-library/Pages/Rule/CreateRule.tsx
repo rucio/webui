@@ -23,25 +23,27 @@ import { Body } from '../Helpers/Body';
 /* =================================================
 *  Importing Types and Interfaces
 *  ================================================= */
-import { DIDLong, DIDType, RSEAccountUsageLimit } from '@/lib/core/entity/rucio';
 import {
     CreateRuleQuery, CreateRuleResponse, DIDName, TypedDIDValidationQuery,
     TypedDIDValidationResponse,
 
 } from '@/lib/infrastructure/data/view-model/create-rule.d';
+import { DIDType } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';
 import { didToScopename } from '../../StreamedTables/helpers';
 import { CreateRuleRSETable } from './CreateRuleRSETable';
+import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
-    didListComDOM: UseComDOM<DIDLong>,
+    didListComDOM: UseComDOM<DIDLongViewModel>,
     // Page 0.1 - DID Validation
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
     // Page 1 - RSE Selection
-    rseListComDOM: UseComDOM<RSEAccountUsageLimit>,
+    rseListComDOM: UseComDOM<RSEAccountUsageLimitViewModel>,
     // Page 3 - Sendoff
     onSubmit: (createRuleQuery: CreateRuleQuery) => Promise<CreateRuleResponse>
 }
@@ -55,7 +57,7 @@ interface Page0State {
     selectDIDMethod: number
     // selection by search
     selectDIDDataPattern: string
-    searchDIDSelection: Array<DIDLong>
+    searchDIDSelection: Array<DIDLongViewModel>
 
     // Subpage 1: List of DIDs
     // selection via typing
@@ -66,7 +68,7 @@ interface Page0State {
 interface Page1State {
     page1progressBlocked: boolean
     RSEExpression: string
-    RSESelection: Array<RSEAccountUsageLimit>
+    RSESelection: Array<RSEAccountUsageLimitViewModel>
     askForApproval: boolean
 }
 
@@ -281,7 +283,7 @@ export const CreateRule = (
                             </div>
                             <CreateRuleDIDTable
                                 comdom={props.didListComDOM}
-                                handleChange={(data: DIDLong[]) => { setPage0State({ ...Page0State, searchDIDSelection: data }) }}
+                                handleChange={(data: DIDLongViewModel[]) => { setPage0State({ ...Page0State, searchDIDSelection: data }) }}
                             />
                         </div>
                     </Collapsible>
@@ -333,7 +335,7 @@ export const CreateRule = (
                         </div>
                         <CreateRuleRSETable
                             comdom={props.rseListComDOM}
-                            handleChange={(data: RSEAccountUsageLimit[]) => { setPage1State({ ...Page1State, RSESelection: data }) }}
+                            handleChange={(data: RSEAccountUsageLimitViewModel[]) => { setPage1State({ ...Page1State, RSESelection: data }) }}
                             askApproval={Page1State.askForApproval}
                         />
                         <div>

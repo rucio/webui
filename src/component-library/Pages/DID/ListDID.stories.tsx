@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react';
 import { ListDID as LD } from './ListDID';
-import { createDIDMeta, createDID, mockUseComDOM } from 'test/fixtures/table-fixtures';
+import { fixtureDIDMetaViewModel, fixtureDIDViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
 
 export default {
     title: 'Components/Pages/DID',
@@ -11,7 +11,7 @@ const Template: StoryFn<typeof LD> = (args) => <LD {...args} />;
 
 export const ListDID = Template.bind({});
 ListDID.args = {
-    comdom: mockUseComDOM(Array.from({length: 100}, () => createDID())),
+    comdom: mockUseComDOM(Array.from({length: 100}, () => fixtureDIDViewModel())),
     didMetaQuery: (scope: string, name: string) => { },
-    didMetaQueryResponse: {status: "success", ...createDIDMeta()}
+    didMetaQueryResponse: fixtureDIDMetaViewModel()
 }

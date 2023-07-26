@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { mockUseComDOM, createRSE } from "test/fixtures/table-fixtures";
+import { mockUseComDOM, fixtureRSEViewModel } from "test/fixtures/table-fixtures";
 import { ListRSE as L } from "./ListRSE";
 
 export default {
@@ -11,5 +11,5 @@ const Template: StoryFn<typeof L> = (args) => <L {...args} />;
 
 export const ListRSE = Template.bind({});
 ListRSE.args = {
-    comdom: mockUseComDOM(Array.from({ length: 100 }, () => createRSE()))
+    comdom: mockUseComDOM(Array.from({ length: 100 }, () => fixtureRSEViewModel()))
 };

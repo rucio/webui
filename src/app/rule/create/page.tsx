@@ -1,7 +1,7 @@
 'use client';
 import { CreateRule as CreateRuleStory } from "@/component-library/Pages/Rule/CreateRule";
-import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio";
-import { DIDLong } from "@/lib/core/entity/rucio"
+import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse";
+import { DIDLongViewModel } from "@/lib/infrastructure/data/view-model/did";
 import {
     CreateRuleQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
@@ -36,7 +36,7 @@ export default function CreateRule() {
     }
 
 
-    const DIDSearchComDOM = useComDOM<DIDLong>(
+    const DIDSearchComDOM = useComDOM<DIDLongViewModel>(
         'create-rule-page-did-query',
         [],
         false,
@@ -45,7 +45,7 @@ export default function CreateRule() {
         true
     )
 
-    const RSEComDOM = useComDOM<RSEAccountUsageLimit>(
+    const RSEComDOM = useComDOM<RSEAccountUsageLimitViewModel>(
         'create-rule-page-rse-query',
         [],
         false,

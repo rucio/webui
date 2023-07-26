@@ -1,4 +1,3 @@
-import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio";
 import { twMerge } from "tailwind-merge";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { createColumnHelper, Row } from "@tanstack/react-table";
@@ -9,16 +8,17 @@ import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { useState, useEffect } from "react";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse";
 
 export const CreateRuleRSETable = (
     props: {
-        comdom: UseComDOM<RSEAccountUsageLimit>,
-        handleChange: (data: RSEAccountUsageLimit[]) => void,
+        comdom: UseComDOM<RSEAccountUsageLimitViewModel>,
+        handleChange: (data: RSEAccountUsageLimitViewModel[]) => void,
         askApproval?: boolean
     }
 ) => {
-    const columnHelper = createColumnHelper<RSEAccountUsageLimit>()
-    const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimit>) => {
+    const columnHelper = createColumnHelper<RSEAccountUsageLimitViewModel>()
+    const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimitViewModel>) => {
         let noQuota = (row.original.quota_bytes && row.original.quota_bytes < row.original.used_bytes)
         return props.askApproval ? false : noQuota
     }
