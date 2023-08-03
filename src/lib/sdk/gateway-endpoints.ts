@@ -226,6 +226,10 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
 /**
 * Reports any common errors that occurred during the Gateway request.
 * Handles HTTP status codes 400, 401, and 500.
+* @param statusCode The HTTP status code returned by the API.
+* @param response The response object returned by the API.
+* @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error,
+* or `undefined` if the error could not be identified clearly.
 */
 async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCode: number, response: Response): Promise<TDTO | undefined> {
     const dto: TDTO = {
@@ -236,12 +240,6 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
         errorMessage: `An error occurred while fetching ${response.url}`,
     } as TDTO;
 
-    try {
-        const errorDetails: string = await response.json()
-        dto.errorMessage = errorDetails
-    } catch(error : any) {
-        // do nothing
-    }
     switch(statusCode) {
         case 400:
             dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
@@ -255,6 +253,8 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
             dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName;    
             dto.errorMessage = `An unknown server side error occurred while fetching ${response.url}`;
             break;
+        default:
+            return undefined;
     }
     return dto;
 }

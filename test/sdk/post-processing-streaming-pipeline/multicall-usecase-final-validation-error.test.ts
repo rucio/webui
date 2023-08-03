@@ -1,5 +1,4 @@
 import { BaseStreamableDTO } from "@/lib/sdk/dto";
-import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements";
 import { BaseMultiCallStreamableUseCase } from "@/lib/sdk/usecase";
 import { BaseErrorResponseModel } from "@/lib/sdk/usecase-models";
 import { BaseViewModel } from "@/lib/sdk/view-models";

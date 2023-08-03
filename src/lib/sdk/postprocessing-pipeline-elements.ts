@@ -151,27 +151,28 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
      */
     abstract transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel | TErrorModel
 
-    async _transform(chunk: {status: 'success' | 'error', requestModel: TRequestModel, responseModel: TResponseModel | TErrorModel}, encoding: BufferEncoding, callback: (error?: Error | null, data?: any | TErrorModel) => void): Promise<void> {
-        let { requestModel, responseModel } = chunk
+    async _transform(chunk: {status: 'success' | 'error', requestModel: TRequestModel, responseModel: TResponseModel | TErrorModel }, encoding: BufferEncoding, callback: (error?: Error | null, data?: any | TErrorModel) => void): Promise<void> {
+        let { status, requestModel, responseModel } = chunk
         
         //bypass is responseModel is already an error model
-        if (responseModel.status === 'error') {
+        if (status === 'error') {
             const errorModel = responseModel as TErrorModel
             callback(null, {
                 status: 'error',
                 requestModel: requestModel,
                 responseModel: errorModel,
             })
+            return
         }
         try {
-        responseModel = responseModel as TResponseModel
-        const dto = await this.makeGatewayRequest(requestModel, responseModel)
-        const response: TResponseModel | TErrorModel = this.processGatewayResponse(responseModel, dto)
-        callback(null, {
-            status: response.status,
-            requestModel: requestModel,
-            responseModel: response,
-        })
+            responseModel = responseModel as TResponseModel
+            const dto = await this.makeGatewayRequest(requestModel, responseModel)
+            const response: TResponseModel | TErrorModel = this.processGatewayResponse(responseModel, dto)
+            callback(null, {
+                status: response.status,
+                requestModel: requestModel,
+                responseModel: response,
+            })
         } catch (error: Error | any) {
             const errorModel: TErrorModel = {
                 status: 'error',
