@@ -244,30 +244,37 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
 
     
     switch(statusCode) {
-        case 400: {
-                const errorDetails = await extractErrorMessage(response);
-                dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
-                dto.errorMessage = `The requested resource was not found at ${response.url}. ${errorDetails?? ''}`
-                break;
-            }
-        case 401: {
-                const errorDetails = await extractErrorMessage(response);
-                dto.errorName = BaseHttpErrorTypes.INVALID_AUTH_TOKEN.errorName;
-                dto.errorMessage = `The provided authentication token is invalid or has expired. ${errorDetails?? ''}`;
-                break;
-            }
-        case 406: {
-                const errorDetails = await extractErrorMessage(response);
-                dto.errorName = BaseHttpErrorTypes.NOT_ACCEPTABLE.errorName;
-                dto.errorMessage = `The requested resource is not available in the requested format. ${errorDetails?? ''}`;
-                break;
-            }
-        case 500: {
-                const errorDetails = await extractErrorMessage(response);
-                dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName;    
-                dto.errorMessage = `An unknown server side error occurred while fetching ${response.url}. ${errorDetails?? ''}`;
-                break;
-            }
+        case 400:
+            dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
+            dto.errorMessage = `The requested resource was not found at ${response.url}.`
+            try {
+                const message = await response.json();
+                dto.errorMessage += ` Error Details: ${message}`; 
+            } catch(error) {}
+            break;
+        case 401:
+            dto.errorName = BaseHttpErrorTypes.INVALID_AUTH_TOKEN.errorName;
+            dto.errorMessage = `The provided authentication token is invalid or has expired.`;
+            try {
+                const message = await response.json();
+                dto.errorMessage += ` Error Details: ${message}`; 
+            } catch(error) {}
+            break;
+        case 406:
+            dto.errorName = BaseHttpErrorTypes.NOT_ACCEPTABLE.errorName;
+            dto.errorMessage = `Not Acceptable.`;
+            try {
+                const message = await response.json();
+            } catch(error) {}
+            break;
+        case 500:
+            dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName;
+            dto.errorMessage = `An unknown server side error occurred while fetching ${response.url}.`;
+            try {
+                const message = await response.json();
+                dto.errorMessage += ` Error Details: ${message}`;
+            } catch(error) {}
+            break;
         default:
             return undefined;
     }
