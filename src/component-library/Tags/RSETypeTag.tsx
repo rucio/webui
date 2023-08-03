@@ -28,7 +28,8 @@ export const RSETypeTag: React.FC<RSETypeTagProps> = (
     const belowMedium = (windowWidth < 768) || forcesmall
     const stringMatch = {
         [RSEType.DISK]: "Disk",
-        [RSEType.TAPE]: "Tape"
+        [RSEType.TAPE]: "Tape",
+        [RSEType.UNKNOWN]: "Unknown"
     }
     return (
         <span
