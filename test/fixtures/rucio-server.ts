@@ -1,7 +1,7 @@
 import { HTTPRequest } from '@/lib/sdk/http'
 import { Headers } from 'node-fetch'
 import { Readable } from 'stream'
-
+import { Response } from 'node-fetch'
 /**
  * Represents a mock HTTP request endpoint.
  */
@@ -63,15 +63,14 @@ export default class MockRucioServerFactory {
      * @param endpoints The endpoints to match against incoming requests.
      */
     static createMockRucioServer(checkAuth: boolean = true, endpoints: MockEndpoint[]) {
-        //disable eslint
-        // eslint-disable-next-line
+        // @ts-ignore
         fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, req => {
             if (checkAuth) {
                 const rucioToken = req.headers.get('X-Rucio-Auth-Token')
                 if (rucioToken !== MockRucioServerFactory.VALID_RUCIO_TOKEN) {
-                    return Promise.resolve({
+                    return Promise.resolve(new Response('Invalid Rucio Auth Token', {
                         status: 401,
-                    })
+                    }))
                 }
             }
             const endpoint = endpoints.find(endpoint => {

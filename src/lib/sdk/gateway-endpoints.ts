@@ -65,7 +65,7 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
     
     /**
      * Fetches the API response from the server.
-     * @returns A promise that resolves to the API response as a data transfer object (DTO).
+     * @returns A DTO if an error occurred, undefined if request was successful and retrned a stream.
      */
     async fetch (): Promise<TDTO | undefined> {
         if (!this.initialized) {
