@@ -199,8 +199,9 @@ export type RSEOld = {
 }
 
 export enum RSEType {
-    Disk = "DISK",
-    Tape = "TAPE",
+    DISK = "DISK",
+    TAPE = "TAPE",
+    UNKNOWN = "UNKNOWN",
 }
 
 // rucio.db.sqla.constants::ReplicaState

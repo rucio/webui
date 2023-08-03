@@ -10,7 +10,7 @@ type RSETypeTagProps = JSX.IntrinsicElements["span"] & {
 
 export const RSETypeTag: React.FC<RSETypeTagProps> = (
     {
-        rsetype = RSEType.Disk,
+        rsetype = RSEType.DISK,
         neversmall = false,
         forcesmall = false,
         ...props
@@ -27,8 +27,8 @@ export const RSETypeTag: React.FC<RSETypeTagProps> = (
     }, [])
     const belowMedium = (windowWidth < 768) || forcesmall
     const stringMatch = {
-        [RSEType.Disk]: "Disk",
-        [RSEType.Tape]: "Tape"
+        [RSEType.DISK]: "Disk",
+        [RSEType.TAPE]: "Tape"
     }
     return (
         <span
@@ -37,8 +37,8 @@ export const RSETypeTag: React.FC<RSETypeTagProps> = (
                 "font-bold",
                 !neversmall ? "w-6 md:w-24 rounded-full md:rounded" : "w-24",
                 forcesmall ? "w-6 md:w-6 rounded-full md:rounded-full" : "",
-                rsetype === RSEType.Disk ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300" :
-                    rsetype === RSEType.Tape ? "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-300" :
+                rsetype === RSEType.DISK ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300" :
+                    rsetype === RSEType.TAPE ? "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-300" :
                         "",
                 className ?? ""
             )}
