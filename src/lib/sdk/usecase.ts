@@ -499,7 +499,7 @@ export abstract class BaseMultiCallStreamableUseCase<
             callback(null, {
                 status: 'error',
                 requestModel: this.requestModel,
-                errorModel: errorModel,
+                responseModel: errorModel,
             })
         }
     }
