@@ -4,7 +4,7 @@ import { RuleMeta } from "@/lib/core/entity/rucio";
 import { createRuleMeta } from "test/fixtures/table-fixtures";
 import { useState, useEffect } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { HTTPRequest } from "@/lib/common/http";
+import { HTTPRequest } from "@/lib/sdk/http";
 
 export default function PageRule() {
     const comDOM = useComDOM<RulePageLockEntry>(

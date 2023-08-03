@@ -1,4 +1,4 @@
-import type { HTTPRequest } from '@/lib/common/http'
+import type { HTTPRequest } from '@/lib/sdk/http'
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port'
 import appContainer from '@/lib/infrastructure/ioc/container-config'
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway'

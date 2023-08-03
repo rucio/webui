@@ -6,7 +6,7 @@ import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { useEffect, useState } from "react";
 import { createDIDDatasetReplicas, createDIDMeta, createDIDRules, mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { DID } from '@/lib/core/entity/rucio';
-import { HTTPRequest } from "@/lib/common/http";
+import { HTTPRequest } from "@/lib/sdk/http";
 
 
 export default function PageDID() {

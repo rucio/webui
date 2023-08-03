@@ -6,7 +6,7 @@ import {
     CreateRuleQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
 } from '@/lib/infrastructure/data/view-model/create-rule'
-import { HTTPRequest } from "@/lib/common/http";
+import { HTTPRequest } from "@/lib/sdk/http";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 
 export default function CreateRule() {

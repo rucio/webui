@@ -1,4 +1,4 @@
-import { HTTPRequest } from "@/lib/common/http";
+import { HTTPRequest } from "@/lib/sdk/http";
 import { DIDMetaDTO } from "@/lib/core/dto/did-dto";
 import { DIDAvailability, DIDType } from "@/lib/core/entity/rucio";
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";

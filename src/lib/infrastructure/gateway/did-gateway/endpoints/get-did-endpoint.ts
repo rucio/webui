@@ -1,6 +1,6 @@
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints"
 import { BaseHttpErrorTypes } from "@/lib/sdk/http"
-import { HTTPRequest } from "@/lib/common/http";
+import { HTTPRequest } from "@/lib/sdk/http";
 import { DIDDTO } from "@/lib/core/dto/did-dto";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { Response } from "node-fetch";

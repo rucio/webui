@@ -3,7 +3,7 @@ import { ListDID as ListDIDStory } from "@/component-library/Pages/DID/ListDID";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { DIDMetaViewModel, DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { HTTPRequest, prepareRequestArgs } from "@/lib/common/http";
+import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 import { useEffect, useState } from "react";
 import { createDIDMeta } from "test/fixtures/table-fixtures";
 

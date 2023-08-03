@@ -4,7 +4,7 @@ import appContainer from "@/lib/infrastructure/ioc/container-config";
 import GATEWAYS from "@/lib/infrastructure/ioc/ioc-symbols-gateway";
 import { PassThrough } from "node:stream";
 import { Response } from "node-fetch";
-import { HTTPRequest } from "@/lib/common/http";
+import { HTTPRequest } from "@/lib/sdk/http";
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
