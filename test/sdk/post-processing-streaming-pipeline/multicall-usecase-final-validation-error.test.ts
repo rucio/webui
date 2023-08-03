@@ -4,36 +4,12 @@ import { BaseMultiCallStreamableUseCase } from "@/lib/sdk/usecase";
 import { BaseErrorResponseModel } from "@/lib/sdk/usecase-models";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 import { TRequestModel, TResponseModel, StreamDTO, TDTO } from "../fixtures/models";
-import { SecondPipelineElement } from "../fixtures/pipeline-elements";
+import { FirstPipelineElement, SecondPipelineElement } from "../fixtures/pipeline-elements";
 import { TestPresenter } from "../fixtures/presenter";
 import { Readable } from "stream";
 import { MockHttpStreamableResponseFactory } from "test/fixtures/http-fixtures";
 
 describe("Post Processing Streaming Pipeline Error Handling", () => {
-    class StupidPipelineElement extends BaseStreamingPostProcessingPipelineElement<
-    TRequestModel,
-    TResponseModel,
-    BaseErrorResponseModel,
-    TDTO> {
-        makeGatewayRequest(requestModel: { rucioAuthToken: string; }, responseModel: TResponseModel): Promise<TDTO> {
-            return Promise.resolve({
-                status: "error",
-                errorCode: 401,
-                errorType: "gateway_endpoint_error",
-                errorMessage: "Failed to authenticate user",
-            } as TDTO);
-        }
-       
-        handleGatewayError(error: TDTO): BaseErrorResponseModel {
-            throw new Error("Should not be called.");
-        }
-        
-        transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel {
-            throw new Error("Should not be called.");
-        }
-
-    }
-
     class TestErrorInPipilineElementUseCase extends BaseMultiCallStreamableUseCase<
         TRequestModel,
         TResponseModel,
@@ -43,10 +19,10 @@ describe("Post Processing Streaming Pipeline Error Handling", () => {
         BaseViewModel
     > {
         constructor(response: any) {
-            const errorPipelineElement = new StupidPipelineElement()
-            const validPipelineElement = new SecondPipelineElement()
+            const firstPipelineElement = new FirstPipelineElement()
+            const secondPipelineElement = new SecondPipelineElement()
             const presenter = new TestPresenter(response)
-            super(presenter, [validPipelineElement, errorPipelineElement])
+            super(presenter, [firstPipelineElement, secondPipelineElement])
         }
         
         validateRequestModel(requestModel: { rucioAuthToken: string; }): BaseErrorResponseModel | undefined {
@@ -90,14 +66,25 @@ describe("Post Processing Streaming Pipeline Error Handling", () => {
         }
 
         validateFinalResponseModel(responseModel: TResponseModel): { isValid: boolean; errorModel?: BaseErrorResponseModel | undefined; } {
-            // Should be called only once
+            if (responseModel.message === 'root_element_2 pipeline element 1 transformed pipeline element 2 transformed') {
+                const error: BaseErrorResponseModel = {
+                    status: 'error',
+                    code: 400,
+                    name: 'ValidationError',
+                    message: 'Failed to validate response model',
+                }
+                return {
+                    isValid: false,
+                    errorModel: error,
+                }
+            }
             return {
                 isValid: true,
             }
         }
     }
 
-    it("should stream a Error ViewModel when an error occurs in a pipeline element", async () => {
+    it("should stream a Error ViewModel when an error occurs during final validation of response model", async () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse()
         const useCase = new TestErrorInPipilineElementUseCase(res)
         const requestModel: TRequestModel = {
@@ -126,13 +113,13 @@ describe("Post Processing Streaming Pipeline Error Handling", () => {
         console.log(receivedData)
         expect (receivedData).toEqual([
             {
-                status: 'error',
-                title: 'failed: Failed to authenticate user',
+                status: 'success',
+                title: 'success: root_element_1 pipeline element 1 transformed pipeline element 2 transformed',
             },
             {
                 status: 'error',
-                title: 'failed: Failed to authenticate user'
-            },
+                title: 'failed: Failed to validate response model',
+            }
         ])       
 
     })
