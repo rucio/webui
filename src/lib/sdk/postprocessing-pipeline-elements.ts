@@ -96,16 +96,6 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
     abstract makeGatewayRequest(requestModel: TRequestModel, responseModel: TResponseModel): Promise<TDTO>
 
     /**
-     * Handles the individual DTO object returned by the gateway's response stream.
-     * @param dto The DTO returned by the gateway.
-     * @returns An object that contains the DTO or error model and the status of processing the DTO.
-     */
-    // abstract validateDTO(dto: TDTO): {
-    //     status: 'success' | 'error' | 'critical'
-    //     data: TDTO | TErrorModel
-    // }
-
-    /**
      * Handles a gateway error by converting it to an error model.
      * This method is called when the gateway returns a DTO with a status of `error`.
      * @param error The DTO returned by the gateway.
@@ -154,7 +144,7 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
     async _transform(chunk: {status: 'success' | 'error', requestModel: TRequestModel, responseModel: TResponseModel | TErrorModel }, encoding: BufferEncoding, callback: (error?: Error | null, data?: any | TErrorModel) => void): Promise<void> {
         let { status, requestModel, responseModel } = chunk
         
-        //bypass is responseModel is already an error model
+        //bypass if responseModel is already an error model
         if (status === 'error') {
             const errorModel = responseModel as TErrorModel
             callback(null, {

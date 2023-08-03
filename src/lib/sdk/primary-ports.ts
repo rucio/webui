@@ -24,7 +24,6 @@ export interface BaseAuthenticatedInputPort<TRequestModel> {
 /**
  * A base interface for streamable input ports.
  * @typeparam AuthenticatedRequestModel The type of the authenticated request model for the input port.
- * @deprecated Primary Input Ports should not be streamable!! Use {@link BaseAuthenticatedInputPort} instead.
  */
 export interface BaseStreamableInputPort<AuthenticatedRequestModel>
     extends Transform {

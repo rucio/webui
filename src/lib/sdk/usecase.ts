@@ -16,7 +16,6 @@ import { BaseDTO, BaseStreamableDTO } from './dto'
 import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { BaseStreamingPresenter } from './presenter'
 import { BaseViewModel } from './view-models'
-import { pipeline } from 'stream'
 
 /**
  * A type that represents a simple use case that does not require authentication.
@@ -36,7 +35,7 @@ export type TAuthenticatedUseCase<TRequestModel> = BaseAuthenticatedInputPort<
  * A type that represents a streamable use case. These usecases are always authenticated.
  * @typeparam TRequestModel The type of the request model for the use case.
  */
-export type TStreamableUseCase<TRequestModel> = BaseStreamableInputPort<
+export type TStreamableUseCase<TRequestModel> = BaseInputPort<
     AuthenticatedRequestModel<TRequestModel>
 >
 
@@ -433,23 +432,11 @@ export abstract class BaseMultiCallStreamableUseCase<
             ...this.postProcessingPipelineElements,
             this.finalResponseValidationTransform,
         ]
-        // TODO: cleanup
         for (let i = 1; i < pipelineElements.length; i++) {
             const pipelineElement = pipelineElements[i]
             const prevPipelineElement = pipelineElements[i - 1]
-            prevPipelineElement
-                // .on('error', error =>
-                //     this.handleStreamError(error as TErrorModel),
-                // )
-                // .on('end', () => {
-                //     console.log("********** Pipeline element ended **********");
-                // })
-                .pipe(pipelineElement)
-            // pipeline(prevPipelineElement, pipelineElement, (error) => {
-            //     console.log("********** Pipeline element ERRRORRROROROROROROROR **********");
-            //     console.log(`${prevPipelineElement.constructor.name} -> ${pipelineElement.constructor.name} error: ${error?.message}`)
-            //     console.log('---------------------------------------------------------------')
-            // })
+            prevPipelineElement.pipe(pipelineElement)
+
         }
         this.presenter.setupStream(this.finalResponseValidationTransform)
     }
