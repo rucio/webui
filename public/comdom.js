@@ -72,7 +72,7 @@ class ComDOM {
         let fetchDetails = {}
         fetchDetails['method'] = this.method
         if(this.headers !== null) fetchDetails['headers'] = this.headers
-        if(this.body !== null) fetchDetails['body'] = JSON.stringify(this.body)
+        if(this.method === 'POST' && this.body !== null) fetchDetails['body'] = JSON.stringify(this.body)
         const res = await fetch(this.url, fetchDetails);
         const reader = res.body.getReader();
         const decoder = new TextDecoder();

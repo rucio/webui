@@ -39,11 +39,11 @@ export default function ListDID() {
     const didQuery = async (query: string, type: DIDType) => {
         const request: HTTPRequest = {
             url: new URL('http://localhost:3000/api/dids'),
-            method: 'POST',
+            method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
             } as HeadersInit),
-            body: {
+            params: {
                 "query": query,
                 "type": type
             },

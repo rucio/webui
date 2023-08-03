@@ -154,10 +154,10 @@ export abstract class BaseStreamingPresenter<
             if(responseModel.status === 'success'){
                 const viewModel =
                 this.streamResponseModelToViewModel(responseModel)
-                callback(null, JSON.stringify(viewModel))
+                callback(null, JSON.stringify(viewModel) + "\n")
             } else {
                 const viewModel = this.streamErrorModelToViewModel(responseModel as unknown as TErrorModel)
-                callback(null, JSON.stringify(viewModel))
+                callback(null, JSON.stringify(viewModel) + "\n")
             }
         } catch (error) {
             // If an error occurs while processing response or error models, we need to handle it here.
