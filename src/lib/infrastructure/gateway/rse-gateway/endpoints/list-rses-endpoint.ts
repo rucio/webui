@@ -58,7 +58,7 @@ export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO
      * @returns The RSEDTO object
      */
     createDTO(response: Buffer): RSEDTO {
-        const data: TRucioRSE = JSON.parse(response.toString())
+        const data: TRucioRSE = JSON.parse(JSON.parse(response.toString()))
         const dto: RSEDTO = convertToRSEDTO(data)
         return dto
     }

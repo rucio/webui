@@ -37,7 +37,7 @@ import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
 import SwitchAccountController, { ISwitchAccountController } from "../controller/switch-account-controller";
 import SwitchAccountPresenter from "../presenter/switch-account-presenter";
-import { loadFeatures, loadFeaturesSync } from "@/lib/sdk/ioc-helpers";
+import { loadFeaturesSync } from "@/lib/sdk/ioc-helpers";
 import ListDidsFeature from "./features/list-dids-feature";
 import LoginConfigFeature from "./features/logic-config-feature";
 import DIDMetaFeature from "./features/did-meta-feature";
@@ -45,9 +45,10 @@ import SubscriptionGatewayOutputPort from "@/lib/core/port/secondary/subscriptio
 import SubscriptionGateway from "../gateway/subscription-gateway/subscription-gateway";
 import GetSubscriptionFeature from "./features/get-subscription-feature";
 import ListSubscriptionsFeature from "./features/list-subscriptions-feature";
-import { ListDID } from "@/component-library/Pages/DID/ListDID";
 import ListDIDRulesFeature from "./features/list-did-rules-feature";
 import DIDKeyValuePairsDataFeature from "./features/get-did-keyvaluepairs-feature";
+import RSEGatewayOutputPort from "@/lib/core/port/secondary/rse-gateway-output-port";
+import RSEGateway from "../gateway/rse-gateway/rse-gateway";
 
 
 /**
@@ -58,9 +59,9 @@ appContainer.bind<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT).to(RucioAccountGat
 appContainer.bind<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER).to(RucioAuthServer);
 appContainer.bind<DIDGatewayOutputPort>(GATEWAYS.DID).to(RucioDIDGateway);
 appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
+appContainer.bind<RSEGatewayOutputPort>(GATEWAYS.RSE).to(RSEGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
 appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
-
 
 loadFeaturesSync(appContainer, [
     new DIDMetaFeature(appContainer),
