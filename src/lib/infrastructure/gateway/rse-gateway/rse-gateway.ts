@@ -6,22 +6,15 @@ import ListRSEsEndpoint from "./endpoints/list-rses-endpoint";
 @injectable()
 export default class RSEGateway implements RSEGatewayOutputPort {
     async listRSEs(rucioAuthToken: string, rseExpression: string): Promise<ListRSEsDTO> {
-        try {
             const endpoint: ListRSEsEndpoint = new ListRSEsEndpoint(rucioAuthToken, rseExpression)
-            await endpoint.fetch()
-            const dto: ListRSEsDTO = {
-                status: 'success',
-                stream: endpoint
-            }
-            return Promise.resolve(dto)
-        } catch(error) {
-            const errorDTO: ListRSEsDTO = {
-                status: 'error',
-                errorName: 'Exception occurred while fetching RSEs',
-                errorType: 'gateway_endpoint_error',
-                errorMessage: error?.toString(),
+            const errorDTO = await endpoint.fetch()
+            if(!errorDTO) {
+                const listRSEsDTO: ListRSEsDTO = {
+                    status: 'success',
+                    stream: endpoint
+                }
+                return listRSEsDTO
             }
             return Promise.resolve(errorDTO)
-        }
     }
 }

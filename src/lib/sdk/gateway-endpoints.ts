@@ -8,6 +8,7 @@ import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-confi
 import { BaseDTO, BaseStreamableDTO } from './dto';
 import fetch from 'node-fetch';
 import { BaseHttpErrorTypes } from './http';
+import { PassThrough } from 'node:stream';
 
 /**
  * An abstract class that extends the `Transform` stream class and provides a base implementation for streamable API endpoints.
@@ -78,7 +79,7 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
             throw new Error(`Request not initialized for ${this.constructor.name}`);
         }
         
-            const response = await this.streamingGateway.getJSONChunks(this.request, this.streamAsNDJSON);
+        const response = await this.streamingGateway.getJSONChunks(this.request, this.streamAsNDJSON);
         if (response instanceof Response) {
             const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response)
             if (commonErrors) {
@@ -87,11 +88,12 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
             
             const error = await this.reportErrors(response.status, response);
             if (error) {
-                throw error;
+                return error;
             }
             return;
         }
-        response.pipe(this);
+        const stream = response as PassThrough;
+        stream.pipe(this);
     }
 
      /**

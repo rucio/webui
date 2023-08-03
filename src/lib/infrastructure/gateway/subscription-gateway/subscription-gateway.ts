@@ -24,12 +24,14 @@ export default class SubscriptionGateway implements SubscriptionGatewayOutputPor
     async list(rucioAuthToken: string, account: string): Promise<ListSubscriptionsDTO> {
         try {
             const endpoint: ListSubscriptionsEndpoint = new ListSubscriptionsEndpoint(rucioAuthToken, account)
-            await endpoint.fetch()
-            const dto: ListSubscriptionsDTO = {
-                status: 'success',
-                stream: endpoint
+            const errorDTO: ListSubscriptionsDTO | undefined = await endpoint.fetch()
+            if(!errorDTO) {
+                return {
+                    status: 'success',
+                    stream: endpoint
+                }
             }
-            return Promise.resolve(dto)
+            return errorDTO
         } catch(error) {
             const errorDTO: ListSubscriptionsDTO = {
                 status: 'error',

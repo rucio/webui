@@ -85,12 +85,15 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
     ): Promise<ListDIDDTO> {
         try {
             const endpoint = new ListDIDsEndpoint(rucioAuthToken, scope, name, type)
-            await endpoint.fetch()
-            const dto: ListDIDDTO = {
-                status: 'success',
-                stream: endpoint,
+            const errorDTO: ListDIDDTO | undefined = await endpoint.fetch()
+            if(!errorDTO) {
+                const dto: ListDIDDTO = {
+                    status: 'success',
+                    stream: endpoint,
+                }
+                return dto
             }
-            return Promise.resolve(dto)
+            return Promise.resolve(errorDTO)
         } catch (error) {
             const errorDTO: ListDIDDTO = {
                 status: 'error',
