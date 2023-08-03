@@ -1,5 +1,5 @@
 import { Transform, TransformCallback } from 'stream';
-import{ HTTPRequest, prepareRequestArgs} from '@/lib/common/http';
+import{ HTTPRequest, prepareRequestArgs} from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import type StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';

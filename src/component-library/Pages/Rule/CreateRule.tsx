@@ -15,7 +15,7 @@ import { NumInput } from '../../Input/NumInput';
 import { AreaInput } from '../../Input/AreaInput';
 import { SummaryPage } from './SummaryPage';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
-import { HTTPRequest } from "@/lib/common/http";
+import { HTTPRequest } from "@/lib/sdk/http";
 import { Heading } from '../Helpers/Heading';
 import { Body } from '../Helpers/Body';
 
