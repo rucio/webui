@@ -5,7 +5,7 @@ import { Component, useEffect, useState } from "react";
 import { createSubscriptionRuleStates } from "test/fixtures/table-fixtures";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 
-export default function ListSubscription() {
+export default function ListSubscription({ params }: { params: { account: string }}) {
     const ComDOM = useComDOM<SubscriptionRuleStates>(
         "subscription-rule-states-query",
         [],

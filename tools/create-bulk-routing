@@ -1,0 +1,49 @@
+#!/usr/bin/python3
+
+import sys
+import json
+from pathlib import Path
+import argparse
+from os import mkdir
+
+def create_folder(folderdef, rootdir):
+    name, contents = folderdef["name"], folderdef["contents"]
+    print("Creating folder", name, "in", rootdir)
+    try:
+        mkdir(rootdir)
+    except FileExistsError:
+        print("Folder already exists, skipping")
+    if contents:
+        for route in contents:
+            create_folder(route, rootdir.joinpath(route["name"]))
+    else:
+        print("Creating file", "page.tsx", "in", rootdir)
+        try:
+            with open(rootdir.joinpath("page.tsx"), "x") as f:
+                f.write("""
+'use client';
+export default function Page() {
+    return (
+        <div>
+            <h1>Page</h1>
+        </div>
+    )
+}
+                """)
+        except FileExistsError:
+            print("File already exists, skipping")
+
+if __name__ == "__main__":
+    # argparse
+    parser = argparse.ArgumentParser(description="Create a bulk of folders and files for routing")
+    parser.add_argument("rootdir", help="The root directory to create the folders in")
+
+    args = parser.parse_args()
+
+    # Parse Stdin JSON input
+    text_input = sys.stdin.read()
+    json_input: dict = json.loads(text_input)
+
+    location = Path(args.rootdir)
+    for route in json_input["contents"]:
+        create_folder(route, location.joinpath(route["name"]))

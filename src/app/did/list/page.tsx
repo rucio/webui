@@ -1,4 +1,5 @@
 'use client';
+
 import { ListDID as ListDIDStory } from "@/component-library/Pages/DID/ListDID";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { DIDMetaViewModel, DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
@@ -7,9 +8,7 @@ import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 import { useEffect, useState } from "react";
 import { createDIDMeta } from "test/fixtures/table-fixtures";
 
-
-export default function ListDID() {
-
+export default function Page() {
     const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMetaViewModel>({} as DIDMetaViewModel)
     const didMetaQuery = async (scope: string, name: string) => {
         const req: HTTPRequest = {
@@ -17,23 +16,23 @@ export default function ListDID() {
             url: new URL('http://localhost:3000/api/didmeta'),
             params: {
                 "scope": scope,
-                "name": name 
+                "name": name
             },
             headers: new Headers({
                 'Content-Type': 'application/json',
             } as HeadersInit)
         }
-        const {url, requestArgs} = prepareRequestArgs(req)
+        const { url, requestArgs } = prepareRequestArgs(req)
         console.log(url)
         const res = await fetch(url, {
             method: "GET",
             headers: new Headers({
                 'Content-Type': 'application/json',
-            } as HeadersInit)            
+            } as HeadersInit)
         })
         // console.log(await res.json())
 
-        setDIDMetaQueryResponse({status: 'success', ... await res.json()})
+        setDIDMetaQueryResponse({ status: 'success', ... await res.json() })
     }
 
     const didQuery = async (query: string, type: DIDType) => {
@@ -60,7 +59,7 @@ export default function ListDID() {
         true
     )
     useEffect(() => {
-        setDIDMetaQueryResponse({status: 'success', ...createDIDMeta()})
+        setDIDMetaQueryResponse({ status: 'success', ...createDIDMeta() })
     }, [])
     useEffect(() => {
         const setRequest = async () => {
