@@ -97,7 +97,8 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
     }
 
      /**
-     * Reports any errors that occurred during the API request.
+     * Reports any errors that occurred during the API request except HTTP status codes 400, 401, 406 and 500, which are automatically
+     * handled by the `handleCommonGatewayEndpointErrors` function.
      * The implementation must check the response status code and return a suitable data transfer object (DTO) if an error occurred.
      * The HTTP status codes 400, 401, and 500 are handled by the `handleCommonGatewayEndpointErrors` function.
      * @param statusCode The HTTP status code returned by the API.
@@ -229,7 +230,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
 
 /**
 * Reports any common errors that occurred during the Gateway request.
-* Handles HTTP status codes 400, 401, and 500.
+* Handles HTTP status codes 400, 401, 406 and 500.
 * @param statusCode The HTTP status code returned by the API.
 * @param response The response object returned by the API.
 * @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error,

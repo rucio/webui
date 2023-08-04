@@ -2,7 +2,7 @@ import "reflect-metadata";
 import StreamGatewayOutputPort from "@/lib/core/port/secondary/stream-gateway-output-port";
 import StreamingGateway from "../../sdk/streaming-gateway";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
-import RucioAccountGateway from "../gateway/account-gateway";
+import RucioAccountGateway from "../gateway/account-gateway/account-gateway";
 import DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
 import RucioDIDGateway from "../gateway/did-gateway/did-gateway";
 import { Container, interfaces } from "inversify";

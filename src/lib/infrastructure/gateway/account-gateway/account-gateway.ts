@@ -1,8 +1,9 @@
-import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, TAccountAttributes } from "@/lib/core/dto/account-dto";
+import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, AccountRSEUsageDTO, ListAccountRSEUsageDTO, TAccountAttributes } from "@/lib/core/dto/account-dto";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import type EnvConfigGatewayOutputPort from "@/lib/core/port/secondary/env-config-gateway-output-port";
 import { inject, injectable } from "inversify";
-import GATEWAYS from "../ioc/ioc-symbols-gateway";
+import GATEWAYS from "../../ioc/ioc-symbols-gateway";
+import ListAccountRSEUsageEndpoint from "./endpoints/list-account-rse-usage-endpoint";
 
 @injectable()
 export default class RucioAccountGateway implements AccountGatewayOutputPort {
@@ -10,6 +11,18 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         @inject(GATEWAYS.ENV_CONFIG) private envConfigGateway: EnvConfigGatewayOutputPort,
     ) {
         this.envConfigGateway = envConfigGateway;
+    }
+    
+    async listAccountRSEUsage(account: string, rucioAuthToken: string): Promise<ListAccountRSEUsageDTO> {
+        const endpoint: ListAccountRSEUsageEndpoint = new ListAccountRSEUsageEndpoint(rucioAuthToken, account)
+        const errorDTO: ListAccountRSEUsageDTO | undefined = await endpoint.fetch()
+        if(!errorDTO) {
+            return {
+                status: 'success',
+                stream: endpoint
+            }
+        }
+        return errorDTO
     }
 
     generateErrorResponse(error: AccountAttributeErrorTypesDTO, account: string, message: string): AccountAttributesDTO {
