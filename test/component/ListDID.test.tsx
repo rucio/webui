@@ -5,7 +5,7 @@
 import { render, act, screen, cleanup, fireEvent } from "@testing-library/react";
 import { ListDID as ListDIDStory } from "@/component-library/Pages/DID/ListDID";
 import { DIDMeta } from "@/lib/core/entity/rucio";
-import { createDID, createDIDMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureDIDViewModel, fixtureDIDMetaViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did";
 var format = require("date-format")
 
@@ -13,7 +13,7 @@ describe("ListDID Story Test", () => {
     it("Checks empty render of the story", async () => {
         await act(async () => render(
             <ListDIDStory
-                comdom={mockUseComDOM(Array.from({length: 0}, () => createDID()))}
+                comdom={mockUseComDOM(Array.from({length: 0}, () => fixtureDIDViewModel()))}
                 didQuery={jest.fn(x => console.log(x))}
                 didMetaQuery={jest.fn(x => console.log(x))}
                 didMetaQueryResponse={{} as DIDMetaViewModel}
@@ -61,10 +61,10 @@ describe("ListDID Story Test", () => {
             SOLUTION:
             remove `aria-label` from the table rows, grab table rows differently.
         */
-        const mockDIDMeta = createDIDMeta()
+        const mockDIDMeta = fixtureDIDMetaViewModel()
         await act(async () => render(
             <ListDIDStory
-                comdom={mockUseComDOM(Array.from({length: 100}, () => createDID()))}
+                comdom={mockUseComDOM(Array.from({length: 100}, () => fixtureDIDViewModel()))}
                 didMetaQuery={jest.fn(x => console.log(x))}
                 didMetaQueryResponse={mockDIDMeta}
             />

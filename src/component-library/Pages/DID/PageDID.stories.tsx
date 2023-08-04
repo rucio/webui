@@ -1,7 +1,7 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { PageDID as PD } from "./PageDID";
 
-import { createDIDMeta, mockUseComDOM, createDIDRules, createDID, createDIDDatasetReplicas, createFileReplicaState, createFileReplicaStateD } from "test/fixtures/table-fixtures";
+import { fixtureDIDMetaViewModel, mockUseComDOM, fixtureDIDRulesViewModel, fixtureDIDViewModel, fixtureDIDDatasetReplicasViewModel, fixtureFilereplicaStateViewModel, fixtureFilereplicaStateDViewModel, fixtureDIDKeyValuePairsViewModel } from "test/fixtures/table-fixtures";
 
 export default {
     title: "Components/Pages/DID",
@@ -11,25 +11,17 @@ export default {
 const Template: StoryFn<typeof PD> = (args) => <PD {...args} />;
 export const PageDID = Template.bind({});
 PageDID.args = {
-    didMeta: createDIDMeta(),
+    didMeta: fixtureDIDMetaViewModel(),
     fromDidList: "yosearch",
     // Parent DIDs [FILE]
-    didParentsComDOM: mockUseComDOM(Array.from({length: 100}, (_, i) => createDID())),
+    didParentsComDOM: mockUseComDOM(Array.from({length: 100}, (_, i) => fixtureDIDViewModel())),
     // DID Metadata
-    didMetadataComDOM: mockUseComDOM([
-        { key: "bernd", value: "das brot" },
-        { key: "kika", value: "der sender" },
-        { key: "kikaninchen", value: "das tier" },
-        { key: "my birthday", value: (new Date(2021, 3)).toISOString() },
-        { key: "am_i_anton", value: false },
-        { key: "R1-tastefactor", value: 3.142 },
-        { key: "hello", value: null },
-    ]),
+    didMetadataComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDKeyValuePairsViewModel())),
     // Filereplicas
-    didFileReplicasComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => createFileReplicaState())),
-    didFileReplicasDComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => createFileReplicaStateD())),
-    didRulesComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => createDIDRules())),
+    didFileReplicasComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureFilereplicaStateViewModel())),
+    didFileReplicasDComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureFilereplicaStateDViewModel())),
+    didRulesComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDRulesViewModel())),
     // Contents
-    didContentsComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => createDID())),
-    didDatasetReplicasComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => createDIDDatasetReplicas()))
+    didContentsComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDViewModel())),
+    didDatasetReplicasComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDDatasetReplicasViewModel()))
 }

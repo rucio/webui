@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react'
-import { createRandomDIDLong, createRSEAccountUsageLimit, mockUseComDOM } from 'test/fixtures/table-fixtures'
+import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures'
 
 import { CreateRule as CR } from './CreateRule'
 import {
@@ -21,7 +21,7 @@ CreateRule.args = {
             success: true,
         })
     },
-    didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => createRandomDIDLong())),
+    didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureDIDLongViewModel())),
     didValidation: (query: TypedDIDValidationQuery) => {
         // if the DID contains the string "error", it will be added to the error list
         var localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] }
@@ -38,5 +38,5 @@ CreateRule.args = {
             return Promise.reject(localErrorDIDs)
         }
     },
-    rseListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => createRSEAccountUsageLimit())),
+    rseListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureRSEAccountUsageLimitViewModel())),
 }

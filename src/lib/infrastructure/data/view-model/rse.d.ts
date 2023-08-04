@@ -1,6 +1,6 @@
 import { DateISO } from "@/lib/core/entity/rucio"
 import { BaseViewModel } from "@/lib/sdk/view-models"
-import { RSE } from "@/lib/core/entity/rucio"
+import { RSE, RSEAccountUsageLimit } from "@/lib/core/entity/rucio"
 
 export type RSEProtocol = {
     rseid: string,
@@ -32,3 +32,9 @@ export type RSEAttribute = {
 }
 
 export interface RSEViewModel extends RSE, BaseViewModel {}
+
+export interface RSEProtocolViewModel extends RSEProtocol, BaseViewModel {}
+
+export interface RSEAttributeViewModel extends RSEAttribute, BaseViewModel {}
+
+export interface RSEAccountUsageLimitViewModel extends RSEAccountUsageLimit, BaseViewModel {}

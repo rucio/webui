@@ -1,9 +1,9 @@
-import { DIDLong } from "@/lib/core/entity/rucio";
+import { DIDLongViewModel } from "@/lib/infrastructure/data/view-model/did";
 import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { StoryFn, Meta } from "@storybook/react";
 import { createColumnHelper, Column} from "@tanstack/react-table";
-import { createRandomDIDLong, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureDIDLongViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { StreamedTable as S } from "./StreamedTable";
 
 export default {
@@ -13,11 +13,11 @@ export default {
 
 const Template: StoryFn<typeof S> = (args) => <S {...args} />;
 
-const columnHelper = createColumnHelper<DIDLong>()
+const columnHelper = createColumnHelper<DIDLongViewModel>()
 
 export const StreamedTable = Template.bind({});
 StreamedTable.args = {
-    tablecomdom: mockUseComDOM<DIDLong>(Array.from({length: 100}, () => createRandomDIDLong())),
+    tablecomdom: mockUseComDOM<DIDLongViewModel>(Array.from({length: 5}, () => fixtureDIDLongViewModel())),
     tablecolumns: [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",

@@ -11,36 +11,33 @@ import { twMerge } from "tailwind-merge";
 import React, { useEffect, useState } from "react";
 
 // DTO etc
-import { DIDMeta, DIDType } from "@/lib/core/entity/rucio";
+import { DIDType } from "@/lib/core/entity/rucio";
 import { PageDIDMetadata } from "./PageDIDMetadata";
 import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
 import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
 import { PageDIDRules } from "./PageDIDRules";
-import {
-    DIDContents, DIDDatasetReplicas, DIDKeyValuePairs, DIDParents, DIDRules,
-    FilereplicaState, FilereplicaStateD
-} from "@/lib/infrastructure/data/view-model/page-did";
 import { PageDIDByType } from "./PageDIDByType";
 import { PageDIDDatasetReplicas } from "./PageDIDDatasetReplicas";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { DIDDatasetReplicasViewModel, DIDKeyValuePairsViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 export interface PageDIDPageProps {
-    didMeta: DIDMeta;
+    didMeta: DIDMetaViewModel;
     fromDidList?: string; // if coming from DIDList, this will be the DIDList's query
     // Parent DIDs [FILE]
-    didParentsComDOM: UseComDOM<DIDParents>
+    didParentsComDOM: UseComDOM<DIDViewModel>
     // Metadata [BOTH]
-    didMetadataComDOM: UseComDOM<DIDKeyValuePairs>
+    didMetadataComDOM: UseComDOM<DIDKeyValuePairsViewModel>
     // File Replica States [FILE]
-    didFileReplicasComDOM: UseComDOM<FilereplicaState>
+    didFileReplicasComDOM: UseComDOM<FilereplicaStateViewModel>
     // File Replica States [DATASET]
-    didFileReplicasDComDOM: UseComDOM<FilereplicaStateD>
+    didFileReplicasDComDOM: UseComDOM<FilereplicaStateDViewModel>
     // Rule State [DATASET]
-    didRulesComDOM: UseComDOM<DIDRules>
+    didRulesComDOM: UseComDOM<DIDRulesViewModel>
     // Contents [COLLECTION]
-    didContentsComDOM: UseComDOM<DIDContents>
+    didContentsComDOM: UseComDOM<DIDViewModel>
     // Dataset Replica States [DATASET]
-    didDatasetReplicasComDOM: UseComDOM<DIDDatasetReplicas>
+    didDatasetReplicasComDOM: UseComDOM<DIDDatasetReplicasViewModel>
 }
 
 
@@ -106,7 +103,7 @@ export const PageDID = (
                         "min-h-0 w-full"
                     )}
                 >
-                    <DIDMetaView data={{status: "success", ...props.didMeta}} show horizontal />
+                    <DIDMetaView data={props.didMeta} show horizontal />
                 </div>
             </Heading>
 

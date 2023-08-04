@@ -78,7 +78,7 @@ export const TableFetchstatus: (
                     <StateButton
                         icon={<HiRefresh className="w-full h-full" />}
                         state={state}
-                        onClick={async (e) => { await comdom.start() }} // Request object is already stored in ComDOM
+                        onClick={async (e) => { e.preventDefault(); await comdom.start() }} // Request object is already stored in ComDOM
                     />
                 </div>
                 <div
@@ -90,12 +90,12 @@ export const TableFetchstatus: (
                     <StateButton
                         icon={<HiPause className="w-full h-full" />}
                         state={state}
-                        onClick={async (e) => { await comdom.pause() }}
+                        onClick={async (e) => { e.preventDefault(); await comdom.pause() }}
                     />
                     <StateButton
                         icon={<HiPlay className="w-full h-full" />}
                         state={state}
-                        onClick={async (e) => { await comdom.resume() }}
+                        onClick={async (e) => { e.preventDefault(); await comdom.resume() }}
                     />
                 </div>
             </form>

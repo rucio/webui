@@ -7,23 +7,22 @@ import { createColumnHelper } from "@tanstack/react-table"
 import { twMerge } from "tailwind-merge"
 
 // Viewmodels etc
-import { FilereplicaStateD } from "@/lib/infrastructure/data/view-model/page-did";
-import { FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import { FilereplicaStateDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 
 
 export const PageDIDFilereplicasD = (
     props: {
-        datasetComDOM: UseComDOM<FilereplicaStateD>,
-        replicaComDOM: UseComDOM<FilereplicaState>,
+        datasetComDOM: UseComDOM<FilereplicaStateDViewModel>,
+        replicaComDOM: UseComDOM<FilereplicaStateViewModel>,
         onChangeDatasetSelection: (selected: string) => void,
     }
 ) => {
     const { datasetComDOM, replicaComDOM, onChangeDatasetSelection } = props
-    const columnHelper = createColumnHelper<FilereplicaStateD>()
+    const columnHelper = createColumnHelper<FilereplicaStateDViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",
@@ -56,7 +55,7 @@ export const PageDIDFilereplicasD = (
                     tablecolumns={tablecolumns}
                     tablestyling={{}}
                     tableselecting={{
-                        handleChange: (data: FilereplicaStateD[]) => { console.info(data) },
+                        handleChange: (data: FilereplicaStateDViewModel[]) => { console.info(data) },
                         enableRowSelection: true,
                         enableMultiRowSelection: false
                     }}

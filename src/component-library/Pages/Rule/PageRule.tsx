@@ -3,8 +3,6 @@ import { useState, useEffect } from "react"
 import { twMerge } from "tailwind-merge";
 var format = require("date-format")
 
-import { RuleMeta, RuleNotification } from "@/lib/core/entity/rucio";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables.d";
 import { LockState } from "@/lib/core/entity/rucio";
 import { Tabs } from "../../Misc/Tabs";
 import { SubPage } from "../../Helpers/SubPage";
@@ -25,19 +23,12 @@ import { Titleth, Contenttd, Generaltable } from "../../Helpers/Metatable";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { Heading } from "../Helpers/Heading";
 import { Body } from "../Helpers/Body";
+import { RuleMetaViewModel, RulePageLockEntryViewModel } from "@/lib/infrastructure/data/view-model/rule";
 
-export interface RulePageLockEntry {
-    scope: string;
-    name: string;
-    rse: string;
-    state: LockState;
-    ddm_link: string;
-    fts_link: string;
-}
 
 export interface PageRulePageProps {
-    ruleMeta: RuleMeta;
-    ruleLocks: UseComDOM<RulePageLockEntry>
+    ruleMeta: RuleMetaViewModel;
+    ruleLocks: UseComDOM<RulePageLockEntryViewModel>
 }
 
 
@@ -56,7 +47,7 @@ export const PageRule = (
 
     const meta = props.ruleMeta;
 
-    const columnHelper = createColumnHelper<RulePageLockEntry>()
+    const columnHelper = createColumnHelper<RulePageLockEntryViewModel>()
     const tablecolumns = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",

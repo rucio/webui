@@ -7,7 +7,7 @@ import { BoolTag } from "../../Tags/BoolTag";
 import { RSETypeTag } from "../../Tags/RSETypeTag";
 import { RSETag } from "../../Tags/RSETag";
 import { HiArrowCircleLeft } from "react-icons/hi";
-import { RSEAttribute, RSEProtocol } from "@/lib/infrastructure/data/view-model/rse";
+import { RSEAttribute, RSEAttributeViewModel, RSEProtocol, RSEProtocolViewModel, RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { PageRSEProtocols } from "./PageRSEProtocols";
 import { PageRSEAttributes } from "./PageRSEAttributes";
@@ -16,10 +16,10 @@ import { Body } from "../Helpers/Body";
 import { Heading } from "../Helpers/Heading";
 
 type PageRSEProps = {
-    rse: RSE
+    rse: RSEViewModel
     rseblockstate: RSEBlockState
-    protocolscomdom: UseComDOM<RSEProtocol>
-    attributescomdom: UseComDOM<RSEAttribute>
+    protocolscomdom: UseComDOM<RSEProtocolViewModel>
+    attributescomdom: UseComDOM<RSEAttributeViewModel>
     fromrselist?: boolean
 }
 

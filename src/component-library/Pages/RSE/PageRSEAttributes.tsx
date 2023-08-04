@@ -1,6 +1,5 @@
 import { twMerge } from "tailwind-merge";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { RSEAttribute } from "@/lib/infrastructure/data/view-model/rse";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { P } from "../../Text/Content/P";
@@ -8,13 +7,14 @@ import { H3 } from "../../Text/Headings/H3";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { BoolTag } from "../../Tags/BoolTag";
 import { NullTag } from "../../Tags/NullTag";
+import { RSEAttributeViewModel } from "@/lib/infrastructure/data/view-model/rse";
 
 export const PageRSEAttributes = (
     props: {
-        comdom: UseComDOM<RSEAttribute>
+        comdom: UseComDOM<RSEAttributeViewModel>
     }
 ) => {
-    const columnHelper = createColumnHelper<RSEAttribute>()
+    const columnHelper = createColumnHelper<RSEAttributeViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor("key", {
             id: "key",
@@ -37,7 +37,7 @@ export const PageRSEAttributes = (
         }),
     ]
     return (
-        <StreamedTable<RSEAttribute>
+        <StreamedTable<RSEAttributeViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{}}

@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { createRandomDIDLong, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureDIDViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { PageDIDByType as P } from "./PageDIDByType";
 
 export default {
@@ -12,6 +12,6 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 export const PageDIDByType = Template.bind({});
 PageDIDByType.args = {
     showDIDType: true,
-    comdom: mockUseComDOM(Array.from({length: 100}, (_, i) => createRandomDIDLong()))
+    comdom: mockUseComDOM(Array.from({length: 100}, (_, i) => fixtureDIDViewModel()))
 
 };

@@ -4,6 +4,10 @@ import { twMerge } from "tailwind-merge";
 import { TablePaginationNav } from "./TablePaginationNav";
 import { TableFetchstatus } from "./TableFetchstatus";
 import { TableBreakout } from "./TableBreakout";
+import { TableErrorstatus } from "./TableErrorstatus";
+import { TableErrorreader } from "./TableErrorreader";
+import { BaseViewModel } from "@/lib/sdk/view-models";
+import { useState } from "react";
 
 /**
  * @param T the type of the data in the table
@@ -22,8 +26,9 @@ type TableFooterProps<T> = JSX.IntrinsicElements["tfoot"] & {
     stacked?: boolean // to save horizontal space
 }
 
-export function TableFooter<T>(props: TableFooterProps<T>) {
+export function TableFooter<T extends BaseViewModel>(props: TableFooterProps<T>) {
     const { stacked, className, ...otherprops } = props
+    const [showDetailedErrors, setShowDetailedErrors] = useState<boolean>(false)
 
     return (
         <tfoot
@@ -58,6 +63,15 @@ export function TableFooter<T>(props: TableFooterProps<T>) {
                             !props.stacked ? "flex flex-col space-y-1 md:space-y-0 items-center" : "flex flex-col space-y-1 items-center",
                         )}
                     >
+                        <TableErrorstatus
+                            className={twMerge(
+                                !props.stacked ? "md:absolute md:inset-y-0 md:left-0 md:w-36 lg:w-48" : "md:space-x-2 md:justify-center md:w-[400px]",
+                                "w-full"
+                            )}
+                            comdom={props.comdom}
+                            showDetailedErrors={showDetailedErrors}
+                            setShowDetailedErrors={setShowDetailedErrors}
+                        />
                         <div
                             className={twMerge(
                                 "w-full md:w-[400px]",
@@ -73,6 +87,20 @@ export function TableFooter<T>(props: TableFooterProps<T>) {
                             comdom={props.comdom}
                         />
                     </div>
+                </td>
+            </tr>
+            <tr aria-label="View the error messages">
+                <td
+                    colSpan={props.table.getVisibleLeafColumns().length}
+                    className={twMerge(
+                        showDetailedErrors ? "table-cell" : "hidden"
+                    )}
+                >
+                    <TableErrorreader
+                        comdom={props.comdom}
+                        showDetailedErrors={showDetailedErrors}
+                        setShowDetailedErrors={setShowDetailedErrors}
+                    />
                 </td>
             </tr>
         </tfoot>

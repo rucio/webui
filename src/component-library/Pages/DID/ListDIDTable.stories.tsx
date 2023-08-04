@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { ListDIDTable as L } from "./ListDIDTable";
-import { createDID, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureDIDViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { DID } from "@/lib/core/entity/rucio";
 
 export default {
@@ -12,6 +12,6 @@ const Template: StoryFn<typeof L> = (args) => <L {...args} />;
 
 export const ListDIDTable = Template.bind({});
 ListDIDTable.args = {
-    comdom: mockUseComDOM(Array.from({length: 100}, () => createDID())),
+    comdom: mockUseComDOM(Array.from({length: 100}, () => fixtureDIDViewModel())),
     selectionFunc: (data: DID[]) => {console.info("ListDIDTable", data)}
 };

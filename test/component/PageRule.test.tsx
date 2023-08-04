@@ -5,17 +5,17 @@
 import { render, act, screen, cleanup, fireEvent, getByRole } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { PageRule as PageRuleStory } from "@/component-library/Pages/Rule/PageRule";
-import { createRandomRulePageLockEntry, createRuleMeta, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureRulePageLockEntryViewModel, fixtureRuleMetaViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 var format = require("date-format")
 
-const ruleMeta = createRuleMeta()
+const ruleMeta = fixtureRuleMetaViewModel()
 
 describe("PageRule Story Test", () => {
     it("Check Subpage Movement", async () => {
         await act(async () => render(
             <PageRuleStory
                 ruleMeta={ruleMeta}
-                ruleLocks={mockUseComDOM(Array.from({length: 100}, (v,k) => createRandomRulePageLockEntry()))}
+                ruleLocks={mockUseComDOM(Array.from({length: 100}, (v,k) => fixtureRulePageLockEntryViewModel()))}
             />
         ))
         const user = userEvent.setup()

@@ -22,19 +22,6 @@ export type FilereplicaStateD = {
     temporary_unavailable: number,
 }
 
-export type DIDParents = {
-    name: string;
-    scope: string;
-    did_type: DIDType;
-}
-
-// Contents of a container
-export type DIDContents = {
-    name: string;
-    scope: string;
-    did_type: DIDType;
-}
-
 export type DIDDatasetReplicas = {
     rse: string;
     rseblocked: RSEBlockState;

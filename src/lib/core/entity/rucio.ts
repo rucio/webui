@@ -84,6 +84,15 @@ export type RuleMeta = {
     updated_at: DateISO
 }
 
+export type RulePageLockEntry = {
+    scope: string;
+    name: string;
+    rse: string;
+    state: LockState;
+    ddm_link: string;
+    fts_link: string;
+}
+
 export type Rule = {
     id: string;
     name: string;

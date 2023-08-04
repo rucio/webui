@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { ListRule as L } from "./ListRule";
-import { mockUseComDOM, createRule } from "test/fixtures/table-fixtures";
+import { mockUseComDOM, fixtureRuleViewModel } from "test/fixtures/table-fixtures";
 
 export default {
     title: 'Components/Pages/Rule',
@@ -11,5 +11,5 @@ const Template: StoryFn<typeof L> = (args) => <L {...args} />;
 
 export const ListRule = Template.bind({});
 ListRule.args = {
-    comdom: mockUseComDOM(Array.from({length: 100}, () => createRule()))
+    comdom: mockUseComDOM(Array.from({length: 100}, () => fixtureRuleViewModel()))
 };

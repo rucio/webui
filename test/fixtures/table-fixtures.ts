@@ -1,20 +1,19 @@
 import { faker } from '@faker-js/faker'
-import { RulePageLockEntry } from '@/component-library/Pages/Rule/PageRule'
 import {
-    LockState, DID, DIDLong, DIDMeta, DIDType, RuleMeta, RuleNotification, RuleState,
-    RSEBlockState, Subscription, SubscriptionRuleStates, SubscriptionState,
-    DIDAvailability, RSEAccountUsageLimit,
+    LockState, DIDType, RuleNotification, RuleState,
+    RSEBlockState, SubscriptionState,
+    DIDAvailability,
     ReplicaState,
-    RSE, RSEType, Rule
+    RSEType,
 } from '@/lib/core/entity/rucio'
-import {
-    DIDDatasetReplicas, DIDRules, FilereplicaState, FilereplicaStateD
-} from '@/lib/infrastructure/data/view-model/page-did';
-import { RSEAttribute, RSEProtocol } from '@/lib/infrastructure/data/view-model/rse';
+import { RSEAccountUsageLimitViewModel, RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
-import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
+import { SubscriptionRuleStatesViewModel, SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
+import { BaseViewModel } from '@/lib/sdk/view-models';
+import { DIDDatasetReplicasViewModel, DIDKeyValuePairsViewModel, DIDLongViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 
-export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
+export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {
         query: {
             data: data,
@@ -24,6 +23,16 @@ export function mockUseComDOM<T>(data: T[]): UseComDOM<T> {
         resume: () => { },
         pause: () => { },
     } as UseComDOM<T>
+}
+
+export function mockBaseVM(fail?: "none" | "some" | "all"): BaseViewModel {
+    const setting = fail ?? "none"
+    return {
+        status: setting === "none" ? "success" : (
+            setting === "some" ? faker.helpers.arrayElement(["success", "error"]) : "error"
+        ),
+        message: faker.lorem.words(3),
+    }
 }
 
 function createRandomScope(): string {
@@ -54,16 +63,18 @@ function createRSEExpression(): string {
     return strings.join("&")
 }
 
-export function createDID(): DID {
+export function fixtureDIDViewModel(): DIDViewModel {
     return {
+        ...mockBaseVM(),
         scope: createRandomScope(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         did_type: randomEnum<DIDType>(DIDType),
     }
 }
 
-export function createRandomDIDLong(): DIDLong {
+export function fixtureDIDLongViewModel(): DIDLongViewModel {
     return {
+        ...mockBaseVM(),
         scope: createRandomScope(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         did_type: randomEnum<DIDType>(DIDType),
@@ -72,8 +83,9 @@ export function createRandomDIDLong(): DIDLong {
     }
 }
 
-export function createRandomRulePageLockEntry(): RulePageLockEntry {
+export function fixtureRulePageLockEntryViewModel(): RulePageLockEntryViewModel {
     return {
+        ...mockBaseVM(),
         scope: createRandomScope(),
         name: faker.string.alphanumeric(10),
         rse: createRSEName(),
@@ -83,8 +95,9 @@ export function createRandomRulePageLockEntry(): RulePageLockEntry {
     }
 }
 
-export function createRuleMeta(): RuleMeta {
+export function fixtureRuleMetaViewModel(): RuleMetaViewModel {
     return {
+        ...mockBaseVM(),
         account: faker.internet.userName(),
         activity: faker.company.buzzPhrase(),
         copies: faker.number.int({ min: 1, max: 10 }),
@@ -111,8 +124,9 @@ export function createRuleMeta(): RuleMeta {
     }
 }
 
-export function createRSEAccountUsageLimit(): RSEAccountUsageLimit {
+export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
     return {
+        ...mockBaseVM(),
         rse_id: faker.string.uuid(),
         rse: createRSEName(),
         account: faker.internet.userName(),
@@ -122,8 +136,9 @@ export function createRSEAccountUsageLimit(): RSEAccountUsageLimit {
     }
 }
 
-export function createRSE(): RSE {
+export function fixtureRSEViewModel(): RSEViewModel {
     return {
+        ...mockBaseVM(),
         id: faker.string.uuid(),
         name: createRSEName(),
         rse_type: randomEnum<RSEType>(RSEType),
@@ -133,8 +148,9 @@ export function createRSE(): RSE {
     }
 }
 
-export function createRSEProtocol(): RSEProtocol {
+export function fixtureRSEProtocolViewModel(): RSEProtocolViewModel {
     return {
+        ...mockBaseVM(),
         rseid: faker.string.uuid(),
         scheme: faker.helpers.arrayElement(["srm", "gsiftp", "root", "davs", "s3", "file"]),
         hostname: faker.internet.ip(),
@@ -159,8 +175,9 @@ export function createRSEProtocol(): RSEProtocol {
     }
 }
 
-export function createRSEAttribute(): RSEAttribute {
+export function fixtureRSEAttributeViewModel(): RSEAttributeViewModel {
     return {
+        ...mockBaseVM(),
         key: faker.lorem.words(2).replace(/\s/g, "-"),
         value: faker.helpers.arrayElement([
             faker.lorem.words(3),
@@ -172,8 +189,9 @@ export function createRSEAttribute(): RSEAttribute {
     }
 }
 
-export function createRule(): Rule {
+export function fixtureRuleViewModel(): RuleViewModel {
     return {
+        ...mockBaseVM(),
         id: faker.string.uuid(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         account: faker.internet.userName(),
@@ -187,10 +205,11 @@ export function createRule(): Rule {
     }
 }
 
-export function createDIDMeta(): DIDMeta {
+export function fixtureDIDMetaViewModel(): DIDMetaViewModel {
     // ignore Collections
     const did_type = faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE])
     return {
+        ...mockBaseVM(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         scope: createRandomScope(),
         account: faker.internet.userName(),
@@ -213,8 +232,23 @@ export function createDIDMeta(): DIDMeta {
     }
 }
 
-export function createDIDDatasetReplicas(): DIDDatasetReplicas {
+export function fixtureDIDKeyValuePairsViewModel(): DIDKeyValuePairsViewModel {
     return {
+        ...mockBaseVM(),
+        key: faker.lorem.words(2).replace(/\s/g, "-"),
+        value: faker.helpers.arrayElement([
+            "das brot",
+            faker.date.past().toISOString(),
+            faker.datatype.boolean(),
+            faker.number.int({ min: 0, max: 1e6 }),
+            null,
+        ])
+    }
+}
+
+export function fixtureDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewModel {
+    return {
+        ...mockBaseVM(),
         rse: createRSEName(),
         rseblocked: faker.number.int({ min: 0, max: 7 }) as RSEBlockState,
         availability: faker.datatype.boolean(),
@@ -225,8 +259,9 @@ export function createDIDDatasetReplicas(): DIDDatasetReplicas {
     }
 }
 
-export function createDIDRules(): DIDRules {
+export function fixtureDIDRulesViewModel(): DIDRulesViewModel {
     return {
+        ...mockBaseVM(),
         id: faker.string.uuid(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         state: randomEnum<RuleState>(RuleState),
@@ -236,15 +271,17 @@ export function createDIDRules(): DIDRules {
     }
 }
 
-export function createFileReplicaState(): FilereplicaState {
+export function fixtureFilereplicaStateViewModel(): FilereplicaStateViewModel {
     return {
+        ...mockBaseVM(),
         rse: createRSEName(),
         state: randomEnum<ReplicaState>(ReplicaState),
     }
 }
 
-export function createFileReplicaStateD(): FilereplicaStateD {
+export function fixtureFilereplicaStateDViewModel(): FilereplicaStateDViewModel {
     return {
+        ...mockBaseVM(),
         scope: createRandomScope(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         available: faker.number.int({ min: 0, max: 10 }),
@@ -256,9 +293,9 @@ export function createFileReplicaStateD(): FilereplicaStateD {
     }
 }
 
-
-export function createSubscriptionRuleStates(): SubscriptionRuleStates {
+export function fixtureSubscriptionRuleStatesViewModel(): SubscriptionRuleStatesViewModel {
     return {
+        ...mockBaseVM(),
         name: faker.lorem.words(3).replace(/\s/g, "."),
         state_ok: faker.number.int({ min: 0, max: 10 }),
         state_replicating: faker.number.int({ min: 0, max: 10 }),

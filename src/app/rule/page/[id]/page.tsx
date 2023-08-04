@@ -1,13 +1,13 @@
 'use client';
-import { PageRule as PageRuleStory, RulePageLockEntry } from "@/component-library/Pages/Rule/PageRule";
-import { RuleMeta } from "@/lib/core/entity/rucio";
-import { createRuleMeta } from "test/fixtures/table-fixtures";
+import { PageRule as PageRuleStory } from "@/component-library/Pages/Rule/PageRule";
+import { fixtureRuleMetaViewModel } from "test/fixtures/table-fixtures";
 import { useState, useEffect } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { HTTPRequest } from "@/lib/sdk/http";
+import { RuleMetaViewModel, RulePageLockEntryViewModel } from "@/lib/infrastructure/data/view-model/rule";
 
 export default function PageRule({ params }: { params: { id: string } }) {
-    const comDOM = useComDOM<RulePageLockEntry>(
+    const comDOM = useComDOM<RulePageLockEntryViewModel>(
         "rule-page-lock-query",
         [],
         false,
@@ -15,9 +15,9 @@ export default function PageRule({ params }: { params: { id: string } }) {
         50,
         true
     )
-    const [meta, setMeta] = useState<RuleMeta>({} as RuleMeta)
+    const [meta, setMeta] = useState<RuleMetaViewModel>({} as RuleMetaViewModel)
     useEffect(() => {
-        setMeta({...createRuleMeta(), id: params.id})
+        setMeta({...fixtureRuleMetaViewModel(), id: params.id})
     }, [])
     useEffect(() => {
         const runQuery = async () => {
