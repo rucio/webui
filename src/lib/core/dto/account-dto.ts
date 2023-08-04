@@ -1,3 +1,6 @@
+import { BaseDTO, BaseStreamableDTO } from "@/lib/sdk/dto"
+import { RSEAccountUsageLimit } from "../entity/rucio"
+
 type TAccountAttribute = {
     key: string,
     value: string
@@ -23,3 +26,14 @@ export enum AccountAttributeErrorTypesDTO{
     NO_ATTRIBUTES_FOUND_FOR_ACCOUNT = 'No attributes found for account',
     UNKNOWN_ERROR = 'Unknown Error'
 }
+
+
+/**
+ * DTO for storing the response from /accounts/<account>/rse-usage/ endpoint
+ */
+export interface ListAccountRSEUsageDTO extends BaseStreamableDTO {}
+
+/**
+ * DTO for storing individually streamed RSE Usage for an account
+ */
+export interface AccountRSEUsageDTO extends BaseDTO, RSEAccountUsageLimit {}
