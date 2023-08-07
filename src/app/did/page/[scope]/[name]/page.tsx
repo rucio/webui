@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import { fixtureDIDDatasetReplicasViewModel, fixtureDIDMetaViewModel, fixtureDIDRulesViewModel, mockUseComDOM, fixtureDIDKeyValuePairsViewModel } from 'test/fixtures/table-fixtures';
 import { HTTPRequest } from "@/lib/sdk/http";
 import { DIDMetaViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { didMetaQueryBase } from '@/app/did/queries';
 
 export default function Page({ params }: { params: { scope: string, name: string } }) {
     const [didMeta, setDIDMeta] = useState<DIDMetaViewModel>({} as DIDMetaViewModel)
     const [fromDidList, setFromDidList] = useState<string>("yosearch")
     useEffect(() => {
-        setDIDMeta(fixtureDIDMetaViewModel())
+        didMetaQueryBase(params.scope, params.name).then(setDIDMeta)
     }, [])
 
     const didParentsComDOM = useComDOM<DIDViewModel>(
