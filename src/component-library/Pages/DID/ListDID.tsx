@@ -70,7 +70,12 @@ export const ListDID = (
                     <div className='grow'>
                         <TextInput
                             onBlur={(event: any) => { setDidSearchQuery(event.target.value) }}
-                            onEnterkey={(event: any) => { setDidSearchQuery(event.target.value) }}
+                            onEnterkey={async (e: any) => {
+                                e.preventDefault()
+                                await props.didQuery(e.target.value, didTypeAllowed)
+                                setDidSearchQuery(e.target.value)
+                                props.comdom.start()
+                            }}
                             id="did-search-pattern"
                         />
                     </div>
