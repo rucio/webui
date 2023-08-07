@@ -304,9 +304,9 @@ export function fixtureSubscriptionRuleStatesViewModel(): SubscriptionRuleStates
     }
 }
 
-export function createSubscriptionMeta(): SubscriptionViewModel {
+export function fixtureSubscriptionViewModel(): SubscriptionViewModel {
     return {
-        status: 'success',
+        ...mockBaseVM(),
         account: faker.internet.userName(),
         created_at: faker.date.past().toISOString(),
         id: faker.string.uuid(),

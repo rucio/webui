@@ -70,8 +70,13 @@
           "name": "page",
           "contents": [
             {
-              "name": "[id]",
-              "contents": []
+              "name": "[account]",
+              "contents": [
+                {
+                  "name": "[name]",
+                  "contents": []
+                }
+              ]
             }
           ]
         }
