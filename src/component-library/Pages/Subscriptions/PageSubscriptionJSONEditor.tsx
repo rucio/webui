@@ -26,7 +26,7 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
         const [json, setJson] = useState<string>(defaultString)
         const [jsonError, setJsonError] = useState<string | null>("") // null means no error, "" means no error but not checked yet
         const [helpWanted, setHelpWanted] = useState<boolean>(false)
-        const rowNum = defaultString.split(/\n/).length
+        const rowNum = (defaultString ?? "").split(/\n/).length
         return (
             <div
                 className={twMerge(
