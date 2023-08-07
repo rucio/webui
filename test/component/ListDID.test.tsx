@@ -30,8 +30,8 @@ describe("ListDID Story Test", () => {
         // Check that `No DID selected` is shown instead of the DIDMetaView, etc
         const noDIDSelectedDiv = screen.getByText("No DID selected").closest("div")
         expect(noDIDSelectedDiv).toHaveClass("block")
-        const goDIDViewButton = screen.getByText("Go To DID Page").closest("button")
-        expect(goDIDViewButton?.parentElement).toHaveClass("hidden")
+        const goDIDViewLink = screen.getByText("Go To DID Page")
+        expect(goDIDViewLink?.parentElement).toHaveClass("hidden")
         // Check that the DID Table Search is empty
         const didFilterInputs = screen.getAllByPlaceholderText("Filter DID")
         didFilterInputs.map((didFilterInput) => { expect(didFilterInput).toHaveValue("") })
@@ -65,6 +65,7 @@ describe("ListDID Story Test", () => {
         await act(async () => render(
             <ListDIDStory
                 comdom={mockUseComDOM(Array.from({length: 100}, () => fixtureDIDViewModel()))}
+                didQuery={jest.fn(x => console.log(x))}
                 didMetaQuery={jest.fn(x => console.log(x))}
                 didMetaQueryResponse={mockDIDMeta}
             />
@@ -78,8 +79,8 @@ describe("ListDID Story Test", () => {
         expect(noDIDSelectedDiv).not.toHaveClass("block")
         const metaDataDiv = screen.getByRole("generic", { name: "DID Metadata Quick Summary" })
         expect(metaDataDiv).toHaveClass("flex")
-        const goDIDViewButton = screen.getByRole("generic", { name: "Go To DID Page" })
-        expect(goDIDViewButton).toHaveClass("block")
+        const goDIDViewButton = screen.getByRole("link", { name: "Go To DID Page" })
+        expect(goDIDViewButton).not.toHaveClass("hidden")
         const didCreationRow = screen.getByRole("row", { name: "Date of DID Creation" })
         expect(didCreationRow).toHaveTextContent(format("yyyy-MM-dd", new Date(mockDIDMeta.created_at)))
         const didObsoleteRow = screen.getByRole("row", { name: "DID Obsolete" })

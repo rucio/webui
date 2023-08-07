@@ -6,33 +6,13 @@ import { DIDMetaViewModel, DIDViewModel } from "@/lib/infrastructure/data/view-m
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 import { useEffect, useState } from "react";
-import { fixtureDIDMetaViewModel } from "test/fixtures/table-fixtures";
+import { didMetaQueryBase } from "../queries";
 
 export default function Page() {
     const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMetaViewModel>({} as DIDMetaViewModel)
-    const didMetaQuery = async (scope: string, name: string) => {
-        const req: HTTPRequest = {
-            method: "GET",
-            url: new URL('http://localhost:3000/api/didmeta'),
-            params: {
-                "scope": scope,
-                "name": name
-            },
-            headers: new Headers({
-                'Content-Type': 'application/json',
-            } as HeadersInit)
-        }
-        const { url, requestArgs } = prepareRequestArgs(req)
-        console.log(url)
-        const res = await fetch(url, {
-            method: "GET",
-            headers: new Headers({
-                'Content-Type': 'application/json',
-            } as HeadersInit)
-        })
-        // console.log(await res.json())
 
-        setDIDMetaQueryResponse({ status: 'success', ... await res.json() })
+    const didMetaQuery = async (scope: string, name: string) => {
+        setDIDMetaQueryResponse(await didMetaQueryBase(scope, name))
     }
 
     const didQuery = async (query: string, type: DIDType) => {
@@ -58,9 +38,6 @@ export default function Page() {
         200,
         true
     )
-    useEffect(() => {
-        setDIDMetaQueryResponse(fixtureDIDMetaViewModel())
-    }, [])
     useEffect(() => {
         const setRequest = async () => {
             const request: HTTPRequest = {

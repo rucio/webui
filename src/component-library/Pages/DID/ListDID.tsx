@@ -10,6 +10,7 @@ import { Heading } from "../Helpers/Heading"
 import { Body } from "../Helpers/Body"
 import { DIDType } from "@/lib/core/entity/rucio"
 import { Checkbox } from "../../Button/Checkbox"
+import Link from "next/link"
 
 var format = require("date-format")
 
@@ -69,7 +70,12 @@ export const ListDID = (
                     <div className='grow'>
                         <TextInput
                             onBlur={(event: any) => { setDidSearchQuery(event.target.value) }}
-                            onEnterkey={(event: any) => { setDidSearchQuery(event.target.value) }}
+                            onEnterkey={async (e: any) => {
+                                e.preventDefault()
+                                await props.didQuery(e.target.value, didTypeAllowed)
+                                setDidSearchQuery(e.target.value)
+                                props.comdom.start()
+                            }}
                             id="did-search-pattern"
                         />
                     </div>
@@ -153,7 +159,7 @@ export const ListDID = (
                         "flex flex-col space-y-2",
                     )}
                 >
-                    <DIDMetaView data={props.didMetaQueryResponse} show={selectedDID ? true : false} />
+                    <DIDMetaView data={meta} show={selectedDID ? true : false} />
                     <div
                         className={twMerge(
                             "text-gray-800",
@@ -165,11 +171,20 @@ export const ListDID = (
                     </div>
                     <div
                         className={twMerge(
-                            selectedDID ? "block" : "hidden",
+                            selectedDID ? "" : "hidden",
                         )}
                         aria-label="Go To DID Page"
                     >
-                        <Button label="Go To DID Page" aria-label="Go To DID Page" />
+                        <Link
+                            className={twMerge(
+                                "py-1 px-3 rounded w-full block",
+                                "bg-blue-500 hover:bg-blue-600 text-white",
+                                "cursor-pointer",
+                                "text-center font-bold",
+                            )}
+                            href={`/did/page/${meta.scope}/${meta.name}`}>
+                            Go To DID Page
+                        </Link>
                     </div>
                 </div>
             </Body>
