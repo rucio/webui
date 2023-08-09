@@ -16,12 +16,14 @@ export default function ListSubscription({ params }: { params: { account: string
     useEffect(() => {
         const runQuery = async () => {
             await ComDOM.start({
-                url: new URL("http://localhost:3000/api/subscriptionrulestates"),
+                url: new URL("http://localhost:3000/api/list-subscription"),
                 method: "GET",
                 headers: new Headers({
                     'Content-Type': 'application/json'
                 } as HeadersInit),
-                body: null,
+                params: {
+                    "account": params.account,
+                }
             })
         }
         runQuery()
@@ -29,6 +31,7 @@ export default function ListSubscription({ params }: { params: { account: string
     return (
         <div>
             <ListSubscriptionStory
+                accountname={params.account}
                 comdom={ComDOM}
             />
         </div>

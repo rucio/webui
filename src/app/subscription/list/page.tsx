@@ -4,7 +4,7 @@ import { Component, useEffect, useState } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { SubscriptionRuleStatesViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
 
-export default function ListSubscription({ params }: { params: { account: string }}) {
+export default function ListSubscription({ params }: { params: { account: string } }) {
     const ComDOM = useComDOM<SubscriptionRuleStatesViewModel>(
         "subscription-rule-states-query",
         [],
@@ -29,6 +29,7 @@ export default function ListSubscription({ params }: { params: { account: string
     return (
         <div>
             <ListSubscriptionStory
+                accountname={params.account}
                 comdom={ComDOM}
             />
         </div>

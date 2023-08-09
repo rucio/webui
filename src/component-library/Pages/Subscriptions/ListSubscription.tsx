@@ -12,8 +12,10 @@ import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { Body } from "../Helpers/Body";
 import { Heading } from "../Helpers/Heading";
 import { SubscriptionRuleStatesViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
+import { TableInternalLink } from "@/component-library/StreamedTables/TableInternalLink";
 
 export interface ListSubscriptionProps {
+    accountname: string;
     comdom: UseComDOM<SubscriptionRuleStatesViewModel>
 }
 
@@ -34,7 +36,7 @@ export const ListSubscription = (
                     />
                 )
             },
-            cell: info => <P mono className="ml-1 break-all">{info.getValue()}</P>
+            cell: info => <TableInternalLink href={`/subscription/page/${props.accountname}/${info.row.original.name}`}>{info.getValue()}</TableInternalLink>,
         }),
         columnHelper.accessor("state_ok", {
             id: "state_ok",
@@ -190,7 +192,10 @@ export const ListSubscription = (
                 "flex flex-col space-y-2 w-full"
             )}
         >
-            <Heading title="List Subscriptions" />
+            <Heading
+                title="List Subscriptions"
+                subtitle={`For account ${props.accountname}`}
+            />
             <Body>
                 <StreamedTable<SubscriptionRuleStatesViewModel>
                     tablecomdom={props.comdom}

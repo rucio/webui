@@ -11,5 +11,6 @@ const Template: StoryFn<typeof L> = (args) => <L {...args} />;
 
 export const ListSubscription = Template.bind({});
 ListSubscription.args = {
+    accountname: "test",
     comdom: mockUseComDOM(Array.from({ length: 100 }, () => fixtureSubscriptionRuleStatesViewModel()))
 };
