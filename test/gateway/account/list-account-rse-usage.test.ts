@@ -32,9 +32,11 @@ describe('Account Gateway : List RSE Usage for an account', () => {
 
         MockRucioServerFactory.createMockRucioServer(true, [listAccountRSEUsageEndpoint]);
     })
+
     afterEach(() => {
         fetchMock.dontMock();
     })
+
     it('Should fetch a list of RSE Usage for a given account', async () => {
         const accountGateway: AccountGatewayOutputPort = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT)
         const listAcountRSEUsageDTO: ListAccountRSEUsageDTO = await accountGateway.listAccountRSEUsage('root', MockRucioServerFactory.VALID_RUCIO_TOKEN)
@@ -53,5 +55,4 @@ describe('Account Gateway : List RSE Usage for an account', () => {
         expect(recievedData[0].used_files).toEqual(2)
         expect(recievedData[0].quota_bytes).toEqual(900)
     })
-   
 });
