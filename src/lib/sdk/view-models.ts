@@ -4,6 +4,6 @@
  * @property message An optional string that provides additional information about the view model.
  */
 export type BaseViewModel = {
-    status: 'success' | 'error';
+    status: 'success' | 'error' | 'pending';
     message?: string;
 }

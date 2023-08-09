@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { createSubscriptionMeta } from "test/fixtures/table-fixtures";
+import { fixtureSubscriptionViewModel } from "test/fixtures/table-fixtures";
 import { PageSubscription as P } from "./PageSubscription";
 
 export default {
@@ -11,5 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageSubscription = Template.bind({});
 PageSubscription.args = {
-    subscriptionViewModel: createSubscriptionMeta()
+    subscriptionViewModel: fixtureSubscriptionViewModel()
 };

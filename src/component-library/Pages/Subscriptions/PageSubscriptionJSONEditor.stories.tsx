@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { createSubscriptionMeta } from "test/fixtures/table-fixtures";
+import { fixtureSubscriptionViewModel } from "test/fixtures/table-fixtures";
 import { PageSubscriptionJSONEditor as P } from "./PageSubscriptionJSONEditor";
 
 import { Type } from "@sinclair/typebox";
@@ -19,7 +19,7 @@ const FilterSchema = Type.Object({
 
 export const PageSubscriptionJSONEditor = Template.bind({});
 PageSubscriptionJSONEditor.args = {
-    defaultString: createSubscriptionMeta().filter,
+    defaultString: fixtureSubscriptionViewModel().filter,
     submit: (json: string) => { console.log(json) },
     schema: FilterSchema
 };
