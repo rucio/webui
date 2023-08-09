@@ -5,9 +5,10 @@ import { PageSubscription as PageSubscriptionStory } from "@/component-library/P
 import { SubscriptionViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
 import { fixtureSubscriptionViewModel } from "test/fixtures/table-fixtures";
 import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
+import { Loading } from "@/component-library/Pages/Helpers/Loading";
 
 export default function PageSubscription({ params }: { params: { account: string, name: string } }) {
-    const [subscriptionViewModel, setSubscriptionViewModel] = useState<SubscriptionViewModel>(fixtureSubscriptionViewModel())
+    const [subscriptionViewModel, setSubscriptionViewModel] = useState<SubscriptionViewModel>({status: "pending"} as SubscriptionViewModel)
     useEffect(() => {
         subscriptionQuery(params.account, params.name).then(setSubscriptionViewModel)
     }, [])
@@ -34,11 +35,20 @@ export default function PageSubscription({ params }: { params: { account: string
 
         return await res.json()
     }
-    return (
-        <PageSubscriptionStory
-            subscriptionViewModel={subscriptionViewModel}
-            editFilter={(s: string) => { }}
-            editReplicationRules={(r: string) => { }}
-        />
-    )
+    if (subscriptionViewModel.status === 'success') {
+        return (
+            <PageSubscriptionStory
+                subscriptionViewModel={subscriptionViewModel}
+                editFilter={(s: string) => { }}
+                editReplicationRules={(r: string) => { }}
+            />
+        )
+    } else {
+        return (
+            <Loading
+                title="View Subscription"
+                subtitle={`For subscription ${params.name}`}
+            />
+        )
+    }
 }
