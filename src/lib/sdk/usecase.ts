@@ -150,6 +150,7 @@ export abstract class BaseUseCase<
             this.validateRequestModel(requestModel)
         if (validationError) {
             await this.presenter.presentError(validationError)
+            return
         }
         return this.makeGatewayRequest(requestModel)
             .then(async (response: TDTO) => {
@@ -195,6 +196,7 @@ TDTO
             this.validateRequestModel(requestModel)
         if (validationError) {
             await this.presenter.presentError(validationError)
+            return
         }
         const dto = await this.makeGatewayRequest(requestModel)
         const data: TResponseModel | TErrorModel = this.processGatewayResponse(dto)
@@ -322,11 +324,13 @@ export abstract class BaseStreamingUseCase<
             this.validateRequestModel(this.requestModel)
         if (validationError) {
             await this.presenter.presentError(validationError)
+            return
         }
         const dto: TDTO = await this.makeGatewayRequest(this.requestModel)
         const error = this.processGatewayResponse(dto)
         if (error) {
             await this.presenter.presentError(error as TErrorModel)
+            return
         }
     }
 
