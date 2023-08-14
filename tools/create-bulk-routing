@@ -7,7 +7,12 @@ import argparse
 from os import mkdir
 
 strings = {
-    "404": "",
+    "404": """
+import { NotFound as NotFoundStory } from "@/component-library/Pages/Helpers/NotFound";
+export default function NotFound() {
+    return <NotFoundStory />
+}
+""",
     "page": """
 'use client';
 export default function Page() {
