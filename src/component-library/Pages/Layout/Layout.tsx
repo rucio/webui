@@ -4,9 +4,10 @@ import { HiUserCircle, HiBell } from "react-icons/hi2"
 import { HiMenu, HiChevronDown } from "react-icons/hi"
 import { twMerge } from "tailwind-merge"
 
-import { useState, useEffect, useRef, forwardRef } from "react"
+import React, { useState, useEffect, useRef, forwardRef } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 import { AccountDropdown } from "./AccountDropdown"
+import Link from "next/link"
 
 export interface LayoutViewModel {
     accountActive: string,
@@ -39,7 +40,7 @@ export const Layout = (
         const [isMouseOver, setIsMouseOver] = useState(false)
         const LinkElem = (props: { href: string, children: React.ReactNode }) => {
             return (
-                <a
+                <Link
                     href={props.href}
                     className={twMerge(
                         "w-full p-1 rounded-sm hover:cursor-pointer",
@@ -50,7 +51,7 @@ export const Layout = (
 
                 >
                     {props.children}
-                </a>
+                </Link>
             )
         }
 
@@ -176,9 +177,9 @@ export const Layout = (
                             />
                             <SearchDropdown inputSelected={isSearching} searchstring={searchString} ref={searchMenuRef} />
                         </span>
-                        <HeaderLinks href="/createrule" onFocus={() => setIsSearching(false)}>Create Rule</HeaderLinks>
-                        <HeaderLinks href="/dids">List DIDs</HeaderLinks>
-                        <HeaderLinks href="/rules">List Rules</HeaderLinks>
+                        <HeaderLinks href="/rule/create" onFocus={() => setIsSearching(false)}>Create Rule</HeaderLinks>
+                        <HeaderLinks href="/did/list">List DIDs</HeaderLinks>
+                        <HeaderLinks href="/rule/list">List Rules</HeaderLinks>
                     </span>
                     <span className="flex space-x-2 items-end relative">
                         <a
@@ -207,9 +208,9 @@ export const Layout = (
                     <nav
                         className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 "
                     >
-                        <HeaderLinks href="/createrule" className="w-full pt-2">Create Rule</HeaderLinks>
-                        <HeaderLinks href="/dids" className="w-full pt-2">List DIDs</HeaderLinks>
-                        <HeaderLinks href="/rules" className="w-full pt-2">List Rules</HeaderLinks>
+                        <HeaderLinks href="/rule/create" className="w-full pt-2">Create Rule</HeaderLinks>
+                        <HeaderLinks href="/did/list" className="w-full pt-2">List DIDs</HeaderLinks>
+                        <HeaderLinks href="/rule/list" className="w-full pt-2">List Rules</HeaderLinks>
                         <HeaderLinks href="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiBell /></span></HeaderLinks>
                     </nav>
                 </Collapsible>
