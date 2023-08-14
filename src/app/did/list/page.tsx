@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { didMetaQueryBase } from "../queries";
 
 export default function Page() {
-    const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMetaViewModel>({} as DIDMetaViewModel)
+    const [didMetaQueryResponse, setDIDMetaQueryResponse] = useState<DIDMetaViewModel>({status: "pending"} as DIDMetaViewModel)
 
     const didMetaQuery = async (scope: string, name: string) => {
         setDIDMetaQueryResponse(await didMetaQueryBase(scope, name))
