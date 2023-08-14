@@ -44,6 +44,20 @@ export const DIDMetaView = (
         )
     }
     const meta = props.data
+    // suspense: data is not loaded yet
+    if (props.data.status === "pending") {return (
+        <div
+            className={twMerge(
+                !props.horizontal ?? false ? "flex flex-col space-y-2" : "grid grid-cols-1 lg:grid-cols-2 lg:gap-x-2 gap-y-2",
+                props.show ? "" : "hidden",
+            )}
+            aria-label="DID Metadata Quick Summary -- Loading"
+            aria-busy="true"
+        >
+            Loading DID Metadata
+        </div>
+    )}
+    // base case: data is loaded
     return (
         <div
             className={twMerge(
