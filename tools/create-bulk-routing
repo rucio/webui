@@ -6,21 +6,14 @@ from pathlib import Path
 import argparse
 from os import mkdir
 
-def create_folder(folderdef, rootdir):
-    name, contents = folderdef["name"], folderdef["contents"]
-    print("Creating folder", name, "in", rootdir)
-    try:
-        mkdir(rootdir)
-    except FileExistsError:
-        print("Folder already exists, skipping")
-    if contents:
-        for route in contents:
-            create_folder(route, rootdir.joinpath(route["name"]))
-    else:
-        print("Creating file", "page.tsx", "in", rootdir)
-        try:
-            with open(rootdir.joinpath("page.tsx"), "x") as f:
-                f.write("""
+strings = {
+    "404": """
+import { NotFound as NotFoundStory } from "@/component-library/Pages/Helpers/NotFound";
+export default function NotFound() {
+    return <NotFoundStory />
+}
+""",
+    "page": """
 'use client';
 export default function Page() {
     return (
@@ -29,9 +22,36 @@ export default function Page() {
         </div>
     )
 }
-                """)
-        except FileExistsError:
-            print("File already exists, skipping")
+"""
+}
+
+def create_file(name: str, rootdir: Path, contents: str) -> None:
+    print("Creating file", name, "in", rootdir)
+    try:
+        with open(rootdir.joinpath(name), "x") as f:
+            f.write(contents)
+    except FileExistsError:
+        print("File already exists, skipping")
+
+def create_folder(name: str, rootdir: Path) -> None:
+    print("Creating folder", name, "in", rootdir)
+    try:
+        mkdir(rootdir.joinpath(name))
+    except FileExistsError:
+        print("Folder already exists, skipping")
+
+def recursive_func(route: dict, rootdir: Path) -> None:
+    name, contents = route["name"], route["contents"]
+    create_folder(name, rootdir)
+    if contents:
+        # Create special files at location
+        for special in route.get("special", []):
+            if special["type"] == "404":
+                create_file("not-found.tsx", rootdir, strings["404"])
+        for route in contents:
+            recursive_func(route, rootdir.joinpath(route["name"]))
+    else:
+        create_file("page.tsx", rootdir, strings["page"])
 
 if __name__ == "__main__":
     # argparse
@@ -46,4 +66,4 @@ if __name__ == "__main__":
 
     location = Path(args.rootdir)
     for route in json_input["contents"]:
-        create_folder(route, location.joinpath(route["name"]))
+        recursive_func(route, location.joinpath(route["name"]))
