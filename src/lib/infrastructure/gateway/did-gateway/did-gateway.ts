@@ -1,9 +1,10 @@
-import { DIDDTO, DIDKeyValuePairsDTO, DIDMetaDTO, ListDIDDTO } from '@/lib/core/dto/did-dto'
+import { DIDDTO, DIDMetaDTO, ListDIDDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from '@/lib/core/dto/did-dto'
 import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import { injectable } from 'inversify'
 import GetDIDEndpoint from './endpoints/get-did-endpoint'
 import GetDIDMetaEndpoint from './endpoints/get-did-meta-endpoint'
+import ListDIDRulesEndpoint from './endpoints/list-did-rules-endpoint'
 import ListDIDsEndpoint from './endpoints/list-dids-endpoint'
 import GetDIDKeyValuePairsEndpoint from './endpoints/get-did-keyvaluepairs-endpoint'
 
@@ -100,7 +101,26 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
             }
             return Promise.resolve(errorDTO)
         }
-            
+    }
+
+    async listDIDRules(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDRulesDTO> {
+        try {
+            const endpoint = new ListDIDRulesEndpoint(rucioAuthToken, scope, name)
+            await endpoint.fetch()
+            return {
+                status: 'success',
+                stream: endpoint,
+            }
+        } catch(error) {
+            const errorDTO: ListDIDRulesDTO = {
+                status: 'error',
+                errorName: 'Unknown Error',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
     }
 
 }
