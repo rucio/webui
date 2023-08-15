@@ -110,7 +110,7 @@ export const PageDIDRules = (
                     <p
                         className={twMerge("break-all pl-1 dark:text-white")}
                     >
-                        {info.getValue().name}
+                        {info.getValue()?.name ?? ""}
                     </p>
                 )
             },
