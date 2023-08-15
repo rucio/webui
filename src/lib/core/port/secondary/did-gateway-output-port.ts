@@ -1,4 +1,4 @@
-import { ListDIDDTO, DIDDTO, DIDMetaDTO, DIDKeyValuePairsDTO } from "../../dto/did-dto";
+import { ListDIDDTO, DIDDTO, DIDMetaDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from "../../dto/did-dto";
 import { DIDType } from "../../entity/rucio";
 
 
@@ -36,4 +36,11 @@ export default interface DIDGatewayOutputPort {
      */
     listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO>
 
+    /**
+     * Returns a list of replication rules for a DID
+     * @param rucioAuthToken A valid rucio auth token
+     * @param scope The scope of the DID
+     * @param name The name of the DID
+     */
+    listDIDRules(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDRulesDTO>
 }
