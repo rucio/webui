@@ -40,6 +40,6 @@ export type DIDRules = {
     name: string;
     state: RuleState;
     account: string;
-    subscription: {name: string, account: string}; // name and account together are unique for a subscription
+    subscription?: {name: string, account: string}; // name and account together are unique for a subscription
     last_modified: DateISO;
 }

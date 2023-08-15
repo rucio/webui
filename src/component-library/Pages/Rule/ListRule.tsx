@@ -169,7 +169,7 @@ export const ListRule = (
                         column={info.column}
                         name="Locks Replicating Count"
                         className="ml-1"
-                        element={<RuleStateTag state={RuleState.Replicating} tiny />}
+                        element={<RuleStateTag state={RuleState.REPLICATING} tiny />}
                         stack
                     />
                 )
@@ -187,7 +187,7 @@ export const ListRule = (
                         column={info.column}
                         name="Locks Stuck Count"
                         className="ml-1"
-                        element={<RuleStateTag state={RuleState.Stuck} tiny />}
+                        element={<RuleStateTag state={RuleState.STUCK} tiny />}
                         stack
                     />
                 )
