@@ -72,7 +72,7 @@ export const ListSubscription = (
                             <RuleStateTag
                                 className={isLg() ? "md:w-28" : ""}
                                 tiny={!isLg()}
-                                state={RuleState.Replicating}
+                                state={RuleState.REPLICATING}
                             />
                         }
                         stack
@@ -95,7 +95,7 @@ export const ListSubscription = (
                             <RuleStateTag
                                 className={isLg() ? "md:w-28" : ""}
                                 tiny={!isLg()}
-                                state={RuleState.Stuck}
+                                state={RuleState.STUCK}
                             />
                         }
                         stack
@@ -118,7 +118,7 @@ export const ListSubscription = (
                             <RuleStateTag
                                 className={isLg() ? "md:w-28" : ""}
                                 tiny={!isLg()}
-                                state={RuleState.Suspended}
+                                state={RuleState.SUSPENDED}
                             />
                         }
                         stack
@@ -152,9 +152,9 @@ export const ListSubscription = (
                         )}
                     >
                         <MiniState state={RuleState.OK} amount={info.row.original.state_ok} />
-                        <MiniState state={RuleState.Replicating} amount={info.row.original.state_replicating} />
-                        <MiniState state={RuleState.Stuck} amount={info.row.original.state_stuck} />
-                        <MiniState state={RuleState.Suspended} amount={info.row.original.state_suspended} />
+                        <MiniState state={RuleState.REPLICATING} amount={info.row.original.state_replicating} />
+                        <MiniState state={RuleState.STUCK} amount={info.row.original.state_stuck} />
+                        <MiniState state={RuleState.SUSPENDED} amount={info.row.original.state_suspended} />
                     </div>
                 )
             },

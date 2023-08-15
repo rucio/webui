@@ -216,12 +216,13 @@ export enum ReplicaState {
 // rucio.db.sqla.constants::RuleState
 // R/O/S/U/W/I
 export enum RuleState {
-    Replicating = "Replicating",
+    REPLICATING = "Replicating",
     OK = "OK",
-    Stuck = "Stuck",
-    Suspended = "Suspended",
-    Waiting_Approval = "Waiting_Approval",
-    Inject = "Inject",
+    STUCK = "Stuck",
+    SUSPENDED = "Suspended",
+    WAITING_APPROVAL = "Waiting_Approval",
+    INJECT = "Inject",
+    UNKNOWN = "Unknown",
 }
 
 export enum SubscriptionState {

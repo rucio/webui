@@ -96,6 +96,7 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
      /**
      * Reports any errors that occurred during the API request.
      * The implementation must check the response status code and return a suitable data transfer object (DTO) if an error occurred.
+     * The HTTP status codes 400, 401, and 500 are handled by the `handleCommonGatewayEndpointErrors` function.
      * @param statusCode The HTTP status code returned by the API.
      * @param response The response object returned by the API.
      * @returns A promise that resolves to a data transfer object (DTO) containing the error, or `undefined` if no error occurred.
@@ -240,21 +241,48 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
         errorMessage: `An error occurred while fetching ${response.url}`,
     } as TDTO;
 
+    
     switch(statusCode) {
-        case 400:
-            dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
-            dto.errorMessage = `The requested resource was not found at ${response.url}`
-            break;
-        case 401:
-            dto.errorName = BaseHttpErrorTypes.INVALID_AUTH_TOKEN.errorName;
-            dto.errorMessage = `The provided authentication token is invalid or has expired`;
-            break;
-        case 500:
-            dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName;    
-            dto.errorMessage = `An unknown server side error occurred while fetching ${response.url}`;
-            break;
+        case 400: {
+                const errorDetails = await extractErrorMessage(response);
+                dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
+                dto.errorMessage = `The requested resource was not found at ${response.url}. ${errorDetails?? ''}`
+                break;
+            }
+        case 401: {
+                const errorDetails = await extractErrorMessage(response);
+                dto.errorName = BaseHttpErrorTypes.INVALID_AUTH_TOKEN.errorName;
+                dto.errorMessage = `The provided authentication token is invalid or has expired. ${errorDetails?? ''}`;
+                break;
+            }
+        case 406: {
+                const errorDetails = await extractErrorMessage(response);
+                dto.errorName = BaseHttpErrorTypes.NOT_ACCEPTABLE.errorName;
+                dto.errorMessage = `The requested resource is not available in the requested format. ${errorDetails?? ''}`;
+                break;
+            }
+        case 500: {
+                const errorDetails = await extractErrorMessage(response);
+                dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName;    
+                dto.errorMessage = `An unknown server side error occurred while fetching ${response.url}. ${errorDetails?? ''}`;
+                break;
+            }
         default:
             return undefined;
     }
     return dto;
+}
+
+/**
+ * 
+ * @param response The HTTPResponse object returned by the API.
+ * @returns undefined if no error details could be extracted from the response, or a json object containing the error details.
+ */
+export async function extractErrorMessage(response: Response): Promise<any | undefined> {
+    try {
+        const error = await response.json();
+        return error;
+    } catch(error: any) {
+        return undefined;
+    }
 }
