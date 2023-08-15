@@ -1,7 +1,7 @@
 'use client';
 import { AuthViewModel, x509AuthRequestHeaders as X509AuthRequestHeaders } from "@/lib/infrastructure/data/auth/auth";
 import { LoginViewModel } from "@/lib/infrastructure/data/view-model/login";
-import { useRouter, useSearchParams } from "next/navigation";
+import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Login as LoginStory } from "@/component-library/Pages/Login/Login";
 import { AuthType, Role, VO } from "@/lib/core/entity/auth-models";
@@ -12,7 +12,7 @@ export default function Login() {
     const [viewModel, setViewModel] = useState<LoginViewModel>()
     const [authViewModel, setAuthViewModel] = useState<AuthViewModel>()
     const router = useRouter()
-    const callbackUrl = useSearchParams().get('callbackUrl')
+    const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl')
 
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
         const body = {
