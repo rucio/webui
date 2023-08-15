@@ -38,3 +38,15 @@ export interface RSEProtocolViewModel extends RSEProtocol, BaseViewModel {}
 export interface RSEAttributeViewModel extends RSEAttribute, BaseViewModel {}
 
 export interface RSEAccountUsageLimitViewModel extends RSEAccountUsageLimit, BaseViewModel {}
+
+export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
+    return {
+        status: 'success',
+        rse_id: '',
+        rse: '',
+        account: '',
+        used_files: 0,
+        used_bytes: 0,
+        quota_bytes: 0,
+    } as RSEAccountUsageLimitViewModel
+}
