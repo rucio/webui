@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge"
 import { ForwardedRef, forwardRef } from "react"
 import { HiCog, HiSwitchHorizontal, HiLogout } from "react-icons/hi"
+import Link from "next/link"
 
 export const AccountDropdown = forwardRef(function AccountDropdown
     (
@@ -25,7 +26,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
             onMouseEnter={e => e.preventDefault()}
             ref={ref}
         >
-            <a
+            <Link
                 className={twMerge(
                     "text-gray-600 hover:bg-gray-200 hover:cursor-pointer",
                     "dark:text-gray-300 dark:hover:bg-gray-600",
@@ -39,7 +40,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                     <span>Settings for </span>
                     <b className="text-gray-800 dark:text-gray-100">{props.accountActive}</b>
                 </span>
-            </a>
+            </Link>
             <div
                 className="flex flex-col"
             >
@@ -48,7 +49,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                         (account) => account !== props.accountActive
                     )).map((account, index) => {
                         return (
-                            <a
+                            <Link
                                 className={twMerge(
                                     "text-gray-600 hover:bg-gray-200 hover:cursor-pointer",
                                     "dark:text-gray-300 dark:hover:bg-gray-600",
@@ -63,12 +64,12 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                                     <span>Switch to </span>
                                     <b className="text-gray-800 dark:text-gray-100">{account}</b>
                                 </span>
-                            </a>
+                            </Link>
                         )
                     })
                 }
             </div>
-            <a
+            <Link
                 className={twMerge(
                     "text-gray-800 hover:bg-red-200 hover:cursor-pointer",
                     "dark:text-gray-100 dark:hover:bg-red-600",
@@ -76,10 +77,10 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                     "text-right",
                     "w-64 sm:w-96"
                 )}
-                href="/logout"
+                href="/api/auth/logout"
             >
                 <b>Logout</b> <HiLogout className="text-3xl shrink-0" />
-            </a>
+            </Link>
         </div>
     )
 }
