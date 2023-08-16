@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { fixtureDIDDatasetReplicasViewModel, fixtureDIDMetaViewModel, fixtureDIDRulesViewModel, mockUseComDOM, fixtureDIDKeyValuePairsViewModel } from 'test/fixtures/table-fixtures';
 import { HTTPRequest } from "@/lib/sdk/http";
 import { DIDMetaViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { didMetaQueryBase } from '@/app/did/queries';
+import { didMetaQueryBase } from '@/app/(rucio)/did/queries';
 import { Loading } from '@/component-library/Pages/Helpers/Loading';
 
 export default function Page({ params }: { params: { scope: string, name: string } }) {
