@@ -45,6 +45,8 @@ import SubscriptionGatewayOutputPort from "@/lib/core/port/secondary/subscriptio
 import SubscriptionGateway from "../gateway/subscription-gateway/subscription-gateway";
 import GetSubscriptionFeature from "./features/get-subscription-feature";
 import ListSubscriptionsFeature from "./features/list-subscriptions-feature";
+import { ListDID } from "@/component-library/Pages/DID/ListDID";
+import ListDIDRulesFeature from "./features/list-did-rules-feature";
 
 
 /**
@@ -63,6 +65,7 @@ loadFeaturesSync(appContainer, [
     new DIDMetaFeature(appContainer),
     new GetSubscriptionFeature(appContainer),
     new ListDidsFeature(appContainer),
+    new ListDIDRulesFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
     new LoginConfigFeature(appContainer),
 ])
