@@ -1,5 +1,6 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto'
 import { DID, DIDMeta } from '@/lib/core/entity/rucio'
+import { DIDKeyValuePairs } from '@/lib/infrastructure/data/view-model/page-did'
 
 /**
  * Data Transfer Object for ListDIDsEndpoint
@@ -29,3 +30,10 @@ export interface DIDDTO extends DID, BaseDTO {
  * Data Transfer Object for DIDMeta Endpoint
  */
 export interface DIDMetaDTO extends BaseDTO, DIDMeta {}
+
+/**
+ * Data Transfer Object for DIDKeyValuePairs Endpoint
+ */
+export interface DIDKeyValuePairsDTO extends BaseDTO {
+    data: DIDKeyValuePairs[]
+}
