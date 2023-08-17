@@ -77,7 +77,8 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
         if (!this.request) {
             throw new Error(`Request not initialized for ${this.constructor.name}`);
         }
-        const response = await this.streamingGateway.getJSONChunks(this.request, this.streamAsNDJSON);
+        
+            const response = await this.streamingGateway.getJSONChunks(this.request, this.streamAsNDJSON);
         if (response instanceof Response) {
             const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response)
             if (commonErrors) {

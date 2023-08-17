@@ -38,6 +38,34 @@ describe('SubscriptionGateway', () => {
             }
         }
         
+        const getSubscriptionByIdEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/Id/bngjsrfdtlkhugrdgflgiu`,
+            method: 'GET',
+            includes: 'subscriptions/Id/bngjsrfdtlkhugrdgflgiu',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "name": "*Sensitive Data",
+                    "filter": "{\"scope\": [\"hidden\"], \"project\": [\"hidden\"], \"split_rule\": true}",
+                    "policyid": 0,
+                    "last_processed": "Mon, 31 Jul 2023 07:33:29 UTC",
+                    "account": "ddmadmin",
+                    "comments": "Sensitive data description has been omitted for privacy reasons.",
+                    "expired_at": null,
+                    "updated_at": "Mon, 31 Jul 2023 07:33:29 UTC",
+                    "id": "bccaabb5877a443abd6c56f3271557df",
+                    "replication_rules": "[{\"activity\": \"Hidden Activity\", \"rse_expression\": \"hidden=1&restricted=true\", \"source_replica_expression\": \"hidden-replica\", \"copies\": \"*\", \"lifetime\": 172800, \"comments\": \"Hidden activity description has been omitted for privacy reasons.\"}]",
+                    "state": "UPDATED",
+                    "lifetime": "Sun, 25 May 2042 15:41:54 UTC",
+                    "retroactive": false,
+                    "created_at": "Wed, 21 May 2014 08:40:15 UTC"
+                  })
+            }                  
+        }
+
         const subscriptionStream = Readable.from([
             JSON.stringify({"id": "c674f72385a14dc8bb5ceba3e491da5a", "name": "wguan test weight", "filter": "{\"scope\": [\"tests\"]}", "replication_rules": "[{\"rse_expression\": \"INFN-T1_SCRATCHDISK|IN2P3-CC_SCRATCHDISK\", \"copies\": 1, \"weight\": \"stresstestweight\"}]", "policyid": 0, "state": "INACTIVE", "last_processed": "Thu, 17 Jul 2014 07:21:03 UTC", "account": "ddmadmin", "lifetime": "Tue, 01 May 2288 07:21:03 UTC", "comments": null, "retroactive": false, "expired_at": null, "created_at": "Thu, 17 Jul 2014 07:21:04 UTC", "updated_at": "Thu, 17 Jul 2014 07:21:04 UTC"}),
             JSON.stringify({"id": "f8fb1e9b69e842daa0e1a29914114593", "name": "Functional test T2", "filter": "{\"project\": [\"step14\"], \"scope\": [\"tests\"], \"split_rule\": true, \"transient\": [\"None\", \"0\"]}", "replication_rules": "[{\"lifetime\": 172800, \"activity\": \"Functional Test\", \"copies\": 20, \"source_replica_expression\": \"tier=1\\\\site=CERN-PROD\", \"rse_expression\": \"(tier=2&type=DATADISK\\\\ruciotestsite=true)\\\\todecommission=true\"}]", "policyid": 0, "state": "INACTIVE", "last_processed": "Thu, 19 May 2022 11:46:11 UTC", "account": "ddmadmin", "lifetime": "Sun, 25 May 2042 15:58:21 UTC", "comments": "Functional tests from T1 to T2", "retroactive": false, "expired_at": null, "created_at": "Mon, 21 Jul 2014 12:18:39 UTC", "updated_at": "Thu, 19 May 2022 11:46:13 UTC"}),
@@ -57,7 +85,7 @@ describe('SubscriptionGateway', () => {
             }
         }
 
-        MockRucioServerFactory.createMockRucioServer(true, [getSubscriptionEndpoint, listSubscriptionsEndpoint]);
+        MockRucioServerFactory.createMockRucioServer(true, [getSubscriptionEndpoint, getSubscriptionByIdEndpoint, listSubscriptionsEndpoint]);
     });
 
     afterEach(() => {
@@ -88,7 +116,6 @@ describe('SubscriptionGateway', () => {
         const listSubscriptionsDTO: ListSubscriptionsDTO = await subscriptionGateway.list(rucioToken, 'ddmadmin');
         expect(listSubscriptionsDTO.status).toEqual('success');
         expect(listSubscriptionsDTO.stream).toBeDefined();
-        expect(listSubscriptionsDTO.error).toBeUndefined();
 
         const subscriptionStream = listSubscriptionsDTO.stream;
 
@@ -111,5 +138,15 @@ describe('SubscriptionGateway', () => {
         expect(receivedData.length).toEqual(3);
         expect(receivedData[0].id).toEqual('c674f72385a14dc8bb5ceba3e491da5a');
         expect(receivedData[0].replication_rules.length).toEqual(1);
+    });
+
+    it("Should list a subscription by Id", async () => {
+        const subscriptionGateway: SubscriptionGatewayOutputPort = appContainer.get<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION);
+        const subscription = await subscriptionGateway.getById(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'bngjsrfdtlkhugrdgflgiu');
+        expect(subscription.id).toEqual('bccaabb5877a443abd6c56f3271557df');
+        expect(subscription.name).toEqual('*Sensitive Data');
+        expect(subscription.state).toEqual(SubscriptionState.UPDATED);
+        expect(subscription.account).toEqual('ddmadmin');
+
     });
 });

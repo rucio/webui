@@ -1,23 +1,20 @@
-import { HTTPRequest } from "@/lib/sdk/http";
 import { SubscriptionDTO } from "@/lib/core/dto/subscription-dto";
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
-import { BaseHttpErrorTypes } from "@/lib/sdk/http";
+import { BaseHttpErrorTypes, HTTPRequest } from "@/lib/sdk/http";
 import { Response } from "node-fetch";
-import { convertToSubscriptionDTO, getEmptySubscriptionDTO as getEmptySubscriptionDTO, TRucioSubscription } from "../subscription-gateway-utils";
+import { convertToSubscriptionDTO, getEmptySubscriptionDTO, TRucioSubscription } from "../subscription-gateway-utils";
 
-export default class GetSubscriptionEndpoint extends BaseEndpoint<SubscriptionDTO> {
-    
+export default class GetSubscriptionByIdEndpoint extends BaseEndpoint<SubscriptionDTO> {
     constructor(
         private readonly rucioAuthToken: string,
-        private readonly account: string,
-        private readonly name: string,
+        private readonly id: string,
     ){
         super()
     }
 
     async initialize(): Promise<void> {
         await super.initialize()
-        this.url = `${this.rucioHost}/subscriptions/${this.account}/${this.name}`
+        this.url = `${this.rucioHost}/subscriptions/Id/${this.id}`
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,
@@ -31,6 +28,7 @@ export default class GetSubscriptionEndpoint extends BaseEndpoint<SubscriptionDT
         this.request = request
         this.initialized = true
     }
+
     async reportErrors(statusCode: number, response: Response): Promise<SubscriptionDTO | undefined> {
         const dto: SubscriptionDTO = getEmptySubscriptionDTO('error')
         dto.errorCode = statusCode
@@ -41,7 +39,7 @@ export default class GetSubscriptionEndpoint extends BaseEndpoint<SubscriptionDT
         }catch(e) {
             // do nothing
         }
-        
+
         dto.errorMessage = message
         switch(statusCode) {
             case 404:
@@ -56,9 +54,9 @@ export default class GetSubscriptionEndpoint extends BaseEndpoint<SubscriptionDT
         return Promise.resolve(dto)
     }
     
-    createDTO(data: any): SubscriptionDTO {
-        data = data as TRucioSubscription
-        const dto = convertToSubscriptionDTO(data, this.account)
+    createDTO(data: Object): SubscriptionDTO {
+        const subscription = data as TRucioSubscription
+        const dto = convertToSubscriptionDTO(subscription, subscription.account)
         return dto
     }
 }
