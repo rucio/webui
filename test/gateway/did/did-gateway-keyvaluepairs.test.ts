@@ -33,5 +33,6 @@ describe("DID Gateway KeyValuePairs Endpoint Tests", () => {
         const dto: DIDKeyValuePairsDTO = await didGateway.getDIDKeyValuePairs(MockRucioServerFactory.VALID_RUCIO_TOKEN, "test", "dataset1")
         expect(dto.status).toEqual("success")
         expect(dto.data).toContainEqual({key: "extra_key", value: "extra_value"})
+        expect(dto.data).toContainEqual({key: "scope", value: "test"})
     });
 })
