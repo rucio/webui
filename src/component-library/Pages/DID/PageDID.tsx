@@ -19,7 +19,7 @@ import { PageDIDRules } from "./PageDIDRules";
 import { PageDIDByType } from "./PageDIDByType";
 import { PageDIDDatasetReplicas } from "./PageDIDDatasetReplicas";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { DIDDatasetReplicasViewModel, DIDKeyValuePairsViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 export interface PageDIDPageProps {
     didMeta: DIDMetaViewModel;
@@ -27,7 +27,7 @@ export interface PageDIDPageProps {
     // Parent DIDs [FILE]
     didParentsComDOM: UseComDOM<DIDViewModel>
     // Metadata [BOTH]
-    didMetadataComDOM: UseComDOM<DIDKeyValuePairsViewModel>
+    didMetadataComDOM: UseComDOM<DIDKeyValuePairsDataViewModel>
     // File Replica States [FILE]
     didFileReplicasComDOM: UseComDOM<FilereplicaStateViewModel>
     // File Replica States [DATASET]

@@ -33,7 +33,10 @@ export type DIDDatasetReplicas = {
 }
 
 // these are general key-value pairs including the metadata
-export type DIDKeyValuePairs = { key: string; value: string | number | boolean | null }
+export type DIDKeyValuePair = { key: string; value: string | number | boolean | null }
+export type DIDKeyValuePairsData = {
+    data: DIDKeyValuePair[]
+}
 
 export type DIDRules = {
     id: string;

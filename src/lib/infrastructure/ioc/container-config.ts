@@ -47,6 +47,7 @@ import GetSubscriptionFeature from "./features/get-subscription-feature";
 import ListSubscriptionsFeature from "./features/list-subscriptions-feature";
 import { ListDID } from "@/component-library/Pages/DID/ListDID";
 import ListDIDRulesFeature from "./features/list-did-rules-feature";
+import DIDKeyValuePairsDataFeature from "./features/get-did-keyvaluepairs-feature";
 
 
 /**
@@ -63,6 +64,7 @@ appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(Subsc
 
 loadFeaturesSync(appContainer, [
     new DIDMetaFeature(appContainer),
+    new DIDKeyValuePairsDataFeature(appContainer),
     new GetSubscriptionFeature(appContainer),
     new ListDidsFeature(appContainer),
     new ListDIDRulesFeature(appContainer),
