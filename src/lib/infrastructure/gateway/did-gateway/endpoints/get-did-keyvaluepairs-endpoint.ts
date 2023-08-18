@@ -1,5 +1,5 @@
 import { DIDKeyValuePairsDTO } from "@/lib/core/dto/did-dto";
-import { DIDKeyValuePairs } from "@/lib/infrastructure/data/view-model/page-did";
+import { DIDKeyValuePair } from "@/lib/infrastructure/data/view-model/page-did";
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
 import { HTTPRequest } from "@/lib/sdk/http";
 import { Response } from "node-fetch";
@@ -42,7 +42,7 @@ export default class GetDIDKeyValuePairsEndpoint extends BaseEndpoint<DIDKeyValu
             status: 'success',
             data: Object.entries(response).map(
                 ([key, value]) => {
-                    return { key: key, value: value } as DIDKeyValuePairs
+                    return { key: key, value: value } as DIDKeyValuePair
                 }
             )
         }

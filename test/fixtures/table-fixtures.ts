@@ -10,7 +10,7 @@ import { RSEAccountUsageLimitViewModel, RSEAttributeViewModel, RSEProtocolViewMo
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 import { SubscriptionRuleStatesViewModel, SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 import { BaseViewModel } from '@/lib/sdk/view-models';
-import { DIDDatasetReplicasViewModel, DIDKeyValuePairsViewModel, DIDLongViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDLongViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
@@ -232,7 +232,7 @@ export function fixtureDIDMetaViewModel(): DIDMetaViewModel {
     }
 }
 
-export function fixtureDIDKeyValuePairsViewModel(): DIDKeyValuePairsViewModel {
+export function fixtureDIDKeyValuePairsViewModel(): DIDKeyValuePairsDataViewModel {
     return {
         ...mockBaseVM(),
         key: faker.lorem.words(2).replace(/\s/g, "-"),

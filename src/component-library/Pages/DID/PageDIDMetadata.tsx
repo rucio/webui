@@ -16,15 +16,15 @@ import { twMerge } from "tailwind-merge"
 import { DIDAvailability } from "@/lib/core/entity/rucio"
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { DIDKeyValuePairsViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { DIDKeyValuePairsDataViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 export const PageDIDMetadata = (
     props: {
-        comdom: UseComDOM<DIDKeyValuePairsViewModel> // remember that this is ONLY the custom metadata
+        comdom: UseComDOM<DIDKeyValuePairsDataViewModel> // remember that this is ONLY the custom metadata
     }
 ) => {
 
-    const columnHelper = createColumnHelper<DIDKeyValuePairsViewModel>()
+    const columnHelper = createColumnHelper<DIDKeyValuePairsDataViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor("key", {
             id: "key",
@@ -74,7 +74,7 @@ export const PageDIDMetadata = (
     ]
 
     return (
-        <StreamedTable<DIDKeyValuePairsViewModel>
+        <StreamedTable<DIDKeyValuePairsDataViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={{}}
