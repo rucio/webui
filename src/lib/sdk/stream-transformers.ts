@@ -95,6 +95,10 @@ export class NewlineDelimittedDataParser extends Transform {
      * @param callback - The callback function to call when the flushing is complete.
      */
     _flush(callback: TransformCallback) {
+        if(this.readBuffer().length === 0) {
+            callback()
+            return
+        }
         const objects = this.readBuffer().split('\n')
         try{
             for (const object of objects) {

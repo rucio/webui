@@ -93,7 +93,7 @@ describe("List DID Rules Feature tests", () => {
 
         await done
         console.log(receivedData)
-        expect(receivedData.length).toBe(2) //TODO: why is this 2?
+        expect(receivedData.length).toBe(1)
         expect(receivedData[0].id).toBe('dummy_id')
         expect(receivedData[0].subscription).toEqual({
             name: '*Functional Test',
