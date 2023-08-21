@@ -21,7 +21,7 @@ import { NormalTable } from "@/component-library/StreamedTables/NormalTable";
 
 export const PageDIDMetadata = (
     props: {
-        data: DIDKeyValuePairsDataViewModel // remember that this is ONLY the custom metadata
+        tabledata: DIDKeyValuePairsDataViewModel // remember that this is ONLY the custom metadata
     }
 ) => {
 
@@ -56,10 +56,10 @@ export const PageDIDMetadata = (
                 if (val === null) {
                     return <NullTag />
                 }
-                if (["Available", "Deleted", "Lost"].includes(val as string)) {
+                if (Object.keys(DIDAvailability).includes(val as string)) {
                     return <AvailabilityTag availability={val as DIDAvailability} />
                 }
-                if (Object.values(DIDType).includes(val as DIDType)) {
+                if (Object.keys(DIDType).includes(val as DIDType)) {
                     return <DIDTypeTag didtype={val as DIDType} />
                 }
                 else {
@@ -74,12 +74,9 @@ export const PageDIDMetadata = (
         })
     ]
 
-    if (props.data.status === "pending") {
+    if (props.tabledata.status === "pending") {
         return (
             <div
-                className={twMerge(
-                    "flex flex-col space-y-2",
-                )}
                 aria-label="DID Metadata Quick Summary -- Loading"
                 aria-busy="true"
             >
@@ -89,9 +86,8 @@ export const PageDIDMetadata = (
     }
     return (
         <NormalTable<DIDKeyValuePair>
-            tabledata={props.data.data}
+            tabledata={props.tabledata.data || []}
             tablecolumns={tablecolumns}
-            tablestyling={{}}
         />
     )
 }

@@ -2,17 +2,21 @@
 import { PageDID as PageDIDStory } from '@/component-library/Pages/DID/PageDID';
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { useEffect, useState } from "react";
-import { fixtureDIDDatasetReplicasViewModel, fixtureDIDMetaViewModel, fixtureDIDRulesViewModel, mockUseComDOM, fixtureDIDKeyValuePairsViewModel } from 'test/fixtures/table-fixtures';
+import { fixtureDIDDatasetReplicasViewModel, fixtureDIDKeyValuePairsDataViewModel, fixtureDIDMetaViewModel, fixtureDIDRulesViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { HTTPRequest } from "@/lib/sdk/http";
-import { DIDMetaViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { didMetaQueryBase } from '@/app/(rucio)/did/queries';
+import { DIDKeyValuePairsDataViewModel, DIDMetaViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { didKeyValuePairsDataQuery, didMetaQueryBase } from '@/app/(rucio)/did/queries';
 import { Loading } from '@/component-library/Pages/Helpers/Loading';
 
 export default function Page({ params }: { params: { scope: string, name: string } }) {
     const [didMeta, setDIDMeta] = useState<DIDMetaViewModel>({status: "pending"} as DIDMetaViewModel)
+    const [didKeyValuePairsData, setDIDKeyValuePairsData] = useState({status: "pending"} as DIDKeyValuePairsDataViewModel)
     const [fromDidList, setFromDidList] = useState<string>("yosearch")
     useEffect(() => {
         didMetaQueryBase(params.scope, params.name).then(setDIDMeta)
+    }, [])
+    useEffect(() => {
+        didKeyValuePairsDataQuery(params.scope, params.name).then(setDIDKeyValuePairsData)
     }, [])
 
     const didParentsComDOM = useComDOM<DIDViewModel>(
@@ -68,7 +72,6 @@ export default function Page({ params }: { params: { scope: string, name: string
         }
         setRequests()
     }, [])
-    const didMetadataComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDKeyValuePairsViewModel()))
     const didRulesComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDRulesViewModel()))
     const didDatasetReplicasComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDDatasetReplicasViewModel()))
     if (didMeta.status === "pending") {return <Loading title="View DID" subtitle={`For DID ${params.scope}:${params.name}`} />}
@@ -77,7 +80,7 @@ export default function Page({ params }: { params: { scope: string, name: string
             didMeta={didMeta}
             fromDidList={fromDidList}
             didParentsComDOM={didParentsComDOM}
-            didMetadataComDOM={didMetadataComDOM}
+            didKeyValuePairsData={didKeyValuePairsData}
             didFileReplicasComDOM={didFileReplicasComDOM}
             didFileReplicasDComDOM={didFileReplicasDComDOM}
             didRulesComDOM={didRulesComDOM}

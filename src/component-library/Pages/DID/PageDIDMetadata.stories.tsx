@@ -11,5 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageDIDMetadata = Template.bind({});
 PageDIDMetadata.args = {
-    data: fixtureDIDKeyValuePairsDataViewModel()
+    tabledata: fixtureDIDKeyValuePairsDataViewModel()
 }
