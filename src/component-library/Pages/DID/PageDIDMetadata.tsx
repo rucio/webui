@@ -4,7 +4,6 @@ import { BoolTag } from "../../Tags/BoolTag";
 import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { DIDType } from "@/lib/core/entity/rucio";
-import { DateTag } from "../../Tags/DateTag";
 import { NullTag } from "../../Tags/NullTag";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 
@@ -17,14 +16,16 @@ import { DIDAvailability } from "@/lib/core/entity/rucio"
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { DIDKeyValuePairsDataViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { DIDKeyValuePair } from "@/lib/infrastructure/data/view-model/page-did";
+import { NormalTable } from "@/component-library/StreamedTables/NormalTable";
 
 export const PageDIDMetadata = (
     props: {
-        comdom: UseComDOM<DIDKeyValuePairsDataViewModel> // remember that this is ONLY the custom metadata
+        data: DIDKeyValuePairsDataViewModel // remember that this is ONLY the custom metadata
     }
 ) => {
 
-    const columnHelper = createColumnHelper<DIDKeyValuePairsDataViewModel>()
+    const columnHelper = createColumnHelper<DIDKeyValuePair>()
     const tablecolumns: any[] = [
         columnHelper.accessor("key", {
             id: "key",
@@ -73,9 +74,22 @@ export const PageDIDMetadata = (
         })
     ]
 
+    if (props.data.status === "pending") {
+        return (
+            <div
+                className={twMerge(
+                    "flex flex-col space-y-2",
+                )}
+                aria-label="DID Metadata Quick Summary -- Loading"
+                aria-busy="true"
+            >
+                Loading DID Metadata
+            </div>
+        )
+    }
     return (
-        <StreamedTable<DIDKeyValuePairsDataViewModel>
-            tablecomdom={props.comdom}
+        <NormalTable<DIDKeyValuePair>
+            tabledata={props.data.data}
             tablecolumns={tablecolumns}
             tablestyling={{}}
         />

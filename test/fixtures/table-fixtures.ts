@@ -12,6 +12,7 @@ import { SubscriptionRuleStatesViewModel, SubscriptionViewModel } from '@/lib/in
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDLongViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { DIDKeyValuePair } from '@/lib/infrastructure/data/view-model/page-did';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {
@@ -232,9 +233,8 @@ export function fixtureDIDMetaViewModel(): DIDMetaViewModel {
     }
 }
 
-export function fixtureDIDKeyValuePairsViewModel(): DIDKeyValuePairsDataViewModel {
+export function fixtureDIDKeyValuePair(): DIDKeyValuePair{
     return {
-        ...mockBaseVM(),
         key: faker.lorem.words(2).replace(/\s/g, "-"),
         value: faker.helpers.arrayElement([
             "das brot",
@@ -243,6 +243,15 @@ export function fixtureDIDKeyValuePairsViewModel(): DIDKeyValuePairsDataViewMode
             faker.number.int({ min: 0, max: 1e6 }),
             null,
         ])
+    }
+}
+
+export function fixtureDIDKeyValuePairsDataViewModel(): DIDKeyValuePairsDataViewModel {
+    return {
+        ...mockBaseVM(),
+        data: Array.from({ length: 100 }, () => {
+            return fixtureDIDKeyValuePair()
+        }),
     }
 }
 
