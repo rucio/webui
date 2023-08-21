@@ -1,7 +1,7 @@
 import { StoryFn, Meta } from "@storybook/react";
 import { PageDID as PD } from "./PageDID";
 
-import { fixtureDIDMetaViewModel, mockUseComDOM, fixtureDIDRulesViewModel, fixtureDIDViewModel, fixtureDIDDatasetReplicasViewModel, fixtureFilereplicaStateViewModel, fixtureFilereplicaStateDViewModel, fixtureDIDKeyValuePairsViewModel } from "test/fixtures/table-fixtures";
+import { fixtureDIDMetaViewModel, mockUseComDOM, fixtureDIDRulesViewModel, fixtureDIDViewModel, fixtureDIDDatasetReplicasViewModel, fixtureFilereplicaStateViewModel, fixtureFilereplicaStateDViewModel, fixtureDIDKeyValuePairsDataViewModel} from "test/fixtures/table-fixtures";
 
 export default {
     title: "Components/Pages/DID",
@@ -16,7 +16,7 @@ PageDID.args = {
     // Parent DIDs [FILE]
     didParentsComDOM: mockUseComDOM(Array.from({length: 100}, (_, i) => fixtureDIDViewModel())),
     // DID Metadata
-    didMetadataComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDKeyValuePairsViewModel())),
+    didKeyValuePairsData: fixtureDIDKeyValuePairsDataViewModel(),
     // Filereplicas
     didFileReplicasComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureFilereplicaStateViewModel())),
     didFileReplicasDComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureFilereplicaStateDViewModel())),

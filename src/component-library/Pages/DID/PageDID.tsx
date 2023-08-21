@@ -27,7 +27,7 @@ export interface PageDIDPageProps {
     // Parent DIDs [FILE]
     didParentsComDOM: UseComDOM<DIDViewModel>
     // Metadata [BOTH]
-    didMetadataComDOM: UseComDOM<DIDKeyValuePairsDataViewModel>
+    didKeyValuePairsData: DIDKeyValuePairsDataViewModel
     // File Replica States [FILE]
     didFileReplicasComDOM: UseComDOM<FilereplicaStateViewModel>
     // File Replica States [DATASET]
@@ -162,7 +162,7 @@ export const PageDID = (
                     show={showPageBools["subpage-metadata"]()}
                     id="subpage-metadata"
                 >
-                    <PageDIDMetadata comdom={props.didMetadataComDOM} />
+                    <PageDIDMetadata tabledata={props.didKeyValuePairsData} />
                 </SubPage>
                 <SubPage
                     show={showPageBools["subpage-contents"]()}
