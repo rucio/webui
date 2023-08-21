@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { fixtureDIDKeyValuePairsViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
+import { fixtureDIDKeyValuePairsDataViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { PageDIDMetadata as P } from "./PageDIDMetadata"
 
 export default {
@@ -11,5 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageDIDMetadata = Template.bind({});
 PageDIDMetadata.args = {
-    comdom: mockUseComDOM(Array.from({length: 100}, (_, i) => fixtureDIDKeyValuePairsViewModel()))
+    data: fixtureDIDKeyValuePairsDataViewModel()
 }
