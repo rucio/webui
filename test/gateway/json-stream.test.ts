@@ -127,7 +127,8 @@ describe('Streaming tests for JSON encoded text payloads', () => {
                 'Content-Type': 'application/x-json-stream',
             },
         }
-        const jsonStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
+        const {type, content} = await streamingGateway.getJSONChunks(request)
+        const jsonStream: PassThrough | Response = content
         expect(jsonStream).not.toBeNull()
         // if response is null fail the test
         if(jsonStream === null) {
@@ -166,7 +167,8 @@ describe('Streaming tests for JSON encoded text payloads', () => {
                 'Content-Type': 'application/x-json-stream',
             },
         }
-        const jsonStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
+        const {type, content} = await streamingGateway.getJSONChunks(request)
+        const jsonStream: PassThrough | Response = content
         expect(jsonStream).not.toBeNull()
         // if response is null fail the test
         if(jsonStream === null) {
@@ -212,7 +214,8 @@ describe('Streaming tests for JSON encoded text payloads', () => {
             body: null,
             headers: {},
         }
-        const jsonStream: PassThrough | Response = await streamingGateway.getJSONChunks(request)
+        const {type, content} = await streamingGateway.getJSONChunks(request)
+        const jsonStream: PassThrough | Response = content
         
         expect(jsonStream).not.toBeNull()
         // if response is null fail the test

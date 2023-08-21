@@ -26,12 +26,15 @@ export default class StreamingGateway implements StreamGatewayOutputPort {
         return Promise.resolve(textStream)
     }
 
-    async getJSONChunks(request: HTTPRequest, ndjson: boolean = false): Promise<PassThrough | Response> {
+    async getJSONChunks(request: HTTPRequest, ndjson: boolean = false): Promise<{ type: 'response' | 'stream', content: PassThrough | Response}> {
         const { url, requestArgs } = prepareRequestArgs(request)
         const response = await fetch(url, requestArgs)
 
         if (!response.ok || response.body === null) {
-            return response
+            return { 
+                type: 'response', 
+                content: response
+            }
         }
 
         const responseBody = response.body
@@ -45,6 +48,9 @@ export default class StreamingGateway implements StreamGatewayOutputPort {
                 .pipe(new BytesToStringifiedJSONTransform({ objectMode: true }))
                 .pipe(jsonStream)
         }
-        return Promise.resolve(jsonStream)
+        return Promise.resolve({
+            type: 'stream',
+            content: jsonStream
+        })
     }
 }
