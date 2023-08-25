@@ -1,6 +1,4 @@
 import { DIDLongViewModel } from "@/lib/infrastructure/data/view-model/did";
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { StoryFn, Meta } from "@storybook/react";
 import { createColumnHelper, Column} from "@tanstack/react-table";
 import { fixtureDIDLongViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
