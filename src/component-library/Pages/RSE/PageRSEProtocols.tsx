@@ -4,7 +4,6 @@ import { twMerge } from "tailwind-merge";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { StreamedTable } from "../../StreamedTables/StreamedTable.stories";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
-import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { H3 } from "../../Text/Headings/H3";
 import { RSEProtocolViewModel } from "@/lib/infrastructure/data/view-model/rse";
 

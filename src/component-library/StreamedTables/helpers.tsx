@@ -1,5 +1,5 @@
 import { DID } from "@/lib/core/entity/rucio";
-import { NormalTableProps, TableSelecting, TableStyling } from "./types";
+import { TableSelecting, TableStyling } from "./types";
 import { useReactTable, getCoreRowModel, getPaginationRowModel, getFilteredRowModel, getSortedRowModel, RowSelectionState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 
