@@ -9,59 +9,17 @@ import { BaseViewModel } from "@/lib/sdk/view-models";
 import { TableBody } from "./TableBody";
 import { TableHeader } from "./TableHeader";
 import { StreamedTableProps } from "./types";
+import { usePrepareTable } from "./helpers";
 
 export function StreamedTable<T extends BaseViewModel>(props: StreamedTableProps<T>) {
     const { className, ...otherprops } = props
 
-    const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-
-    const table = useReactTable<T>({
-        data: props.tablecomdom.query.data || [],
-        columns: props.tablecolumns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        debugTable: false,
-        enableRowSelection: props.tableselecting?.enableRowSelection ?? false,
-        enableMultiRowSelection: props.tableselecting?.enableMultiRowSelection ?? false,
-        onRowSelectionChange: setRowSelection,
-        state: {
-            columnVisibility: props.tablestyling?.visibility,
-            rowSelection: rowSelection
-        }
+    const { table, rowSelection, setRowSelection, breakoutVisibility, setBreakoutVisibility } = usePrepareTable<T>({
+        tabledata: props.tablecomdom.query.data || [],
+        tablecolumns: props.tablecolumns,
+        tablestyling: props.tablestyling,
+        tableselecting: props.tableselecting,
     })
-
-    // https://github.com/TanStack/table/discussions/2155#discussioncomment-6010065
-    useEffect(() => {
-        props.tableselecting?.handleChange(table.getSelectedRowModel().flatRows.map((row) => row.original))
-    }, [rowSelection, table])
-    // `enableRowSelection` might be subject to change => clear selection if changes to false
-    useEffect(() => {
-        if (props.tableselecting?.enableRowSelection === false) {
-            table.setRowSelection({})
-        }
-    }, [props.tableselecting?.enableRowSelection])
-
-
-    // Pagination
-    const [pageIndex, setPageIndex] = useState(table.getState().pagination.pageIndex)
-    useEffect(() => {
-        setPageIndex(table.getState().pagination.pageIndex)
-    }, [table])
-    useEffect(() => {
-        table.setPageIndex(pageIndex)
-    }, [pageIndex, table])
-    // Page number
-    useEffect(() => {
-        table.setPageSize(props.tablestyling?.pageSize ?? 10) // default to 10
-    }, [props.tablestyling?.pageSize, table])
-
-    // Breakout
-    const [breakoutVisibility, setBreakoutVisibility] = useState(props.tableselecting?.breakOut?.breakoutVisibility ?? false)
-    useEffect(() => {
-        setBreakoutVisibility(props.tableselecting?.breakOut?.breakoutVisibility ?? false)
-    }, [props.tableselecting?.breakOut?.breakoutVisibility])
 
     return (
         <table
