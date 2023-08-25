@@ -1,13 +1,11 @@
-import { DateISO, RSE, RSEBlockState } from "@/lib/core/entity/rucio";
-import { H1 } from "../../Text/Headings/H1";
+import { RSEBlockState } from "@/lib/core/entity/rucio";
 import { twMerge } from "tailwind-merge";
 import { Generaltable } from "../../Helpers/Metatable";
 import { Titleth, Contenttd } from "../../Helpers/Metatable";
 import { BoolTag } from "../../Tags/BoolTag";
 import { RSETypeTag } from "../../Tags/RSETypeTag";
 import { RSETag } from "../../Tags/RSETag";
-import { HiArrowCircleLeft } from "react-icons/hi";
-import { RSEAttribute, RSEAttributeViewModel, RSEProtocol, RSEProtocolViewModel, RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
+import { RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { PageRSEProtocols } from "./PageRSEProtocols";
 import { PageRSEAttributes } from "./PageRSEAttributes";

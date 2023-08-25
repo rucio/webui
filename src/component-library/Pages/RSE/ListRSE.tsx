@@ -1,9 +1,8 @@
 import { twMerge } from "tailwind-merge";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { RSE, RSEType } from "@/lib/core/entity/rucio";
+import { RSEType } from "@/lib/core/entity/rucio";
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { createColumnHelper } from "@tanstack/react-table";
-import { H3 } from "../../Text/Headings/H3";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { BoolTag } from "../../Tags/BoolTag";

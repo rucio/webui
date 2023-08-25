@@ -1,8 +1,3 @@
-import {
-    getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
-    getSortedRowModel, RowSelectionState, useReactTable
-} from "@tanstack/react-table";
-import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { TableFooter } from "./TableFooter";
 import { BaseViewModel } from "@/lib/sdk/view-models";

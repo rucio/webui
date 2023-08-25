@@ -1,5 +1,5 @@
 import { twMerge } from 'tailwind-merge';
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "../../Button/Button";
 import { Tabs } from "../../Misc/Tabs";
 import { H1 } from '../../Text/Headings/H1';

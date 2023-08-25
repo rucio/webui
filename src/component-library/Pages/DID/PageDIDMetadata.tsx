@@ -5,7 +5,6 @@ import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { NullTag } from "../../Tags/NullTag";
-import { StreamedTable } from "../../StreamedTables/StreamedTable";
 
 // misc packages, react
 import { createColumnHelper } from "@tanstack/react-table"
@@ -14,7 +13,6 @@ import { twMerge } from "tailwind-merge"
 // Viewmodels etc
 import { DIDAvailability } from "@/lib/core/entity/rucio"
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { DIDKeyValuePairsDataViewModel } from "@/lib/infrastructure/data/view-model/did";
 import { DIDKeyValuePair } from "@/lib/infrastructure/data/view-model/page-did";
 import { NormalTable } from "@/component-library/StreamedTables/NormalTable";
