@@ -6,18 +6,20 @@ export type TableStyling = Partial<{
     tableFooterStack?: boolean
 }>
 
+export type TableSelecting<T> = {
+    handleChange: (data: T[]) => void,
+    enableRowSelection: boolean
+    enableMultiRowSelection?: boolean,
+    breakOut?: {
+        breakoutVisibility: boolean,
+        keys: Record<string, string>, // column id, displayname
+    }
+}
+
 type NoDataTableProps<T> = JSX.IntrinsicElements["table"] & {
     tablecolumns: any[] // todo type this
-    tablestyling?: TableStyling 
-    tableselecting?: {
-        handleChange: (data: T[]) => void,
-        enableRowSelection: boolean
-        enableMultiRowSelection?: boolean,
-        breakOut?: {
-            breakoutVisibility: boolean,
-            keys: Record<string, string>, // column id, displayname
-        }
-    }
+    tablestyling?: TableStyling
+    tableselecting?: TableSelecting<T>
 }
 
 export type StreamedTableProps<T extends BaseViewModel> = NoDataTableProps<T> & {
