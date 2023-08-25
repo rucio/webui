@@ -1,7 +1,6 @@
 // components
 import { H3 } from "../../Text/Headings/H3";
 import { HiDotsHorizontal } from "react-icons/hi"
-import { TableData } from "@/lib/infrastructure/data/view-model/streamedtables";
 import { createColumnHelper} from "@tanstack/react-table"
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
