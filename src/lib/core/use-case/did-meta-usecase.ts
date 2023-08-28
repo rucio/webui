@@ -1,4 +1,4 @@
-import { BaseUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { injectable } from "inversify";
 import { DIDMetaDTO } from "../dto/did-dto";
@@ -7,7 +7,7 @@ import type DIDGatewayOutputPort from "../port/secondary/did-gateway-output-port
 import { DIDMetaError, DIDMetaRequest, DIDMetaResponse } from "../usecase-models/did-meta-usecase-models";
 
 @injectable()
-class DIDMetaUseCase extends BaseUseCase<AuthenticatedRequestModel<DIDMetaRequest>, DIDMetaResponse, DIDMetaError, DIDMetaDTO> implements DIDMetaInputPort {
+class DIDMetaUseCase extends BaseSingleEndpointUseCase<AuthenticatedRequestModel<DIDMetaRequest>, DIDMetaResponse, DIDMetaError, DIDMetaDTO> implements DIDMetaInputPort {
     constructor(
         protected readonly presenter: DIDMetaOutputPort,
         private readonly gateway: DIDGatewayOutputPort,

@@ -2,12 +2,12 @@ import { injectable } from "inversify";
 import { LoginConfigError, LoginConfigResponse } from "../usecase-models/login-config-usecase-models";
 import type { LoginConfigInputPort, LoginConfigOutputPort } from "../port/primary/login-config-ports";
 import type EnvConfigGatewayOutputPort from "../port/secondary/env-config-gateway-output-port";
-import { BaseUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointUseCase } from "@/lib/sdk/usecase";
 import { LoginConfigDTO } from "../dto/login-config-dto";
 import { ConfigNotFound, InvalidConfig } from "../exceptions/env-config-exceptions";
 
 @injectable()
-class LoginConfigUseCase extends BaseUseCase<void, LoginConfigResponse, LoginConfigError, LoginConfigDTO> implements LoginConfigInputPort {
+class LoginConfigUseCase extends BaseSingleEndpointUseCase<void, LoginConfigResponse, LoginConfigError, LoginConfigDTO> implements LoginConfigInputPort {
     constructor(
         protected presenter: LoginConfigOutputPort,
         private envConfigGateway: EnvConfigGatewayOutputPort,

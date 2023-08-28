@@ -48,25 +48,14 @@ export type TUseCase<TRequestModel> =
     | TAuthenticatedUseCase<TRequestModel>
     | TStreamableUseCase<TRequestModel>
 
-/**
- * A base class for use cases.
- * @typeparam TRequestModel The type of the request model for the use case.
- * @typeparam TResponseModel The type of the response model for the use case.
- * @typeparam TErrorModel The type of the error model for the use case.
- * @typeparam TDTO The type of the DTO for the use case.
- */
+
 export abstract class BaseUseCase<
     TRequestModel,
     TResponseModel extends BaseResponseModel,
     TErrorModel extends BaseErrorResponseModel,
-    TDTO extends BaseDTO,
 > {
     protected presenter: BaseOutputPort<TResponseModel, TErrorModel>
 
-    /**
-     * Creates a new instance of the `BaseUseCase` class.
-     * @param presenter The output port that the use case will use to present the response or error model.
-     */
     constructor(presenter: BaseOutputPort<TResponseModel, TErrorModel>) {
         this.presenter = presenter
     }
@@ -80,6 +69,36 @@ export abstract class BaseUseCase<
         requestModel: TRequestModel,
     ): TErrorModel | undefined
 
+    /**
+     * Executes the use case with the given request model.
+     * @param requestModel The request model for the use case.
+     * @returns A promise that resolves when the use case has completed.
+     */
+    abstract execute(requestModel: TRequestModel): Promise<void>
+
+} 
+/**
+ * A base class for use cases that make a request to a single non-streaming gateway endpoint.
+ * @typeparam TRequestModel The type of the request model for the use case.
+ * @typeparam TResponseModel The type of the response model for the use case.
+ * @typeparam TErrorModel The type of the error model for the use case.
+ * @typeparam TDTO The type of the DTO for the use case.
+ */
+export abstract class BaseSingleEndpointUseCase<
+    TRequestModel,
+    TResponseModel extends BaseResponseModel,
+    TErrorModel extends BaseErrorResponseModel,
+    TDTO extends BaseDTO,
+> extends BaseUseCase<TRequestModel, TResponseModel, TErrorModel>{
+    /**
+     * Creates a new instance of the `BaseUseCase` class.
+     * @param presenter The output port that the use case will use to present the response or error model.
+     */
+    constructor(presenter: BaseOutputPort<TResponseModel, TErrorModel>) {
+        super(presenter)
+    }
+
+    
     /**
      * Makes a gateway request with the given request model.
      * @param requestModel The request model to send to the gateway.
@@ -97,7 +116,6 @@ export abstract class BaseUseCase<
      */
     abstract handleGatewayError(error: TDTO): TErrorModel;
 
-    
 
     /**
      * Handles the DTO returned by the gateway.
@@ -173,7 +191,7 @@ export abstract class BasePostProcessingPipelineUseCase<TRequestModel,
 TResponseModel extends BaseResponseModel,
 TErrorModel extends BaseErrorResponseModel,
 TDTO extends BaseDTO,
-> extends BaseUseCase<
+> extends BaseSingleEndpointUseCase<
 TRequestModel,
 TResponseModel,
 TErrorModel,
