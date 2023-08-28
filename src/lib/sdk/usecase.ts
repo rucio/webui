@@ -187,7 +187,7 @@ export abstract class BaseSingleEndpointUseCase<
     }
 }
 
-export abstract class BasePostProcessingPipelineUseCase<TRequestModel,
+export abstract class BaseSingleEndpointPostProcessingPipelineUseCase<TRequestModel,
 TResponseModel extends BaseResponseModel,
 TErrorModel extends BaseErrorResponseModel,
 TDTO extends BaseDTO,
