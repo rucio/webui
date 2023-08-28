@@ -1,5 +1,5 @@
 import { SubscriptionViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
-import { BaseStreamingUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointStreamingUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { injectable } from "inversify";
 import { ListSubscriptionsDTO, SubscriptionDTO } from "../dto/subscription-dto";
@@ -8,7 +8,7 @@ import type SubscriptionGatewayOutputPort from "../port/secondary/subscription-g
 import { ListSubscriptionsError, ListSubscriptionsRequest, ListSubscriptionsResponse } from "../usecase-models/list-subscriptions-usecase-models";
 
 @injectable()
-class ListSubscriptionsUseCase extends BaseStreamingUseCase<
+class ListSubscriptionsUseCase extends BaseSingleEndpointStreamingUseCase<
     ListSubscriptionsRequest,
     ListSubscriptionsResponse,
     ListSubscriptionsError,

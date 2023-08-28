@@ -1,5 +1,5 @@
 import { BaseStreamableDTO } from "@/lib/sdk/dto";
-import { BaseStreamingUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointStreamingUseCase } from "@/lib/sdk/usecase";
 import { BaseErrorResponseModel } from "@/lib/sdk/usecase-models";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 import { MockHttpStreamableResponseFactory } from "test/fixtures/http-fixtures";
@@ -10,7 +10,7 @@ import { Readable } from "stream";
 
 
 describe("Stream Error Handling", () => {
-    class TestStreamErrorUseCase extends BaseStreamingUseCase<TRequestModel, TResponseModel, BaseErrorResponseModel, BaseStreamableDTO, StreamDTO, BaseViewModel > {
+    class TestStreamErrorUseCase extends BaseSingleEndpointStreamingUseCase<TRequestModel, TResponseModel, BaseErrorResponseModel, BaseStreamableDTO, StreamDTO, BaseViewModel > {
         
         constructor(response: any) {
             const presenter = new TestPresenter(response)
