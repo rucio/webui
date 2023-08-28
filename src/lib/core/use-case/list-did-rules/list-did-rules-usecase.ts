@@ -1,5 +1,5 @@
 import { DIDRulesViewModel } from "@/lib/infrastructure/data/view-model/did";
-import { BaseMultiCallStreamableUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointPostProcessingPipelineStreamingUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { injectable } from "inversify";
 import { DIDRulesDTO, ListDIDRulesDTO } from "../../dto/did-dto";
@@ -10,7 +10,7 @@ import { ListDIDRulesError, ListDIDRulesResponse, ListDIDRulesRequest } from "..
 import GetDIDSubscriptionsByIDPipelineElement from "./pipeline-element-get-did-subscription";
 
 @injectable()
-class ListDIDRulesUseCase extends BaseMultiCallStreamableUseCase<ListDIDRulesRequest, ListDIDRulesResponse, ListDIDRulesError, ListDIDRulesDTO, DIDRulesDTO, DIDRulesViewModel> implements ListDIDRulesInputPort {
+class ListDIDRulesUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingUseCase<ListDIDRulesRequest, ListDIDRulesResponse, ListDIDRulesError, ListDIDRulesDTO, DIDRulesDTO, DIDRulesViewModel> implements ListDIDRulesInputPort {
     constructor(
         protected presenter: ListDIDRulesOutputPort,
         private didGateway: DIDGatewayOutputPort,
@@ -74,11 +74,6 @@ class ListDIDRulesUseCase extends BaseMultiCallStreamableUseCase<ListDIDRulesReq
             status: 'success',
         }
     }
-
-    handleStreamError(error: ListDIDRulesError): void {
-        console.log(error)
-    }
-    
 }
 
 export default ListDIDRulesUseCase;

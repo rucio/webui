@@ -1,5 +1,5 @@
 import { BaseStreamableDTO } from '@/lib/sdk/dto'
-import { BaseMultiCallStreamableUseCase } from '@/lib/sdk/usecase'
+import { BaseSingleEndpointPostProcessingPipelineStreamingUseCase } from '@/lib/sdk/usecase'
 import {
     BaseErrorResponseModel,
     BaseResponseModel,
@@ -16,7 +16,7 @@ import { TestPresenter } from '../fixtures/presenter'
 import { BaseViewModel } from '@/lib/sdk/view-models'
 
 describe('BaseMultiCallStreamableUseCase', () => {
-    class TestMultiCallPipelineUseCase extends BaseMultiCallStreamableUseCase<
+    class TestMultiCallPipelineUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingUseCase<
         TRequestModel,
         TResponseModel,
         BaseErrorResponseModel,
@@ -78,11 +78,6 @@ describe('BaseMultiCallStreamableUseCase', () => {
             }
         }
 
-        handleStreamError(error: BaseErrorResponseModel): void {
-            throw new Error('handleError: found something!' + error.message)
-        }
-
-        
 
         validateFinalResponseModel(responseModel: BaseResponseModel): {
             isValid: boolean

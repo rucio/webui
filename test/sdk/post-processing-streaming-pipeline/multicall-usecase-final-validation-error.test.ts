@@ -1,5 +1,5 @@
 import { BaseStreamableDTO } from "@/lib/sdk/dto";
-import { BaseMultiCallStreamableUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointPostProcessingPipelineStreamingUseCase } from "@/lib/sdk/usecase";
 import { BaseErrorResponseModel } from "@/lib/sdk/usecase-models";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 import { TRequestModel, TResponseModel, StreamDTO, TDTO } from "../fixtures/models";
@@ -9,7 +9,7 @@ import { Readable } from "stream";
 import { MockHttpStreamableResponseFactory } from "test/fixtures/http-fixtures";
 
 describe("Post Processing Streaming Pipeline Error Handling", () => {
-    class TestErrorInPipilineElementUseCase extends BaseMultiCallStreamableUseCase<
+    class TestErrorInPipilineElementUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingUseCase<
         TRequestModel,
         TResponseModel,
         BaseErrorResponseModel,
@@ -58,10 +58,6 @@ describe("Post Processing Streaming Pipeline Error Handling", () => {
                 status: 'success',
                 data: responseModel,
             }
-        }
-
-        handleStreamError(error: BaseErrorResponseModel): void {
-            throw new Error("Should not be called.");
         }
 
         validateFinalResponseModel(responseModel: TResponseModel): { isValid: boolean; errorModel?: BaseErrorResponseModel | undefined; } {

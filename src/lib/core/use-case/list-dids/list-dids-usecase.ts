@@ -4,14 +4,14 @@ import type DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-out
 import { DIDDTO, ListDIDDTO, ListDIDsStreamData } from "../../dto/did-dto";
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../../usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
-import { BaseMultiCallStreamableUseCase, BaseStreamingUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointPostProcessingPipelineStreamingUseCase, BaseSingleEndpointStreamingUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
 import GetDIDsPipelineElement from "./pipeline-element-get-did";
 import { DID } from "../../entity/rucio";
 
 @injectable()
-class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDDTO, ListDIDsViewModel> implements ListDIDsInputPort {
+class ListDIDsUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDDTO, ListDIDsViewModel> implements ListDIDsInputPort {
     
     constructor(
         protected presenter: ListDIDsOutputPort,
@@ -85,10 +85,6 @@ class ListDIDsUseCase extends BaseMultiCallStreamableUseCase<ListDIDsRequest, Li
             data: responseModel,
             status: 'success',
         }
-    }
-
-    handleStreamError(error: ListDIDsError): void {
-        console.log(error)
     }
 
     validateFinalResponseModel(responseModel: ListDIDsResponse): { isValid: boolean; errorModel?: ListDIDsError | undefined; } {

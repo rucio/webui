@@ -1,7 +1,7 @@
 import {
     BaseAuthenticatedInputPort,
     BaseInputPort,
-    BaseMultiCallStreamableInputPort,
+    BaseMultiCallStreamableInputPort as BaseSingleEndpointPostProcessingPipelineStreamingInputPort,
     BaseOutputPort,
     BaseStreamableInputPort,
     BaseStreamingOutputPort,
@@ -13,7 +13,7 @@ import {
 } from './usecase-models'
 import { Transform, TransformCallback, PassThrough, Readable } from 'stream'
 import { BaseDTO, BaseStreamableDTO } from './dto'
-import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
+import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement as BaseFinalResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { BaseStreamingPresenter } from './presenter'
 import { BaseViewModel } from './view-models'
 
@@ -242,20 +242,17 @@ TDTO
     }
     
 }
+
+
 export abstract class BaseStreamingUseCase<
-        TRequestModel,
-        TResponseModel extends BaseResponseModel,
-        TErrorModel extends BaseErrorResponseModel,
-        TDTO extends BaseStreamableDTO,
-        TStreamDTO,
-        TStreamViewModel extends BaseViewModel
-    >
-    extends Transform
-    implements
-        BaseStreamableInputPort<AuthenticatedRequestModel<TRequestModel>>
+    TRequestModel,
+    TResponseModel extends BaseResponseModel,
+    TErrorModel extends BaseErrorResponseModel,
+    TStreamDTO extends BaseDTO,
+    TStreamViewModel extends BaseViewModel,
+> extends Transform implements BaseStreamableInputPort<AuthenticatedRequestModel<TRequestModel>>
 {
     protected presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TStreamViewModel>
-    protected requestModel: AuthenticatedRequestModel<TRequestModel> | undefined
 
     constructor(
         presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TStreamViewModel>,
@@ -274,82 +271,56 @@ export abstract class BaseStreamingUseCase<
     ): TErrorModel | undefined
 
     /**
-     * Makes a gateway request with the given request model.
-     * @param requestModel The request model to send to the gateway.
-     * @returns A promise that resolves with the DTO returned by the gateway.
+     * Generate or Fetch a source stream via zero or more gateway endpoints.
+     * @param requestModel The request model for the UseCase.
+     * @returns A promise that resolves with the source stream or an error model.
      */
-    abstract makeGatewayRequest(
-        requestModel: AuthenticatedRequestModel<TRequestModel>,
-    ): Promise<TDTO>
-
-    /**
-     * Handles a gateway error by converting it to an error model.
-     * @param error The DTO returned by the gateway.
-     * @returns An error model that represents the gateway error.
-     */
-    abstract handleGatewayError(error: TDTO): TErrorModel
-
-    /**
-     * Processes individual streamed chunks of data from the gateway.
-     * @param dto The streamed data from the gateway.
-     * @returns An object that represents the processed data.
-     */
-    abstract processStreamedData(dto: TStreamDTO): {
-        data: TResponseModel | TErrorModel
-        status: 'success' | 'error'
-    }
+    abstract generateSourceStream(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<{
+        status: 'success' | 'error',
+        stream?: Transform | Readable | PassThrough | null,
+        error?: TErrorModel
+    }>
 
     setupStreamingPipeline(stream: Transform | Readable | PassThrough): void {
         stream.pipe(this)
         this.presenter.setupStream(this)
     }
 
-    /**
-     * Processes the DTO. Sets up the streaming pipeline if the DTO is valid.
-     * @param response The DTO returned by the gateway.
-     * @returns undefined if there were no errors, or an error model if there was an error.
-     */
-    processGatewayResponse(response: TDTO): undefined | TErrorModel {
-        if (response.status === 'success') {
-            const { stream } = response
-            if (stream) {
-                this.setupStreamingPipeline(stream)
-                return undefined
-            } else {
-                return {
-                    status: 'error',
-                    message: 'No stream found in response',
-                } as TErrorModel
-            }
-        } else {
-            const commonError: BaseErrorResponseModel | undefined = handleCommonGatewayErrors<TDTO>(response)
-            if(commonError) {
-                return commonError as TErrorModel
-            }
-            const errorModel: TErrorModel = this.handleGatewayError(response)
-            return errorModel
+    async execute(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<void> {
+        const validationError: TErrorModel | undefined = this.validateRequestModel(requestModel)
+        if(validationError) {
+            this.presenter.presentError(validationError)
+            return
         }
+
+        const sourceStreamOrError: {
+            status: 'success' | 'error',
+            stream?: Transform | Readable | PassThrough | null,
+            error?: TErrorModel
+        } = await this.generateSourceStream(requestModel)
+        if(sourceStreamOrError.status === 'error') {
+            this.presenter.presentError(sourceStreamOrError.error as TErrorModel)
+            return
+        }
+        const sourceStream = sourceStreamOrError.stream
+        if(!sourceStream) {
+            this.presenter.presentError({
+                status: 'error',
+                message: 'No stream found in response',
+            } as TErrorModel)
+            return
+        }
+        this.setupStreamingPipeline(sourceStream)
     }
 
     /**
-     * Executes the use case with the given request model.
+     * Processes individual streamed chunks of data from the gateway.
+     * @param dto The streamed data.
+     * @returns An object that represents the processed data.
      */
-    async execute(
-        requestModel: AuthenticatedRequestModel<TRequestModel>,
-    ): Promise<void> {
-        this.requestModel = requestModel
-        const validationError: TErrorModel | undefined =
-            this.validateRequestModel(this.requestModel)
-        if (validationError) {
-            await this.presenter.presentError(validationError)
-            return
-        }
-        const dto: TDTO = await this.makeGatewayRequest(this.requestModel)
-        const error = this.processGatewayResponse(dto)
-        if (error) {
-            await this.presenter.presentError(error as TErrorModel)
-            return
-        }
+    abstract processStreamedData(dto: TStreamDTO): {
+        data: TResponseModel | TErrorModel
+        status: 'success' | 'error'
     }
 
     _transform(
@@ -368,6 +339,87 @@ export abstract class BaseStreamingUseCase<
     }
 }
 
+export abstract class BaseSingleEndpointStreamingUseCase<
+        TRequestModel,
+        TResponseModel extends BaseResponseModel,
+        TErrorModel extends BaseErrorResponseModel,
+        TDTO extends BaseStreamableDTO,
+        TStreamDTO extends BaseDTO,
+        TStreamViewModel extends BaseViewModel
+    >
+    extends BaseStreamingUseCase<
+        TRequestModel,
+        TResponseModel,
+        TErrorModel,
+        TStreamDTO,
+        TStreamViewModel
+    >
+{
+
+    constructor(
+        presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TStreamViewModel>,
+    ) {
+        super(presenter)
+    }
+
+    /**
+     * Makes a gateway request with the given request model.
+     * @param requestModel The request model to send to the gateway.
+     * @returns A promise that resolves with the DTO returned by the gateway.
+     */
+    abstract makeGatewayRequest(
+        requestModel: AuthenticatedRequestModel<TRequestModel>,
+    ): Promise<TDTO>
+
+    /**
+     * Handles a gateway error by converting it to an error model.
+     * @param error The DTO returned by the gateway.
+     * @returns An error model that represents the gateway error.
+     */
+    abstract handleGatewayError(error: TDTO): TErrorModel
+
+    /**
+     * Processes the DTO. Sets up the streaming pipeline if the DTO is valid.
+     * @param response The DTO returned by the gateway.
+     * @returns undefined if there were no errors, or an error model if there was an error.
+     */
+    processGatewayResponse(response: TDTO): undefined | TErrorModel {
+        if (response.status === 'success') {
+            const { stream } = response
+            if (stream) {
+                return undefined
+            } else {
+                return {
+                    status: 'error',
+                    message: 'No stream found in response',
+                } as TErrorModel
+            }
+        } else {
+            const commonError: BaseErrorResponseModel | undefined = handleCommonGatewayErrors<TDTO>(response)
+            if(commonError) {
+                return commonError as TErrorModel
+            }
+            const errorModel: TErrorModel = this.handleGatewayError(response)
+            return errorModel
+        }
+    }
+
+    async generateSourceStream(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<{ status: 'success' | 'error'; stream?: Transform | Readable | PassThrough | null | undefined; error?: TErrorModel | undefined; }> {
+        const dto = await this.makeGatewayRequest(requestModel)
+        const error = this.processGatewayResponse(dto)
+        if(error) {
+            return {
+                status: 'error',
+                error: error as TErrorModel
+            }
+        }
+        return {
+            status: 'success',
+            stream: dto.stream
+        }
+    }
+}
+
 
 /**
  * A base class for multi-call streamable use cases that provide a post-processing pipeline for the streamed elements.
@@ -379,7 +431,7 @@ export abstract class BaseStreamingUseCase<
  * @typeparam TStreamDTO The type of the data transfer object for the streamed data for the use case.
  * @typeparam TViewModel The type of the view model for the use case.
  */
-export abstract class BaseMultiCallStreamableUseCase<
+export abstract class BaseSingleEndpointPostProcessingPipelineStreamingUseCase<
         TRequestModel,
         TResponseModel extends BaseResponseModel,
         TErrorModel extends BaseErrorResponseModel,
@@ -387,7 +439,7 @@ export abstract class BaseMultiCallStreamableUseCase<
         TStreamDTO extends BaseDTO,
         TViewModel extends BaseViewModel
     >
-    extends BaseStreamingUseCase<
+    extends BaseSingleEndpointStreamingUseCase<
         TRequestModel,
         TResponseModel,
         TErrorModel,
@@ -396,7 +448,7 @@ export abstract class BaseMultiCallStreamableUseCase<
         TViewModel
     >
     implements
-        BaseMultiCallStreamableInputPort<
+        BaseSingleEndpointPostProcessingPipelineStreamingInputPort<
             AuthenticatedRequestModel<TRequestModel>,
             TResponseModel,
             TErrorModel
@@ -413,12 +465,17 @@ export abstract class BaseMultiCallStreamableUseCase<
     >[] = []
 
     /**
+     * The request model for the use case which will be passed along the pipeline. 
+     */
+    protected requestModel: TRequestModel | undefined
+
+    /**
      * The final pipeline element that validates the final response model.
      */
     protected finalResponseValidationTransform: Transform
     
     /**
-     * Instantiates a new instance of the {@link BaseMultiCallStreamableUseCase} class.
+     * Instantiates a new instance of the {@link BaseSingleEndpointPostProcessingPipelineStreamingUseCase} class.
      * @param presenter The {@link BaseStreamingPresenter} for this use case
      * @param postProcessingPipelineElements The list of {@link BaseStreamingPostProcessingPipelineElement} that will be used to process the stream.
      */
@@ -437,7 +494,7 @@ export abstract class BaseMultiCallStreamableUseCase<
     ) {
         super(presenter)
         this.postProcessingPipelineElements = postProcessingPipelineElements
-        this.finalResponseValidationTransform = new BaseResponseModelValidatorPipelineElement<TResponseModel, TErrorModel>(this.validateFinalResponseModel)
+        this.finalResponseValidationTransform = new BaseFinalResponseModelValidatorPipelineElement<TResponseModel, TErrorModel>(this.validateFinalResponseModel)
     }
 
     /**
@@ -473,12 +530,18 @@ export abstract class BaseMultiCallStreamableUseCase<
         errorModel?: TErrorModel | undefined
     }
 
-    /**
-     * Handles an error that occurs in the streaming pipeline.
-     * @param error The error that occurred.
-     * @remarks This method is called when an error occurs in the streaming pipeline.
-     */
-    abstract handleStreamError(error: TErrorModel): void
+    // /**
+    //  * Handles an error that occurs in the streaming pipeline.
+    //  * @param error The error that occurred.
+    //  * @remarks This method is called when an error occurs in the streaming pipeline.
+    //  * @deprecated Not used
+    //  */
+    // abstract handleStreamError(error: TErrorModel): void
+
+    async execute(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<void> {
+        await super.execute(requestModel)
+        this.requestModel = requestModel
+    }
 
     /**
      * Processes the individial stream element and pushes it to the next element in the pipeline.
@@ -504,7 +567,6 @@ export abstract class BaseMultiCallStreamableUseCase<
             )
         } else {
             const errorModel = data as TErrorModel
-            // this.emit('error', errorModel)
             callback(null, {
                 status: 'error',
                 requestModel: this.requestModel,
