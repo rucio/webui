@@ -181,7 +181,7 @@ export abstract class BaseStreamingPostProcessingPipelineElement<TRequestModel, 
 /**
  * A base class for the final validation stage in a post processing streaming pipeline.
  */
-export class BaseResponseModelValidatorPipelineElement<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel> extends Transform {
+export class BaseFinalResponseModelValidatorPipelineElement<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel> extends Transform {
     protected validatorFn: {(responseModel: TResponseModel): {isValid: boolean, errorModel?: TErrorModel | undefined}}
 
     constructor(validatorFn:{(responseModel: TResponseModel): {isValid: boolean, errorModel?: TErrorModel | undefined}}) {

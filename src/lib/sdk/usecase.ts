@@ -13,7 +13,7 @@ import {
 } from './usecase-models'
 import { Transform, TransformCallback, PassThrough, Readable } from 'stream'
 import { BaseDTO, BaseStreamableDTO } from './dto'
-import { BaseStreamingPostProcessingPipelineElement, BaseResponseModelValidatorPipelineElement as BaseFinalResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
+import { BaseStreamingPostProcessingPipelineElement, BaseFinalResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { BaseStreamingPresenter } from './presenter'
 import { BaseViewModel } from './view-models'
 
@@ -49,6 +49,13 @@ export type TUseCase<TRequestModel> =
     | TStreamableUseCase<TRequestModel>
 
 
+/**
+ * A type that represents a simple use case that takes care of fetching data
+ * from zero or more gateway endpoints
+ * @typeparam TRequestModel The type of the request model for the use case.
+ * @typeparam TResponseModel The type of the response model for the use case.
+ * @typeparam TErrorModel The type of the error model for the use case.
+ */
 export abstract class BaseUseCase<
     TRequestModel,
     TResponseModel extends BaseResponseModel,
@@ -187,6 +194,14 @@ export abstract class BaseSingleEndpointUseCase<
     }
 }
 
+/**
+ * A base class for use cases that make a request to a single non-streaming gateway endpoint 
+ * and provide a post-processing pipeline for the response model.
+ * @typeparam TRequestModel The type of the request model for the use case.
+ * @typeparam TResponseModel The type of the response model for the use case.
+ * @typeparam TErrorModel The type of the error model for the use case.
+ * @typeparam TDTO The type of the DTO for the use case.
+ */
 export abstract class BaseSingleEndpointPostProcessingPipelineUseCase<TRequestModel,
 TResponseModel extends BaseResponseModel,
 TErrorModel extends BaseErrorResponseModel,
@@ -204,11 +219,23 @@ TDTO
         this.postProcessingPipelineElements = postProcessingPipelineElements
     }
 
+    /**
+     * Validates the final response model for the use case.
+     * @param responseModel The response model to validate.
+     * @returns An object that indicates whether the response model is valid or not, and an error model if it is invalid.
+     * If the response model is valid, the error model is undefined.
+     * If the response model is invalid, the error model is defined.
+     */
     abstract validateFinalResponseModel(responseModel: TResponseModel): {
         isValid: boolean,
         errorModel?: TErrorModel
     }
 
+    /**
+     * Validates the request model, makes the gateway request and processes the response.
+     * @param requestModel The request model to validate.
+     * @returns 
+     */
     async execute(requestModel: TRequestModel): Promise<void> {
         const validationError: TErrorModel | undefined =
             this.validateRequestModel(requestModel)
@@ -243,7 +270,15 @@ TDTO
     
 }
 
-
+/**
+ * A base class for streaming use cases that take care of fetching the source stream from zero or more 
+ * gateway endpoints and setting up the streaming pipeline.
+ * @typeparam TRequestModel The type of the request model for the use case.
+ * @typeparam TResponseModel The type of the response model for the use case.
+ * @typeparam TErrorModel The type of the error model for the use case.
+ * @typeparam TStreamDTO The type of the data transfer object for the streamed data for the use case.
+ * @typeparam TStreamViewModel The type of the view model for the use case.
+ */
 export abstract class BaseStreamingUseCase<
     TRequestModel,
     TResponseModel extends BaseResponseModel,
@@ -281,11 +316,19 @@ export abstract class BaseStreamingUseCase<
         error?: TErrorModel
     }>
 
+    /**
+     * Connects the source stream to the use case's outbound streaming pipeline.
+     * @param stream The source stream for the use case.
+     */
     setupStreamingPipeline(stream: Transform | Readable | PassThrough): void {
         stream.pipe(this)
         this.presenter.setupStream(this)
     }
 
+    /**
+     * Validates the request model, generates the source stream and sets up the streaming pipeline.
+     * @param requestModel The request model for the use case.
+     */
     async execute(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<void> {
         const validationError: TErrorModel | undefined = this.validateRequestModel(requestModel)
         if(validationError) {
@@ -339,6 +382,15 @@ export abstract class BaseStreamingUseCase<
     }
 }
 
+/**
+ * A base class for streamable use cases that source from a single gateway endpoint.
+ * @typeparam TRequestModel The type of the request model for the use case.
+ * @typeparam TResponseModel The type of the response model for the use case.
+ * @typeparam TErrorModel The type of the error model for the use case.
+ * @typeparam TDTO The type of the data transfer object for the use case.
+ * @typeparam TStreamDTO The type of the data transfer object for the streamed data for the use case.
+ * @typeparam TStreamViewModel The type of the view model for the use case.
+ */
 export abstract class BaseSingleEndpointStreamingUseCase<
         TRequestModel,
         TResponseModel extends BaseResponseModel,
@@ -404,6 +456,11 @@ export abstract class BaseSingleEndpointStreamingUseCase<
         }
     }
 
+    /**
+     * Generates the source stream for the use case from a single gateway endpoint.
+     * @param requestModel The request model for the use case.
+     * @returns An object that represents the source stream or an error model.
+     */
     async generateSourceStream(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<{ status: 'success' | 'error'; stream?: Transform | Readable | PassThrough | null | undefined; error?: TErrorModel | undefined; }> {
         const dto = await this.makeGatewayRequest(requestModel)
         const error = this.processGatewayResponse(dto)
@@ -422,12 +479,13 @@ export abstract class BaseSingleEndpointStreamingUseCase<
 
 
 /**
- * A base class for multi-call streamable use cases that provide a post-processing pipeline for the streamed elements.
+ * A base class for streamable use cases that source from a single gateway endpoint 
+ * and provide a post-processing pipeline for the streamed elements.
  * @typeparam TRequestModel The type of the request model for the use case.
  * @typeparam TResponseModel The type of the response model for the use case.
  * @typeparam TErrorModel The type of the error model for the use case.
  * @typeparam TDTO The type of the data transfer object for the use case.
- * @typeparam TStreamData The type of the streamed data for the use case.
+ * @typeparam TStreamDTO The type of the streamed data for the use case.
  * @typeparam TStreamDTO The type of the data transfer object for the streamed data for the use case.
  * @typeparam TViewModel The type of the view model for the use case.
  */
@@ -520,7 +578,6 @@ export abstract class BaseSingleEndpointPostProcessingPipelineStreamingUseCase<
         this.presenter.setupStream(this.finalResponseValidationTransform)
     }
 
-
     /**
      * Validates the final response model after execution of all post processing pipeline elements.
      * @param responseModel The response model to validate.
@@ -530,14 +587,10 @@ export abstract class BaseSingleEndpointPostProcessingPipelineStreamingUseCase<
         errorModel?: TErrorModel | undefined
     }
 
-    // /**
-    //  * Handles an error that occurs in the streaming pipeline.
-    //  * @param error The error that occurred.
-    //  * @remarks This method is called when an error occurs in the streaming pipeline.
-    //  * @deprecated Not used
-    //  */
-    // abstract handleStreamError(error: TErrorModel): void
-
+    /**
+     * Sets the request model for the use case within the instance in order to pass it along the pipeline.
+     * @param requestModel The request model for the use case.
+     */
     async execute(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<void> {
         await super.execute(requestModel)
         this.requestModel = requestModel
