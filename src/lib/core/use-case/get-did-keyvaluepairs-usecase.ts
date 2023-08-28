@@ -1,4 +1,4 @@
-import { BaseUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { injectable } from "inversify";
 import { DIDKeyValuePairsDataError, DIDKeyValuePairsDataRequest, DIDKeyValuePairsDataResponse } from "../usecase-models/did-keyvaluepairs-usecase-models";
@@ -8,7 +8,7 @@ import { DIDKeyValuePairsDataInputPort, type DIDKeyValuePairsDataOutputPort } fr
 import type DIDGatewayOutputPort from "../port/secondary/did-gateway-output-port";
 
 @injectable()
-class DIDKeyValuePairsDataUseCase extends BaseUseCase<
+class DIDKeyValuePairsDataUseCase extends BaseSingleEndpointUseCase<
     AuthenticatedRequestModel<DIDKeyValuePairsDataRequest>,
     DIDKeyValuePairsDataResponse,
     DIDKeyValuePairsDataError,

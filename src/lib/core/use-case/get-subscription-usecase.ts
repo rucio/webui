@@ -1,4 +1,4 @@
-import { BaseUseCase } from "@/lib/sdk/usecase";
+import { BaseSingleEndpointUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { injectable } from "inversify";
 import { SubscriptionDTO } from "../dto/subscription-dto";
@@ -8,7 +8,7 @@ import { GetSubscriptionError, GetSubscriptionRequest, GetSubscriptionResponse }
 
 
 @injectable()
-class GetSubscriptionUseCase extends BaseUseCase<AuthenticatedRequestModel<GetSubscriptionRequest>, GetSubscriptionResponse, GetSubscriptionError, SubscriptionDTO> implements GetSubscriptionInputPort {
+class GetSubscriptionUseCase extends BaseSingleEndpointUseCase<AuthenticatedRequestModel<GetSubscriptionRequest>, GetSubscriptionResponse, GetSubscriptionError, SubscriptionDTO> implements GetSubscriptionInputPort {
     constructor(
         protected readonly presenter: GetSubscriptionOutputPort,
         private readonly gateway: SubscriptionGatewayOutputPort,
