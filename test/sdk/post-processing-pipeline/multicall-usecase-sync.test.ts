@@ -1,7 +1,7 @@
 import { BaseDTO } from '@/lib/sdk/dto'
 import { BasePostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements'
 import { BasePresenter } from '@/lib/sdk/presenter'
-import { BasePostProcessingPipelineUseCase } from '@/lib/sdk/usecase'
+import { BaseSingleEndpointPostProcessingPipelineUseCase } from '@/lib/sdk/usecase'
 import {
     BaseErrorResponseModel,
     BaseResponseModel,
@@ -95,7 +95,7 @@ class TestPresenter extends BasePresenter<TResponseModel, BaseErrorResponseModel
         }
     }
 }
-class TestMultiCallUseCase extends BasePostProcessingPipelineUseCase<
+class TestMultiCallUseCase extends BaseSingleEndpointPostProcessingPipelineUseCase<
     RequestModel,
     TResponseModel,
     BaseErrorResponseModel,
@@ -138,7 +138,7 @@ class TestMultiCallUseCase extends BasePostProcessingPipelineUseCase<
 
 }
 
-class TestErrorPipelineUseCase extends BasePostProcessingPipelineUseCase<
+class TestErrorPipelineUseCase extends BaseSingleEndpointPostProcessingPipelineUseCase<
 RequestModel,
 TResponseModel,
 BaseErrorResponseModel,
