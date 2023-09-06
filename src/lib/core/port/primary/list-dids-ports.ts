@@ -1,7 +1,5 @@
-import { BaseAuthenticatedInputPort } from "@/lib/sdk/primary-ports";
-import { ListDIDsRequest } from "@/lib/core/usecase-models/list-dids-usecase-models";
-import { BaseStreamingOutputPort } from "@/lib/sdk/primary-ports";
-import { ListDIDsError, ListDIDsResponse } from "@/lib/core/usecase-models/list-dids-usecase-models";
+import { BaseStreamingOutputPort, BaseAuthenticatedInputPort } from "@/lib/sdk/primary-ports";
+import { ListDIDsRequest, ListDIDsError, ListDIDsResponse } from "@/lib/core/usecase-models/list-dids-usecase-models";
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
 
 /**
