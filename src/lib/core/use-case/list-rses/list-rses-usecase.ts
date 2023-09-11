@@ -22,19 +22,78 @@ class ListRSEsUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingU
     }
 
     validateFinalResponseModel(responseModel: ListRSEsResponse): { isValid: boolean; errorModel?: ListRSEsError | undefined; } {
-        throw new Error("Method not implemented.");
+        if(
+            responseModel.id === null || 
+            responseModel.rse_type === null ||
+            responseModel.volatile === null ||
+            responseModel.deterministic === null ||
+            responseModel.staging_area === null
+        ) {
+            return {
+                isValid: false,
+                errorModel: {
+                    status: 'error',
+                    name: responseModel.name,
+                    error: 'Unknown Error',
+                    code: 500,
+                    message: 'RSE data is incomplete',
+                }
+            }
+        }
+        return { isValid: true }
     }
-    makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListRSEsRequest>): Promise<ListRSEsDTO> {
-        throw new Error("Method not implemented.");
+
+    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListRSEsRequest>): Promise<ListRSEsDTO> {
+        return await this.rseGateway.listRSEs(requestModel.rucioAuthToken, requestModel.rseExpression);
     }
+
     handleGatewayError(error: ListRSEsDTO): ListRSEsError {
-        throw new Error("Method not implemented.");
+        let errorType = 'Unknown Error'
+        let message = error.errorMessage
+        if(message === 'Invalid Auth Token') {
+            errorType = 'Invalid Request'
+        }
+        else if(message !== 'Unknown Error') {
+            errorType = 'Invalid RSE Expression'
+        }
+        return {
+            error: errorType,
+            message: `${error.errorCode}: ${error.errorMessage}`,
+        } as ListRSEsError
     }
+
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListRSEsRequest>): ListRSEsError | undefined {
-        throw new Error("Method not implemented.");
+        // we dont validate the RSE Expression here, Rucio does that
+        return undefined;
     }
+
     processStreamedData(dto: RSEDTO): { data: ListRSEsResponse | ListRSEsError; status: "error" | "success"; } {
-        throw new Error("Method not implemented.");
+        const errorModel: ListRSEsError = {
+            status: 'error',
+            code: 400,
+            error: 'Invalid RSE Query',
+            message: 'Gateway received an invalid (undefined) RSE for the query',
+            name: 'Gateway Error: Undefined RSE in stream',
+        }
+        if(dto.name === undefined) {
+            return {
+                status: 'error',
+                data: errorModel,
+            }
+        }
+        const responseModel: ListRSEsResponse = {
+            status: 'success',
+            name: dto.name,
+            id: dto.id,
+            rse_type: dto.rse_type,
+            volatile: dto.volatile,
+            deterministic: dto.deterministic,
+            staging_area: dto.staging_area,
+        }
+        return {
+            data: responseModel,
+            status: 'success',
+        }
     }
 
 }
