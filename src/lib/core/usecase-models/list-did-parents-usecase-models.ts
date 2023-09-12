@@ -17,4 +17,4 @@ export interface ListDIDParentsResponse extends DID, BaseResponseModel {}
 /**
 * @interface ListDIDParentsError represents the ErrorModel for list_did_parents usecase
 */
-export interface DIDMetaError extends BaseErrorResponseModel {}
+export interface ListDIDParentsError extends BaseErrorResponseModel {}
