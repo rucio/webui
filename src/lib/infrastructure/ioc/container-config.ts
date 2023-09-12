@@ -49,6 +49,7 @@ import ListDIDRulesFeature from "./features/list-did-rules-feature";
 import DIDKeyValuePairsDataFeature from "./features/get-did-keyvaluepairs-feature";
 import RSEGatewayOutputPort from "@/lib/core/port/secondary/rse-gateway-output-port";
 import RSEGateway from "../gateway/rse-gateway/rse-gateway";
+import ListDIDParentsFeature from "./features/list-did-parents-feature";
 
 
 /**
@@ -71,6 +72,7 @@ loadFeaturesSync(appContainer, [
     new ListDIDRulesFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
     new LoginConfigFeature(appContainer),
+    new ListDIDParentsFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();

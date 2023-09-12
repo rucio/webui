@@ -10,6 +10,7 @@ const CONTROLLERS = {
     GET_SUBSCRIPTION: Symbol.for("GetSubscriptionController"),
     LOGIN_CONFIG: Symbol.for("LoginConfigController"),
     LIST_DIDS: Symbol.for("ListDIDsController"),
+    LIST_DID_PARENTS: Symbol.for("ListDIDParentsController"),
     LIST_DID_RULES: Symbol.for("ListDIDRulesController"),
     LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsController"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),
