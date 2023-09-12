@@ -27,6 +27,12 @@ export interface DIDDTO extends DID, BaseDTO {
 }
 
 /**
+ * Data Transfer Object for ListDIDParentsEndpoint
+ * Represents the parent of a DID
+ */
+export interface DIDParentDTO extends DID, BaseDTO {}
+
+/**
  * Data Transfer Object for DIDMeta Endpoint
  */
 export interface DIDMetaDTO extends BaseDTO, DIDMeta {}
