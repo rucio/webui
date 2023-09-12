@@ -4,6 +4,8 @@ import { ObjectFlags } from "typescript"
 
 // File replica states for file DIDs
 export type FilereplicaState = {
+    scope: string,
+    name: string,
     rse: string
     state: ReplicaState
 }
