@@ -8,6 +8,7 @@ import { ListDIDParentsInputPort } from "@/lib/core/port/primary/list-did-parent
 import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factory";
 
 export type ListDIDParentsControllerParameters = TAuthenticatedControllerParameters & {
+    rucioAuthToken: string,
     scope: string,
     name: string,
 };
