@@ -7,6 +7,7 @@ import GetDIDMetaEndpoint from './endpoints/get-did-meta-endpoint'
 import ListDIDRulesEndpoint from './endpoints/list-did-rules-endpoint'
 import ListDIDsEndpoint from './endpoints/list-dids-endpoint'
 import GetDIDKeyValuePairsEndpoint from './endpoints/get-did-keyvaluepairs-endpoint'
+import ListDIDParentsEndpoint from './endpoints/list-did-parents-endpoint'
 
 
 @injectable()
@@ -77,6 +78,30 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         }
     }
 
+    async listDIDParents(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDDTO> {
+        try {
+            const endpoint = new ListDIDParentsEndpoint(rucioAuthToken, scope, name)
+            const errorDTO: ListDIDDTO | undefined = await endpoint.fetch()
+            if(!errorDTO) {
+                const dto: ListDIDDTO = {
+                    status: 'success',
+                    stream: endpoint,
+                }
+                return dto
+            }
+            return Promise.resolve(errorDTO)
+        } catch(error) {
+            const errorDTO: ListDIDDTO = {
+                status: 'error',
+                errorName: 'Unknown Error',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
+    }
+    
     async listDIDs(
         rucioAuthToken: string,
         scope: string,
