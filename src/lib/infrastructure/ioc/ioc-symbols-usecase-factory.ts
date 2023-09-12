@@ -10,6 +10,7 @@ const USECASE_FACTORY = {
     GET_SUBSCRIPTION: Symbol.for("Factory<GetSubscriptionUseCase>"),
     LOGIN_CONFIG: Symbol.for("Factory<LoginConfigUseCase>"),
     LIST_DIDS: Symbol.for("Factory<ListDIDsUseCase>"),
+    LIST_DID_PARENTS: Symbol.for("Factory<ListDIDParentsUseCase>"),
     LIST_DID_RULES: Symbol.for("Factory<ListDIDRulesUseCase>"),
     LIST_SUBSCRIPTIONS: Symbol.for("Factory<ListSubscriptionsUseCase>"),
     SET_X509_LOGIN_SESSION: Symbol.for("Factory<SetX509LoginSessionUseCase>"),
