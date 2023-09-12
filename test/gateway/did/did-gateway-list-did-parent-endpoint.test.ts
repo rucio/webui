@@ -4,7 +4,7 @@ import GATEWAYS from "@/lib/infrastructure/ioc/ioc-symbols-gateway";
 import DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
 import appContainer from "@/lib/infrastructure/ioc/container-config";
 import { DIDRulesDTO, ListDIDRulesDTO } from "@/lib/core/dto/did-dto";
-import { RuleState } from "@/lib/core/entity/rucio";
+import { DIDType, RuleState } from "@/lib/core/entity/rucio";
 
 describe("DID Gateway List DID Parent Endpoint Tests", () => {
     beforeEach(() => {
@@ -66,14 +66,16 @@ describe("DID Gateway List DID Parent Endpoint Tests", () => {
         expect(receivedData.length).toBe(2);
         expect(receivedData).toEqual([
             {
+                "status": "success",
                 "scope": "test",
                 "name": "dataset1",
-                "type": "DATASET"
+                "did_type": DIDType.DATASET,
             },
             {
+                "status": "success",
                 "scope": "test",
                 "name": "dataset2",
-                "type": "DATASET"
+                "did_type": DIDType.DATASET,
             }
         ])
     });

@@ -1,6 +1,7 @@
 import { DIDParentDTO, ListDIDDTO } from "@/lib/core/dto/did-dto";
 import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints";
 import { HTTPRequest } from "@/lib/sdk/http";
+import { convertToDIDParentDTO, TRucioDID } from "../did-gateway-utils";
 
 export default class ListDIDParentsEndpoint extends BaseStreamableEndpoint<ListDIDDTO, DIDParentDTO> {
     constructor(
@@ -47,7 +48,8 @@ export default class ListDIDParentsEndpoint extends BaseStreamableEndpoint<ListD
     }
 
     createDTO(response: Buffer): DIDParentDTO {
-        const data: DIDParentDTO = JSON.parse(JSON.parse(response.toString()))
-        return data
+        const data: TRucioDID = JSON.parse(JSON.parse(response.toString()))
+        const dto: DIDParentDTO = convertToDIDParentDTO(data)
+        return dto
     }
 }
