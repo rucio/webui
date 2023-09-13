@@ -39,3 +39,15 @@ export function generateEmptyFilereplicaStateViewModel(): FilereplicaStateViewMo
         state: ReplicaState.UNKNOWN,
     }
 }
+
+export function generateEmptyDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewModel {
+    return {
+        status: "error",
+        rseblocked: 0,
+        availability: false,
+        available_files: 0,
+        available_bytes: 0,
+        creation_date: "",
+        last_accessed: "",
+    } as DIDDatasetReplicasViewModel
+}
