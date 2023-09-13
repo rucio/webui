@@ -13,8 +13,8 @@ import React, { useEffect, useState } from "react";
 // DTO etc
 import { DIDType } from "@/lib/core/entity/rucio";
 import { PageDIDMetadata } from "./PageDIDMetadata";
-import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
-import { PageDIDFilereplicasD } from "./PageDIDFilereplicasD";
+import { PageDIDFilereplicas } from "./PageDIDFileReplicas";
+import { PageDIDFilereplicasD } from "./PageDIDFileReplicasD";
 import { PageDIDRules } from "./PageDIDRules";
 import { PageDIDByType } from "./PageDIDByType";
 import { PageDIDDatasetReplicas } from "./PageDIDDatasetReplicas";

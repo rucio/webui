@@ -1,6 +1,6 @@
 // components
 import { P } from "../../Text/Content/P";
-import { PageDIDFilereplicas } from "./PageDIDFilereplicas";
+import { PageDIDFilereplicas } from "./PageDIDFileReplicas";
 
 // misc packages, react
 import { createColumnHelper } from "@tanstack/react-table"

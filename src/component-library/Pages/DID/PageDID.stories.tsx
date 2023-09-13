@@ -19,7 +19,6 @@ PageDID.args = {
     didKeyValuePairsData: fixtureDIDKeyValuePairsDataViewModel(),
     // Filereplicas
     didFileReplicasComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureFilereplicaStateViewModel())),
-    didFileReplicasDComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureFilereplicaStateDViewModel())),
     didRulesComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDRulesViewModel())),
     // Contents
     didContentsComDOM: mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDViewModel())),
