@@ -111,9 +111,9 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
     /**
      * Creates a data transfer object (DTO) from the streamed data returned by the API.
      * @param response The response data returned by the API as a buffer. This response will contain one individual object in the stream.
-     * @returns The DTO that represents the API response.
+     * @returns The DTO that represents the API response or a list of dto's that will be streamed down the pipeline as individual objects.
      */
-    abstract createDTO(response: Buffer): TStreamData;
+    abstract createDTO(response: Buffer): TStreamData | TStreamData[];
 
     /**
      * Transforms the streamed data and pushes it to the client.
@@ -124,6 +124,11 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
     _transform(chunk: any, encoding: BufferEncoding, callback: TransformCallback): void {
         try {
             const dto = this.createDTO(chunk);
+            if(Array.isArray(dto)) {
+                dto.forEach((d) => this.push(d));
+                callback();
+                return;
+            }
             this.push(dto);
             callback();
         } catch (error) {

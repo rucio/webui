@@ -5,12 +5,26 @@ import ListFileReplicasEndpoint from "./endpoints/list-file-replicas-endpoint";
 
 @injectable()
 export default class ReplicaGateway implements ReplicaGatewayOutputPort {
-    async listReplicas(rucioAuthToken: string, scope: string, name: string): Promise<ListReplicasDTO> {
-        const endpoint = new ListFileReplicasEndpoint()
-        const dto = await endpoint.fetch()
-        if(dto === undefined) {
-            throw new Error('Error fetching replicas')
+    
+    async listFileReplicas(rucioAuthToken: string, scope: string, name: string): Promise<ListReplicasDTO> {
+        try {
+        const endpoint = new ListFileReplicasEndpoint(rucioAuthToken, scope, name)
+        const errorDTO: ListReplicasDTO | undefined = await endpoint.fetch()
+        if(!errorDTO) {
+            return {
+                status: 'success',
+                stream: endpoint
+            }
         }
-        return dto
+        return errorDTO
+        } catch(error) {
+            const errorDTO: ListReplicasDTO = {
+                status: 'error',
+                errorName: 'Exception occurred while fetching replicas',
+                errorType: 'gateway_endpoint_error',
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
     }
 }
