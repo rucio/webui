@@ -1,4 +1,4 @@
-import { DIDRules } from "@/lib/infrastructure/data/view-model/page-did";
+import { DIDRules } from "../entity/rucio";
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
 
 export interface ListDIDRulesRequest {

@@ -3,7 +3,7 @@ import { H3 } from "../../Text/Headings/H3";
 import { BoolTag } from "../../Tags/BoolTag";
 import { AvailabilityTag } from "../../Tags/AvailabilityTag";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
-import { DIDType } from "@/lib/core/entity/rucio";
+import { DIDType, DIDKeyValuePair } from "@/lib/core/entity/rucio";
 import { NullTag } from "../../Tags/NullTag";
 
 // misc packages, react
@@ -14,7 +14,6 @@ import { twMerge } from "tailwind-merge"
 import { DIDAvailability } from "@/lib/core/entity/rucio"
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { DIDKeyValuePairsDataViewModel } from "@/lib/infrastructure/data/view-model/did";
-import { DIDKeyValuePair } from "@/lib/infrastructure/data/view-model/page-did";
 import { NormalTable } from "@/component-library/StreamedTables/NormalTable";
 
 export const PageDIDMetadata = (

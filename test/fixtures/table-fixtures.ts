@@ -12,7 +12,7 @@ import { SubscriptionRuleStatesViewModel, SubscriptionViewModel } from '@/lib/in
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDLongViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
-import { DIDKeyValuePair } from '@/lib/infrastructure/data/view-model/page-did';
+import { DIDKeyValuePair } from '@/lib/core/entity/rucio';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {

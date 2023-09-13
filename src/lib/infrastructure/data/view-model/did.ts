@@ -1,6 +1,8 @@
-import { DID, DIDLong, DIDMeta, DIDType, ReplicaState, RuleState } from "@/lib/core/entity/rucio";
+import {
+    DID, DIDLong, DIDMeta, DIDType, ReplicaState, RuleState,   DIDRules, DIDKeyValuePairsData,
+    FilereplicaState, FilereplicaStateD, DIDDatasetReplicas
+} from "@/lib/core/entity/rucio";
 import { BaseViewModel } from "@/lib/sdk/view-models";
-import { DIDRules, DIDDatasetReplicas, FilereplicaState, FilereplicaStateD, DIDKeyValuePairsData } from "./page-did";
 
 export interface DIDViewModel extends DID, BaseViewModel {}
 export interface DIDLongViewModel extends DIDLong, BaseViewModel {}

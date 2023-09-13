@@ -23,6 +23,21 @@ export enum DIDAvailability {
     UNKNOWN = "Unknown",
 }
 
+export type DIDDatasetReplicas = {
+    rse: string;
+    rseblocked: RSEBlockState;
+    availability: boolean;
+    available_files: number;
+    available_bytes: number;
+    creation_date: DateISO;
+    last_accessed: DateISO;
+}
+
+// these are general key-value pairs including the metadata
+export type DIDKeyValuePair = { key: string; value: string | number | boolean | null }
+export type DIDKeyValuePairsData = {
+    data: DIDKeyValuePair[]
+}
 
 // copied from deployed rucio UI
 export type DIDMeta = {
@@ -45,6 +60,36 @@ export type DIDMeta = {
     md5: string | null
     guid: string | null
     filesize: number | null
+}
+
+export type DIDRules = {
+    id: string;
+    name: string;
+    state: RuleState;
+    account: string;
+    subscription?: {name: string, account: string}; // name and account together are unique for a subscription
+    last_modified: DateISO;
+}
+
+// File replica states for file DIDs
+export type FilereplicaState = {
+    rse: string
+    state: ReplicaState
+}
+
+// File replica states for dataset DIDs
+// stores summary information on the file replica states of the files within
+// a dataset DID: how many files are in each state
+// currently not in use since we only display scopenames
+export type FilereplicaStateD = {
+    scope: string,
+    name: string,
+    available: number,
+    unavailable: number,
+    copying: number,
+    being_deleted: number,
+    bad: number,
+    temporary_unavailable: number,
 }
 
 // results of web::flaskapi:v1::rses::RSEAccountUsageLimit::get
@@ -153,6 +198,35 @@ export type RSE = {
     volatile: boolean;
     deterministic: boolean;
     staging_area: boolean;
+}
+
+export type RSEProtocol = {
+    rseid: string,
+    scheme: string,
+    hostname: string,
+    port: number,
+    prefix: string,
+    impl: string,
+    priorities_lan: {
+        read: number,
+        write: number,
+        delete: number
+    },
+    priorities_wan: {
+        read: number,
+        write: number,
+        delete: number,
+        tpc: number,
+        tpcwrite: number,
+        tpcread: number,
+    },
+    updated_at: DateISO,
+    created_at: DateISO,
+}
+
+export type RSEAttribute = {
+    key: string,
+    value: string| DateISO | number | boolean | null,
 }
 
 /*

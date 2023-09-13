@@ -1,4 +1,4 @@
-import { DIDDatasetReplicas, FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did"; // TODO: Move to entity, breaks clean architecture
+import { DIDDatasetReplicas, FilereplicaState } from "../entity/rucio";
 import { BaseDTO, BaseStreamableDTO } from "@/lib/sdk/dto";
 
 /**

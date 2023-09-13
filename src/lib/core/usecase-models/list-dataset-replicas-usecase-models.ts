@@ -1,4 +1,4 @@
-import { DIDDatasetReplicas } from "@/lib/infrastructure/data/view-model/page-did";
+import { DIDDatasetReplicas } from "../entity/rucio";
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models"
 /**
  * @interface ListDatasetReplicasRequest represents the RequestModel for list_dataset_replicas usecase
