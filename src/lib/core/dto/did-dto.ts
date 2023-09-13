@@ -1,6 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto'
-import { DID, DIDMeta } from '@/lib/core/entity/rucio'
-import { DIDKeyValuePair, DIDRules } from '@/lib/infrastructure/data/view-model/page-did'
+import { DID, DIDKeyValuePair, DIDMeta, DIDRules } from '@/lib/core/entity/rucio'
 
 /**
  * Data Transfer Object for ListDIDsEndpoint

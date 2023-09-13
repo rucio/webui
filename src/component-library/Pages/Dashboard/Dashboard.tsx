@@ -6,7 +6,7 @@ import { Checkbox } from "../../Button/Checkbox";
 import { WidgetOngoingrules } from "./Widgets/WidgetOngoingrules";
 import { RoleTag } from "../../Tags/RoleTag";
 import { Role } from "@/lib/core/entity/account";
-import { Ongoingrules, Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
+import { Ongoingrules, Usedquota } from "@/lib/core/entity/widgets";
 import { WidgetUsedquota } from "./Widgets/WidgetUsedquota";
 import { useState, useEffect } from "react";
 import { Heading } from "../Helpers/Heading";

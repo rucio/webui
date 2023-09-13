@@ -1,4 +1,4 @@
-import { Ongoingrules, Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
+import { Ongoingrules, Usedquota } from "@/lib/core/entity/widgets";
 import { faker } from "@faker-js/faker";
 import { createRSEName } from "./table-fixtures";
 

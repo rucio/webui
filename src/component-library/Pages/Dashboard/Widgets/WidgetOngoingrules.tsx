@@ -11,7 +11,8 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { ChartData, Ongoingrules } from "@/lib/infrastructure/data/view-model/widgets";
+import { ChartData } from "../types";
+import { Ongoingrules } from "@/lib/core/entity/widgets";
 import {
     createColumnHelper, getCoreRowModel, getPaginationRowModel, useReactTable,
     Row, Column, getSortedRowModel

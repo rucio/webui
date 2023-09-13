@@ -1,4 +1,4 @@
-import { FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did"
+import { FilereplicaState } from "../entity/rucio"
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models"
 /**
  * @interface ListFileReplicasRequest represents the RequestModel for list_file_replicas usecase

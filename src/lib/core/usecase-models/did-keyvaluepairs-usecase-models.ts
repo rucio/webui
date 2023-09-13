@@ -1,4 +1,4 @@
-import { DIDKeyValuePair, DIDKeyValuePairsData } from "@/lib/infrastructure/data/view-model/page-did";
+import { DIDKeyValuePair, DIDKeyValuePairsData } from "../entity/rucio";
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
 
 export interface DIDKeyValuePairsDataRequest {

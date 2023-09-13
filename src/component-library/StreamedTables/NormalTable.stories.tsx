@@ -2,7 +2,7 @@ import { StoryFn, Meta } from "@storybook/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { fixtureDIDKeyValuePair } from "test/fixtures/table-fixtures";
 import { NormalTable as N } from "./NormalTable";
-import { DIDKeyValuePair } from "@/lib/infrastructure/data/view-model/page-did";
+import { DIDKeyValuePair } from "@/lib/core/entity/rucio";
 import { TableFilterString } from "./TableFilterString";
 import { DIDAvailability, DIDType } from "@/lib/core/entity/rucio";
 import { twMerge } from "tailwind-merge";

@@ -1,5 +1,5 @@
 import { H4 } from "@/component-library/Text/Headings/H4";
-import { Usedquota } from "@/lib/infrastructure/data/view-model/widgets";
+import { Usedquota } from "@/lib/core/entity/widgets";
 import { twMerge } from "tailwind-merge";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';

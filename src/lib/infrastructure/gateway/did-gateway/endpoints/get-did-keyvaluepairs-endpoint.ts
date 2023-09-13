@@ -1,5 +1,5 @@
 import { DIDKeyValuePairsDTO } from "@/lib/core/dto/did-dto";
-import { DIDKeyValuePair } from "@/lib/infrastructure/data/view-model/page-did";
+import { DIDKeyValuePair } from "@/lib/core/entity/rucio";
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
 import { HTTPRequest } from "@/lib/sdk/http";
 import { Response } from "node-fetch";
