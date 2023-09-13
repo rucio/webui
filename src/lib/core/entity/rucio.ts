@@ -206,12 +206,13 @@ export enum RSEType {
 
 // rucio.db.sqla.constants::ReplicaState
 export enum ReplicaState {
-    Available = "Available",
-    Unavailable = "Unavailable",
-    Copying = "Copying",
-    Being_Deleted = "Being_Deleted",
-    Bad = "Bad",
-    Temporary_Unavailable = "Temporary_Unavailable",
+    AVAILABLE = "Available",
+    UNAVAILABLE = "Unavailable",
+    COPYING = "Copying",
+    BEING_DELETED = "Being_Deleted",
+    BAD = "Bad",
+    TEMPORARY_UNAVAILABLE = "Temporary_Unavailable",
+    UNKNOWN = "Unknown",
 }
 
 // rucio.db.sqla.constants::RuleState

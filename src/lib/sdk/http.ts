@@ -9,7 +9,7 @@ export type HTTPRequest = {
     url: URL | string
     params?: { [key: string]: string }
     headers?: Headers | { [key: string]: string } | NodeFetchHeaders | HeadersInit | null
-    body?: { [key: string]: string } | null
+    body?: { [key: string]: any } | null
 }
 
 /**

@@ -48,7 +48,7 @@ export const PageDIDDatasetReplicas = (
                                 {info.getValue()}
                             </a>
                         </RSETag>
-                        {info.row.original.availability ? "" : <ReplicaStateTag state={ReplicaState.Unavailable} tiny className="shrink-0 mr-1" />}
+                        {info.row.original.availability ? "" : <ReplicaStateTag state={ReplicaState.UNAVAILABLE} tiny className="shrink-0 mr-1" />}
                     </span>
                 )
             },
@@ -63,7 +63,7 @@ export const PageDIDDatasetReplicas = (
             cell: (info) => {
                 return (
                     <ReplicaStateTag
-                        state={info.row.original.availability ? ReplicaState.Available : ReplicaState.Unavailable}
+                        state={info.row.original.availability ? ReplicaState.AVAILABLE : ReplicaState.UNAVAILABLE}
                         className="ml-2 md:w-40"
                     />
                 )
