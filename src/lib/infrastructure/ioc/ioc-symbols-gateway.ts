@@ -9,6 +9,7 @@ const GATEWAYS = {
     RSE: Symbol.for("RSEGateway"),
     STREAM: Symbol.for("StreamGateway"),
     SUBSCRIPTION: Symbol.for("SubscriptionGateway"),
+    REPLICA: Symbol.for("ReplicaGateway"),
 }
 
 export default GATEWAYS;
