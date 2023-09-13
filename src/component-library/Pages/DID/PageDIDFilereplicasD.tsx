@@ -10,19 +10,19 @@ import { twMerge } from "tailwind-merge"
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { FilereplicaStateDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { DIDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 
 
 export const PageDIDFilereplicasD = (
     props: {
-        datasetComDOM: UseComDOM<FilereplicaStateDViewModel>,
-        replicaComDOM: UseComDOM<FilereplicaStateViewModel>,
-        onChangeDatasetSelection: (selected: string) => void,
+        datasetComDOM: UseComDOM<DIDViewModel>, // the files in the dataset
+        replicaComDOM: UseComDOM<FilereplicaStateViewModel>, // replicas of the selected file
+        onChangeFileSelection: (scope: string, name: string) => void,
     }
 ) => {
-    const { datasetComDOM, replicaComDOM, onChangeDatasetSelection } = props
-    const columnHelper = createColumnHelper<FilereplicaStateDViewModel>()
+    const { datasetComDOM, replicaComDOM, onChangeFileSelection } = props
+    const columnHelper = createColumnHelper<DIDViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
             id: "did",
@@ -50,17 +50,27 @@ export const PageDIDFilereplicasD = (
                     "xl:grid xl:grid-cols-2 xl:gap-4 xl:pt-1",
                 )}
             >
-                <StreamedTable
+                <StreamedTable<DIDViewModel>
                     tablecomdom={datasetComDOM}
                     tablecolumns={tablecolumns}
-                    tablestyling={{}}
+                    tablestyling={{
+                        tableFooterStack: true
+                    }}
                     tableselecting={{
-                        handleChange: (data: FilereplicaStateDViewModel[]) => { console.info(data) },
+                        handleChange: (data: DIDViewModel[]) => {
+                            if (data.length === 0) return
+                            onChangeFileSelection(data[0].scope, data[0].name)
+                        },
                         enableRowSelection: true,
                         enableMultiRowSelection: false
                     }}
                 />
-                <PageDIDFilereplicas comdom={replicaComDOM} />
+                <PageDIDFilereplicas
+                    comdom={replicaComDOM}
+                    tablestyling={{
+                        tableFooterStack: true
+                    }}
+                />
             </div>
         </div>
     )

@@ -28,9 +28,6 @@ export default function Page({ params }: { params: { scope: string, name: string
     const didFileReplicasComDOM = useComDOM<FilereplicaStateViewModel>(
         'page-did-filereplicas-query', [], false, Infinity, 200, true
     )
-    const didFileReplicasDComDOM = useComDOM<FilereplicaStateDViewModel>(
-        'page-did-filereplicas-d-query', [], false, Infinity, 200, true
-    )
     useEffect(() => {
         const setRequests = async () => {
             const requestParents: HTTPRequest = {
@@ -60,15 +57,6 @@ export default function Page({ params }: { params: { scope: string, name: string
                 body: null,
             }
             await didFileReplicasComDOM.setRequest(requestsFilereplicas)
-            const requestsFilereplicasD: HTTPRequest = {
-                url: new URL('http://localhost:3000/api/filereplicastate-d'),
-                method: 'GET',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                } as HeadersInit),
-                body: null,
-            }
-            await didFileReplicasDComDOM.setRequest(requestsFilereplicasD)
         }
         setRequests()
     }, [])
@@ -82,7 +70,6 @@ export default function Page({ params }: { params: { scope: string, name: string
             didParentsComDOM={didParentsComDOM}
             didKeyValuePairsData={didKeyValuePairsData}
             didFileReplicasComDOM={didFileReplicasComDOM}
-            didFileReplicasDComDOM={didFileReplicasDComDOM}
             didRulesComDOM={didRulesComDOM}
             didContentsComDOM={didContentsComDOM}
             didDatasetReplicasComDOM={didDatasetReplicasComDOM}

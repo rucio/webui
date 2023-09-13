@@ -30,8 +30,7 @@ export interface PageDIDPageProps {
     didKeyValuePairsData: DIDKeyValuePairsDataViewModel
     // File Replica States [FILE]
     didFileReplicasComDOM: UseComDOM<FilereplicaStateViewModel>
-    // File Replica States [DATASET]
-    didFileReplicasDComDOM: UseComDOM<FilereplicaStateDViewModel>
+    // File Replica States [DATASET] simply uses Contents ComDOM
     // Rule State [DATASET]
     didRulesComDOM: UseComDOM<DIDRulesViewModel>
     // Contents [COLLECTION]
@@ -139,13 +138,13 @@ export const PageDID = (
                 </SubPage>
                 <SubPage
                     show={showPageBools["subpage-file-replica-states-d"]()}
-                    run={() => { if (props.didFileReplicasDComDOM.query.data.length === 0) { props.didFileReplicasDComDOM.start() } }}
+                    run={() => { if (props.didContentsComDOM.query.data.length === 0) { props.didContentsComDOM.start() } }}
                     id="subpage-file-replica-states-d"
                 >
                     <PageDIDFilereplicasD
                         replicaComDOM={props.didFileReplicasComDOM}
-                        datasetComDOM={props.didFileReplicasDComDOM}
-                        onChangeDatasetSelection={() => {
+                        datasetComDOM={props.didContentsComDOM}
+                        onChangeFileSelection={() => {
                             // TODO set query
                             // run query for file replicas
                         }}

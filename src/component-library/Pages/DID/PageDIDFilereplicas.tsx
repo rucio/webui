@@ -14,11 +14,13 @@ import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
 import { FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { TableStyling } from "@/component-library/StreamedTables/types";
 
 
 export const PageDIDFilereplicas = (
     props: {
         comdom: UseComDOM<FilereplicaStateViewModel>,
+        tablestyling?: TableStyling,
     }
 ) => {
     const columnHelper = createColumnHelper<FilereplicaStateViewModel>()
@@ -71,7 +73,7 @@ export const PageDIDFilereplicas = (
         <StreamedTable<FilereplicaStateViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
-            tablestyling={{}}
+            tablestyling={props.tablestyling ?? {}}
         />
     )
 }
