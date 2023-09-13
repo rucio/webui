@@ -50,6 +50,8 @@ import DIDKeyValuePairsDataFeature from "./features/get-did-keyvaluepairs-featur
 import RSEGatewayOutputPort from "@/lib/core/port/secondary/rse-gateway-output-port";
 import RSEGateway from "../gateway/rse-gateway/rse-gateway";
 import ListDIDParentsFeature from "./features/list-did-parents-feature";
+import ReplicaGatewayOutputPort from "@/lib/core/port/secondary/replica-gateway-output-port";
+import ReplicaGateway from "../gateway/replica-gateway/replica-gateway";
 
 
 /**
@@ -63,6 +65,7 @@ appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigG
 appContainer.bind<RSEGatewayOutputPort>(GATEWAYS.RSE).to(RSEGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
 appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
+appContainer.bind<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA).to(ReplicaGateway);
 
 loadFeaturesSync(appContainer, [
     new DIDMetaFeature(appContainer),
