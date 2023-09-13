@@ -1,9 +1,9 @@
-import { DIDParentDTO, ListDIDDTO } from "@/lib/core/dto/did-dto";
+import { DIDDTO, ListDIDDTO } from "@/lib/core/dto/did-dto";
 import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints";
 import { HTTPRequest } from "@/lib/sdk/http";
-import { convertToDIDParentDTO, TRucioDID } from "../did-gateway-utils";
+import { convertToDIDDTO, TRucioDID } from "../did-gateway-utils";
 
-export default class ListDIDParentsEndpoint extends BaseStreamableEndpoint<ListDIDDTO, DIDParentDTO> {
+export default class ListDIDParentsEndpoint extends BaseStreamableEndpoint<ListDIDDTO, DIDDTO> {
     constructor(
         private readonly rucioAuthToken: string,
         private readonly scope: string,
@@ -47,9 +47,9 @@ export default class ListDIDParentsEndpoint extends BaseStreamableEndpoint<ListD
         return Promise.resolve(errorDTO)
     }
 
-    createDTO(response: Buffer): DIDParentDTO {
+    createDTO(response: Buffer): DIDDTO {
         const data: TRucioDID = JSON.parse(JSON.parse(response.toString()))
-        const dto: DIDParentDTO = convertToDIDParentDTO(data)
+        const dto: DIDDTO = convertToDIDDTO(data)
         return dto
     }
 }

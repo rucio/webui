@@ -1,4 +1,4 @@
-import { ListDIDDTO, DIDDTO, DIDMetaDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from "../../dto/did-dto";
+import { ListDIDDTO, DIDExtendedDTO, DIDMetaDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from "../../dto/did-dto";
 import { DIDType } from "../../entity/rucio";
 
 
@@ -11,9 +11,9 @@ export default interface DIDGatewayOutputPort {
      * @param rucioAuthToken A valid Rucio auth token.
      * @param scope The scope of the DID.
      * @param name The exact name of the DID.
-     * @returns A Promise that resolves to a {@link DIDDTO} object.
+     * @returns A Promise that resolves to a {@link DIDExtendedDTO} object.
      */
-    getDID(rucioAuthToken: string, scope: string, name: string): Promise<DIDDTO>
+    getDID(rucioAuthToken: string, scope: string, name: string): Promise<DIDExtendedDTO>
     
     /**
      * Retrieves metadata for a DID from the Rucio Server.
@@ -68,4 +68,12 @@ export default interface DIDGatewayOutputPort {
      * @returns A Promise that resolves to a {@link ListDIDRulesDTO} object.
      */
     listDIDRules(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDRulesDTO>
+
+    /**
+     * Retrieves a list of DIDs that are contained within the given DID.
+     * @param rucioAuthToken A valid Rucio auth token.
+     * @param scope The scope of the DID.
+     * @param name The name of the DID.
+     */
+    listDIDContents(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDDTO>
 }

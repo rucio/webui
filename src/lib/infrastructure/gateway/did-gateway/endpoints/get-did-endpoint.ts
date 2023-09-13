@@ -1,11 +1,11 @@
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints"
 import { BaseHttpErrorTypes } from "@/lib/sdk/http"
 import { HTTPRequest } from "@/lib/sdk/http";
-import { DIDDTO } from "@/lib/core/dto/did-dto";
+import { DIDExtendedDTO } from "@/lib/core/dto/did-dto";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { Response } from "node-fetch";
 
-export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
+export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
 
     constructor(
         private rucioAuthToken: string,
@@ -36,8 +36,8 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
     /**
      * @implements
      */
-    async reportErrors(statusCode: number, response: Response): Promise<DIDDTO | undefined> {
-        const dto: DIDDTO = {
+    async reportErrors(statusCode: number, response: Response): Promise<DIDExtendedDTO | undefined> {
+        const dto: DIDExtendedDTO = {
             status: 'error',
             errorCode: statusCode,
             errorType: 'gateway_endpoint_error',
@@ -75,7 +75,7 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
     /**
      * @implements
      */
-    createDTO(data: any): DIDDTO {
+    createDTO(data: any): DIDExtendedDTO {
         data = data as {
             type: string,
             account: string,
@@ -96,7 +96,7 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDDTO> {
             did_type = DIDType.FILE
         }
 
-        const dto: DIDDTO = {
+        const dto: DIDExtendedDTO = {
             status: 'success',
             name: this.name,
             scope: this.scope,

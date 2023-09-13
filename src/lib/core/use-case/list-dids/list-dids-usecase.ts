@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import type { ListDIDsInputPort, ListDIDsOutputPort } from "@/lib/core/port/primary/list-dids-ports";
 import type DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
-import { DIDDTO, ListDIDDTO, ListDIDsStreamData } from "../../dto/did-dto";
+import { DIDExtendedDTO, ListDIDDTO, ListDIDsStreamData } from "../../dto/did-dto";
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../../usecase-models/list-dids-usecase-models";
 import { parseDIDString } from "@/lib/common/did-utils";
 import { BaseSingleEndpointPostProcessingPipelineStreamingUseCase, BaseSingleEndpointStreamingUseCase } from "@/lib/sdk/usecase";
@@ -11,7 +11,7 @@ import GetDIDsPipelineElement from "./pipeline-element-get-did";
 import { DID } from "../../entity/rucio";
 
 @injectable()
-class ListDIDsUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDDTO, ListDIDsViewModel> implements ListDIDsInputPort {
+class ListDIDsUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDExtendedDTO, ListDIDsViewModel> implements ListDIDsInputPort {
     
     constructor(
         protected presenter: ListDIDsOutputPort,

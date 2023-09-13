@@ -1,4 +1,4 @@
-import { DIDParentDTO, DIDRulesDTO } from "@/lib/core/dto/did-dto";
+import { DIDDTO, DIDRulesDTO } from "@/lib/core/dto/did-dto";
 import { DIDType, RuleState } from "@/lib/core/entity/rucio";
 
 
@@ -83,9 +83,9 @@ export function convertToDIDRulesDTO(data: TRucioRules): DIDRulesDTO {
     return dto
 }
 
-export function convertToDIDParentDTO(data: TRucioDID): DIDParentDTO {
+export function convertToDIDDTO(data: TRucioDID): DIDDTO {
     const type: DIDType = getDIDType(data.type)
-    const dto: DIDParentDTO = {
+    const dto: DIDDTO = {
         status: 'success',
         scope: data.scope,
         name: data.name,
