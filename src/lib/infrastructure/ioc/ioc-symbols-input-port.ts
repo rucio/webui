@@ -10,6 +10,7 @@ const INPUT_PORT = {
     LIST_DIDS: Symbol.for("ListDIDsInputPort"),
     LIST_DID_PARENTS: Symbol.for("ListDIDParentsInputPort"),
     LIST_DID_RULES: Symbol.for("ListDIDRulesInputPort"),
+    LIST_DATASET_REPLICAS: Symbol.for("ListDatasetReplicasInputPort"),
     LIST_FILE_REPLICAS: Symbol.for("ListFileReplicasInputPort"),
     LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsInputPort"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionInputPort"),

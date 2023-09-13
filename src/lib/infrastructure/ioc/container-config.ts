@@ -53,6 +53,7 @@ import ListDIDParentsFeature from "./features/list-did-parents-feature";
 import ReplicaGatewayOutputPort from "@/lib/core/port/secondary/replica-gateway-output-port";
 import ReplicaGateway from "../gateway/replica-gateway/replica-gateway";
 import ListFileReplicasFeature from "./features/list-file-replicas-feature";
+import ListDatasetReplicasFeature from "./features/list-dataset-replicas-feature";
 
 
 /**
@@ -78,6 +79,7 @@ loadFeaturesSync(appContainer, [
     new LoginConfigFeature(appContainer),
     new ListDIDParentsFeature(appContainer),
     new ListFileReplicasFeature(appContainer),
+    new ListDatasetReplicasFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
