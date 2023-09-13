@@ -1,4 +1,4 @@
-import { FileReplicaStateDTO } from "@/lib/core/dto/replica-dto";
+import { DatasetReplicasDTO, FileReplicaStateDTO } from "@/lib/core/dto/replica-dto";
 import { ReplicaState } from "@/lib/core/entity/rucio";
 
 export type TRucioFileReplica = {
@@ -22,6 +22,24 @@ export type TRucioFileReplica = {
     states: {
       [key: string]: string;
     };
+};
+
+/**
+ * The type representing a Rucio Dataset Replica returned by Rucio REST API
+ */
+export type TRucioDatasetReplica = {
+    scope: string;
+    name: string;
+    rse: string;
+    rse_id: string;
+    bytes: number;
+    length: number;
+    available_bytes: number;
+    available_length: number;
+    state: string;
+    created_at: string;
+    updated_at: string;
+    accessed_at: string | null;
 };
 
 function getReplicaState(state: string): ReplicaState {
@@ -62,4 +80,24 @@ export function convertToFileReplicaStateDTOs(
         dtoList.push(replicaStateDTO);
     }
     return dtoList;
+}
+
+/**
+ * Get a DatasetReplicasDTO object from a Rucio Server response.
+ * @param replica A Rucio Server response containing the dataset replicas of a given dataset DID.
+ * @returns DatasetReplicasDTO object.
+ */
+export function convertToDatasetReplicaDTO(
+  replica: TRucioDatasetReplica
+): DatasetReplicasDTO {
+  const dto: DatasetReplicasDTO = {
+    status: 'success',
+    rse: replica.rse,
+    availability: replica.state === 'AVAILABLE',
+    available_files: replica.available_length,
+    available_bytes: replica.available_bytes, // TODO: question: What is difference between available_bytes and bytes?
+    creation_date: replica.created_at,
+    last_accessed: replica.accessed_at? replica.accessed_at : '',
+  };
+  return dto;
 }

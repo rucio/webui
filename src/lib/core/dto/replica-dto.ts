@@ -1,4 +1,4 @@
-import { FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did"; // TODO: Move to entity, breaks clean architecture
+import { DIDDatasetReplicas, FilereplicaState } from "@/lib/infrastructure/data/view-model/page-did"; // TODO: Move to entity, breaks clean architecture
 import { BaseDTO, BaseStreamableDTO } from "@/lib/sdk/dto";
 
 /**
@@ -12,3 +12,12 @@ export interface ListReplicasDTO extends BaseStreamableDTO {}
  * Represents file replica state.
  */
 export interface FileReplicaStateDTO extends BaseDTO, FilereplicaState {}
+
+
+/**
+ * Represents a data transfer object for listing dataset replicas.
+ * The property `rseblocked` is omitted because it cannot be obtained from the Rucio server.
+ * This property depends on policy packages and therefore the information cannoe be obtained in a way
+ * that works for all communities.
+ */
+export interface DatasetReplicasDTO extends BaseDTO, Omit<DIDDatasetReplicas, 'rseblocked'> {}
