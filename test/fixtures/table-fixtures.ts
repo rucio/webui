@@ -283,8 +283,6 @@ export function fixtureDIDRulesViewModel(): DIDRulesViewModel {
 export function fixtureFilereplicaStateViewModel(): FilereplicaStateViewModel {
     return {
         ...mockBaseVM(),
-        scope: createRandomScope(),
-        name: faker.lorem.words(3).replace(/\s/g, "."),
         rse: createRSEName(),
         state: randomEnum<ReplicaState>(ReplicaState),
     }
