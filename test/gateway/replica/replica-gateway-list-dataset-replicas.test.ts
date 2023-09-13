@@ -45,7 +45,7 @@ describe('Replica Gateway: List Dataset Replicas', () => {
         fetchMock.resetMocks()
     })
 
-    it('should successfully stream a list of file replicas', async () => {
+    it('should successfully stream a list of dataset replicas', async () => {
         const rucioReplicaGateway: ReplicaGatewayOutputPort = appContainer.get<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA)
         const dto: ListReplicasDTO = await rucioReplicaGateway.listDatasetReplicas(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'test', 'dataset1')
         expect(dto.status).toBe('success')
