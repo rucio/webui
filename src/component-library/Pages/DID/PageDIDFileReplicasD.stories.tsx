@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { PageDIDFilereplicasD as PDFD } from "./PageDIDFilereplicasD"
+import { PageDIDFilereplicasD as PDFD } from "./PageDIDFileReplicasD"
 import { fixtureFilereplicaStateViewModel, fixtureFilereplicaStateDViewModel, mockUseComDOM, fixtureDIDViewModel } from 'test/fixtures/table-fixtures';
 import { useEffect, useState } from 'react';
 

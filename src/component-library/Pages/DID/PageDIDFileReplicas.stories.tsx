@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { PageDIDFilereplicas as PDF } from "./PageDIDFilereplicas"
+import { PageDIDFilereplicas as PDF } from "./PageDIDFileReplicas"
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { fixtureFilereplicaStateViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
 
