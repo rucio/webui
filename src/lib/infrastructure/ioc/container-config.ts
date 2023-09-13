@@ -52,6 +52,7 @@ import RSEGateway from "../gateway/rse-gateway/rse-gateway";
 import ListDIDParentsFeature from "./features/list-did-parents-feature";
 import ReplicaGatewayOutputPort from "@/lib/core/port/secondary/replica-gateway-output-port";
 import ReplicaGateway from "../gateway/replica-gateway/replica-gateway";
+import ListFileReplicasFeature from "./features/list-file-replicas-feature";
 
 
 /**
@@ -76,6 +77,7 @@ loadFeaturesSync(appContainer, [
     new ListSubscriptionsFeature(appContainer),
     new LoginConfigFeature(appContainer),
     new ListDIDParentsFeature(appContainer),
+    new ListFileReplicasFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
