@@ -1,4 +1,4 @@
-import { DID, DIDLong, DIDMeta, DIDType, RuleState } from "@/lib/core/entity/rucio";
+import { DID, DIDLong, DIDMeta, DIDType, ReplicaState, RuleState } from "@/lib/core/entity/rucio";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 import { DIDRules, DIDDatasetReplicas, FilereplicaState, FilereplicaStateD, DIDKeyValuePairsData } from "./page-did";
 
@@ -29,5 +29,13 @@ export function generateEmptyDIDViewModel(): DIDViewModel {
         name: "",
         scope: "",
         did_type: DIDType.UNKNOWN,
+    }
+}
+
+export function generateEmptyFilereplicaStateViewModel(): FilereplicaStateViewModel {
+    return {
+        status: "error",
+        rse: "",
+        state: ReplicaState.UNKNOWN,
     }
 }
