@@ -15,7 +15,7 @@ export type ListDIDsStreamData = string
 /**
  * Data Transfer Object for GetDIDEndpoint
  */
-export interface DIDDTO extends DID, BaseDTO {
+export interface DIDExtendedDTO extends DID, BaseDTO {
     status: 'success' | 'error'
     errorMessage?: string
     account: string
@@ -30,7 +30,7 @@ export interface DIDDTO extends DID, BaseDTO {
  * Data Transfer Object for ListDIDParentsEndpoint
  * Represents the parent of a DID
  */
-export interface DIDParentDTO extends DID, BaseDTO {}
+export interface DIDDTO extends DID, BaseDTO {}
 
 /**
  * Data Transfer Object for DIDMeta Endpoint

@@ -1,19 +1,19 @@
 import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { DIDDTO } from "../../dto/did-dto";
+import { DIDExtendedDTO } from "../../dto/did-dto";
 import DIDGatewayOutputPort from "../../port/secondary/did-gateway-output-port";
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../../usecase-models/list-dids-usecase-models";
 
-export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingPipelineElement<ListDIDsRequest, ListDIDsResponse, ListDIDsError, DIDDTO>{
+export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingPipelineElement<ListDIDsRequest, ListDIDsResponse, ListDIDsError, DIDExtendedDTO>{
     constructor(private didGateway: DIDGatewayOutputPort) {
         super();
     }
-    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>, responseModel: ListDIDsResponse): Promise<DIDDTO> {
+    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>, responseModel: ListDIDsResponse): Promise<DIDExtendedDTO> {
         try {
-            const dto: DIDDTO = await this.didGateway.getDID(requestModel.rucioAuthToken, responseModel.scope, responseModel.name);
+            const dto: DIDExtendedDTO = await this.didGateway.getDID(requestModel.rucioAuthToken, responseModel.scope, responseModel.name);
             return dto;
         } catch (error: any) {
-            const errorDTO: DIDDTO = {
+            const errorDTO: DIDExtendedDTO = {
                 status: 'error',
                 errorName: 'Unknown Error',
                 errorMessage: (error as Error).message,
@@ -31,7 +31,7 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
         }
     }
 
-    handleGatewayError(dto: DIDDTO): ListDIDsError {
+    handleGatewayError(dto: DIDExtendedDTO): ListDIDsError {
         let error: 'Unknown Error' | 'Invalid DID Query' | 'Invalid Request' = 'Unknown Error';
         switch(dto.errorMessage) {
             case 'Invalid Auth Token':
@@ -64,7 +64,7 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
         return errorModel;
     }
 
-    validateDTO(dto: DIDDTO): { status: "success" | "error" | "critical"; data: ListDIDsError | DIDDTO; } {
+    validateDTO(dto: DIDExtendedDTO): { status: "success" | "error" | "critical"; data: ListDIDsError | DIDExtendedDTO; } {
         if(dto.expired_at === '') {
             dto.expired_at = 'Never';
         }
@@ -76,7 +76,7 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
     }
 
    
-    transformResponseModel(responseModel: ListDIDsResponse, dto: DIDDTO): ListDIDsResponse {
+    transformResponseModel(responseModel: ListDIDsResponse, dto: DIDExtendedDTO): ListDIDsResponse {
         responseModel.bytes = dto.bytes;
         responseModel.length = dto.length;
         return responseModel;

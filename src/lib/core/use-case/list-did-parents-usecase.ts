@@ -7,11 +7,11 @@ import { ListDIDParentsInputPort, type ListDIDParentsOutputPort } from "@/lib/co
 import { DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 import { ListDIDDTO } from "@/lib/core/dto/did-dto";
-import { DIDParentDTO} from "@/lib/core/dto/did-dto";
+import { DIDDTO} from "@/lib/core/dto/did-dto";
 import type DIDGatewayOutputPort from "@/lib/core/port/secondary/did-gateway-output-port";
 
 @injectable()
-export default class ListDIDParentsUseCase extends BaseSingleEndpointStreamingUseCase<AuthenticatedRequestModel<ListDIDParentsRequest>, ListDIDParentsResponse, ListDIDParentsError, ListDIDDTO, DIDParentDTO, DIDViewModel> implements ListDIDParentsInputPort {
+export default class ListDIDParentsUseCase extends BaseSingleEndpointStreamingUseCase<AuthenticatedRequestModel<ListDIDParentsRequest>, ListDIDParentsResponse, ListDIDParentsError, ListDIDDTO, DIDDTO, DIDViewModel> implements ListDIDParentsInputPort {
    
     constructor(
         protected readonly presenter: ListDIDParentsOutputPort,
@@ -40,7 +40,7 @@ export default class ListDIDParentsUseCase extends BaseSingleEndpointStreamingUs
         } as ListDIDParentsError
     }
 
-    processStreamedData(dto: DIDParentDTO): { data: ListDIDParentsResponse | ListDIDParentsError; status: "success" | "error"; } {
+    processStreamedData(dto: DIDDTO): { data: ListDIDParentsResponse | ListDIDParentsError; status: "success" | "error"; } {
         const responseModel: ListDIDParentsResponse = {
             ...dto,
             status: 'success',

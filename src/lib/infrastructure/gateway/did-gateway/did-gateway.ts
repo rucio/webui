@@ -1,4 +1,4 @@
-import { DIDDTO, DIDMetaDTO, ListDIDDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from '@/lib/core/dto/did-dto'
+import { DIDExtendedDTO, DIDMetaDTO, ListDIDDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from '@/lib/core/dto/did-dto'
 import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import { injectable } from 'inversify'
@@ -8,15 +8,17 @@ import ListDIDRulesEndpoint from './endpoints/list-did-rules-endpoint'
 import ListDIDsEndpoint from './endpoints/list-dids-endpoint'
 import GetDIDKeyValuePairsEndpoint from './endpoints/get-did-keyvaluepairs-endpoint'
 import ListDIDParentsEndpoint from './endpoints/list-did-parents-endpoint'
+import ListDIDContentsEndpoint from './endpoints/list-did-contents-endpoint'
 
 
 @injectable()
 export default class RucioDIDGateway implements DIDGatewayOutputPort {
+    
     async getDID(
         rucioAuthToken: string,
         scope: string,
         name: string,
-    ): Promise<DIDDTO> {
+    ): Promise<DIDExtendedDTO> {
         const endpoint = new GetDIDEndpoint(rucioAuthToken, scope, name)
         const dto = await endpoint.fetch()
         return dto
@@ -151,4 +153,23 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         }
     }
 
+    async listDIDContents(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDDTO> {
+        try {
+            const endpoint = new ListDIDContentsEndpoint(rucioAuthToken, scope, name)
+            await endpoint.fetch()
+            return {
+                status: 'success',
+                stream: endpoint,
+            }
+        } catch(error) {
+            const errorDTO: ListDIDRulesDTO = {
+                status: 'error',
+                errorName: 'Unknown Error',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
+    }
 }
