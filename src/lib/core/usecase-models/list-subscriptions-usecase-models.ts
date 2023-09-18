@@ -9,7 +9,6 @@ import { Subscription } from "../entity/rucio";
  */
 export interface ListSubscriptionsRequest {
     account: string;
-    sessionAccount: string;
 }
 
 export interface ListSubscriptionsResponse extends Subscription, BaseResponseModel {}

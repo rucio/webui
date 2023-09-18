@@ -23,19 +23,6 @@ class GetSubscriptionUseCase extends BaseSingleEndpointUseCase<AuthenticatedRequ
             } as GetSubscriptionError
         }
 
-        if(requestModel.sessionAccount !== requestModel.account) {
-            return {
-                error: 'INVALID_ACCOUNT',
-                message: 'Account specified in the request is not same as the account present in the session',
-            } as GetSubscriptionError
-        }
-        
-        if(requestModel.name === '' || requestModel.name === undefined) {
-            return {
-                error: 'INVALID_REQUEST',
-                message: 'Name is required',
-            } as GetSubscriptionError
-        }
         if(requestModel.rucioAuthToken === '' || requestModel.rucioAuthToken === undefined) {
             return {
                 error: 'INVALID_AUTH',

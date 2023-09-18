@@ -3,7 +3,6 @@ import { Subscription } from "../entity/rucio";
 
 export interface GetSubscriptionRequest {
     account: string;
-    sessionAccount: string;
     name: string;
 }
 

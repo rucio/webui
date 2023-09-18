@@ -33,22 +33,6 @@ class ListSubscriptionsUseCase extends BaseSingleEndpointStreamingUseCase<
                 message: 'The account specified in the request is an empty string',
             } as ListSubscriptionsError
         }
-
-        if(requestModel.sessionAccount === '' || requestModel.sessionAccount === undefined) {
-            return {
-                status: 'error',
-                error: 'INVALID_ACCOUNT',
-                message: 'The account specified in the session is an empty string. Check if you are logged in.',
-            } as ListSubscriptionsError
-        }
-
-        if (requestModel.sessionAccount != requestModel.account) {
-            return {
-                status: 'error',
-                error: 'INVALID_ACCOUNT',
-                message: 'The account specified in the request is not same as the account present in the session',
-            } as ListSubscriptionsError
-        }
     }
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListSubscriptionsRequest>): Promise<ListSubscriptionsDTO> {
         const { rucioAuthToken, account } = requestModel;

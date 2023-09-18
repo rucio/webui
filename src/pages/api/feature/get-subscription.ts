@@ -33,7 +33,6 @@ async function getSubscription(req: NextApiRequest, res: NextApiResponse, rucioA
     const controller: GetSubscriptionController = appContainer.get(CONTROLLERS.GET_SUBSCRIPTION)
     const controllerParameters: GetSubscriptionControllerParameters = {
         response: res,
-        account: account,
         name: name,
         sessionAccount: sessionUser?.rucioAccount,
         rucioAuthToken: rucioAuthToken
