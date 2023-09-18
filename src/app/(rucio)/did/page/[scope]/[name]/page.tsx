@@ -36,6 +36,18 @@ export default function Page({ params }: { params: { scope: string, name: string
     )
     useEffect(() => {
         const setRequests = async () => {
+            await didContentsComDOM.setRequest({
+                url: new URL('http://localhost:3000/api/feature/list-did-contents'),
+                method: 'GET',
+                params: {
+                    scope: params.scope,
+                    name: params.name,
+                },
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                } as HeadersInit),
+                body: null,
+            } as HTTPRequest)
             await didParentsComDOM.setRequest({
                 url: new URL('http://localhost:3000/api/feature/list-did-parents'),
                 method: 'GET',
