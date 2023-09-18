@@ -20,6 +20,7 @@ import { PageDIDByType } from "./PageDIDByType";
 import { PageDIDDatasetReplicas } from "./PageDIDDatasetReplicas";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { HTTPRequest } from "@/lib/sdk/http";
 
 export interface PageDIDPageProps {
     didMeta: DIDMetaViewModel;
@@ -31,6 +32,8 @@ export interface PageDIDPageProps {
     // File Replica States [FILE]
     didFileReplicasComDOM: UseComDOM<FilereplicaStateViewModel>
     // File Replica States [DATASET] simply uses Contents ComDOM
+    // But we supply an onchange function that is called when the contents comdom is selected
+    didFileReplicasDOnChange: (scope: string, name: string) => void // This function changes the file replicas comdom's request to the selected file
     // Rule State [DATASET]
     didRulesComDOM: UseComDOM<DIDRulesViewModel>
     // Contents [COLLECTION]
@@ -144,10 +147,7 @@ export const PageDID = (
                     <PageDIDFilereplicasD
                         replicaComDOM={props.didFileReplicasComDOM}
                         datasetComDOM={props.didContentsComDOM}
-                        onChangeFileSelection={() => {
-                            // TODO set query
-                            // run query for file replicas
-                        }}
+                        onChangeFileSelection={props.didFileReplicasDOnChange}
                     />
                 </SubPage>
                 <SubPage
