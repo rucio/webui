@@ -4,7 +4,7 @@ import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { useEffect, useState } from "react";
 import { fixtureDIDDatasetReplicasViewModel, fixtureDIDKeyValuePairsDataViewModel, fixtureDIDMetaViewModel, fixtureDIDRulesViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { HTTPRequest } from "@/lib/sdk/http";
-import { DIDKeyValuePairsDataViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { didKeyValuePairsDataQuery, didMetaQueryBase } from '@/app/(rucio)/did/queries';
 import { Loading } from '@/component-library/Pages/Helpers/Loading';
 
@@ -30,6 +30,9 @@ export default function Page({ params }: { params: { scope: string, name: string
     )
     const didRulesComDOM = useComDOM<DIDRulesViewModel>(
         'page-did-rules-query', [], false, Infinity, 200, true
+    )
+    const didDatasetReplicasComDOM = useComDOM<DIDDatasetReplicasViewModel>(
+        'page-did-datasetreplicas-query', [], false, Infinity, 200, true
     )
     useEffect(() => {
         const setRequests = async () => {
@@ -72,11 +75,21 @@ export default function Page({ params }: { params: { scope: string, name: string
                 } as HeadersInit),
                 body: null,
             } as HTTPRequest)
+            await didDatasetReplicasComDOM.setRequest({
+                url: new URL('http://localhost:3000/api/feature/list-dataset-replicas'),
+                method: 'GET',
+                params: {
+                    scope: params.scope,
+                    name: params.name,
+                },
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                } as HeadersInit),
+                body: null,
+            } as HTTPRequest)
         }
         setRequests()
     }, [])
-    // const didRulesComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDRulesViewModel()))
-    const didDatasetReplicasComDOM = mockUseComDOM(Array.from({ length: 100 }, (_, i) => fixtureDIDDatasetReplicasViewModel()))
     if (didMeta.status === "pending") {return <Loading title="View DID" subtitle={`For DID ${params.scope}:${params.name}`} />}
     return (
         <PageDIDStory
