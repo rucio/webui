@@ -122,12 +122,14 @@ export const PageDID = (
                 />
                 <SubPage
                     show={showPageBools["subpage-rules"]()}
+                    run={() => { if (props.didRulesComDOM.query.data.length === 0) { props.didRulesComDOM.start() } }}
                     id="subpage-rules"
                 >
                     <PageDIDRules comdom={props.didRulesComDOM} />
                 </SubPage>
                 <SubPage
                     show={didtype === DIDType.FILE ? false : didtype === DIDType.DATASET ? subpageIndex === 1 : false}
+                    run={() => { if (props.didDatasetReplicasComDOM.query.data.length === 0) { props.didDatasetReplicasComDOM.start() } }}
                     id="subpage-dataset-replicas"
                 >
                     <PageDIDDatasetReplicas comdom={props.didDatasetReplicasComDOM} />
