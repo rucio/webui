@@ -19,7 +19,7 @@ async function listDatasetReplicas(req:NextApiRequest, res: NextApiResponse, ruc
         res.status(400).json({ error: 'Missing scope or name parameter' })
         return
     }
-
+    
     const controllerParameters: ListDatasetReplicasControllerParameters = {
         response: res,
         rucioAuthToken: rucioAuthToken,
