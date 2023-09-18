@@ -7,7 +7,6 @@ import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
 export type ListDIDRulesControllerParameters = TAuthenticatedControllerParameters & {
-    account: string;
     sessionAccount: string;
     name: string;
     scope: string;
@@ -23,7 +22,6 @@ class ListDIDRulesController extends BaseController<ListDIDRulesControllerParame
     
     prepareRequestModel(parameters: ListDIDRulesControllerParameters): AuthenticatedRequestModel<ListDIDRulesRequest> {
         const requestModel: AuthenticatedRequestModel<ListDIDRulesRequest> = {
-            account: parameters.account,
             sessionAccount: parameters.sessionAccount,
             rucioAuthToken: parameters.rucioAuthToken,
             name: parameters.name,

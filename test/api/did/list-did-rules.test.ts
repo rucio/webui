@@ -64,7 +64,6 @@ describe("List DID Rules Feature tests", () => {
 
         const listDIDRulesController = appContainer.get<BaseController<ListDIDRulesControllerParameters, ListDIDRulesRequest>>(CONTROLLERS.LIST_DID_RULES);
         const listDIDRulesControllerParams: ListDIDRulesControllerParameters = {
-            account: 'ddmadmin',
             sessionAccount: 'ddmadmin',
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
             response: res as unknown as NextApiResponse,

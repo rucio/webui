@@ -38,14 +38,6 @@ class ListDIDRulesUseCase extends BaseSingleEndpointPostProcessingPipelineStream
     
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListDIDRulesRequest>): ListDIDRulesError | undefined {
-        if(requestModel.account !== requestModel.sessionAccount) {
-            const errorModel: ListDIDRulesError = {
-                status: 'error',
-                message: `Cannot make request for ${requestModel.account}. Currently logged in as ${requestModel.sessionAccount}`,
-                code: 400,
-                name: 'Invalid Account',
-            }
-        }
         return undefined;
     }
 
