@@ -11,6 +11,7 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { DIDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { TableInternalLink } from "@/component-library/StreamedTables/TableInternalLink";
 
 
 
@@ -36,7 +37,9 @@ export const PageDIDFilereplicasD = (
             },
             cell: info => {
                 return (
-                    <P>{info.getValue()}</P>
+                    <TableInternalLink href={`/did/page/${info.row.original.scope}/${info.row.original.name}`}>
+                        {info.getValue()}
+                    </TableInternalLink>
                 )
             }
         }),

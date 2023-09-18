@@ -10,6 +10,7 @@ import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
 import { HiDotsHorizontal } from "react-icons/hi"
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { TableInternalLink } from "@/component-library/StreamedTables/TableInternalLink";
 
 export const PageDIDByType = (
     props: {
@@ -31,7 +32,9 @@ export const PageDIDByType = (
             },
             cell: info => {
                 return (
-                    <P className="break-all pr-1">{info.getValue()}</P>
+                    <TableInternalLink href={`/did/page/${info.row.original.scope}/${info.row.original.name}`}>
+                        {info.getValue()}
+                    </TableInternalLink>
                 )
             }
         }),

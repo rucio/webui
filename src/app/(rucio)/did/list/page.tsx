@@ -27,6 +27,7 @@ export default function Page() {
                 "type": type
             },
         }
+        console.log(request)
         await DIDSearchComDOM.setRequest(request)
     }
 
@@ -38,23 +39,6 @@ export default function Page() {
         200,
         true
     )
-    useEffect(() => {
-        const setRequest = async () => {
-            const request: HTTPRequest = {
-                url: new URL('http://localhost:3000/api/feature/list-dids'),
-                method: 'GET',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                } as HeadersInit),
-                params: {
-                    "query": "test:*",
-                    "type": DIDType.DATASET
-                },
-            }
-            await DIDSearchComDOM.setRequest(request)
-        }
-        setRequest()
-    }, [])
     return (
         <ListDIDStory
             comdom={DIDSearchComDOM}
