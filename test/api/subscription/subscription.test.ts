@@ -47,7 +47,7 @@ describe("GET Subscription Feature Tests", () => {
     });
 
     it("should get subscription", async () => {
-        const { req, res, session } = await createHttpMocks('/api/subscription/ddmadmin/*Functional%20Test', 'GET', {});
+        const { req, res, session } = await createHttpMocks('/api/feature/get-subscription/ddmadmin/*Functional%20Test', 'GET', {});
 
         const getSubscriptionController = appContainer.get<BaseController<GetSubscriptionControllerParameters, GetSubscriptionRequest>>(CONTROLLERS.GET_SUBSCRIPTION);
         const getSubscriptionControllerParams: GetSubscriptionControllerParameters = {

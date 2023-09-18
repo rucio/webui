@@ -15,7 +15,7 @@ export default function PageSubscription({ params }: { params: { account: string
     async function subscriptionQuery(account: string, name: string): Promise<SubscriptionViewModel> {
         const req: HTTPRequest = {
             method: "GET",
-            url: new URL('http://localhost:3000/api/subscription'),
+            url: new URL('http://localhost:3000/api/feature/get-subscription'),
             params: {
                 "account": account,
                 "name": name

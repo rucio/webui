@@ -4,7 +4,7 @@ import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 export async function didMetaQueryBase(scope: string, name: string): Promise<DIDMetaViewModel> {
     const req: HTTPRequest = {
         method: "GET",
-        url: new URL('http://localhost:3000/api/didmeta'),
+        url: new URL('http://localhost:3000/api/feature/get-did-meta'),
         params: {
             "scope": scope,
             "name": name
@@ -28,7 +28,7 @@ export async function didMetaQueryBase(scope: string, name: string): Promise<DID
 export async function didKeyValuePairsDataQuery(scope: string, name: string): Promise<DIDKeyValuePairsDataViewModel> {
     const req: HTTPRequest = {
         method: "GET",
-        url: new URL('http://localhost:3000/api/didkeyvaluepairs'),
+        url: new URL('http://localhost:3000/api/feature/get-did-keyvaluepairs'),
         params: {
             "scope": scope,
             "name": name
