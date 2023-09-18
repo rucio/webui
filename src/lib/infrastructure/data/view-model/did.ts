@@ -1,6 +1,6 @@
 import {
     DID, DIDLong, DIDMeta, DIDType, ReplicaState, RuleState,   DIDRules, DIDKeyValuePairsData,
-    FilereplicaState, FilereplicaStateD, DIDDatasetReplicas
+    FileReplicaState, FileReplicaStateD, DIDDatasetReplicas
 } from "@/lib/core/entity/rucio";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 
@@ -11,8 +11,8 @@ export interface DIDMetaViewModel extends DIDMeta, BaseViewModel {}
 export interface DIDKeyValuePairsDataViewModel extends DIDKeyValuePairsData, BaseViewModel {}
 export interface DIDRulesViewModel extends DIDRules, BaseViewModel {}
 export interface DIDDatasetReplicasViewModel extends DIDDatasetReplicas, BaseViewModel {}
-export interface FilereplicaStateViewModel extends FilereplicaState, BaseViewModel {}
-export interface FilereplicaStateDViewModel extends FilereplicaStateD, BaseViewModel {}
+export interface FilereplicaStateViewModel extends FileReplicaState, BaseViewModel {}
+export interface FilereplicaStateDViewModel extends FileReplicaStateD, BaseViewModel {}
 
 export function generateEmptyDIDRulesViewModel(): DIDRulesViewModel {
     return {

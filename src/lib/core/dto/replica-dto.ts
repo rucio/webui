@@ -1,4 +1,4 @@
-import { DIDDatasetReplicas, FilereplicaState } from "../entity/rucio";
+import { DIDDatasetReplicas, FileReplicaState } from "../entity/rucio";
 import { BaseDTO, BaseStreamableDTO } from "@/lib/sdk/dto";
 
 /**
@@ -11,7 +11,7 @@ export interface ListReplicasDTO extends BaseStreamableDTO {}
 /**
  * Represents file replica state.
  */
-export interface FileReplicaStateDTO extends BaseDTO, FilereplicaState {}
+export interface FileReplicaStateDTO extends BaseDTO, FileReplicaState {}
 
 
 /**

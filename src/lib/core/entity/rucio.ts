@@ -72,7 +72,7 @@ export type DIDRules = {
 }
 
 // File replica states for file DIDs
-export type FilereplicaState = {
+export type FileReplicaState = {
     rse: string
     state: ReplicaState
 }
@@ -81,7 +81,7 @@ export type FilereplicaState = {
 // stores summary information on the file replica states of the files within
 // a dataset DID: how many files are in each state
 // currently not in use since we only display scopenames
-export type FilereplicaStateD = {
+export type FileReplicaStateD = {
     scope: string,
     name: string,
     available: number,

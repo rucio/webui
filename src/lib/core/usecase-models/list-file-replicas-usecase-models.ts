@@ -1,4 +1,4 @@
-import { FilereplicaState } from "../entity/rucio"
+import { FileReplicaState } from "../entity/rucio"
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models"
 /**
  * @interface ListFileReplicasRequest represents the RequestModel for list_file_replicas usecase
@@ -11,7 +11,7 @@ export interface ListFileReplicasRequest {
 /** 
  * @interface ListFileReplicasResponse represents the ResponseModel for list_file_replicas usecase
 */
-export interface ListFileReplicasResponse extends FilereplicaState, BaseResponseModel {}
+export interface ListFileReplicasResponse extends FileReplicaState, BaseResponseModel {}
 
 
 /**
