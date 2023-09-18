@@ -9,8 +9,8 @@ import { didKeyValuePairsDataQuery, didMetaQueryBase } from '@/app/(rucio)/did/q
 import { Loading } from '@/component-library/Pages/Helpers/Loading';
 
 export default function Page({ params }: { params: { scope: string, name: string } }) {
-    const [didMeta, setDIDMeta] = useState<DIDMetaViewModel>({status: "pending"} as DIDMetaViewModel)
-    const [didKeyValuePairsData, setDIDKeyValuePairsData] = useState({status: "pending"} as DIDKeyValuePairsDataViewModel)
+    const [didMeta, setDIDMeta] = useState<DIDMetaViewModel>({ status: "pending" } as DIDMetaViewModel)
+    const [didKeyValuePairsData, setDIDKeyValuePairsData] = useState({ status: "pending" } as DIDKeyValuePairsDataViewModel)
     const [fromDidList, setFromDidList] = useState<string>("yosearch")
     useEffect(() => {
         didMetaQueryBase(params.scope, params.name).then(setDIDMeta)
@@ -28,6 +28,21 @@ export default function Page({ params }: { params: { scope: string, name: string
     const didFileReplicasComDOM = useComDOM<FilereplicaStateViewModel>(
         'page-did-filereplicas-query', [], false, Infinity, 200, true
     )
+    const didFileReplicasDOnChange = (scope: string, name: string) => {
+        didFileReplicasComDOM.setRequest({
+            url: new URL('http://localhost:3000/api/feature/list-file-replicas'),
+            method: 'GET',
+            params: {
+                scope: scope,
+                name: name,
+            },
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            } as HeadersInit),
+            body: null,
+        } as HTTPRequest)
+        didFileReplicasComDOM.start()
+    }
     const didRulesComDOM = useComDOM<DIDRulesViewModel>(
         'page-did-rules-query', [], false, Infinity, 200, true
     )
@@ -99,7 +114,7 @@ export default function Page({ params }: { params: { scope: string, name: string
         }
         setRequests()
     }, [])
-    if (didMeta.status === "pending") {return <Loading title="View DID" subtitle={`For DID ${params.scope}:${params.name}`} />}
+    if (didMeta.status === "pending") { return <Loading title="View DID" subtitle={`For DID ${params.scope}:${params.name}`} /> }
     return (
         <PageDIDStory
             didMeta={didMeta}
@@ -107,6 +122,7 @@ export default function Page({ params }: { params: { scope: string, name: string
             didParentsComDOM={didParentsComDOM}
             didKeyValuePairsData={didKeyValuePairsData}
             didFileReplicasComDOM={didFileReplicasComDOM}
+            didFileReplicasDOnChange={didFileReplicasDOnChange}
             didRulesComDOM={didRulesComDOM}
             didContentsComDOM={didContentsComDOM}
             didDatasetReplicasComDOM={didDatasetReplicasComDOM}
