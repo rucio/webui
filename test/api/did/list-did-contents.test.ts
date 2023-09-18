@@ -5,55 +5,49 @@ import { NextApiResponse } from "next";
 import { MockHttpStreamableResponseFactory } from "test/fixtures/http-fixtures";
 import MockRucioServerFactory, { MockEndpoint } from "test/fixtures/rucio-server";
 import { Readable } from "stream";
-import { ListDIDParentsControllerParameters } from "@/lib/infrastructure/controller/list-did-parents-controller";
-import { ListDIDParentsRequest } from "@/lib/core/usecase-models/list-did-parents-usecase-models";
 import { DIDType } from "@/lib/core/entity/rucio";
+import { ListDIDContentsControllerParameters } from "@/lib/infrastructure/controller/list-did-contents-controller";
+import { ListDIDContentsRequest } from "@/lib/core/usecase-models/list-did-contents-usecase-models";
 
-describe("List DID Parents Feature tests", () => {
+describe("List DID Contents Feature tests", () => {
     beforeEach(() => {
         fetchMock.doMock();
-        const didListParentsMockEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/file1/parents`,
-            method: "GET",
-            includes: "test/file1/parents",
+        const didListContentsMockEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/dids`,
+            method: 'GET',
+            includes: '/dataset1/dids',
             response: {
                 status: 200,
                 headers: {
-                    "Content-Type": "application/x-json-stream",
+                    'Content-Type': 'application/x-json-stream',
                 },
-                body: Readable.from( [
-                    JSON.stringify({
-                        "scope": "test",
-                        "name": "dataset1",
-                        "type": "DATASET"
-                    }),
-                    JSON.stringify({
-                        "scope": "test",
-                        "name": "dataset2",
-                        "type": "DATASET"
-                    })
-                ].join("\n")),
-            },
-        };
+                body: Readable.from(
+                    [
+                        JSON.stringify({"scope": "test", "name": "file1", "type": "FILE", "bytes": 10485760, "adler32": "517daa38", "md5": "e4319066a5d3771954652a6905cebe82"}),
+                        JSON.stringify({"scope": "test", "name": "file2", "type": "FILE", "bytes": 10485760, "adler32": "fc6ff847", "md5": "bcc3619205bf64d3cbe984b27c042a01"}),
+                    ].join('\n')
+                )
+            }
+        }
 
-        MockRucioServerFactory.createMockRucioServer(true, [didListParentsMockEndpoint]);
+        MockRucioServerFactory.createMockRucioServer(true, [didListContentsMockEndpoint]);
     });
 
     afterEach(() => {
         fetchMock.dontMock();
     });
-    it("should list DID parents", async () => {
+    it("should list DID contents", async () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse();
 
-        const listDIDParentsController = appContainer.get<BaseController<ListDIDParentsControllerParameters, ListDIDParentsRequest>>(CONTROLLERS.LIST_DID_PARENTS);
-        const listDIDParentsControllerParams: ListDIDParentsControllerParameters = {
+        const listDIDContentsController = appContainer.get<BaseController<ListDIDContentsControllerParameters, ListDIDContentsRequest>>(CONTROLLERS.LIST_DID_CONTENTS);
+        const listDIDContentsControllerParams: ListDIDContentsControllerParameters = {
             response: res as unknown as NextApiResponse,
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            name: 'file1',
+            name: 'dataset1',
             scope: 'test'
         }
 
-        await listDIDParentsController.execute(listDIDParentsControllerParams);
+        await listDIDContentsController.execute(listDIDContentsControllerParams);
 
         const receivedData: any[] = []
         const onData = (data: any) => {
@@ -78,14 +72,14 @@ describe("List DID Parents Feature tests", () => {
         expect(receivedData[0]).toEqual({
             "status": "success",
             "scope": "test",
-            "name": "dataset1",
-            "did_type": DIDType.DATASET
+            "name": "file1",
+            "did_type": DIDType.FILE
         })
         expect(receivedData[1]).toEqual({
             "status": "success",
             "scope": "test",
-            "name": "dataset2",
-            "did_type": DIDType.DATASET
+            "name": "file2",
+            "did_type": DIDType.FILE
         })
         
     });

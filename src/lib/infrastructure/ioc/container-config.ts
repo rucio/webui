@@ -54,6 +54,7 @@ import ReplicaGatewayOutputPort from "@/lib/core/port/secondary/replica-gateway-
 import ReplicaGateway from "../gateway/replica-gateway/replica-gateway";
 import ListFileReplicasFeature from "./features/list-file-replicas-feature";
 import ListDatasetReplicasFeature from "./features/list-dataset-replicas-feature";
+import ListDIDContentsFeature from "./features/list-did-contents-feature";
 
 
 /**
@@ -80,11 +81,12 @@ loadFeaturesSync(appContainer, [
     new DIDKeyValuePairsDataFeature(appContainer),
     new GetSubscriptionFeature(appContainer),
     new ListDidsFeature(appContainer),
-    new ListDIDRulesFeature(appContainer),
-    new ListSubscriptionsFeature(appContainer),
+    new ListDIDContentsFeature(appContainer),
     new ListDIDParentsFeature(appContainer),
-    new ListFileReplicasFeature(appContainer),
+    new ListDIDRulesFeature(appContainer),
     new ListDatasetReplicasFeature(appContainer),
+    new ListFileReplicasFeature(appContainer),
+    new ListSubscriptionsFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
