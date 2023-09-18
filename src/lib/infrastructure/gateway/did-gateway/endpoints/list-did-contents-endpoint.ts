@@ -1,9 +1,8 @@
 import { DIDDTO, ListDIDDTO } from "@/lib/core/dto/did-dto";
-import { DIDType } from "@/lib/core/entity/rucio";
 import { BaseStreamableEndpoint, extractErrorMessage } from "@/lib/sdk/gateway-endpoints";
 import { HTTPRequest } from "@/lib/sdk/http";
 import { Response } from "node-fetch";
-import { TRucioFileReplica } from "../../replica-gateway/replica-gateway-utils";
+import { convertToDIDDTO, TRucioDID } from "../did-gateway-utils";
 
 export default class ListDIDContentsEndpoint extends BaseStreamableEndpoint<ListDIDDTO, DIDDTO> {
     constructor(
@@ -16,22 +15,15 @@ export default class ListDIDContentsEndpoint extends BaseStreamableEndpoint<List
     async initialize(): Promise<void> {
         await super.initialize()
         const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/replicas/list`
+        const endpoint = `${rucioHost}/dids/${this.scope}/${this.name}/dids`
         const request: HTTPRequest = {
-            method: 'POST',
+            method: 'GET',
             url: endpoint,
             headers: {
                 'X-Rucio-Auth-Token': this.rucioAuthToken,
                 'Content-Type': 'application/x-json-stream',
             },
-            body: {
-                'dids': [{
-                    'scope': this.scope,
-                    'name': this.name,
-                }],
-                'all_states': true,
-                'ignore_availability': true,
-            },
+            body: null,
             params: undefined,
         }
         this.request = request
@@ -56,13 +48,8 @@ export default class ListDIDContentsEndpoint extends BaseStreamableEndpoint<List
     }
 
     createDTO(response: Buffer): DIDDTO {
-        const data: TRucioFileReplica = JSON.parse(JSON.parse(response.toString()))
-        const dto: DIDDTO = {
-            status: 'success',
-            scope: data.scope,
-            name: data.name,
-            did_type: DIDType.FILE,
-        }
+        const data: TRucioDID = JSON.parse(JSON.parse(response.toString()))
+        const dto: DIDDTO = convertToDIDDTO(data)
         return dto
     }
 }
