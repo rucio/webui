@@ -54,15 +54,18 @@ export default function Page({ params }: { params: { scope: string, name: string
                 body: null,
             }
             await didContentsComDOM.setRequest(requestContents)
-            const requestsFilereplicas: HTTPRequest = {
-                url: new URL('http://localhost:3000/api/filereplicastate'),
+            await didFileReplicasComDOM.setRequest({
+                url: new URL('http://localhost:3000/api/feature/list-file-replicas'),
                 method: 'GET',
+                params: {
+                    scope: params.scope,
+                    name: params.name,
+                },
                 headers: new Headers({
                     'Content-Type': 'application/json',
                 } as HeadersInit),
                 body: null,
-            }
-            await didFileReplicasComDOM.setRequest(requestsFilereplicas)
+            } as HTTPRequest)
             await didRulesComDOM.setRequest({
                 url: new URL('http://localhost:3000/api/feature/list-did-rules'),
                 method: 'GET',
