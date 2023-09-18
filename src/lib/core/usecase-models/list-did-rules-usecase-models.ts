@@ -2,7 +2,6 @@ import { DIDRules } from "../entity/rucio";
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
 
 export interface ListDIDRulesRequest {
-    account: string;
     sessionAccount: string
     name: string;
     scope: string;
