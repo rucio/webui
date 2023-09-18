@@ -37,7 +37,7 @@ export const PageDIDDatasetReplicas = (
                     >
                         <RSETag blocked={info.row.original.rseblocked}>
                             <a
-                                href={"/rse/" + info.getValue()}
+                                href={`/rse/page/${info.row.id}`}
                                 target="_blank"
                                 rel="noreferrer"
                                 className={twMerge(

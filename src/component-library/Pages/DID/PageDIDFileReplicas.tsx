@@ -30,7 +30,7 @@ export const PageDIDFilereplicas = (
             cell: (info) => {
                 // perhaps use this as a basis for links in tables
                 return (
-                    <TableInternalLink href={"/rse/" + info.getValue()}>
+                    <TableInternalLink href={"/rse/page/" + info.getValue()}>
                         {info.getValue()}
                     </TableInternalLink>
                 )
