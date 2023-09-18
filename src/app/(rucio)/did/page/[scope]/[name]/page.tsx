@@ -36,24 +36,18 @@ export default function Page({ params }: { params: { scope: string, name: string
     )
     useEffect(() => {
         const setRequests = async () => {
-            const requestParents: HTTPRequest = {
-                url: new URL('http://localhost:3000/api/listdids'),
+            await didParentsComDOM.setRequest({
+                url: new URL('http://localhost:3000/api/feature/list-did-parents'),
                 method: 'GET',
+                params: {
+                    scope: params.scope,
+                    name: params.name,
+                },
                 headers: new Headers({
                     'Content-Type': 'application/json',
                 } as HeadersInit),
                 body: null,
-            }
-            await didParentsComDOM.setRequest(requestParents)
-            const requestContents: HTTPRequest = {
-                url: new URL('http://localhost:3000/api/listdids'),
-                method: 'GET',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                } as HeadersInit),
-                body: null,
-            }
-            await didContentsComDOM.setRequest(requestContents)
+            } as HTTPRequest)
             await didFileReplicasComDOM.setRequest({
                 url: new URL('http://localhost:3000/api/feature/list-file-replicas'),
                 method: 'GET',
