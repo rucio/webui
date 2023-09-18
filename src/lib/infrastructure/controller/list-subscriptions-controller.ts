@@ -7,7 +7,6 @@ import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
 export type ListSubscriptionsControllerParameters = TAuthenticatedControllerParameters & {
-    account: string;
     sessionAccount: string;
 }
 
@@ -20,9 +19,8 @@ class ListSubscriptionsController extends BaseController<ListSubscriptionsContro
     }
     prepareRequestModel(parameters: ListSubscriptionsControllerParameters): AuthenticatedRequestModel<ListSubscriptionsRequest> {
         return {
-            account: parameters.account,
-            sessionAccount: parameters.sessionAccount,
-            rucioAuthToken: parameters.rucioAuthToken
+            rucioAuthToken: parameters.rucioAuthToken,
+            account: parameters.sessionAccount,
         }
     }
 }

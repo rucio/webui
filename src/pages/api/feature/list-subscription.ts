@@ -33,7 +33,6 @@ async function listSubscriptions(req:NextApiRequest, res: NextApiResponse, rucio
 
     const controllerParameters: ListSubscriptionsControllerParameters = {
         response: res,
-        account: account,
         sessionAccount: sessionAccount,
         rucioAuthToken: rucioAuthToken
     }
