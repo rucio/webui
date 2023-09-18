@@ -17,7 +17,7 @@ export default function Page() {
 
     const didQuery = async (query: string, type: DIDType) => {
         const request: HTTPRequest = {
-            url: new URL('http://localhost:3000/api/dids'),
+            url: new URL('http://localhost:3000/api/feature/list-dids'),
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export default function Page() {
     useEffect(() => {
         const setRequest = async () => {
             const request: HTTPRequest = {
-                url: new URL('http://localhost:3000/api/dids'),
+                url: new URL('http://localhost:3000/api/feature/list-dids'),
                 method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json',
