@@ -69,6 +69,12 @@ appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway)
 appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
 appContainer.bind<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA).to(ReplicaGateway);
 
+// Load Auth Features/Usecases
+loadFeaturesSync(appContainer, [
+    new LoginConfigFeature(appContainer),
+])
+
+// Load Features
 loadFeaturesSync(appContainer, [
     new DIDMetaFeature(appContainer),
     new DIDKeyValuePairsDataFeature(appContainer),
@@ -76,7 +82,6 @@ loadFeaturesSync(appContainer, [
     new ListDidsFeature(appContainer),
     new ListDIDRulesFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
-    new LoginConfigFeature(appContainer),
     new ListDIDParentsFeature(appContainer),
     new ListFileReplicasFeature(appContainer),
     new ListDatasetReplicasFeature(appContainer),
