@@ -41,23 +41,6 @@ export function generateEmptyRSEViewModel(): RSEViewModel {
 export function generateEmptyRSEProtocolViewModel(): RSEProtocolViewModel {
     return {
         status: 'error',
-        rseid: '',
-        scheme: '',
-        hostname: '',
-        port: 0,
-        prefix: '',
-        impl: '',
-        priorities_lan: {
-            read: 0,
-            write: 0,
-            delete: 0
-        },
-        priorities_wan: {
-            read: 0,
-            write: 0,
-            delete: 0,
-            tpcwrite: 0,
-            tpcread: 0,
-        },
+        protocols: [],
     }
 }

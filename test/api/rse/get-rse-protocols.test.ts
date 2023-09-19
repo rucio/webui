@@ -116,9 +116,8 @@ describe('GET RSE Protocols API Test', () => {
         }
         await getRSEProtocolsController.execute(getRSEProtocolsControllerParameters)
         const data = await res._getJSONData()
-        expect(data).toEqual([
+        expect(data.protocols).toEqual([
             {
-                "status": "success",
                 "rseid": "MOCK3",
                 "scheme": "file",
                 "hostname": "localhost",
@@ -139,7 +138,6 @@ describe('GET RSE Protocols API Test', () => {
                 },
               },
               {
-                "status": "success",
                 "rseid": "MOCK3",
                 "scheme": "https",
                 "hostname": "mock3.com",
@@ -160,7 +158,6 @@ describe('GET RSE Protocols API Test', () => {
                 },
               },
               {
-                "status": "success",
                 "rseid": "MOCK3",
                 "scheme": "srm",
                 "hostname": "mock3.com",
