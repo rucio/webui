@@ -216,12 +216,12 @@ export type RSEProtocol = {
         read: number,
         write: number,
         delete: number,
-        tpc: number,
+        tpc?: number, // TODO: what is this?
         tpcwrite: number,
         tpcread: number,
     },
-    updated_at: DateISO,
-    created_at: DateISO,
+    updated_at?: DateISO, // TODO: rucio does not provide this
+    created_at?: DateISO, // TODO: rucio does not provide this
 }
 
 export type RSEAttribute = {
