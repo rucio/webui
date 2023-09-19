@@ -8,7 +8,9 @@ export interface RSEProtocolViewModel extends BaseViewModel {
     protocols: RSEProtocol[]
 }
 
-export interface RSEAttributeViewModel extends RSEAttribute, BaseViewModel {}
+export interface RSEAttributeViewModel extends BaseViewModel {
+    attributes: RSEAttribute[]
+}
 
 export interface RSEAccountUsageLimitViewModel extends RSEAccountUsageLimit, BaseViewModel {}
 
