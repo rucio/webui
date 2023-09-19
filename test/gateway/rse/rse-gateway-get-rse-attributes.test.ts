@@ -29,10 +29,21 @@ describe('RSEGateway GET RSE Attributes Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [getRSEAttributesMockEndpoint]);
     })
 
-    test('it should get RSE attributes', async () => {
-        const rseGateway: RSEGatewayOutputPort = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE)
-    })
     afterEach(() => {
         fetchMock.dontMock();
+    })
+
+    test('it should get RSE attributes', async () => {
+        const rseGateway: RSEGatewayOutputPort = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE)
+        const rseAttributes = await rseGateway.getRSEAttributes(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'MOCK3')
+        expect(rseAttributes).toEqual({
+            status: 'success',
+            ISP: "CERN- LHC",
+            MOCK3: true,
+            continent: "EU",
+            country_name: "Switzerland",
+            region_code: "07",
+            time_zone: "Europe/Zurich"
+        })
     })
 })
