@@ -1,4 +1,4 @@
-import { ListRSEsDTO, RSEDTO } from "../../dto/rse-dto";
+import { ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO } from "@/lib/core/dto/rse-dto";
 
 export default interface RSEGatewayOutputPort {
 
@@ -14,14 +14,14 @@ export default interface RSEGatewayOutputPort {
      * @param rucioAuthToken A valid Rucio Auth Token.
      * @param rseName The RSE to list protocols for.
      */
-    getRSEProtocols(rucioAuthToken: string, rseName: string): Promise<ListRSEsDTO>
+    getRSEProtocols(rucioAuthToken: string, rseName: string): Promise<RSEProtocolDTO>
 
     /**
      * Get all supported attributes for a given RSE.
      * @param rucioAuthToken A valid Rucio Auth Token.
      * @param rseName The RSE to list attributes for.
      */
-    getRSEAttributes(rucioAuthToken: string, rseName: string): Promise<ListRSEsDTO>
+    getRSEAttributes(rucioAuthToken: string, rseName: string): Promise<RSEAttributeDTO>
 
     /**
      * Streams the RSEs for the given RSE Expression.
@@ -30,10 +30,4 @@ export default interface RSEGatewayOutputPort {
      */
     listRSEs(rucioAuthToken: string, rseExpression: string): Promise<ListRSEsDTO>
 
-    /**
-     * Gets the RSE for the given RSE name.
-     * @param rucioAuthToken A valid Rucio Auth Token.
-     * @param rseName The RSE name to get.
-     */
-    getRSE(rucioAuthToken: string, rseName: string): Promise<RSEDTO>
 }
