@@ -56,6 +56,7 @@ import ListFileReplicasFeature from "./features/list-file-replicas-feature";
 import ListDatasetReplicasFeature from "./features/list-dataset-replicas-feature";
 import ListDIDContentsFeature from "./features/list-did-contents-feature";
 import GetRSEFeature from "./features/get-rse-feature";
+import GetRSEProtocolsFeature from "./features/get-rse-protocols-feature";
 
 
 /**
@@ -93,6 +94,7 @@ loadFeaturesSync(appContainer, [
 // Features: Page RSE
 loadFeaturesSync(appContainer, [
     new GetRSEFeature(appContainer),
+    new GetRSEProtocolsFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
