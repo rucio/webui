@@ -1,4 +1,5 @@
 import { RSEAttributeDTO } from "@/lib/core/dto/rse-dto";
+import { RSEAttribute } from "@/lib/core/entity/rucio";
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
 import { HTTPRequest } from "@/lib/sdk/http";
 import { Response } from "node-fetch";
@@ -41,9 +42,17 @@ export default class GetRSEAttributesEndpoint extends BaseEndpoint<RSEAttributeD
     }
 
     createDTO(data: Object): RSEAttributeDTO {
+        const attributes: RSEAttribute[] = []
+        for (const [key, value] of Object.entries(data)) {
+            const attribute: RSEAttribute = {
+                key: key,
+                value: value
+            }
+            attributes.push(attribute)
+        }
         return {
             status: 'success',
-            ...data
+            attributes: attributes
         } as RSEAttributeDTO
     }
 

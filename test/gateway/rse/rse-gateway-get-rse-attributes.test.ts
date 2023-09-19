@@ -35,15 +35,36 @@ describe('RSEGateway GET RSE Attributes Endpoint Tests', () => {
 
     test('it should get RSE attributes', async () => {
         const rseGateway: RSEGatewayOutputPort = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE)
-        const rseAttributes = await rseGateway.getRSEAttributes(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'MOCK3')
-        expect(rseAttributes).toEqual({
+        const rseAttributesDTO = await rseGateway.getRSEAttributes(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'MOCK3')
+        expect(rseAttributesDTO).toEqual({
             status: 'success',
-            ISP: "CERN- LHC",
-            MOCK3: true,
-            continent: "EU",
-            country_name: "Switzerland",
-            region_code: "07",
-            time_zone: "Europe/Zurich"
+            attributes: [
+                {
+                key: 'ISP',
+                value: 'CERN- LHC'
+                },
+                {
+                key: 'MOCK3',
+                value: true
+                },
+                {
+                key: 'continent',
+                value: 'EU'
+                },
+                {
+                key: 'country_name',
+                value: 'Switzerland'
+                },
+                {
+                key: 'region_code',
+                value: '07'
+                },
+                {
+                key: 'time_zone',
+                value: 'Europe/Zurich'
+                }
+            ]
+            
         })
     })
 })

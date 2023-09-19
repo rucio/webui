@@ -21,4 +21,6 @@ export interface RSEProtocolDTO extends BaseDTO {
 /**
  * Data Transfer Object for GET RSE Attributes Endpoint
  */
-export interface RSEAttributeDTO extends RSEAttribute, BaseDTO {}
+export interface RSEAttributeDTO extends BaseDTO {
+    attributes: RSEAttribute[]
+}
