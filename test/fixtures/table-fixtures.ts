@@ -5,6 +5,8 @@ import {
     DIDAvailability,
     ReplicaState,
     RSEType,
+    RSEProtocol,
+    RSEAttribute,
 } from '@/lib/core/entity/rucio'
 import { RSEAccountUsageLimitViewModel, RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
@@ -152,46 +154,54 @@ export function fixtureRSEViewModel(): RSEViewModel {
 export function fixtureRSEProtocolViewModel(): RSEProtocolViewModel {
     return {
         ...mockBaseVM(),
-        protocols: [{
-            rseid: faker.string.uuid(),
-            scheme: faker.helpers.arrayElement(["srm", "gsiftp", "root", "davs", "s3", "file"]),
-            hostname: faker.internet.ip(),
-            port: faker.number.int({ min: 0, max: 1e4 }),
-            prefix: faker.lorem.words(3).replace(/\s/g, "."),
-            impl: "rucio.rse.protocols.gfal.Default",
-            priorities_lan: {
-                read: faker.number.int({ min: 0, max: 10 }),
-                write: faker.number.int({ min: 0, max: 10 }),
-                delete: faker.number.int({ min: 0, max: 10 }),
-            },
-            priorities_wan: {
-                read: faker.number.int({ min: 0, max: 10 }),
-                write: faker.number.int({ min: 0, max: 10 }),
-                delete: faker.number.int({ min: 0, max: 10 }),
-                tpc: faker.number.int({ min: 0, max: 10 }),
-                tpcwrite: faker.number.int({ min: 0, max: 10 }),
-                tpcread: faker.number.int({ min: 0, max: 10 }),
-            },
-            updated_at: faker.date.recent().toISOString(),
-            created_at: faker.date.past().toISOString(),
-        }]
+        protocols: Array.from({ length: faker.number.int({ min: 1, max: 100 }) }, () => fixtureRSEProtocol()),
     }
 }
+
+export function fixtureRSEProtocol(): RSEProtocol {
+    return {
+        rseid: faker.string.uuid(),
+        scheme: faker.helpers.arrayElement(["srm", "gsiftp", "root", "davs", "s3", "file"]),
+        hostname: faker.internet.ip(),
+        port: faker.number.int({ min: 0, max: 1e4 }),
+        prefix: faker.lorem.words(3).replace(/\s/g, "."),
+        impl: "rucio.rse.protocols.gfal.Default",
+        priorities_lan: {
+            read: faker.number.int({ min: 0, max: 10 }),
+            write: faker.number.int({ min: 0, max: 10 }),
+            delete: faker.number.int({ min: 0, max: 10 }),
+        },
+        priorities_wan: {
+            read: faker.number.int({ min: 0, max: 10 }),
+            write: faker.number.int({ min: 0, max: 10 }),
+            delete: faker.number.int({ min: 0, max: 10 }),
+            tpc: faker.number.int({ min: 0, max: 10 }),
+            tpcwrite: faker.number.int({ min: 0, max: 10 }),
+            tpcread: faker.number.int({ min: 0, max: 10 }),
+        },
+        updated_at: faker.date.recent().toISOString(),
+        created_at: faker.date.past().toISOString(),
+    }
+}
+
+export function fixtureRSEAttribute(): RSEAttribute {
+    return {
+        key: faker.lorem.words(2).replace(/\s/g, "-"),
+        value: faker.helpers.arrayElement([
+            faker.lorem.words(3),
+            faker.date.past().toISOString(),
+            faker.number.int({ min: 0, max: 1e6 }),
+            faker.datatype.boolean(),
+            null,
+        ]),
+    }
+}
+
 
 export function fixtureRSEAttributeViewModel(): RSEAttributeViewModel {
     return {
         ...mockBaseVM(),
-        // TODO: @ThePhisch changing this to fix builds, see #344
-        attributes: [{
-            key: faker.lorem.words(2).replace(/\s/g, "-"),
-            value: faker.helpers.arrayElement([
-                faker.lorem.words(3),
-                faker.date.past().toISOString(),
-                faker.number.int({ min: 0, max: 1e6 }),
-                faker.datatype.boolean(),
-                null,
-            ]),
-        }]
+        attributes: Array.from({ length: faker.number.int({ min: 1, max: 100 }) }, () => fixtureRSEAttribute()),
     }
 }
 
@@ -238,7 +248,7 @@ export function fixtureDIDMetaViewModel(): DIDMetaViewModel {
     }
 }
 
-export function fixtureDIDKeyValuePair(): DIDKeyValuePair{
+export function fixtureDIDKeyValuePair(): DIDKeyValuePair {
     return {
         key: faker.lorem.words(2).replace(/\s/g, "-"),
         value: faker.helpers.arrayElement([

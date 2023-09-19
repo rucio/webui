@@ -30,7 +30,7 @@ export default function Page({ params }: { params: { scope: string, name: string
     )
     const didFileReplicasDOnChange = (scope: string, name: string) => {
         didFileReplicasComDOM.setRequest({
-            url: new URL('http://localhost:3000/api/feature/list-file-replicas'),
+            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-file-replicas`),
             method: 'GET',
             params: {
                 scope: scope,
@@ -52,7 +52,7 @@ export default function Page({ params }: { params: { scope: string, name: string
     useEffect(() => {
         const setRequests = async () => {
             await didContentsComDOM.setRequest({
-                url: new URL('http://localhost:3000/api/feature/list-did-contents'),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-did-contents`),
                 method: 'GET',
                 params: {
                     scope: params.scope,
@@ -64,7 +64,7 @@ export default function Page({ params }: { params: { scope: string, name: string
                 body: null,
             } as HTTPRequest)
             await didParentsComDOM.setRequest({
-                url: new URL('http://localhost:3000/api/feature/list-did-parents'),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-did-parents`),
                 method: 'GET',
                 params: {
                     scope: params.scope,
@@ -76,7 +76,7 @@ export default function Page({ params }: { params: { scope: string, name: string
                 body: null,
             } as HTTPRequest)
             await didFileReplicasComDOM.setRequest({
-                url: new URL('http://localhost:3000/api/feature/list-file-replicas'),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-file-replicas`),
                 method: 'GET',
                 params: {
                     scope: params.scope,
@@ -88,7 +88,7 @@ export default function Page({ params }: { params: { scope: string, name: string
                 body: null,
             } as HTTPRequest)
             await didRulesComDOM.setRequest({
-                url: new URL('http://localhost:3000/api/feature/list-did-rules'),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-did-rules`),
                 method: 'GET',
                 params: {
                     scope: params.scope,
@@ -100,7 +100,7 @@ export default function Page({ params }: { params: { scope: string, name: string
                 body: null,
             } as HTTPRequest)
             await didDatasetReplicasComDOM.setRequest({
-                url: new URL('http://localhost:3000/api/feature/list-dataset-replicas'),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-dataset-replicas`),
                 method: 'GET',
                 params: {
                     scope: params.scope,

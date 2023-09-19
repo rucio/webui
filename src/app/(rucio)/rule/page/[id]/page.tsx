@@ -22,7 +22,7 @@ export default function PageRule({ params }: { params: { id: string } }) {
     useEffect(() => {
         const runQuery = async () => {
             const request: HTTPRequest = {
-                url: new URL("http://localhost:3000/api/rulepagelockentry"),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/rulepagelockentry`),
                 method: "GET",
                 headers: new Headers({
                     'Content-Type': 'application/json'

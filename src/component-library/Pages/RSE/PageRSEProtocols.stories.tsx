@@ -11,5 +11,5 @@ const Template: StoryFn<typeof P> = (args) => <P {...args} />;
 
 export const PageRSEProtocols = Template.bind({});
 PageRSEProtocols.args = {
-    comdom: mockUseComDOM(Array.from({length: 20}, (_, i) => fixtureRSEProtocolViewModel()))
+    tableData: fixtureRSEProtocolViewModel()
 };

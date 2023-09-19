@@ -24,7 +24,7 @@
           "name": "page",
           "contents": [
             {
-              "name": "[id]",
+              "name": "[name]",
               "contents": []
             }
           ]

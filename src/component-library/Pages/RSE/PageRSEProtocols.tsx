@@ -7,11 +7,13 @@ import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { H3 } from "../../Text/Headings/H3";
 import { RSEProtocolViewModel } from "@/lib/infrastructure/data/view-model/rse";
 import { RSEProtocol } from "@/lib/core/entity/rucio";
+import { NormalTable } from "@/component-library/StreamedTables/NormalTable";
+import { TableStyling } from "@/component-library/StreamedTables/types";
 
 export const PageRSEProtocols = (
     props: {
         // TODO: data will not be streamed, but loaded in one go
-        comdom: UseComDOM<RSEProtocolViewModel>
+        tableData: RSEProtocolViewModel
     }
 ) => {
     const shortstyle = { style: "w-20" }
@@ -77,12 +79,12 @@ export const PageRSEProtocols = (
             cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
             meta: shortstylepink,
         }),
-        columnHelper.accessor("priorities_wan.tpc", {
-            id: "priorities_lan.tpc",
-            header: info => <TableSortUpDown name="TPC" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
-            meta: shortstylepink,
-        }),
+        // columnHelper.accessor("priorities_wan.tpc", {
+        //     id: "priorities_lan.tpc",
+        //     header: info => <TableSortUpDown name="TPC" column={info.column} stack />,
+        //     cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+        //     meta: shortstylepink,
+        // }),
         columnHelper.accessor("priorities_wan.tpcwrite", {
             id: "priorities_lan.tpcwrite",
             header: info => <TableSortUpDown name="TPC/W" column={info.column} stack />,
@@ -97,12 +99,12 @@ export const PageRSEProtocols = (
         }),
     ]
     return (
-        <StreamedTable
-            tablecomdom={props.comdom}
+        <NormalTable<RSEProtocol>
+            tabledata={props.tableData.protocols || []}
             tablecolumns={tablecolumns}
             tablestyling={{
-                pageSize: 5
-            }}
+                pageSize: 5,
+            } as TableStyling}
         />
     );
 };

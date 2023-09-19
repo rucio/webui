@@ -16,7 +16,7 @@ export default function ListSubscription({ params }: { params: { account: string
     useEffect(() => {
         const runQuery = async () => {
             await ComDOM.start({
-                url: new URL("http://localhost:3000/api/feature/list-subscription"),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-subscription`),
                 method: "GET",
                 headers: new Headers({
                     'Content-Type': 'application/json'

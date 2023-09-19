@@ -124,7 +124,7 @@ export const CreateRule = (
         let DIDSearchString = explicitDIDSearchExpression ? explicitDIDSearchExpression : Page0State.selectDIDDataPattern
         // build request for comdom
         const request: HTTPRequest = {
-            url: new URL("http://localhost:3000/api/listdids"),
+            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/listdids`),
             method: "GET",
             headers: new Headers({
                 'Content-Type': 'application/json'
@@ -187,7 +187,7 @@ export const CreateRule = (
         var RSEExpression = explicitRSEExpression ? explicitRSEExpression : Page1State.RSEExpression
         // build request for comdom
         const request: HTTPRequest = {
-            url: new URL("http://localhost:3000/api/rseaccountusage"),
+            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/rseaccountusage`),
             method: "GET",
             headers: new Headers({
                 'Content-Type': 'application/json'
