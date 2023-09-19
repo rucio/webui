@@ -8,6 +8,7 @@ const USECASE_FACTORY = {
     DID_META: Symbol.for("Factory<DIDMetaUseCase>"),
     DID_KEYVALUEPAIRS: Symbol.for("Factory<DIDKeyValuePairsDataUseCase>"),
     GET_RSE: Symbol.for("Factory<GetRSEUseCase>"),
+    GET_RSE_PROTOCOLS: Symbol.for("Factory<GetRSEProtocolsUseCase>"),
     GET_SUBSCRIPTION: Symbol.for("Factory<GetSubscriptionUseCase>"),
     LOGIN_CONFIG: Symbol.for("Factory<LoginConfigUseCase>"),
     LIST_DIDS: Symbol.for("Factory<ListDIDsUseCase>"),
