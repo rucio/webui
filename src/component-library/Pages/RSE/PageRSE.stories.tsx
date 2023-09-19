@@ -1,6 +1,6 @@
 import { RSEBlockState } from "@/lib/core/entity/rucio";
 import { StoryFn, Meta } from "@storybook/react";
-import { fixtureRSEViewModel, fixtureRSEProtocolViewModel, fixtureRSEAttributeViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureRSEViewModel, fixtureRSEProtocolViewModel, fixtureRSEAttributeViewModel } from "test/fixtures/table-fixtures";
 import { PageRSE as P } from "./PageRSE";
 
 export default {
@@ -14,7 +14,7 @@ export const PageRSE = Template.bind({});
 PageRSE.args = {
     rse: fixtureRSEViewModel(),
     rseblockstate: 7 as RSEBlockState, // 7 = all blocked
-    protocolscomdom: mockUseComDOM(Array.from({length: 20}, (_, i) => fixtureRSEProtocolViewModel())),
-    attributescomdom: mockUseComDOM(Array.from({ length: 20 }, (_, i) => fixtureRSEAttributeViewModel())),
+    protocols: fixtureRSEProtocolViewModel(),
+    attributes: fixtureRSEAttributeViewModel(),
     fromrselist: true,
 };

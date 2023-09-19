@@ -6,7 +6,6 @@ import { BoolTag } from "../../Tags/BoolTag";
 import { RSETypeTag } from "../../Tags/RSETypeTag";
 import { RSETag } from "../../Tags/RSETag";
 import { RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { PageRSEProtocols } from "./PageRSEProtocols";
 import { PageRSEAttributes } from "./PageRSEAttributes";
 import { H2 } from "../../Text/Headings/H2";
@@ -16,8 +15,8 @@ import { Heading } from "../Helpers/Heading";
 type PageRSEProps = {
     rse: RSEViewModel
     rseblockstate: RSEBlockState
-    protocolscomdom: UseComDOM<RSEProtocolViewModel>
-    attributescomdom: UseComDOM<RSEAttributeViewModel>
+    protocols: RSEProtocolViewModel
+    attributes: RSEAttributeViewModel
     fromrselist?: boolean
 }
 
@@ -78,7 +77,7 @@ export const PageRSE = (
                     )}
                 >
                     <H2>RSE Protocols</H2>
-                    <PageRSEProtocols comdom={props.protocolscomdom} />
+                    <PageRSEProtocols tableData={props.protocols}/>
                 </div>
                 <div
                     className={twMerge(
@@ -87,7 +86,7 @@ export const PageRSE = (
                     )}
                 >
                     <H2>RSE Attributes</H2>
-                    <PageRSEAttributes comdom={props.attributescomdom} />
+                    <PageRSEAttributes attributes={props.attributes.attributes} />
                 </div>
             </Body>
         </div>
