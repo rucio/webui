@@ -58,6 +58,7 @@ import ListDIDContentsFeature from "./features/list-did-contents-feature";
 import GetRSEFeature from "./features/get-rse-feature";
 import GetRSEProtocolsFeature from "./features/get-rse-protocols-feature";
 import GetRSEAttributesFeature from "./features/get-rse-attributes-feature";
+import ListRSEsFeature from "./features/list-rses-feature";
 
 
 /**
@@ -98,6 +99,12 @@ loadFeaturesSync(appContainer, [
     new GetRSEProtocolsFeature(appContainer),
     new GetRSEAttributesFeature(appContainer),
 ])
+
+// Features: List RSE
+loadFeaturesSync(appContainer, [
+    new ListRSEsFeature(appContainer),
+])
+
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);

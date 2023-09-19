@@ -18,6 +18,7 @@ const CONTROLLERS = {
     LIST_DID_RULES: Symbol.for("ListDIDRulesController"),
     LIST_DATASET_REPLICAS: Symbol.for("ListDatasetReplicasController"),
     LIST_FILE_REPLICAS: Symbol.for("ListFileReplicasController"),
+    LIST_RSES: Symbol.for("ListRSEsController"),
     LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsController"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),
     SITE_HEADER: Symbol.for("SiteHeaderController"),
