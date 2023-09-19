@@ -1,6 +1,5 @@
-import { DateISO } from "@/lib/core/entity/rucio"
 import { BaseViewModel } from "@/lib/sdk/view-models"
-import { RSE, RSEAttribute, RSEAccountUsageLimit, RSEProtocol } from "@/lib/core/entity/rucio"
+import { RSE, RSEAttribute, RSEAccountUsageLimit, RSEProtocol, RSEType } from "@/lib/core/entity/rucio"
 
 
 export interface RSEViewModel extends RSE, BaseViewModel {}
@@ -13,7 +12,7 @@ export interface RSEAccountUsageLimitViewModel extends RSEAccountUsageLimit, Bas
 
 export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
     return {
-        status: 'success',
+        status: 'error',
         rse_id: '',
         rse: '',
         account: '',
@@ -21,4 +20,18 @@ export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitVie
         used_bytes: 0,
         quota_bytes: 0,
     } as RSEAccountUsageLimitViewModel
+}
+
+export function generateEmptyRSEViewModel(): RSEViewModel {
+    return {
+        status: 'error',
+        id: '',
+        name: '',
+        rse_type: RSEType.UNKNOWN,
+        volatile: false,
+        deterministic: false,
+        staging_area: false,
+
+
+    } as RSEViewModel
 }
