@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from "@/lib/sdk/dto";
-import { RSE, RSEProtocol } from "@/lib/core/entity/rucio";
+import { RSE, RSEAttribute, RSEProtocol } from "@/lib/core/entity/rucio";
 
 /**
  * The Data Transfer Object for the ListRSEsEndpoint which contains the stream
@@ -21,6 +21,4 @@ export interface RSEProtocolDTO extends BaseDTO {
 /**
  * Data Transfer Object for GET RSE Attributes Endpoint
  */
-export interface RSEAttributeDTO extends BaseDTO {
-    attributes: string[]
-}
+export interface RSEAttributeDTO extends RSEAttribute, BaseDTO {}
