@@ -4,7 +4,9 @@ import { RSE, RSEAttribute, RSEAccountUsageLimit, RSEProtocol, RSEType } from "@
 
 export interface RSEViewModel extends RSE, BaseViewModel {}
 
-export interface RSEProtocolViewModel extends RSEProtocol, BaseViewModel {}
+export interface RSEProtocolViewModel extends BaseViewModel {
+    protocols: RSEProtocol[]
+}
 
 export interface RSEAttributeViewModel extends RSEAttribute, BaseViewModel {}
 
