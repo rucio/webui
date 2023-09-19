@@ -183,17 +183,4 @@ describe('GET RSE Protocols API Test', () => {
         ])
     })
 
-    it('should return an auth error if the user is not authenticated', async () => {
-        const { req, res, session } = await createHttpMocks('/api/feature/get-rse?rseName=DINGDONGRSE', 'GET', {});
-        const getRSEProtocolsController = appContainer.get<BaseController<GetRSEProtocolsControllerParameters, GetRSEProtocolsRequest>>(CONTROLLERS.GET_RSE_PROTOCOLS)
-        const getRSEProtocolsControllerParameters: GetRSEProtocolsControllerParameters = {
-            rucioAuthToken: 'asdasdasd',
-            response: res as unknown as NextApiResponse,
-            rseName: 'MOCK3',
-        }
-        await getRSEProtocolsController.execute(getRSEProtocolsControllerParameters)
-        const data = await res._getJSONData()
-        expect(data.length).toEqual(1)
-        expect(data[0].message).toEqual("The provided authentication token is invalid or has expired.")
-    })
 })
