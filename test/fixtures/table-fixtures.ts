@@ -181,14 +181,17 @@ export function fixtureRSEProtocolViewModel(): RSEProtocolViewModel {
 export function fixtureRSEAttributeViewModel(): RSEAttributeViewModel {
     return {
         ...mockBaseVM(),
-        key: faker.lorem.words(2).replace(/\s/g, "-"),
-        value: faker.helpers.arrayElement([
-            faker.lorem.words(3),
-            faker.date.past().toISOString(),
-            faker.number.int({ min: 0, max: 1e6 }),
-            faker.datatype.boolean(),
-            null,
-        ]),
+        // TODO: @ThePhisch changing this to fix builds, see #344
+        attributes: [{
+            key: faker.lorem.words(2).replace(/\s/g, "-"),
+            value: faker.helpers.arrayElement([
+                faker.lorem.words(3),
+                faker.date.past().toISOString(),
+                faker.number.int({ min: 0, max: 1e6 }),
+                faker.datatype.boolean(),
+                null,
+            ]),
+        }]
     }
 }
 

@@ -8,13 +8,15 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { BoolTag } from "../../Tags/BoolTag";
 import { NullTag } from "../../Tags/NullTag";
 import { RSEAttributeViewModel } from "@/lib/infrastructure/data/view-model/rse";
+import { RSEAttribute } from "@/lib/core/entity/rucio";
 
 export const PageRSEAttributes = (
     props: {
+        // TODO: @ThePhisch data will not be streamed, but loaded in one go
         comdom: UseComDOM<RSEAttributeViewModel>
     }
 ) => {
-    const columnHelper = createColumnHelper<RSEAttributeViewModel>()
+    const columnHelper = createColumnHelper<RSEAttribute>()
     const tablecolumns: any[] = [
         columnHelper.accessor("key", {
             id: "key",
