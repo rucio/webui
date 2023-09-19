@@ -6,16 +6,18 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable.stories";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { H3 } from "../../Text/Headings/H3";
 import { RSEProtocolViewModel } from "@/lib/infrastructure/data/view-model/rse";
+import { RSEProtocol } from "@/lib/core/entity/rucio";
 
 export const PageRSEProtocols = (
     props: {
+        // TODO: data will not be streamed, but loaded in one go
         comdom: UseComDOM<RSEProtocolViewModel>
     }
 ) => {
     const shortstyle = { style: "w-20" }
     const shortstyleblue = { style: "w-20 bg-blue-100"}
     const shortstylepink = { style: "w-20 bg-pink-100"}
-    const columnHelper = createColumnHelper<RSEProtocolViewModel>()
+    const columnHelper = createColumnHelper<RSEProtocol>()
     const tablecolumns: any[] = [
         columnHelper.accessor("scheme", {
             id: "scheme",

@@ -29,7 +29,7 @@ export default class GetRSEProtocolsFeature extends BaseFeature<
     GetRSEProtocolsRequest,
     GetRSEProtocolsResponse,
     GetRSEProtocolsError,
-    RSEProtocolViewModel[]
+    RSEProtocolViewModel
 > {
     constructor(appContainer: Container) {
         const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE)

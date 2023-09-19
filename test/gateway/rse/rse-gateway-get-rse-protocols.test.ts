@@ -167,7 +167,7 @@ describe('RSEGateway GET RSE Protocols Endpoint Tests', () => {
 
     })
     
-      afterEach(() => {
+    afterEach(() => {
         fetchMock.dontMock();
     })
 })
