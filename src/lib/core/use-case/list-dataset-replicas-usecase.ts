@@ -41,6 +41,19 @@ export default class ListDatasetReplicasUseCase extends BaseSingleEndpointStream
     }
 
     processStreamedData(dto: DatasetReplicasDTO): { data: ListDatasetReplicasResponse | ListDatasetReplicasError; status: "success" | "error"; } {
+        if(dto.status === 'error') {
+            const errorModel: ListDatasetReplicasError = {
+                    status: 'error',
+                    code: dto.errorCode || 500,
+                    message: dto.errorMessage || 'Could not fetch or process the fetched data',
+                    name: dto.errorName || 'Gateway Error',
+            }
+            return {
+                status: 'error',
+                data: errorModel,
+            }
+        }
+        
         const responseModel: ListDatasetReplicasResponse = {
             ...dto,
             status: 'success',

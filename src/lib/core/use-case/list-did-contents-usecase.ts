@@ -41,6 +41,18 @@ export default class ListDIDContentsUseCase extends BaseSingleEndpointStreamingU
     }
 
     processStreamedData(dto: DIDDTO): { data: ListDIDContentsResponse | ListDIDContentsError; status: "success" | "error"; } {
+        if(dto.status === 'error') {
+            const errorModel: ListDIDContentsError = {
+                    status: 'error',
+                    code: dto.errorCode || 500,
+                    message: dto.errorMessage || 'Could not fetch or process the fetched data',
+                    name: dto.errorName || 'Gateway Error',
+            }
+            return {
+                status: 'error',
+                data: errorModel,
+            }
+        }
         const responseModel: ListDIDContentsResponse = {
             ...dto,
             status: 'success',
