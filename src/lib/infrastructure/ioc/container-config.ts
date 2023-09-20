@@ -59,6 +59,7 @@ import GetRSEFeature from "./features/get-rse-feature";
 import GetRSEProtocolsFeature from "./features/get-rse-protocols-feature";
 import GetRSEAttributesFeature from "./features/get-rse-attributes-feature";
 import ListRSEsFeature from "./features/list-rses-feature";
+import ListAllRSEsFeature from "./features/list-all-rses-feature";
 
 
 /**
@@ -103,6 +104,11 @@ loadFeaturesSync(appContainer, [
 // Features: List RSE
 loadFeaturesSync(appContainer, [
     new ListRSEsFeature(appContainer),
+])
+
+// Features: Create Rule
+loadFeaturesSync(appContainer, [
+    new ListAllRSEsFeature(appContainer),
 ])
 
 
