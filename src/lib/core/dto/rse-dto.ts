@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from "@/lib/sdk/dto";
-import { RSE, RSEAttribute, RSEProtocol } from "@/lib/core/entity/rucio";
+import { RSE, RSEAttribute, RSEProtocol, RSEType } from "@/lib/core/entity/rucio";
 
 /**
  * The Data Transfer Object for the ListRSEsEndpoint which contains the stream
@@ -23,4 +23,16 @@ export interface RSEProtocolDTO extends BaseDTO {
  */
 export interface RSEAttributeDTO extends BaseDTO {
     attributes: RSEAttribute[]
+}
+
+export function getEmptyRSEDTO(): RSEDTO {
+    return {
+        status: 'error',
+        id: '',
+        name: '',
+        rse_type: RSEType.UNKNOWN,
+        volatile: false,
+        staging_area: false,
+        deterministic: false,
+    }
 }
