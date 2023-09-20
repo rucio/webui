@@ -24,6 +24,7 @@ class ListDIDsController extends BaseController<ListDIDsControllerParameters, Au
         switch(type) {
             case 'container': {
                 did_type = DIDType.CONTAINER;
+                break;
             }
             case 'dataset': {
                 did_type = DIDType.DATASET;
