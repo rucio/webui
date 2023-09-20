@@ -58,6 +58,9 @@ export type TRucioRSEProtocol = {
  * @returns {@link RSEType}
  */
 function getRSEType(rseType: string): RSEType {
+    if(rseType === undefined || rseType === null || rseType === ''){
+        return RSEType.UNKNOWN
+    }
     switch(rseType.toUpperCase()) {
         case 'DISK':
             return RSEType.DISK
