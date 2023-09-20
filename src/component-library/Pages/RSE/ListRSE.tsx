@@ -14,12 +14,19 @@ import useReponsiveHook from "../../Helpers/ResponsiveHook";
 import { Body } from "../Helpers/Body";
 import { Heading } from "../Helpers/Heading";
 import { RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
+import { TextInput } from "@/component-library/Input/TextInput";
+import { useState } from "react";
+import { Button } from "@/component-library/Button/Button";
 
 export const ListRSE = (
     props: {
         comdom: UseComDOM<RSEViewModel>
+        setRSEQuery: (rseExpression: string) => void
     }
 ) => {
+
+    const [rseSearchQuery, setRSESearchQuery] = useState<string>("")
+
     const columnHelper = createColumnHelper<RSEViewModel>()
     const tablecolumns = [
         columnHelper.accessor("name", {
@@ -36,7 +43,7 @@ export const ListRSE = (
             },
             cell: info => {
                 return (
-                    <TableInternalLink href={"/rse/" + info.getValue()}>
+                    <TableInternalLink href={"/rse/page/" + info.getValue()}>
                         {info.getValue()}
                     </TableInternalLink>
                 )
@@ -120,7 +127,47 @@ export const ListRSE = (
         >
             <Heading
                 title="List RSEs"
-            />
+            >
+                <form
+                    className={twMerge(
+                        "flex flex-col sm:flex-row sm:space-x-2 sm:items-end w-full",
+                    )}
+                    aria-label="RSE Search"
+                >
+                    <label
+                        className={twMerge(
+                            "w-fit flex-none",
+                            "text-black dark:text-white"
+                        )}
+                        htmlFor='rse-search-pattern'
+                    >
+                        RSE Search Pattern
+                    </label>
+                    <TextInput
+                        onBlur={(event: any) => { setRSESearchQuery(event.target.value) }}
+                        onEnterkey={async (e: any) => {
+                            e.preventDefault()
+                            await props.setRSEQuery(e.target.value)
+                            setRSESearchQuery(e.target.value)
+                            props.comdom.start()
+                        }}
+                        id="rse-search-pattern"
+                    />
+                    <Button
+                        type="button"
+                        label="Search"
+                        onClick={async (e: any) => {
+                            e.preventDefault()
+                            await props.setRSEQuery(rseSearchQuery)
+                            props.comdom.start()
+                        }}
+                        className={twMerge(
+                            "w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0"
+                        )}
+                        id="rse-button-search"
+                    />
+                </form>
+            </Heading>
             <Body>
                 <StreamedTable<RSEViewModel>
                     tablecomdom={props.comdom}
