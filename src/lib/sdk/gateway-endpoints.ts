@@ -228,8 +228,15 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
                 errorMessage: `An error occurred while fetching ${this.request.url}`,
             } as TDTO;
         } else {
-            const data = await response.json();
-            return this.createDTO(data);
+            try {
+                const data = await response.json();
+                return this.createDTO(data);
+            } catch(error) {
+                return {
+                    status: 'error',
+                    errorMessage: `An error occurred while fetching ${this.request.url}. Error: ${error}}`,
+                } as TDTO;
+            }
         }
     }
 }

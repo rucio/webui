@@ -14,6 +14,14 @@ export default class GetRSEPipelineElement extends BaseStreamingPostProcessingPi
         try {
             const { rucioAuthToken } = requestModel;
             const rseName = responseModel.name;
+            if(!rseName) {
+                const errorDTO: RSEDTO = getEmptyRSEDTO();
+                errorDTO.status = 'error';
+                errorDTO.errorCode = 400;
+                errorDTO.errorName = 'Invalid Request';
+                errorDTO.errorMessage = 'RSE Name not found in response model';
+                return errorDTO;
+            }
             const dto: RSEDTO = await this.gateway.getRSE(rucioAuthToken, rseName);
             return dto;
         } catch (error: any) {
@@ -27,7 +35,6 @@ export default class GetRSEPipelineElement extends BaseStreamingPostProcessingPi
     }
 
     handleGatewayError(dto: RSEDTO): ListRSEsError {
-        
         const errorModel: ListRSEsError = {
             status: 'error',
             name: dto.name,
