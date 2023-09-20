@@ -51,6 +51,21 @@ class ListSubscriptionsUseCase extends BaseSingleEndpointStreamingUseCase<
     }
 
     processStreamedData(dto: SubscriptionDTO): { data: ListSubscriptionsError | ListSubscriptionsResponse; status: "success" | "error"; } {
+        if(dto.status === 'error') {
+            const errorModel: ListSubscriptionsError = {
+                    status: 'error',
+                    error: dto.errorName || 'Gateway Error',
+                    code: dto.errorCode || 500,
+                    message: dto.errorMessage || 'Could not fetch or process the fetched data',
+                    name: dto.errorName || 'Gateway Error',
+            }
+            
+            return {
+                status: 'error',
+                data: errorModel,
+            }
+        }
+
         const responseModel: ListSubscriptionsResponse = {
             ...dto,
             status: 'success',

@@ -42,11 +42,17 @@ export default class ListRSEsUseCase extends BaseSingleEndpointStreamingUseCase<
 
     processStreamedData(dto: RSEDTO): { data: ListRSEsResponse | ListRSEsError; status: "success" | "error"; } {
         // TODO: process streamed data
-        const errorModel: ListRSEsError = {
+        if(dto.status === 'error') {
+            const errorModel: ListRSEsError = {
+                    status: 'error',
+                    code: dto.errorCode || 500,
+                    message: dto.errorMessage || 'Could not fetch or process the fetched data',
+                    name: dto.errorName || 'Gateway Error',
+            }
+            return {
                 status: 'error',
-                code: 400,
-                message: 'Gateway recieved an invalid (undefined) response for the query',
-                name: 'Gateway Error: Undefined response in stream',
+                data: errorModel,
+            }
         }
         
         // TODO: convert to response model

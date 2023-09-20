@@ -41,11 +41,17 @@ export default class ListFileReplicasUseCase extends BaseSingleEndpointStreaming
     }
 
     processStreamedData(dto: FileReplicaStateDTO): { data: ListFileReplicasResponse | ListFileReplicasError; status: "success" | "error"; } {
-        const errorModel: ListFileReplicasError = {
+        if(dto.status === 'error') {
+            const errorModel: ListFileReplicasError = {
+                    status: 'error',
+                    code: dto.errorCode || 500,
+                    message: dto.errorMessage || 'Could not fetch or process the fetched data',
+                    name: dto.errorName || 'Gateway Error',
+            }
+            return {
                 status: 'error',
-                code: 400,
-                message: 'Gateway recieved an invalid (undefined) response for the query',
-                name: 'Gateway Error: Undefined response in stream',
+                data: errorModel,
+            }
         }
         
         const responseModel: ListFileReplicasResponse = {

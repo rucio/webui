@@ -57,6 +57,18 @@ class ListDIDRulesUseCase extends BaseSingleEndpointPostProcessingPipelineStream
     }
 
     processStreamedData(dto: DIDRulesDTO): { data: ListDIDRulesResponse | ListDIDRulesError; status: "error" | "success"; } {
+        if(dto.status === 'error') {
+            const errorModel: ListDIDRulesError = {
+                    status: 'error',
+                    code: dto.errorCode || 500,
+                    message: dto.errorMessage || 'Could not fetch or process the fetched data',
+                    name: dto.errorName || 'Gateway Error',
+            }
+            return {
+                status: 'error',
+                data: errorModel,
+            }
+        }
         const responseModel: ListDIDRulesResponse = {
             ...dto,
             status: 'success',
