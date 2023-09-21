@@ -29,6 +29,11 @@ export const config = {
     ]
 }
 
+async function reLogin(request: NextRequest) {
+    const logoutPage = new URL(`/api/auth/logout?callbackUrl=${request.url}`, request.url)
+    return NextResponse.redirect(logoutPage)
+}
+
 async function initiateLogin(request: NextRequest){
     const loginPage = new URL(`/api/auth/login?callbackUrl=${request.url}`, request.url)
     return NextResponse.redirect(loginPage)
@@ -40,16 +45,20 @@ export async function middleware(request: NextRequest) {
         const session = await getSession(request, response)
         
         // check session
-        if(!session || !session.user || !session.user.isLoggedIn || !session.user.rucioAuthToken) {
+        if(!session || !session.user) {
             return await initiateLogin(request)
         }
 
+        // check if user is logged in and token exists
+        if(!session.user.isLoggedIn || !session.user.rucioAuthToken) {
+            return await reLogin(request)
+        }
         // check if rucio token is valid
         try {
             validateRucioToken(session.user)
         }
         catch(error) {
-            return await initiateLogin(request)
+            return await reLogin(request)
         }
 
         // All checks have passed, redirect to the original request if it exists
