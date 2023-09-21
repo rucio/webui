@@ -258,6 +258,33 @@ export type RSEAttribute = {
     value: string| DateISO | number | boolean | null,
 }
 
+/**
+ * Represents a transfer request in Rucio.
+ */
+export type Request = {
+    id: string,
+    request_type: RequestType,
+    scope: string,
+    name: string,
+    did_type: DIDType,
+    dest_rse_id: string,
+    source_rse_id: string | null,
+    attributes: string,
+    state: RequestState,
+    activity: string,
+    bytes: number,
+    submitted_at?: DateISO,
+    started_at?: DateISO,
+    transferred_at?: DateISO,
+    submitter_id?: number,
+    estimated_started_at?: DateISO,
+    estimated_transferred_at?: DateISO,
+    account: string,
+    requested_at: DateISO,
+    priority: number,
+    transfertool: string,
+}
+
 /*
 ================================================================================
 ========================= ENUMS and DISCRETE TYPES =============================
@@ -340,6 +367,34 @@ export enum SubscriptionState {
     UPDATED = "U",
     BROKEN = "B",
     UNKNOWN = "UNKNOWN",
+}
+
+// rucio.db.sqla.constants::RequestType
+// T/U/D/I/O
+export enum RequestType {
+    TRANSFER = "T",
+    UPLOAD = "U",
+    DOWNLOAD = "D",
+    STAGEIN = "I",
+    STAGEOUT = "O",
+}
+
+// rucio.db.sqla.constants::RequestState
+// Q/G/S/F/D/L/N/O/A/M/U/W/P
+export enum RequestState {
+    QUEUED = "Q",
+    SUBMITTING = "G",
+    SUBMITTED = "S",
+    FAILED = "F",
+    DONE = "D",
+    LOST = "L",
+    NO_SOURCES = "N",
+    ONLY_TAPE_SOURCES = "O",
+    SUBMISSION_FAILED = "A",
+    MISMATCH_SCHEME = "M",
+    SUSPEND = "U",
+    WAITING = "W",
+    PREPARING = "P",
 }
 
 // octal representation of the blockstate
