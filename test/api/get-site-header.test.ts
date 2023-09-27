@@ -2,14 +2,14 @@ import { SessionUser } from "@/lib/core/entity/auth-models";
 import { addOrUpdateSessionUser, setEmptySession } from "@/lib/infrastructure/auth/session-utils";
 import appContainer from "@/lib/infrastructure/ioc/container-config";
 import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
-import { ISiteHeaderController } from "@/lib/infrastructure/controller/site-header-controller";
+import { IGetSiteHeaderController } from "@/lib/infrastructure/controller/get-site-header-controller";
 import { SiteHeaderViewModel } from "@/lib/infrastructure/data/view-model/site-header";
 import { getIronSession } from "iron-session";
 import { NextApiRequest } from "next";
 import { createMocks } from "node-mocks-http";
 import { createHttpMocks } from "test/fixtures/http-fixtures";
 
-describe('SiteHeader API Test', () => {
+describe('Get SiteHeader API Test', () => {
     it('should present successful SiteHeaderViewModel', async () => {
         const { req, res } = createMocks({
             url: 'http://testhost:3000/api/site-header',
@@ -35,7 +35,7 @@ describe('SiteHeader API Test', () => {
             rucioVO: 'def',
         } as SessionUser)
 
-        const siteHeaderController = appContainer.get<ISiteHeaderController>(CONTROLLERS.SITE_HEADER)
+        const siteHeaderController = appContainer.get<IGetSiteHeaderController>(CONTROLLERS.SITE_HEADER)
         await siteHeaderController.handle(session, res as undefined as NextApiRequest);
 
         expect(res._getStatusCode()).toBe(200);
@@ -51,7 +51,7 @@ describe('SiteHeader API Test', () => {
 
     it('should present SiteHeaderViewModel when Session does not contain any users', async () => {
         const { req, res, session } = await createHttpMocks() 
-        const siteHeaderController = appContainer.get<ISiteHeaderController>(CONTROLLERS.SITE_HEADER)
+        const siteHeaderController = appContainer.get<IGetSiteHeaderController>(CONTROLLERS.SITE_HEADER)
         await siteHeaderController.handle(session, res as undefined as NextApiRequest);
         
         expect(res._getStatusCode()).toBe(418);

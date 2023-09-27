@@ -4,12 +4,12 @@ import { IronSession } from "iron-session";
 import { NextApiRequest, NextApiResponse } from "next";
 import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
-export interface ISiteHeaderController {
+export interface IGetSiteHeaderController {
     handle(session: IronSession, response: NextApiResponse): Promise<void>;
 }
 
 @injectable()
-class SiteHeaderController implements ISiteHeaderController {
+class GetSiteHeaderController implements IGetSiteHeaderController {
     private useCase: SiteHeaderInputPort | null = null
     private useCaseFactory: (response: NextApiResponse) => SiteHeaderInputPort
     constructor(
@@ -23,4 +23,4 @@ class SiteHeaderController implements ISiteHeaderController {
     }
 }
 
-export default SiteHeaderController;
+export default GetSiteHeaderController;
