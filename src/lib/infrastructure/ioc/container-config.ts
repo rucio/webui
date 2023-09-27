@@ -31,7 +31,7 @@ import StreamingController, { IStreamingController } from "../controller/streami
 import StreamPresenter from "../presenter/stream-presenter";
 import SiteHeaderInputPort from "@/lib/core/port/primary/site-header-input-port";
 import SiteHeaderUseCase from "@/lib/core/use-case/site-header-usecase";
-import SiteHeaderController, { ISiteHeaderController } from "../controller/site-header-controller";
+import GetSiteHeaderController, { IGetSiteHeaderController } from "../controller/get-site-header-controller";
 import SiteHeaderPresenter from "../presenter/site-header-presenter";
 import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input-port";
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
@@ -142,7 +142,7 @@ appContainer.bind<interfaces.Factory<StreamInputPort<RSEOld>>>(USECASE_FACTORY.S
 );
 
 appContainer.bind<SiteHeaderInputPort>(INPUT_PORT.SITE_HEADER).to(SiteHeaderUseCase).inRequestScope();
-appContainer.bind<ISiteHeaderController>(CONTROLLERS.SITE_HEADER).to(SiteHeaderController);
+appContainer.bind<IGetSiteHeaderController>(CONTROLLERS.SITE_HEADER).to(GetSiteHeaderController);
 appContainer.bind<interfaces.Factory<SiteHeaderInputPort>>(USECASE_FACTORY.SITE_HEADER).toFactory<SiteHeaderUseCase, [NextApiResponse]>((context: interfaces.Context) =>
     (response: NextApiResponse) => {
         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
