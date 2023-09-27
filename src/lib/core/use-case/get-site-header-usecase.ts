@@ -1,18 +1,20 @@
 import { injectable } from "inversify";
 import { IronSession } from "iron-session";
-import { SiteHeaderResponse } from "../usecase-models/site-header-usecase-models";
+import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from "../usecase-models/get-site-header-usecase-models";
 import type { User } from "../entity/auth-models";
-import SiteHeaderInputPort from "../port/primary/site-header-input-port";
-import type SiteHeaderOutputPort from "../port/primary/site-header-output-port";
+import type { GetSiteHeaderInputPort, GetSiteHeaderOutputPort } from "../port/primary/get-site-header-ports";
 import type EnvConfigGatewayOutputPort from "../port/secondary/env-config-gateway-output-port";
+import { BaseUseCase } from "@/lib/sdk/usecase";
 
 
 @injectable()
-class SiteHeaderUseCase implements SiteHeaderInputPort {
+class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHeaderResponse, GetSiteHeaderError>implements GetSiteHeaderInputPort {
+    
     constructor(
-        private presenter: SiteHeaderOutputPort<any>,
-        private envConfigGateway: EnvConfigGatewayOutputPort,
+        protected readonly presenter: GetSiteHeaderOutputPort,
+        private readonly envConfigGateway: EnvConfigGatewayOutputPort,
     ) {
+        super(presenter);
         this.presenter = presenter;
         this.envConfigGateway = envConfigGateway;
     }
@@ -58,7 +60,8 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
 
         const homeUrl = `/dashboard`;
 
-        const baseResponseModel: SiteHeaderResponse = {
+        const baseResponseModel: GetSiteHeaderResponse = {
+            status: 'success',
             homeUrl: homeUrl,
             activeUser: activeUser,
             availableUsers: allUsers,
@@ -68,7 +71,11 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
         if(!activeUser){
             await this.presenter.presentError({
                 ...baseResponseModel,
-                error: 'no-active-user'
+                status: 'error',
+                error: 'no-active-user',
+                message: 'No active user found',
+                name: 'no-active-user',
+                code: 418,
             })
             return;
         }
@@ -76,13 +83,25 @@ class SiteHeaderUseCase implements SiteHeaderInputPort {
         if(!projectURL) {
             await this.presenter.presentError({
                 ...baseResponseModel,
-                error: 'project-url-not-found'
+                status: 'error',
+                error: 'project-url-not-found',
+                message: 'Project URL not found',
+                name: 'project-url-not-found',
+                code: 500,
             })
             return;
         }
         
         await this.presenter.presentSuccess(baseResponseModel);
     }
+
+    validateRequestModel(requestModel: GetSiteHeaderRequest): GetSiteHeaderError | undefined {
+        return undefined;
+    }
+    
+    async execute(requestModel: GetSiteHeaderRequest): Promise<void> {
+       await this.generateSiteHeader(requestModel.session);
+    }
 }
 
-export default SiteHeaderUseCase;
+export default GetSiteHeaderUseCase;

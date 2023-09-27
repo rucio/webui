@@ -27,5 +27,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "babel.config.js"],
-  "exclude": ["node_modules", "**/*FullFilter.stories.tsx"]
+  "exclude": ["node_modules", "**/*FullFilter.stories.tsx", "tools/meow-maker/**/*"]
 }
