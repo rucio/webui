@@ -29,10 +29,9 @@ import StreamUseCase from "@/lib/core/use-case/stream-usecase";
 import { RSEOld } from "@/lib/core/entity/rucio";
 import StreamingController, { IStreamingController } from "../controller/streaming-controller";
 import StreamPresenter from "../presenter/stream-presenter";
-import SiteHeaderInputPort from "@/lib/core/port/primary/site-header-input-port";
-import SiteHeaderUseCase from "@/lib/core/use-case/site-header-usecase";
-import GetSiteHeaderController, { IGetSiteHeaderController } from "../controller/get-site-header-controller";
-import SiteHeaderPresenter from "../presenter/site-header-presenter";
+import GetSiteHeaderUseCase from "@/lib/core/use-case/get-site-header-usecase";
+import GetSiteHeaderController, { GetSiteHeaderControllerParameters } from "../controller/get-site-header-controller";
+import GetSiteHeaderPresenter from "../presenter/get-site-header-presenter";
 import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input-port";
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
 import SwitchAccountController, { ISwitchAccountController } from "../controller/switch-account-controller";
@@ -60,6 +59,7 @@ import GetRSEProtocolsFeature from "./features/get-rse-protocols-feature";
 import GetRSEAttributesFeature from "./features/get-rse-attributes-feature";
 import ListRSEsFeature from "./features/list-rses-feature";
 import ListAllRSEsFeature from "./features/list-all-rses-feature";
+import GetSiteHeaderFeature from "./features/get-site-header-feature";
 
 
 /**
@@ -74,6 +74,12 @@ appContainer.bind<RSEGatewayOutputPort>(GATEWAYS.RSE).to(RSEGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
 appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
 appContainer.bind<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA).to(ReplicaGateway);
+
+
+// Load Common Features
+loadFeaturesSync(appContainer, [
+    new GetSiteHeaderFeature(appContainer),
+])
 
 // Load Auth Features/Usecases
 loadFeaturesSync(appContainer, [
@@ -141,15 +147,15 @@ appContainer.bind<interfaces.Factory<StreamInputPort<RSEOld>>>(USECASE_FACTORY.S
     }
 );
 
-appContainer.bind<SiteHeaderInputPort>(INPUT_PORT.SITE_HEADER).to(SiteHeaderUseCase).inRequestScope();
-appContainer.bind<IGetSiteHeaderController>(CONTROLLERS.SITE_HEADER).to(GetSiteHeaderController);
-appContainer.bind<interfaces.Factory<SiteHeaderInputPort>>(USECASE_FACTORY.SITE_HEADER).toFactory<SiteHeaderUseCase, [NextApiResponse]>((context: interfaces.Context) =>
-    (response: NextApiResponse) => {
-        const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
-        const presenter = new SiteHeaderPresenter(response)
-        return new SiteHeaderUseCase(presenter, envConfigGateway);
-    }
-);
+// appContainer.bind<GetSiteHeaderInputPort>(INPUT_PORT.GET_SITE_HEADER).to(GetSiteHeaderUseCase).inRequestScope();
+// appContainer.bind<GetSiteHeaderControllerParameters>(CONTROLLERS.GET_SITE_HEADER).to(GetSiteHeaderController);
+// appContainer.bind<interfaces.Factory<GetSiteHeaderInputPort>>(USECASE_FACTORY.GET_SITE_HEADER).toFactory<GetSiteHeaderUseCase, [NextApiResponse]>((context: interfaces.Context) =>
+//     (response: NextApiResponse) => {
+//         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
+//         const presenter = new GetSiteHeaderPresenter(response)
+//         return new GetSiteHeaderUseCase(presenter, envConfigGateway);
+//     }
+// );
 
 appContainer.bind<SwitchAccountInputPort>(INPUT_PORT.SWITCH_ACCOUNT).to(SwitchAccountUseCase).inRequestScope();
 appContainer.bind<ISwitchAccountController>(CONTROLLERS.SWITCH_ACCOUNT).to(SwitchAccountController);

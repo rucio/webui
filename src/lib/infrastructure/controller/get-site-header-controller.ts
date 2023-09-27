@@ -1,25 +1,31 @@
-import SiteHeaderInputPort from "@/lib/core/port/primary/site-header-input-port";
+import { GetSiteHeaderInputPort } from "@/lib/core/port/primary/get-site-header-ports";
+import { GetSiteHeaderRequest } from "@/lib/core/usecase-models/get-site-header-usecase-models";
+import { BaseController, TAuthenticatedControllerParameters, TSimpleControllerParameters } from "@/lib/sdk/controller";
 import { inject, injectable } from "inversify";
 import { IronSession } from "iron-session";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 
-export interface IGetSiteHeaderController {
-    handle(session: IronSession, response: NextApiResponse): Promise<void>;
+
+// Note: TAuthenticatedControllerParameters is NOT required, but is used to avoid type errors
+// Yes, it is a hack
+export type GetSiteHeaderControllerParameters = TSimpleControllerParameters & {
+    session: IronSession;
 }
 
 @injectable()
-class GetSiteHeaderController implements IGetSiteHeaderController {
-    private useCase: SiteHeaderInputPort | null = null
-    private useCaseFactory: (response: NextApiResponse) => SiteHeaderInputPort
+class GetSiteHeaderController extends BaseController<GetSiteHeaderControllerParameters, GetSiteHeaderRequest> {
+    
     constructor(
-        @inject(USECASE_FACTORY.SITE_HEADER) useCaseFactory: (response: NextApiResponse) => SiteHeaderInputPort,
-    ){
-        this.useCaseFactory = useCaseFactory;
+        @inject(USECASE_FACTORY.GET_SITE_HEADER) getSiteHeaderUseCaseFactory: (response: NextApiResponse) => GetSiteHeaderInputPort,
+    ) {
+        super(getSiteHeaderUseCaseFactory);
     }
-    async handle(session: IronSession, response: NextApiResponse) {
-        this.useCase = this.useCaseFactory(response);
-        await this.useCase.generateSiteHeader(session)
+    
+    prepareRequestModel(parameters: GetSiteHeaderControllerParameters): GetSiteHeaderRequest{
+        return {
+            session: parameters.session,
+        }
     }
 }
 

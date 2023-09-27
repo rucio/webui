@@ -2,10 +2,11 @@ import { SessionUser } from "@/lib/core/entity/auth-models";
 import { addOrUpdateSessionUser, setEmptySession } from "@/lib/infrastructure/auth/session-utils";
 import appContainer from "@/lib/infrastructure/ioc/container-config";
 import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
-import { IGetSiteHeaderController } from "@/lib/infrastructure/controller/get-site-header-controller";
+import GetSiteHeaderController from "@/lib/infrastructure/controller/get-site-header-controller";
+import { GetSiteHeaderControllerParameters } from "@/lib/infrastructure/controller/get-site-header-controller";
 import { SiteHeaderViewModel } from "@/lib/infrastructure/data/view-model/site-header";
 import { getIronSession } from "iron-session";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { createHttpMocks } from "test/fixtures/http-fixtures";
 
@@ -35,8 +36,12 @@ describe('Get SiteHeader API Test', () => {
             rucioVO: 'def',
         } as SessionUser)
 
-        const siteHeaderController = appContainer.get<IGetSiteHeaderController>(CONTROLLERS.SITE_HEADER)
-        await siteHeaderController.handle(session, res as undefined as NextApiRequest);
+        const getSiteHeaderController = appContainer.get<GetSiteHeaderController>(CONTROLLERS.GET_SITE_HEADER)
+        const getSiteHeaderControllerParameters = {
+            session: session,
+            response: res as unknown as NextApiResponse,
+        }
+        await getSiteHeaderController.execute(getSiteHeaderControllerParameters);
 
         expect(res._getStatusCode()).toBe(200);
         const viewModel: SiteHeaderViewModel = JSON.parse(res._getData());
@@ -51,12 +56,15 @@ describe('Get SiteHeader API Test', () => {
 
     it('should present SiteHeaderViewModel when Session does not contain any users', async () => {
         const { req, res, session } = await createHttpMocks() 
-        const siteHeaderController = appContainer.get<IGetSiteHeaderController>(CONTROLLERS.SITE_HEADER)
-        await siteHeaderController.handle(session, res as undefined as NextApiRequest);
+        const siteHeaderController = appContainer.get<GetSiteHeaderController>(CONTROLLERS.GET_SITE_HEADER)
+        await siteHeaderController.execute({
+            session: session,
+            response: res as unknown as NextApiResponse,
+        });
         
         expect(res._getStatusCode()).toBe(418);
         const data = JSON.parse(res._getData());
-        expect(data.error).toBe('no-active-user')
+        expect(data.message).toBe('no-active-user')
         expect(data).not.toHaveProperty('projectUrl');
         expect(data).not.toHaveProperty('activeAccount');
         expect(data).toHaveProperty('homeUrl');
