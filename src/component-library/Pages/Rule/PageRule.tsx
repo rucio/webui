@@ -24,11 +24,14 @@ import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { Heading } from "../Helpers/Heading";
 import { Body } from "../Helpers/Body";
 import { RuleMetaViewModel, RulePageLockEntryViewModel } from "@/lib/infrastructure/data/view-model/rule";
+import { Button } from "@/component-library/Button/Button";
+import { HiRocketLaunch } from "react-icons/hi2";
 
 
 export interface PageRulePageProps {
     ruleMeta: RuleMetaViewModel;
     ruleLocks: UseComDOM<RulePageLockEntryViewModel>
+    ruleBoostFunc: () => void;
 }
 
 
@@ -152,7 +155,21 @@ export const PageRule = (
             <Heading
                 title="View Rule"
                 subtitle={`For rule ${props.ruleMeta.scope}:${props.ruleMeta.name}`}
-            />
+                >
+                <div
+                    className={twMerge(
+                        "w-full p-2 rounded",
+                        "bg-gray-200 dark:bg-gray-900",
+                    )}
+                >
+                    <Button
+                        label="Boost rule"
+                        theme="orange"
+                        icon={<HiRocketLaunch />}
+                        onClick={() => props.ruleBoostFunc()}
+                    />
+                </div>
+            </Heading>
             <Body>
                 <Tabs
                     tabs={

@@ -37,6 +37,7 @@ export default function PageRule({ params }: { params: { id: string } }) {
         <PageRuleStory
             ruleMeta={meta}
             ruleLocks={comDOM}
+            ruleBoostFunc={() => {console.log("boost not implemented")}}
         />
     )
 }

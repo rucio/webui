@@ -14,4 +14,5 @@ export const PageRule = Template.bind({});
 PageRule.args = {
     ruleMeta: fixtureRuleMetaViewModel(),
     ruleLocks: mockUseComDOM<RulePageLockEntryViewModel>(Array.from({length: 100}, () => fixtureRulePageLockEntryViewModel())),
+    ruleBoostFunc: () => {console.log("boosted rule")}
 };
