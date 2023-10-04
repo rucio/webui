@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { HTTPRequest } from "@/lib/sdk/http";
 import { RuleMetaViewModel, RulePageLockEntryViewModel } from "@/lib/infrastructure/data/view-model/rule";
+import { getSiteHeader } from "@/app/(rucio)/queries";
+import { SiteHeaderViewModel } from "@/lib/infrastructure/data/view-model/site-header";
 
 export default function PageRule({ params }: { params: { id: string } }) {
     const comDOM = useComDOM<RulePageLockEntryViewModel>(
@@ -15,9 +17,15 @@ export default function PageRule({ params }: { params: { id: string } }) {
         50,
         true
     )
+    const [isAdmin, setIsAdmin] = useState<boolean>(false)
+    useEffect(() => {
+        getSiteHeader().then((vm: SiteHeaderViewModel) =>
+            setIsAdmin(vm.activeAccount?.role === 'admin'),
+        )
+    }, [])
     const [meta, setMeta] = useState<RuleMetaViewModel>({} as RuleMetaViewModel)
     useEffect(() => {
-        setMeta({...fixtureRuleMetaViewModel(), id: params.id})
+        setMeta({ ...fixtureRuleMetaViewModel(), id: params.id })
     }, [])
     useEffect(() => {
         const runQuery = async () => {
@@ -37,7 +45,10 @@ export default function PageRule({ params }: { params: { id: string } }) {
         <PageRuleStory
             ruleMeta={meta}
             ruleLocks={comDOM}
-            ruleBoostFunc={() => {console.log("boost not implemented")}}
+            ruleBoostFunc={() => {
+                console.log('boost not implemented')
+            }}
+            ruleBoostShow={isAdmin}
         />
     )
 }

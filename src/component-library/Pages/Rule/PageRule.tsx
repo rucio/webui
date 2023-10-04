@@ -32,6 +32,7 @@ export interface PageRulePageProps {
     ruleMeta: RuleMetaViewModel;
     ruleLocks: UseComDOM<RulePageLockEntryViewModel>
     ruleBoostFunc: () => void;
+    ruleBoostShow: boolean;
 }
 
 
@@ -160,6 +161,7 @@ export const PageRule = (
                     className={twMerge(
                         "w-full p-2 rounded",
                         "bg-gray-200 dark:bg-gray-900",
+                        props.ruleBoostShow ? "" : "hidden"
                     )}
                 >
                     <Button
