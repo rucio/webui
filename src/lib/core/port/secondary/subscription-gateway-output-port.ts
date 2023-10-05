@@ -1,4 +1,5 @@
-import { ListSubscriptionsDTO, SubscriptionDTO } from "../../dto/subscription-dto";
+import { BaseStreamableDTO } from "@/lib/sdk/dto";
+import { ListSubscriptionsDTO, SubscriptionDTO, SubscriptionRuleStateDTO } from "../../dto/subscription-dto";
 
 export default interface SubscriptionGatewayOutputPort {
     /**
@@ -22,5 +23,13 @@ export default interface SubscriptionGatewayOutputPort {
      * @param account The rucio account name for which the subscriptions should be listed
      */
     list(rucioAuthToken: string, account: string): Promise<ListSubscriptionsDTO>
+
+    /**
+     * 
+     * @param rucioAuthToken A valid rucio auth token
+     * @param account: The rucio account name for which the subscriptions should be listed
+     * @param name: The rucio subscription name
+     */
+    listSubscriptionRuleStates(rucioAuthToken: string, account: string, name: string): Promise<BaseStreamableDTO>
 
 }

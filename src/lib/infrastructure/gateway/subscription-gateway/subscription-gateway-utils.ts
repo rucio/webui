@@ -1,5 +1,6 @@
-import { SubscriptionDTO } from "@/lib/core/dto/subscription-dto";
-import { SubscriptionReplicationRule, SubscriptionState } from "@/lib/core/entity/rucio";
+import { SubscriptionDTO, SubscriptionRuleStateDTO } from "@/lib/core/dto/subscription-dto";
+import { RuleState, SubscriptionReplicationRule, SubscriptionState } from "@/lib/core/entity/rucio";
+import { de } from "@faker-js/faker";
 
 /**
  * Represents the data returned by Rucio Server for a subscription.
@@ -20,6 +21,8 @@ export type TRucioSubscription = {
     created_at: string;
     updated_at: string;
 }
+
+export type TRucioSubscriptionRuleStates = [string, string, string, number]
 
 /**
  * @param replicationRules A JSON formatted string representing a list of replication rules for a subscription
@@ -43,6 +46,24 @@ export function parseReplicationRules(replicationRules: string): SubscriptionRep
     return rules;
 }
 
+export function parseReplicationRuleState(replicationRuleStateString: string): RuleState {
+    switch(replicationRuleStateString.toUpperCase()) {
+        case "REPLICATING":
+            return RuleState.REPLICATING
+        case "OK":
+            return RuleState.OK
+        case "STUCK":
+            return RuleState.STUCK
+        case "SUSPENDED":
+            return RuleState.SUSPENDED
+        case "WAITING_APPROVAL":
+            return RuleState.WAITING_APPROVAL
+        case "INJECT":
+            return RuleState.INJECT
+        default:
+            return RuleState.UNKNOWN
+    }
+}
 /**
  * @param state represents the state of a subscription as a string
  * @returns SubscriptionState enum value
@@ -91,6 +112,16 @@ export function convertToSubscriptionDTO(data: TRucioSubscription, account: stri
     }
 }
 
+
+export function convertToSubscriptionRuleStatesDTO(data: TRucioSubscriptionRuleStates): SubscriptionRuleStateDTO {
+    return {
+        status: 'success',
+        account: data[0],
+        subscriptionName: data[1],
+        state: parseReplicationRuleState(data[2]),
+        count: data[3],
+    }
+}
 /**
  * @returns Base {@link SubscriptionDTO} object with all fields set to empty values.
  */
@@ -110,5 +141,19 @@ export function getEmptySubscriptionDTO(status: 'success' | 'error'): Subscripti
         updated_at: "",
         filter: "",
         replication_rules: [],
+    }
+}
+
+export function getEmptySubscriptionRuleStatesDTO(): SubscriptionRuleStateDTO {
+    return {
+        status: 'error',
+        errorCode: 0,
+        errorMessage: 'gateway_endpoint_error',
+        errorName: '',
+        errorType: '',
+        account: '',
+        subscriptionName: '',
+        state: RuleState.UNKNOWN,
+        count: 0,
     }
 }
