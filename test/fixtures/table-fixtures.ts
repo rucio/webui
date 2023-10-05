@@ -369,3 +369,12 @@ export function fixtureSubscriptionViewModel(): SubscriptionViewModel {
         ),
     }
 }
+
+
+export function generateSequenceArray(length: number, generator: () => any): any[] {
+    const result: number[] = [];
+    for (let i = 1; i <= length; i++) {
+        result.push(generator());
+    }
+    return result;
+}
