@@ -46,13 +46,19 @@ export default class ListSubscriptionRuleStatesUseCase extends BaseSingleEndpoin
 
     mergeResponseModels(existingModel: ListSubscriptionRuleStatesResponse, newModel: ListSubscriptionRuleStatesResponse): ListSubscriptionRuleStatesResponse {
         return {
-            ...existingModel,
-            ...newModel,
+            status: 'success',
+            name: existingModel.name,
+            state_ok: existingModel.state_ok + newModel.state_ok,
+            state_replicating: existingModel.state_replicating + newModel.state_replicating,
+            state_stuck: existingModel.state_stuck + newModel.state_stuck,
+            state_suspended: existingModel.state_suspended + newModel.state_suspended,
+            state_inject: existingModel.state_inject + newModel.state_inject,
+            state_waiting_approval: existingModel.state_waiting_approval + newModel.state_waiting_approval,
         }
     }
 
     addOrUpdateSubscriptionRuleState(ruleStateDTO: SubscriptionRuleStateDTO): ListSubscriptionRuleStatesResponse {
-        let existingEntry = this.responseModels.find((rs) => rs.name === ruleStateDTO.subscriptionName)
+        let existingEntryIndex = this.responseModels.findIndex((rs) => rs.name === ruleStateDTO.subscriptionName)
         const newEntry: ListSubscriptionRuleStatesResponse = {
             status: 'success',
             name: ruleStateDTO.subscriptionName,
@@ -86,9 +92,10 @@ export default class ListSubscriptionRuleStatesUseCase extends BaseSingleEndpoin
             default:
                 break;
         }
-        if(existingEntry) {
-            existingEntry = this.mergeResponseModels(existingEntry, newEntry)
-            return existingEntry
+        if(existingEntryIndex != -1) {
+            const mergedEntry = this.mergeResponseModels(this.responseModels[existingEntryIndex], newEntry)
+            this.responseModels[existingEntryIndex] = mergedEntry
+            return mergedEntry
         } else {
             this.responseModels.push(newEntry)
             return newEntry
@@ -114,7 +121,7 @@ export default class ListSubscriptionRuleStatesUseCase extends BaseSingleEndpoin
         try {
             const responseModel = this.addOrUpdateSubscriptionRuleState(dto)
             return {
-                status: 'success',
+                status: 'pending' as any, // intentional use of any
                 data: responseModel,
             }
         } catch (error: any) {

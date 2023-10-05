@@ -7,6 +7,8 @@ import { ListSubscriptionRuleStatesControllerParameters } from "@/lib/infrastruc
 import { ListSubscriptionRuleStatesRequest } from "@/lib/core/usecase-models/list-subscription-rule-states-usecase-models";
 import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
 import { NextApiResponse } from "next";
+import { generateEmptySubscriptionRuleStatesViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
+
 
 describe('Get Subscription Rule States', () => {
     beforeEach(() => {
@@ -26,6 +28,7 @@ describe('Get Subscription Rule States', () => {
                         JSON.stringify(["ddmadmin", "group.phys-gener to CERN-PROD_PHYS-GENER", "OK", 5344]),
                         JSON.stringify(["ddmadmin", "*Functional Test", "OK", 95918]),
                         JSON.stringify(["ddmadmin", "T0 DESD to T1 tape", "OK", 2382]),
+                        JSON.stringify(["ddmadmin", "T0 DESD to T1 tape", "STUCK", 500]),
                     ].join('\n'))
             }
         }
@@ -66,6 +69,33 @@ describe('Get Subscription Rule States', () => {
         })
         
         await done
-        
+        expect(receivedData).toEqual([
+            {
+                ...generateEmptySubscriptionRuleStatesViewModel(),
+                status: 'success',
+                name: 'EVNT to T0 with 1 year lifetime',
+                state_ok: 15464,
+            },
+            {
+                ...generateEmptySubscriptionRuleStatesViewModel(),
+                status: 'success',
+                name: 'group.phys-gener to CERN-PROD_PHYS-GENER',
+                state_ok: 5344,
+            },
+            {
+                ...generateEmptySubscriptionRuleStatesViewModel(),
+                status: 'success',
+                name: '*Functional Test',
+                state_ok: 95918,
+            },
+            {
+                ...generateEmptySubscriptionRuleStatesViewModel(),
+                status: 'success',
+                name: 'T0 DESD to T1 tape',
+                state_ok: 2382,
+                state_stuck: 500,
+            }
+        ])
+
     })
 })
