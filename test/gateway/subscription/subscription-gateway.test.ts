@@ -66,6 +66,8 @@ describe('SubscriptionGateway', () => {
             }                  
         }
 
+        
+
         const subscriptionStream = Readable.from([
             JSON.stringify({"id": "c674f72385a14dc8bb5ceba3e491da5a", "name": "wguan test weight", "filter": "{\"scope\": [\"tests\"]}", "replication_rules": "[{\"rse_expression\": \"INFN-T1_SCRATCHDISK|IN2P3-CC_SCRATCHDISK\", \"copies\": 1, \"weight\": \"stresstestweight\"}]", "policyid": 0, "state": "INACTIVE", "last_processed": "Thu, 17 Jul 2014 07:21:03 UTC", "account": "ddmadmin", "lifetime": "Tue, 01 May 2288 07:21:03 UTC", "comments": null, "retroactive": false, "expired_at": null, "created_at": "Thu, 17 Jul 2014 07:21:04 UTC", "updated_at": "Thu, 17 Jul 2014 07:21:04 UTC"}),
             JSON.stringify({"id": "f8fb1e9b69e842daa0e1a29914114593", "name": "Functional test T2", "filter": "{\"project\": [\"step14\"], \"scope\": [\"tests\"], \"split_rule\": true, \"transient\": [\"None\", \"0\"]}", "replication_rules": "[{\"lifetime\": 172800, \"activity\": \"Functional Test\", \"copies\": 20, \"source_replica_expression\": \"tier=1\\\\site=CERN-PROD\", \"rse_expression\": \"(tier=2&type=DATADISK\\\\ruciotestsite=true)\\\\todecommission=true\"}]", "policyid": 0, "state": "INACTIVE", "last_processed": "Thu, 19 May 2022 11:46:11 UTC", "account": "ddmadmin", "lifetime": "Sun, 25 May 2042 15:58:21 UTC", "comments": "Functional tests from T1 to T2", "retroactive": false, "expired_at": null, "created_at": "Mon, 21 Jul 2014 12:18:39 UTC", "updated_at": "Thu, 19 May 2022 11:46:13 UTC"}),
@@ -75,7 +77,7 @@ describe('SubscriptionGateway', () => {
         const listSubscriptionsEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/ddmadmin`,
             method: 'GET',
-            includes: 'subscriptions/ddmadmin',
+            endsWith: 'subscriptions/ddmadmin',
             response: {
                 status: 200,
                 headers: {
