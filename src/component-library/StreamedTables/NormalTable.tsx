@@ -4,6 +4,7 @@ import { TableHeader } from "./TableHeader";
 import { TableBody } from "./TableBody";
 import { NormalTableProps } from "./types";
 import { usePrepareTable } from "./helpers";
+import { TableBreakout } from "./TableBreakout";
 
 
 export function NormalTable<T>(props: NormalTableProps<T>) {
@@ -13,6 +14,7 @@ export function NormalTable<T>(props: NormalTableProps<T>) {
         tabledata: props.tabledata,
         tablecolumns: props.tablecolumns,
         tablestyling: props.tablestyling,
+        tableselecting: props.tableselecting,
     })
 
     return (
@@ -35,6 +37,19 @@ export function NormalTable<T>(props: NormalTableProps<T>) {
                 role="rowgroup"
                 aria-label="NormalTable Footer"
             >
+                <tr aria-label="Extra Information">
+                <td
+                    className={twMerge(
+                        props.tableselecting?.breakOut?.breakoutVisibility ? "table-cell" : "hidden"
+                    )}
+                    colSpan={table.getVisibleLeafColumns().length}
+                >
+                    <TableBreakout
+                        keys={props.tableselecting?.breakOut?.keys ?? {} as Record<string, string>}
+                        row={table.getSelectedRowModel().flatRows[0]}
+                    />
+                </td>
+            </tr>
                 <tr aria-label="Pagination Controls">
                     <td
                         colSpan={table.getVisibleLeafColumns().length}

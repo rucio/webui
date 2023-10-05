@@ -9,6 +9,7 @@ import { RSEProtocolViewModel } from "@/lib/infrastructure/data/view-model/rse";
 import { RSEProtocol } from "@/lib/core/entity/rucio";
 import { NormalTable } from "@/component-library/StreamedTables/NormalTable";
 import { TableStyling } from "@/component-library/StreamedTables/types";
+import useReponsiveHook from "@/component-library/Helpers/ResponsiveHook";
 
 export const PageRSEProtocols = (
     props: {
@@ -17,8 +18,8 @@ export const PageRSEProtocols = (
     }
 ) => {
     const shortstyle = { style: "w-20" }
-    const shortstyleblue = { style: "w-20 bg-blue-100"}
-    const shortstylepink = { style: "w-20 bg-pink-100"}
+    const shortstyleblue = { style: "w-20 bg-blue-100 dark:bg-blue-900"}
+    const shortstylepink = { style: "w-20 bg-pink-100 dark:bg-pink-900"}
     const columnHelper = createColumnHelper<RSEProtocol>()
     const tablecolumns: any[] = [
         columnHelper.accessor("scheme", {
@@ -62,19 +63,19 @@ export const PageRSEProtocols = (
             meta: shortstyleblue
         }),
         columnHelper.accessor("priorities_wan.read", {
-            id: "priorities_lan.read",
+            id: "priorities_wan.read",
             header: info => <TableSortUpDown name="WAN/R" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
             meta: shortstylepink
         }),
         columnHelper.accessor("priorities_wan.write", {
-            id: "priorities_lan.write",
+            id: "priorities_wan.write",
             header: info => <TableSortUpDown name="WAN/W" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
             meta: shortstylepink
         }),
         columnHelper.accessor("priorities_wan.delete", {
-            id: "priorities_lan.delete",
+            id: "priorities_wan.delete",
             header: info => <TableSortUpDown name="WAN/D" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
             meta: shortstylepink,
@@ -86,25 +87,67 @@ export const PageRSEProtocols = (
         //     meta: shortstylepink,
         // }),
         columnHelper.accessor("priorities_wan.tpcwrite", {
-            id: "priorities_lan.tpcwrite",
+            id: "priorities_wan.tpcwrite",
             header: info => <TableSortUpDown name="TPC/W" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
             meta: shortstylepink,
         }),
         columnHelper.accessor("priorities_wan.tpcread", {
-            id: "priorities_lan.tpcread",
+            id: "priorities_wan.tpcread",
             header: info => <TableSortUpDown name="TPC/R" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
             meta: shortstylepink,
         }),
     ]
+    const responsive = useReponsiveHook()
     return (
         <NormalTable<RSEProtocol>
             tabledata={props.tableData.protocols || []}
             tablecolumns={tablecolumns}
             tablestyling={{
+                visibility: {
+                    "priorities_lan.read": responsive.lg,
+                    "priorities_lan.write": responsive.lg,
+                    "priorities_lan.delete": responsive.lg,
+                    "priorities_wan.read": responsive.lg,
+                    "priorities_wan.write": responsive.lg,
+                    "priorities_wan.delete": responsive.lg,
+                    "priorities_wan.tpcwrite": responsive.lg,
+                    "priorities_wan.tpcread": responsive.lg,
+                    "port": responsive.md,
+                    "prefix": responsive.md,
+                },
                 pageSize: 5,
             } as TableStyling}
+            tableselecting={{
+                enableRowSelection: !responsive.lg,
+                handleChange: (rows: RSEProtocol[]) => {},
+                breakOut: {
+                    breakoutVisibility: !responsive.lg,
+                    keys: responsive.md ? {
+                        "priorities_lan.read": "LAN/R",
+                        "priorities_lan.write": "LAN/W",
+                        "priorities_lan.delete": "LAN/D",
+                        "priorities_wan.read": "WAN/R",
+                        "priorities_wan.write": "WAN/W",
+                        "priorities_wan.delete": "WAN/D",
+                        "priorities_wan.tpcwrite": "TPC/W",
+                        "priorities_wan.tpcread": "TPC/R",
+                    } : {
+                        "port": "Port",
+                        "prefix": "Prefix",
+                        "priorities_lan.read": "LAN/R",
+                        "priorities_lan.write": "LAN/W",
+                        "priorities_lan.delete": "LAN/D",
+                        "priorities_wan.read": "WAN/R",
+                        "priorities_wan.write": "WAN/W",
+                        "priorities_wan.delete": "WAN/D",
+                        "priorities_wan.tpcwrite": "TPC/W",
+                        "priorities_wan.tpcread": "TPC/R",
+                    }
+                }
+            }
+            }
         />
     );
 };
