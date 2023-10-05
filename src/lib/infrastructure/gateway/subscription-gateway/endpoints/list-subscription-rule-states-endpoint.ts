@@ -14,12 +14,10 @@ export default class ListSubscriptionRuleStatesEndpoint extends BaseStreamableEn
      * Creates a new instance of the `ListSubscriptionRuleStatesEndpoint` class.
      * @param rucioAuthToken A valid rucio auth token
      * @param account The account for which to list subscriptions
-     * @param name The subscription name
      */
     constructor(
         private readonly rucioAuthToken: string,
         private readonly account: string,
-        private readonly name: string,
     ){
         super()
     }
@@ -30,7 +28,8 @@ export default class ListSubscriptionRuleStatesEndpoint extends BaseStreamableEn
     async initialize(): Promise<void> {
         await super.initialize()
         const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/subscriptions/${this.account}/${this.name}/Rules/States`
+        // TODO: bug in rucio. subscription name does not matter
+        const endpoint = `${rucioHost}/subscriptions/${this.account}/doesntmatter/Rules/States`
         const request: HTTPRequest = {
             method: 'GET',
             url: endpoint,

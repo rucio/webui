@@ -9,7 +9,6 @@ import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factor
 
 export type ListSubscriptionRuleStatesControllerParameters = TAuthenticatedControllerParameters & {
     account: string;
-    subscriptionName: string;
 };
 
 @injectable()
@@ -23,7 +22,6 @@ class ListSubscriptionRuleStatesController extends BaseController<ListSubscripti
         return {
             rucioAuthToken: parameters.rucioAuthToken,
             account: parameters.account,
-            name: parameters.subscriptionName,
         }
     }
 }

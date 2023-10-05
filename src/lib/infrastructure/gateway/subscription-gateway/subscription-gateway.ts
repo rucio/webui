@@ -23,9 +23,9 @@ export default class SubscriptionGateway implements SubscriptionGatewayOutputPor
         return dto
     }
 
-    async listSubscriptionRuleStates(rucioAuthToken: string, account: string, name: string): Promise<BaseStreamableDTO> {
+    async listSubscriptionRuleStates(rucioAuthToken: string, account: string): Promise<BaseStreamableDTO> {
         try {
-            const endpoint: ListSubscriptionRuleStatesEndpoint = new ListSubscriptionRuleStatesEndpoint(rucioAuthToken, account, name)
+            const endpoint: ListSubscriptionRuleStatesEndpoint = new ListSubscriptionRuleStatesEndpoint(rucioAuthToken, account)
             const errorDTO: BaseStreamableDTO | undefined = await endpoint.fetch()
             if(!errorDTO) {
                 return {

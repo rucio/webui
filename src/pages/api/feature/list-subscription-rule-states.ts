@@ -15,12 +15,7 @@ async function listSubscriptionRuleStates(req:NextApiRequest, res: NextApiRespon
         res.status(405).json({ error: 'Method Not Allowed' })
         return
     }
-
-    const {name} = req.query
-    if(!name) {
-        res.status(400).json({ error: 'Missing required query parameter: name' })
-        return
-    }
+   
     const account = sessionUser?.rucioAccount
     if(!account) {
         res.status(400).json({ error: 'Could not determine account name. Are you logged in?' })
@@ -31,7 +26,6 @@ async function listSubscriptionRuleStates(req:NextApiRequest, res: NextApiRespon
         response: res,
         rucioAuthToken: rucioAuthToken,
         account: account,
-        subscriptionName: name as string,
     }
 
     const controller = appContainer.get<BaseController<ListSubscriptionRuleStatesControllerParameters, void>>(CONTROLLERS.LIST_SUBSCRIPTION_RULE_STATES)

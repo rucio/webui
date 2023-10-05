@@ -5,7 +5,6 @@ import { SubscriptionRuleStates } from "../entity/rucio"
 */
 export interface ListSubscriptionRuleStatesRequest {
     account: string,
-    name: string,
 }
 
 /** 

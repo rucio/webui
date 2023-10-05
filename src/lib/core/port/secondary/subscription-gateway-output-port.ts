@@ -28,8 +28,7 @@ export default interface SubscriptionGatewayOutputPort {
      * 
      * @param rucioAuthToken A valid rucio auth token
      * @param account: The rucio account name for which the subscriptions should be listed
-     * @param name: The rucio subscription name
      */
-    listSubscriptionRuleStates(rucioAuthToken: string, account: string, name: string): Promise<BaseStreamableDTO>
+    listSubscriptionRuleStates(rucioAuthToken: string, account: string): Promise<BaseStreamableDTO>
 
 }
