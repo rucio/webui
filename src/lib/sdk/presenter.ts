@@ -143,7 +143,7 @@ export abstract class BaseStreamingPresenter<
     }
 
     _transform(
-        chunk: TResponseModel,
+        chunk: TResponseModel | TErrorModel,
         encoding: BufferEncoding,
         callback: TransformCallback,
     ): void {
@@ -155,9 +155,11 @@ export abstract class BaseStreamingPresenter<
                 const viewModel =
                 this.streamResponseModelToViewModel(responseModel)
                 callback(null, JSON.stringify(viewModel) + "\n")
-            } else {
+            } else if(responseModel.status === 'error'){
                 const viewModel = this.streamErrorModelToViewModel(responseModel as unknown as TErrorModel)
                 callback(null, JSON.stringify(viewModel) + "\n")
+            } else {
+                callback(null)
             }
         } catch (error) {
             // If an error occurs while processing response or error models, we need to handle it here.

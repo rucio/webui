@@ -4,7 +4,8 @@ import { SubscriptionRuleStates } from "../entity/rucio"
  * @interface ListSubscriptionRuleStatesRequest represents the RequestModel for list_subscription_rule_states usecase
 */
 export interface ListSubscriptionRuleStatesRequest {
-    account: string
+    account: string,
+    name: string,
 }
 
 /** 
