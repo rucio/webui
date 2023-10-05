@@ -89,4 +89,23 @@ describe('Get Subscription Rule States', () => {
             },
         ]);
     });
+    it('tests_merge_of_2_objects', () => {
+        const obj1 = {
+            status: 'success',
+            states_ok: 1,
+        }
+        const obj2 = {
+            status: 'success',
+            states_replicating: 2,
+        }
+        const mergedObj = {
+            ...obj1,
+            ...obj2,
+        }
+        expect(mergedObj).toEqual({
+            status: 'success',
+            states_ok: 1,
+            states_replicating: 2,
+        })
+    })
 })

@@ -38,7 +38,8 @@ export function generateEmptySubscriptionRuleStatesViewModel(): SubscriptionRule
         state_replicating: 0,
         state_stuck: 0,
         state_suspended: 0,
-       
+        state_waiting_approval: 0,
+        state_inject: 0,
     }
     return viewModel
 }
