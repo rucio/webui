@@ -189,6 +189,8 @@ export type SubscriptionRuleStates = {
     state_replicating: number
     state_stuck: number
     state_suspended: number
+    state_waiting_approval: number
+    state_inject: number
 }
 
 export type RSE = {
