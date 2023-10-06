@@ -1,6 +1,7 @@
 import { withAuthenticatedSessionRoute } from "@/lib/infrastructure/auth/session-utils";
 import { NextApiRequest, NextApiResponse } from "next";
-import { fixtureRuleMetaViewModel } from "test/fixtures/table-fixtures";
+import { fixtureRuleViewModel, fixtureSubscriptionRuleStatesViewModel, generateSequenceArray } from "test/fixtures/table-fixtures";
+import { Readable } from "stream";
 
 async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string) {
     if(req.method !== 'PUT') {
@@ -8,21 +9,19 @@ async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
         return
     }
 
-    const { ruleId } = req.query
-    if(!ruleId) {
-        res.status(400).json({ error: 'Missing ruleId' })
+    const { subscriptionID } = req.query
+    if(!subscriptionID) {
+        res.status(400).json({ error: 'Missing subscriptionID' })
         return
     }
-    const { updatedRule } = req.body
-    
-    if(!updatedRule) {
+    const { updatedSubscription } = req.body
+    if(!updatedSubscription) {
         res.status(400).json({ error: 'Missing body' })
         return
     }
-    
+
     res.status(200).json({
-        ...fixtureRuleMetaViewModel(),
-        updatedRule
+        updatedSubscription
     })
 }
 
