@@ -43,7 +43,6 @@ describe("List Subscription Feature tests", () => {
 
         const listSubscriptionsController = appContainer.get<BaseController<ListSubscriptionsControllerParameters, ListSubscriptionsRequest>>(CONTROLLERS.LIST_SUBSCRIPTIONS);
         const listSubscriptionsControllerParams: ListSubscriptionsControllerParameters = {
-            account: 'ddmadmin',
             sessionAccount: 'ddmadmin',
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
             response: res as unknown as NextApiResponse

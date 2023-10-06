@@ -60,6 +60,7 @@ import GetRSEAttributesFeature from "./features/get-rse-attributes-feature";
 import ListRSEsFeature from "./features/list-rses-feature";
 import ListAllRSEsFeature from "./features/list-all-rses-feature";
 import GetSiteHeaderFeature from "./features/get-site-header-feature";
+import ListSubscriptionRuleStatesFeature from "./features/list-subscription-rule-states-feature";
 
 
 /**
@@ -117,6 +118,10 @@ loadFeaturesSync(appContainer, [
     new ListAllRSEsFeature(appContainer),
 ])
 
+//Features: List Subscriptions
+loadFeaturesSync(appContainer, [
+    new ListSubscriptionRuleStatesFeature(appContainer),
+])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
