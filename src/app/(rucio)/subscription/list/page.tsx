@@ -3,8 +3,20 @@ import { ListSubscription as ListSubscriptionStory } from "@/component-library/P
 import { Component, useEffect, useState } from "react";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { SubscriptionRuleStatesViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
+import { SiteHeaderViewModel } from "@/lib/infrastructure/data/view-model/site-header";
+import { getSiteHeader } from "../../queries";
 
 export default function ListSubscription({ params }: { params: { account: string } }) {
+
+    const [accountName, setAccountName] = useState<string>("")
+    useEffect(() => {
+        getSiteHeader().then(
+            (data: SiteHeaderViewModel) => {
+                setAccountName(data.activeAccount?.rucioAccount ?? "Unknown")
+            }
+        )
+    }, [])
+
     const ComDOM = useComDOM<SubscriptionRuleStatesViewModel>(
         "subscription-rule-states-query",
         [],
@@ -16,7 +28,7 @@ export default function ListSubscription({ params }: { params: { account: string
     useEffect(() => {
         const runQuery = async () => {
             await ComDOM.start({
-                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/get-subscription-rulestates`),
+                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-subscription-rule-states`),
                 method: "GET",
                 headers: new Headers({
                     'Content-Type': 'application/json'
@@ -29,7 +41,7 @@ export default function ListSubscription({ params }: { params: { account: string
     return (
         <div>
             <ListSubscriptionStory
-                accountname={params.account}
+                accountname={accountName}
                 comdom={ComDOM}
             />
         </div>
