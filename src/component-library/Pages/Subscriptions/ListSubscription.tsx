@@ -13,6 +13,7 @@ import { Body } from "../Helpers/Body";
 import { Heading } from "../Helpers/Heading";
 import { SubscriptionRuleStatesViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
 import { TableInternalLink } from "@/component-library/StreamedTables/TableInternalLink";
+import useReponsiveHook from "@/component-library/Helpers/ResponsiveHook";
 
 export interface ListSubscriptionProps {
     accountname: string;
@@ -47,8 +48,8 @@ export const ListSubscription = (
                         column={info.column}
                         element={
                             <RuleStateTag
-                                className={isLg() ? "md:w-28" : ""}
-                                tiny={!isLg()}
+                                className={responsive.lg ? "md:w-28" : ""}
+                                tiny={!responsive.lg}
                                 state={RuleState.OK}
                             />
                         }
@@ -70,8 +71,8 @@ export const ListSubscription = (
                         column={info.column}
                         element={
                             <RuleStateTag
-                                className={isLg() ? "md:w-28" : ""}
-                                tiny={!isLg()}
+                                className={responsive.lg ? "md:w-28" : ""}
+                                tiny={!responsive.lg}
                                 state={RuleState.REPLICATING}
                             />
                         }
@@ -93,8 +94,8 @@ export const ListSubscription = (
                         column={info.column}
                         element={
                             <RuleStateTag
-                                className={isLg() ? "md:w-28" : ""}
-                                tiny={!isLg()}
+                                className={responsive.lg ? "md:w-28" : ""}
+                                tiny={!responsive.lg}
                                 state={RuleState.STUCK}
                             />
                         }
@@ -116,9 +117,55 @@ export const ListSubscription = (
                         column={info.column}
                         element={
                             <RuleStateTag
-                                className={isLg() ? "md:w-28" : ""}
-                                tiny={!isLg()}
+                                className={responsive.lg ? "md:w-28" : ""}
+                                tiny={!responsive.lg}
                                 state={RuleState.SUSPENDED}
+                            />
+                        }
+                        stack
+                    />
+                )
+            },
+            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            meta: {
+                style: "w-12 lg:w-32",
+            }
+        }),
+        columnHelper.accessor("state_waiting_approval", {
+            id: "state_waiting_approval",
+            header: info => {
+                return (
+                    <TableSortUpDown
+                        name="Waiting Approval"
+                        column={info.column}
+                        element={
+                            <RuleStateTag
+                                className={responsive.lg ? "md:w-28" : ""}
+                                tiny={!responsive.lg}
+                                state={RuleState.WAITING_APPROVAL}
+                            />
+                        }
+                        stack
+                    />
+                )
+            },
+            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            meta: {
+                style: "w-12 lg:w-32",
+            }
+        }),
+        columnHelper.accessor("state_inject", {
+            id: "state_inject",
+            header: info => {
+                return (
+                    <TableSortUpDown
+                        name="Inject"
+                        column={info.column}
+                        element={
+                            <RuleStateTag
+                                className={responsive.lg ? "md:w-28" : ""}
+                                tiny={!responsive.lg}
+                                state={RuleState.INJECT}
                             />
                         }
                         stack
@@ -155,6 +202,8 @@ export const ListSubscription = (
                         <MiniState state={RuleState.REPLICATING} amount={info.row.original.state_replicating} />
                         <MiniState state={RuleState.STUCK} amount={info.row.original.state_stuck} />
                         <MiniState state={RuleState.SUSPENDED} amount={info.row.original.state_suspended} />
+                        <MiniState state={RuleState.WAITING_APPROVAL} amount={info.row.original.state_waiting_approval} />
+                        <MiniState state={RuleState.INJECT} amount={info.row.original.state_inject} />
                     </div>
                 )
             },
@@ -165,25 +214,7 @@ export const ListSubscription = (
     ]
 
 
-    const [windowSize, setWindowSize] = useState([
-        1920, 1080
-    ]);
-
-    useEffect(() => {
-        setWindowSize([window.innerWidth, window.innerHeight])
-
-        const handleWindowResize = () => {
-            setWindowSize([window.innerWidth, window.innerHeight]);
-        };
-
-        window.addEventListener('resize', handleWindowResize);
-
-        return () => {
-            window.removeEventListener('resize', handleWindowResize);
-        };
-    }, []);
-    const isSm = () => windowSize[0] > 640  // 640px is the breakpoint for sm => is minimum sm sized
-    const isLg = () => windowSize[0] > 1024 // 1024px is the breakpoint for lg => is minimum lg sized
+    const responsive = useReponsiveHook()
 
 
     return (
@@ -202,11 +233,13 @@ export const ListSubscription = (
                     tablecolumns={tablecolumns}
                     tablestyling={{
                         visibility: {
-                            "state_ok": isSm(),
-                            "state_replicating": isSm(),
-                            "state_stuck": isSm(),
-                            "state_suspended": isSm(),
-                            "condensed_states": !isSm(),
+                            "state_ok": responsive.sm,
+                            "state_replicating": responsive.sm,
+                            "state_stuck": responsive.sm,
+                            "state_suspended": responsive.sm,
+                            "state_waiting_approval": responsive.sm,
+                            "state_inject": responsive.sm,
+                            "condensed_states": !responsive.sm,
                         },
                         tableHeadRowStyle: "md:h-16",
                         tableBodyRowStyle: "h-8",
