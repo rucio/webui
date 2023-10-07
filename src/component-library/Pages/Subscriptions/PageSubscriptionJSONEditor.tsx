@@ -107,7 +107,12 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
                                 }
                             }}
                         />
-                        <Button label="Commit" type="submit" disabled={jsonError !== null} className="w-28" />
+                        <Button label="Commit"
+                                type="submit"
+                                disabled={jsonError !== null}
+                                className="w-28"
+                                onClick={e => {submit(json)}} 
+                                />
                     </div>
                 </div>
                     <Collapsible showIf={helpWanted}>

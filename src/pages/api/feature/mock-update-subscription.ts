@@ -1,6 +1,6 @@
 import { withAuthenticatedSessionRoute } from "@/lib/infrastructure/auth/session-utils";
 import { NextApiRequest, NextApiResponse } from "next";
-import { fixtureRuleViewModel, fixtureSubscriptionRuleStatesViewModel, generateSequenceArray } from "test/fixtures/table-fixtures";
+import { fixtureRuleViewModel, fixtureSubscriptionRuleStatesViewModel, fixtureSubscriptionViewModel, generateSequenceArray } from "test/fixtures/table-fixtures";
 import { Readable } from "stream";
 
 async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string) {
@@ -14,15 +14,18 @@ async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
         res.status(400).json({ error: 'Missing subscriptionID' })
         return
     }
-    const { updatedSubscription } = req.body
-    if(!updatedSubscription) {
+
+    if(!req.body) {
+        // currently accepts any body
         res.status(400).json({ error: 'Missing body' })
         return
     }
 
-    res.status(200).json({
-        updatedSubscription
-    })
+    res.status(200).json(
+        // currently only responds with a fake subscription
+        // in reality, return the updated subscription.
+        fixtureSubscriptionViewModel()
+    )
 }
 
-export default withAuthenticatedSessionRoute(endpoint);
+export default withAuthenticatedSessionRoute(endpoint); 
