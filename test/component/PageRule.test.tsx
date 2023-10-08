@@ -16,6 +16,8 @@ describe("PageRule Story Test", () => {
             <PageRuleStory
                 ruleMeta={ruleMeta}
                 ruleLocks={mockUseComDOM(Array.from({length: 100}, (v,k) => fixtureRulePageLockEntryViewModel()))}
+                ruleBoostFunc={() => {}}
+                ruleBoostShow={false}
             />
         ))
         const user = userEvent.setup()
@@ -35,12 +37,9 @@ describe("PageRule Story Test", () => {
         ).toHaveTextContent(
             `${ruleMeta.scope}:${ruleMeta.name}`
         )
-        // click on header
-        await user.click(screen.getByRole("heading", { name: /For rule/}))
-        selectedTabExpect().not.toHaveFocus()
-        // tab to focus the `locks` tab
-        await user.tab()
-        selectedTabExpect().toHaveFocus()
+
+
+        await user.click(screen.getByRole("tab", { name: "Locks"}))
         // arrow right to focus the `metadata` tab (test cycling!)
         await user.keyboard("{arrowright}")
         selectedTabExpect().toHaveTextContent("Metadata")

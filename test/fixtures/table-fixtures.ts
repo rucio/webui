@@ -327,6 +327,7 @@ export function fixtureSubscriptionRuleStatesViewModel(): SubscriptionRuleStates
         state_suspended: faker.number.int({ min: 0, max: 10 }),
         state_waiting_approval: faker.number.int({ min: 0, max: 10 }),
         state_inject: faker.number.int({ min: 0, max: 10 }),
+
     }
 }
 
@@ -368,4 +369,13 @@ export function fixtureSubscriptionViewModel(): SubscriptionViewModel {
             2
         ),
     }
+}
+
+
+export function generateSequenceArray(length: number, generator: () => any): any[] {
+    const result: number[] = [];
+    for (let i = 1; i <= length; i++) {
+        result.push(generator());
+    }
+    return result;
 }
