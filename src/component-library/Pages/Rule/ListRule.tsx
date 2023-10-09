@@ -25,6 +25,7 @@ import { useState } from "react";
 import { Heading } from "../Helpers/Heading";
 import { Body } from "../Helpers/Body";
 import { RuleViewModel } from "@/lib/infrastructure/data/view-model/rule";
+import { HTTPRequest } from "@/lib/sdk/http";
 
 type ListRuleUserDefineQuery = Partial<{
     account: string
@@ -38,6 +39,7 @@ type ListRuleUserDefineQuery = Partial<{
 export const ListRule = (
     props: {
         comdom: UseComDOM<RuleViewModel>
+        webui_host: string
     }
 ) => {
     const columnHelper = createColumnHelper<Rule>()
@@ -205,6 +207,21 @@ export const ListRule = (
         from_date: undefined,
         to_date: undefined,
     })
+
+    const listRuleRequest = async () => {
+        const request: HTTPRequest = {
+            method: "GET",
+            url: props.webui_host + "/api/feature/mock-list-rules",
+            params: {
+                rse_expression: userdefinequery.rse_expression ?? "",
+                activity: userdefinequery.activity ?? "",
+                state: userdefinequery.state ?? RuleState.UNKNOWN,
+                from_date: userdefinequery.from_date?.toUTCString() ?? "",
+                to_date: userdefinequery.to_date?.toUTCString() ?? "",
+            }
+        }
+        await props.comdom.start(request)
+    }
     return (
         <div
             className={twMerge(
@@ -299,7 +316,7 @@ export const ListRule = (
                     <Button
                         label="Search"
                         type="submit"
-                        onClick={(e: any) => { e.preventDefault(); console.log(userdefinequery) }}
+                        onClick={(e: any) => {listRuleRequest}}
                     />
                 </form>
             </Heading>
