@@ -7,6 +7,9 @@ import {
     RSEType,
     RSEProtocol,
     RSEAttribute,
+    RequestType,
+    RequestState,
+    RequestStatsPerPair,
 } from '@/lib/core/entity/rucio'
 import { RSEAccountUsageLimitViewModel, RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
@@ -16,6 +19,8 @@ import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDLongView
 import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { DIDKeyValuePair } from '@/lib/core/entity/rucio';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { TransferViewModel } from '@/lib/infrastructure/data/view-model/request';
+import { TransferStatsViewModel } from '@/lib/infrastructure/data/view-model/request-stats';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {
@@ -69,6 +74,17 @@ function createRSEExpression(): string {
     ] as Array<() => string>, { min: 1, max: 4 })
     const strings = creators.map((creator) => creator())
     return strings.join("&")
+}
+
+function randomRequestStats(activities: string[]): RequestStatsPerPair[] {
+    const avail_activities = faker.helpers.arrayElements(activities)
+    return avail_activities.map<RequestStatsPerPair>((activity) => {
+        return {
+            activity: activity,
+            counter: faker.number.int({ max: 100 }),
+            bytes: faker.number.int({ min: 0, max: 1e12 }),
+        };
+    })
 }
 
 export function fixtureDIDViewModel(): DIDViewModel {
@@ -395,11 +411,58 @@ export function fixtureSubscriptionViewModel(): SubscriptionViewModel {
     }
 }
 
-
 export function generateSequenceArray(length: number, generator: () => any): any[] {
     const result: number[] = [];
     for (let i = 1; i <= length; i++) {
         result.push(generator());
     }
     return result;
+}
+
+export function fixtureTransferViewModel(): TransferViewModel {
+    const did_type = faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE])
+    return {
+        ...mockBaseVM(),
+        id: faker.string.uuid(),
+        request_type: randomEnum<RequestType>(RequestType),
+        scope: createRandomScope(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        did_type: did_type,
+        dest_rse_id: faker.string.uuid(),
+        source_rse_id: faker.string.uuid(),
+        attributes: JSON.stringify({
+            "source_replica_expression": createRSEExpression(),
+            "allow_tape_source": faker.datatype.boolean(),
+            "ds_name": faker.lorem.word(),
+            "lifetime": faker.date.future().toISOString()
+        }),
+        state: randomEnum<RequestState>(RequestState),
+        activity: faker.lorem.words({ min: 1, max: 3 }),
+        bytes: faker.number.int({ min: 0, max: 1e12 }),
+        account: faker.internet.userName(),
+        priority: faker.number.int({ min: 0, max: 3 }),
+        transfertool: faker.helpers.arrayElement(['fts', 'globus']),
+        requested_at: faker.date.past().toISOString(),
+        source_rse: createRSEName(),
+        dest_rse: createRSEName(),
+    }
+}
+
+export function fixtureTransferStatsViewModel(): TransferStatsViewModel {
+    const activities = faker.helpers.multiple(() => faker.lorem.words({ min: 1, max: 3 }), { count: 9 })
+    return {
+        ...mockBaseVM(),
+        account: faker.internet.userName(),
+        state: randomEnum<RequestState>(RequestState),
+        source_rse_id: faker.string.uuid(),
+        dest_rse_id: faker.string.uuid(),
+        source_rse: createRSEName(),
+        dest_rse: createRSEName(),
+        request_stats: randomRequestStats(activities),
+    }
+}
+
+export function fixtureRequestStatsPerPair(): RequestStatsPerPair[] {
+    const activities = faker.helpers.multiple(() => faker.lorem.words({ min: 1, max: 3 }), { count: 9 })
+    return randomRequestStats(activities)
 }
