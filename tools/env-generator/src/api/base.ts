@@ -66,7 +66,7 @@ export class WebUIEnvTemplateCompiler {
   }
   validateOIDCProvider(provider: string, global_prefix: string): EnvValidationError[] {
     const prefix = `OIDC_PROVIDER_${provider.toUpperCase()}_`
-    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "userinfo_url", "redirect_url"]
+    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "userinfo_url", "redirect_url", "refresh_token_url"]
     const errors: EnvValidationError[] = []
     requiredVariables.forEach((key) => {
       const varName = `${prefix}${key.toUpperCase()}`
