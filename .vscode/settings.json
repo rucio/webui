@@ -2,4 +2,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "jest.jestCommandLine": "npm run test -- --watch --env=jsdom",
+  "jest.autoRun": {
+    "onSave": false
+  },
 }
