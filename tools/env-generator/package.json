@@ -1,0 +1,27 @@
+{
+    "name": "webui-env-maker",
+    "version": "1.0.0",
+    "description": "Generates .env file for webui",
+    "main": "generate-env.js",
+    "scripts": {
+        "build": "tsc && cp -rf src/templates dist/",
+        "dev": "watch 'npm run build' src/"
+    },
+    "author": "Mayank Sharma ( imptodefeat@gmail.com )",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^20.5.9",
+        "@types/yargs": "^17.0.24",
+        "@typescript-eslint/eslint-plugin": "^6.5.0",
+        "@typescript-eslint/parser": "^6.5.0",
+        "chalk": "^5.3.0",
+        "eslint": "^8.48.0",
+        "nodemon": "^3.0.1",
+        "typescript": "^5.2.2",
+        "watch": "^1.0.2",
+        "yargs": "^17.7.2"
+    },
+    "files": [
+        "templates"
+    ]
+}
