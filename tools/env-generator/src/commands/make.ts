@@ -1,5 +1,5 @@
 import { type Arguments, type CommandBuilder } from 'yargs';
-import { BaseCompiledTemplate, EnvValidationError } from '../api/base';
+import { WebUIEnvTemplateCompiler, EnvValidationError } from '../api/base';
 
 // Command Line Options
 type Options = {
@@ -59,7 +59,7 @@ export const handler = async (argv: Arguments<Options>) => {
   }
 
   // initialize template builder
-  const envTemplateBuilder = new BaseCompiledTemplate(
+  const envTemplateBuilder = new WebUIEnvTemplateCompiler(
     filteredEnv,
     output_path,
     '.env',
@@ -71,9 +71,6 @@ export const handler = async (argv: Arguments<Options>) => {
     envTemplateBuilder.mergeWithDefaults()
   }
 
-  // print env variables
-  console.log('Environment Variables:')
-  console.log(filteredEnv)
   // validate env variables
   const errors: EnvValidationError[] = envTemplateBuilder.validateEnv(prefix)
   if (errors.length > 0) {
