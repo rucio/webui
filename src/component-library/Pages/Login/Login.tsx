@@ -137,11 +137,11 @@ export const Login = ({
                     <div
                         className={twMerge(
                             "flex flex-row justify-center space-x-2",
-                            loginViewModel.oidcEnabled ? "" : "hidden"
+                            loginViewModel.voList[selectedVOTab].oidcEnabled ? "" : "hidden"
                         )}
                         aria-label="OIDC Login Buttons"
                     >
-                        {loginViewModel.oidcProviders.map((provider: OIDCProvider, index: number) => {
+                        {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
                             return (<Button theme='orange' label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />)
                         })}
                     </div>
@@ -149,7 +149,7 @@ export const Login = ({
                     <Button
                         label="x509"
                         onClick={async () => {
-                            const vo = loginViewModel.voList[selectedVOTab - 1] || DefaultVO
+                            const vo = loginViewModel.voList[selectedVOTab] || DefaultVO
 
                             const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
 
