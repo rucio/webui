@@ -120,7 +120,8 @@ export const WidgetUsedquota: React.FC<JSX.IntrinsicElements["div"] & {
                 </div>
                 <div
                     className={twMerge(
-                        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+                        "dark:text-white"
                     )}
                 >
                     <RSEPie input={input[0]} small={isSm()} />
