@@ -4,7 +4,7 @@ import { fixtureOngoingrules, fixtureUsedquota } from "test/fixtures/widget-fixt
 import { Dashboard as D } from "@/component-library/Pages/Dashboard/Dashboard";
 
 export default {
-    title: 'Demos/Dashboard',
+    title: 'Demos/02_Dashboard',
     component: D,
 } as Meta<typeof D>;
 
