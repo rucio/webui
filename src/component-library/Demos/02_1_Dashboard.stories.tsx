@@ -4,16 +4,16 @@ import { fixtureOngoingrules, fixtureUsedquota } from "test/fixtures/widget-fixt
 import { Dashboard as D } from "@/component-library/Pages/Dashboard/Dashboard";
 
 export default {
-    title: 'Demos/02_Dashboard',
+    title: 'Demos/Dashboard',
     component: D,
 } as Meta<typeof D>;
 
 type Story  = StoryObj<typeof D>
 
-export const sampleDashboard: Story = {
+export const SampleUserDashboard: Story = {
     args: {
-        accountname: "test",
-        accountrole: Role.ADMIN,
+        accountname: "mayank",
+        accountrole: Role.USER,
         inputOngoingrules: Array.from({length: 20}, (v,k) => fixtureOngoingrules()),
         inputUsedquota: Array.from({length: 20}, (v,k) => fixtureUsedquota())
     }
