@@ -86,29 +86,3 @@ export const AMultiVOOIDCEnabledLogin: Story = {
         voLHCb.oidcEnabled = true;
     }
 } 
-
-export const A2LoginCustomization04: Story = {
-    args: {
-        loginViewModel: {
-            status: 'success',
-            x509Enabled: true,
-            oidcEnabled: true,
-            oidcProviders: [cernOIDCProvider],
-            multiVOEnabled: true,
-            voList: [voAtlas, voCMS, voLHCb],
-            isLoggedIn: false,
-            rucioAuthHost: 'https://rucio.cern.ch',
-        },
-        authViewModel: {
-            status: "success",
-            message: "",
-            rucioAccount: "",
-            rucioMultiAccount: "",
-            rucioAuthType: "",
-            rucioAuthToken: "",
-            rucioIdentity: "",
-            rucioAuthTokenExpires: "",
-            role: undefined,
-        }
-    },
-} 
