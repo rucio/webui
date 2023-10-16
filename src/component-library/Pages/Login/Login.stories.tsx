@@ -1,5 +1,5 @@
 import { AuthType, OIDCProvider, Role, VO } from '@/lib/core/entity/auth-models'
-import { StoryFn, Meta } from '@storybook/react'
+import { StoryFn, Meta, StoryObj, Args } from '@storybook/react'
 
 import { Login } from './Login'
 

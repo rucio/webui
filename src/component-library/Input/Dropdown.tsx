@@ -65,7 +65,7 @@ export function Dropdown<T>(
                             className={twMerge(
                                 "p-1 rounded select-none cursor-pointer",
                                 "bg-white odd:bg-stone-100", // bg normal
-                                "dark:bg-gray-700 dark:odd:bg-gray-800", // bg dark
+                                "dark:bg-gray-700 dark:odd:bg-gray-800", "dark:text-white", // bg dark
                                 "hover:bg-gray-200 dark:hover:bg-gray-900", // hover (dark and light)
                             )}
                             onClick={e => {
