@@ -97,7 +97,7 @@ export const Login = ({
                 <P>Multiple accounts are mapped to the passed credentials. Choose one to continue.</P>
                 <Dropdown<string>
                     keys={multiaccounts}
-                    renderFunc={(key: string | undefined) => { return (<p>{key ?? "undefined"}</p>) }}
+                    renderFunc={(key: string | undefined) => { return (<p>{key ?? "select an account"}</p>) }}
                     handleChange={(key: string | undefined) => { setAccount(key) }}
                     disableUndefined
                 />
