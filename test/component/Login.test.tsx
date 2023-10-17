@@ -49,7 +49,7 @@ describe("Login Page Test", () => {
         await act( async () => render(<Login/>))
 
         // Check OIDC buttons are present but NOT rendered
-        oidcProviders.map((provider) => {
+        voList[1].oidcProviders.map((provider) => {
             const OIDCButton = screen.getByText(provider.name)
             expect(OIDCButton).toBeInTheDocument()
         })
@@ -107,8 +107,8 @@ describe("Login Page Test", () => {
         await act( async () => render(<Login/>))
 
         // Check OIDC buttons: 2 pieces and collapsed
-        const oidcParent = screen.getByRole('generic', {name: /OIDC Login Buttons/})
-        expect(oidcParent.className).toContain('hidden')
+        const oidcParent = screen.queryByRole('generic', { name: /OIDC Login Buttons/ });
+        expect(oidcParent).toBeNull();
         
     })
 

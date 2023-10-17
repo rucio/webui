@@ -134,6 +134,7 @@ export const Login = ({
                     className="flex justify-center flex-col space-y-4"
                     aria-label="Choose Login Method"
                 >
+                    { loginViewModel.oidcEnabled == true ?
                     <div
                         className={twMerge(
                             "flex flex-row justify-center space-x-2",
@@ -145,6 +146,7 @@ export const Login = ({
                             return (<Button theme='orange' label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />)
                         })}
                     </div>
+                    : <></>}
 
                     <Button
                         label="x509"

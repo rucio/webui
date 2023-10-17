@@ -14,8 +14,8 @@ export const getSampleVOs = (): VO[] => {
         name: "CMS",
         shortName: "cms",
         logoUrl: "https://cms.ch/logo.png",
-        oidcEnabled: false,
-        oidcProviders: [],
+        oidcEnabled: true,
+        oidcProviders: [getSampleOIDCProviders()[0]],
     };
     vos.push(atlas);
     vos.push(cms);
