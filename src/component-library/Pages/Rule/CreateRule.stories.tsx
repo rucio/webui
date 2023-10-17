@@ -40,3 +40,4 @@ CreateRule.args = {
     },
     rseListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureRSEAccountUsageLimitViewModel())),
 }
+
