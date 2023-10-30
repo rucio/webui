@@ -44,9 +44,10 @@ For each `OIDC Provider` specified in the `OIDC_PROVIDERS` variable, the additio
 3. Run the `generate_env.js` script to generate the `.env` file for the WEBUI. You can switch between `dev` and `prod` modes.
 
 ```bash
+npm install liquidjs
 npm run build
 chmod +x ./dist/generate-env.js
-source .env.template; ./dist/generate-env.js make prod ./.env --write
+source .env.base; ./dist/generate-env.js make prod ./.env --write
 ```
 
 The script will report any errors in the `.env.base` file. If there are no errors, the `.env` file will be generated in the current directory.
