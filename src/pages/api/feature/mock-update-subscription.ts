@@ -1,6 +1,6 @@
 import { withAuthenticatedSessionRoute } from "@/lib/infrastructure/auth/session-utils";
 import { NextApiRequest, NextApiResponse } from "next";
-import { fixtureRuleViewModel, fixtureSubscriptionRuleStatesViewModel, fixtureSubscriptionViewModel, generateSequenceArray } from "test/fixtures/table-fixtures";
+import { fixtureSubscriptionViewModel } from "test/fixtures/table-fixtures";
 import { Readable } from "stream";
 
 async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string) {
