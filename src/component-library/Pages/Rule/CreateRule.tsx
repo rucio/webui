@@ -124,12 +124,15 @@ export const CreateRule = (
         let DIDSearchString = explicitDIDSearchExpression ? explicitDIDSearchExpression : Page0State.selectDIDDataPattern
         // build request for comdom
         const request: HTTPRequest = {
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/listdids`),
+            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-dids`),
             method: "GET",
             headers: new Headers({
                 'Content-Type': 'application/json'
             } as HeadersInit),
-            body: null,
+            params: {
+                query: DIDSearchString,
+                type: DIDType.ALL
+            },
         }
         // run query
         await props.didListComDOM.setRequest(request)
@@ -187,7 +190,7 @@ export const CreateRule = (
         var RSEExpression = explicitRSEExpression ? explicitRSEExpression : Page1State.RSEExpression
         // build request for comdom
         const request: HTTPRequest = {
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/rseaccountusage`),
+            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/mock-list-rse-account-usage`),
             method: "GET",
             headers: new Headers({
                 'Content-Type': 'application/json'

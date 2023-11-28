@@ -1,6 +1,5 @@
 import { withAuthenticatedSessionRoute } from "@/lib/infrastructure/auth/session-utils";
 import { NextApiRequest, NextApiResponse } from "next";
-import { fixtureRuleMetaViewModel, generateSequenceArray } from "test/fixtures/table-fixtures";
 
 async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string) {
     if(req.method !== 'POST') {

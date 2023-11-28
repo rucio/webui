@@ -1,4 +1,3 @@
-
 'use client';
 
 import { ListRule } from "@/component-library/Pages/Rule/ListRule";
