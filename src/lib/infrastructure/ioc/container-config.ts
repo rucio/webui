@@ -61,6 +61,8 @@ import ListRSEsFeature from "./features/list-rses-feature";
 import ListAllRSEsFeature from "./features/list-all-rses-feature";
 import GetSiteHeaderFeature from "./features/get-site-header-feature";
 import ListSubscriptionRuleStatesFeature from "./features/list-subscription-rule-states-feature";
+import RuleGatewayOutputPort from "@/lib/core/port/secondary/rule-gateway-output-port";
+import RuleGateway from "../gateway/rule-gateway/rule-gateway";
 
 
 /**
@@ -75,7 +77,7 @@ appContainer.bind<RSEGatewayOutputPort>(GATEWAYS.RSE).to(RSEGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
 appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
 appContainer.bind<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA).to(ReplicaGateway);
-
+appContainer.bind<RuleGatewayOutputPort>(GATEWAYS.RULE).to(RuleGateway);
 
 // Load Common Features
 loadFeaturesSync(appContainer, [

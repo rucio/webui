@@ -1,7 +1,6 @@
-import { DIDType, LockState } from "@/lib/core/entity/rucio";
+import { DIDType } from "@/lib/core/entity/rucio";
 import { StoryFn, Meta } from "@storybook/react";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
-import { LockStateTag } from "../../Tags/LockStateTag";
 import { Heading as H } from "./Heading";
 
 export default {
