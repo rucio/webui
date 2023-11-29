@@ -1,8 +1,9 @@
-import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, AccountRSEUsageDTO, ListAccountRSEUsageDTO, TAccountAttributes } from "@/lib/core/dto/account-dto";
+import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, AccountInfoDTO, AccountRSEUsageDTO, ListAccountRSEUsageDTO, TAccountAttributes } from "@/lib/core/dto/account-dto";
 import AccountGatewayOutputPort from "@/lib/core/port/secondary/account-gateway-output-port";
 import type EnvConfigGatewayOutputPort from "@/lib/core/port/secondary/env-config-gateway-output-port";
 import { inject, injectable } from "inversify";
 import GATEWAYS from "../../ioc/ioc-symbols-gateway";
+import GetAccountInfoEndpoint from "./endpoints/get-account-info-endpoint";
 import ListAccountRSEUsageEndpoint from "./endpoints/list-account-rse-usage-endpoint";
 
 @injectable()
@@ -11,6 +12,12 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         @inject(GATEWAYS.ENV_CONFIG) private envConfigGateway: EnvConfigGatewayOutputPort,
     ) {
         this.envConfigGateway = envConfigGateway;
+    }
+    
+    async getAccountInfo(account: string, rucioAuthToken: string): Promise<AccountInfoDTO> {
+        const endpoint: GetAccountInfoEndpoint = new GetAccountInfoEndpoint(rucioAuthToken, account)
+        const dto: AccountInfoDTO = await endpoint.fetch()
+        return dto
     }
     
     async listAccountRSEUsage(account: string, rucioAuthToken: string): Promise<ListAccountRSEUsageDTO> {
