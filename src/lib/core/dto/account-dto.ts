@@ -43,3 +43,12 @@ export interface AccountRSEUsageDTO extends BaseDTO, RSEAccountUsageLimit {}
  * about the account
  */
 export interface AccountInfoDTO extends BaseDTO, AccountInfo {}
+
+/**
+ * A DTO containing the data field which is a record of key-value pairs.
+ * The key is the name of the RSE and the value is the limit of the RSE in bytes for a given account
+ */
+export interface AccountRSELimitDTO extends BaseDTO {
+    account: string,
+    limits: Record<string, number>
+}
