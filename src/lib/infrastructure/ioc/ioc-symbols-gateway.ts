@@ -10,6 +10,7 @@ const GATEWAYS = {
     STREAM: Symbol.for("StreamGateway"),
     SUBSCRIPTION: Symbol.for("SubscriptionGateway"),
     REPLICA: Symbol.for("ReplicaGateway"),
+    RULE: Symbol.for("RuleGateway"),
 }
 
 export default GATEWAYS;

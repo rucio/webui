@@ -22,8 +22,8 @@ export const LockStateTag: (
             <span
                 className={twMerge(
                     lockState === LockState.OK ? "bg-green-300 border-green-700 dark:bg-green-700 dark:border-green-200" : (
-                        lockState === LockState.Stuck ? "bg-amber-300 border-amber-700 dark:bg-amber-700 dark:border-amber-200" : (
-                            lockState === LockState.Replicating ? "bg-red-400 border-red-700 dark:bg-red-700 dark:border-red-200" : 
+                        lockState === LockState.STUCK ? "bg-amber-300 border-amber-700 dark:bg-amber-700 dark:border-amber-200" : (
+                            lockState === LockState.REPLICATING ? "bg-red-400 border-red-700 dark:bg-red-700 dark:border-red-200" : 
                                 ""
                         )
                     ),

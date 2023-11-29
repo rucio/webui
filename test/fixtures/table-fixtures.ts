@@ -92,7 +92,7 @@ export function fixtureRulePageLockEntryViewModel(): RulePageLockEntryViewModel 
         scope: createRandomScope(),
         name: faker.string.alphanumeric(10),
         rse: createRSEName(),
-        state: faker.helpers.arrayElement(['R', 'O', 'S']) as LockState,
+        state: faker.helpers.arrayElement(['R', 'O', 'S', 'U']) as LockState,
         ddm_link: faker.internet.url(),
         fts_link: faker.internet.url(),
     }

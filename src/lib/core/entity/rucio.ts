@@ -239,9 +239,10 @@ export type RSEAttribute = {
 
 // rucio.db.sqla.constants::LockState
 export enum LockState {
-    Replicating = "R",
+    REPLICATING = "R",
     OK = "O",
-    Stuck = "S",
+    STUCK = "S",
+    UNKNOWN = "U",
 }
 
 // rucio.db.sqla.constants::RuleNotification
