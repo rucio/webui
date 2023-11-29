@@ -4,6 +4,31 @@ export type DateISO = string
  * Entity models for Rucio. Please keep the type definitions sorted in alphabetical order.
  */
 
+export enum AccountStatus {
+    ACTIVE = 'ACTIVE',
+    SUSPENDED = 'SUSPENDED',
+    DELETED = 'DELETED',
+    UNKNOWN = 'UNKNOWN',
+}
+
+export enum AccountType {
+    USER = 'USER',
+    GROUP = 'GROUP',
+    SERVICE = 'SERVICE',
+    UNKNOWN = 'UNKNOWN',
+}
+
+export type AccountInfo = {
+    account: string;
+    accountType: AccountType;
+    accountStatus: AccountStatus;
+    email: string;
+    createdAt: DateISO;
+    updatedAt: DateISO;
+    deletedAt?: DateISO;
+    suspendedAt?:  DateISO;
+};
+
 // results of core::did::list_dids (with `long` option)
 export type DID = {
     name: string;

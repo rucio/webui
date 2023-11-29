@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from "@/lib/sdk/dto"
-import { RSEAccountUsageLimit } from "../entity/rucio"
+import { AccountInfo, RSEAccountUsageLimit } from "../entity/rucio"
 
 type TAccountAttribute = {
     key: string,
@@ -37,3 +37,9 @@ export interface ListAccountRSEUsageDTO extends BaseStreamableDTO {}
  * DTO for storing individually streamed RSE Usage for an account
  */
 export interface AccountRSEUsageDTO extends BaseDTO, RSEAccountUsageLimit {}
+
+/**
+ * DTO for storing the response from /accounts/<account>/ endpoint. Contains information 
+ * about the account
+ */
+export interface AccountInfoDTO extends BaseDTO, AccountInfo {}
