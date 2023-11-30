@@ -23,6 +23,8 @@ const USECASE_FACTORY = {
     LIST_RSES: Symbol.for("Factory<ListRSEsUseCase>"),
     LIST_SUBSCRIPTIONS: Symbol.for("Factory<ListSubscriptionsUseCase>"),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for("Factory<ListSubscriptionRuleStatesUseCase>"),
+    LIST_TRANSFER_STATS: Symbol.for("Factory<ListTransferStatsUseCase>"),
+    LIST_TRANSFERS: Symbol.for("Factory<ListTransfersUseCase>"),
     LOGIN_CONFIG: Symbol.for("Factory<LoginConfigUseCase>"),
     SET_X509_LOGIN_SESSION: Symbol.for("Factory<SetX509LoginSessionUseCase>"),
     GET_SITE_HEADER: Symbol.for("Factory<SiteHeaderUseCase>"),

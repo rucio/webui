@@ -291,20 +291,16 @@ export type Request = {
  * Represents statistics for the nubmer of transfer requests over dest_rse and
  * source_rse in Rucio.
  */
-export type RequestStatsPerPair = {
-    activity: string,
-    counter: number,
-    bytes: number,
-}
-
 export type RequestStats = {
     account: string,
-    state: RequestState,
     dest_rse_id: string,
     source_rse_id: string,
     dest_rse: string,
     source_rse: string,
-    request_stats: RequestStatsPerPair[],
+    activity: string,
+    state: RequestState,
+    counter: number,
+    bytes: number,
 }
 
 /*

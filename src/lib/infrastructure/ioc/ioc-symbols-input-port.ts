@@ -21,6 +21,8 @@ const INPUT_PORT = {
     LIST_RSES: Symbol.for("ListRSEsInputPort"),
     LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsInputPort"),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for("ListSubscriptionRuleStatesInputPort"),
+    LIST_TRANSFER_STATS: Symbol.for("ListTransferStatsInputPort"),
+    LIST_TRANSFERS: Symbol.for("ListTransfersInputPort"),
     LOGIN_CONFIG: Symbol.for("LoginConfigInputPort"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionInputPort"),
     GET_SITE_HEADER: Symbol.for("SiteHeaderInputPort"),

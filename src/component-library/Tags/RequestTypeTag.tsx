@@ -1,5 +1,4 @@
 import { RequestType } from "@/lib/core/entity/rucio";
-import { RowSelection } from "@tanstack/react-table";
 import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 

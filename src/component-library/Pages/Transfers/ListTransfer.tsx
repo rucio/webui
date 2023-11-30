@@ -1,6 +1,5 @@
 import useReponsiveHook from "@/component-library/Helpers/ResponsiveHook"
 import { TableFilterDiscrete } from "@/component-library/StreamedTables/TableFilterDiscrete"
-import { TableFilterString } from "@/component-library/StreamedTables/TableFilterString"
 import { RequestTypeTag } from "@/component-library/Tags/RequestTypeTag"
 import { RequestType } from "@/lib/core/entity/rucio"
 import { TransferViewModel } from "@/lib/infrastructure/data/view-model/request"
@@ -59,6 +58,7 @@ export const ListTransfer = (
         >
             <Heading
                 title="List Active Transfers"
+                subtitle={`For Pair (RSE)`}
             />
             <Body>
                 <StreamedTable<TransferViewModel>
