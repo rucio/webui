@@ -18,8 +18,9 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         rucioAuthToken: string,
         scope: string,
         name: string,
+        dynamicDepth: DIDType.DATASET | DIDType.FILE | undefined,
     ): Promise<DIDExtendedDTO> {
-        const endpoint = new GetDIDEndpoint(rucioAuthToken, scope, name)
+        const endpoint = new GetDIDEndpoint(rucioAuthToken, scope, name, dynamicDepth)
         const dto = await endpoint.fetch()
         return dto
     }

@@ -1,5 +1,4 @@
 import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints"
-import { BaseHttpErrorTypes } from "@/lib/sdk/http"
 import { HTTPRequest } from "@/lib/sdk/http";
 import { DIDExtendedDTO } from "@/lib/core/dto/did-dto";
 import { DIDType } from "@/lib/core/entity/rucio";
@@ -11,6 +10,8 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
         private rucioAuthToken: string,
         private scope: string,
         private name: string,
+        private dynamicDepth: DIDType.DATASET | DIDType.FILE | undefined = undefined,
+        
     ) {
         super()
     }
@@ -20,6 +21,9 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
     async initialize(): Promise<void> {
         await super.initialize()
         this.url = `${this.rucioHost}/dids/${this.scope}/${this.name}/status`
+        if(this.dynamicDepth) {
+            this.url += `?dynamic_depth=${this.dynamicDepth.toUpperCase()}`
+        }
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,
@@ -64,6 +68,7 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
                 if (error.exception === 'ScopeNotFound') {
                     dto.errorMessage = 'Scope Not Found'
                 }
+                dto.errorMessage = error
                 break
             default:
                 dto.errorMessage = 'Unknown Error'
