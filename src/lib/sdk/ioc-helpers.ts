@@ -289,10 +289,8 @@ export async function loadFeatures(appContainer: Container, featuresDir?: string
 }
 
 export function loadFeaturesSync(appContainer: Container, features: IFeature[]) {
-    console.log(`Loading ${features.length} features`)
     for ( const feature of features ) {
         try {
-            console.log(`Loading feature ${feature.name}`)
             feature.load(appContainer);
         } catch (error) {
             console.error(`Error loading feature ${feature.name}: ${error}`)

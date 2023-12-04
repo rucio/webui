@@ -11,9 +11,10 @@ export default interface DIDGatewayOutputPort {
      * @param rucioAuthToken A valid Rucio auth token.
      * @param scope The scope of the DID.
      * @param name The exact name of the DID.
+     * @param dynamicDepth The depth until until which the length and bytes should be calculated. Optional.
      * @returns A Promise that resolves to a {@link DIDExtendedDTO} object.
      */
-    getDID(rucioAuthToken: string, scope: string, name: string): Promise<DIDExtendedDTO>
+    getDID(rucioAuthToken: string, scope: string, name: string, dynamicDepth: DIDType.DATASET | DIDType.FILE | undefined): Promise<DIDExtendedDTO>
     
     /**
      * Retrieves metadata for a DID from the Rucio Server.

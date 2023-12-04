@@ -121,6 +121,7 @@ describe('DID Gateway Tests', () => {
             'rucio-ddmlab-askdjljioj',
             'test',
             'dataset1',
+            undefined,
         )
         expect(didDTO.status).toBe('success')
         expect(didDTO.account).toBe('root')
