@@ -189,6 +189,7 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         } catch(error) {
             const errorDTO: CreateDIDSampleDTO = {
                 status: 'error',
+                created: false,
                 errorName: 'An exception occurred while creating the sample DID.',
                 errorType: 'gateway_endpoint_error',
                 errorCode: 500,
