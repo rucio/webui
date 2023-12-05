@@ -1,5 +1,4 @@
 import { Transform, PassThrough, Readable } from 'stream';
-import { BaseHTTPError } from './http';
 
 
 /**
