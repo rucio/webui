@@ -20,7 +20,6 @@ export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitVie
         rse_id: '',
         rse: '',
         account: '',
-        used_files: 0,
         used_bytes: 0,
         quota_bytes: 0,
     } as RSEAccountUsageLimitViewModel

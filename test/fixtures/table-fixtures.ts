@@ -133,7 +133,7 @@ export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitView
         rse_id: faker.string.uuid(),
         rse: createRSEName(),
         account: faker.internet.userName(),
-        used_files: faker.number.int({ min: 0, max: 1e6 }),
+        files: faker.number.int({ min: 0, max: 1e6 }),
         used_bytes: faker.number.int({ min: 0, max: 1e12 }),
         quota_bytes: faker.number.int({ min: 0, max: 1e12 }),
     }
