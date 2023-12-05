@@ -52,7 +52,7 @@ describe('Account Gateway : List RSE Usage for an account', () => {
         expect(recievedData[0].rse_id).toEqual('d72884a3eb1747cf979af8959c978aab')
         expect(recievedData[0].rse).toEqual('XRD2')
         expect(recievedData[0].used_bytes).toEqual(100)
-        expect(recievedData[0].used_files).toEqual(2)
+        expect(recievedData[0].files).toEqual(2)
         expect(recievedData[0].quota_bytes).toEqual(900)
     })
 });

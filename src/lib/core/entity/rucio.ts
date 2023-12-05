@@ -122,7 +122,7 @@ export type RSEAccountUsageLimit = {
     rse_id: string;
     rse: string;
     account: string;
-    used_files: number;
+    files: number;
     used_bytes: number;
     quota_bytes: number;
 }
