@@ -285,6 +285,7 @@ export enum DIDType {
     FILE = "File",
     ALL = "All",
     UNKNOWN = "Unknown",
+    DERIVED = "Derived",
 }
 
 // replace this!
