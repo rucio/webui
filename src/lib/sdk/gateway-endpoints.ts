@@ -154,14 +154,16 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
     protected initialized: boolean = false;
     protected request: HTTPRequest | undefined;
     protected rucioHost: string = 'https://rucio-host.com';
-
+    protected parsedBodyAsText: boolean = false;
     protected url: string = '';
 
     protected envConfigGateway: EnvConfigGatewayOutputPort;
     
     constructor(
+        parseBodyAsText: boolean = false
     ) {
         this.envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
+        this.parsedBodyAsText = parseBodyAsText;
     }
 
     /**
@@ -229,8 +231,13 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             } as TDTO;
         } else {
             try {
-                const data = await response.json();
-                return this.createDTO(data);
+                if(!this.parsedBodyAsText) {
+                    const data = await response.json();
+                    return this.createDTO(data);
+                } else {
+                    const text = await response.text();
+                    return this.createDTO(text);
+                }
             } catch(error) {
                 return {
                     status: 'error',
