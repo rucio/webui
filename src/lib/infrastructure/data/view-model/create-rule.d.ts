@@ -44,6 +44,7 @@ export interface CreateRuleQuery {
     numsamples: number
     groupby: DIDType
     comment: string
+    approval: boolean
 }
 
 export interface TypedDIDValidationQuery {

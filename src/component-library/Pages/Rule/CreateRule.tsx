@@ -83,6 +83,7 @@ interface Page2State {
     takesamples: boolean
     numsamples: number
     freeComment: string
+    approval: boolean
 }
 
 export const CreateRule = (
@@ -216,7 +217,8 @@ export const CreateRule = (
         asynchronousMode: false,
         numcopies: 1,
         freeComment: "",
-        page2progressBlocked: false
+        page2progressBlocked: false,
+        approval: false
     })
 
     /* =================================================
@@ -234,6 +236,7 @@ export const CreateRule = (
             numsamples: Page2State.numsamples,
             groupby: Page2State.groupBy,
             comment: Page2State.freeComment,
+            approval: Page2State.approval
         }
 
         // execute query
@@ -474,6 +477,7 @@ export const CreateRule = (
                         numsamples: Page2State.numsamples,
                         groupby: Page2State.groupBy,
                         comment: Page2State.freeComment,
+                        approval: Page2State.approval
                     }} />
                 </RulePage>
             </Body>
