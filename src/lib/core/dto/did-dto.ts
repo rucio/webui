@@ -66,3 +66,10 @@ export interface ListDIDRulesDTO extends BaseStreamableDTO {}
 export interface DIDRulesDTO extends Omit<DIDRules, 'subscription'>, BaseDTO {
     subscription_id?: string
 }
+
+/**
+ * Data Transfer Object for CreateDidSampleEndpoint
+ */
+export interface CreateDIDSampleDTO extends BaseDTO {
+    created: boolean
+}

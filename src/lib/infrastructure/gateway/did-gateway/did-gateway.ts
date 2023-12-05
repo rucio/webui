@@ -1,4 +1,4 @@
-import { DIDExtendedDTO, DIDMetaDTO, ListDIDDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from '@/lib/core/dto/did-dto'
+import { DIDExtendedDTO, DIDMetaDTO, ListDIDDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO, CreateDIDSampleDTO } from '@/lib/core/dto/did-dto'
 import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import { injectable } from 'inversify'
@@ -9,7 +9,7 @@ import ListDIDsEndpoint from './endpoints/list-dids-endpoint'
 import GetDIDKeyValuePairsEndpoint from './endpoints/get-did-keyvaluepairs-endpoint'
 import ListDIDParentsEndpoint from './endpoints/list-did-parents-endpoint'
 import ListDIDContentsEndpoint from './endpoints/list-did-contents-endpoint'
-
+import CreateDIDSampleEndpoint from './endpoints/create-did-sample-endpoint'
 
 @injectable()
 export default class RucioDIDGateway implements DIDGatewayOutputPort {
@@ -166,6 +166,30 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
             const errorDTO: ListDIDRulesDTO = {
                 status: 'error',
                 errorName: 'Unknown Error',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
+    }
+
+    async createDIDSample(
+        rucioAuthToken: string,
+        inputScope: string,
+        inputName: string,
+        outputScope: string,
+        outputName: string,
+        nbFiles: number
+    ): Promise<CreateDIDSampleDTO> {
+        try {
+            const endpoint = new CreateDIDSampleEndpoint(rucioAuthToken, inputScope, inputName, outputScope, outputName, nbFiles);
+            const dto = await endpoint.fetch()
+            return dto;
+        } catch(error) {
+            const errorDTO: CreateDIDSampleDTO = {
+                status: 'error',
+                errorName: 'An exception occurred while creating the sample DID.',
                 errorType: 'gateway_endpoint_error',
                 errorCode: 500,
                 errorMessage: error?.toString(),

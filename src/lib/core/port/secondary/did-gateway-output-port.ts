@@ -1,4 +1,4 @@
-import { ListDIDDTO, DIDExtendedDTO, DIDMetaDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO } from "../../dto/did-dto";
+import { ListDIDDTO, DIDExtendedDTO, DIDMetaDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO, CreateDIDSampleDTO } from "../../dto/did-dto";
 import { DIDType } from "../../entity/rucio";
 
 
@@ -15,7 +15,7 @@ export default interface DIDGatewayOutputPort {
      * @returns A Promise that resolves to a {@link DIDExtendedDTO} object.
      */
     getDID(rucioAuthToken: string, scope: string, name: string, dynamicDepth: DIDType.DATASET | DIDType.FILE | undefined): Promise<DIDExtendedDTO>
-    
+
     /**
      * Retrieves metadata for a DID from the Rucio Server.
      * @param rucioAuthToken A valid Rucio auth token.
@@ -24,7 +24,7 @@ export default interface DIDGatewayOutputPort {
      * @returns A Promise that resolves to a {@link DIDMetaDTO} object.
      */
     getDIDMeta(rucioAuthToken: string, scope: string, name: string): Promise<DIDMetaDTO>
-    
+
     /**
      * Retrieves key-value pairs for a DID from the Rucio Server.
      * @param rucioAuthToken A valid Rucio auth token.
@@ -77,4 +77,23 @@ export default interface DIDGatewayOutputPort {
      * @param name The name of the DID.
      */
     listDIDContents(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDDTO>
+
+    /**
+     * Sends a request to create a sample DID to the Rucio Server.
+     * @param rucioAuthToken A valid Rucio auth token.
+     * @param inputScope The scope of the input DID.
+     * @param inputName The name of the input DID.
+     * @param outputScope The scope of the output DID.
+     * @param outputName The name of the output DID.
+     * @param nbFiles The number of files.
+     * @returns A Promise that resolves to a {@link CreateDIDSampleDTO} object.
+     */
+    createDIDSample(
+        rucioAuthToken: string,
+        inputScope: string,
+        inputName: string,
+        outputScope: string,
+        outputName: string,
+        nbFiles: number
+    ): Promise<CreateDIDSampleDTO>
 }
