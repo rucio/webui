@@ -1,21 +1,16 @@
 import { BaseUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { injectable } from "inversify";
+import { generateDerivedDIDName, generateNewScope } from "../domain-service/did-domain-services";
 import { AccountInfoDTO } from "../dto/account-dto";
-import { DIDDTO, DIDExtendedDTO } from "../dto/did-dto";
-import { AccountType, DID, DIDType } from "../entity/rucio";
+import { DIDExtendedDTO } from "../dto/did-dto";
+import { AccountType, DID, DIDLong, DIDType } from "../entity/rucio";
 import type { CreateRuleSummaryInputPort, CreateRuleSummaryOutputPort } from "../port/primary/create-rule-summary-ports";
 import type AccountGatewayOutputPort from "../port/secondary/account-gateway-output-port";
 import type DIDGatewayOutputPort from "../port/secondary/did-gateway-output-port";
 import { CreateRuleSummaryRequest, CreateRuleSummaryResponse, CreateRuleSummaryError } from "../usecase-models/create-rule-summary-usecase-models";
+import {createDIDSummaryRow, TDIDSummaryRow} from "../domain-service/rule-domain-services";
 
-type TDIDSummaryRow = {
-    did: DID;
-    copies: number;
-    files: number;
-    size: number | 'cannot be determined as DID has not been sampled';
-    requested_size: number | 'cannot be determined as DID has not been sampled';
-}
 
 @injectable()
 export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRequestModel<CreateRuleSummaryRequest>, CreateRuleSummaryResponse, CreateRuleSummaryError> implements CreateRuleSummaryInputPort{
@@ -35,41 +30,19 @@ export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRe
         return undefined;
     }
 
-    protected async generateNewScope(rucioAuthToken: string, account: string): Promise<string> {
-        const accountInfoDTO: AccountInfoDTO = await this.accountGateway.getAccountInfo(account, rucioAuthToken);
-        if(accountInfoDTO.accountType === AccountType.USER) {
-            return `user.${account}`;
-        }else if(accountInfoDTO.accountType === AccountType.GROUP) {
-            return `group.${account}`;
-        } else {
-            throw new Error(`Invalid account type for rule creation: ${accountInfoDTO.accountType}`);
-        }
-    }
-
-    protected generateDerivedDIDName(newScope: string, selectedDID: DID): DID {
-        const newName = `${newScope}.${selectedDID.name}_der${Date.now() / 1000}`;
-        return {
-            name: newName,
-            scope: newScope,
-            did_type: DIDType.DERIVED,
-        } as DID
-    }
-
     async execute(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): Promise<void> {
-        const didSummaryRows: TDIDSummaryRow[] = [];
-        
+        const account = requestModel.account;
+        const rucioAuthToken = requestModel.rucioAuthToken;
+        // DID Summary Table
+        const didSummaryTable: TDIDSummaryRow[] = [];
         if(requestModel.withSamples) {
-            const newScope: string = await this.generateNewScope(requestModel.rucioAuthToken, requestModel.account); 
+            const accountInfoDTO: AccountInfoDTO = await this.accountGateway.getAccountInfo(account, rucioAuthToken);
+            const accountType: AccountType = accountInfoDTO.accountType;
+            const newScope: string = generateNewScope(account, accountType); 
             requestModel.selectedDIDs.forEach((did: DID) => {
-            const dervicedDID: DID = this.generateDerivedDIDName(newScope, did);
-            const didSummaryRow: TDIDSummaryRow = {
-                did: dervicedDID,
-                copies: requestModel.copies,
-                files: requestModel.sampleFileCount,
-                size: 'cannot be determined as DID has not been sampled',
-                requested_size: 'cannot be determined as DID has not been sampled'
-            };
-            didSummaryRows.push(didSummaryRow);
+            const derivedDID: DID = generateDerivedDIDName(newScope, did);
+            const didSummaryRow =  createDIDSummaryRow(derivedDID as DIDLong, requestModel.copies)
+            didSummaryTable.push(didSummaryRow);
             });
         } else {
             requestModel.selectedDIDs.forEach(async (did: DID) => {
@@ -80,19 +53,21 @@ export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRe
                     DIDType.FILE
                 )
                 if(didDTO.status === 'success') {
-                    const didSummaryRow: TDIDSummaryRow = {
-                        did: didDTO,
-                        copies: requestModel.copies,
-                        files: didDTO.length,
-                        size: didDTO.bytes,
-                        requested_size: requestModel.copies * didDTO.bytes,
-                    }
-                    didSummaryRows.push(didSummaryRow);
+                    const didSummaryRow: TDIDSummaryRow = createDIDSummaryRow(
+                        didDTO,
+                        requestModel.copies,
+                    );
+                    didSummaryTable.push(didSummaryRow);
                 } else {
                     // TODO: could not get DID info, handle error?
                 }
             })
         }
+
+        // RSE Summary Table
+
+
+
 
     }
 }
