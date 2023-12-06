@@ -1,6 +1,5 @@
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
-import { DIDExtendedDTO } from "../dto/did-dto";
-import { DID, DIDLong, RSEAccountUsage } from "../entity/rucio";
+import { DIDLong, RSEAccountUsage } from "../entity/rucio";
 
 /**
  * @interface ListAccountRSEQuotasRequest represents the ListAccountRSEQuotas request model for a streamed element.
@@ -8,12 +7,17 @@ import { DID, DIDLong, RSEAccountUsage } from "../entity/rucio";
 export interface ListAccountRSEQuotasRequest {
     account: string;
     requestedDIDs: DIDLong[];
+    rseExpression: string;
 }
 
 /**
  * @interface ListAccountRSEQuotasResponse represents the ListAccountRSEQuotas response model for a streamed element.
  */
-export interface ListAccountRSEQuotasResponse extends RSEAccountUsage, BaseResponseModel {}
+export interface ListAccountRSEQuotasResponse extends RSEAccountUsage, BaseResponseModel {
+    bytes_remaining: number,
+    has_quota: boolean,
+    total_expected_usage: number,
+}
 
 
 /**

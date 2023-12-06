@@ -63,7 +63,7 @@ describe('List RSEs Feature tests', () => {
             availability: 7,
         })
         const listRSEsEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/rses?expression=XRD1`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rses/?expression=XRD1`,
             method: 'GET',
             includes: 'rses?expression=XRD1',
             response: {

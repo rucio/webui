@@ -18,7 +18,7 @@ type TDIDSummaryRow = {
 }
 
 @injectable()
-class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRequestModel<CreateRuleSummaryRequest>, CreateRuleSummaryResponse, CreateRuleSummaryError> implements CreateRuleSummaryInputPort{
+export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRequestModel<CreateRuleSummaryRequest>, CreateRuleSummaryResponse, CreateRuleSummaryError> implements CreateRuleSummaryInputPort{
     private total_copies = 0
     private total_files = 0;
     private total_size = 0;
@@ -94,6 +94,5 @@ class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRequestModel<Crea
             })
         }
 
-        
     }
 }

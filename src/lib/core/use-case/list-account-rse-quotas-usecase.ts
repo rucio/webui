@@ -103,7 +103,7 @@ export default class ListAccountRSEQuotasUseCase extends BaseStreamingUseCase<Au
     }
 
     async generateSourceStream(requestModel: AuthenticatedRequestModel<AuthenticatedRequestModel<ListAccountRSEQuotasRequest>>): Promise<{ status: "success" | "error"; stream?: Transform | Readable | PassThrough | null | undefined; error?: ListAccountRSEQuotasError | undefined; }> {
-        const listRSEDTO: ListRSEsDTO = await this.rseGateway.listRSEs(requestModel.rucioAuthToken, '');
+        const listRSEDTO: ListRSEsDTO = await this.rseGateway.listRSEs(requestModel.rucioAuthToken, requestModel.rseExpression);
         if(listRSEDTO.status === 'error') {
             const errorModel: ListAccountRSEQuotasError = {
                 status: 'error',
@@ -204,6 +204,9 @@ export default class ListAccountRSEQuotasUseCase extends BaseStreamingUseCase<Au
             files: -1, // does not matter for this use case
             used_bytes: bytesUsed,
             bytes_limit: bytesLimit,
+            bytes_remaining: bytesRemaining,
+            has_quota: hasQuota,
+            total_expected_usage: totalExpectedUsage,
         }
 
         return {

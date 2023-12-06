@@ -130,6 +130,7 @@ describe("Create Rule: List Account RSE Quotas", () => {
         const recievedData: string[] = await collectStreamedData<string>(res)
         expect(recievedData.length).toEqual(5)
         expect(JSON.parse(recievedData[0]).used_bytes === 500).toBeTruthy()
+        expect(JSON.parse(recievedData[0]).has_quota).toBeFalsy()
         expect(JSON.parse(recievedData[1]).used_bytes === 0).toBeTruthy()
     });
 

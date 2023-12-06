@@ -12,7 +12,11 @@ export interface RSEAttributeViewModel extends BaseViewModel {
     attributes: RSEAttribute[]
 }
 
-export interface RSEAccountUsageLimitViewModel extends RSEAccountUsage, BaseViewModel {}
+export interface RSEAccountUsageLimitViewModel extends RSEAccountUsage, BaseViewModel {
+    bytes_remaining: number,
+    has_quota: boolean,
+    total_expected_usage: number,
+}
 
 export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
     return {

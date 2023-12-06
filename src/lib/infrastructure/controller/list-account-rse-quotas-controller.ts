@@ -10,6 +10,7 @@ import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
 export type ListAccountRSEQuotasControllerParameters = TAuthenticatedControllerParameters & {
     account: string;
     requestedDIDs: DIDLong[];
+    rseExpression?: string;
 }
 
 @injectable()
@@ -25,6 +26,7 @@ class ListAccountRSEQuotasController extends BaseController<ListAccountRSEQuotas
             rucioAuthToken: parameters.rucioAuthToken,
             account: parameters.account,
             requestedDIDs: parameters.requestedDIDs,
+            rseExpression: parameters.rseExpression ?? '',
         }
         return requestModel;
     }
