@@ -1,5 +1,5 @@
 import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse";
-import { BaseStreamingUseCase, BaseUseCase } from "@/lib/sdk/usecase";
+import { BaseStreamingUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { collectStreamedData } from "@/lib/sdk/utils";
 import { injectable } from "inversify";
@@ -169,10 +169,6 @@ export default class ListAccountRSEQuotasUseCase extends BaseStreamingUseCase<Au
             }
         }
 
-        if(bytesLimit === -1) {
-            bytesLimit = Infinity;
-        }
-
         if(bytesLimit < 0) {
             bytesLimit = 0;
         }
@@ -189,13 +185,13 @@ export default class ListAccountRSEQuotasUseCase extends BaseStreamingUseCase<Au
             bytesRemaining = 0;
         }
 
-        if(bytesUsed < 0) {
+        if(bytesUsed < 0 || bytesUsed === Infinity  || isNaN(bytesUsed)) {
             bytesUsed = 0;
         }
 
-        if(bytesLimit === Infinity) {
-            bytesLimit = Infinity
-            bytesRemaining = Infinity;
+        if(bytesLimit === -1 || bytesLimit == Infinity) {
+            bytesLimit = -1
+            bytesRemaining = -1;
             hasQuota = true;
         }
 
