@@ -128,16 +128,19 @@ export function fixtureRuleMetaViewModel(): RuleMetaViewModel {
 }
 
 export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
+    const bytes_limit = faker.number.int({ min: 0, max: 1e12 })
+    const used_bytes = faker.number.int({ min: 0, max: 1e12 })
+    const has_quota = bytes_limit > used_bytes 
     return {
         ...mockBaseVM(),
         rse_id: faker.string.uuid(),
         rse: createRSEName(),
         account: faker.internet.userName(),
         files: faker.number.int({ min: 0, max: 1e6 }),
-        used_bytes: faker.number.int({ min: 0, max: 1e12 }),
-        bytes_limit: faker.number.int({ min: 0, max: 1e12 }),
-        bytes_remaining: faker.number.int({ min: 0, max: 1e12 }),
-        has_quota: faker.datatype.boolean(),
+        used_bytes: used_bytes,
+        bytes_limit: bytes_limit,
+        bytes_remaining: bytes_limit - used_bytes,
+        has_quota: bytes_limit > used_bytes,
         total_expected_usage: faker.number.int({ min: 0, max: 1e12 }),
     }
 }

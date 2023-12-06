@@ -30,7 +30,7 @@ export const CreateRuleDIDTable = (
                             type="checkbox"
                             disabled={!info.row.getCanSelect()}
                             checked={info.row.getIsSelected()}
-                            onClick={e => {
+                            onChange={e => {
                                 info.row.toggleSelected()
                             }}
                         />

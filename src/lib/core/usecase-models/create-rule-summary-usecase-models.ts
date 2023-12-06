@@ -1,5 +1,6 @@
 import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
 import { DID } from "../entity/rucio";
+import { TRSESummaryRow } from "../entity/rule-summary";
 
 export interface TCreateRuleWithSamplesSummaryRequest {
     withSamples: true;
@@ -18,7 +19,10 @@ export interface TCreateRuleWithoutSamplesSummaryRequest {
     copies: number;
 }
 
-export type CreateRuleSummaryRequest = TCreateRuleWithSamplesSummaryRequest | TCreateRuleWithoutSamplesSummaryRequest;
+export type CreateRuleSummaryRequest = {
+    summarySelectedRSEs: TRSESummaryRow[];
+    askApproval: boolean;
+} & (TCreateRuleWithSamplesSummaryRequest | TCreateRuleWithoutSamplesSummaryRequest);
 
 type DIDSummary = {
 

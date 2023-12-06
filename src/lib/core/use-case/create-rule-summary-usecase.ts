@@ -10,7 +10,7 @@ import type AccountGatewayOutputPort from "../port/secondary/account-gateway-out
 import type DIDGatewayOutputPort from "../port/secondary/did-gateway-output-port";
 import { CreateRuleSummaryRequest, CreateRuleSummaryResponse, CreateRuleSummaryError } from "../usecase-models/create-rule-summary-usecase-models";
 import {createDIDSummaryRow} from "../utils/create-rule-utils";
-import { TDIDSummaryRow } from "../entity/rule-summary";
+import { TDIDSummaryRow, TRSESummaryRow } from "../entity/rule-summary";
 
 
 @injectable()
@@ -66,6 +66,13 @@ export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRe
         }
 
         // RSE Summary Table
+        const selectedRSEs: TRSESummaryRow[] = requestModel.summarySelectedRSEs
+
+        let approvalRequested = requestModel.askApproval;
+        selectedRSEs.forEach((rse: TRSESummaryRow) => {
+            
+        })
+
 
 
 
