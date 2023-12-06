@@ -18,11 +18,11 @@ describe("Account Gateway: Get Account Limits", () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "XRD1": -1,
-                    "XRD2": 900,
-                    "XRD3": 600,
-                    "XRD4": 700,
-                    "SSH1": 800
+                    "XRD1": 200,
+                    "XRD2": Infinity,
+                    "XRD3": Infinity,
+                    "XRD4": -1,
+                    "SSH1": -1
                 })
             }
         }

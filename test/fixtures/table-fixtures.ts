@@ -136,6 +136,9 @@ export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitView
         files: faker.number.int({ min: 0, max: 1e6 }),
         used_bytes: faker.number.int({ min: 0, max: 1e12 }),
         bytes_limit: faker.number.int({ min: 0, max: 1e12 }),
+        bytes_remaining: faker.number.int({ min: 0, max: 1e12 }),
+        has_quota: faker.datatype.boolean(),
+        total_expected_usage: faker.number.int({ min: 0, max: 1e12 }),
     }
 }
 
