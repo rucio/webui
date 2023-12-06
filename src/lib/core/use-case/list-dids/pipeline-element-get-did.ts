@@ -1,6 +1,7 @@
 import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { DIDExtendedDTO } from "../../dto/did-dto";
+import { DIDExtendedDTO, DIDMetaDTO } from "../../dto/did-dto";
+import { DIDType } from "../../entity/rucio";
 import DIDGatewayOutputPort from "../../port/secondary/did-gateway-output-port";
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../../usecase-models/list-dids-usecase-models";
 
@@ -10,7 +11,9 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
     }
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>, responseModel: ListDIDsResponse): Promise<DIDExtendedDTO> {
         try {
-            const dto: DIDExtendedDTO = await this.didGateway.getDID(requestModel.rucioAuthToken, responseModel.scope, responseModel.name, undefined);
+            const dto: DIDExtendedDTO = await this.didGateway.getDID(requestModel.rucioAuthToken, responseModel.scope, responseModel.name, DIDType.FILE);
+            const didMetaDTO: DIDMetaDTO = await this.didGateway.getDIDMeta(requestModel.rucioAuthToken, responseModel.scope, responseModel.name);
+            dto.did_type = didMetaDTO.did_type;
             return dto;
         } catch (error: any) {
             const errorDTO: DIDExtendedDTO = {
@@ -79,6 +82,7 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
     transformResponseModel(responseModel: ListDIDsResponse, dto: DIDExtendedDTO): ListDIDsResponse {
         responseModel.bytes = dto.bytes;
         responseModel.length = dto.length;
+        responseModel.did_type = dto.did_type;
         return responseModel;
     }
 
