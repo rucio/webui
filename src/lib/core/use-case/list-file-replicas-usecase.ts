@@ -24,6 +24,10 @@ export default class ListFileReplicasUseCase extends BaseSingleEndpointStreaming
         return undefined;
     }
 
+    async intializeRequest(request: AuthenticatedRequestModel<AuthenticatedRequestModel<ListFileReplicasRequest>>): Promise<ListFileReplicasError | undefined> {
+        return undefined;
+    }
+
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListFileReplicasRequest>): Promise<ListReplicasDTO> {
         const { rucioAuthToken, scope, name } = requestModel;
         const dto: ListReplicasDTO = await this.gateway.listFileReplicas(rucioAuthToken, scope, name);

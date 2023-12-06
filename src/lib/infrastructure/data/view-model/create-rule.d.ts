@@ -1,4 +1,4 @@
-import { DIDLong, DIDType, RSEAccountUsageLimit } from "@/lib/core/entity/rucio";
+import { DIDLong, DIDType, RSEAccountUsage } from "@/lib/core/entity/rucio";
 import { FetchStatus } from "@tanstack/react-query";
 
 export interface CreateRuleViewModel {
@@ -81,6 +81,6 @@ export interface DIDSearchResponse {
 }
 
 export interface RSESearchResponse {
-    data: RSEAccountUsageLimit[],
+    data: RSEAccountUsage[],
     fetchStatus: FetchStatus
 }

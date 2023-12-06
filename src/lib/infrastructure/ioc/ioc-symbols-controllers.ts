@@ -11,6 +11,7 @@ const CONTROLLERS = {
     GET_RSE_ATTRIBUTES: Symbol.for("GetRSEAttributesController"),
     GET_RSE_PROTOCOLS: Symbol.for("GetRSEProtocolsController"),
     GET_SUBSCRIPTION: Symbol.for("GetSubscriptionController"),
+    LIST_ACCOUNT_RSE_QUOTAS: Symbol.for("ListAccountRSEQuotasController"),
     LIST_ALL_RSES: Symbol.for("ListAllRSEsController"),
     LIST_DIDS: Symbol.for("ListDIDsController"),
     LIST_DID_CONTENTS: Symbol.for("ListDIDContentsController"),

@@ -38,7 +38,7 @@ export function convertToAccountRSEUsageDTO(data: TRucioAccountRSEUsage, account
         rse: data.rse,
         used_bytes: data.bytes,
         files: data.files,
-        quota_bytes: data.bytes_limit,
+        bytes_limit: data.bytes_limit,
     }
     return dto
 }

@@ -45,6 +45,10 @@ export default class ListRSEsUseCase extends BaseSingleEndpointPostProcessingPip
     return undefined;
   }
 
+  async intializeRequest(request: AuthenticatedRequestModel<ListRSEsRequest>): Promise<ListRSEsError | undefined> {
+    return undefined;
+  }
+  
   async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListRSEsRequest>): Promise<ListRSEsDTO> {
     const { rucioAuthToken, rseExpression } = requestModel;
     const dto: ListRSEsDTO = await this.gateway.listRSEs(rucioAuthToken, rseExpression);

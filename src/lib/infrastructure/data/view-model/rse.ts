@@ -1,5 +1,5 @@
 import { BaseViewModel } from "@/lib/sdk/view-models"
-import { RSE, RSEAttribute, RSEAccountUsageLimit, RSEProtocol, RSEType } from "@/lib/core/entity/rucio"
+import { RSE, RSEAttribute, RSEAccountUsage, RSEProtocol, RSEType } from "@/lib/core/entity/rucio"
 
 
 export interface RSEViewModel extends RSE, BaseViewModel {}
@@ -12,7 +12,7 @@ export interface RSEAttributeViewModel extends BaseViewModel {
     attributes: RSEAttribute[]
 }
 
-export interface RSEAccountUsageLimitViewModel extends RSEAccountUsageLimit, BaseViewModel {}
+export interface RSEAccountUsageLimitViewModel extends RSEAccountUsage, BaseViewModel {}
 
 export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
     return {
@@ -21,7 +21,7 @@ export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitVie
         rse: '',
         account: '',
         used_bytes: 0,
-        quota_bytes: 0,
+        bytes_limit: 0,
     } as RSEAccountUsageLimitViewModel
 }
 

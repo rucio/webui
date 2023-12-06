@@ -15,32 +15,36 @@ class ListDIDRulesUseCase extends BaseSingleEndpointPostProcessingPipelineStream
         protected presenter: ListDIDRulesOutputPort,
         private didGateway: DIDGatewayOutputPort,
         subscriptionsGateway: SubscriptionGatewayOutputPort,
-    ) {
-        const getSubscriptionByIdPipelineElement: GetDIDSubscriptionsByIDPipelineElement = new GetDIDSubscriptionsByIDPipelineElement(subscriptionsGateway);
-        super(presenter, [getSubscriptionByIdPipelineElement])
-    }
-
-    validateFinalResponseModel(responseModel: ListDIDRulesResponse): { isValid: boolean; errorModel?: ListDIDRulesError | undefined; } {
-        if(!responseModel.subscription_name || !responseModel.subscription_account) {
+        ) {
+            const getSubscriptionByIdPipelineElement: GetDIDSubscriptionsByIDPipelineElement = new GetDIDSubscriptionsByIDPipelineElement(subscriptionsGateway);
+            super(presenter, [getSubscriptionByIdPipelineElement])
+        }
+        
+        validateFinalResponseModel(responseModel: ListDIDRulesResponse): { isValid: boolean; errorModel?: ListDIDRulesError | undefined; } {
+            if(!responseModel.subscription_name || !responseModel.subscription_account) {
+                return {
+                    isValid: false,
+                    errorModel: {
+                        status: 'error',
+                        message: 'Subscription details not found',
+                    } as ListDIDRulesError
+                }
+            }
+            
             return {
-                isValid: false,
-                errorModel: {
-                    status: 'error',
-                    message: 'Subscription details not found',
-                } as ListDIDRulesError
+                isValid: true,
             }
         }
-
-        return {
-            isValid: true,
-        }
-    }
-    
-
+        
+        
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListDIDRulesRequest>): ListDIDRulesError | undefined {
         return undefined;
     }
-
+        
+    async intializeRequest(request: AuthenticatedRequestModel<ListDIDRulesRequest>): Promise<ListDIDRulesError | undefined> {
+        return undefined;
+    }
+    
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDRulesRequest>): Promise<ListDIDRulesDTO> {
         const dto: ListDIDRulesDTO = await this.didGateway.listDIDRules(requestModel.rucioAuthToken, requestModel.scope, requestModel.name);
         return dto;

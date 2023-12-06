@@ -1,4 +1,4 @@
-import { RSEAccountUsageLimit } from "@/lib/core/entity/rucio";
+import { RSEAccountUsage } from "@/lib/core/entity/rucio";
 import { StoryFn, Meta } from "@storybook/react";
 import { fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { CreateRuleRSETable as C } from "./CreateRuleRSETable";
@@ -13,5 +13,5 @@ const Template: StoryFn<typeof C> = (args) => <C {...args} />;
 export const CreateRuleRSETable = Template.bind({});
 CreateRuleRSETable.args = {
     comdom: mockUseComDOM(Array.from({length: 100}, () => fixtureRSEAccountUsageLimitViewModel())),
-    handleChange: (data: RSEAccountUsageLimit[]) => {console.info(data)},
+    handleChange: (data: RSEAccountUsage[]) => {console.info(data)},
 };

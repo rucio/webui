@@ -11,6 +11,9 @@ import { Readable } from "stream";
 
 describe("Stream Error Handling", () => {
     class TestStreamErrorUseCase extends BaseSingleEndpointStreamingUseCase<TRequestModel, TResponseModel, BaseErrorResponseModel, BaseStreamableDTO, StreamDTO, BaseViewModel > {
+        async intializeRequest(request: { rucioAuthToken: string; }): Promise<BaseErrorResponseModel | undefined> {
+            return undefined;
+        }
         
         constructor(response: any) {
             const presenter = new TestPresenter(response)

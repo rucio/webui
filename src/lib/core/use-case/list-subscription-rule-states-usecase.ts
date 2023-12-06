@@ -28,6 +28,10 @@ export default class ListSubscriptionRuleStatesUseCase extends BaseSingleEndpoin
         return undefined;
     }
 
+    async intializeRequest(request: AuthenticatedRequestModel<AuthenticatedRequestModel<ListSubscriptionRuleStatesRequest>>): Promise<ListSubscriptionRuleStatesError | undefined> {
+        return undefined;
+    }
+    
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListSubscriptionRuleStatesRequest>): Promise<BaseStreamableDTO> {
         const { rucioAuthToken, account } = requestModel;
         const dto: BaseStreamableDTO = await this.gateway.listSubscriptionRuleStates(rucioAuthToken, account);

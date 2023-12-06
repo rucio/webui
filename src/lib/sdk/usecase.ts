@@ -297,6 +297,13 @@ export abstract class BaseStreamingUseCase<
     }
 
     /**
+     * Call any gateways/repositories that provide static data to augment the streamed data.
+     * This method is called before the streaming pipeline is set up.
+     * @returns An error model if there was an error, or `undefined` if there was no error.
+     */
+    abstract intializeRequest(request: AuthenticatedRequestModel<TRequestModel>): Promise<undefined | TErrorModel>
+    
+    /**
      * Validates the request model for the use case.
      * @param requestModel The request model to validate.
      * @returns An error model if the request model is invalid, or `undefined` if the request model is valid.
@@ -335,7 +342,21 @@ export abstract class BaseStreamingUseCase<
             this.presenter.presentError(validationError)
             return
         }
-
+        
+        try {
+            const initializionError = await this.intializeRequest(requestModel)
+            if(initializionError) {
+                this.presenter.presentError(initializionError)
+                return
+            }
+        } catch (error) {
+            this.presenter.presentError({
+                status: 'error',
+                message: 'Could not initialize the request',
+            } as TErrorModel)
+            return
+        }
+        
         const sourceStreamOrError: {
             status: 'success' | 'error',
             stream?: Transform | Readable | PassThrough | null,

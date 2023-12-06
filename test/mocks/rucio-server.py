@@ -115,9 +115,9 @@ def rseaccountusage():
             'rse_id': f'rse_{value}',
             'rse': fake.pystr_format(),
             'account': name,
-            'used_files': random.randint(0, 50),
+            'files': random.randint(0, 50),
             'used_bytes': random.randint(0, 1000),
-            'quota_bytes': random.randint(500, 2000),
+            'bytes_limit': random.randint(500, 2000),
         } for value in range(10)
     ]
     try:

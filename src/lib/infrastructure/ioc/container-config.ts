@@ -29,9 +29,6 @@ import StreamUseCase from "@/lib/core/use-case/stream-usecase";
 import { RSEOld } from "@/lib/core/entity/rucio";
 import StreamingController, { IStreamingController } from "../controller/streaming-controller";
 import StreamPresenter from "../presenter/stream-presenter";
-import GetSiteHeaderUseCase from "@/lib/core/use-case/get-site-header-usecase";
-import GetSiteHeaderController, { GetSiteHeaderControllerParameters } from "../controller/get-site-header-controller";
-import GetSiteHeaderPresenter from "../presenter/get-site-header-presenter";
 import SwitchAccountInputPort from "@/lib/core/port/primary/switch-account-input-port";
 import SwitchAccountUseCase from "@/lib/core/use-case/switch-account-usecase";
 import SwitchAccountController, { ISwitchAccountController } from "../controller/switch-account-controller";
@@ -63,6 +60,7 @@ import GetSiteHeaderFeature from "./features/get-site-header-feature";
 import ListSubscriptionRuleStatesFeature from "./features/list-subscription-rule-states-feature";
 import RuleGatewayOutputPort from "@/lib/core/port/secondary/rule-gateway-output-port";
 import RuleGateway from "../gateway/rule-gateway/rule-gateway";
+import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feature";
 
 
 /**
@@ -118,6 +116,7 @@ loadFeaturesSync(appContainer, [
 // Features: Create Rule
 loadFeaturesSync(appContainer, [
     new ListAllRSEsFeature(appContainer),
+    new ListAccountRSEQuotasFeature(appContainer),
 ])
 
 //Features: List Subscriptions
