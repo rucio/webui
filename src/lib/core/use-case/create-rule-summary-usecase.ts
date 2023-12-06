@@ -1,7 +1,7 @@
 import { BaseUseCase } from "@/lib/sdk/usecase";
 import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 import { injectable } from "inversify";
-import { generateDerivedDIDName, generateNewScope } from "../domain-service/did-domain-services";
+import { generateDerivedDIDName, generateNewScope } from "../utils/did-utils";
 import { AccountInfoDTO } from "../dto/account-dto";
 import { DIDExtendedDTO } from "../dto/did-dto";
 import { AccountType, DID, DIDLong, DIDType } from "../entity/rucio";
@@ -9,7 +9,8 @@ import type { CreateRuleSummaryInputPort, CreateRuleSummaryOutputPort } from "..
 import type AccountGatewayOutputPort from "../port/secondary/account-gateway-output-port";
 import type DIDGatewayOutputPort from "../port/secondary/did-gateway-output-port";
 import { CreateRuleSummaryRequest, CreateRuleSummaryResponse, CreateRuleSummaryError } from "../usecase-models/create-rule-summary-usecase-models";
-import {createDIDSummaryRow, TDIDSummaryRow} from "../domain-service/rule-domain-services";
+import {createDIDSummaryRow} from "../utils/create-rule-utils";
+import { TDIDSummaryRow } from "../entity/rule-summary";
 
 
 @injectable()
