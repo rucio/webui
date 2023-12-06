@@ -90,8 +90,10 @@ export default class ListAccountRSEQuotasUseCase extends BaseStreamingUseCase<Au
                     limit: undefined,
                     bytesRemaining: accountUsageDTO.bytes_limit - accountUsageDTO.used_bytes,
                 }
-            } else {
-                this.accountRSEUsageAndLimits[rseName].bytesRemaining = accountUsageDTO.bytes_limit - accountUsageDTO.used_bytes;
+            }
+            const bytesLimit = this.accountRSEUsageAndLimits[rseName].limit;
+            if(bytesLimit !== undefined && bytesLimit !== -1) {
+                this.accountRSEUsageAndLimits[rseName].bytesRemaining = bytesLimit - accountUsageDTO.used_bytes;
             }
         })
         
@@ -181,7 +183,7 @@ export default class ListAccountRSEQuotasUseCase extends BaseStreamingUseCase<Au
         
         const totalExpectedUsage = this.totalDIDBytesRequested + bytesUsed;
 
-        let hasQuota = bytesLimit <= totalExpectedUsage;
+        let hasQuota = bytesLimit > totalExpectedUsage;
 
         if(bytesRemaining < 0) {
             bytesRemaining = 0;
