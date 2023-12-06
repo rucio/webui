@@ -1,4 +1,5 @@
-import { CreateRuleQuery } from '@/lib/infrastructure/data/view-model/create-rule'
+import { TCreateRuleRequest } from '@/lib/infrastructure/data/view-model/create-rule'
+import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule'
 import { StoryFn, Meta } from '@storybook/react'
 import { SummaryPage as SP } from './SummaryPage'
 
@@ -12,6 +13,7 @@ const Template: StoryFn<typeof SP> = args => <SP {...args} />
 export const SummaryPage = Template.bind({})
 SummaryPage.args = {
     data: {
+        status: 'success',
         DIDList: [
             'user.AndrewJenkins:dataset-dBDUMqZWnMImKbhZCJUA',
             'user.SandraOrtiz:file-SxbkaPRbmlZezztEiAZl',
@@ -42,5 +44,5 @@ SummaryPage.args = {
         numsamples: -1,
         groupby: "File",
         comment: "",
-    } as CreateRuleQuery,
+    } as RuleSummaryViewModel,
 }

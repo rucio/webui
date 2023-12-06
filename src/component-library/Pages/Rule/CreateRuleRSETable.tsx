@@ -33,7 +33,7 @@ export const CreateRuleRSETable = (
                             type="checkbox"
                             disabled={!info.row.getCanSelect()}
                             checked={info.row.getIsSelected()}
-                            onChange={e => {
+                            onClick={e => {
                                 info.row.toggleSelected()
                             }}
                         />

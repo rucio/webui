@@ -24,11 +24,12 @@ import { Body } from '../Helpers/Body';
 *  Importing Types and Interfaces
 *  ================================================= */
 import {
-    CreateRuleQuery, CreateRuleResponse, DIDName, TypedDIDValidationQuery,
+    TCreateRuleRequest, CreateRuleResponse, DIDName, TypedDIDValidationQuery,
     TypedDIDValidationResponse,
+    TFetchCreateRuleSummaryRequest,
 
 } from '@/lib/infrastructure/data/view-model/create-rule.d';
-import { DIDType } from '@/lib/core/entity/rucio';
+import { DIDLong, DIDType } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';
@@ -36,6 +37,7 @@ import { didToScopename } from '../../StreamedTables/helpers';
 import { CreateRuleRSETable } from './CreateRuleRSETable';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
@@ -44,8 +46,16 @@ export interface CreateRulePageProps {
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
     // Page 1 - RSE Selection
     rseListComDOM: UseComDOM<RSEAccountUsageLimitViewModel>,
+    // Page 2 - Summary
+    fetchSummary: (
+        query: TFetchCreateRuleSummaryRequest, 
+        setSummaryViewModel: (viewModel: RuleSummaryViewModel) => void, 
+        setActivePage: (int: number) => void,
+        setError: (error: string) => void,
+    ) => void,
     // Page 3 - Sendoff
-    onSubmit: (createRuleQuery: CreateRuleQuery) => Promise<CreateRuleResponse>
+    onSubmit: (createRuleQuery: TCreateRuleRequest) => Promise<CreateRuleResponse>
+
 }
 
 // can assume that DIDs are unique, hence SET can be used later
@@ -239,13 +249,14 @@ export const CreateRule = (
     })
 
     /* =================================================
-    *  Page 3
+    *  Page 3 : Summary page
     *  ================================================= */
-    const page3submitFunction = (event: any) => {
-        // build query
-        const CreateRuleQuery: CreateRuleQuery = {
-            DIDList: Page0State.typedDIDs.concat(didToScopename(Page0State.searchDIDSelection)),
-            RSEList: Page1State.RSESelection.map(element => element.rse),
+    const [summaryViewModel, setSummaryViewModel] = useState<RuleSummaryViewModel>()
+
+    const loadRuleSummaryPage = () => {
+        const fetchSummaryRequest: TFetchCreateRuleSummaryRequest = {
+            RSEViewModels: Page1State.RSESelection,
+            DIDViewModels: Page0State.searchDIDSelection,
             expirydate: Page2State.expiryDate,
             notifications: Page2State.enableNotifications,
             asynchronousMode: Page2State.asynchronousMode,
@@ -255,9 +266,29 @@ export const CreateRule = (
             comment: Page2State.freeComment,
             approval: Page2State.approval
         }
+        props.fetchSummary(fetchSummaryRequest, setSummaryViewModel, setActivePage, (error: string) => { console.log(error) })        
+    }
 
+    
+    
+    const page3submitFunction = (event: any) => {
         // execute query
-        const response = props.onSubmit(CreateRuleQuery)
+        // TODO : Use summary view model to create the query
+        const createRulesRequest: TCreateRuleRequest = {
+            DIDList: Page0State.typedDIDs.concat(didToScopename(Page0State.searchDIDSelection)),
+            RSEList: Page1State.RSESelection.map((element) => element.rse),
+            RSEViewModels: Page1State.RSESelection,
+            DIDViewModels: Page0State.searchDIDSelection,
+            expirydate: Page2State.expiryDate,
+            notifications: Page2State.enableNotifications,
+            asynchronousMode: Page2State.asynchronousMode,
+            numcopies: Page2State.numcopies,
+            numsamples: Page2State.numsamples,
+            groupby: Page2State.groupBy,
+            comment: Page2State.freeComment,
+            approval: Page2State.approval
+        }
+        const response = props.onSubmit(createRulesRequest)
         response.then((response) => {
             console.log("response: ", response)
         })
@@ -311,8 +342,10 @@ export const CreateRule = (
                         </div>
                     </Collapsible>
                     <Collapsible showIf={Page0State.selectDIDMethod === 1}>
+                        {/* TODO: delayed */}
                         <div className="flex flex-col space-y-2 m-2">
-                            <Label label="dids">Data Identifiers to select:</Label>
+                            <Label label="dids">This feature will be released soon!</Label>
+                            {/* <Label label="dids">Data Identifiers to select:</Label>
                             <ListInput
                                 id="dids"
                                 onAdd={(value: string) => {
@@ -337,7 +370,7 @@ export const CreateRule = (
                                         <P mono key={index}>DID {element.DID} has Errorcodes {element.ErrorCodes}</P>
                                     )
                                 })}
-                            </div>
+                            </div> */}
                         </div>
                     </Collapsible>
                 </RulePage>
@@ -371,7 +404,7 @@ export const CreateRule = (
                         </div>
                     </div>
                 </RulePage>
-                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { loadRuleSummaryPage() }} onPrev={pagePrevFunction}>
                     <div className="flex md:flex-row md:space-x-2 flex-col space-y-2 m-2">
                         <div className="flex flex-col space-y-2 md:w-60 w-full">
                             <div className="w-full">
@@ -484,17 +517,21 @@ export const CreateRule = (
                     </div>
                 </RulePage>
                 <RulePage pagenum={3} activePage={activePage} onNext={page3submitFunction} onPrev={pagePrevFunction} submit>
-                    <SummaryPage data={{
-                        DIDList: Page0State.typedDIDs.concat(didToScopename(Page0State.searchDIDSelection)),
-                        RSEList: Page1State.RSESelection.map(element => element.rse),
-                        expirydate: Page2State.expiryDate,
-                        notifications: Page2State.enableNotifications,
-                        asynchronousMode: Page2State.asynchronousMode,
-                        numcopies: Page2State.numcopies,
-                        numsamples: Page2State.numsamples,
-                        groupby: Page2State.groupBy,
-                        comment: Page2State.freeComment,
-                        approval: Page2State.approval
+                    <SummaryPage data={summaryViewModel? summaryViewModel : {
+                        status: 'error',
+                        message: 'Please check your inputs on previous pages! Cannot retrieve summary from the server',
+                        DIDList: [],
+                        RSEList: [],
+                        RSEViewModels: [],
+                        DIDViewModels: [],
+                        expirydate: new Date(2025, 1, 1),
+                        notifications: false,
+                        asynchronousMode: false,
+                        numcopies: 0,
+                        numsamples: 0,
+                        groupby: DIDType.UNKNOWN,
+                        comment: '',
+                        approval: false,
                     }} />
                 </RulePage>
             </Body>
