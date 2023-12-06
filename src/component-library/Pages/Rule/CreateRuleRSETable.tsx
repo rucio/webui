@@ -19,7 +19,7 @@ export const CreateRuleRSETable = (
 ) => {
     const columnHelper = createColumnHelper<RSEAccountUsageLimitViewModel>()
     const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimitViewModel>) => {
-        let noQuota = (row.original.bytes_limit && row.original.bytes_limit < row.original.used_bytes)
+        let noQuota = !row.original.has_quota
         return props.askApproval ? false : noQuota
     }
     const tablecolumns = [
@@ -33,7 +33,7 @@ export const CreateRuleRSETable = (
                             type="checkbox"
                             disabled={!info.row.getCanSelect()}
                             checked={info.row.getIsSelected()}
-                            onClick={e => {
+                            onChange={e => {
                                 info.row.toggleSelected()
                             }}
                         />

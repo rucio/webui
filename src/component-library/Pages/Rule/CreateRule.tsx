@@ -181,17 +181,34 @@ export const CreateRule = (
         if (Page1State.RSESelection.length === 0) {
             setPage1State({ ...Page1State, page1progressBlocked: true })
         }
+        // set page1progressblocked to true if any selected RSE needs quota and Ask for Approval is not checked
+        else if(!Page1State.askForApproval){
+            let needsApproval = false
+            Page1State.RSESelection.forEach(element => {
+                if(!element.has_quota){
+                    needsApproval = true
+                    return
+                }
+            });
+            if(needsApproval){
+                setPage1State({ ...Page1State, page1progressBlocked: true })
+            } else {
+                setPage1State({ ...Page1State, page1progressBlocked: false })
+            }
+        } else if(Page1State.askForApproval){
+            setPage1State({ ...Page1State, page1progressBlocked: false })
+        }
         else {
             setPage1State({ ...Page1State, page1progressBlocked: false })
         }
-    }, [Page1State.RSESelection])
+    }, [Page1State.RSESelection, Page1State.askForApproval])
 
     const page1RSESearch = async (event: any, explicitRSEExpression?: string) => {
         // sometimes the state has not updated yet, so use explicitly passed RSEExpr
         var RSEExpression = explicitRSEExpression ? explicitRSEExpression : Page1State.RSEExpression
         // build request for comdom
         const request: HTTPRequest = {
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/mock-list-rse-account-usage`),
+            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-account-rse-quotas`),
             method: "GET",
             headers: new Headers({
                 'Content-Type': 'application/json'
