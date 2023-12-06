@@ -12,7 +12,6 @@ import type RSEGatewayOutputPort from "@/lib/core/port/secondary/rse-gateway-out
 
 @injectable()
 export default class ListAllRSEsUseCase extends BaseSingleEndpointStreamingUseCase<AuthenticatedRequestModel<ListAllRSEsRequest>, ListAllRSEsResponse, ListAllRSEsError, ListRSEsDTO, RSEDTO, RSEViewModel> implements ListAllRSEsInputPort {
-   
     constructor(
         protected readonly presenter: ListAllRSEsOutputPort,
         private readonly gateway: RSEGatewayOutputPort,
@@ -22,6 +21,10 @@ export default class ListAllRSEsUseCase extends BaseSingleEndpointStreamingUseCa
     
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListAllRSEsRequest>): ListAllRSEsError | undefined {
         return undefined;
+    }
+
+    async intializeRequest(request: AuthenticatedRequestModel<AuthenticatedRequestModel<ListAllRSEsRequest>>): Promise<ListAllRSEsError | undefined> {
+        return Promise.resolve(undefined);
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListAllRSEsRequest>): Promise<ListRSEsDTO> {

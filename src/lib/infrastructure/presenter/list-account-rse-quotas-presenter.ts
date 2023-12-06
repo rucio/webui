@@ -1,9 +1,9 @@
 import { BaseStreamingPresenter } from "@/lib/sdk/presenter";
-import { ListAccountRSEUsageResponse, ListAccountRSEUsageError } from "@/lib/core/usecase-models/list-account-rse-usage-usecase-models";
+import { ListAccountRSEQuotasResponse, ListAccountRSEQuotasError } from "@/lib/core/usecase-models/list-account-rse-quotas-usecase-models";
 import { getEmptyRSEAccountUsageLimitViewModel, RSEAccountUsageLimitViewModel } from "../data/view-model/rse";
 import { NextApiResponse } from "next";
 
-export default class ListAccountRSEUsagePresenter extends BaseStreamingPresenter<ListAccountRSEUsageResponse, ListAccountRSEUsageError, RSEAccountUsageLimitViewModel> {
+export default class ListAccountRSEQuotasPresenter extends BaseStreamingPresenter<ListAccountRSEQuotasResponse, ListAccountRSEQuotasError, RSEAccountUsageLimitViewModel> {
     response: NextApiResponse<any>;
 
     constructor(response: NextApiResponse) {
@@ -11,7 +11,7 @@ export default class ListAccountRSEUsagePresenter extends BaseStreamingPresenter
         this.response = response;
     }
     
-    convertErrorModelToViewModel(errorModel: ListAccountRSEUsageError): { status: number; viewModel: RSEAccountUsageLimitViewModel; } {
+    convertErrorModelToViewModel(errorModel: ListAccountRSEQuotasError): { status: number; viewModel: RSEAccountUsageLimitViewModel; } {
         const viewModel: RSEAccountUsageLimitViewModel = getEmptyRSEAccountUsageLimitViewModel();
         const error = errorModel.error;
         if(error === 'INVALID_ACCOUNT') {
@@ -30,14 +30,14 @@ export default class ListAccountRSEUsagePresenter extends BaseStreamingPresenter
         }
     }
 
-    streamResponseModelToViewModel(responseModel: ListAccountRSEUsageResponse): RSEAccountUsageLimitViewModel {
+    streamResponseModelToViewModel(responseModel: ListAccountRSEQuotasResponse): RSEAccountUsageLimitViewModel {
         const viewModel: RSEAccountUsageLimitViewModel = {
             ...responseModel,
         };
         return viewModel;
     }
 
-    streamErrorModelToViewModel(error: ListAccountRSEUsageError): RSEAccountUsageLimitViewModel {
+    streamErrorModelToViewModel(error: ListAccountRSEQuotasError): RSEAccountUsageLimitViewModel {
         const viewModel: RSEAccountUsageLimitViewModel = getEmptyRSEAccountUsageLimitViewModel();
         viewModel.message = error.message;
         viewModel.status = 'error';

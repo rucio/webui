@@ -24,6 +24,10 @@ export default class ListDIDParentsUseCase extends BaseSingleEndpointStreamingUs
         return undefined;
     }
 
+    async intializeRequest(request: AuthenticatedRequestModel<AuthenticatedRequestModel<ListDIDParentsRequest>>): Promise<ListDIDParentsError | undefined> {
+        return undefined;
+    }
+
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDParentsRequest>): Promise<ListDIDDTO> {
         const { rucioAuthToken, scope, name } = requestModel;
         const dto: ListDIDDTO = await this.gateway.listDIDParents(rucioAuthToken, scope, name);

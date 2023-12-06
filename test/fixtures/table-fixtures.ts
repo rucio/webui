@@ -135,7 +135,7 @@ export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitView
         account: faker.internet.userName(),
         files: faker.number.int({ min: 0, max: 1e6 }),
         used_bytes: faker.number.int({ min: 0, max: 1e12 }),
-        quota_bytes: faker.number.int({ min: 0, max: 1e12 }),
+        bytes_limit: faker.number.int({ min: 0, max: 1e12 }),
     }
 }
 

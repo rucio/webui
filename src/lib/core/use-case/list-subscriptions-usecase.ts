@@ -34,6 +34,11 @@ class ListSubscriptionsUseCase extends BaseSingleEndpointStreamingUseCase<
             } as ListSubscriptionsError
         }
     }
+
+    async intializeRequest(request: AuthenticatedRequestModel<ListSubscriptionsRequest>): Promise<ListSubscriptionsError | undefined> {
+        return undefined;
+    }
+
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListSubscriptionsRequest>): Promise<ListSubscriptionsDTO> {
         const { rucioAuthToken, account } = requestModel;
         const dto: ListSubscriptionsDTO = await this.subscriptionGateway.list(rucioAuthToken, account);

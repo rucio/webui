@@ -39,6 +39,10 @@ describe('BaseMultiCallStreamableUseCase', () => {
             return undefined
         }
 
+        async intializeRequest(request: { rucioAuthToken: string }): Promise<BaseErrorResponseModel | undefined> {
+            return undefined
+        }
+
         makeGatewayRequest(requestModel: {
             rucioAuthToken: string
         }): Promise<BaseStreamableDTO> {

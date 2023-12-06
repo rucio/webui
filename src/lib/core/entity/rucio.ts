@@ -118,13 +118,13 @@ export type FileReplicaStateD = {
 }
 
 // results of web::flaskapi:v1::rses::RSEAccountUsageLimit::get
-export type RSEAccountUsageLimit = {
+export type RSEAccountUsage = {
     rse_id: string;
     rse: string;
     account: string;
     files: number;
     used_bytes: number;
-    quota_bytes: number;
+    bytes_limit: number;
 }
 
 // copied from deployed rucio UI

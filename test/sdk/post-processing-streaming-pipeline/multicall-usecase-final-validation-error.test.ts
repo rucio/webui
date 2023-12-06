@@ -17,6 +17,7 @@ describe("Post Processing Streaming Pipeline Error Handling", () => {
         StreamDTO,
         BaseViewModel
     > {
+        
         constructor(response: any) {
             const firstPipelineElement = new FirstPipelineElement()
             const secondPipelineElement = new SecondPipelineElement()
@@ -25,6 +26,9 @@ describe("Post Processing Streaming Pipeline Error Handling", () => {
         }
         
         validateRequestModel(requestModel: { rucioAuthToken: string; }): BaseErrorResponseModel | undefined {
+            return undefined;
+        }
+        async intializeRequest(request: { rucioAuthToken: string; }): Promise<BaseErrorResponseModel | undefined> {
             return undefined;
         }
         makeGatewayRequest(requestModel: { rucioAuthToken: string; }): Promise<BaseStreamableDTO> {

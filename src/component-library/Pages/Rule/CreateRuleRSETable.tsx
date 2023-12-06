@@ -19,7 +19,7 @@ export const CreateRuleRSETable = (
 ) => {
     const columnHelper = createColumnHelper<RSEAccountUsageLimitViewModel>()
     const isNoQuotaLeftFunction = (row: Row<RSEAccountUsageLimitViewModel>) => {
-        let noQuota = (row.original.quota_bytes && row.original.quota_bytes < row.original.used_bytes)
+        let noQuota = (row.original.bytes_limit && row.original.bytes_limit < row.original.used_bytes)
         return props.askApproval ? false : noQuota
     }
     const tablecolumns = [
@@ -88,7 +88,7 @@ export const CreateRuleRSETable = (
                 style: "w-24"
             }
         }),
-        columnHelper.accessor(row => row.quota_bytes - row.used_bytes, {
+        columnHelper.accessor(row => row.bytes_limit - row.used_bytes, {
             id: 'remaining_bytes',
             header: info => {
                 return (
@@ -116,8 +116,8 @@ export const CreateRuleRSETable = (
                 style: "w-24"
             }
         }),
-        columnHelper.accessor('quota_bytes', {
-            id: 'quota_bytes',
+        columnHelper.accessor('bytes_limit', {
+            id: 'bytes_limit',
             header: info => {
                 return (
                     <TableSortUpDown
@@ -129,7 +129,7 @@ export const CreateRuleRSETable = (
                 )
             },
             cell: (props) => {
-                return <P mono className="text-right"><Number number={props.row.original.quota_bytes} /></P>
+                return <P mono className="text-right"><Number number={props.row.original.bytes_limit} /></P>
             },
             meta: {
                 style: "w-24"
@@ -169,7 +169,7 @@ export const CreateRuleRSETable = (
                 visibility: {
                     "rse_id": false,
                     "used_bytes": isMd(),
-                    "quota_bytes": isMd(),
+                    "bytes_limit": isMd(),
                 }
             }}
         />

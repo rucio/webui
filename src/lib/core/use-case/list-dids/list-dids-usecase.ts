@@ -38,6 +38,10 @@ class ListDIDsUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingU
         }
     }
 
+    async intializeRequest(request: AuthenticatedRequestModel<ListDIDsRequest>): Promise<ListDIDsError | undefined> {
+        return undefined;
+    }
+
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): Promise<ListDIDDTO> {
         const { scope, name } = parseDIDString(requestModel.query);
         const listDIDDTO: ListDIDDTO = await this.didGateway.listDIDs(requestModel.rucioAuthToken, scope, name, requestModel.type);

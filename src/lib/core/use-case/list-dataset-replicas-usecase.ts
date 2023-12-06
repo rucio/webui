@@ -12,7 +12,6 @@ import type ReplicaGatewayOutputPort from "@/lib/core/port/secondary/replica-gat
 
 @injectable()
 export default class ListDatasetReplicasUseCase extends BaseSingleEndpointStreamingUseCase<AuthenticatedRequestModel<ListDatasetReplicasRequest>, ListDatasetReplicasResponse, ListDatasetReplicasError, ListReplicasDTO, DatasetReplicasDTO, DIDDatasetReplicasViewModel> implements ListDatasetReplicasInputPort {
-   
     constructor(
         protected readonly presenter: ListDatasetReplicasOutputPort,
         private readonly gateway: ReplicaGatewayOutputPort,
@@ -22,6 +21,10 @@ export default class ListDatasetReplicasUseCase extends BaseSingleEndpointStream
     
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListDatasetReplicasRequest>): ListDatasetReplicasError | undefined {
         return undefined;
+    }
+
+    intializeRequest(request: AuthenticatedRequestModel<AuthenticatedRequestModel<ListDatasetReplicasRequest>>): Promise<ListDatasetReplicasError | undefined> {
+        return Promise.resolve(undefined);
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDatasetReplicasRequest>): Promise<ListReplicasDTO> {
