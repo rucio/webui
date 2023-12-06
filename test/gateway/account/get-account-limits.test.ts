@@ -8,7 +8,7 @@ describe("Account Gateway: Get Account Limits", () => {
 
     beforeEach(() => {
         fetchMock.doMock();
-        const accountInfoEndpoint: MockEndpoint = {
+        const accountLimitEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/accounts/root/limits`,
             method: 'GET',
             includes: 'account',
@@ -18,15 +18,15 @@ describe("Account Gateway: Get Account Limits", () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "XRD1": 200,
-                    "XRD2": -1,
-                    "XRD3": Infinity,
-                    "XRD4": Infinity,
-                    "SSH1": Infinity
+                    "XRD1": -1,
+                    "XRD2": 900,
+                    "XRD3": 600,
+                    "XRD4": 700,
+                    "SSH1": 800
                 })
             }
         }
-        MockRucioServerFactory.createMockRucioServer(true, [accountInfoEndpoint]);
+        MockRucioServerFactory.createMockRucioServer(true, [accountLimitEndpoint]);
     })
 
     afterEach(() => {
