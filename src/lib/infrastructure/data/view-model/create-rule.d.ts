@@ -1,5 +1,6 @@
 import { DIDLong, DIDType, RSEAccountUsage } from "@/lib/core/entity/rucio";
 import { FetchStatus } from "@tanstack/react-query";
+import { RSEAccountUsageLimitViewModel } from "./rse";
 
 export interface CreateRuleViewModel {
     placeholder: string;
@@ -32,11 +33,24 @@ export interface RSEInformation {
 /*
 *  Queries
 */
-export interface CreateRuleQuery {
-    // To be run at the end of the function (`submit` pressed)
-    // Contains all the information entered by the user
+export interface TFetchCreateRuleSummaryRequest {
+    RSEViewModels: Array<RSEAccountUsageLimitViewModel>
+    DIDViewModels: Array<DIDLong>
+    expirydate: Date
+    notifications: boolean
+    asynchronousMode: boolean
+    numcopies: number
+    numsamples: number
+    groupby: DIDType
+    comment: string
+    approval: boolean
+}
+
+export interface TCreateRuleRequest {
     DIDList: Array<DIDName>
     RSEList: Array<RSEName>
+    RSEViewModels: Array<RSEAccountUsageLimitViewModel>
+    DIDViewModels: Array<DIDLong>
     expirydate: Date
     notifications: boolean
     asynchronousMode: boolean

@@ -3,9 +3,11 @@ import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseC
 
 import { CreateRule as CR } from './CreateRule'
 import {
-    CreateRuleQuery,
+    TCreateRuleRequest,
+    TFetchCreateRuleSummaryRequest,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
 } from '@/lib/infrastructure/data/view-model/create-rule'
+import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule'
 
 export default {
     title: 'Components/Pages/Rule',
@@ -16,10 +18,24 @@ const Template: StoryFn<typeof CR> = args => <CR {...args} />
 
 export const CreateRule = Template.bind({})
 CreateRule.args = {
-    onSubmit: (query: CreateRuleQuery) => {
+    onSubmit: (query: TCreateRuleRequest) => {
         return Promise.resolve({
             success: true,
         })
+    },
+    fetchSummary: (
+        query: TFetchCreateRuleSummaryRequest, 
+        setSummaryViewModel: (viewModel: RuleSummaryViewModel) => void, 
+        setActivePage: (int: number) => void,
+        setError: (error: string) => void,
+    ) => {
+        setSummaryViewModel({
+            ...query,
+            status: 'success',
+            DIDList: query.DIDViewModels.map((did) => `${did.scope}:${did.name}`),
+            RSEList: query.RSEViewModels.map((rse) => rse.rse),
+        })
+        setActivePage(3)
     },
     didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureDIDLongViewModel())),
     didValidation: (query: TypedDIDValidationQuery) => {

@@ -1,4 +1,4 @@
-import { CreateRuleQuery, TypedDIDValidationQuery, TypedDIDValidationResponse } from "@/lib/infrastructure/data/view-model/create-rule";
+import { TCreateRuleRequest, TypedDIDValidationQuery, TypedDIDValidationResponse } from "@/lib/infrastructure/data/view-model/create-rule";
 import { Meta, StoryObj } from "@storybook/react";
 import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { CreateRule  as CR} from "../Pages/Rule/CreateRule.stories";
@@ -12,7 +12,7 @@ type Story  = StoryObj<typeof CR>
 
 export const CreateRule: Story = {
     args: {
-        onSubmit: (query: CreateRuleQuery) => {
+        onSubmit: (query: TCreateRuleRequest) => {
             return Promise.resolve({
                 success: true,
             })

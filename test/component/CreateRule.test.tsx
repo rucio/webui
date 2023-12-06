@@ -4,7 +4,7 @@
 
 import { CreateRule } from "@/component-library/Pages/Rule/CreateRule";
 import {
-    CreateRuleQuery, DIDSearchQuery,
+    TCreateRuleRequest, DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
     RSESearchQuery
 } from '@/lib/infrastructure/data/view-model/create-rule'
@@ -16,7 +16,7 @@ jest.mock('next/navigation')
 let user: any // user input
 let F: any  // fixtures
 
-const onSubmit = (query: CreateRuleQuery) => {
+const onSubmit = (query: TCreateRuleRequest) => {
     return Promise.resolve({
         success: true,
     })

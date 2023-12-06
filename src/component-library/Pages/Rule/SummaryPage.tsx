@@ -1,10 +1,11 @@
-import { CreateRuleQuery } from "@/lib/infrastructure/data/view-model/create-rule"
+import { TCreateRuleRequest } from "@/lib/infrastructure/data/view-model/create-rule"
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
-import FC from "react"
+import FC, { useEffect } from "react"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { HiQuestionMarkCircle } from "react-icons/hi"
 import { SamplingTag } from "../../Tags/SamplingTag"
+import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule"
 
 var format = require("date-format")
 
@@ -82,7 +83,7 @@ const OptionTD = (props: {children: any}): JSX.Element =>
 
 export const SummaryPage = (
     props: {
-        data: CreateRuleQuery
+        data: RuleSummaryViewModel
     }
 ) => {
     return (
@@ -110,7 +111,7 @@ export const SummaryPage = (
                 )}
             >
                 <TabularSummary data={props.data.DIDList} title="DIDs" />
-                <TabularSummary data={props.data.RSEList} title="RSEs" />
+                <TabularSummary data={props.data.RSEViewModels.map(rse => rse.rse_id)} title="RSEs" />
             </div>
             <div
                 className={twMerge(
