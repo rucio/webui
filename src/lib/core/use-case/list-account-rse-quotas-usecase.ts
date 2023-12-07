@@ -6,7 +6,7 @@ import { injectable } from "inversify";
 import { Transform, Readable, PassThrough } from "stream";
 import { AccountRSELimitDTO, AccountRSEUsageDTO } from "../dto/account-dto";
 import { ListRSEsDTO, RSEDTO } from "../dto/rse-dto";
-import { DIDLong, RSEAccountUsage as RSEAccountUsage } from "../entity/rucio";
+import { DIDLong } from "../entity/rucio";
 import { TAccountRSEUsageAndLimits, TRSESummaryRow } from "../entity/rule-summary";
 import type { ListAccountRSEQuotasInputPort, ListAccountRSEQuotasOutputPort } from "../port/primary/list-account-rse-quotas-ports";
 import type AccountGatewayOutputPort from "../port/secondary/account-gateway-output-port";

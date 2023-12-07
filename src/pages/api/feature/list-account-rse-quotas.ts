@@ -24,6 +24,11 @@ async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
         return
     }
 
+    let rseExpression: string = req.body.rseExpression
+    if(rseExpression === undefined || rseExpression === null || rseExpression.length === 0) {
+        rseExpression = ''
+    }
+
     const account = sessionUser.rucioAccount
 
     const controllerParameters: ListAccountRSEQuotasControllerParameters = {
@@ -31,6 +36,7 @@ async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
         rucioAuthToken: rucioAuthToken,
         account: account,
         requestedDIDs: requestedDIDs,
+        rseExpression: rseExpression,
     }
 
     const controller = appContainer.get<BaseController<ListAccountRSEQuotasControllerParameters, void>>(CONTROLLERS.LIST_ACCOUNT_RSE_QUOTAS)
