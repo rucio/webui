@@ -34,6 +34,10 @@ export default class ListAccountRSEQuotasPresenter extends BaseStreamingPresente
         const viewModel: RSEAccountUsageLimitViewModel = {
             ...responseModel,
         };
+        if (viewModel.has_quota && viewModel.bytes_limit === -1) {
+            viewModel.bytes_limit = -1;
+            viewModel.bytes_remaining = -1;
+        }
         return viewModel;
     }
 

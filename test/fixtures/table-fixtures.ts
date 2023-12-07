@@ -19,7 +19,11 @@ import { DIDKeyValuePair } from '@/lib/core/entity/rucio';
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {
         query: {
-            data: data,
+            data: {
+                all: data,
+                success: data.filter((d) => d.status === "success"),
+                error: data.filter((d) => d.status === "error"),
+            },
             fetchStatus: "idle",
         },
         start: () => { },

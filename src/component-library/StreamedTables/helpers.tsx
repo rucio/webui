@@ -1,6 +1,6 @@
 import { DID } from "@/lib/core/entity/rucio";
 import { TableSelecting, TableStyling } from "./types";
-import { useReactTable, getCoreRowModel, getPaginationRowModel, getFilteredRowModel, getSortedRowModel, RowSelectionState } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, getPaginationRowModel, getFilteredRowModel, getSortedRowModel, RowSelectionState, FilterFn } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 
 export function didToScopename(list: DID[]): string[] {
@@ -9,6 +9,8 @@ export function didToScopename(list: DID[]): string[] {
 
 export function usePrepareTable<T>(props: {
     tabledata: T[]
+    successViewModels?: T[]
+    errorViewModels?: T[]
     tablecolumns: any[]
     tablestyling?: TableStyling
     tableselecting?: TableSelecting<T>

@@ -1,3 +1,5 @@
+import { BaseViewModel } from "@/lib/sdk/view-models";
+
 export type DateISO = string
 
 /**
@@ -289,7 +291,8 @@ export enum DIDType {
 }
 
 // replace this!
-export type RSEOld = {
+export interface RSEOld extends BaseViewModel {
+    status: 'success' | 'error'
     id: string;
     name: string;
     city: string,

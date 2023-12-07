@@ -31,7 +31,7 @@ describe('DID API Tests', () => {
         }
 
         const dataset1StatusEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/status`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/status?dynamic_depth=FILE`,
             method: 'GET',
             response: {
                 status: 200,
@@ -53,7 +53,7 @@ describe('DID API Tests', () => {
         }
 
         const dataset2StatusEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset2/status`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset2/status?dynamic_depth=FILE`,
             method: 'GET',
             response: {
                 status: 200,
@@ -75,7 +75,7 @@ describe('DID API Tests', () => {
         }
 
         const dataset3StatusEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset3/status`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset3/status?dynamic_depth=FILE`,
             method: 'GET',
             response: {
                 status: 200,

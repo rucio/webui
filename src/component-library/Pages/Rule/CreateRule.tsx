@@ -219,11 +219,13 @@ export const CreateRule = (
         // build request for comdom
         const request: HTTPRequest = {
             url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-account-rse-quotas`),
-            method: "GET",
+            method: "POST",
             headers: new Headers({
                 'Content-Type': 'application/json'
             } as HeadersInit),
-            body: null,
+            body: {
+                "requestedDIDs": Page0State.searchDIDSelection,
+            }
         }
         // run query
         await props.rseListComDOM.setRequest(request)

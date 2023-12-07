@@ -16,7 +16,7 @@ export const TableErrorstatus: React.FC<JSX.IntrinsicElements["form"] & {
     const { className, ...otherprops } = props
     const [numBadRows, setNumBadRows] = useState<number>(0)
     useEffect(() => {
-        const data = comdom.query.data
+        const data = comdom.query.data.error
         if (data.length === 1 && data[0].status === "error") {
             // currently this takes precedence over the individual errors
             // expectation is that if only one element and it fails, it's a backend error

@@ -22,7 +22,7 @@ const TableErrorelement: React.FC<JSX.IntrinsicElements["div"] & {message: strin
 }
 
 export const TableErrorreader: React.FC<JSX.IntrinsicElements["div"] & {
-    comdom: UseComDOM<BaseViewModel>,
+    comdom: UseComDOM<any>,
     showDetailedErrors: boolean,
     setShowDetailedErrors: (show: boolean) => void,
 }> = (
@@ -55,7 +55,7 @@ export const TableErrorreader: React.FC<JSX.IntrinsicElements["div"] & {
                     "h-48 overflow-y-scroll"
                 )}
             >
-                {comdom.query.data.filter(vm => vm.status === "error").map((vm, i) => {return (
+                {comdom.query.data.error.filter(vm => vm.status === "error").map((vm, i) => {return (
                     <TableErrorelement
                         key={i}
                         message={vm.message ?? "Unknown Error"}
