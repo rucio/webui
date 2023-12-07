@@ -29,7 +29,7 @@ import {
     TFetchCreateRuleSummaryRequest,
 
 } from '@/lib/infrastructure/data/view-model/create-rule.d';
-import { DIDLong, DIDType } from '@/lib/core/entity/rucio';
+import { DIDType } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';

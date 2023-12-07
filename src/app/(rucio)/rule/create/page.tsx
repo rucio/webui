@@ -7,9 +7,9 @@ import {
     TFetchCreateRuleSummaryRequest,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
 } from '@/lib/infrastructure/data/view-model/create-rule'
-import { HTTPRequest } from "@/lib/sdk/http";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule";
+import { BatchResponse } from "@/lib/infrastructure/web-worker/comdom-wrapper";
 
 export default function CreateRule() {
 
@@ -74,13 +74,24 @@ export default function CreateRule() {
         true
     )
 
+    const processRSEAccountUsageLimitViewModelBatchResponse = (batch: BatchResponse<RSEAccountUsageLimitViewModel>) => {
+        batch.data.forEach((rseAccountUsageLimitViewModel: RSEAccountUsageLimitViewModel) => {
+            if(rseAccountUsageLimitViewModel.status === 'success') {
+                if(rseAccountUsageLimitViewModel.bytes_limit === -1) {
+                    rseAccountUsageLimitViewModel.bytes_limit = Infinity
+                }
+            }
+        })
+        return batch
+    }
     const RSEComDOM = useComDOM<RSEAccountUsageLimitViewModel>(
         'create-rule-page-rse-query',
         [],
         false,
         Infinity,
         50,
-        true
+        true,
+        processRSEAccountUsageLimitViewModelBatchResponse
     )
 
     return (

@@ -66,7 +66,7 @@ export enum UseComDOMStatus {
  * @param restInterval The time in ms that the query will sleep before checking if new data is available from the ComDOM web worker. Set to Infinity to disable automatic background checking for new data.
  * @param fetchInterval The time in ms that the query will wait before fetching the next batch of data. This is used to prevent the query from fetching data too frequently.
  * @param debug Enable debug logging for the hook, ComDOM wrapper and ComDOM web worker.
- * 
+ * @param postProcessBatchResponse A function that takes in a batch response from the ComDOM web worker and returns a batch response. This is useful for post processing the batch response before it is returned by the query.
  * @returns query The query object from (tanstack/react-query) returned by the useQuery hook.
  * @returns dataSink A ref that contains the current data sink. This is same as query.data but is a ref instead of a state variable.
  * @returns successViewModelsDataSink A ref that contains the current success view models. This is same as query.data but is a ref instead of a state variable and only contains view models with status 'success'.
@@ -92,6 +92,7 @@ export default function useComDOM<TData extends BaseViewModel>(
     restInterval: number = Infinity,
     fetchInterval: number = 200,
     debug: boolean = false,
+    postProcessBatchResponse?: (batchResponse: BatchResponse<TData>) => BatchResponse<TData>,
 ) {
     const dataSink = useRef<TData[]>(initialData)
     const successViewModelsDataSink = useRef<TData[]>(initialData.filter(viewModel => viewModel.status === 'success') as TData[])
@@ -173,14 +174,16 @@ export default function useComDOM<TData extends BaseViewModel>(
         }
         try {
             setStatus(UseComDOMStatus.RUNNING)
-            const batchResponse: BatchResponse<TData> | null =
+            let batchResponse: BatchResponse<TData> | null =
                 await comDOMWrapper.next()
             if (batchResponse == null || !batchResponse.next) {
                 setPollInterval(restInterval)
                 setStatus(UseComDOMStatus.DONE)
                 return Promise.reject('ComDOM has finished fetching all data')
             }
-            console.log('Batch Response', batchResponse)
+            if (postProcessBatchResponse) {
+                batchResponse = postProcessBatchResponse(batchResponse)
+            }
             const successViewModels = batchResponse.data.filter(viewModel => viewModel.status === 'success')
             const errorViewModels = batchResponse.data.filter(viewModel => viewModel.status === 'error')
             dataSink.current.push(...successViewModels)
