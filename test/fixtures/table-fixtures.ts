@@ -9,7 +9,6 @@ import {
     RSEAttribute,
     RequestType,
     RequestState,
-    RequestStatsPerPair,
 } from '@/lib/core/entity/rucio'
 import { RSEAccountUsageLimitViewModel, RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
@@ -74,17 +73,6 @@ function createRSEExpression(): string {
     ] as Array<() => string>, { min: 1, max: 4 })
     const strings = creators.map((creator) => creator())
     return strings.join("&")
-}
-
-function randomRequestStats(activities: string[]): RequestStatsPerPair[] {
-    const avail_activities = faker.helpers.arrayElements(activities)
-    return avail_activities.map<RequestStatsPerPair>((activity) => {
-        return {
-            activity: activity,
-            counter: faker.number.int({ max: 100 }),
-            bytes: faker.number.int({ min: 0, max: 1e12 }),
-        };
-    })
 }
 
 export function fixtureDIDViewModel(): DIDViewModel {
@@ -437,7 +425,7 @@ export function fixtureTransferViewModel(): TransferViewModel {
             "lifetime": faker.date.future().toISOString()
         }),
         state: randomEnum<RequestState>(RequestState),
-        activity: faker.lorem.words({ min: 1, max: 3 }),
+        activity: faker.company.buzzPhrase(),
         bytes: faker.number.int({ min: 0, max: 1e12 }),
         account: faker.internet.userName(),
         priority: faker.number.int({ min: 0, max: 3 }),
@@ -449,7 +437,6 @@ export function fixtureTransferViewModel(): TransferViewModel {
 }
 
 export function fixtureTransferStatsViewModel(): TransferStatsViewModel {
-    const activities = faker.helpers.multiple(() => faker.lorem.words({ min: 1, max: 3 }), { count: 9 })
     return {
         ...mockBaseVM(),
         account: faker.internet.userName(),
@@ -458,11 +445,8 @@ export function fixtureTransferStatsViewModel(): TransferStatsViewModel {
         dest_rse_id: faker.string.uuid(),
         source_rse: createRSEName(),
         dest_rse: createRSEName(),
-        request_stats: randomRequestStats(activities),
+        activity: faker.company.buzzPhrase(),
+        counter: faker.number.int({ max: 100 }),
+        bytes: faker.number.int({ min: 0, max: 1e12 }),
     }
-}
-
-export function fixtureRequestStatsPerPair(): RequestStatsPerPair[] {
-    const activities = faker.helpers.multiple(() => faker.lorem.words({ min: 1, max: 3 }), { count: 9 })
-    return randomRequestStats(activities)
 }
