@@ -232,8 +232,12 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
         } else {
             try {
                 if(!this.parsedBodyAsText) {
-                    const data = await response.json();
-                    return this.createDTO(data);
+                    const data = await response.text();
+                    console.log("DEBUG: ", data)
+                    // TODO: Handle better: replace Infinity with -1
+                    const infinityPatch = data.replace(/Infinity/g, '-1');
+                    const json = JSON.parse(infinityPatch);
+                    return this.createDTO(json);
                 } else {
                     const text = await response.text();
                     return this.createDTO(text);
@@ -241,7 +245,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             } catch(error) {
                 return {
                     status: 'error',
-                    errorMessage: `An error occurred while fetching ${this.request.url}. Error: ${error}}`,
+                    errorMessage: `An error occurred while fetching and parsing response from ${this.request.url}. Error: ${error}}`,
                 } as TDTO;
             }
         }

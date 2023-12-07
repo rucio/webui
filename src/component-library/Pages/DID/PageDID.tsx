@@ -122,28 +122,28 @@ export const PageDID = (
                 />
                 <SubPage
                     show={showPageBools["subpage-rules"]()}
-                    run={() => { if (props.didRulesComDOM.query.data.length === 0) { props.didRulesComDOM.start() } }}
+                    run={() => { if (props.didRulesComDOM.query.data.all.length === 0) { props.didRulesComDOM.start() } }}
                     id="subpage-rules"
                 >
                     <PageDIDRules comdom={props.didRulesComDOM} />
                 </SubPage>
                 <SubPage
                     show={didtype === DIDType.FILE ? false : didtype === DIDType.DATASET ? subpageIndex === 1 : false}
-                    run={() => { if (props.didDatasetReplicasComDOM.query.data.length === 0) { props.didDatasetReplicasComDOM.start() } }}
+                    run={() => { if (props.didDatasetReplicasComDOM.query.data.all.length === 0) { props.didDatasetReplicasComDOM.start() } }}
                     id="subpage-dataset-replicas"
                 >
                     <PageDIDDatasetReplicas comdom={props.didDatasetReplicasComDOM} />
                 </SubPage>
                 <SubPage
                     show={showPageBools["subpage-file-replica-states"]()}
-                    run={() => { if (props.didFileReplicasComDOM.query.data.length === 0) { props.didFileReplicasComDOM.start() } }}
+                    run={() => { if (props.didFileReplicasComDOM.query.data.all.length === 0) { props.didFileReplicasComDOM.start() } }}
                     id="subpage-file-replica-states"
                 >
                     <PageDIDFilereplicas comdom={props.didFileReplicasComDOM} />
                 </SubPage>
                 <SubPage
                     show={showPageBools["subpage-file-replica-states-d"]()}
-                    run={() => { if (props.didContentsComDOM.query.data.length === 0) { props.didContentsComDOM.start() } }}
+                    run={() => { if (props.didContentsComDOM.query.data.all.length === 0) { props.didContentsComDOM.start() } }}
                     id="subpage-file-replica-states-d"
                 >
                     <PageDIDFilereplicasD
@@ -154,7 +154,7 @@ export const PageDID = (
                 </SubPage>
                 <SubPage
                     show={showPageBools["subpage-parent-dids"]()}
-                    run={() => { if (props.didParentsComDOM.query.data.length === 0) { props.didParentsComDOM.start() } }}
+                    run={() => { if (props.didParentsComDOM.query.data.all.length === 0) { props.didParentsComDOM.start() } }}
                     id="subpage-parent-dids"
                 >
                     <PageDIDByType comdom={props.didParentsComDOM} />
@@ -167,7 +167,7 @@ export const PageDID = (
                 </SubPage>
                 <SubPage
                     show={showPageBools["subpage-contents"]()}
-                    run={() => { if (props.didContentsComDOM.query.data.length === 0) { props.didContentsComDOM.start() } }}
+                    run={() => { if (props.didContentsComDOM.query.data.all.length === 0) { props.didContentsComDOM.start() } }}
                     id="subpage-contents"
                 >
                     <PageDIDByType showDIDType comdom={props.didContentsComDOM} />

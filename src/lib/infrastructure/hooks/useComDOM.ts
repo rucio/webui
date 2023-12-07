@@ -7,6 +7,7 @@ import ComDOMWrapper, {
 } from '@/lib/infrastructure/web-worker/comdom-wrapper'
 
 import { HTTPRequest } from '@/lib/sdk/http'
+import { BaseViewModel } from '@/lib/sdk/view-models'
 
 export type ComDOMError = {
     id: number
@@ -14,9 +15,20 @@ export type ComDOMError = {
     cause: string
 }
 
-export type UseComDOM<TData> = {
-    query: DefinedUseQueryResult<TData[], unknown>
+/**
+ * @description The data used by tables that render ViewModels.
+ */
+export type ViewModelTableData<TData extends BaseViewModel> = {
+    all: TData[]
+    success: TData[]
+    error: TData[]
+}
+
+export type UseComDOM<TData extends BaseViewModel> = {
+    query: DefinedUseQueryResult<ViewModelTableData<TData>, unknown>
     dataSink: React.MutableRefObject<TData[]>
+    successViewModels: React.MutableRefObject<TData[]>
+    errorViewModels: React.MutableRefObject<TData[]>
     status: UseComDOMStatus
     comDOMStatus: ComDOMStatus
     pollInterval: number
@@ -57,6 +69,8 @@ export enum UseComDOMStatus {
  * 
  * @returns query The query object from (tanstack/react-query) returned by the useQuery hook.
  * @returns dataSink A ref that contains the current data sink. This is same as query.data but is a ref instead of a state variable.
+ * @returns successViewModelsDataSink A ref that contains the current success view models. This is same as query.data but is a ref instead of a state variable and only contains view models with status 'success'.
+ * @returns errorViewModelsDataSink A ref that contains the current error view models. This is same as query.data but is a ref instead of a state variable and only contains view models with status 'error'.
  * @returns status {@link UseComDOMStatus}The status of the useComDOM hook, derived from the status of the query and the web worker.
  * @returns comDOMStatus {@link ComDOMStatus} The status of the ComDOM web worker.
  * @returns pollInterval The current poll interval of the query in milliseconds.
@@ -71,7 +85,7 @@ export enum UseComDOMStatus {
  * @returns setRequest A function that sets the current HTTP request object used by the ComDOM web worker.
  */
 
-export default function useComDOM<TData>(
+export default function useComDOM<TData extends BaseViewModel>(
     queryName: string,
     initialData: TData[] = [],
     proactiveRefetch: boolean = false,
@@ -80,6 +94,9 @@ export default function useComDOM<TData>(
     debug: boolean = false,
 ) {
     const dataSink = useRef<TData[]>(initialData)
+    const successViewModelsDataSink = useRef<TData[]>(initialData.filter(viewModel => viewModel.status === 'success') as TData[])
+    const errorViewModelsDataSink = useRef<TData[]>(initialData.filter(viewModel => viewModel.status === 'error') as TData[])
+
     const comDOMWrapper: IComDOMWrapper<TData> = useMemo(() => {
         return new ComDOMWrapper<TData>(debug)
     }, [debug])
@@ -163,8 +180,17 @@ export default function useComDOM<TData>(
                 setStatus(UseComDOMStatus.DONE)
                 return Promise.reject('ComDOM has finished fetching all data')
             }
-            dataSink.current.push(...batchResponse.data)
-            return dataSink.current
+            console.log('Batch Response', batchResponse)
+            const successViewModels = batchResponse.data.filter(viewModel => viewModel.status === 'success')
+            const errorViewModels = batchResponse.data.filter(viewModel => viewModel.status === 'error')
+            dataSink.current.push(...successViewModels)
+            successViewModelsDataSink.current.push(...successViewModels)
+            errorViewModelsDataSink.current.push(...errorViewModels)
+            return {
+                "all": dataSink.current,
+                "success": successViewModelsDataSink.current,
+                "error": errorViewModelsDataSink.current
+            }
         } catch (error: any) {
             reportError(error, 'Error fetching data from background thread')
             setStatus(UseComDOMStatus.ERROR)
@@ -175,7 +201,11 @@ export default function useComDOM<TData>(
     const query = useQuery({
         queryKey: queryKey,
         queryFn: queryFn,
-        initialData: initialData,
+        initialData: { 
+            "all": initialData,
+            "success": initialData.filter(viewModel => viewModel.status === 'success') as TData[],
+            "error": initialData.filter(viewModel => viewModel.status === 'error') as TData[],
+        },
         refetchInterval: pollInterval,
         refetchOnWindowFocus: proactiveRefetch,
         refetchOnMount: proactiveRefetch,
@@ -199,6 +229,8 @@ export default function useComDOM<TData>(
             }
             _log('Resetting data sink')
             dataSink.current = initialData
+            successViewModelsDataSink.current = []
+            errorViewModelsDataSink.current = []
             _log('Starting ComDOM with URL', req?.url.toString())
             if (req == null) {
                 throw new Error('HTTPRequest for streaming is null')
@@ -259,6 +291,8 @@ export default function useComDOM<TData>(
         try {
             queryClient.setQueriesData(queryKey, initialData)
             dataSink.current = initialData
+            successViewModelsDataSink.current = []
+            errorViewModelsDataSink.current = []
             _log('Data sink cleaned')
         } catch (error: any) {
             _log('Error cleaning ComDOM', error)
@@ -270,6 +304,8 @@ export default function useComDOM<TData>(
     return {
         query,
         dataSink,
+        successViewModels: successViewModelsDataSink,
+        errorViewModels: errorViewModelsDataSink,
         status,
         comDOMStatus,
         pollInterval,

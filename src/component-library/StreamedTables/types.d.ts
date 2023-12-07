@@ -1,3 +1,6 @@
+import { ViewModelTableData } from "@/lib/infrastructure/hooks/useComDOM"
+import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM"
+
 export type TableStyling = Partial<{
     visibility?: Record<string, boolean>
     tableHeadRowStyle?: string

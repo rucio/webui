@@ -12,8 +12,6 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>, responseModel: ListDIDsResponse): Promise<DIDExtendedDTO> {
         try {
             const dto: DIDExtendedDTO = await this.didGateway.getDID(requestModel.rucioAuthToken, responseModel.scope, responseModel.name, DIDType.FILE);
-            const didMetaDTO: DIDMetaDTO = await this.didGateway.getDIDMeta(requestModel.rucioAuthToken, responseModel.scope, responseModel.name);
-            dto.did_type = didMetaDTO.did_type;
             return dto;
         } catch (error: any) {
             const errorDTO: DIDExtendedDTO = {

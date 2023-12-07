@@ -1,4 +1,4 @@
-import { Table, flexRender } from "@tanstack/react-table";
+import { Table, flexRender, TableState } from "@tanstack/react-table";
 import { twMerge } from "tailwind-merge";
 import { TableStyling } from "./types";
 

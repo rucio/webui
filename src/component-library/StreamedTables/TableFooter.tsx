@@ -6,7 +6,6 @@ import { TableFetchstatus } from "./TableFetchstatus";
 import { TableBreakout } from "./TableBreakout";
 import { TableErrorstatus } from "./TableErrorstatus";
 import { TableErrorreader } from "./TableErrorreader";
-import { BaseViewModel } from "@/lib/sdk/view-models";
 import { useState } from "react";
 
 /**
@@ -18,7 +17,7 @@ import { useState } from "react";
  */
 type TableFooterProps<T> = JSX.IntrinsicElements["tfoot"] & {
     table: Table<T>,
-    comdom: UseComDOM<T>
+    comdom: UseComDOM<any> // TODO: fix this any, use BaseViewModel
     breakout?: {
         breakoutVisibility: boolean,
         keys: Record<string, string>,
@@ -26,7 +25,7 @@ type TableFooterProps<T> = JSX.IntrinsicElements["tfoot"] & {
     stacked?: boolean // to save horizontal space
 }
 
-export function TableFooter<T extends BaseViewModel>(props: TableFooterProps<T>) {
+export function TableFooter<T>(props: TableFooterProps<T>) {
     const { stacked, className, ...otherprops } = props
     const [showDetailedErrors, setShowDetailedErrors] = useState<boolean>(false)
 

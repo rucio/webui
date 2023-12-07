@@ -68,7 +68,7 @@ export default function RSETable() {
     )
     
     const table = useReactTable<RSEOld>({
-        data: query.data || [],
+        data: query.data.all || [],
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         debugTable: true,

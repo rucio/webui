@@ -6,11 +6,13 @@ import { TableHeader } from "./TableHeader";
 import { StreamedTableProps } from "./types";
 import { usePrepareTable } from "./helpers";
 
-export function StreamedTable<T extends BaseViewModel>(props: StreamedTableProps<T>) {
+export function StreamedTable<T>(props: StreamedTableProps<T>) {
     const { className, ...otherprops } = props
 
     const { table, rowSelection, setRowSelection, breakoutVisibility, setBreakoutVisibility } = usePrepareTable<T>({
-        tabledata: props.tablecomdom.query.data || [],
+        tabledata: props.tablecomdom.query.data.all || [],
+        successViewModels: props.tablecomdom.query.data.success,
+        errorViewModels: props.tablecomdom.query.data.error,
         tablecolumns: props.tablecolumns,
         tablestyling: props.tablestyling,
         tableselecting: props.tableselecting,
