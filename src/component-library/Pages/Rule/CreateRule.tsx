@@ -225,6 +225,7 @@ export const CreateRule = (
             } as HeadersInit),
             body: {
                 "requestedDIDs": Page0State.searchDIDSelection,
+                "rseExpression": RSEExpression,
             }
         }
         // run query
