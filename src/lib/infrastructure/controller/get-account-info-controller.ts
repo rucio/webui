@@ -7,7 +7,9 @@ import { GetAccountInfoRequest } from "@/lib/core/usecase-models/get-account-inf
 import { GetAccountInfoInputPort } from "@/lib/core/port/primary/get-account-info-ports";
 import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factory";
 
-export type GetAccountInfoControllerParameters = TAuthenticatedControllerParameters & {};
+export type GetAccountInfoControllerParameters = TAuthenticatedControllerParameters & {
+    account: string;
+};
 
 @injectable()
 class GetAccountInfoController extends BaseController<GetAccountInfoControllerParameters, AuthenticatedRequestModel<GetAccountInfoRequest>> {
@@ -18,7 +20,8 @@ class GetAccountInfoController extends BaseController<GetAccountInfoControllerPa
     }
     prepareRequestModel(parameters: GetAccountInfoControllerParameters): AuthenticatedRequestModel<GetAccountInfoRequest> {
         return {
-            rucioAuthToken: parameters.rucioAuthToken
+            rucioAuthToken: parameters.rucioAuthToken,
+            account: parameters.account,
         }
     }
 }
