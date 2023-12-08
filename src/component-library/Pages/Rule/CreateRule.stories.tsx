@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react'
-import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures'
+import { fixtureDIDLongViewModel, fixtureListDIDViewModel as fixtureListDIDsViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures'
 
 import { CreateRule as CR } from './CreateRule'
 import {
@@ -37,7 +37,7 @@ CreateRule.args = {
         })
         setActivePage(3)
     },
-    didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureDIDLongViewModel())),
+    didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureListDIDsViewModel())),
     didValidation: (query: TypedDIDValidationQuery) => {
         // if the DID contains the string "error", it will be added to the error list
         var localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] }

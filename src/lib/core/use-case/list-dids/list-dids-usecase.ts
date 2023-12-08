@@ -84,6 +84,7 @@ class ListDIDsUseCase extends BaseSingleEndpointPostProcessingPipelineStreamingU
             did_type: dto.did_type,
             length: 0,
             bytes: 0,
+            open: false, // This is updated in the pipeline element that follows this usecase
         }
         return {
             data: responseModel,

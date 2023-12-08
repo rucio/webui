@@ -1,6 +1,6 @@
 import { TCreateRuleRequest, TypedDIDValidationQuery, TypedDIDValidationResponse } from "@/lib/infrastructure/data/view-model/create-rule";
 import { Meta, StoryObj } from "@storybook/react";
-import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureDIDLongViewModel, fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { CreateRule  as CR} from "../Pages/Rule/CreateRule.stories";
 
 export default {
@@ -17,7 +17,7 @@ export const CreateRule: Story = {
                 success: true,
             })
         },
-        didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureDIDLongViewModel())),
+        didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureListDIDViewModel())),
         didValidation: (query: TypedDIDValidationQuery) => {
             // if the DID contains the string "error", it will be added to the error list
             var localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] }

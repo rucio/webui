@@ -11,11 +11,12 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { DIDLongViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
 
 export const CreateRuleDIDTable = (
     props: {
-        comdom: UseComDOM<DIDLongViewModel>,
-        handleChange: (data: DIDLongViewModel[]) => void,
+        comdom: UseComDOM<ListDIDsViewModel>,
+        handleChange: (data: ListDIDsViewModel[]) => void,
     }
 ) => {
     const columnHelper = createColumnHelper<DIDLongViewModel>()

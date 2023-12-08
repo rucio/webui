@@ -233,7 +233,6 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             try {
                 if(!this.parsedBodyAsText) {
                     const data = await response.text();
-                    console.log("DEBUG: ", data)
                     // TODO: Handle better: replace Infinity with -1
                     const infinityPatch = data.replace(/Infinity/g, '-1');
                     const json = JSON.parse(infinityPatch);

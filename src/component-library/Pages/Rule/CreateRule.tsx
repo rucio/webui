@@ -38,10 +38,11 @@ import { CreateRuleRSETable } from './CreateRuleRSETable';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface CreateRulePageProps {
     // Page 0.0 - DID Search`
-    didListComDOM: UseComDOM<DIDLongViewModel>,
+    didListComDOM: UseComDOM<ListDIDsViewModel>,
     // Page 0.1 - DID Validation
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
     // Page 1 - RSE Selection
@@ -67,7 +68,7 @@ interface Page0State {
     selectDIDMethod: number
     // selection by search
     selectDIDDataPattern: string
-    searchDIDSelection: Array<DIDLongViewModel>
+    searchDIDSelection: Array<ListDIDsViewModel>
 
     // Subpage 1: List of DIDs
     // selection via typing
@@ -257,7 +258,10 @@ export const CreateRule = (
     const [summaryViewModel, setSummaryViewModel] = useState<RuleSummaryViewModel>()
 
     const loadRuleSummaryPage = () => {
-        const fetchSummaryRequest: TFetchCreateRuleSummaryRequest = {
+        const fetchSummaryRequest: RuleSummaryViewModel = {
+            status: 'success',
+            RSEList: Page1State.RSESelection.map((element) => element.rse),
+            DIDList: Page0State.typedDIDs.concat(didToScopename(Page0State.searchDIDSelection)),
             RSEViewModels: Page1State.RSESelection,
             DIDViewModels: Page0State.searchDIDSelection,
             expirydate: Page2State.expiryDate,
@@ -269,7 +273,9 @@ export const CreateRule = (
             comment: Page2State.freeComment,
             approval: Page2State.approval
         }
-        props.fetchSummary(fetchSummaryRequest, setSummaryViewModel, setActivePage, (error: string) => { console.log(error) })        
+        setSummaryViewModel(fetchSummaryRequest)
+        setActivePage(3)
+        // props.fetchSummary(fetchSummaryRequest, setSummaryViewModel, setActivePage, (error: string) => { console.log(error) })        
     }
 
     
@@ -340,12 +346,12 @@ export const CreateRule = (
                             </div>
                             <CreateRuleDIDTable
                                 comdom={props.didListComDOM}
-                                handleChange={(data: DIDLongViewModel[]) => { setPage0State({ ...Page0State, searchDIDSelection: data }) }}
+                                handleChange={(data: ListDIDsViewModel[]) => { setPage0State({ ...Page0State, searchDIDSelection: data }) }}
                             />
                         </div>
                     </Collapsible>
                     <Collapsible showIf={Page0State.selectDIDMethod === 1}>
-                        {/* TODO: delayed */}
+                        {/* TODO: Beta */}
                         <div className="flex flex-col space-y-2 m-2">
                             <Label label="dids">This feature will be released soon!</Label>
                             {/* <Label label="dids">Data Identifiers to select:</Label>

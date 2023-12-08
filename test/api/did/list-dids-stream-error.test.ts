@@ -151,6 +151,7 @@ describe('DID API Tests', () => {
                 "did_type": "Dataset",
                 "bytes": 0,
                 "length": 0,
+                "open": true,
             },
             {
                 "status": "success",
@@ -159,6 +160,7 @@ describe('DID API Tests', () => {
                 "did_type": "Dataset",
                 "bytes": 123,
                 "length": 456,
+                "open": true,
             },
             {
                 "status": "success",
@@ -167,6 +169,7 @@ describe('DID API Tests', () => {
                 "did_type": "Dataset",
                 "bytes": 456,
                 "length": 789,
+                "open": true,
             },
             {
                 "status": "error",
@@ -176,6 +179,7 @@ describe('DID API Tests', () => {
                 "did_type": "Unknown",
                 "bytes": 0,
                 "length": 0,
+                "open": false,
             }
         ])
     })

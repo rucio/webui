@@ -15,6 +15,7 @@ import { BaseViewModel } from '@/lib/sdk/view-models';
 import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDLongViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { DIDKeyValuePair } from '@/lib/core/entity/rucio';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {
@@ -89,6 +90,19 @@ export function fixtureDIDLongViewModel(): DIDLongViewModel {
         length: faker.number.int({ min: 0, max: 1e6 }),
     }
 }
+
+export function fixtureListDIDViewModel(): ListDIDsViewModel {
+    return {
+        ...mockBaseVM(),
+        scope: createRandomScope(),
+        name: faker.lorem.words(3).replace(/\s/g, "."),
+        did_type: randomEnum<DIDType>(DIDType),
+        bytes: faker.number.int({ min: 0, max: 1e12 }),
+        length: faker.number.int({ min: 0, max: 1e6 }),
+        open: faker.datatype.boolean(),
+    }
+}
+
 
 export function fixtureRulePageLockEntryViewModel(): RulePageLockEntryViewModel {
     return {

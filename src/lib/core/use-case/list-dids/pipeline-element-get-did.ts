@@ -81,6 +81,7 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
         responseModel.bytes = dto.bytes;
         responseModel.length = dto.length;
         responseModel.did_type = dto.did_type;
+        responseModel.open = dto.open;
         return responseModel;
     }
 

@@ -10,8 +10,13 @@ import {
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule";
 import { BatchResponse } from "@/lib/infrastructure/web-worker/comdom-wrapper";
+import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
+import { useEffect, useState } from "react";
+import { AccountInfo } from "@/lib/core/entity/rucio";
 
 export default function CreateRule() {
+
+    const [accountInfo, setAccountInfo] = useState<AccountInfo>()
 
     const onSubmit = (query: TCreateRuleRequest) => {
         return Promise.resolve({
@@ -65,7 +70,7 @@ export default function CreateRule() {
     }
 
 
-    const DIDSearchComDOM = useComDOM<DIDLongViewModel>(
+    const DIDSearchComDOM = useComDOM<ListDIDsViewModel>(
         'create-rule-page-did-query',
         [],
         false,
@@ -84,6 +89,7 @@ export default function CreateRule() {
         })
         return batch
     }
+
     const RSEComDOM = useComDOM<RSEAccountUsageLimitViewModel>(
         'create-rule-page-rse-query',
         [],
@@ -94,8 +100,11 @@ export default function CreateRule() {
         processRSEAccountUsageLimitViewModelBatchResponse
     )
 
+    useEffect(() => {
+    })
     return (
         <CreateRuleStory
+            accountInfo={accountInfo}
             onSubmit={onSubmit}
             fetchSummary={fetchSummary}
             didValidation={didValidation}
