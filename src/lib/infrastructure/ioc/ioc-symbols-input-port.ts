@@ -5,6 +5,7 @@
 const INPUT_PORT = {
     DID_META: Symbol.for("DIDMetaInputPort"),
     DID_KEYVALUEPAIRS: Symbol.for("DIDKeyValuePairsDataInputPort"),
+    GET_ACCOUNT_INFO: Symbol.for("GetAccountInfoInputPort"),
     GET_RSE: Symbol.for("GetRSEInputPort"),
     GET_RSE_ATTRIBUTES: Symbol.for("GetRSEAttributesInputPort"),
     GET_RSE_PROTOCOLS: Symbol.for("GetRSEProtocolsInputPort"),
