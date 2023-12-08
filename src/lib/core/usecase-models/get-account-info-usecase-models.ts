@@ -3,7 +3,9 @@ import { AccountInfo } from "../entity/rucio";
 /**
  * @interface GetAccountInfoRequest represents the RequestModel for get_account_info usecase
 */
-export interface GetAccountInfoRequest {}
+export interface GetAccountInfoRequest {
+    account: string;
+}
 
 /** 
  * @interface GetAccountInfoResponse represents the ResponseModel for get_account_info usecase
