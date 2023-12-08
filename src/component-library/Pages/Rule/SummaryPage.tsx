@@ -1,17 +1,22 @@
-import { TCreateRuleRequest } from "@/lib/infrastructure/data/view-model/create-rule"
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
-import FC, { useEffect } from "react"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
-import { HiQuestionMarkCircle } from "react-icons/hi"
 import { SamplingTag } from "../../Tags/SamplingTag"
 import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule"
+import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse"
+import { BasicStatusTag } from "@/component-library/Tags/BasicStatusTag"
+import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did"
 
 var format = require("date-format")
 
+type TBadge = {
+    title: string,
+    type: 'success' | 'error' | 'warning' | 'info',
+}
+
 const TabularSummary = (
     props: {
-        data: string[],
+        data: {title: string, badges:TBadge[]}[],
         title: string,
     }
 ) => {
@@ -55,14 +60,16 @@ const TabularSummary = (
                                 <td
                                     className="break-all md:break-normal pl-2 py-1 select-all"
                                 >
-                                    {elem}
+                                    {elem.title}
                                 </td>
                                 <td
                                     className="w-8 text-center"
                                 >
-                                    <button>
-                                        <HiQuestionMarkCircle />
-                                    </button>
+                                    {
+                                        elem.badges.map((badge, index) => {
+                                            return <BasicStatusTag key={index} text={badge.title} status={badge.type} />
+                                        })
+                                    }
                                 </td>
                             </tr>
                         )
@@ -90,13 +97,108 @@ export const SummaryPage = (
         
     const multiRSE = props.data.RSEViewModels.length > 1
     const multiDID = props.data.DIDList.length > 1
-    const singleCopy = props.data.numcopies === 1
     const openDIDs = props.data.DIDViewModels.filter(did => did.open)
+    const sampleFiles = props.data.numsamples
+    const lifetime = (props.data.expirydate.getTime() - (new Date().getTime())) / (1000 * 60 * 60 * 24)
+    const lifetimeDays = Math.floor(lifetime) > 0 ? Math.floor(lifetime) : 1
+    const userAskedForApproval = props.data.approval
+    
+    const getRSETableContent = () => {
+        return props.data.RSEViewModels.map((rse: RSEAccountUsageLimitViewModel, index) => {
+            const showQuotaWarningBadge = rse.has_quota
+            const badges: TBadge[] = [] 
+            if(showQuotaWarningBadge) {
+                badges.push({
+                    title: 'Needs Approval',
+                    type: 'error',
+                })
+            }
+            return {
+                title: rse.rse,
+                badges: badges
+            }
+        })
+    }
+
+    const getDIDTableContent = () => {
+        return props.data.DIDViewModels.map((did: ListDIDsViewModel, index) => {
+            const showOpenBadge = did.open
+            const badges: TBadge[] = [] 
+            if(showOpenBadge) {
+                badges.push({
+                    title: 'Open',
+                    type: 'warning',
+                })
+            }
+            return {
+                title: `${did.scope}:${did.name}`,
+                badges: badges
+            }
+        })
+    }
+
+    const getSummaryMessages = (copies: number, selected_dids: ListDIDsViewModel[], rse_data: RSEAccountUsageLimitViewModel[], approval: boolean, nbfiles: number, open: boolean, lifetime: number) => {
+        let did_summary_text = "";
+        let rse_summary_text = "";
+        let lifetime_summary_text = "";
+    
+        if (nbfiles != null) {
+            did_summary_text = `This will ${approval ? '<b>ask for approval</b>' : ''} to create a rule for the following sample dataset(s) with ${nbfiles} file(s):`;
+        } else if (copies == 1 && selected_dids.length == 1 && rse_data.length == 1) {
+            did_summary_text = `This request will ${approval ? '<b>ask for approval</b>' : ''} to create a rule for the following DID:`;
+            rse_summary_text = "The rule will replicate to the following RSE:";
+        } else {
+            did_summary_text = `This request will ${approval ? '<b>ask for approval</b>' : ''} create rules for the following DIDs:`;
+            rse_summary_text = "The rules will replicate to one of the following RSEs:";
+        }
+    
+        if (open) {
+            did_summary_text += '</br>The DIDs in bold are still open. Everything that will be added to them after you created the rule will also be transferred to the selected RSE.';
+        }
+    
+        if (lifetime == 1) {
+            lifetime_summary_text = "The lifetime will be 1 day. If this is ok you can submit the rule request. If not you can go back and change it.";
+        } else if (lifetime == 0) {
+            lifetime_summary_text = "The lifetime will be infinite. If this is ok you can submit the rule request. If not you can go back and change it.";
+        } else {
+            lifetime_summary_text = `The lifetime will be ${lifetime} days. If this is ok you can submit the rule request. If not you can go back and change it.`;
+        }
+    
+        return { did_summary_text, rse_summary_text, lifetime_summary_text };
+    }
     const getMessages = () => {
         const messages = []
-        messages.push("This  will create a rule for" + (multiDID? ' the DIDs listed below' : ' the DID ' + props.data.DIDList[0]))
-        messages.push("The rules will be created for " + (multiRSE? 'one of the RSEs listed below' : `the RSE ${props.data.RSEList[0]}` ))
+        if(sampleFiles && sampleFiles > 0) {
+            if(userAskedForApproval) {
+                messages.push(`You have asked for approval to create a rule for the following sample dataset(s) with ${sampleFiles} file(s).`)
+            }else {
+                messages.push(`This will create a rule for following sample dataset(s) with ${sampleFiles} file(s).`)
+            }
+        } else {
+            messages.push("This  will create a rule for" + (multiDID? ' the DIDs listed below' : ' the DID ' + props.data.DIDList[0]))
+        }
+        if(userAskedForApproval) {
+            if(multiDID) {
+                messages.push("You have asked for approval for Multiple DIDs. This request will create a new container and will put all of the following DIDs into it. The rule will be created on the new container.")
+            }else {
+                messages.push("You have asked for approval to create this rule.")
+            }
+        }
+        if(openDIDs.length > 0) {
+            messages.push("There are open DIDs present in your request. Everything that will be added to them after you created the rule will also be transferred to the selected RSE.")
+        }
 
+        if(multiRSE) {
+            messages.push("This will create a rule on one of the RSEs listed below.")
+        }else {
+            messages.push("This will create a rule on the RSE listed below.")
+        }
+
+        if(lifetimeDays === 1) {
+            messages.push("The lifetime will be 1 day.  If this is ok you can submit the rule request. If not you can go back and change it.")
+        }else {
+            messages.push(`The lifetime will be ${lifetimeDays} days.  If this is ok you can submit the rule request. If not you can go back and change it.`)
+        }
         return messages
     }
     return (
@@ -119,7 +221,7 @@ export const SummaryPage = (
                 <div
                     className={twMerge(
                         "px-2 mx-2 rounded border dark:border-0",
-                        "bg-gray-200 dark:bg-gray-600",
+                        "bg-gray-200 dark:bg-gray-800",
                         "dark:text-white"
                     )}
                 >
@@ -128,7 +230,7 @@ export const SummaryPage = (
                         return (
                             <li
                                 key={index}
-                                className="list-disc list-inside"
+                                className="pl-5 list-disc"
                             >
                                 {message}
                             </li>
@@ -138,12 +240,6 @@ export const SummaryPage = (
                     </ul>
                 </div>
             </div>
-            <pre 
-                className="text-gray-800 dark:text-white"    
-            >
-                The rules will be created on {multiRSE? 'one of the following RSEs' : 'the following RSE'}
-                
-            </pre>
             <div
                 className={twMerge(
                     "grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-4",
@@ -152,8 +248,8 @@ export const SummaryPage = (
                     "dark:border-2"
                 )}
             >
-                <TabularSummary data={props.data.DIDList} title="DIDs" />
-                <TabularSummary data={props.data.RSEViewModels.map(rse => rse.rse_id)} title="RSEs" />
+                <TabularSummary data={getDIDTableContent()} title="DIDs" />
+                <TabularSummary data={getRSETableContent()} title="RSEs" />
             </div>
             <div
                 className={twMerge(
