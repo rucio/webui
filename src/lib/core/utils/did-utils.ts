@@ -12,7 +12,8 @@ export const generateNewScope = (account: string, accountType: AccountType): str
     }else if(accountType === AccountType.GROUP) {
         return `group.${account}`;
     } else {
-        throw new Error(`Invalid account type for rule creation: ${accountType}`);
+        // TODO: Handle Service Account like root
+        return `user.${account}`;
     }
 }
 

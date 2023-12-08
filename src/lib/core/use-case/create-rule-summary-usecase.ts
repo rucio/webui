@@ -33,42 +33,40 @@ export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRe
     validateRequestModel(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): BaseErrorResponseModel | undefined {
         return undefined;
     }
-    execute(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    // async execute(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): Promise<void> {
-    //     const account = requestModel.account;
-    //     const rucioAuthToken = requestModel.rucioAuthToken;
-    //     // DID Summary Table
-    //     const didSummaryTable: TDIDSummaryRow[] = [];
-    //     if(requestModel.withSamples) {
-    //         const accountInfoDTO: AccountInfoDTO = await this.accountGateway.getAccountInfo(account, rucioAuthToken);
-    //         const accountType: AccountType = accountInfoDTO.accountType;
-    //         const newScope: string = generateNewScope(account, accountType); 
-    //         requestModel.selectedDIDs.forEach((did: DID) => {
-    //         const derivedDID: DID = generateDerivedDIDName(newScope, did);
-    //         const didSummaryRow =  createDIDSummaryRow(derivedDID as DIDLong, requestModel.copies)
-    //         didSummaryTable.push(didSummaryRow);
-    //         });
-    //     } else {
-    //         requestModel.selectedDIDs.forEach(async (did: DID) => {
-    //             const didDTO: DIDExtendedDTO = await this.didGateway.getDID(
-    //                 requestModel.rucioAuthToken,
-    //                 did.scope,
-    //                 did.name,
-    //                 DIDType.FILE
-    //             )
-    //             if(didDTO.status === 'success') {
-    //                 const didSummaryRow: TDIDSummaryRow = createDIDSummaryRow(
-    //                     didDTO,
-    //                     requestModel.copies,
-    //                 );
-    //                 didSummaryTable.push(didSummaryRow);
-    //             } else {
-    //                 // TODO: could not get DID info, handle error?
-    //             }
-    //         })
-    //     }
+   
+    async execute(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): Promise<void> {
+        const account = requestModel.account;
+        const rucioAuthToken = requestModel.rucioAuthToken;
+        // DID Summary Table
+        const didSummaryTable: TDIDSummaryRow[] = [];
+        if(requestModel.withSamples) {
+            const accountInfoDTO: AccountInfoDTO = await this.accountGateway.getAccountInfo(account, rucioAuthToken);
+            const accountType: AccountType = accountInfoDTO.accountType;
+            const newScope: string = generateNewScope(account, accountType); 
+            requestModel.selectedDIDs.forEach((did: DID) => {
+                const derivedDID: DID = generateDerivedDIDName(newScope, did);
+                const didSummaryRow =  createDIDSummaryRow(derivedDID as DIDLong, requestModel.copies)
+                didSummaryTable.push(didSummaryRow);
+            });
+        } else {
+            requestModel.selectedDIDs.forEach(async (did: DID) => {
+                const didDTO: DIDExtendedDTO = await this.didGateway.getDID(
+                    requestModel.rucioAuthToken,
+                    did.scope,
+                    did.name,
+                    DIDType.FILE
+                )
+                if(didDTO.status === 'success') {
+                    const didSummaryRow: TDIDSummaryRow = createDIDSummaryRow(
+                        didDTO,
+                        requestModel.copies,
+                    );
+                    didSummaryTable.push(didSummaryRow);
+                } else {
+                    // TODO: could not get DID info, handle error?
+                }
+            })
+        }
 
     //     // RSE Summary Table
     //     let needsApproval = false;
@@ -109,5 +107,5 @@ export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRe
             
         // }
 
-    // }
+    }
 }

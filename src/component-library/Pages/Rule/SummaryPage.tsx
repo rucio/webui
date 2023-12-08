@@ -6,6 +6,8 @@ import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule"
 import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse"
 import { BasicStatusTag } from "@/component-library/Tags/BasicStatusTag"
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did"
+import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-utils"
+import { DID } from "@/lib/core/entity/rucio"
 
 var format = require("date-format")
 
@@ -109,7 +111,7 @@ export const SummaryPage = (
             const badges: TBadge[] = [] 
             if(showQuotaWarningBadge) {
                 badges.push({
-                    title: 'Needs Approval',
+                    title: 'Quota',
                     type: 'error',
                 })
             }
@@ -121,51 +123,40 @@ export const SummaryPage = (
     }
 
     const getDIDTableContent = () => {
-        return props.data.DIDViewModels.map((did: ListDIDsViewModel, index) => {
-            const showOpenBadge = did.open
-            const badges: TBadge[] = [] 
-            if(showOpenBadge) {
-                badges.push({
-                    title: 'Open',
-                    type: 'warning',
-                })
-            }
-            return {
-                title: `${did.scope}:${did.name}`,
-                badges: badges
-            }
+        if(!sampleFiles) {
+            return props.data.DIDViewModels.map((did: ListDIDsViewModel, index) => {
+                const showOpenBadge = did.open
+                const badges: TBadge[] = [] 
+                if(showOpenBadge) {
+                    badges.push({
+                        title: 'Open',
+                        type: 'warning',
+                    })
+                }
+                return {
+                    title: `${did.scope}:${did.name}`,
+                    badges: badges
+                }
+            })
+        }
+        const accountType = props.data.accountInfo.accountType
+        const newScope = generateNewScope("account_missing", accountType)
+        const tableData: {title: string, badges: TBadge[]}[] = []
+        props.data.DIDViewModels.forEach((did: ListDIDsViewModel, index) => {
+            const derivedDID: DID =generateDerivedDIDName(newScope, did) 
+            tableData.push({
+                title: `${derivedDID.scope}:${derivedDID.name}`,
+                badges: [
+                    {
+                        title: 'Derived',
+                        type: 'info',
+                    }
+                ]
+            })
         })
+        return tableData
     }
 
-    const getSummaryMessages = (copies: number, selected_dids: ListDIDsViewModel[], rse_data: RSEAccountUsageLimitViewModel[], approval: boolean, nbfiles: number, open: boolean, lifetime: number) => {
-        let did_summary_text = "";
-        let rse_summary_text = "";
-        let lifetime_summary_text = "";
-    
-        if (nbfiles != null) {
-            did_summary_text = `This will ${approval ? '<b>ask for approval</b>' : ''} to create a rule for the following sample dataset(s) with ${nbfiles} file(s):`;
-        } else if (copies == 1 && selected_dids.length == 1 && rse_data.length == 1) {
-            did_summary_text = `This request will ${approval ? '<b>ask for approval</b>' : ''} to create a rule for the following DID:`;
-            rse_summary_text = "The rule will replicate to the following RSE:";
-        } else {
-            did_summary_text = `This request will ${approval ? '<b>ask for approval</b>' : ''} create rules for the following DIDs:`;
-            rse_summary_text = "The rules will replicate to one of the following RSEs:";
-        }
-    
-        if (open) {
-            did_summary_text += '</br>The DIDs in bold are still open. Everything that will be added to them after you created the rule will also be transferred to the selected RSE.';
-        }
-    
-        if (lifetime == 1) {
-            lifetime_summary_text = "The lifetime will be 1 day. If this is ok you can submit the rule request. If not you can go back and change it.";
-        } else if (lifetime == 0) {
-            lifetime_summary_text = "The lifetime will be infinite. If this is ok you can submit the rule request. If not you can go back and change it.";
-        } else {
-            lifetime_summary_text = `The lifetime will be ${lifetime} days. If this is ok you can submit the rule request. If not you can go back and change it.`;
-        }
-    
-        return { did_summary_text, rse_summary_text, lifetime_summary_text };
-    }
     const getMessages = () => {
         const messages = []
         if(sampleFiles && sampleFiles > 0) {
