@@ -1,7 +1,6 @@
 'use client';
 import { CreateRule as CreateRuleStory } from "@/component-library/Pages/Rule/CreateRule";
 import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse";
-import { DIDLongViewModel } from "@/lib/infrastructure/data/view-model/did";
 import {
     TCreateRuleRequest,
     TFetchCreateRuleSummaryRequest,
@@ -13,10 +12,9 @@ import { BatchResponse } from "@/lib/infrastructure/web-worker/comdom-wrapper";
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
 import { useEffect, useState } from "react";
 import { AccountInfo } from "@/lib/core/entity/rucio";
+import { generateEmptyAccountInfoViewModel } from "@/lib/infrastructure/data/view-model/account";
 
 export default function CreateRule() {
-
-    const [accountInfo, setAccountInfo] = useState<AccountInfo>()
 
     const onSubmit = (query: TCreateRuleRequest) => {
         return Promise.resolve({
@@ -100,8 +98,22 @@ export default function CreateRule() {
         processRSEAccountUsageLimitViewModelBatchResponse
     )
 
+    const [accountInfo, setAccountInfo] = useState<AccountInfo>(generateEmptyAccountInfoViewModel())
     useEffect(() => {
-    })
+        fetch(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/account-info`)
+        .then((response) => {
+            if(response.ok) {
+                return response.json()
+            } else {
+                throw new Error(`Error fetching account info. Are you logged in? HTTP Status Code: ${response.status}`)
+            }
+        }).then((data: AccountInfo) => {
+            setAccountInfo(data)
+        }).catch((error) => {
+            console.error(error)
+        })
+    }, [])
+
     return (
         <CreateRuleStory
             accountInfo={accountInfo}

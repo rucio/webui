@@ -18,5 +18,5 @@ export interface RuleSummaryViewModel extends BaseViewModel {
     groupby: DIDType
     comment: string
     approval: boolean
-    account: AccountInfo
+    accountInfo: AccountInfo
 }

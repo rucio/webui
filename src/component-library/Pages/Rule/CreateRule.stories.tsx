@@ -8,6 +8,7 @@ import {
     TypedDIDValidationQuery, TypedDIDValidationResponse,
 } from '@/lib/infrastructure/data/view-model/create-rule'
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule'
+import { AccountStatus, AccountType } from '@/lib/core/entity/rucio'
 
 export default {
     title: 'Components/Pages/Rule',
@@ -34,6 +35,14 @@ CreateRule.args = {
             status: 'success',
             DIDList: query.DIDViewModels.map((did) => `${did.scope}:${did.name}`),
             RSEList: query.RSEViewModels.map((rse) => rse.rse),
+            accountInfo: {
+                account: 'maany',
+                accountType: AccountType.USER,
+                accountStatus: AccountStatus.ACTIVE,
+                createdAt: "2021-07-01T00:00:00Z",
+                updatedAt: "2021-07-01T00:00:00Z",
+                email: "abcd@sth.com",
+            }
         })
         setActivePage(3)
     },
