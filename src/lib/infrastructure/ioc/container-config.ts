@@ -61,6 +61,7 @@ import ListSubscriptionRuleStatesFeature from "./features/list-subscription-rule
 import RuleGatewayOutputPort from "@/lib/core/port/secondary/rule-gateway-output-port";
 import RuleGateway from "../gateway/rule-gateway/rule-gateway";
 import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feature";
+import GetAccountInfoFeature from "./features/get-account-info-feature";
 
 
 /**
@@ -117,6 +118,7 @@ loadFeaturesSync(appContainer, [
 loadFeaturesSync(appContainer, [
     new ListAllRSEsFeature(appContainer),
     new ListAccountRSEQuotasFeature(appContainer),
+    new GetAccountInfoFeature(appContainer),
 ])
 
 //Features: List Subscriptions

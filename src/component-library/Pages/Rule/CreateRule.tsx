@@ -268,7 +268,8 @@ export const CreateRule = (
             numsamples: Page2State.numsamples,
             groupby: Page2State.groupBy,
             comment: Page2State.freeComment,
-            approval: Page1State.askForApproval
+            approval: Page1State.askForApproval,
+            accountInfo: props.accountInfo,
         }
         setSummaryViewModel(fetchSummaryRequest)
         setActivePage(3)
@@ -538,6 +539,7 @@ export const CreateRule = (
                         groupby: DIDType.UNKNOWN,
                         comment: '',
                         approval: false,
+                        accountInfo: props.accountInfo,
                     }} />
                 </RulePage>
             </Body>
