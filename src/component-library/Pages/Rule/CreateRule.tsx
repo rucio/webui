@@ -8,7 +8,6 @@ import { TextInput } from '../../Input/TextInput';
 import { Dropdown } from './GroupingDropdown';
 import { RulePage } from './RulePage';
 import { DateInput } from '../../Input/DateInput';
-import { ListInput } from '../../Input/ListInput';
 import { P } from "../../Text/Content/P";
 import { Label } from "../../Text/Content/Label"
 import { NumInput } from '../../Input/NumInput';
@@ -29,18 +28,18 @@ import {
     TFetchCreateRuleSummaryRequest,
 
 } from '@/lib/infrastructure/data/view-model/create-rule.d';
-import { DIDType } from '@/lib/core/entity/rucio';
+import { AccountInfo, DIDType } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
 import { CreateRuleDIDTable } from './CreateRuleDIDTable';
 import { didToScopename } from '../../StreamedTables/helpers';
 import { CreateRuleRSETable } from './CreateRuleRSETable';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface CreateRulePageProps {
+    accountInfo: AccountInfo,
     // Page 0.0 - DID Search`
     didListComDOM: UseComDOM<ListDIDsViewModel>,
     // Page 0.1 - DID Validation
@@ -94,7 +93,6 @@ interface Page2State {
     takesamples: boolean
     numsamples: number
     freeComment: string
-    approval: boolean
 }
 
 export const CreateRule = (
@@ -249,7 +247,6 @@ export const CreateRule = (
         numcopies: 1,
         freeComment: "",
         page2progressBlocked: false,
-        approval: false
     })
 
     /* =================================================
@@ -271,7 +268,7 @@ export const CreateRule = (
             numsamples: Page2State.numsamples,
             groupby: Page2State.groupBy,
             comment: Page2State.freeComment,
-            approval: Page2State.approval
+            approval: Page1State.askForApproval
         }
         setSummaryViewModel(fetchSummaryRequest)
         setActivePage(3)
@@ -295,7 +292,7 @@ export const CreateRule = (
             numsamples: Page2State.numsamples,
             groupby: Page2State.groupBy,
             comment: Page2State.freeComment,
-            approval: Page2State.approval
+            approval: Page1State.askForApproval
         }
         const response = props.onSubmit(createRulesRequest)
         response.then((response) => {

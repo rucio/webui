@@ -1,4 +1,4 @@
-import { Rule } from "@/lib/core/entity/rucio";
+import { AccountInfo, Rule } from "@/lib/core/entity/rucio";
 import { RulePageLockEntry, RuleMeta } from "@/lib/core/entity/rucio";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 
@@ -18,4 +18,5 @@ export interface RuleSummaryViewModel extends BaseViewModel {
     groupby: DIDType
     comment: string
     approval: boolean
+    account: AccountInfo
 }

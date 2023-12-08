@@ -1,5 +1,4 @@
 import { DIDType } from "@/lib/core/entity/rucio";
-import { twMerge } from "tailwind-merge";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DIDTypeTag } from "../../Tags/DIDTypeTag";
 import { Number } from "../../Text/Content/Number";

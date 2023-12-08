@@ -10,16 +10,14 @@ import type AccountGatewayOutputPort from "../port/secondary/account-gateway-out
 import type DIDGatewayOutputPort from "../port/secondary/did-gateway-output-port";
 import { CreateRuleSummaryRequest, CreateRuleSummaryResponse, CreateRuleSummaryError } from "../usecase-models/create-rule-summary-usecase-models";
 import {createDIDSummaryRow} from "../utils/create-rule-utils";
-// import { TDIDSummaryRow, TRSESummaryRow } from "../entity/rule-summary";
+import { TDIDSummaryRow, TRSESummaryRow } from "../entity/rule-summary";
 import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse";
 import DIDTypeTagStories from "@/component-library/Tags/DIDTypeTag.stories";
 
 
 @injectable()
 export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRequestModel<CreateRuleSummaryRequest>, CreateRuleSummaryResponse, CreateRuleSummaryError> implements CreateRuleSummaryInputPort{
-    execute(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
+   
     private total_copies = 0
     private total_files = 0;
     private total_size = 0;
@@ -35,7 +33,9 @@ export default class CreateRuleSummayUseCase extends BaseUseCase<AuthenticatedRe
     validateRequestModel(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): BaseErrorResponseModel | undefined {
         return undefined;
     }
-
+    execute(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
     // async execute(requestModel: AuthenticatedRequestModel<CreateRuleSummaryRequest>): Promise<void> {
     //     const account = requestModel.account;
     //     const rucioAuthToken = requestModel.rucioAuthToken;
