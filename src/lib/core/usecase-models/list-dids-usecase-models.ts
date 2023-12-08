@@ -9,6 +9,7 @@ export interface ListDIDsRequest {
 export interface ListDIDsResponse extends DID, BaseResponseModel {
     bytes: number;
     length: number;
+    open: boolean;
 }
 
 export interface ListDIDsError extends BaseErrorResponseModel {

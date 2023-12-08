@@ -61,7 +61,7 @@ const TabularSummary = (
                                     className="w-8 text-center"
                                 >
                                     <button>
-                                        <HiQuestionMarkCircle/>
+                                        <HiQuestionMarkCircle />
                                     </button>
                                 </td>
                             </tr>
@@ -74,18 +74,31 @@ const TabularSummary = (
     )
 }
 
-const OptionTD = (props: {children: any}): JSX.Element =>  
-        <td
-            className="pl-2 py-1"
-        >
-            {props.children}
-        </td>
+const OptionTD = (props: { children: any }): JSX.Element =>
+    <td
+        className="pl-2 py-1"
+    >
+        {props.children}
+    </td>
 
 export const SummaryPage = (
     props: {
         data: RuleSummaryViewModel
     }
-) => {
+    ) => {
+
+        
+    const multiRSE = props.data.RSEViewModels.length > 1
+    const multiDID = props.data.DIDList.length > 1
+    const singleCopy = props.data.numcopies === 1
+    const openDIDs = props.data.DIDViewModels.filter(did => did.open)
+    const getMessages = () => {
+        const messages = []
+        messages.push("This  will create a rule for" + (multiDID? ' the DIDs listed below' : ' the DID ' + props.data.DIDList[0]))
+        messages.push("The rules will be created for " + (multiRSE? 'one of the RSEs listed below' : `the RSE ${props.data.RSEList[0]}` ))
+
+        return messages
+    }
     return (
         <div
             className={twMerge(
@@ -102,6 +115,35 @@ export const SummaryPage = (
                 </h1>
                 <SamplingTag sampling={props.data.numsamples >= 0} />
             </div>
+            <div>
+                <div
+                    className={twMerge(
+                        "px-2 mx-2 rounded border dark:border-0",
+                        "bg-gray-200 dark:bg-gray-600",
+                        "dark:text-white"
+                    )}
+                >
+                    <ul className="">
+                    {getMessages().map((message, index) => {
+                        return (
+                            <li
+                                key={index}
+                                className="list-disc list-inside"
+                            >
+                                {message}
+                            </li>
+                        )
+                    })
+                    }
+                    </ul>
+                </div>
+            </div>
+            <pre 
+                className="text-gray-800 dark:text-white"    
+            >
+                The rules will be created on {multiRSE? 'one of the following RSEs' : 'the following RSE'}
+                
+            </pre>
             <div
                 className={twMerge(
                     "grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-4",
@@ -133,10 +175,10 @@ export const SummaryPage = (
                     className="px-2"
                 >
                     <table className={twMerge(
-                            "w-full rounded-md table-fixed", 
-                            "bg-white dark:bg-gray-700",
-                            "text-gray-800 dark:text-gray-100"
-                        )}
+                        "w-full rounded-md table-fixed",
+                        "bg-white dark:bg-gray-700",
+                        "text-gray-800 dark:text-gray-100"
+                    )}
                     >
                         <tbody>
                             <tr className="text-black dark:text-white">
@@ -149,15 +191,15 @@ export const SummaryPage = (
                             </tr>
                             <tr className="border-t dark:border-gray-400">
                                 <OptionTD>Enable Notifications</OptionTD>
-                                <td><BoolTag val={props.data.notifications}/></td>
+                                <td><BoolTag val={props.data.notifications} /></td>
                             </tr>
                             <tr className="border-t dark:border-gray-400">
                                 <OptionTD>Asynchronous Mode</OptionTD>
-                                <td><BoolTag val={props.data.asynchronousMode}/></td>
+                                <td><BoolTag val={props.data.asynchronousMode} /></td>
                             </tr>
                             <tr className="border-t dark:border-gray-400">
                                 <OptionTD>Group By</OptionTD>
-                                <td><DIDTypeTag didtype={props.data.groupby}/></td>
+                                <td><DIDTypeTag didtype={props.data.groupby} /></td>
                             </tr>
                             <tr className="border-t dark:border-gray-400">
                                 <OptionTD>Number of Copies</OptionTD>
@@ -170,6 +212,7 @@ export const SummaryPage = (
                         </tbody>
                     </table>
                 </div>
+                
                 <div>
                     <h3
                         className="text-xl font-bold p-2 dark:text-white"
