@@ -7,6 +7,7 @@
 const CONTROLLERS = {
     DID_META: Symbol.for("DIDMetaController"),
     DID_KEYVALUEPAIRS: Symbol.for("DIDKeyValuePairsDataController"),
+    GET_ACCOUNT_INFO: Symbol.for("GetAccountInfoController"),
     GET_RSE: Symbol.for("GetRSEController"),
     GET_RSE_ATTRIBUTES: Symbol.for("GetRSEAttributesController"),
     GET_RSE_PROTOCOLS: Symbol.for("GetRSEProtocolsController"),
