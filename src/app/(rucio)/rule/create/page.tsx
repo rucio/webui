@@ -78,10 +78,16 @@ export default function CreateRule() {
     )
 
     const processRSEAccountUsageLimitViewModelBatchResponse = (batch: BatchResponse<RSEAccountUsageLimitViewModel>) => {
+        // The feature replaces Infinity with -1 for the bytes_limit and bytes_remaining fields
+        // This is done because Infinity is not a valid JSON value
+        // This code replaces -1 with Infinity for the bytes_limit and bytes_remaining fields
         batch.data.forEach((rseAccountUsageLimitViewModel: RSEAccountUsageLimitViewModel) => {
             if(rseAccountUsageLimitViewModel.status === 'success') {
                 if(rseAccountUsageLimitViewModel.bytes_limit === -1) {
                     rseAccountUsageLimitViewModel.bytes_limit = Infinity
+                }
+                if(rseAccountUsageLimitViewModel.bytes_remaining === -1) {
+                    rseAccountUsageLimitViewModel.bytes_remaining = Infinity
                 }
             }
         })

@@ -88,7 +88,7 @@ export const CreateRuleRSETable = (
                 style: "w-24"
             }
         }),
-        columnHelper.accessor(row => row.bytes_limit - row.used_bytes, {
+        columnHelper.accessor(row => row.bytes_remaining, {
             id: 'remaining_bytes',
             header: info => {
                 return (

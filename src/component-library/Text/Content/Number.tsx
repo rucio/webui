@@ -20,6 +20,17 @@ export const Number: React.FC<ByteProps> = (
             0
         </span>
     )
+    if(number === Infinity) return (
+        <span
+            className={twMerge(
+                className ?? "",
+                "text-yellow-500 text-bold", // placed here to override all other classes for Infinity
+            )}
+            {...otherprops}
+        >
+            Infinity
+        </span>
+    )
     if (isNaN(+number)) return (
         <span
             className={twMerge(
