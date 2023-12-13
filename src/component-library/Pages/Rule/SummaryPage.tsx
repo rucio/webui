@@ -123,72 +123,8 @@ export const SummaryPage = (
         })
     }
 
-    const generateDIDSummaryTableData = (): TDIDSummaryTableRowProps[] => {
-        if(!sampleFiles || sampleFiles <= 0) {
-            return props.data.DIDViewModels.map((did: ListDIDsViewModel, index) => {
-                const showOpenBadge = did.open
-                const badges: BasicStatusTagProps[] = [] 
-                if(showOpenBadge) {
-                    badges.push({
-                        text: 'Open',
-                        status: 'warning',
-                    })
-                }
-                return {
-                    name: `${did.scope}:${did.name}`,
-                    copies: props.data.numcopies,
-                    size: did.bytes,
-                    files: did.length,
-                    requestedSize: props.data.numcopies * did.bytes,
-                    tags: badges,
-                } as TDIDSummaryTableRowProps
-            })
-        }
-        const accountType = props.data.accountInfo.accountType
-        const account = props.data.accountInfo.account
-        const newScope = generateNewScope(account, accountType)
-        const tableData: TDIDSummaryTableRowProps[] = []
-        props.data.DIDViewModels.forEach((did: ListDIDsViewModel, index) => {
-            const derivedDID: DID =generateDerivedDIDName(newScope, did) 
-            tableData.push({
-                name: `${derivedDID.scope}:${derivedDID.name}`,
-                copies: props.data.numcopies,
-                files: sampleFiles,
-                size: '-',
-                requestedSize: `-`,
-                tags: [
-                    {
-                        text: 'Derived',
-                        status: 'info',
-                    }
-                ]
-            })
-        })
-        return tableData
-    }
-
     const getMessages = () => {
         const messages = []
-        if(sampleFiles && sampleFiles > 0) {
-            if(userAskedForApproval) {
-                messages.push(`You have asked for approval to create a rule for the following sample dataset(s) with ${sampleFiles} file(s).`)
-            }else {
-                messages.push(`This will create a rule for following sample dataset(s) with ${sampleFiles} file(s).`)
-            }
-        } else {
-            messages.push("This  will create a rule for" + (multiDID? ' the DIDs listed below' : ' the DID ' + props.data.DIDList[0]))
-        }
-        if(userAskedForApproval) {
-            if(multiDID) {
-                messages.push("You have asked for approval for Multiple DIDs. This request will create a new container and will put all of the following DIDs into it. The rule will be created on the new container.")
-            }else {
-                messages.push("You have asked for approval to create this rule.")
-            }
-        }
-        if(openDIDs.length > 0) {
-            messages.push("There are open DIDs present in your request. Everything that will be added to them after you created the rule will also be transferred to the selected RSE.")
-        }
-
         if(multiRSE) {
             messages.push("This will create a rule on one of the RSEs listed below.")
         }else {
@@ -218,29 +154,6 @@ export const SummaryPage = (
                 </h1>
                 <SamplingTag sampling={props.data.numsamples >= 0} />
             </div>
-            <div>
-                <div
-                    className={twMerge(
-                        "px-2 mx-2 rounded border dark:border-0",
-                        "bg-gray-200 dark:bg-gray-800",
-                        "dark:text-white"
-                    )}
-                >
-                    <ul className="">
-                    {getMessages().map((message, index) => {
-                        return (
-                            <li
-                                key={index}
-                                className="pl-5 list-disc"
-                            >
-                                {message}
-                            </li>
-                        )
-                    })
-                    }
-                    </ul>
-                </div>
-            </div>
             <div
                 className={twMerge(
                     "flex flex-row space-x-2",
@@ -249,7 +162,15 @@ export const SummaryPage = (
                     "dark:border-2"
                 )}
             >
-                <DIDSummaryTable tabledata={generateDIDSummaryTableData()} numSamples={sampleFiles} takeSamples={props.data.takeSamples}/>
+                <DIDSummaryTable 
+                    // tabledata={generateDIDSummaryTableData()} 
+                    listDIDViewModels={props.data.DIDViewModels}
+                    numSamples={sampleFiles} 
+                    takeSamples={props.data.takeSamples}
+                    accountInfo={props.data.accountInfo}
+                    numcopies={props.data.numcopies}
+                    userAskedForApproval={userAskedForApproval}
+                />
             </div>
             <div
                 className={twMerge(

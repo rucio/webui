@@ -5,6 +5,9 @@ import { P } from "@/component-library/Text/Content/P"
 import { TableSortUpDown } from "@/component-library/StreamedTables/TableSortUpDown"
 import { Number } from "@/component-library/Text/Content/Number"
 import { twMerge } from "tailwind-merge"
+import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-utils"
+import { AccountInfo, DID } from "@/lib/core/entity/rucio"
+import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did"
 
 
 export type  TDIDSummaryTableRowProps = {
@@ -18,16 +21,95 @@ export type  TDIDSummaryTableRowProps = {
 export const DIDSummaryTable = (props: {
     numSamples: number,
     takeSamples: boolean,
-    tabledata: TDIDSummaryTableRowProps[]
+    userAskedForApproval: boolean,
+    listDIDViewModels: ListDIDsViewModel[],
+    numcopies: number,
+    accountInfo: AccountInfo,
 }) => {
-    const totalFiles: number = props.tabledata.reduce((sum, row) => {
+    const generateDIDSummaryTableData = (): TDIDSummaryTableRowProps[] => {
+        if(!props.takeSamples) {
+            return props.listDIDViewModels.map((did: ListDIDsViewModel, index) => {
+                const showOpenBadge = did.open
+                const badges: BasicStatusTagProps[] = [] 
+                if(showOpenBadge) {
+                    badges.push({
+                        text: 'Open',
+                        status: 'warning',
+                    })
+                }
+                return {
+                    name: `${did.scope}:${did.name}`,
+                    copies: props.numcopies,
+                    size: did.bytes,
+                    files: did.length,
+                    requestedSize: props.numcopies * did.bytes,
+                    tags: badges,
+                } as TDIDSummaryTableRowProps
+            })
+        }
+        const accountType = props.accountInfo.accountType
+        const account = props.accountInfo.account
+        const newScope = generateNewScope(account, accountType)
+        const tableData: TDIDSummaryTableRowProps[] = []
+        props.listDIDViewModels.forEach((did: ListDIDsViewModel, index) => {
+            const derivedDID: DID =generateDerivedDIDName(newScope, did) 
+            tableData.push({
+                name: `${derivedDID.scope}:${derivedDID.name}`,
+                copies: props.numcopies,
+                files: props.numSamples,
+                size: '-',
+                requestedSize: `-`,
+                tags: [
+                    {
+                        text: 'Derived',
+                        status: 'info',
+                    }
+                ]
+            })
+        })
+        return tableData
+    }
+    const generateMessages = () => {
+        const messages: string[] = []
+        const multiDID = props.listDIDViewModels.length > 1
+        const openDIDs = props.listDIDViewModels.filter((did) => did.open)
+        if(props.takeSamples) {
+            if(props.userAskedForApproval) {
+                messages.push(`You have asked for approval to create a rule for the following sample dataset(s) with ${props.numSamples} file(s).`)
+            }else {
+                messages.push(`This will create a rule for following sample dataset(s) with ${props.numSamples} file(s).`)
+            }
+        } else {
+            messages.push("This  will create a rule for" + (multiDID? ' the DIDs listed below' : ' the DID shown below.'));
+            if(openDIDs.length > 0) {
+                messages.push("There are open DIDs present in your request. Everything that will be added to them after you created the rule will also be transferred to the selected RSE.")
+            }
+        }
+        if(props.userAskedForApproval) {
+            if(multiDID) {
+                messages.push("You have asked for approval for Multiple DIDs. This request will create a new container and will put all of the following DIDs into it. The rule will be created on the new container.")
+            }else {
+                messages.push("You have asked for approval to create this rule.")
+            }
+        }
+        
+        return messages
+    }
+    
+    const tabledata = generateDIDSummaryTableData()
+    const messages = generateMessages()
+
+    const totalFiles: number = tabledata.reduce((sum, row) => {
+        if(typeof row.files !== 'number') {
+            return parseInt(row.files) + sum // For some reason, the type of row.files is string | number
+        }
         return sum + row.files;
     },0);
 
-    const totalSize: number | '-' = props.takeSamples ? '-' : props.tabledata.reduce((sum, row) => {
+    const totalSize: number | '-' = props.takeSamples ? '-' : tabledata.reduce((sum, row) => {
         return typeof row.size === 'number' ? sum + row.size : sum;
     }, 0);
-    const totalRequestedSize: number | '-' = props.takeSamples ? '-': props.tabledata.reduce((sum, row) => {
+    const totalRequestedSize: number | '-' = props.takeSamples ? '-': tabledata.reduce((sum, row) => {
         return typeof row.requestedSize === 'number' ? sum + row.requestedSize : sum;
     }, 0);
 
@@ -178,9 +260,32 @@ export const DIDSummaryTable = (props: {
 
     return (
         <div className="flex flex-col space-y-4">
+            <div>
+                <div
+                    className={twMerge(
+                        "px-2 mx-2 rounded border dark:border-0",
+                        "bg-gray-200 dark:bg-gray-800",
+                        "dark:text-white"
+                    )}
+                >
+                    <ul className="">
+                    {messages.map((message, index) => {
+                        return (
+                            <li
+                                key={index}
+                                className="pl-5 list-disc"
+                            >
+                                {message}
+                            </li>
+                        )
+                    })
+                    }
+                    </ul>
+                </div>
+            </div>
             <NormalTable<TDIDSummaryTableRowProps>
                 className="w-full rounded-md"
-                tabledata={props.tabledata}
+                tabledata={tabledata}
                 tablecolumns={tablecolumns}
                 tablestyling={{
                     "tableHeadRowStyle": "border-b border-gray-300 bg-gray-700 dark:bg-gray-800",
