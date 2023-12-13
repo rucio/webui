@@ -8,6 +8,8 @@ import { BasicStatusTag } from "@/component-library/Tags/BasicStatusTag"
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did"
 import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-utils"
 import { DID } from "@/lib/core/entity/rucio"
+import { BasicStatusTagProps } from "@/component-library/Tags/BasicStatusTag"
+import { DIDSummaryTable, TDIDSummaryTableRowProps } from "./DIDSummaryTable"
 
 var format = require("date-format")
 
@@ -104,7 +106,8 @@ export const SummaryPage = (
     const lifetime = (props.data.expirydate.getTime() - (new Date().getTime())) / (1000 * 60 * 60 * 24)
     const lifetimeDays = Math.floor(lifetime) > 0 ? Math.floor(lifetime) : 1
     const userAskedForApproval = props.data.approval
-    
+    const accountType = props.data.accountInfo.accountType
+    const account = props.data.accountInfo.account
     const getRSETableContent = () => {
         return props.data.RSEViewModels.map((rse: RSEAccountUsageLimitViewModel, index) => {
             const showQuotaWarningBadge = rse.has_quota
@@ -122,34 +125,41 @@ export const SummaryPage = (
         })
     }
 
-    const getDIDTableContent = () => {
-        if(!sampleFiles) {
+    const generateDIDSummaryTableData = (): TDIDSummaryTableRowProps[] => {
+        if(!sampleFiles || sampleFiles <= 0) {
             return props.data.DIDViewModels.map((did: ListDIDsViewModel, index) => {
                 const showOpenBadge = did.open
-                const badges: TBadge[] = [] 
+                const badges: BasicStatusTagProps[] = [] 
                 if(showOpenBadge) {
                     badges.push({
-                        title: 'Open',
-                        type: 'warning',
+                        text: 'Open',
+                        status: 'warning',
                     })
                 }
                 return {
-                    title: `${did.scope}:${did.name}`,
-                    badges: badges
-                }
+                    name: `${did.scope}:${did.name}`,
+                    copies: props.data.numcopies,
+                    size: did.bytes,
+                    requestedSize: props.data.numcopies * did.bytes,
+                    tags: badges,
+                } as TDIDSummaryTableRowProps
             })
         }
         const accountType = props.data.accountInfo.accountType
-        const newScope = generateNewScope("account_missing", accountType)
-        const tableData: {title: string, badges: TBadge[]}[] = []
+        const account = props.data.accountInfo.account
+        const newScope = generateNewScope(account, accountType)
+        const tableData: TDIDSummaryTableRowProps[] = []
         props.data.DIDViewModels.forEach((did: ListDIDsViewModel, index) => {
             const derivedDID: DID =generateDerivedDIDName(newScope, did) 
             tableData.push({
-                title: `${derivedDID.scope}:${derivedDID.name}`,
-                badges: [
+                name: `${derivedDID.scope}:${derivedDID.name}`,
+                copies: props.data.numcopies,
+                size: '-',
+                requestedSize: `-`,
+                tags: [
                     {
-                        title: 'Derived',
-                        type: 'info',
+                        text: 'Derived',
+                        status: 'info',
                     }
                 ]
             })
@@ -233,13 +243,22 @@ export const SummaryPage = (
             </div>
             <div
                 className={twMerge(
+                    "flex flex-row space-x-2",
+                    "p-2",
+                    "rounded-md border",
+                    "dark:border-2"
+                )}
+            >
+                <DIDSummaryTable tabledata={generateDIDSummaryTableData()} numSamples={1}/>
+            </div>
+            <div
+                className={twMerge(
                     "grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-4",
                     "p-2",
                     "rounded-md border",
                     "dark:border-2"
                 )}
             >
-                <TabularSummary data={getDIDTableContent()} title="DIDs" />
                 <TabularSummary data={getRSETableContent()} title="RSEs" />
             </div>
             <div

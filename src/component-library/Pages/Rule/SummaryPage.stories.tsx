@@ -1,6 +1,7 @@
-import { TCreateRuleRequest } from '@/lib/infrastructure/data/view-model/create-rule'
+import { AccountType } from '@/lib/core/entity/rucio'
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule'
 import { StoryFn, Meta } from '@storybook/react'
+import { fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel } from 'test/fixtures/table-fixtures'
 import { SummaryPage as SP } from './SummaryPage'
 
 export default {
@@ -17,26 +18,16 @@ SummaryPage.args = {
         DIDList: [
             'user.AndrewJenkins:dataset-dBDUMqZWnMImKbhZCJUA',
             'user.SandraOrtiz:file-SxbkaPRbmlZezztEiAZl',
-            'user.MelissaShelton:file-CaZMRUQWGhesOkWSzdkz',
-            'user.JoseBarrett:file-mKHvHGlxOYhUtyAMJqdQ',
-            'user.LydiaSutton:file-mKuBLQDRKBgthFnRgmJQ',
-            'user.PaulCummings:file-ZUlnFYuSmcxKWooZnICx',
-            'user.MeghanCalhoun:container-bdkoFMyJGgbwicrCsyeV',
-            'user.LindaTanner:dataset-TpSAGnllAEIFozKSumEO',
-            'user.ArielEvans:dataset-kkKMiMTqMSrOJifoUndW',
-            'user.LindseyCamacho:container-cOBMVlriASiQuGguohXY',
-            'user.MarcRogers:dataset-TVhCKJdrYTZVqGlowukp',
-            'user.ChristopherSmith:container-RNXMmmXKHGMdCEmqtJOZ',
-            'user.ShawnaBrown:container-cgLgEzDjnurZfDUTQxaz',
-            'user.LaurenRichardson:container-yhTinsENWqBuYfRBYpfs',
-            'user.RaymondPacheco:container-SDqOFRwIziUCRlizDaOD',
-            'user.LauraWallace:dataset-FyhlLyLlqyOBPqmMwjhn',
-            'user.JoelWade:dataset-dcLjidPONNGZYoHZEmUY',
-            'user.TrevorGonzalez:file-PxfYHLUCVVXWsoDDJqSq',
-            'user.GregoryBridges:container-qKJhmaOonuOeDLQqQqca',
             'user.AnneDrake:dataset-iSbQaNzafdlsFDiugmxv'
         ],
         RSEList: ["rse_6"],
+        DIDViewModels: [
+            fixtureListDIDViewModel(),
+            fixtureListDIDViewModel(),
+        ],
+        RSEViewModels: [
+            fixtureRSEAccountUsageLimitViewModel(),
+        ],
         expirydate: new Date(),
         notifications: false,
         asynchronousMode: false,
@@ -44,5 +35,13 @@ SummaryPage.args = {
         numsamples: -1,
         groupby: "File",
         comment: "",
+        accountInfo: {
+            account: "root",
+            accountType: AccountType.USER,
+            email: "",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+
+        }
     } as RuleSummaryViewModel,
 }

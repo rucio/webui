@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 
-
+export type BasicStatusTagProps = {
+    text: string
+    status: 'success' | 'error' | 'warning' | 'info'
+}
 export const BasicStatusTag: React.FC<JSX.IntrinsicElements["span"] & { 
     text: string, status: 'success' | 'error' | 'warning' | 'info'
 }> = (
@@ -8,7 +11,7 @@ export const BasicStatusTag: React.FC<JSX.IntrinsicElements["span"] & {
         text = 'Check this out!',
         status,
         ...props
-    }
+    } : BasicStatusTagProps
 ) => {
 
     const colorFn = (status: 'success' | 'error' | 'warning' | 'info') => {
