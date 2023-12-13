@@ -52,10 +52,16 @@ export const DIDSummaryTable = (props: {
         }),
         columnHelper.accessor("copies", {
             id: "copies",
-            header: info => <span className="text-xl dark:text-white">Copies</span>,
+            header: info => {
+                return ( 
+                    <div className="text-left text-xl dark:text-white">
+                        <span>Copies</span>
+                    </div>
+                )
+            },
             cell: info => (
                 <div className="flex flex-col items-center w-36 px-2">
-                    <span className="text-center w-36 dark:text-white">{info.getValue()}</span>
+                    <span className="text-left w-36 dark:text-white">{info.getValue()}</span>
                 </div>
             ),
             meta: {
@@ -74,8 +80,13 @@ export const DIDSummaryTable = (props: {
                 )
             },
             cell: (info) => (
-                <div className="flex flex-col items-center w-24 px-2">
-                    <span className="text-center w-36 dark:text-white">{info.getValue()}</span>
+                <div className={twMerge(
+                            "flex flex-col items-left",
+                            "text-left dark:text-white",
+                            "w-24 px-2"
+                            )}
+                >
+                    <span>{info.getValue()}</span>
                 </div>
             ),
             meta: {
@@ -93,12 +104,22 @@ export const DIDSummaryTable = (props: {
                     />
                 )
             },
-            cell: (info) => {
+            cell: info => {
                 const value = info.getValue()
                 if(value === '-') {
-                    return <span className="text-center dark:text-white px-2">-</span>
+                    return (
+                    <div className="flex flex-col items-justify text-center dark:text-white px-2">
+                        <span className="">-</span>
+                    </div>
+                    )
                 }
-                return <Number className="text-center dark:text-white px-2" number={value} />
+                return (
+                <div className={twMerge("flex flex-col items-left",
+                    "text-right dark:text-white"
+                )}>
+                    <Number number={value} />
+                </div>
+                )
             },
             meta: {
                 style: "w-24"
@@ -108,7 +129,7 @@ export const DIDSummaryTable = (props: {
             id: "requestedSize",
             header: info => {
                 return (
-                    <div className="flex flex-row items-center">
+                    <div className="flex flex-row items-justify">
                         <TableSortUpDown
                             name="Requested Size"
                             column={info.column}
@@ -121,14 +142,16 @@ export const DIDSummaryTable = (props: {
                 const value = info.getValue()
                 if(value === '-') {
                     return (
-                    <div className="flex flex-col items-center text-center dark:text-white px-2">
+                    <div className="flex flex-col items-justify text-center dark:text-white px-2">
                         <span className="">-</span>
                     </div>
                     )
                 }
                 return (
-                <div className="flex flex-col items-left">
-                    <Number className="text-center dark:text-white" number={value} />
+                <div className={twMerge("flex flex-col items-left",
+                    "text-right dark:text-white"
+                )}>
+                    <Number number={value} />
                 </div>
                 )
             },
@@ -160,8 +183,12 @@ export const DIDSummaryTable = (props: {
                 tabledata={props.tabledata}
                 tablecolumns={tablecolumns}
                 tablestyling={{
-                    "tableHeadRowStyle": "bg-gray-700 dark:bg-gray-800",
-                    "tableBodyRowStyle": "border border-gray-300 bg-gray-700 dark:bg-gray-800",
+                    "tableHeadRowStyle": "border-b border-gray-300 bg-gray-700 dark:bg-gray-800",
+                    "tableBodyRowStyle": twMerge(
+                        "bg-white odd:bg-stone-100 text-black",
+                        "dark:bg-gray-700 odd:dark:bg-gray-800 dark:text-gray-100",
+                        "border-b border-gray-300",
+                    )
                 }}
             />
             <div
