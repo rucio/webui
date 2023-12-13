@@ -4,10 +4,12 @@
 
 import { CreateRule } from "@/component-library/Pages/Rule/CreateRule";
 import {
-    TCreateRuleRequest, DIDSearchQuery,
+    DIDSearchQuery,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
-    RSESearchQuery
+    RSESearchQuery,
+    CreateRulesViewModel
 } from '@/lib/infrastructure/data/view-model/create-rule'
+import { TCreateRuleFeatureRequestParams } from "@/pages/api/feature/create-rule";
 import { render, act, screen, cleanup, within, fireEvent } from "@testing-library/react";
 import userEvent from '@testing-library/user-event'
 
@@ -16,9 +18,10 @@ jest.mock('next/navigation')
 let user: any // user input
 let F: any  // fixtures
 
-const onSubmit = (query: TCreateRuleRequest) => {
+const onSubmit = (query: TCreateRuleFeatureRequestParams): Promise<CreateRulesViewModel> => {
     return Promise.resolve({
-        success: true,
+        status: 'success',
+        rules: {}
     })
 }
 

@@ -7,7 +7,6 @@ import { Tabs } from '../../Misc/Tabs';
 import { TextInput } from '../../Input/TextInput';
 import { Dropdown } from './GroupingDropdown';
 import { RulePage } from './RulePage';
-import { DateInput } from '../../Input/DateInput';
 import { P } from "../../Text/Content/P";
 import { Label } from "../../Text/Content/Label"
 import { NumInput } from '../../Input/NumInput';
@@ -23,11 +22,12 @@ import { Body } from '../Helpers/Body';
 *  Importing Types and Interfaces
 *  ================================================= */
 import {
-    TCreateRuleRequest, CreateRuleResponse, DIDName, TypedDIDValidationQuery,
+    DIDName, TypedDIDValidationQuery,
     TypedDIDValidationResponse,
     TFetchCreateRuleSummaryRequest,
+    CreateRulesViewModel,
 
-} from '@/lib/infrastructure/data/view-model/create-rule.d';
+} from '@/lib/infrastructure/data/view-model/create-rule';
 import { AccountInfo, DIDType } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { SamplingTag } from '../../Tags/SamplingTag';
@@ -38,6 +38,8 @@ import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-mo
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { LifetimeWithExpirationDateInput } from './LifetimeWithExpiryDateInput';
+import { TCreateRuleFeatureRequestParams } from '@/pages/api/feature/create-rule';
+import { CreateRuleStatusPage } from './CreateRuleStatusPage';
 
 export interface CreateRulePageProps {
     accountInfo: AccountInfo,
@@ -47,15 +49,8 @@ export interface CreateRulePageProps {
     didValidation: (didValidationQuery: TypedDIDValidationQuery) => Promise<TypedDIDValidationResponse>,
     // Page 1 - RSE Selection
     rseListComDOM: UseComDOM<RSEAccountUsageLimitViewModel>,
-    // Page 2 - Summary
-    fetchSummary: (
-        query: TFetchCreateRuleSummaryRequest, 
-        setSummaryViewModel: (viewModel: RuleSummaryViewModel) => void, 
-        setActivePage: (int: number) => void,
-        setError: (error: string) => void,
-    ) => void,
     // Page 3 - Sendoff
-    onSubmit: (createRuleQuery: TCreateRuleRequest) => Promise<CreateRuleResponse>
+    onSubmit: (createRuleQuery: TCreateRuleFeatureRequestParams) => Promise<CreateRulesViewModel>
 
 }
 
@@ -96,6 +91,8 @@ interface Page2State {
     numsamples: number
     freeComment: string
 }
+
+interface Page4State extends CreateRulesViewModel {}
 
 export const CreateRule = (
     props: CreateRulePageProps
@@ -278,19 +275,23 @@ export const CreateRule = (
         }
         setSummaryViewModel(fetchSummaryRequest)
         setActivePage(3)
-        // props.fetchSummary(fetchSummaryRequest, setSummaryViewModel, setActivePage, (error: string) => { console.log(error) })        
     }
 
-    
-    
-    const page3submitFunction = (event: any) => {
-        // execute query
-        // TODO : Use summary view model to create the query
-        const createRulesRequest: TCreateRuleRequest = {
-            DIDList: Page0State.typedDIDs.concat(didToScopename(Page0State.searchDIDSelection)),
-            RSEList: Page1State.RSESelection.map((element) => element.rse),
+    /* =================================================
+    *  Page 4 : Create Rule Status Page
+    *  ================================================= */
+   const [Page4State, setPage4State] = useState<Page4State>({
+        status: 'pending',
+        rules: {}
+   })
+
+    const submitRuleRequestAndLoadStatus = async (event: any) => {
+        setPage4State({ rules: {}, status: 'pending' })
+        setActivePage(4)
+        const createRulesRequest:TCreateRuleFeatureRequestParams  = {
             RSEViewModels: Page1State.RSESelection,
             DIDViewModels: Page0State.searchDIDSelection,
+            lifetime: Page2State.lifetime,
             expirydate: Page2State.expiryDate,
             notifications: Page2State.enableNotifications,
             asynchronousMode: Page2State.asynchronousMode,
@@ -300,10 +301,9 @@ export const CreateRule = (
             comment: Page2State.freeComment,
             approval: Page1State.askForApproval
         }
-        const response = props.onSubmit(createRulesRequest)
-        response.then((response) => {
-            console.log("response: ", response)
-        })
+
+        const response = await props.onSubmit(createRulesRequest)
+        setPage4State(response)
     }
 
     /* =================================================
@@ -320,7 +320,7 @@ export const CreateRule = (
                 title="Create Rule"
             >
                 <Timeline
-                    steps={["DIDs", "RSEs", "Options", "Summary"]}
+                    steps={["DIDs", "RSEs", "Options", "Summary", "Status"]}
                     active={activePage}
                     onJump={(goal: number) => { setActivePage(goal) }}
                 />
@@ -527,7 +527,7 @@ export const CreateRule = (
                         </div>
                     </div>
                 </RulePage>
-                <RulePage pagenum={3} activePage={activePage} onNext={page3submitFunction} onPrev={pagePrevFunction} submit>
+                <RulePage pagenum={3} activePage={activePage} onNext={submitRuleRequestAndLoadStatus} onPrev={pagePrevFunction} submit>
                     <SummaryPage data={summaryViewModel? summaryViewModel : {
                         status: 'error',
                         message: 'Please check your inputs on previous pages! Cannot retrieve summary from the server',
@@ -547,6 +547,9 @@ export const CreateRule = (
                         approval: false,
                         accountInfo: props.accountInfo,
                     }} />
+                </RulePage>
+                <RulePage pagenum={4} activePage={activePage} onPrev={pagePrevFunction} onNext={() =>{}} isLastPage>
+                    <CreateRuleStatusPage createRuleViewModel={Page4State} />
                 </RulePage>
             </Body>
         </div>

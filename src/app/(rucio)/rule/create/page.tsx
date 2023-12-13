@@ -2,8 +2,8 @@
 import { CreateRule as CreateRuleStory } from "@/component-library/Pages/Rule/CreateRule";
 import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse";
 import {
-    TCreateRuleRequest,
-    TFetchCreateRuleSummaryRequest,
+    CreateRulesViewModel,
+    generateEmptyCreateRulesViewModel,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
 } from '@/lib/infrastructure/data/view-model/create-rule'
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
@@ -13,43 +13,37 @@ import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did
 import { useEffect, useState } from "react";
 import { AccountInfo } from "@/lib/core/entity/rucio";
 import { generateEmptyAccountInfoViewModel } from "@/lib/infrastructure/data/view-model/account";
+import { TCreateRuleFeatureRequestParams } from "@/pages/api/feature/create-rule";
 
 export default function CreateRule() {
 
-    const onSubmit = (query: TCreateRuleRequest) => {
-        return Promise.resolve({
-            success: true,
-        })
+    const onSubmit = async (query: TCreateRuleFeatureRequestParams) => {
+        let viewModel: CreateRulesViewModel = generateEmptyCreateRulesViewModel()
+        viewModel.status = 'pending'
+        
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/create-rule`, {
+                method: "POST",
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                } as HeadersInit),
+                body: JSON.stringify(query)
+            })
+    
+            if(response.ok) {
+                const data: CreateRulesViewModel = await response.json()
+                viewModel = data
+            } else {
+                throw new Error(`Error creating rule. HTTP Status Code: ${response.status}`)
+            }
+        } catch (error: any) {
+            viewModel.status = 'error'
+            viewModel.message = error.message
+        }
+    
+        return viewModel
     }
 
-    const fetchSummary = (
-        query: TFetchCreateRuleSummaryRequest,
-        setSummaryViewModel: (viewModel: RuleSummaryViewModel) => void,
-        setActivePage: (int: number) => void,
-        setError: (error: string) => void,
-        ) => {
-        const url: URL = new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/create-rule-summary`)
-        fetch(url.toString(), {
-            method: "POST",
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            } as HeadersInit),
-            body: JSON.stringify(query)
-        }).then((response) => {
-            if(response.ok) {
-                return response.json()
-            } else {
-                setError(`Error fetching summary. HTTP Status Code: ${response.status}`)
-            }
-        }).then((data: RuleSummaryViewModel) => {
-            setSummaryViewModel(data)
-            setActivePage(3)
-        }).catch((error) => {
-            setError(`Error fetching summary. Error: ${error}`)
-        })
-        return query
-    }
-    
     const didValidation = (query: TypedDIDValidationQuery) => {
         // if the DID contains the string "error", it will be added to the error list
         var localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] }
@@ -124,7 +118,6 @@ export default function CreateRule() {
         <CreateRuleStory
             accountInfo={accountInfo}
             onSubmit={onSubmit}
-            fetchSummary={fetchSummary}
             didValidation={didValidation}
             didListComDOM={DIDSearchComDOM}
             rseListComDOM={RSEComDOM}

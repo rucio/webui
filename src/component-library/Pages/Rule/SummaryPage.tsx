@@ -26,15 +26,6 @@ export const SummaryPage = (
     const lifetimeDays = Math.floor(lifetime) > 0 ? Math.floor(lifetime) : 1
     const userAskedForApproval = props.data.approval
 
-    const getMessages = () => {
-        const messages = []
-        if(lifetimeDays === 1) {
-            messages.push("The lifetime will be 1 day.  If this is ok you can submit the rule request. If not you can go back and change it.")
-        }else {
-            messages.push(`The lifetime will be ${lifetimeDays} days.  If this is ok you can submit the rule request. If not you can go back and change it.`)
-        }
-        return messages
-    }
     return (
         <div
             className={twMerge(
