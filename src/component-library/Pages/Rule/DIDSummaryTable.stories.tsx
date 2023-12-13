@@ -1,3 +1,5 @@
+import { AccountStatus, AccountType, DIDType } from "@/lib/core/entity/rucio";
+import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did";
 import { Meta, StoryFn } from "@storybook/react";
 import { DIDSummaryTable } from "./DIDSummaryTable";
 
@@ -12,22 +14,26 @@ export const DIDSummaryTableStory = template.bind({});
 
 DIDSummaryTableStory.args = {
     numSamples: 1,
-    tabledata: [
+    takeSamples: false,
+    accountInfo: {
+        account: "test",
+        accountType: AccountType.USER,
+        accountStatus: AccountStatus.ACTIVE,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        email: "",
+    },
+    numcopies: 1,
+    userAskedForApproval: false,
+    listDIDViewModels: [
         {
-            name: "user.jdoe:file1",
-            size: 100,
-            requestedSize: 100,
-            copies: 2,
-            tags: [
-                {
-                    status: "success",
-                    text: "Available"
-                },
-                {
-                    status: "warning",
-                    text: "Open"
-                }
-            ]
-        },
+            "status": "success",
+            "scope": "test",
+            "name": "test",
+            "did_type": DIDType.DATASET,
+            "bytes": 123123123123,
+            "length": 4,
+            "open": false,
+        } as ListDIDsViewModel
     ]
 }
