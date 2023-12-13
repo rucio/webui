@@ -73,6 +73,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/react-highlight": "^0.12.5",
+    "@wixc3/react-board": "^2.3.0",
     "babel-loader": "^8.3.0",
     "css-loader": "^6.7.3",
     "dedent-js": "^1.0.1",
