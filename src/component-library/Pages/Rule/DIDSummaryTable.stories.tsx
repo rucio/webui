@@ -4,7 +4,7 @@ import { Meta, StoryFn } from "@storybook/react";
 import { DIDSummaryTable } from "./DIDSummaryTable";
 
 export default {
-    title: 'Components/Rule/CreateRule/DIDSummaryTable',
+    title: 'Pages/Rule/CreateRule/DIDSummaryTable',
     component: DIDSummaryTable,
 } as Meta<typeof DIDSummaryTable>;
 
