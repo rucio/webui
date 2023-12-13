@@ -8,6 +8,7 @@ export const RulePage = (
         activePage: number,
         onNext: (event: any) => void,
         onPrev: (event: any) => void,
+        isLastPage?: boolean,
         submit?: boolean,
         progressBlocked?: boolean,
         children?: any
@@ -32,9 +33,11 @@ export const RulePage = (
                         </span>
                     </Collapsible>
                     {!props.submit ? (
+                        <Collapsible showIf={!props.isLastPage}>
                         <span className="absolute bottom-0 right-0 w-24">
                             <Button label="Next" disabled={props.progressBlocked} onClick={props.onNext} />
                         </span>
+                        </Collapsible>
                     ) : (
                         <span className="absolute bottom-0 right-0 w-24">
                             <Button label="Submit" disabled={props.progressBlocked} type="submit" onClick={props.onNext} />

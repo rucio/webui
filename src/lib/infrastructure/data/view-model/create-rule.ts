@@ -1,10 +1,21 @@
 import { DIDLong, DIDType, RSEAccountUsage } from "@/lib/core/entity/rucio";
+import { BaseViewModel } from "@/lib/sdk/view-models";
 import { FetchStatus } from "@tanstack/react-query";
 import { RSEAccountUsageLimitViewModel } from "./rse";
 
-export interface CreateRuleViewModel {
-    placeholder: string;
+
+/**
+ * View model for the Create Rule Request.
+ * @property rules - The list of pairs of Rule ID and corresponding DID.
+ */
+export interface CreateRulesViewModel extends BaseViewModel {
+    rules: Record<string, string>
 }
+
+export const generateEmptyCreateRulesViewModel = (): CreateRulesViewModel => ({
+    status: 'error',
+    rules: {},
+})
 
 /*
 *  Data structures
@@ -38,21 +49,6 @@ export interface TFetchCreateRuleSummaryRequest {
     DIDViewModels: Array<DIDLong>
     expirydate: Date
     lifetime: number
-    notifications: boolean
-    asynchronousMode: boolean
-    numcopies: number
-    numsamples: number
-    groupby: DIDType
-    comment: string
-    approval: boolean
-}
-
-export interface TCreateRuleRequest {
-    DIDList: Array<DIDName>
-    RSEList: Array<RSEName>
-    RSEViewModels: Array<RSEAccountUsageLimitViewModel>
-    DIDViewModels: Array<DIDLong>
-    expirydate: Date
     notifications: boolean
     asynchronousMode: boolean
     numcopies: number

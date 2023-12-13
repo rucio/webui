@@ -1,6 +1,7 @@
-import { TCreateRuleRequest, TypedDIDValidationQuery, TypedDIDValidationResponse } from "@/lib/infrastructure/data/view-model/create-rule";
+import { CreateRulesViewModel, TypedDIDValidationQuery, TypedDIDValidationResponse } from "@/lib/infrastructure/data/view-model/create-rule";
+import { TCreateRuleFeatureRequestParams } from "@/pages/api/feature/create-rule";
 import { Meta, StoryObj } from "@storybook/react";
-import { fixtureDIDLongViewModel, fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
+import { fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
 import { CreateRule  as CR} from "../Pages/Rule/CreateRule.stories";
 
 export default {
@@ -12,9 +13,13 @@ type Story  = StoryObj<typeof CR>
 
 export const CreateRule: Story = {
     args: {
-        onSubmit: (query: TCreateRuleRequest) => {
+        onSubmit: (query: TCreateRuleFeatureRequestParams): Promise<CreateRulesViewModel> => {
             return Promise.resolve({
-                success: true,
+                status: 'success',
+                rules: {
+                    "123123143243": "scope:dataset1",
+                    "127849dsgs": "scope:dataset2",
+                }
             })
         },
         didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureListDIDViewModel())),

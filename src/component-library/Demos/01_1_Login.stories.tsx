@@ -76,7 +76,7 @@ export const Playbook_InitLogin: Story = {
         const canvas = within(canvasElement);
         
         const userpassButton = canvas.getByRole('button', {name: /Userpass/})
-        await userEvent.click(userpassButton, {button: 0}, {skipPointerEventsCheck: true})
+        await userEvent.click(userpassButton)
         
         const usernameTextbox = canvas.getByRole('textbox', {name: /Username/})
         await userEvent.type(usernameTextbox, 'mayank', {delay: 100})

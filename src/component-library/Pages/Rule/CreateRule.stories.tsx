@@ -3,12 +3,10 @@ import { fixtureListDIDViewModel as fixtureListDIDsViewModel, fixtureRSEAccountU
 
 import { CreateRule as CR } from './CreateRule'
 import {
-    TCreateRuleRequest,
-    TFetchCreateRuleSummaryRequest,
+    CreateRulesViewModel,
     TypedDIDValidationQuery, TypedDIDValidationResponse,
 } from '@/lib/infrastructure/data/view-model/create-rule'
-import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule'
-import { AccountStatus, AccountType } from '@/lib/core/entity/rucio'
+import { TCreateRuleFeatureRequestParams } from '@/pages/api/feature/create-rule'
 
 export default {
     title: 'Components/Pages/Rule',
@@ -19,33 +17,14 @@ const Template: StoryFn<typeof CR> = args => <CR {...args} />
 
 export const CreateRule = Template.bind({})
 CreateRule.args = {
-    onSubmit: (query: TCreateRuleRequest) => {
+    onSubmit: (query: TCreateRuleFeatureRequestParams): Promise<CreateRulesViewModel> => {
         return Promise.resolve({
-            success: true,
-        })
-    },
-    fetchSummary: (
-        query: TFetchCreateRuleSummaryRequest, 
-        setSummaryViewModel: (viewModel: RuleSummaryViewModel) => void, 
-        setActivePage: (int: number) => void,
-        setError: (error: string) => void,
-    ) => {
-        setSummaryViewModel({
-            ...query,
             status: 'success',
-            DIDList: query.DIDViewModels.map((did) => `${did.scope}:${did.name}`),
-            RSEList: query.RSEViewModels.map((rse) => rse.rse),
-            takeSamples: false,
-            accountInfo: {
-                account: 'maany',
-                accountType: AccountType.USER,
-                accountStatus: AccountStatus.ACTIVE,
-                createdAt: "2021-07-01T00:00:00Z",
-                updatedAt: "2021-07-01T00:00:00Z",
-                email: "abcd@sth.com",
+            rules: {
+                "123123143243": "scope:dataset1",
+                "127849dsgs": "scope:dataset2",
             }
         })
-        setActivePage(3)
     },
     didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureListDIDsViewModel())),
     didValidation: (query: TypedDIDValidationQuery) => {
