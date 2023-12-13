@@ -10,7 +10,7 @@ import { AccountInfo, DID } from "@/lib/core/entity/rucio"
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did"
 
 
-export type  TDIDSummaryTableRowProps = {
+export type TDIDSummaryTableRowProps = {
     name: string
     copies: number
     files: number
@@ -27,11 +27,11 @@ export const DIDSummaryTable = (props: {
     accountInfo: AccountInfo,
 }) => {
     const generateDIDSummaryTableData = (): TDIDSummaryTableRowProps[] => {
-        if(!props.takeSamples) {
+        if (!props.takeSamples) {
             return props.listDIDViewModels.map((did: ListDIDsViewModel, index) => {
                 const showOpenBadge = did.open
-                const badges: BasicStatusTagProps[] = [] 
-                if(showOpenBadge) {
+                const badges: BasicStatusTagProps[] = []
+                if (showOpenBadge) {
                     badges.push({
                         text: 'Open',
                         status: 'warning',
@@ -52,7 +52,7 @@ export const DIDSummaryTable = (props: {
         const newScope = generateNewScope(account, accountType)
         const tableData: TDIDSummaryTableRowProps[] = []
         props.listDIDViewModels.forEach((did: ListDIDsViewModel, index) => {
-            const derivedDID: DID =generateDerivedDIDName(newScope, did) 
+            const derivedDID: DID = generateDerivedDIDName(newScope, did)
             tableData.push({
                 name: `${derivedDID.scope}:${derivedDID.name}`,
                 copies: props.numcopies,
@@ -73,43 +73,43 @@ export const DIDSummaryTable = (props: {
         const messages: string[] = []
         const multiDID = props.listDIDViewModels.length > 1
         const openDIDs = props.listDIDViewModels.filter((did) => did.open)
-        if(props.takeSamples) {
-            if(props.userAskedForApproval) {
+        if (props.takeSamples) {
+            if (props.userAskedForApproval) {
                 messages.push(`You have asked for approval to create a rule for the following sample dataset(s) with ${props.numSamples} file(s).`)
-            }else {
+            } else {
                 messages.push(`This will create a rule for following sample dataset(s) with ${props.numSamples} file(s).`)
             }
         } else {
-            messages.push("This  will create a rule for" + (multiDID? ' the DIDs listed below' : ' the DID shown below.'));
-            if(openDIDs.length > 0) {
+            messages.push("This  will create a rule for" + (multiDID ? ' the DIDs listed below' : ' the DID shown below.'));
+            if (openDIDs.length > 0) {
                 messages.push("There are open DIDs present in your request. Everything that will be added to them after you created the rule will also be transferred to the selected RSE.")
             }
         }
-        if(props.userAskedForApproval) {
-            if(multiDID) {
+        if (props.userAskedForApproval) {
+            if (multiDID) {
                 messages.push("You have asked for approval for Multiple DIDs. This request will create a new container and will put all of the following DIDs into it. The rule will be created on the new container.")
-            }else {
+            } else {
                 messages.push("You have asked for approval to create this rule.")
             }
         }
-        
+
         return messages
     }
-    
+
     const tabledata = generateDIDSummaryTableData()
     const messages = generateMessages()
 
     const totalFiles: number = tabledata.reduce((sum, row) => {
-        if(typeof row.files !== 'number') {
+        if (typeof row.files !== 'number') {
             return parseInt(row.files) + sum // For some reason, the type of row.files is string | number
         }
         return sum + row.files;
-    },0);
+    }, 0);
 
     const totalSize: number | '-' = props.takeSamples ? '-' : tabledata.reduce((sum, row) => {
         return typeof row.size === 'number' ? sum + row.size : sum;
     }, 0);
-    const totalRequestedSize: number | '-' = props.takeSamples ? '-': tabledata.reduce((sum, row) => {
+    const totalRequestedSize: number | '-' = props.takeSamples ? '-' : tabledata.reduce((sum, row) => {
         return typeof row.requestedSize === 'number' ? sum + row.requestedSize : sum;
     }, 0);
 
@@ -117,11 +117,12 @@ export const DIDSummaryTable = (props: {
     const tablecolumns: any[] = [
         columnHelper.accessor("name", {
             id: "did",
-            header: info => { return (
-            <div className="text-xl text-left dark:text-white">
-                <span>DID</span>
-            </div>
-            )
+            header: info => {
+                return (
+                    <div className="text-xl text-left dark:text-white">
+                        <span>DID</span>
+                    </div>
+                )
             },
             cell: info => (
                 <div className="flex flex-col items-left px-2">
@@ -135,7 +136,7 @@ export const DIDSummaryTable = (props: {
         columnHelper.accessor("copies", {
             id: "copies",
             header: info => {
-                return ( 
+                return (
                     <div className="text-left text-xl dark:text-white">
                         <span>Copies</span>
                     </div>
@@ -163,10 +164,10 @@ export const DIDSummaryTable = (props: {
             },
             cell: (info) => (
                 <div className={twMerge(
-                            "flex flex-col items-left",
-                            "text-left dark:text-white",
-                            "w-24 px-2"
-                            )}
+                    "flex flex-col items-left",
+                    "text-left dark:text-white",
+                    "w-24 px-2"
+                )}
                 >
                     <span>{info.getValue()}</span>
                 </div>
@@ -188,19 +189,19 @@ export const DIDSummaryTable = (props: {
             },
             cell: info => {
                 const value = info.getValue()
-                if(value === '-') {
+                if (value === '-') {
                     return (
-                    <div className="flex flex-col items-justify text-center dark:text-white px-2">
-                        <span className="">-</span>
-                    </div>
+                        <div className="flex flex-col items-justify text-center dark:text-white px-2">
+                            <span className="">-</span>
+                        </div>
                     )
                 }
                 return (
-                <div className={twMerge("flex flex-col items-left",
-                    "text-right dark:text-white"
-                )}>
-                    <Number number={value} />
-                </div>
+                    <div className={twMerge("flex flex-col items-left",
+                        "text-right dark:text-white"
+                    )}>
+                        <Number number={value} />
+                    </div>
                 )
             },
             meta: {
@@ -222,19 +223,19 @@ export const DIDSummaryTable = (props: {
             },
             cell: info => {
                 const value = info.getValue()
-                if(value === '-') {
+                if (value === '-') {
                     return (
-                    <div className="flex flex-col items-justify text-center dark:text-white px-2">
-                        <span className="">-</span>
-                    </div>
+                        <div className="flex flex-col items-justify text-center dark:text-white px-2">
+                            <span className="">-</span>
+                        </div>
                     )
                 }
                 return (
-                <div className={twMerge("flex flex-col items-left",
-                    "text-right dark:text-white"
-                )}>
-                    <Number number={value} />
-                </div>
+                    <div className={twMerge("flex flex-col items-left",
+                        "text-right dark:text-white"
+                    )}>
+                        <Number number={value} />
+                    </div>
                 )
             },
             meta: {
@@ -244,14 +245,14 @@ export const DIDSummaryTable = (props: {
         columnHelper.accessor("tags", {
             id: "tags",
             header: info => {
-                return ( 
+                return (
                     <span className="text-xl dark:text-white">Tags</span>
                 )
             },
             cell: (info) => {
                 return <div className="flex flex-col items-center">
                     {info.getValue().map((tagProps, idx) => {
-                        return <BasicStatusTag  key={idx} {...tagProps} />
+                        return <BasicStatusTag key={idx} {...tagProps} />
                     })}
                 </div>
             }
@@ -269,17 +270,17 @@ export const DIDSummaryTable = (props: {
                     )}
                 >
                     <ul className="">
-                    {messages.map((message, index) => {
-                        return (
-                            <li
-                                key={index}
-                                className="pl-5 list-disc"
-                            >
-                                {message}
-                            </li>
-                        )
-                    })
-                    }
+                        {messages.map((message, index) => {
+                            return (
+                                <li
+                                    key={index}
+                                    className="pl-5 list-disc"
+                                >
+                                    {message}
+                                </li>
+                            )
+                        })
+                        }
                     </ul>
                 </div>
             </div>
@@ -297,40 +298,40 @@ export const DIDSummaryTable = (props: {
                 }}
             />
             <div
-                    className=""
+                className=""
+            >
+                <table className={twMerge(
+                    "w-full rounded-md table-fixed relative",
+                    "bg-white dark:bg-gray-700",
+                    "text-gray-800 dark:text-gray-100"
+                )}
                 >
-                    <table className={twMerge(
-                        "w-full rounded-md table-fixed relative",
-                        "bg-white dark:bg-gray-700",
-                        "text-gray-800 dark:text-gray-100"
-                    )}
-                    >
-                        <tbody>
-                            <tr className="text-black dark:text-white">
-                                <th className="w-56 pl-2 py-2 text-left">Parameter</th>
-                                <th className="pl-2 py-2 text-left">Value</th>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <td className="w-56 pl-2 py-1">Total Files</td>
-                                <td className="pl-2 py-1">{totalFiles}</td>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <td className="w-56 pl-2 py-1">Total Size</td>
-                                <td className="pl-2 py-1">{
-                                    typeof totalSize === 'number' ? <Number number={totalSize} /> : totalSize
-                                }</td>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <td className="w-56 pl-2 py-1">Total Requested Size</td>
-                                <td className="pl-2 py-1">
-                                    {
-                                        typeof totalRequestedSize === 'number' ? <Number number={totalRequestedSize} /> : totalRequestedSize
-                                    }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <tbody>
+                        <tr className="text-black dark:text-white">
+                            <th className="w-56 pl-2 py-2 text-left">Parameter</th>
+                            <th className="pl-2 py-2 text-left">Value</th>
+                        </tr>
+                        <tr className="border-t dark:border-gray-400">
+                            <td className="w-56 pl-2 py-1">Total Files</td>
+                            <td className="pl-2 py-1">{totalFiles}</td>
+                        </tr>
+                        <tr className="border-t dark:border-gray-400">
+                            <td className="w-56 pl-2 py-1">Total Size</td>
+                            <td className="pl-2 py-1">{
+                                typeof totalSize === 'number' ? <Number number={totalSize} /> : totalSize
+                            }</td>
+                        </tr>
+                        <tr className="border-t dark:border-gray-400">
+                            <td className="w-56 pl-2 py-1">Total Requested Size</td>
+                            <td className="pl-2 py-1">
+                                {
+                                    typeof totalRequestedSize === 'number' ? <Number number={totalRequestedSize} /> : totalRequestedSize
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

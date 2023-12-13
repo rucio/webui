@@ -10,6 +10,7 @@ import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-u
 import { DID } from "@/lib/core/entity/rucio"
 import { BasicStatusTagProps } from "@/component-library/Tags/BasicStatusTag"
 import { DIDSummaryTable, TDIDSummaryTableRowProps } from "./DIDSummaryTable"
+import { RSESummaryTable } from "./RSESummaryTable"
 
 var format = require("date-format")
 
@@ -100,28 +101,10 @@ export const SummaryPage = (
 
         
     const multiRSE = props.data.RSEViewModels.length > 1
-    const multiDID = props.data.DIDList.length > 1
-    const openDIDs = props.data.DIDViewModels.filter(did => did.open)
     const sampleFiles = props.data.numsamples
     const lifetime = (props.data.expirydate.getTime() - (new Date().getTime())) / (1000 * 60 * 60 * 24)
     const lifetimeDays = Math.floor(lifetime) > 0 ? Math.floor(lifetime) : 1
     const userAskedForApproval = props.data.approval
-    const getRSETableContent = () => {
-        return props.data.RSEViewModels.map((rse: RSEAccountUsageLimitViewModel, index) => {
-            const showQuotaWarningBadge = rse.has_quota
-            const badges: TBadge[] = [] 
-            if(showQuotaWarningBadge) {
-                badges.push({
-                    title: 'Quota',
-                    type: 'error',
-                })
-            }
-            return {
-                title: rse.rse,
-                badges: badges
-            }
-        })
-    }
 
     const getMessages = () => {
         const messages = []
@@ -141,7 +124,7 @@ export const SummaryPage = (
     return (
         <div
             className={twMerge(
-                "flex flex-col space-y-2",
+                "flex flex-col space-y-4",
                 "p-2",
                 "bg-white dark:bg-gray-800"
             )}
@@ -150,7 +133,7 @@ export const SummaryPage = (
                 <h1
                     className={twMerge("text-2xl font-bold text-black dark:text-white")}
                 >
-                    Summary Page
+                    DID Overview
                 </h1>
                 <SamplingTag sampling={props.data.numsamples >= 0} />
             </div>
@@ -172,15 +155,23 @@ export const SummaryPage = (
                     userAskedForApproval={userAskedForApproval}
                 />
             </div>
+            <div className="flex justify-start space-x-2">
+                <h1
+                    className={twMerge("text-2xl font-bold text-black dark:text-white")}
+                >
+                    RSE Overview
+                </h1>
+                <SamplingTag sampling={props.data.numsamples >= 0} />
+            </div>
             <div
                 className={twMerge(
-                    "grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-4",
+                    "flex flex-row space-x-2",
                     "p-2",
                     "rounded-md border",
                     "dark:border-2"
                 )}
             >
-                <TabularSummary data={getRSETableContent()} title="RSEs" />
+                <RSESummaryTable rseAccountUsageLimitViewModels={props.data.RSEViewModels} />
             </div>
             <div
                 className={twMerge(
