@@ -8,6 +8,7 @@ import { twMerge } from "tailwind-merge"
 import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-utils"
 import { AccountInfo, DID } from "@/lib/core/entity/rucio"
 import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did"
+import { SamplingTag } from "@/component-library/Tags/SamplingTag"
 
 
 export type TDIDSummaryTableRowProps = {
@@ -261,6 +262,14 @@ export const DIDSummaryTable = (props: {
 
     return (
         <div className="flex flex-col space-y-4">
+            <div className="flex justify-start space-x-2">
+                <h1
+                    className={twMerge("text-2xl font-bold text-black dark:text-white")}
+                >
+                    DID Overview
+                </h1>
+                <SamplingTag sampling={props.takeSamples} />
+            </div>
             <div>
                 <div
                     className={twMerge(

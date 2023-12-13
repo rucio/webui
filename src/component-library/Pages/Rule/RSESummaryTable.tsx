@@ -1,14 +1,16 @@
 import { NormalTable } from "@/component-library/StreamedTables/NormalTable"
-import { BasicStatusTagProps } from "@/component-library/Tags/BasicStatusTag"
+import { TableSortUpDown } from "@/component-library/StreamedTables/TableSortUpDown"
+import { BasicStatusTag, BasicStatusTagProps } from "@/component-library/Tags/BasicStatusTag"
 import { P } from "@/component-library/Text/Content/P"
 import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse"
 import { createColumnHelper } from "@tanstack/react-table"
 import { twMerge } from "tailwind-merge"
+import { Number } from "@/component-library/Text/Content/Number"
 
 type TRSESummaryTableRow = {
     rseName: string,
-    remainingQuota: number,
-    totalQuota: number,
+    remainingBytes: number,
+    quota: number,
     hasQuota: boolean,
     tags: BasicStatusTagProps[]
 }
@@ -28,8 +30,8 @@ export const RSESummaryTable = (props: {
             return {
                 rseName: rseAccountUsageLimitViewModel.rse,
                 hasQuota: rseAccountUsageLimitViewModel.has_quota,
-                remainingQuota: rseAccountUsageLimitViewModel.bytes_remaining,
-                totalQuota: rseAccountUsageLimitViewModel.bytes_limit,
+                remainingBytes: rseAccountUsageLimitViewModel.bytes_remaining,
+                quota: rseAccountUsageLimitViewModel.bytes_limit,
                 tags: badges
             } as TRSESummaryTableRow
         })
@@ -71,33 +73,110 @@ export const RSESummaryTable = (props: {
                         <P>{info.getValue()}</P>
                     </div>
                 )
+            },
+            meta: {
+                style: "w-64"
             }
-        })
+        }),
+        columnHelper.accessor("remainingBytes", {
+            id: "remainingBytes",
+            header: info => {
+                return (
+                    <TableSortUpDown
+                        name="Remaining"
+                        column={info.column}
+                        className="px-2 text-center"
+                    />
+                )
+            },
+            cell: info => {
+                const value = info.getValue()
+                return (
+                    <div className={twMerge("flex flex-col items-left",
+                        "text-left dark:text-white"
+                    )}>
+                        <Number number={value} />
+                    </div>
+                )
+            },
+            meta: {
+                style: "w-48"
+            }
+        }),
+        columnHelper.accessor("quota", {
+            id: "quota",
+            header: info => {
+                return (
+                    <TableSortUpDown
+                        name="Quota"
+                        column={info.column}
+                        className="px-2"
+                    />
+                )
+            },
+            cell: info => {
+                const value = info.getValue()
+                return (
+                    <div className={twMerge("flex flex-col items-left",
+                        "text-left",
+                        "dark:text-white"
+                    )}>
+                        <Number number={value} />
+                    </div>
+                )
+            },
+            meta: {
+                style: "w-48"
+            }
+        }),
+        columnHelper.accessor("tags", {
+            id: "tags",
+            header: info => {
+                return (
+                    <span className="text-xl dark:text-white">Tags</span>
+                )
+            },
+            cell: (info) => {
+                return <div className="flex flex-col items-center">
+                    {info.getValue().map((tagProps, idx) => {
+                        return <BasicStatusTag key={idx} {...tagProps} />
+                    })}
+                </div>
+            },
+            meta: {
+                style: "w-48"
+            }
+        }),
     ]
     return (
         <div className="flex flex-col space-y-4">
-            <div>
-                <div
-                    className={twMerge(
-                        "px-2 mx-2 rounded border dark:border-0",
-                        "bg-gray-200 dark:bg-gray-800",
-                        "dark:text-white"
-                    )}
+            <div className="flex justify-start space-x-2">
+                <h1
+                    className={twMerge("text-2xl font-bold text-black dark:text-white")}
                 >
-                    <ul className="">
-                        {messages.map((message, index) => {
-                            return (
-                                <li
-                                    key={index}
-                                    className="pl-5 list-disc"
-                                >
-                                    {message}
-                                </li>
-                            )
-                        })
-                        }
-                    </ul>
-                </div>
+                    RSE Overview
+                </h1>
+            </div>
+            <div
+                className={twMerge(
+                    "px-2 mx-2 rounded border dark:border-0",
+                    "bg-gray-200 dark:bg-gray-800",
+                    "dark:text-white"
+                )}
+            >
+                <ul className="">
+                    {messages.map((message, index) => {
+                        return (
+                            <li
+                                key={index}
+                                className="pl-5 list-disc"
+                            >
+                                {message}
+                            </li>
+                        )
+                    })
+                    }
+                </ul>
             </div>
             <NormalTable<TRSESummaryTableRow>
                 tablecolumns={tablecolumns}

@@ -3,9 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { SamplingTag } from "../../Tags/SamplingTag"
 import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule"
-import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse"
 import { BasicStatusTag } from "@/component-library/Tags/BasicStatusTag"
-import { ListDIDsViewModel } from "@/lib/infrastructure/data/view-model/list-did"
 import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-utils"
 import { DID } from "@/lib/core/entity/rucio"
 import { BasicStatusTagProps } from "@/component-library/Tags/BasicStatusTag"
@@ -13,78 +11,6 @@ import { DIDSummaryTable, TDIDSummaryTableRowProps } from "./DIDSummaryTable"
 import { RSESummaryTable } from "./RSESummaryTable"
 
 var format = require("date-format")
-
-type TBadge = {
-    title: string,
-    type: 'success' | 'error' | 'warning' | 'info',
-}
-
-const TabularSummary = (
-    props: {
-        data: {title: string, badges:TBadge[]}[],
-        title: string,
-    }
-) => {
-    const id = "summary-table-" + props.title.toLowerCase()
-    return (
-        <div
-            className={twMerge(
-                "bg-white rounded-md overflow-hidden",
-                "h-96 flex flex-col"
-            )}
-        >
-            <label htmlFor={id}>
-                <h3
-                    className={twMerge(
-                        "text-xl font-bold p-2",
-                        "bg-white dark:bg-gray-800",
-                        "text-black dark:text-white"
-                    )}
-                >
-                    {props.title // TODO: make this searchable
-                    }
-                </h3>
-            </label>
-            <div
-                className={twMerge(
-                    "h-full overflow-y-auto rounded-md",
-                    "dark:bg-gray-800"
-                )}
-                id={id}
-            >
-                <table className="w-full border dark:border-2 rounded-md">
-                    {props.data.map((elem, index) => {
-                        return (
-                            <tr
-                                key={index}
-                                className={twMerge(
-                                    "bg-white odd:bg-stone-100 text-black",
-                                    "dark:bg-gray-700 odd:dark:bg-gray-800 dark:text-gray-100"
-                                )}
-                            >
-                                <td
-                                    className="break-all md:break-normal pl-2 py-1 select-all"
-                                >
-                                    {elem.title}
-                                </td>
-                                <td
-                                    className="w-8 text-center"
-                                >
-                                    {
-                                        elem.badges.map((badge, index) => {
-                                            return <BasicStatusTag key={index} text={badge.title} status={badge.type} />
-                                        })
-                                    }
-                                </td>
-                            </tr>
-                        )
-                    })
-                    }
-                </table>
-            </div>
-        </div>
-    )
-}
 
 const OptionTD = (props: { children: any }): JSX.Element =>
     <td
@@ -108,12 +34,6 @@ export const SummaryPage = (
 
     const getMessages = () => {
         const messages = []
-        if(multiRSE) {
-            messages.push("This will create a rule on one of the RSEs listed below.")
-        }else {
-            messages.push("This will create a rule on the RSE listed below.")
-        }
-
         if(lifetimeDays === 1) {
             messages.push("The lifetime will be 1 day.  If this is ok you can submit the rule request. If not you can go back and change it.")
         }else {
@@ -129,14 +49,7 @@ export const SummaryPage = (
                 "bg-white dark:bg-gray-800"
             )}
         >
-            <div className="flex justify-start space-x-2">
-                <h1
-                    className={twMerge("text-2xl font-bold text-black dark:text-white")}
-                >
-                    DID Overview
-                </h1>
-                <SamplingTag sampling={props.data.numsamples >= 0} />
-            </div>
+            
             <div
                 className={twMerge(
                     "flex flex-row space-x-2",
@@ -146,7 +59,6 @@ export const SummaryPage = (
                 )}
             >
                 <DIDSummaryTable 
-                    // tabledata={generateDIDSummaryTableData()} 
                     listDIDViewModels={props.data.DIDViewModels}
                     numSamples={sampleFiles} 
                     takeSamples={props.data.takeSamples}
@@ -155,14 +67,7 @@ export const SummaryPage = (
                     userAskedForApproval={userAskedForApproval}
                 />
             </div>
-            <div className="flex justify-start space-x-2">
-                <h1
-                    className={twMerge("text-2xl font-bold text-black dark:text-white")}
-                >
-                    RSE Overview
-                </h1>
-                <SamplingTag sampling={props.data.numsamples >= 0} />
-            </div>
+            
             <div
                 className={twMerge(
                     "flex flex-row space-x-2",
