@@ -14,6 +14,7 @@ export interface RuleSummaryViewModel extends BaseViewModel {
     notifications: boolean
     asynchronousMode: boolean
     numcopies: number
+    takeSamples: boolean
     numsamples: number
     groupby: DIDType
     comment: string

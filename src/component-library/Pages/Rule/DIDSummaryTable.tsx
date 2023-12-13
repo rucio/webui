@@ -10,18 +10,24 @@ import { twMerge } from "tailwind-merge"
 export type  TDIDSummaryTableRowProps = {
     name: string
     copies: number
+    files: number
     size: number | '-'
     requestedSize: number | '-'
     tags: BasicStatusTagProps[]
 }
 export const DIDSummaryTable = (props: {
     numSamples: number,
+    takeSamples: boolean,
     tabledata: TDIDSummaryTableRowProps[]
 }) => {
-    const totalSize: number | '-' = props.tabledata.reduce((sum, row) => {
+    const totalFiles: number = props.tabledata.reduce((sum, row) => {
+        return sum + row.files;
+    },0);
+
+    const totalSize: number | '-' = props.takeSamples ? '-' : props.tabledata.reduce((sum, row) => {
         return typeof row.size === 'number' ? sum + row.size : sum;
     }, 0);
-    const totalRequestedSize: number | '-' = props.tabledata.reduce((sum, row) => {
+    const totalRequestedSize: number | '-' = props.takeSamples ? '-': props.tabledata.reduce((sum, row) => {
         return typeof row.requestedSize === 'number' ? sum + row.requestedSize : sum;
     }, 0);
 
@@ -54,6 +60,26 @@ export const DIDSummaryTable = (props: {
             ),
             meta: {
                 style: "w-36"
+            }
+        }),
+        columnHelper.accessor("files", {
+            id: "files",
+            header: info => {
+                return (
+                    <TableSortUpDown
+                        name="Files"
+                        column={info.column}
+                        className="px-2"
+                    />
+                )
+            },
+            cell: (info) => (
+                <div className="flex flex-col items-center w-24 px-2">
+                    <span className="text-center w-36 dark:text-white">{info.getValue()}</span>
+                </div>
+            ),
+            meta: {
+                style: "w-24"
             }
         }),
         columnHelper.accessor("size", {
@@ -154,7 +180,7 @@ export const DIDSummaryTable = (props: {
                             </tr>
                             <tr className="border-t dark:border-gray-400">
                                 <td className="w-56 pl-2 py-1">Total Files</td>
-                                <td className="pl-2 py-1">{100}</td>
+                                <td className="pl-2 py-1">{totalFiles}</td>
                             </tr>
                             <tr className="border-t dark:border-gray-400">
                                 <td className="w-56 pl-2 py-1">Total Size</td>
@@ -170,30 +196,6 @@ export const DIDSummaryTable = (props: {
                                     }
                                 </td>
                             </tr>
-                            {/* <tr className="border-t dark:border-gray-400">
-                                <OptionTD>Expiry Date</OptionTD>
-                                <td className="select-all py-1">{format("yyyy-MM-dd", props.data.expirydate)}</td>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <OptionTD>Enable Notifications</OptionTD>
-                                <td><BoolTag val={props.data.notifications} /></td>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <OptionTD>Asynchronous Mode</OptionTD>
-                                <td><BoolTag val={props.data.asynchronousMode} /></td>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <OptionTD>Group By</OptionTD>
-                                <td><DIDTypeTag didtype={props.data.groupby} /></td>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <OptionTD>Number of Copies</OptionTD>
-                                <td className="select-all py-1">{props.data.numcopies}</td>
-                            </tr>
-                            <tr className="border-t dark:border-gray-400">
-                                <OptionTD>Comment</OptionTD>
-                                <td className="select-all py-1">{props.data.comment}</td>
-                            </tr> */}
                         </tbody>
                     </table>
                 </div>

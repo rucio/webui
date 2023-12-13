@@ -106,8 +106,6 @@ export const SummaryPage = (
     const lifetime = (props.data.expirydate.getTime() - (new Date().getTime())) / (1000 * 60 * 60 * 24)
     const lifetimeDays = Math.floor(lifetime) > 0 ? Math.floor(lifetime) : 1
     const userAskedForApproval = props.data.approval
-    const accountType = props.data.accountInfo.accountType
-    const account = props.data.accountInfo.account
     const getRSETableContent = () => {
         return props.data.RSEViewModels.map((rse: RSEAccountUsageLimitViewModel, index) => {
             const showQuotaWarningBadge = rse.has_quota
@@ -140,6 +138,7 @@ export const SummaryPage = (
                     name: `${did.scope}:${did.name}`,
                     copies: props.data.numcopies,
                     size: did.bytes,
+                    files: did.length,
                     requestedSize: props.data.numcopies * did.bytes,
                     tags: badges,
                 } as TDIDSummaryTableRowProps
@@ -154,6 +153,7 @@ export const SummaryPage = (
             tableData.push({
                 name: `${derivedDID.scope}:${derivedDID.name}`,
                 copies: props.data.numcopies,
+                files: sampleFiles,
                 size: '-',
                 requestedSize: `-`,
                 tags: [
@@ -249,7 +249,7 @@ export const SummaryPage = (
                     "dark:border-2"
                 )}
             >
-                <DIDSummaryTable tabledata={generateDIDSummaryTableData()} numSamples={1}/>
+                <DIDSummaryTable tabledata={generateDIDSummaryTableData()} numSamples={sampleFiles} takeSamples={props.data.takeSamples}/>
             </div>
             <div
                 className={twMerge(
