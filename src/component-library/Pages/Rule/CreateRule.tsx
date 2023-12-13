@@ -37,6 +37,7 @@ import { CreateRuleRSETable } from './CreateRuleRSETable';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { LifetimeWithExpirationDateInput } from './LifetimeWithExpiryDateInput';
 
 export interface CreateRulePageProps {
     accountInfo: AccountInfo,
@@ -85,6 +86,7 @@ interface Page1State {
 interface Page2State {
     page2progressBlocked: boolean
     expiryDate: Date
+    lifetime: number
     enableNotifications: boolean
     showAdvanced: boolean
     groupBy: DIDType
@@ -238,6 +240,7 @@ export const CreateRule = (
     // page 2 state
     const [Page2State, setPage2State] = useState<Page2State>({
         expiryDate: new Date(2025, 1, 1),
+        lifetime: 0,
         takesamples: false,
         numsamples: -1,
         enableNotifications: false,
@@ -262,6 +265,7 @@ export const CreateRule = (
             RSEViewModels: Page1State.RSESelection,
             DIDViewModels: Page0State.searchDIDSelection,
             expirydate: Page2State.expiryDate,
+            lifetime: Page2State.lifetime,
             notifications: Page2State.enableNotifications,
             asynchronousMode: Page2State.asynchronousMode,
             numcopies: Page2State.numcopies,
@@ -416,12 +420,11 @@ export const CreateRule = (
                     <div className="flex md:flex-row md:space-x-2 flex-col space-y-2 m-2">
                         <div className="flex flex-col space-y-2 md:w-60 w-full">
                             <div className="w-full">
-                                <Label label="expiryDate">Expiry Date</Label>
-                                <DateInput
+                                <Label label="expiryDate">Lifetime and Expiry Date</Label>
+                                <LifetimeWithExpirationDateInput
                                     initialdate={Page2State.expiryDate}
                                     placeholder="Rule Expiry Date"
-                                    onchange={(date: Date) => { setPage2State({ ...Page2State, expiryDate: date }) }}
-                                    id="expiryDate"
+                                    onChange={(date: Date, lifetime: number) => { setPage2State({ ...Page2State, expiryDate: date, lifetime: lifetime }) }}
                                 />
                             </div>
                             <div className="w-full">
@@ -533,6 +536,7 @@ export const CreateRule = (
                         RSEViewModels: [],
                         DIDViewModels: [],
                         expirydate: new Date(2025, 1, 1),
+                        lifetime: 0,
                         notifications: false,
                         asynchronousMode: false,
                         numcopies: 0,

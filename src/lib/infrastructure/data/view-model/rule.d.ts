@@ -11,6 +11,7 @@ export interface RuleSummaryViewModel extends BaseViewModel {
     RSEViewModels: Array<RSEAccountUsageLimitViewModel>
     DIDViewModels: Array<DIDLong>
     expirydate: Date
+    lifetime: number
     notifications: boolean
     asynchronousMode: boolean
     numcopies: number

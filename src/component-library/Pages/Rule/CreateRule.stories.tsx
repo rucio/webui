@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react'
-import { fixtureDIDLongViewModel, fixtureListDIDViewModel as fixtureListDIDsViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures'
+import { fixtureListDIDViewModel as fixtureListDIDsViewModel, fixtureRSEAccountUsageLimitViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures'
 
 import { CreateRule as CR } from './CreateRule'
 import {
@@ -35,6 +35,7 @@ CreateRule.args = {
             status: 'success',
             DIDList: query.DIDViewModels.map((did) => `${did.scope}:${did.name}`),
             RSEList: query.RSEViewModels.map((rse) => rse.rse),
+            takeSamples: false,
             accountInfo: {
                 account: 'maany',
                 accountType: AccountType.USER,

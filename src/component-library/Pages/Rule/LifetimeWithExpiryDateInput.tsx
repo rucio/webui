@@ -1,6 +1,6 @@
 import { DateInput } from "@/component-library/Input/DateInput"
 import { NumInput } from "@/component-library/Input/NumInput"
-import { type } from "@testing-library/user-event/dist/types/utility"
+import { calculateDateFromLifetime, calculateLifetimeInDays } from "@/lib/core/utils/lifetime-utils"
 import { useState } from "react"
 import { twMerge } from "tailwind-merge"
 
@@ -17,17 +17,7 @@ export const LifetimeWithExpirationDateInput: React.FC<LifetimeWithExpirationDat
         disabled = false,
         placeholder = "Select a date",
     }: LifetimeWithExpirationDateInputProps) => {
-    const calculateLifetimeInDays = (date: Date) => {
-        const currentDate = new Date()
-        const diffInTime = date.getTime() - currentDate.getTime()
-        const diffInDays = diffInTime / (1000 * 3600 * 24)
-        return Math.ceil(diffInDays)
-    }
-    const calculateDateFromLifetime = (lifetime: number) => {
-        const currentDate = new Date()
-        const newDate = new Date(currentDate.getTime() + lifetime * 24 * 60 * 60 * 1000)
-        return newDate
-    }
+    
     const [lifetimeInDays, setLifetimeInDays] = useState<number>(() => {
         if (initialdate) {
             return calculateLifetimeInDays(initialdate)

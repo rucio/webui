@@ -1,12 +1,7 @@
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
 import { DIDTypeTag } from "../../Tags/DIDTypeTag"
-import { SamplingTag } from "../../Tags/SamplingTag"
 import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule"
-import { BasicStatusTag } from "@/component-library/Tags/BasicStatusTag"
-import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-utils"
-import { DID } from "@/lib/core/entity/rucio"
-import { BasicStatusTagProps } from "@/component-library/Tags/BasicStatusTag"
 import { DIDSummaryTable, TDIDSummaryTableRowProps } from "./DIDSummaryTable"
 import { RSESummaryTable } from "./RSESummaryTable"
 
@@ -26,7 +21,6 @@ export const SummaryPage = (
     ) => {
 
         
-    const multiRSE = props.data.RSEViewModels.length > 1
     const sampleFiles = props.data.numsamples
     const lifetime = (props.data.expirydate.getTime() - (new Date().getTime())) / (1000 * 60 * 60 * 24)
     const lifetimeDays = Math.floor(lifetime) > 0 ? Math.floor(lifetime) : 1
@@ -89,7 +83,7 @@ export const SummaryPage = (
             >
                 <div className="flex flex-row">
                     <h3
-                        className="text-xl font-bold p-2 text-gray-800 dark:text-white"
+                        className="text-2xl font-bold p-2 text-gray-800 dark:text-white"
                     >
                         Options
                     </h3>
@@ -111,6 +105,10 @@ export const SummaryPage = (
                             <tr className="border-t dark:border-gray-400">
                                 <OptionTD>Expiry Date</OptionTD>
                                 <td className="select-all py-1">{format("yyyy-MM-dd", props.data.expirydate)}</td>
+                            </tr>
+                            <tr className="border-t dark:border-gray-400">
+                                <OptionTD>Lifetime</OptionTD>
+                                <td className="select-all py-1">{lifetimeDays} days</td>
                             </tr>
                             <tr className="border-t dark:border-gray-400">
                                 <OptionTD>Enable Notifications</OptionTD>
@@ -149,7 +147,7 @@ export const SummaryPage = (
                             "dark:text-white"
                         )}
                     >
-                        {props.data.numsamples < 0 ? "Not taking Samples" : "Sampling " + props.data.numsamples + " elements from the named DIDs."}
+                        {props.data.numsamples < 0 ? "Disabled" : "Sampling " + props.data.numsamples + " files from the selected DIDs."}
                     </div>
                 </div>
             </div>
