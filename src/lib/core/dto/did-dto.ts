@@ -92,4 +92,7 @@ export interface AttachDIDDTO extends BaseDTO {
  * Data Transfer Object for SetDIDStatus (open/closed) endpoint
  */
 export interface SetDIDStatusDTO extends BaseDTO {
+    scope: string
+    name: string
+    open: boolean
 }
