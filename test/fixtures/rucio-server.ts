@@ -2,6 +2,7 @@ import { HTTPRequest } from '@/lib/sdk/http'
 import { Headers } from 'node-fetch'
 import { Readable } from 'stream'
 import { Response } from 'node-fetch'
+import { BaseViewModel } from '@/lib/sdk/view-models'
 /**
  * Represents a mock HTTP request endpoint.
  */
@@ -20,6 +21,13 @@ export interface MockEndpoint extends HTTPRequest {
      * The response to send when this endpoint is matched.
      */
     response: MockGatewayResponse
+
+    /**
+     * Validate the request parameters, body, and headers.
+     * @param req The request to validate.
+     * @returns undefined if the request is valid, otherwise a BaseViewModel with the error.
+     */
+    requestValidator?: (req: Request) => Promise<void>
 }
 
 /**
@@ -90,6 +98,9 @@ export default class MockRucioServerFactory {
                     status: 404,
                     body: JSON.stringify('Not found')
                 } as MockGatewayResponse)
+            }
+            if(endpoint.requestValidator) {
+                endpoint.requestValidator(req)
             }
             return Promise.resolve(endpoint.response)
         })

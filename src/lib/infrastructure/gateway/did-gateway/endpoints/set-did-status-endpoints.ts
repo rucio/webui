@@ -10,7 +10,8 @@ export default class SetDIDStatusEndpoint extends BaseEndpoint<SetDIDStatusDTO> 
         private name: string,
         private open: boolean,
     ) {
-        super()
+        //parse body as text
+        super(true)
     }
     /**
      * @override

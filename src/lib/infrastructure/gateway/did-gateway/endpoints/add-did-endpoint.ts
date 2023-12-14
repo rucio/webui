@@ -30,7 +30,7 @@ export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
             body: {
                 scope: this.scope,
                 name: this.name,
-                type: this.didType,
+                type: this.didType.toUpperCase(),
             },
         }
         this.request = request
