@@ -5,7 +5,7 @@ import { HTTPRequest } from "@/lib/sdk/http";
 import { Response } from "node-fetch";
 
 
-export default class AttachDIDEndpoint extends BaseEndpoint<AttachDIDDTO> {
+export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
     constructor(
         private readonly rucioAuthToken: string,
         private readonly scope: string,
