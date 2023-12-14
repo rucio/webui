@@ -8,7 +8,8 @@ export const RulePage = (
         activePage: number,
         onNext: (event: any) => void,
         onPrev: (event: any) => void,
-        isLastPage?: boolean,
+        allowNext: boolean,
+        allowPrev: boolean,
         submit?: boolean,
         progressBlocked?: boolean,
         children?: any
@@ -27,13 +28,13 @@ export const RulePage = (
                     {props.children}
                 </div>
                 <div className="relative w-full h-8">
-                    <Collapsible showIf={props.activePage !== 0}>
+                    <Collapsible showIf={props.activePage !== 0 && props.allowPrev}>
                         <span className="absolute bottom-0 left-0 w-24">
                             <Button label="Previous" onClick={props.onPrev} />
                         </span>
                     </Collapsible>
                     {!props.submit ? (
-                        <Collapsible showIf={!props.isLastPage}>
+                        <Collapsible showIf={props.allowNext}>
                         <span className="absolute bottom-0 right-0 w-24">
                             <Button label="Next" disabled={props.progressBlocked} onClick={props.onNext} />
                         </span>

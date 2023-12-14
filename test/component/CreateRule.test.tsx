@@ -21,7 +21,7 @@ let F: any  // fixtures
 const onSubmit = (query: TCreateRuleFeatureRequestParams): Promise<CreateRulesViewModel> => {
     return Promise.resolve({
         status: 'success',
-        rules: {}
+        rules: []
     })
 }
 

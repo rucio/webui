@@ -16,10 +16,16 @@ export const CreateRule: Story = {
         onSubmit: (query: TCreateRuleFeatureRequestParams): Promise<CreateRulesViewModel> => {
             return Promise.resolve({
                 status: 'success',
-                rules: {
-                    "123123143243": "scope:dataset1",
-                    "127849dsgs": "scope:dataset2",
-                }
+                rules: [
+                    {
+                        RuleID: "123123143243",
+                        DID: "scope:dataset1"
+                    },
+                    {
+                        RuleID: "127849dsgs",
+                        DID: "scope:dataset2"
+                    },
+                ]
             })
         },
         didListComDOM: mockUseComDOM(Array.from({ length: 100 }, () => fixtureListDIDViewModel())),

@@ -282,11 +282,11 @@ export const CreateRule = (
     *  ================================================= */
    const [Page4State, setPage4State] = useState<Page4State>({
         status: 'pending',
-        rules: {}
+        rules: []
    })
 
     const submitRuleRequestAndLoadStatus = async (event: any) => {
-        setPage4State({ rules: {}, status: 'pending' })
+        setPage4State({ rules: [], status: 'pending' })
         setActivePage(4)
         const createRulesRequest:TCreateRuleFeatureRequestParams  = {
             RSEViewModels: Page1State.RSESelection,
@@ -326,7 +326,7 @@ export const CreateRule = (
                 />
             </Heading>
             <Body>
-                <RulePage pagenum={0} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={0} allowNext={true} allowPrev={false} activePage={activePage} progressBlocked={Page0State.page0progressBlocked} onNext={(event: any) => { page0nextFunction(event) }} onPrev={pagePrevFunction}>
                     <Tabs
                         tabs={["DID Search Pattern", "List of DIDs"]}
                         active={Page0State.selectDIDMethod}
@@ -386,7 +386,7 @@ export const CreateRule = (
                         </div>
                     </Collapsible>
                 </RulePage>
-                <RulePage pagenum={1} activePage={activePage} progressBlocked={Page1State.page1progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={1} allowNext allowPrev activePage={activePage} progressBlocked={Page1State.page1progressBlocked} onNext={() => { setActivePage(activePage + 1) }} onPrev={pagePrevFunction}>
                     <div className="flex flex-col space-y-2 m-2">
                         <div className="flex w-full flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
                             <label className="-mb-2 sm:mt-2.5 sm:w-36" htmlFor='rse-expression'><P>RSE Expression</P></label>
@@ -416,7 +416,7 @@ export const CreateRule = (
                         </div>
                     </div>
                 </RulePage>
-                <RulePage pagenum={2} activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { loadRuleSummaryPage() }} onPrev={pagePrevFunction}>
+                <RulePage pagenum={2} allowNext allowPrev activePage={activePage} progressBlocked={Page2State.page2progressBlocked} onNext={() => { loadRuleSummaryPage() }} onPrev={pagePrevFunction}>
                     <div className="flex md:flex-row md:space-x-2 flex-col space-y-2 m-2">
                         <div className="flex flex-col space-y-2 md:w-60 w-full">
                             <div className="w-full">
@@ -527,7 +527,7 @@ export const CreateRule = (
                         </div>
                     </div>
                 </RulePage>
-                <RulePage pagenum={3} activePage={activePage} onNext={submitRuleRequestAndLoadStatus} onPrev={pagePrevFunction} submit>
+                <RulePage pagenum={3} activePage={activePage} allowNext allowPrev onNext={submitRuleRequestAndLoadStatus} onPrev={pagePrevFunction} submit>
                     <SummaryPage data={summaryViewModel? summaryViewModel : {
                         status: 'error',
                         message: 'Please check your inputs on previous pages! Cannot retrieve summary from the server',
@@ -548,7 +548,7 @@ export const CreateRule = (
                         accountInfo: props.accountInfo,
                     }} />
                 </RulePage>
-                <RulePage pagenum={4} activePage={activePage} onPrev={pagePrevFunction} onNext={() =>{}} isLastPage>
+                <RulePage pagenum={4} activePage={activePage} onPrev={pagePrevFunction} onNext={() =>{}} allowNext={false} allowPrev={Page4State.status === 'error'}>
                     <CreateRuleStatusPage createRuleViewModel={Page4State} />
                 </RulePage>
             </Body>
