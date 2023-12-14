@@ -73,3 +73,23 @@ export interface DIDRulesDTO extends Omit<DIDRules, 'subscription'>, BaseDTO {
 export interface CreateDIDSampleDTO extends BaseDTO {
     created: boolean
 }
+
+/**
+ * Data Transfer Object for AddDIDEndpoint
+ */
+export interface AddDIDDTO extends BaseDTO {
+    created: boolean
+}
+
+/**
+ * Data Transfer Object for AttachDIDEndpoint
+ */
+export interface AttachDIDDTO extends BaseDTO {
+    created: boolean
+}
+
+/**
+ * Data Transfer Object for SetDIDStatus (open/closed) endpoint
+ */
+export interface SetDIDStatusDTO extends BaseDTO {
+}
