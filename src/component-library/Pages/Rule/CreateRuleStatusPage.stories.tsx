@@ -14,8 +14,17 @@ const Template: StoryFn<typeof CreateRuleStatusPage> = (args) => <CreateRuleStat
 export const Story = Template.bind({});
 Story.args = {
   createRuleViewModel: {
-    status: 'error',
+    status: 'success',
     message: 'There has been an error my ser!',
-    rules : {}
+    rules: [
+      {
+        "RuleID": "1234567890",
+        "DID": "scope:name",
+      },
+      {
+        "RuleID": "1234567890",
+        "DID": "scope:name",
+      }
+    ]
   },
 } as TCreateRuleStatusPageProps;

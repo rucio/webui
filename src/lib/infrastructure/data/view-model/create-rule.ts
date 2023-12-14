@@ -3,18 +3,24 @@ import { BaseViewModel } from "@/lib/sdk/view-models";
 import { FetchStatus } from "@tanstack/react-query";
 import { RSEAccountUsageLimitViewModel } from "./rse";
 
-
+/**
+ * Represents a pair of Rule ID and corresponding DID for a newly created rule.
+ */
+export interface TRuleIDDIDPair {
+    RuleID: string
+    DID: string
+}
 /**
  * View model for the Create Rule Request.
  * @property rules - The list of pairs of Rule ID and corresponding DID.
  */
 export interface CreateRulesViewModel extends BaseViewModel {
-    rules: Record<string, string>
+    rules: TRuleIDDIDPair[]
 }
 
 export const generateEmptyCreateRulesViewModel = (): CreateRulesViewModel => ({
     status: 'error',
-    rules: {},
+    rules: [],
 })
 
 /*
