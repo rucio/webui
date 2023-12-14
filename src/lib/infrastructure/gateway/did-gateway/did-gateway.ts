@@ -1,5 +1,5 @@
-import { DIDExtendedDTO, DIDMetaDTO, ListDIDDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO, CreateDIDSampleDTO } from '@/lib/core/dto/did-dto'
-import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio'
+import { DIDExtendedDTO, DIDMetaDTO, ListDIDDTO, ListDIDRulesDTO, DIDKeyValuePairsDTO, CreateDIDSampleDTO, AddDIDDTO, AttachDIDDTO, SetDIDStatusDTO } from '@/lib/core/dto/did-dto'
+import { DID, DIDAvailability, DIDType } from '@/lib/core/entity/rucio'
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port'
 import { injectable } from 'inversify'
 import GetDIDEndpoint from './endpoints/get-did-endpoint'
@@ -10,9 +10,74 @@ import GetDIDKeyValuePairsEndpoint from './endpoints/get-did-keyvaluepairs-endpo
 import ListDIDParentsEndpoint from './endpoints/list-did-parents-endpoint'
 import ListDIDContentsEndpoint from './endpoints/list-did-contents-endpoint'
 import CreateDIDSampleEndpoint from './endpoints/create-did-sample-endpoint'
+import AddDIDEndpoint from './endpoints/add-did-endpoint'
+import AttachDIDsEndpoint from './endpoints/attach-dids-endpoint'
+import SetDIDStatusEndpoint from './endpoints/set-did-status-endpoints'
 
 @injectable()
 export default class RucioDIDGateway implements DIDGatewayOutputPort {
+    async addDID(rucioAuthToken: string, scope: string, name: string, didType: DIDType): Promise<AddDIDDTO> {
+        try {
+            const endpoint = new AddDIDEndpoint(rucioAuthToken, scope, name, didType)
+            const dto = await endpoint.fetch()
+            return dto
+        } catch(error) {
+            const errorDTO: AddDIDDTO = {
+                status: 'error',
+                created: false,
+                errorName: 'An exception occurred while creating the DID.',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
+    }
+
+
+    async attachDIDs(rucioAuthToken: string, scope: string, name: string, dids: DID[]): Promise<AttachDIDDTO> {
+        try {
+            const endpoint = new AttachDIDsEndpoint(rucioAuthToken, scope, name, dids)
+            const dto = endpoint.fetch()
+            return dto
+        }catch (error) {
+            const errorDTO: AttachDIDDTO = {
+                status: 'error',
+                created: false,
+                errorName: 'An exception occurred while attaching the DIDs.',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
+    }
+
+    async createDIDSample(
+        rucioAuthToken: string,
+        inputScope: string,
+        inputName: string,
+        outputScope: string,
+        outputName: string,
+        nbFiles: number
+    ): Promise<CreateDIDSampleDTO> {
+        try {
+            const endpoint = new CreateDIDSampleEndpoint(rucioAuthToken, inputScope, inputName, outputScope, outputName, nbFiles);
+            const dto = await endpoint.fetch()
+            return dto;
+        } catch(error) {
+            const errorDTO: CreateDIDSampleDTO = {
+                status: 'error',
+                created: false,
+                errorName: 'An exception occurred while creating the sample DID.',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            }
+            return Promise.resolve(errorDTO)
+        }
+    }
+    
     
     async getDID(
         rucioAuthToken: string,
@@ -174,23 +239,18 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         }
     }
 
-    async createDIDSample(
-        rucioAuthToken: string,
-        inputScope: string,
-        inputName: string,
-        outputScope: string,
-        outputName: string,
-        nbFiles: number
-    ): Promise<CreateDIDSampleDTO> {
+    async setDIDStatus(rucioAuthToken: string, scope: string, name: string, open: boolean): Promise<SetDIDStatusDTO> {
         try {
-            const endpoint = new CreateDIDSampleEndpoint(rucioAuthToken, inputScope, inputName, outputScope, outputName, nbFiles);
+            const endpoint = new SetDIDStatusEndpoint(rucioAuthToken, scope, name, open)
             const dto = await endpoint.fetch()
-            return dto;
+            return dto
         } catch(error) {
-            const errorDTO: CreateDIDSampleDTO = {
+            const errorDTO: SetDIDStatusDTO = {
                 status: 'error',
-                created: false,
-                errorName: 'An exception occurred while creating the sample DID.',
+                scope: scope,
+                name: name,
+                open: open,
+                errorName: 'Unknown Error',
                 errorType: 'gateway_endpoint_error',
                 errorCode: 500,
                 errorMessage: error?.toString(),
