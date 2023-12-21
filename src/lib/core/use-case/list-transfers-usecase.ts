@@ -46,6 +46,10 @@ export default class ListTransfersUseCase extends BaseSingleEndpointStreamingUse
         return undefined;
     }
 
+    async intializeRequest(request: AuthenticatedRequestModel<AuthenticatedRequestModel<ListTransfersRequest>>): Promise<ListTransfersError | undefined> {
+        return Promise.resolve(undefined);
+    }
+
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<AuthenticatedRequestModel<ListTransfersRequest>>): Promise<ListTransfersDTO> {
         const { rucioAuthToken, sourceRSE, destRSE } = requestModel;
         const dto: ListTransfersDTO = await this.gateway.listTransfers(rucioAuthToken, sourceRSE, destRSE)
