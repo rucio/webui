@@ -18,10 +18,13 @@
         "eslint": "^8.48.0",
         "nodemon": "^3.0.1",
         "typescript": "^5.2.2",
-        "watch": "^1.0.2",
+        "watch": "^0.13.0",
         "yargs": "^17.7.2"
     },
     "files": [
         "templates"
-    ]
+    ],
+    "dependencies": {
+        "liquidjs": "^10.10.0"
+    }
 }

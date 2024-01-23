@@ -36,10 +36,6 @@ export const handler = async (argv: Arguments<Options>) => {
   console.log(`write: ${write}`)
   console.log(`defaults: ${defaults}`)
 
-  // process.env['RUCIasd O_WEBUI_R UCIO_HOs  ST'] = 'https://rucio-server:443'
-  // process.env['RUCIO_WEBUI_RUCIO_AUTH_HOST'] = 'https://rucio-server:443'
-  
-
   // extract all env variables starting with RUCIO_WEBUI_    
   const prefix = 'RUCIO_WEBUI_'
   let filteredEnv = Object.keys(process.env)
