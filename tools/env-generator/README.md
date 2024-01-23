@@ -4,7 +4,7 @@ This tool is used to generate the `.env.production` or `.env` or `.env.developme
 
 ## Usage
 
-1. Copy the provided `.env.template` file to a base envionment file. The base file will be used to export environment variables that will ultimately be used for generating the .env files for the WEBUI.
+1. For development, copy the provided `.env.template` file to a base envionment file. The base file will be used to export environment variables that will ultimately be used for generating the .env files for the WEBUI.
 
 ```bash
 cp .env.template .env.base
@@ -28,15 +28,15 @@ cp .env.template .env.base
 For each `VO` specified in the `VO_LIST` variable, the additional variables need to be specified. The variables should be added in the following format:
 ```export RUCIO_WEBUI_VO_<VO_SHORT_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>```. An example for the default VO is shown below:
 
-| Variable Name                        | Full Name                                        | Description                                                                    | Example | Default |
-|-------------------------------------|--------------------------------------------------|--------------------------------------------------------------------------------|---------|---------|
-| OIDC_PROVIDER_CERN_CLIENT_ID         | RUCIO_WEBUI_OIDC_PROVIDER_CERN_CLIENT_ID         | The client id for the webui registered on the OIDC Provider dashboard         |         |         |
-| OIDC_PROVIDER_CERN_CLIENT_SECRET     | RUCIO_WEBUI_OIDC_PROVIDER_CERN_CLIENT_SECRET     | The client secret for the webui obtained from the OIDC Provider                |         |         |
-| OIDC_PROVIDER_CERN_AUTHORIZATION_URL | RUCIO_WEBUI_OIDC_PROVIDER_CERN_AUTHORIZATION_URL | The authorization URL for the OIDC Provider                                    |         |         |
-| OIDC_PROVIDER_CERN_TOKEN_URL         | RUCIO_WEBUI_OIDC_PROVIDER_CERN_TOKEN_URL         | The token endpoint for the OIDC Provider                                       |         |         |
-| OIDC_PROVIDER_CERN_REFRESH_TOKEN_URL | RUCIO_WEBUI_OIDC_PROVIDER_CERN_REFRESH_TOKEN_URL | The refresh token endpoint                                                     |         |         |
-| OIDC_PROVIDER_CERN_USERINFO_URL      | RUCIO_WEBUI_OIDC_PROVIDER_CERN_USERINFO_URL      | The URL to obtain user info from the OIDC Provider                             |         |         |
-| OIDC_PROVIDER_CERN_REDIRECT_URL      | RUCIO_WEBUI_OIDC_PROVIDER_CERN_REDIRECT_URL      | The redirection URL configured on the OIDC Provider                            |         |         |
+| Variable Name                        | Full Name                                        | Description                                                           | Example | Default |
+| ------------------------------------ | ------------------------------------------------ | --------------------------------------------------------------------- | ------- | ------- |
+| OIDC_PROVIDER_CERN_CLIENT_ID         | RUCIO_WEBUI_OIDC_PROVIDER_CERN_CLIENT_ID         | The client id for the webui registered on the OIDC Provider dashboard |         |         |
+| OIDC_PROVIDER_CERN_CLIENT_SECRET     | RUCIO_WEBUI_OIDC_PROVIDER_CERN_CLIENT_SECRET     | The client secret for the webui obtained from the OIDC Provider       |         |         |
+| OIDC_PROVIDER_CERN_AUTHORIZATION_URL | RUCIO_WEBUI_OIDC_PROVIDER_CERN_AUTHORIZATION_URL | The authorization URL for the OIDC Provider                           |         |         |
+| OIDC_PROVIDER_CERN_TOKEN_URL         | RUCIO_WEBUI_OIDC_PROVIDER_CERN_TOKEN_URL         | The token endpoint for the OIDC Provider                              |         |         |
+| OIDC_PROVIDER_CERN_REFRESH_TOKEN_URL | RUCIO_WEBUI_OIDC_PROVIDER_CERN_REFRESH_TOKEN_URL | The refresh token endpoint                                            |         |         |
+| OIDC_PROVIDER_CERN_USERINFO_URL      | RUCIO_WEBUI_OIDC_PROVIDER_CERN_USERINFO_URL      | The URL to obtain user info from the OIDC Provider                    |         |         |
+| OIDC_PROVIDER_CERN_REDIRECT_URL      | RUCIO_WEBUI_OIDC_PROVIDER_CERN_REDIRECT_URL      | The redirection URL configured on the OIDC Provider                   |         |         |
 
 For each `OIDC Provider` specified in the `OIDC_PROVIDERS` variable, the additional variables need to be specified. The variables should be added in the following format:
 ```export RUCIO_WEBUI_OIDC_PROVIDER_<PROVIDER_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>```. An example for the CERN OIDC provider is shown below:
@@ -47,7 +47,7 @@ For each `OIDC Provider` specified in the `OIDC_PROVIDERS` variable, the additio
 npm install liquidjs
 npm run build
 chmod +x ./dist/generate-env.js
-source .env.base; ./dist/generate-env.js make prod ./.env --write
+source .env.base; ./dist/generate-env.js make dev ./.env --write
 ```
 
 The script will report any errors in the `.env.base` file. If there are no errors, the `.env` file will be generated in the current directory.
