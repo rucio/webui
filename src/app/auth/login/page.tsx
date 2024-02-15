@@ -70,13 +70,12 @@ export default function Login() {
             res = await fetch(rucioX509Endpoint, {
                 method: 'GET',
                 headers: headers,
-                mode: 'no-cors',
             })
         } catch (error) {
             console.log(error)
             return Promise.resolve({
                 status: 'error',
-                message: 'Oops! Did you provide a x509 certificate?',
+                message: 'An error occurred while trying to login with x509 certificate: ' + error,
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
