@@ -50,7 +50,7 @@ export default function Login() {
      */
     const handleX509Submit = async (vo: VO, loginViewModel: LoginViewModel, account?: string | undefined): Promise<AuthViewModel> => {
         const rucioAuthHost = loginViewModel.rucioAuthHost
-        const rucioX509Endpoint = `${rucioAuthHost}/auth/x509`
+        const rucioX509Endpoint = `${rucioAuthHost}/auth/x509/webui`
 
         let requestHeaders: X509AuthRequestHeaders = {
             'X-Rucio-Allow-Return-Multiple-Accounts': true,
@@ -69,7 +69,8 @@ export default function Login() {
         try {
             res = await fetch(rucioX509Endpoint, {
                 method: 'GET',
-                headers: headers
+                headers: headers,
+                mode: 'no-cors',
             })
         } catch (error) {
             console.log(error)
