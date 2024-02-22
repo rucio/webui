@@ -25,6 +25,6 @@
         "templates"
     ],
     "dependencies": {
-        "liquidjs": "^10.10.0"
+        "liquidjs": "^10.10.1"
     }
 }

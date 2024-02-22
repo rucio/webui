@@ -61,6 +61,7 @@ export class WebUIEnvTemplateCompiler {
       'VO_LIST': 'def',
       'VO_DEFAULT': 'def',
       'OIDC_ENABLED': 'false',
+      'ENABLE_SSL': 'false',
       ...this.environmentVariables,
     }
   }
@@ -130,7 +131,7 @@ export class WebUIEnvTemplateCompiler {
     const env = this.environmentVariables
     const errors: EnvValidationError[] = []
 
-    const requiredVariables: string[] = ["rucio_host", "rucio_auth_host", "host", "project_url", "vo_default", "vo_list"]
+    const requiredVariables: string[] = ["rucio_host", "rucio_auth_host", "hostname", "project_url", "vo_default", "vo_list"]
 
     // check if all required variables are set
     requiredVariables.forEach((key) => {
