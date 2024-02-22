@@ -13,20 +13,33 @@ cp .env.template .env.base
 2. Edit the `.env.base` file and add the required environment variables. All the variables **MUST** be prefixed with `RUCIO_WEBUI_`` The variables should be added in the following format:
 ```export RUCIO_WEBUI_<VARIABLE_NAME>=<VARIABLE_VALUE>```
 
-| Variable Name   | Full Name                   | Description                                                 | Example                        | Default |
-| --------------- | --------------------------- | ----------------------------------------------------------- | ------------------------------ | ------- |
-| RUCIO_HOST      | RUCIO_WEBUI_RUCIO_HOST      | URL for the Rucio Server                                    | https://rucio-lb-prod.cern.ch  |         |
-| RUCIO_AUTH_HOST | RUCIO_WEBUI_RUCIO_AUTH_HOST | URL for the Rucio authentication server                     | https://rucio-auth-host.ch:443 |         |
-| HOST            | RUCIO_WEBUI_HOST            | Public URL at which Rucio WebUI will be accessible          | https://rucio-ui.cern.ch       |         |
-| PROJECT_URL     | RUCIO_WEBUI_PROJECT_URL     | Public URL for your project                                 | https://atlas.cern.ch          |         |
-| VO_DEFAULT      | RUCIO_WEBUI_VO_DEFAULT      | Short name for the default VO used for authentication        | def                            | def     |
-| VO_LIST         | RUCIO_WEBUI_VO_LIST         | CSV string containing the list of supported VOs              | def, atl, cms                  | def     |
-| MULTIVO_ENABLED | RUCIO_WEBUI_MULTIVO_ENABLED | Whether to enable multi-VO config (true or false)           | true                           |         |
-| OIDC_ENABLED    | RUCIO_WEBUI_OIDC_ENABLED    | Enable or Disable OIDC Authentication (true or false)       | true                           |         |
-| OIDC_PROVIDERS  | RUCIO_WEBUI_OIDC_PROVIDERS  | CSV string containing names of OIDC Providers               | cern, indigo                   |         |
+| Variable Name   | Full Name                   | Description                                                                             | Example                        | Default |
+|-----------------|-----------------------------|-----------------------------------------------------------------------------------------|--------------------------------|---------|
+| RUCIO_HOST      | RUCIO_WEBUI_RUCIO_HOST      | URL for the Rucio Server                                                                | https://rucio-lb-prod.cern.ch  |         |
+| RUCIO_AUTH_HOST | RUCIO_WEBUI_RUCIO_AUTH_HOST | URL for the Rucio authentication server                                                 | https://rucio-auth-host.ch:443 |         |
+| HOSTNAME        | RUCIO_WEBUI_HOSTNAME        | Public HOSTNAME at which Rucio WebUI will be accessible. It can include the port number | rucio-ui.cern.ch               |         |
+| ENABLE_SSL      | RUCIO_WEBUI_ENABLE_SSL      | Enable or Disable TLS Termination (true or false)                                       | true                           | false   |
+| PROJECT_URL     | RUCIO_WEBUI_PROJECT_URL     | Public URL for your project                                                             | https://atlas.cern.ch          |         |
+| VO_DEFAULT      | RUCIO_WEBUI_VO_DEFAULT      | Short name for the default VO used for authentication                                   | def                            | def     |
+| VO_LIST         | RUCIO_WEBUI_VO_LIST         | CSV string containing the list of supported VOs                                         | def, atl, cms                  | def     |
+| MULTIVO_ENABLED | RUCIO_WEBUI_MULTIVO_ENABLED | Whether to enable multi-VO config (true or false)                                       | true                           |         |
+| OIDC_ENABLED    | RUCIO_WEBUI_OIDC_ENABLED    | Enable or Disable OIDC Authentication (true or false)                                   | true                           |         |
+| OIDC_PROVIDERS  | RUCIO_WEBUI_OIDC_PROVIDERS  | CSV string containing names of OIDC Providers                                           | cern, indigo                   |         |
 
 For each `VO` specified in the `VO_LIST` variable, the additional variables need to be specified. The variables should be added in the following format:
 ```export RUCIO_WEBUI_VO_<VO_SHORT_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>```. An example for the default VO is shown below:
+
+For each `VO` specified in the `VO_LIST` variable, additional variables need to be specified. These variables should be added in the following format:
+```RUCIO_WEBUI_VO_<VO_SHORT_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>```. An example for the default VO is shown below:
+| Variable Name         | Full Name                         | Description                                                               | Example      | Default |
+|-----------------------|-----------------------------------|---------------------------------------------------------------------------|--------------|---------|
+| VO_DEF_NAME           | RUCIO_WEBUI_VO_DEF_NAME           | Full name of the default VO                                               | default      |         |
+| VO_DEF_LOGO           | RUCIO_WEBUI_VO_DEF_LOGO           | URL to the logo of the default VO that will be rendered on the login page |              |         |
+| VO_DEF_OIDC_ENABLED   | RUCIO_WEBUI_VO_DEF_OIDC_ENABLED   | Enable or Disable OIDC Authentication for the default VO (true or false)  | true         |         |
+| VO_DEF_OIDC_PROVIDERS | RUCIO_WEBUI_VO_DEF_OIDC_PROVIDERS | CSV string containing names of OIDC Providers for the default VO          | cern, indigo |         |
+
+For each `OIDC Provider` specified in the `OIDC_PROVIDERS` variable, the additional variables need to be specified. The variables should be added in the following format:
+```export RUCIO_WEBUI_OIDC_PROVIDER_<PROVIDER_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>```. An example for the CERN OIDC provider is shown below:
 
 | Variable Name                        | Full Name                                        | Description                                                           | Example | Default |
 | ------------------------------------ | ------------------------------------------------ | --------------------------------------------------------------------- | ------- | ------- |
@@ -38,13 +51,10 @@ For each `VO` specified in the `VO_LIST` variable, the additional variables need
 | OIDC_PROVIDER_CERN_USERINFO_URL      | RUCIO_WEBUI_OIDC_PROVIDER_CERN_USERINFO_URL      | The URL to obtain user info from the OIDC Provider                    |         |         |
 | OIDC_PROVIDER_CERN_REDIRECT_URL      | RUCIO_WEBUI_OIDC_PROVIDER_CERN_REDIRECT_URL      | The redirection URL configured on the OIDC Provider                   |         |         |
 
-For each `OIDC Provider` specified in the `OIDC_PROVIDERS` variable, the additional variables need to be specified. The variables should be added in the following format:
-```export RUCIO_WEBUI_OIDC_PROVIDER_<PROVIDER_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>```. An example for the CERN OIDC provider is shown below:
-
 3. Run the `generate_env.js` script to generate the `.env` file for the WEBUI. You can switch between `dev` and `prod` modes.
 
 ```bash
-npm install liquidjs
+npm install
 npm run build
 chmod +x ./dist/generate-env.js
 source .env.base; ./dist/generate-env.js make dev ./.env --write
