@@ -34,6 +34,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                     "text-right"
                 )}
                 href="/accountsettings"
+                prefetch={false}
             >
                 <HiCog className="text-3xl text-gray-600 dark:text-gray-100 shrink-0" />
                 <span>
@@ -58,6 +59,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                                 )}
                                 key={index}
                                 href="/switchaccount"
+                                prefetch={false}
                             >
                                 <HiSwitchHorizontal className="text-2xl dark:text-gray-100 shrink-0" />
                                 <span>
@@ -78,6 +80,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                     "w-64 sm:w-96"
                 )}
                 href="/api/auth/logout"
+                prefetch={false}
             >
                 <b>Logout</b> <HiLogout className="text-3xl shrink-0" />
             </Link>
