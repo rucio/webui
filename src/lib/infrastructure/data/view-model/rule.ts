@@ -1,4 +1,4 @@
-import { AccountInfo, DIDLong, DIDType, Rule } from "@/lib/core/entity/rucio";
+import { AccountInfo, DIDLong, DIDType, Rule, RuleState } from "@/lib/core/entity/rucio";
 import { RulePageLockEntry, RuleMeta } from "@/lib/core/entity/rucio";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 import { DIDName, RSEName } from "./create-rule";
@@ -23,4 +23,22 @@ export interface RuleSummaryViewModel extends BaseViewModel {
     comment: string
     approval: boolean
     accountInfo: AccountInfo
+}
+
+
+export function generateEmptyRuleViewModel() {
+    const emptyRuleModel: RuleViewModel = {
+        status: 'error',
+        id: '',
+        name: '',
+        account: '',
+        rse_expression: '',
+        created_at: '',
+        remaining_lifetime: 0,
+        state: RuleState.UNKNOWN,
+        locks_ok_cnt: 0,
+        locks_replicating_cnt: 0,
+        locks_stuck_cnt: 0,
+    }
+    return emptyRuleModel;
 }
