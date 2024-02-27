@@ -2,7 +2,7 @@ import { injectable } from 'inversify'
 import { BaseSingleEndpointStreamingUseCase } from '@/lib/sdk/usecase'
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models'
 
-import {
+import type {
     ListRulesForAccountError,
     ListRulesForAccountRequest,
     ListRulesForAccountResponse,
@@ -32,6 +32,7 @@ export default class ListRulesForAccountUseCase
     constructor(
         protected readonly presenter: ListRulesForAccountOutputPort,
         private readonly gateway: RSEGatewayOutputPort,
+        private requestModel: ListRulesForAccountRequest, 
     ) {
         super(presenter)
     }
@@ -47,6 +48,7 @@ export default class ListRulesForAccountUseCase
             AuthenticatedRequestModel<ListRulesForAccountRequest>
         >,
     ): Promise<ListRulesForAccountError | undefined> {
+        this.requestModel = request
         return Promise.resolve(undefined)
     }
 
@@ -88,7 +90,12 @@ export default class ListRulesForAccountUseCase
                 data: errorModel,
             }
         }
-
+        
+        // TODO 
+        // let validStream = true
+        // dto.account != this.requestModel.account ? validStream = false : null
+        // dto.rse_expression != this.requestModel.rseExpression ? validStream = false : null
+        
         const responseModel: ListRulesForAccountResponse = {
             ...dto,
             status: 'success',
