@@ -32,7 +32,7 @@ export default class ListRulesForAccountUseCase
     constructor(
         protected readonly presenter: ListRulesForAccountOutputPort,
         private readonly gateway: RSEGatewayOutputPort,
-        private requestModel: ListRulesForAccountRequest, 
+        private requestModel: ListRulesForAccountRequest | undefined = undefined, 
     ) {
         super(presenter)
     }
@@ -90,7 +90,7 @@ export default class ListRulesForAccountUseCase
                 data: errorModel,
             }
         }
-        
+
         // TODO 
         // let validStream = true
         // dto.account != this.requestModel.account ? validStream = false : null

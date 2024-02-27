@@ -21,6 +21,7 @@ const CONTROLLERS = {
     LIST_DATASET_REPLICAS: Symbol.for("ListDatasetReplicasController"),
     LIST_FILE_REPLICAS: Symbol.for("ListFileReplicasController"),
     LIST_RSES: Symbol.for("ListRSEsController"),
+    LIST_RULES_FOR_ACCOUNT: Symbol.for("ListRulesForAccountController"),
     LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsController"),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for("ListSubscriptionRuleStatesController"),
     LOGIN_CONFIG: Symbol.for("LoginConfigController"),

@@ -19,6 +19,7 @@ const INPUT_PORT = {
     LIST_DATASET_REPLICAS: Symbol.for("ListDatasetReplicasInputPort"),
     LIST_FILE_REPLICAS: Symbol.for("ListFileReplicasInputPort"),
     LIST_RSES: Symbol.for("ListRSEsInputPort"),
+    LIST_RULES_FOR_ACCOUNT: Symbol.for("ListRulesForAccountInputPort"),
     LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsInputPort"),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for("ListSubscriptionRuleStatesInputPort"),
     LOGIN_CONFIG: Symbol.for("LoginConfigInputPort"),
