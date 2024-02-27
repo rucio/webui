@@ -21,6 +21,7 @@ const USECASE_FACTORY = {
     LIST_DATASET_REPLICAS: Symbol.for("Factory<ListDatasetReplicasUseCase>"),
     LIST_FILE_REPLICAS: Symbol.for("Factory<ListFileReplicasUseCase>"),
     LIST_RSES: Symbol.for("Factory<ListRSEsUseCase>"),
+    LIST_RULES_FOR_ACCOUNT: Symbol.for("Factory<ListRulesForAccountUseCase>"),
     LIST_SUBSCRIPTIONS: Symbol.for("Factory<ListSubscriptionsUseCase>"),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for("Factory<ListSubscriptionRuleStatesUseCase>"),
     LOGIN_CONFIG: Symbol.for("Factory<LoginConfigUseCase>"),
