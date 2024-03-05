@@ -15,7 +15,7 @@ import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule'
 
 import { BaseStreamableDTO } from '@/lib/sdk/dto'
 import { RuleDTO } from '@/lib/core/dto/rule-dto'
-import type RSEGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output-port'
+import type RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output-port'
 
 @injectable()
 export default class ListRulesForAccountUseCase
@@ -31,7 +31,7 @@ export default class ListRulesForAccountUseCase
 {
     constructor(
         protected readonly presenter: ListRulesForAccountOutputPort,
-        private readonly gateway: RSEGatewayOutputPort,
+        private readonly gateway: RuleGatewayOutputPort,
         private requestModel: ListRulesForAccountRequest | undefined = undefined, 
     ) {
         super(presenter)

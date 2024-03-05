@@ -20,6 +20,7 @@ import { Container } from 'inversify'
 import ListRulesForAccountUseCase from "@/lib/core/use-case/list-rules-for-account-usecase"
 
 import ListRulesForAccountPresenter from "@/lib/infrastructure/presenter/list-rules-for-account-presenter"
+import RuleGateway from "../../gateway/rule-gateway/rule-gateway"
 
 
 
@@ -31,7 +32,7 @@ export default class ListRulesForAccountFeature extends BaseStreamableFeature<
     RuleViewModel
 > {
     constructor(appContainer: Container) {
-        const ruleGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RULE)
+        const ruleGateway = appContainer.get<RuleGateway>(GATEWAYS.RULE)
         
         const symbols: IOCSymbols = {
             CONTROLLER: CONTROLLERS.LIST_RULES_FOR_ACCOUNT,

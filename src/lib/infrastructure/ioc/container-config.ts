@@ -62,6 +62,7 @@ import RuleGatewayOutputPort from "@/lib/core/port/secondary/rule-gateway-output
 import RuleGateway from "../gateway/rule-gateway/rule-gateway";
 import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feature";
 import GetAccountInfoFeature from "./features/get-account-info-feature";
+import ListRulesForAccountFeature from "./features/list-rules-for-account-feature";
 
 
 /**
@@ -99,6 +100,7 @@ loadFeaturesSync(appContainer, [
     new ListDIDRulesFeature(appContainer),
     new ListDatasetReplicasFeature(appContainer),
     new ListFileReplicasFeature(appContainer),
+    new ListRulesForAccountFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
 ])
 
