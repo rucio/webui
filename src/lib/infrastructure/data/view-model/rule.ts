@@ -2,6 +2,7 @@ import { AccountInfo, DIDLong, DIDType, Rule, RuleState } from "@/lib/core/entit
 import { RulePageLockEntry, RuleMeta } from "@/lib/core/entity/rucio";
 import { BaseViewModel } from "@/lib/sdk/view-models";
 import { DIDName, RSEName } from "./create-rule";
+import { ListDIDsViewModel } from "./list-did";
 import { RSEAccountUsageLimitViewModel } from "./rse";
 
 export interface RuleViewModel extends Rule, BaseViewModel {}
@@ -11,7 +12,7 @@ export interface RuleSummaryViewModel extends BaseViewModel {
     DIDList: Array<DIDName>
     RSEList: Array<RSEName>
     RSEViewModels: Array<RSEAccountUsageLimitViewModel>
-    DIDViewModels: Array<DIDLong>
+    DIDViewModels: Array<ListDIDsViewModel>
     expirydate: Date
     lifetime: number
     notifications: boolean

@@ -1,4 +1,4 @@
-import { AccountType } from '@/lib/core/entity/rucio'
+import { AccountStatus, AccountType } from '@/lib/core/entity/rucio'
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule'
 import { StoryFn, Meta } from '@storybook/react'
 import { fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel } from 'test/fixtures/table-fixtures'
@@ -37,11 +37,15 @@ SummaryPage.args = {
         comment: "",
         accountInfo: {
             account: "root",
+            accountStatus: AccountStatus.ACTIVE,
             accountType: AccountType.USER,
             email: "",
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
 
-        }
+        },
+        lifetime: 0,
+        takeSamples: false,
+        approval: false,
     } as RuleSummaryViewModel,
 }
