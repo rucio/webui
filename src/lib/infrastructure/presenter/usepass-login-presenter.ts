@@ -35,7 +35,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
         if(role) {
             viewModel.role = role;
         } else {
-            viewModel.status = 'cannot_determine_account_role'
+            viewModel.role = Role.USER
         }
 
         const sessionUser: SessionUser = {
