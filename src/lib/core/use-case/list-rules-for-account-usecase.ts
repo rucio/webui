@@ -71,10 +71,14 @@ export default class ListRulesForAccountUseCase
             code: error.errorCode,
         } as ListRulesForAccountError
     }
+    
+    sayHelloToEraldo() {
+        console.log('Hello Eraldo')
+    }
 
     processStreamedData(dto: RuleDTO): {
         data: ListRulesForAccountResponse | ListRulesForAccountError
-        status: 'success' | 'error'
+        status: 'success' | 'error' | 'ignore'
     } {
         if (dto.status === 'error') {
             const errorModel: ListRulesForAccountError = {
@@ -90,11 +94,21 @@ export default class ListRulesForAccountUseCase
                 data: errorModel,
             }
         }
+        // TODO Apply filters
 
-        // TODO 
-        // let validStream = true
-        // dto.account != this.requestModel.account ? validStream = false : null
-        // dto.rse_expression != this.requestModel.rseExpression ? validStream = false : null
+        if( dto.state != this.requestModel?.ruleState) {
+            return {
+                status: 'ignore',
+                data: {
+                    status: 'error',
+                    code: 403,
+                    message: `Failed filter ${dto.state} != ${this.requestModel?.ruleState}`,
+                    name: 'Failed Rule State Filter',
+                } as ListRulesForAccountError
+            }
+        }
+
+        // TODO add remaining filters
         
         const responseModel: ListRulesForAccountResponse = {
             ...dto,

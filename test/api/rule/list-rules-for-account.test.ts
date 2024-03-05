@@ -54,7 +54,7 @@ describe("List DID Rules Feature tests", () => {
 
         const recievedData: string[] = await collectStreamedData<string>(res)
 
-        expect(recievedData).toHaveLength(3);
+        expect(recievedData).toHaveLength(2);
 
         // check if all rule states in received data are RuleState.OK
         for (const rule of recievedData) {

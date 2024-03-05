@@ -16,6 +16,7 @@ import { BaseDTO, BaseStreamableDTO } from './dto'
 import { BaseStreamingPostProcessingPipelineElement, BaseFinalResponseModelValidatorPipelineElement, BasePostProcessingPipelineElement } from './postprocessing-pipeline-elements'
 import { BaseStreamingPresenter } from './presenter'
 import { BaseViewModel } from './view-models'
+import { el } from '@faker-js/faker'
 
 /**
  * A type that represents a simple use case that does not require authentication.
@@ -384,7 +385,7 @@ export abstract class BaseStreamingUseCase<
      */
     abstract processStreamedData(dto: TStreamDTO): {
         data: TResponseModel | TErrorModel
-        status: 'success' | 'error'
+        status: 'success' | 'error' | 'ignore'
     }
 
     _transform(
@@ -396,6 +397,8 @@ export abstract class BaseStreamingUseCase<
         if (status === 'success') {
             const responseModel = data as TResponseModel
             callback(null, responseModel)
+        } else if (status === 'ignore') {
+            callback()
         } else {
             const errorModel = data as TErrorModel
             callback(null, errorModel)
