@@ -1,12 +1,9 @@
-'use client';
+'use client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import "@/component-library/outputtailwind.css";
-import "reflect-metadata";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Layout as LayoutStory } from '@/component-library/Pages/Layout/Layout';
-
-
-const queryClient = new QueryClient();
+import '@/component-library/outputtailwind.css'
+import 'reflect-metadata'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { RucioAppLayout } from './rucio-app-layout'
 
 
 export default function RootLayout({
@@ -14,19 +11,10 @@ export default function RootLayout({
 }: {
     children: React.ReactNode
 }) {
-
     return (
-        <LayoutStory
-            LVM={{
-                accountActive: "test",
-                accountsPossible: ["test", "test2"],
-                rucioProjectLink: "rucio.cern.ch",
-                experimentProjectLink: "atlas.cern",
-            }}
-        >
-            <QueryClientProvider client={queryClient}>
-                {children}
-            </QueryClientProvider>
-        </LayoutStory>
+        <QueryClientProvider client={new QueryClient()}>
+            <RucioAppLayout>{children}</RucioAppLayout>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     )
 }

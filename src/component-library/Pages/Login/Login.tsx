@@ -116,12 +116,15 @@ export const Login = ({
                 } />
             </Collapsible>
             <div className="text-center dark:text-white">
-                <H1 className="mt-4 mb-2">Rucio Login</H1>
+                <H1 className="mt-4 mb-2">Rucio Login</H1> 
             </div>
 
-            <form
+            <div
                 className="flex flex-col space-y-2"
-                onSubmit={e => { e.preventDefault() }} // TODO handle proper submit!
+                onSubmit={ (e) => { 
+                        e.preventDefault()
+                    }
+                } // TODO handle proper submit!
             >
                 <Tabs
                     tabs={loginViewModel.voList.map((vo) => vo.name)}
@@ -171,7 +174,7 @@ export const Login = ({
                         setShowUserPassLoginForm(!showUserPassLoginForm)
                     }
                     } />
-
+                    <form>
                     <fieldset
                         className={twMerge(
                             "flex flex-col space-y-2",
@@ -183,6 +186,7 @@ export const Login = ({
                     >
                         <div
                             className={twMerge("flex flex-col space-y-1")}
+
                         >
                             <LabelledInput
                                 label="Username"
@@ -198,12 +202,13 @@ export const Login = ({
                             <LabelledInput
                                 label="Account"
                                 idinput="account-input"
-                                updateFunc={(data: string) => { setAccount(data) }}
+                                updateFunc={(data: string) => { setAccount(data) }}                               
                             />
                         </div>
                         <Button
                             label="Login"
                             type="submit"
+                            role="button"
                             onClick={async () => {
                                 await handleUserPassSubmit(
                                     username,
@@ -212,8 +217,9 @@ export const Login = ({
                                     account
                                 )
                             }}
-                        />
+                        />             
                     </fieldset>
+                    </form>
                     <fieldset
                         className={twMerge(
                             "mx-2 md:mx-10",
@@ -229,7 +235,7 @@ export const Login = ({
                         />
                     </fieldset>
                 </div>
-            </form >
+            </div >
         </div >
     )
 }
