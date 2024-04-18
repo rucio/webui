@@ -28,15 +28,18 @@ export const Layout = (
     const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
     const [isProfileOpen, setIsProfileOpen] = useState(false)
 
-    const SearchDropdown = forwardRef(function SearchDropdown
-        (
-            props: {
+    /* Add contants with state for each section if it is clicked or not*/
+
+    const [isRulesDropDown, setIsRulesDropDown] = useState(false)
+    const [isMoreDropDown, setIsMoreDropDown] = useState(false)
+
+    const SearchDropdown = forwardRef(function SearchDropdown(
+        props: {
                 inputSelected: boolean,
                 searchstring: string,
             },
             ref: React.ForwardedRef<HTMLDivElement>
         ) {
-
         const [isMouseOver, setIsMouseOver] = useState(false)
         const LinkElem = (props: { href: string, children: React.ReactNode }) => {
             return (
@@ -125,7 +128,6 @@ export const Layout = (
         document.addEventListener("mousedown", handleClickOutside)
     }, [searchMenuRef])
 
-
     // images to be returned by static nextjs
     return (
         <div
@@ -162,7 +164,7 @@ export const Layout = (
                         </a>
                         <a className="bg-purple-500 w-12 h-12" href={props.LVM.experimentProjectLink} />
                     </span>
-                    <span className="hidden md:visible md:flex space-x-4 items-center">
+                    <span className="hidden md:visible md:flex space-x-12 items-center pl-2 pr-2">
                         <span className="relative">
                             <input
                                 className={twMerge(
@@ -172,22 +174,52 @@ export const Layout = (
                                 placeholder="Search"
                                 onFocus={() => setIsSearching(true)}
                                 // onBlur={() => setIsSearching(false)}
-                                onChange={(e) => setSearchString(e.target.value)}
+                                onChange={e => setSearchString(e.target.value)}
                                 ref={searchMenuInputRef}
                             />
-                            <SearchDropdown inputSelected={isSearching} searchstring={searchString} ref={searchMenuRef} />
+                            <SearchDropdown
+                                inputSelected={isSearching}
+                                searchstring={searchString}
+                                ref={searchMenuRef}
+                            />
                         </span>
-                        <HeaderLinks href="/rule/create" onFocus={() => setIsSearching(false)}>Create Rule</HeaderLinks>
-                        <HeaderLinks href="/did/list">List DIDs</HeaderLinks>
-                        <HeaderLinks href="/rule/list">List Rules</HeaderLinks>
-                    </span>
-                    <span className="flex space-x-2 items-end relative">
-                        <a
-                            className="hidden md:block text-gray-100"
-                            href="/notifications"
+                        <HeaderLinks
+                            href="/did/list"
+                            className="w-full pt-2 pb-2 text-gray-100 text-left"
+                            
                         >
-                            <HiBell className="text-4xl" />
-                        </a>
+                           DIDs
+                        </HeaderLinks>
+                        <HeaderLinks
+                            href="/rse/list"
+                            className="w-full pt-2  pb-2 text-gray-100 text-center"
+                        >
+                            RSEs
+                        </HeaderLinks>
+
+                        <button
+                            className="w-full pt-2 pb-2 text-gray-100 text-center"
+                            onClick={() => {
+                                setIsRulesDropDown(!isRulesDropDown)
+                                if (isMoreDropDown)
+                                {setIsMoreDropDown(!isMoreDropDown) }
+                            }}
+                        >
+                            Rules
+                        </button>
+                        <button
+                            className="w-full pt-2 pb-2 text-gray-100 text-center"
+                            onClick={() => {
+                                setIsMoreDropDown(!isMoreDropDown) 
+                                if(isRulesDropDown){
+                                setIsRulesDropDown(!isRulesDropDown)}
+                            }}
+                        >
+                            ...
+                        </button>
+                    </span>
+
+                    <span className="flex space-x-2 items-end relative pl-2 pr-2">
                         <button
                             className="text-gray-100 flex items-center"
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -204,14 +236,95 @@ export const Layout = (
                         />
                     </span>
                 </nav>
+
+                <Collapsible showIf={isRulesDropDown} className="bg-gray-800">
+                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600">
+                        <HeaderLinks
+                            href="/rule/create"
+                            className="w-full pt-2 text-gray-100  text-center"
+                        >
+                            Create Rule
+                        </HeaderLinks>
+                        <HeaderLinks
+                            href="/rule/list"
+                            className="w-full pt-2 pb-2  text-gray-100 text-center"
+                        >
+                            List Rules
+                        </HeaderLinks>
+                    </nav>
+                </Collapsible>
+                <Collapsible showIf={isMoreDropDown} className="bg-gray-800 w-full">
+                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600">
+                        <HeaderLinks
+                            href="/subscription/list"
+                            className="w-full pt-2 pb-2  text-gray-100 text-center"
+                        >
+                            Subscription
+                        </HeaderLinks>
+                    </nav>
+                </Collapsible>
+
                 <Collapsible showIf={isHamburgerOpen}>
-                    <nav
-                        className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 "
-                    >
-                        <HeaderLinks href="/rule/create" className="w-full pt-2">Create Rule</HeaderLinks>
-                        <HeaderLinks href="/did/list" className="w-full pt-2">List DIDs</HeaderLinks>
-                        <HeaderLinks href="/rule/list" className="w-full pt-2">List Rules</HeaderLinks>
-                        <HeaderLinks href="/notifications" className="w-full pt-2"><span className="flex justify-between items-center">Notifications <HiBell /></span></HeaderLinks>
+                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 ">
+                        <HeaderLinks
+                            href="/did/list"
+                            className="w-full pt-2  text-gray-100 text-left"
+                        >
+                            List DIDs
+                        </HeaderLinks>
+                        <HeaderLinks
+                            href="/rse/list"
+                            className="w-full pt-2  text-gray-100 text-left"
+                        >
+                            List RSEs
+                        </HeaderLinks>
+
+                        <button
+                            className="w-full pt-2 text-gray-100 text-left"
+                            onClick={() => {
+                                setIsRulesDropDown(!isRulesDropDown)
+                                if (isMoreDropDown)
+                                {setIsMoreDropDown(!isMoreDropDown) }
+                            }}
+                        >
+                            Rules
+                        </button>
+                        <Collapsible showIf={isRulesDropDown} className='w-full'>
+                            <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 ">
+                                <HeaderLinks
+                                    href="/rule/create"
+                                    className="w-full pt-2 text-gray-100 text-left"
+                                >
+                                    Create Rule
+                                </HeaderLinks>
+                                <HeaderLinks
+                                    href="/rule/list"
+                                    className="w-full pt-2  text-gray-100 text-left"
+                                >
+                                    List Rules
+                                </HeaderLinks>
+                            </nav>
+                        </Collapsible>
+                        <button
+                            className="w-full pt-1 pb-1 text-gray-100 text-left"
+                            onClick={() => {
+                                setIsMoreDropDown(!isMoreDropDown) 
+                                if(isRulesDropDown){
+                                    setIsRulesDropDown(!isRulesDropDown)}
+                            }}
+                        >
+                            ...
+                        </button>
+                        <Collapsible showIf={isMoreDropDown} className="w-full">
+                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 ">
+                        <HeaderLinks
+                            href="/subscription/list"
+                            className="w-full pt-2 pb-2  text-gray-100 text-left"
+                        >
+                            Subscription
+                        </HeaderLinks>
+                    </nav>
+                </Collapsible>
                     </nav>
                 </Collapsible>
             </header>

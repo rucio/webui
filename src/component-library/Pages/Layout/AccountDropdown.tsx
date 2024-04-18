@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge"
-import { ForwardedRef, forwardRef } from "react"
+import { ForwardedRef, forwardRef, useState } from "react"
 import { HiCog, HiSwitchHorizontal, HiLogout } from "react-icons/hi"
 import Link from "next/link"
 
@@ -58,7 +58,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                                     "text-right"
                                 )}
                                 key={index}
-                                href="/switchaccount"
+                                href="/api/account/switch"
                                 prefetch={false}
                             >
                                 <HiSwitchHorizontal className="text-2xl dark:text-gray-100 shrink-0" />
