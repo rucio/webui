@@ -2487,6 +2487,11 @@ html {
     background-color: rgb(190 24 93 / var(--tw-bg-opacity));
   }
 
+  .dark\:bg-pink-900 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(131 24 67 / var(--tw-bg-opacity));
+  }
+
   .dark\:bg-purple-600 {
     --tw-bg-opacity: 1;
     background-color: rgb(147 51 234 / var(--tw-bg-opacity));
@@ -2795,6 +2800,10 @@ html {
     display: none;
   }
 
+  .sm\:w-10 {
+    width: 2.5rem;
+  }
+
   .sm\:w-24 {
     width: 6rem;
   }
@@ -3054,8 +3063,20 @@ html {
     grid-column: span 2 / span 2;
   }
 
+  .lg\:block {
+    display: block;
+  }
+
+  .lg\:hidden {
+    display: none;
+  }
+
   .lg\:w-32 {
     width: 8rem;
+  }
+
+  .lg\:w-36 {
+    width: 9rem;
   }
 
   .lg\:w-48 {
