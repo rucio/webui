@@ -41,7 +41,7 @@ export const PageDIDDatasetReplicas = (
                                 target="_blank"
                                 rel="noreferrer"
                                 className={twMerge(
-                                    "dark:text-white",
+                                    "dark:text-text-0 text-text-1000",
                                     "hover:underline"
                                 )}
                             >
@@ -88,7 +88,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right dark:text-white",
+                            "font-mono text-right dark:text-text-0 text-text-1000",
                         )}
                     >
                         {info.row.original.available_files}
@@ -115,7 +115,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right dark:text-white",
+                            "font-mono text-right dark:text-text-0 text-text-1000",
                         )}
                     >
                         <Number number={info.row.original.available_bytes} />
@@ -142,7 +142,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right dark:text-white",
+                            "font-mono text-right dark:text-text-0 text-text-1000",
                         )}
                     >
                         <DateTag date={new Date(info.row.original.creation_date)} />
@@ -169,7 +169,7 @@ export const PageDIDDatasetReplicas = (
                     <span
                         className={twMerge(
                             "flex flex-row justify-end pr-2",
-                            "font-mono text-right dark:text-white",
+                            "font-mono text-right dark:text-text-0 text-text-1000",
                         )}
                     >
                         <DateTag date={new Date(info.row.original.last_accessed)} />

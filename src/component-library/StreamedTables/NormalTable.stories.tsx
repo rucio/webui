@@ -29,7 +29,7 @@ NormalTable.args = {
             id: "key",
             cell: (info) => {
                 return (
-                    <span className={twMerge("dark:text-white")}>
+                    <span className={twMerge("dark:text-text-0 text-text-1000")}>
                         {info.getValue()}
                     </span>
                 )
@@ -61,12 +61,12 @@ NormalTable.args = {
                     return <DIDTypeTag didtype={val as DIDType} />
                 }
                 else {
-                    return <span className="dark:text-white">{val as string}</span>
+                    return <span className="dark:text-text-0 text-text-1000">{val as string}</span>
                 }
             },
             header: info => {
                 return (
-                    <H3 className="text-left">Value</H3>
+                    <H3 className="text-left dark:text-text-0 text-text-1000">Value</H3>
                 )
             }
         })

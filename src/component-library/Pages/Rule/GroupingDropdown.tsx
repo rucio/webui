@@ -42,7 +42,7 @@ export const Dropdown = forwardRef(function Dropdown
                 onClick={() => { setActive(!isActive) }} ref={buttonRef}
                 className={twMerge(
                     "py-1 px-3 rounded w-full",
-                    "bg-blue-500 hover:bg-blue-600 text-white",
+                    "bg-brand-500 hover:bg-brand-600 text-text-0",
                     "cursor-pointer",
                     "font-bold",
                     "flex justify-center space-x-2"
@@ -54,7 +54,7 @@ export const Dropdown = forwardRef(function Dropdown
             </button>
             <Collapsible showIf={isActive}>
                 <div className="absolute right-0 mt-2 w-56 rounded border dark:border-2 z-[100]" ref={ref}>
-                    <div className="p-1 flex flex-col bg-white dark:bg-gray-700">
+                    <div className="p-1 flex flex-col bg-neutral-0 dark:bg-neutral-700">
                         <ol>
                             {options.map((element: any, index: number) => {
                                 return (
@@ -67,8 +67,8 @@ export const Dropdown = forwardRef(function Dropdown
                                         }}
                                         className={twMerge(
                                             "p-1 rounded select-none cursor-pointer",
-                                            "bg-white hover:bg-gray-200",
-                                            "dark:bg-gray-700 hover:dark:bg-gray-900 dark:text-gray-100"
+                                            "bg-neutral-0 hover:bg-neutral-200",
+                                            "dark:bg-neutral-700 hover:dark:bg-neutral-900 dark:text-text-100"
                                         )}
                                     >
                                         {nodes[index]}

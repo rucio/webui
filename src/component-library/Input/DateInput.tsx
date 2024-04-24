@@ -31,7 +31,7 @@ export const DateInput: React.FC<DateInputProps> = (
                 onChange={(date: Date) => {onChange(date); setChosendate(date)}}
                 className={twMerge(
                     "w-full border rounded-sm pt-2 px-2",
-                    "dark:bg-gray-800 dark:border-2 dark:text-white",
+                    "bg-neutral-100 dark:bg-neutral-800 dark:border-2 dark:text-text-0 text-text-1000",
                     className ?? ""
                 )}
                 dateFormat={"yyyy-MM-dd"}

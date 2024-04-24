@@ -51,7 +51,7 @@ export const Tabs: React.FC<JSX.IntrinsicElements["div"] & {
                 className={twMerge(
                     "flex flex-col sm:flex-row",
                     "list-none font-bold",
-                    "bg-white dark:bg-gray-900",
+                    "bg-neutral-0 dark:bg-neutral-900",
                     "border-0 dark:border-2 dark:rounded-md dark:bg-clip-content",
                     className ?? "",
                 )}
@@ -65,8 +65,8 @@ export const Tabs: React.FC<JSX.IntrinsicElements["div"] & {
                             data-id={index.toString()}
                             className={twMerge(
                                 "flex-1 p-4 hover:cursor-pointer",
-                                "border-b-4 border-blue-500",
-                                "text-blue-500 hover:bg-gray-100 dark:hover:bg-transparent",
+                                "border-b-4 border-brand-500",
+                                "text-brand-500 hover:bg-neutral-100 dark:hover:bg-transparent",
                                 "dark:rounded-b-sm"
                             )}
                             key={index.toString()} // required by react
@@ -97,8 +97,8 @@ export const Tabs: React.FC<JSX.IntrinsicElements["div"] & {
                             data-id={index.toString()}
                             className={twMerge(
                                 "flex-1 p-4 hover:cursor-pointer",
-                                "border-b-4 border-gray-300 dark:border-gray-100",
-                                "text-gray-600 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-transparent"
+                                "border-b-4 border-neutral-300 dark:border-neutral-100",
+                                "text-text-600 dark:text-text-100 hover:bg-neutral-100 dark:hover:bg-transparent"
                             )}
                             key={index.toString()}
                             role="tab"

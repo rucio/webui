@@ -21,13 +21,13 @@ export const LockStateTag: (
         return (
             <span
                 className={twMerge(
-                    lockState === LockState.OK ? "bg-green-300 border-green-700 dark:bg-green-700 dark:border-green-200" : (
-                        lockState === LockState.STUCK ? "bg-amber-300 border-amber-700 dark:bg-amber-700 dark:border-amber-200" : (
-                            lockState === LockState.REPLICATING ? "bg-red-400 border-red-700 dark:bg-red-700 dark:border-red-200" : 
+                    lockState === LockState.OK ? "bg-base-success-300 border-base-success-700 dark:bg-base-success-700 dark:border-base-success-200" : (
+                        lockState === LockState.STUCK ? "bg-base-warning-300 border-base-warning-700 dark:bg-base-warning-700 dark:border-base-warning-200" : (
+                            lockState === LockState.REPLICATING ? "bg-base-error-400 border-base-error-700 dark:bg-base-error-700 dark:border-base-error-200" : 
                                 ""
                         )
                     ),
-                    "text-black dark:text-white font-sans",
+                    "text-text-1000 dark:text-text-0 font-sans",
                     !tiny ? "w-28 rounded border text-center" : "w-6 h-6 rounded-full border text-center select-none shrink-0",
                     "flex justify-center items-center",
                     className ?? "",

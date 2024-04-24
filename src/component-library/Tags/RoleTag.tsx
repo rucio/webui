@@ -10,10 +10,10 @@ export const RoleTag: React.FC<JSX.IntrinsicElements["span"] & {role: Role}> = (
     return (
         <span
             className={twMerge(
-                role === Role.ADMIN ? "bg-fuchsia-200 dark:bg-fuchsia-700" : (
-                    role === Role.USER ? "bg-lime-200 dark:bg-lime-700" : ""
+                role === Role.ADMIN ? "bg-extra-rose-200 dark:bg-extra-rose-700" : (
+                    role === Role.USER ? "bg-brand-200 dark:bg-brand-700" : ""
                 ),
-                "text-black dark:text-white",
+                "text-text-1000 dark:text-text-0",
                 "w-24 h-6 rounded text-center select-none",
                 "flex flex-row justify-center items-center",
             )}

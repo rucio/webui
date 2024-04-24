@@ -14,8 +14,8 @@ export const CheckmarkTag = (
     <span
       className={twMerge(
         "h-6 w-6 rounded-full flex justify-center text-center items-center",
-        val ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" :
-          "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+        val ? "bg-base-success-100 text-base-success-800 dark:bg-base-success-900 dark:text-base-success-300" :
+          "bg-base-error-100 text-base-error-800 dark:bg-base-error-900 dark:text-base-error-300",
         "font-bold",
         className
       )}

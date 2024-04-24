@@ -11,8 +11,8 @@ export const Body: React.FC<BodyProps> = (
             className={twMerge(
                 "flex flex-col space-y-2",
                 "rounded-md p-2 border",
-                "dark:border-2 dark:border-white",
-                "bg-white dark:bg-gray-800",
+                "dark:border-2 dark:border-neutral-0",
+                "bg-neutral-0 dark:bg-neutral-800",
                 className ?? ""
             )}
             {...otherprops}

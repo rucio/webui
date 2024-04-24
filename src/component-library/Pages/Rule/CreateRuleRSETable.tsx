@@ -46,7 +46,7 @@ export const CreateRuleRSETable = (
         }),
         columnHelper.accessor("rse_id", {
             id: "rse_id",
-            header: info => <H3 className="text-left">RSE ID</H3>,
+            header: info => <H3 className="text-left text-text-2 dark:text-text-0">RSE ID</H3>,
             cell: info => <P mono>{info.getValue()}</P>
         }),
         columnHelper.accessor("rse", {
@@ -59,7 +59,7 @@ export const CreateRuleRSETable = (
                     />
                 )
             },
-            cell: info => <P mono className="break-all">{info.getValue()}</P>
+            cell: info => <P mono className="break-all text-text-1000 dark:text-text-0">{info.getValue()}</P>
         }),
         columnHelper.accessor('used_bytes', {
             id: 'used_bytes',
@@ -77,7 +77,7 @@ export const CreateRuleRSETable = (
                 // if value is greater than quota bytes, print in red
                 return (
                     <P mono className={twMerge(
-                        isNoQuotaLeftFunction(info.row) ? "text-red-500 dark:text-red-500 font-bold" : "",
+                        isNoQuotaLeftFunction(info.row) ? "text-base-error-500 dark:text-base-error-500 font-bold" : "text-text-1000 dark:text-text-0",
                         "text-right"
                     )}>
                         <Number number={info.getValue()} />
@@ -105,7 +105,7 @@ export const CreateRuleRSETable = (
                 // if value is greater than quota bytes, print in red
                 return (
                     <P mono className={twMerge(
-                        isNoQuotaLeftFunction(info.row) ? "text-red-500 dark:text-red-500 font-bold" : "",
+                        isNoQuotaLeftFunction(info.row) ? "text-base-error-500 dark:text-base-error-500 font-bold" : "text-text-1000 dark:text-text-0",
                         "text-right"
                     )}>
                         <Number number={info.getValue()} />
@@ -129,7 +129,7 @@ export const CreateRuleRSETable = (
                 )
             },
             cell: (props) => {
-                return <P mono className="text-right"><Number number={props.row.original.bytes_limit} /></P>
+                return <P mono className="text-right text-text-1000 dark:text-text-0"><Number number={props.row.original.bytes_limit} /></P>
             },
             meta: {
                 style: "w-24"

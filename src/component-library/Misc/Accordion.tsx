@@ -32,8 +32,8 @@ export const Accordion: (
                         className={twMerge(
                             "flex items-center justify-between",
                             "w-full py-2",
-                            "text-gray-600 dark:text-gray-100",
-                            "border-b-2 border-gray-300 dark:border-gray-100",
+                            "text-text-600 dark:text-text-100",
+                            "border-b-2 border-neutral-300 dark:border-neutral-100",
                         )}
                         onClick={() => {setAccordion(!accordion) }}
                     >

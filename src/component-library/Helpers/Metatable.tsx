@@ -5,7 +5,7 @@ export const Titleth: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) => 
     return (
         <th
             className={twMerge(
-                "font-bold w-28 md:w-48 pl-1 dark:text-white text-left",
+                "font-bold w-28 md:w-48 pl-1 dark:text-text-0 text-text-1000 text-left",
                 className ?? ""
             )}
             scope={scope ?? "row"}
@@ -20,7 +20,7 @@ export const Contenttd: React.FC<JSX.IntrinsicElements["td"]> = ({ ...props }) =
     return (
         <td
             className={twMerge(
-                "break-all dark:text-gray-100 pr-1",
+                "break-all dark:text-text-100 text-text-1000 pr-1",
                 className ?? ""
             )}
             {...otherprops}
@@ -35,7 +35,7 @@ export const Generaltable: React.FC<JSX.IntrinsicElements["table"]> = ({ ...prop
     return (
         <table
             className={twMerge(
-                "bg-white dark:bg-gray-700",
+                "bg-neutral-0 dark:bg-neutral-700 text-text-1000 dark:text-text-0",
                 "w-full rounded border-separate border-spacing-y-1",
                 className ?? ""
             )}

@@ -58,7 +58,7 @@ export const PageDIDFilereplicas = (
                     <TableFilterDiscrete<ReplicaState>
                         name="File Replica State"
                         keys={Object.values(ReplicaState)}
-                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <ReplicaStateTag state={key} tiny />}
+                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <ReplicaStateTag state={key} tiny />}
                         column={info.column}
                     />
                 )

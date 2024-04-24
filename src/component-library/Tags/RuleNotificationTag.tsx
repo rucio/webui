@@ -21,10 +21,10 @@ export const RuleNotificationTag: (
         return (
             <span
                 className={twMerge(
-                    notificationState === RuleNotification.No ? "bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200" : (
-                        notificationState === RuleNotification.Close ? "bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200" : (
-                            notificationState === RuleNotification.Yes ? "bg-green-300 text-green-800 dark:bg-green-700 dark:text-green-200" : (
-                                notificationState === RuleNotification.Progress ? "bg-blue-300 text-blue-800 dark:bg-blue-700 dark:text-blue-200" :
+                    notificationState === RuleNotification.No ? "bg-neutral-300 text-text-800 dark:bg-neutral-600 dark:text-text-200" : (
+                        notificationState === RuleNotification.Close ? "bg-neutral-300 text-text-800 dark:bg-neutral-600 dark:text-teext-200" : (
+                            notificationState === RuleNotification.Yes ? "bg-base-success-300 text-base-success-800 dark:bg-base-success-700 dark:text-base-success-200" : (
+                                notificationState === RuleNotification.Progress ? "bg-brand-300 text-brand-800 dark:bg-brand-700 dark:text-brand-200" :
                                     ""
                             )
                         )

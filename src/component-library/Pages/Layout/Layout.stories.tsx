@@ -11,7 +11,7 @@ const Template: StoryFn<typeof L> = args => <L {...args} />
 
 export const Layout = Template.bind({})
 Layout.args = {
-    children: <div className="bg-red-500">Layout</div>,
+    children: <div className="bg-base-warning-500">Layout</div>,
     LVM: {
         accountActive: "Galahad",
         accountsPossible: ["Galahad", "Percival", "Gawain", "Gareth"],

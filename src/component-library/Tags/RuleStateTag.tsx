@@ -30,17 +30,17 @@ export const RuleStateTag: (
         return (
             <span
                 className={twMerge(
-                    state === "OK" ? "bg-green-300 border-green-700 dark:bg-green-700 dark:border-green-200" : ( state === "Stuck" ? "bg-red-400 border-red-700 dark:bg-red-700 dark:border-red-200" : (
-                            state === "Replicating" ? "bg-amber-300 border-amber-700 dark:bg-amber-700 dark:border-amber-200" : (
-                                state === "Suspended" ? "bg-gray-300 border-gray-700 dark:bg-gray-700 dark:border-gray-200" : (
-                                    state === "Waiting_Approval" ? "bg-pink-300 border-pink-700 dark:bg-pink-700 dark:border-pink-200" : (
-                                        "bg-blue-300 border-blue-700 dark:bg-blue-700 dark:border-blue-200"
+                    state === "OK" ? "bg-base-success-300 border-base-success-700 dark:bg-base-success-700 dark:border-base-success-200" : ( state === "Stuck" ? "bg-base-error-400 border-base-error-700 dark:bg-base-error-700 dark:border-base-error-200" : (
+                            state === "Replicating" ? "bg-base-warning-300 border-base-warning-700 dark:bg-base-warning-700 dark:border-base-warning-200" : (
+                                state === "Suspended" ? "bg-neutral-300 border-neutral-700 dark:bg-neutral-700 dark:border-neutral-200" : (
+                                    state === "Waiting_Approval" ? "bg-extra-indigo-300 border-extra-indigo-700 dark:bg-extra-indigo-700 dark:border-extra-indigo-200" : (
+                                        "bg-base-info-300 border-base-info-700 dark:bg-base-info-700 dark:border-base-info-200"
                                     )
                                 )
                             )
                         )
                     ),
-                    "text-black dark:text-white underline font-sans",
+                    "text-text-1000 dark:text-text-0 underline font-sans",
                     !tiny ? "w-28 md:w-44 rounded border text-center" : "w-6 h-6 rounded-full border text-center select-none shrink-0",
                     "flex justify-center items-center",
                     className ?? "",

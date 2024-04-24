@@ -20,7 +20,7 @@ export const RulePage = (
             <div
                 className={twMerge(
                     "flex flex-col space-y-2",
-                    "bg-white dark:bg-gray-800"
+                    "bg-neutral-0 dark:bg-neutral-800"
                 )}
                 data-testid={`rule-page-${props.pagenum}`}
             >

@@ -18,7 +18,7 @@ export const DIDMetaView = (
         return (
             <td
                 className={twMerge(
-                    "font-bold w-32 pl-1 dark:text-white",
+                    "font-bold w-32 pl-1 dark:text-text-0",
                     className ?? ""
                 )}
                 aria-label="Key"
@@ -33,7 +33,7 @@ export const DIDMetaView = (
         return (
             <td
                 className={twMerge(
-                    "break-all dark:text-gray-100",
+                    "break-all dark:text-text-100",
                     className ?? ""
                 )}
                 aria-label="Value"
@@ -68,7 +68,7 @@ export const DIDMetaView = (
         >
             <table
                 className={twMerge(
-                    "bg-white dark:bg-gray-700",
+                    "bg-neutral-0 dark:bg-neutral-700",
                     "w-full rounded border-separate border-spacing-y-1"
                 )}
                 aria-label="DID Scopename"
@@ -86,7 +86,7 @@ export const DIDMetaView = (
             </table>
             <table
                 className={twMerge(
-                    "bg-white dark:bg-gray-700",
+                    "bg-neutral-0 dark:bg-neutral-700",
                     "w-full rounded border-separate border-spacing-y-1",
                     meta.did_type === "File" ? "table" : "hidden"
                 )}
@@ -114,7 +114,7 @@ export const DIDMetaView = (
             </table>
             <table
                 className={twMerge(
-                    "bg-white dark:bg-gray-700",
+                    "bg-neutral-0 dark:bg-neutral-700",
                     "w-full rounded border-separate border-spacing-y-1"
                 )}
                 aria-label="Date Information"
@@ -132,7 +132,7 @@ export const DIDMetaView = (
             </table>
             <table
                 className={twMerge(
-                    "bg-white dark:bg-gray-700",
+                    "bg-neutral-0 dark:bg-neutral-700",
                     "w-full rounded border-separate border-spacing-y-1"
                 )}
                 aria-label="DID Information"
@@ -163,7 +163,7 @@ export const DIDMetaView = (
             </table>
             <table
                 className={twMerge(
-                    "bg-white dark:bg-gray-700",
+                    "bg-neutral-0 dark:bg-neutral-700",
                     "w-full rounded border-separate border-spacing-y-1"
                 )}
                 aria-label="Further DID Information"

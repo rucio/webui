@@ -17,9 +17,9 @@ export const TextInput: (
         <input
             className={twMerge(
                 "w-full h-8 px-2 pt-2 ",
-                "dark:border-gray-400 dark:bg-gray-800 dark:text-white ",
+                "dark:border-neutral-400 dark:bg-neutral-800 bg-neutral-0 text-text-1000 dark:text-text-0 ",
                 "border rounded-sm",
-                "dark:border-2 dark:border-white",
+                "dark:border-2 dark:border-neutral-0",
                 props.className ?? ""
             )}
             onKeyDown={(e) => {

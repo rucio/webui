@@ -34,7 +34,7 @@ export const PageDIDRules = (
                         )}
                     >
                         <span
-                            className={twMerge("break-all pl-1 dark:text-white")}
+                            className={twMerge("break-all pl-1 dark:text-text-0 text-text-1000")}
                         >
                             {info.getValue()}
                         </span>
@@ -70,7 +70,7 @@ export const PageDIDRules = (
                     <TableFilterDiscrete<RuleState>
                         name="Rule State"
                         keys={Object.values(RuleState)}
-                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <RuleStateTag state={key} tiny />}
+                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <RuleStateTag state={key} tiny />}
                         column={info.column}
                     />
                 )
@@ -84,7 +84,7 @@ export const PageDIDRules = (
             cell: (info) => {
                 return (
                     <p
-                        className={twMerge("break-all pl-1 dark:text-white")}
+                        className={twMerge("break-all pl-1 dark:text-text-0 text-text-1000")}
                     >
                         {info.getValue()}
                     </p>
@@ -107,7 +107,7 @@ export const PageDIDRules = (
             cell: (info) => {
                 return (
                     <p
-                        className={twMerge("break-all pl-1 dark:text-white")}
+                        className={twMerge("break-all pl-1 dark:text-text-0 text-text-1000")}
                     >
                         {info.getValue()?.name ?? ""}
                     </p>

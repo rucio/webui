@@ -14,7 +14,7 @@ export const TableExternalLink: React.FC<JSX.IntrinsicElements["a"] & { label: s
             className={twMerge(
                 "px-1 rounded",
                 "flex flex-row items-center",
-                "bg-blue-500 hover:bg-blue-600 text-white",
+                "bg-brand-500 hover:bg-brand-600 text-text-0",
                 className ?? "",
             )}
             {...otherprops}

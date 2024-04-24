@@ -39,16 +39,16 @@ export const SubscriptionStateTag: (
         return (
             <span
                 className={twMerge(
-                    state === SubscriptionState.ACTIVE ? "bg-blue-300 border-blue-700 dark:bg-blue-700 dark:border-blue-200" : (
-                        state === SubscriptionState.INACTIVE ? "bg-gray-300 border-gray-700 dark:bg-gray-700 dark:border-gray-200" : (
-                            state === SubscriptionState.NEW ? "bg-teal-300 border-teal-700 dark:bg-teal-700 dark:border-teal-200" : (
-                                state === SubscriptionState.UPDATED ? "bg-green-300 border-green-700 dark:bg-green-700 dark:border-green-200" :
-                                    "bg-red-300 border-red-700 dark:bg-red-700 dark:border-red-200" // broken
+                    state === SubscriptionState.ACTIVE ? "bg-brand-300 border-brand-700 dark:bg-brand-700 dark:border-brand-200" : (
+                        state === SubscriptionState.INACTIVE ? "bg-neutral-300 border-neutral-700 dark:bg-neutral-700 dark:border-neutral-200" : (
+                            state === SubscriptionState.NEW ? "bg-base-info-300 border-base-info-700 dark:bg-base-info-700 dark:border-base-info-200" : (
+                                state === SubscriptionState.UPDATED ? "bg-base-success-300 border-base-success-700 dark:bg-base-success-700 dark:border-base-success-200" :
+                                    "bg-base-error-300 border-base-error-700 dark:bg-base-error-700 dark:border-base-error-200" // broken
 
                             )
                         )
                     ),
-                    "text-black dark:text-white",
+                    "text-text-1000 dark:text-text-0",
                     !tiny ? "w-24 rounded border text-center" : "w-6 h-6 rounded-full border text-center select-none shrink-0",
                     "flex justify-center items-center",
                     className ?? "",

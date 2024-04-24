@@ -25,10 +25,10 @@ export const Alert = ({
         <div 
             className={twMerge(
                 "px-4 py-3 border-l-4",
-                variant === "primary" ? "bg-blue-100 border-blue-500 text-blue-700" : "",
-                variant === "warn" ? "bg-orange-100 border-orange-500 text-orange-700" : "",
-                variant === "success" ? "bg-green-100 border-green-500 text-green-700" : "",
-                variant === "error" ? "bg-red-100 border-red-500 text-red-700" : "",
+                variant === "primary" ? "bg-base-info-100 border-base-info-500 text-base-info-700" : "",
+                variant === "warn" ? "bg-base-warning-100 border-base-warning-500 text-base-warning-700" : "",
+                variant === "success" ? "bg-base-success-100 border-base-success-500 text-base-success-700" : "",
+                variant === "error" ? "bg-base-error-100 border-base-error-500 text-base-error-700" : "",
                 "flex flex-row justify-between items-center",
             )}
         >

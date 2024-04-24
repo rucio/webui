@@ -8,7 +8,7 @@ export const Label = (
         return (
             <label
                 htmlFor={props.label}
-                className="dark:text-white"
+                className="dark:text-text-0 text-text-1000"
             >
                 {props.children}
             </label>

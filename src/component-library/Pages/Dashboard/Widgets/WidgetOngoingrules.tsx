@@ -156,7 +156,7 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
                     {
                         label: "OK",
                         data: rows.map(row => percentify(row.getValue("ok"), row)),
-                        backgroundColor: "#86efac"
+                        backgroundColor: "#bef264"
                     },
                     {
                         label: "Replicating",
@@ -179,7 +179,7 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
         return (
             <div
                 className={twMerge(
-                    "flex flex-col items-center"
+                    "flex flex-col items-center",
                 )}
             >
                 <div
@@ -187,7 +187,7 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
                         "flex flex-col items-center space-y-2"
                     )}
                 >
-                    <H3 className="font-bold">Locks of Ongoing Rules</H3>
+                    <H3 className="font-bold text-text-1000 dark:text-text-100">Locks of Ongoing Rules</H3>
                     <div
                         className={twMerge(
                             "flex flex-row space-x-2"
@@ -197,17 +197,17 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
                         <TableSortUpDown
                             name="OK"
                             column={table.getColumn("ok") as Column<Ongoingrules, number>}
-                            element={<WidgetColourLabel name="OK" colour="bg-green-300" />}
+                            element={<WidgetColourLabel name="OK" colour="bg-base-success-300" />}
                         />
                         <TableSortUpDown
                             name="Replicating"
                             column={table.getColumn("ok") as Column<Ongoingrules, number>}
-                            element={<WidgetColourLabel name="Replicating" colour="bg-amber-300" />}
+                            element={<WidgetColourLabel name="Replicating" colour="bg-base-warning-300" />}
                         />
                         <TableSortUpDown
                             name="Stuck"
                             column={table.getColumn("stuck") as Column<Ongoingrules, number>}
-                            element={<WidgetColourLabel name="Stuck" colour="bg-red-400" />}
+                            element={<WidgetColourLabel name="Stuck" colour="bg-base-error-400" />}
                         />
                     </div>
                 </div>

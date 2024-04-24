@@ -19,7 +19,7 @@ export function TableHeader<T>(props: JSX.IntrinsicElements["thead"] & {
             <tr
                 className={twMerge(
                     "h-16 md:h-12",
-                    "bg-white dark:bg-gray-700",
+                    "bg-neutral-0 dark:bg-neutral-700",
                     "relative",
                     props.tablestyling?.tableHeadRowStyle ?? "",
                 )}

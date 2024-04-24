@@ -38,8 +38,8 @@ export const RSETypeTag: React.FC<RSETypeTagProps> = (
                 "font-bold",
                 !neversmall ? "w-6 md:w-24 rounded-full md:rounded" : "w-24",
                 forcesmall ? "w-6 md:w-6 rounded-full md:rounded-full" : "",
-                rsetype === RSEType.DISK ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300" :
-                    rsetype === RSEType.TAPE ? "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-300" :
+                rsetype === RSEType.DISK ? "bg-extra-emerald-100 text-extra-emerald-800 dark:bg-extra-emerald-900 dark:text-extra-emerald-300" :
+                    rsetype === RSEType.TAPE ? "bg-extra-rose-100 text-extra-rose-800 dark:bg-extra-rose-900 dark:text-extra-rose-300" :
                         "",
                 className ?? ""
             )}

@@ -14,8 +14,8 @@ export const TableInternalLink: React.FC<TableInternalLinkProps> = (
                 "pl-1",
                 "break-all",
                 "hover:underline",
-                "hover:text-blue-600",
-                "dark:text-white dark:hover:text-blue-400",
+                "hover:text-brand-600",
+                "dark:text-brand-100 dark:hover:text-brand-400",
                 "cursor-pointer",
             )}
             {...otherprops}

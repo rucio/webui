@@ -18,7 +18,7 @@ export function NormalTable<T>(props: NormalTableProps<T>) {
     return (
         <table
             className={twMerge(
-                "bg-white dark:bg-gray-700",
+                "bg-neutral-0 dark:bg-neutral-700 dark:text-text-0 text-text-1000",
                 "w-full",
                 "relative",
                 "table-fixed",

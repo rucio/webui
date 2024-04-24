@@ -24,10 +24,10 @@ export function TableBody<T>(props: JSX.IntrinsicElements["tbody"] &
                         key={row.id}
                         className={twMerge(
                             "h-16 md:h-8",
-                            selected ? "bg-blue-200 odd:bg-blue-200" : "bg-white odd:bg-stone-100", // bg normal
-                            selected ? "dark:bg-blue-500 odd:dark:bg-blue-500" : "dark:bg-gray-700 dark:odd:bg-gray-800", // bg dark
-                            selected ? "hover:bg-blue-300  dark:hover:bg-blue-600" : "hover:bg-gray-200 dark:hover:bg-gray-900", // hover (dark and light)
-                            selected ? "border-blue-400 dark:border-blue-700 border" : "", // handle border when selected
+                            selected ? "bg-brand-200 odd:bg-brand-200" : "bg-neutral-0 odd:bg-neutral-100", // bg normal
+                            selected ? "dark:bg-brand-500 odd:dark:bg-brand-500" : "dark:bg-neutral-700 dark:odd:bg-neutral-800", // bg dark
+                            selected ? "hover:bg-brand-300  dark:hover:bg-brand-600" : "hover:bg-neutral-200 dark:hover:bg-neutral-900", // hover (dark and light)
+                            selected ? "border-brand-400 dark:border-brand-700 border" : "", // handle border when selected
                             row.getCanSelect() ? "hover:cursor-pointer" : "hover:cursor-normal", // handle cursor when selectable
                             props.tablestyling?.tableBodyRowStyle ?? "",
                         )}

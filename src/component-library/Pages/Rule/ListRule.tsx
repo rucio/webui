@@ -47,7 +47,7 @@ export const ListRule = (
                         column={info.column}
                         name="Name"
                         placeholder="Filter by RSE Name"
-                        className="ml-1"
+                        className="ml-1 dark:text-text-0 text-text-1000"
                     />
                 )
             },
@@ -61,41 +61,41 @@ export const ListRule = (
         }),
         columnHelper.accessor("account", {
             id: "account",
-            cell: info => <P className="break-all">{info.getValue()}</P>,
+            cell: info => <P className="break-all dark:text-text-0 text-text-1000">{info.getValue()}</P>,
             header: info => {
                 return (
                     <TableFilterString
                         column={info.column}
                         name="Account"
                         placeholder="Filter by Account"
-                        className="ml-1"
+                        className="ml-1 dark:text-text-0 text-text-1000"
                     />
                 )
             },
         }),
         columnHelper.accessor("rse_expression", {
             id: "rse_expression",
-            cell: info => <P className="break-all" mono>{info.getValue()}</P>,
+            cell: info => <P className="break-all dark:text-text-0 text-text-1000" mono>{info.getValue()}</P>,
             header: info => {
                 return (
                     <TableFilterString
                         column={info.column}
                         name="RSE Expression"
                         placeholder="Filter by RSE Expression"
-                        className="ml-1"
+                        className="ml-1 dark:text-text-0 text-text-1000"
                     />
                 )
             },
         }),
         columnHelper.accessor("created_at", {
             id: "created_at",
-            cell: info => <DateTag date={new Date(info.getValue())} className="flex flex-row justify-end" />,
+            cell: info => <DateTag date={new Date(info.getValue())} className="flex flex-row justify-end dark:text-text-0 text-text-1000" />,
             header: info => {
                 return (
                     <TableSortUpDown
                         column={info.column}
                         name="Created At"
-                        className="ml-1"
+                        className="ml-1 dark:text-text-0 text-text-1000"
                         stack
                     />
                 )
@@ -106,13 +106,13 @@ export const ListRule = (
         }),
         columnHelper.accessor("remaining_lifetime", {
             id: "remaining_lifetime",
-            cell: info => <P className="text-right" mono>{info.getValue()}</P>,
+            cell: info => <P className="text-right dark:text-text-0 text-text-1000" mono>{info.getValue()}</P>,
             header: info => {
                 return (
                     <TableSortUpDown
                         column={info.column}
                         name="Lifetime Remaining"
-                        className="ml-1"
+                        className="ml-1 dark:text-text-0 text-text-1000"
                         stack
                     />
                 )
@@ -130,7 +130,7 @@ export const ListRule = (
                         column={info.column}
                         name="State"
                         keys={Object.values(RuleState)}
-                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <RuleStateTag state={key} tiny />}
+                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <RuleStateTag state={key} tiny />}
                         stack
                     />
                 )
@@ -141,13 +141,13 @@ export const ListRule = (
         }),
         columnHelper.accessor("locks_ok_cnt", {
             id: "locks_ok_cnt",
-            cell: info => <P className="text-right">{info.getValue()}</P>,
+            cell: info => <P className="text-right dark:text-text-0 text-text-1000">{info.getValue()}</P>,
             header: info => {
                 return (
                     <TableSortUpDown
                         column={info.column}
                         name="Locks OK Count"
-                        className="ml-1"
+                        className="ml-1 dark:text-text-0 text-text-1000"
                         element={<RuleStateTag state={RuleState.OK} tiny />}
                         stack
                     />
@@ -159,7 +159,7 @@ export const ListRule = (
         }),
         columnHelper.accessor("locks_replicating_cnt", {
             id: "locks_replicating_cnt",
-            cell: info => <P className="text-right">{info.getValue()}</P>,
+            cell: info => <P className="text-right dark:text-text-0 text-text-1000">{info.getValue()}</P>,
             header: info => {
                 return (
                     <TableSortUpDown
@@ -177,7 +177,7 @@ export const ListRule = (
         }),
         columnHelper.accessor("locks_stuck_cnt", {
             id: "locks_stuck_cnt",
-            cell: info => <P className="text-right">{info.getValue()}</P>,
+            cell: info => <P className="text-right dark:text-text-0 text-text-1000">{info.getValue()}</P>,
             header: info => {
                 return (
                     <TableSortUpDown
@@ -234,12 +234,12 @@ export const ListRule = (
                     <fieldset
                         className={twMerge(
                             "w-full rounded",
-                            "bg-gray-200 dark:bg-gray-900",
+                            "bg-neutral-200 dark:bg-neutral-900 dark:text-text-0 text-text-1000",
                         )}
                     >
                         <Generaltable
                             className={twMerge(
-                                "bg-inherit dark:bg-inherit"
+                                "bg-inherit dark:bg-inherit dark:text-text-0 text-text-1000"
                             )}
                         >
                             <tr>
@@ -286,18 +286,18 @@ export const ListRule = (
                                             "flex p-1 rounded justify-start",
                                             "flex-col space-y-2 md:space-y-0",
                                             "md:flex-row md:space-x-2",
-                                            "bg-gray-300 dark:bg-gray-900"
+                                            "bg-neutral-300 dark:bg-neutral-900"
                                         )}
                                     >
                                         <div className="flex flex-row space-x-1 items-baseline">
-                                            <label className="flex-none" htmlFor="from-date">From</label>
+                                            <label className="flex-none dark:text-text-0 text-text-1000" htmlFor="from-date">From</label>
                                             <DateInput
                                                 onchange={date => { setUserdefinequery({ ...userdefinequery, from_date: date }) }}
                                                 id="from-date"
                                             />
                                         </div>
                                         <div className="flex flex-row space-x-1 items-baseline">
-                                            <label className="flex-none" htmlFor="to-date">to</label>
+                                            <label className="flex-none dark:text-text-0 text-text-1000" htmlFor="to-date">to</label>
                                             <DateInput
                                                 onchange={date => { setUserdefinequery({ ...userdefinequery, to_date: date }) }}
                                                 id="to-date"

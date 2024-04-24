@@ -25,7 +25,7 @@ export const NumInput: (
         <input
             type="number"
             value={numvalue > 0 ? numvalue : ""}
-            className="w-full border dark:border-gray-400 rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white dark:border-2"
+            className="w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 text-text-1000 dark:text-text-0 bg-neutral-0 dark:bg-neutral-800 dark:border-2"
             onKeyDown={onEnterkey}
             {...props}
         >

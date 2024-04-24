@@ -47,8 +47,8 @@ export const Layout = (
                     href={props.href}
                     className={twMerge(
                         "w-full p-1 rounded-sm hover:cursor-pointer",
-                        "hover:bg-gray-200 text-gray-800",
-                        "hover:dark:bg-gray-600 dark:bg-slate-800 dark:text-gray-100"
+                        "hover:bg-neutral-200  text-text-800",
+                        "hover:dark:bg-neutral-600 dark:bg-neutral-800 dark:text-text-100"
                     )}
                     onMouseDown={e => { e.preventDefault() }}
 
@@ -65,7 +65,8 @@ export const Layout = (
                     "rounded-md border shadow-md",
                     (props.inputSelected || isMouseOver) ? "visible" : "invisible",
                     "absolute mt-2",
-                    "bg-white dark:bg-slate-800",
+                    "text-text-900 dark:text-text-100",
+                    "bg-neutral-100 dark:bg-neutral-800",
                     "z-[100]"
                 )}
                 onMouseEnter={() => { setIsMouseOver(true) }}
@@ -96,7 +97,7 @@ export const Layout = (
         return (
             <a
                 className={twMerge(
-                    "hover:text-gray-400 font-bold text-l hover:cursor-pointer text-gray-100",
+                    "hover:text-text-400 font-bold text-l hover:cursor-pointer text-text-100",
                     props.className ?? "",
                 )}
                 {...props}
@@ -132,14 +133,14 @@ export const Layout = (
     return (
         <div
             className={twMerge(
-                "dark:bg-gray-900 bg-gray-100",
+                "dark:bg-neutral-900 bg-neutral-100",
                 "h-full min-h-screen",
                 "flex flex-col"
             )}
         >
             <header
                 className={twMerge(
-                    "w-full flex flex-col bg-gray-800 space-y-2 p-2",
+                    "w-full flex flex-col bg-neutral-800 space-y-2 p-2",
                     "md:h-16",
                     "z-[100]"
                 )}
@@ -151,7 +152,7 @@ export const Layout = (
                         className="flex md:hidden"
                     >
                         <button
-                            className="text-gray-100"
+                            className="text-text-100"
                             onClick={() => { setIsHamburgerOpen(!isHamburgerOpen) }}
                         >
                             <HiMenu className="text-4xl" />
@@ -159,17 +160,17 @@ export const Layout = (
                     </span>
 
                     <span className="flex flex-row space-x-2">
-                        <a className="bg-white w-12 h-12 rounded" href={props.LVM.rucioProjectLink}>
+                        <a className="bg-neutral-100 w-12 h-12 rounded" href={props.LVM.rucioProjectLink}>
                             <Image src="/logocropped.svg" alt="Rucio Logo" width={48} height={48}/>
                         </a>
-                        <a className="bg-purple-500 w-12 h-12" href={props.LVM.experimentProjectLink} />
+                        <a className="bg-brand-500 w-12 h-12" href={props.LVM.experimentProjectLink} />
                     </span>
                     <span className="hidden md:visible md:flex space-x-12 items-center pl-2 pr-2">
                         <span className="relative">
                             <input
                                 className={twMerge(
-                                    "p-2 rounded-lg w-48 lg:w-96 bg-gray-600 text-gray-100",
-                                    "focus:bg-white focus:text-black"
+                                    "p-2 rounded-lg w-48 lg:w-96 bg-neutral-600 text-text-100",
+                                    "focus:bg-neutral-100 focus:text-text-900"
                                 )}
                                 placeholder="Search"
                                 onFocus={() => setIsSearching(true)}
@@ -185,20 +186,20 @@ export const Layout = (
                         </span>
                         <HeaderLinks
                             href="/did/list"
-                            className="w-full pt-2 pb-2 text-gray-100 text-left"
+                            className="w-full pt-2 pb-2 text-text-100 hover:text-brand-500 text-left"
                             
                         >
                            DIDs
                         </HeaderLinks>
                         <HeaderLinks
                             href="/rse/list"
-                            className="w-full pt-2  pb-2 text-gray-100 text-center"
+                            className="w-full pt-2  pb-2 text-text-100 hover:text-brand-500 text-center"
                         >
                             RSEs
                         </HeaderLinks>
 
                         <button
-                            className="w-full pt-2 pb-2 text-gray-100 text-center"
+                            className="w-full pt-2 pb-2 text-text-100 hover:text-brand-500 text-center"
                             onClick={() => {
                                 setIsRulesDropDown(!isRulesDropDown)
                                 if (isMoreDropDown)
@@ -208,7 +209,7 @@ export const Layout = (
                             Rules
                         </button>
                         <button
-                            className="w-full pt-2 pb-2 text-gray-100 text-center"
+                            className="w-full pt-2 pb-2 text-text-100 hover:text-brand-500 text-center"
                             onClick={() => {
                                 setIsMoreDropDown(!isMoreDropDown) 
                                 if(isRulesDropDown){
@@ -221,7 +222,7 @@ export const Layout = (
 
                     <span className="flex space-x-2 items-end relative pl-2 pr-2">
                         <button
-                            className="text-gray-100 flex items-center"
+                            className="text-text-100 hover:text-brand-500 flex items-center"
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
                             ref={accountMenuButtonRef}
                         >
@@ -238,26 +239,26 @@ export const Layout = (
                 </nav>
 
                 <Collapsible showIf={isRulesDropDown} className="bg-gray-800">
-                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600">
+                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600">
                         <HeaderLinks
                             href="/rule/create"
-                            className="w-full pt-2 text-gray-100  text-center"
+                            className="w-full pt-2 text-text-100 hover:text-brand-500  text-center"
                         >
                             Create Rule
                         </HeaderLinks>
                         <HeaderLinks
                             href="/rule/list"
-                            className="w-full pt-2 pb-2  text-gray-100 text-center"
+                            className="w-full pt-2 pb-2  text-text-100  hover:text-brand-500 text-center"
                         >
                             List Rules
                         </HeaderLinks>
                     </nav>
                 </Collapsible>
                 <Collapsible showIf={isMoreDropDown} className="bg-gray-800 w-full">
-                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600">
+                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600">
                         <HeaderLinks
                             href="/subscription/list"
-                            className="w-full pt-2 pb-2  text-gray-100 text-center"
+                            className="w-full pt-2 pb-2  text-text-100 hover:text-brand-500 text-center"
                         >
                             Subscription
                         </HeaderLinks>
@@ -265,22 +266,22 @@ export const Layout = (
                 </Collapsible>
 
                 <Collapsible showIf={isHamburgerOpen}>
-                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 ">
+                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600 ">
                         <HeaderLinks
                             href="/did/list"
-                            className="w-full pt-2  text-gray-100 text-left"
+                            className="w-full pt-2  text-text-100 hover:text-brand-500 text-left"
                         >
                             List DIDs
                         </HeaderLinks>
                         <HeaderLinks
                             href="/rse/list"
-                            className="w-full pt-2  text-gray-100 text-left"
+                            className="w-full pt-2  text-text-100 hover:text-brand-500 text-left"
                         >
                             List RSEs
                         </HeaderLinks>
 
                         <button
-                            className="w-full pt-2 text-gray-100 text-left"
+                            className="w-full pt-2 text-text-100 hover:text-brand-500 text-left"
                             onClick={() => {
                                 setIsRulesDropDown(!isRulesDropDown)
                                 if (isMoreDropDown)
@@ -290,23 +291,23 @@ export const Layout = (
                             Rules
                         </button>
                         <Collapsible showIf={isRulesDropDown} className='w-full'>
-                            <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 ">
+                            <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600 ">
                                 <HeaderLinks
                                     href="/rule/create"
-                                    className="w-full pt-2 text-gray-100 text-left"
+                                    className="w-full pt-2 text-text-100 hover:text-brand-500 text-left"
                                 >
                                     Create Rule
                                 </HeaderLinks>
                                 <HeaderLinks
                                     href="/rule/list"
-                                    className="w-full pt-2  text-gray-100 text-left"
+                                    className="w-full pt-2  text-text-100 hover:text-brand-500 text-left"
                                 >
                                     List Rules
                                 </HeaderLinks>
                             </nav>
                         </Collapsible>
                         <button
-                            className="w-full pt-1 pb-1 text-gray-100 text-left"
+                            className="w-full pt-1 pb-1 text-text-100 hover:text-brand-500 text-left"
                             onClick={() => {
                                 setIsMoreDropDown(!isMoreDropDown) 
                                 if(isRulesDropDown){
@@ -316,10 +317,10 @@ export const Layout = (
                             ...
                         </button>
                         <Collapsible showIf={isMoreDropDown} className="w-full">
-                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-gray-600 border-t border-gray-600 ">
+                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600 ">
                         <HeaderLinks
                             href="/subscription/list"
-                            className="w-full pt-2 pb-2  text-gray-100 text-left"
+                            className="w-full pt-2 pb-2  text-text-100 hover:text-brand-500 text-left"
                         >
                             Subscription
                         </HeaderLinks>
@@ -341,7 +342,7 @@ export const Layout = (
                 className={twMerge(
                     "border-t",
                     "h-16 p-2",
-                    "text-gray-500",
+                    "text-text-500",
                     "flex"
                 )}
             >
@@ -360,10 +361,10 @@ export const Layout = (
                         "grid grid-flow-col-dense grid-cols-2 grid-rows-2"
                     )}
                 >
-                    <a href="/docs/api" className="hover:text-blue-500">API</a>
-                    <a href="/privacy" className="hover:text-blue-500">Privacy</a>
-                    <a href="/docs" className="hover:text-blue-500">Docs</a>
-                    <a href="/status" className="hover:text-blue-500">Status</a>
+                    <a href="/docs/api" className="hover:text-brand-500">API</a>
+                    <a href="/privacy" className="hover:text-brand-500">Privacy</a>
+                    <a href="/docs" className="hover:text-brand-500">Docs</a>
+                    <a href="/status" className="hover:text-brand-500">Status</a>
                 </div>
             </footer>
         </div>

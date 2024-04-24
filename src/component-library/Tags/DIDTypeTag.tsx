@@ -32,13 +32,13 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = (
     const colPicker = (didtype: DIDType) => {
         switch (didtype) {
             case DIDType.CONTAINER:
-                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300"
+                return "bg-extra-emerald-100 text-extra-emerald-800 dark:bg-extra-emerald-900 dark:text-extra-emerald-300"
             case DIDType.DATASET:
-                return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
+                return "bg-extra-yellow-100 text-extra-yellow-800 dark:bg-extra-yellow-900 dark:text-extra-yellow-300"
             case DIDType.FILE:
-                return "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300"
+                return "bg-extra-rose-100 text-extra-rose-800 dark:bg-extra-rose-900 dark:text-extra-rose-300"
             case DIDType.COLLECTION:
-                return "bg-stone-100 text-stone-800 dark:bg-stone-900 dark:text-stone-300"
+                return "bg-neutral-200 text-text-800 dark:bg-neutral-900 dark:text-text-300"
             default:
                 return ""
         }

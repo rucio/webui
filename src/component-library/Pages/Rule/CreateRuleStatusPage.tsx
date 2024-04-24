@@ -21,18 +21,18 @@ export const CreateRuleStatusPage = ({
             id: "RuleID",
             header: info => {
                 return (
-                    <div className="text-xl text-left dark:text-white">
+                    <div className="text-xl text-left text-text-100">
                         <span>Rule ID</span>
                     </div>
                 )
             },
             cell: info => {
                 return (
-                    <div className="flex flex-col text-left dark:text-white">
+                    <div className="flex flex-col text-left dark:text-text-0 text-text-1000">
                         <Link
                             className={twMerge(
-                                "text-blue-500 hover:text-blue-700",
-                                "dark:text-blue-400 dark:hover:text-blue-300"
+                                "text-brand-500 hover:text-brand-700",
+                                "dark:text-brand-400 dark:hover:text-brand-300"
                             )}
                             href={`/rule/page/${info.getValue()}`}
                         >
@@ -46,14 +46,14 @@ export const CreateRuleStatusPage = ({
             id: "DID",
             header: info => {
                 return (
-                    <div className="text-xl text-left dark:text-white">
+                    <div className="text-xl text-left text-text-100 ">
                         <span>DID</span>
                     </div>
                 )
             },
             cell: info => {
                 return (
-                    <div className="flex flex-col text-left dark:text-white">
+                    <div className="flex flex-col text-left dark:text-text-0 text-text-1000">
                         <span>{info.getValue()}</span>
                     </div>
                 )
@@ -67,12 +67,12 @@ export const CreateRuleStatusPage = ({
                 "flex flex-col items-center space-y-4",
                 "w-full h-full",
                 "p-2",
-                "bg-white dark:bg-gray-800",
-                "dark:text-white"
+                "bg-neutral-0 dark:bg-neutral-800",
+                "dark:text-text-0 text-text-1000"
             )}
         >
             <div className="flex items-center justify-center w-56 h-56 ">
-                <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">loading...</div>
+                <div className="px-3 py-1 text-xs font-medium leading-none text-center text-brand-800 bg-neutral-200 rounded-full animate-pulse dark:bg-neutral-900 dark:text-brand-200">loading...</div>
             </div>
         </div>
     )
@@ -85,8 +85,8 @@ export const CreateRuleStatusPage = ({
                     "flex flex-col space-y-4",
                     "w-full h-full",
                     "p-2",
-                    "bg-white dark:bg-gray-800",
-                    "dark:text-white"
+                    "bg-neutral-0 dark:bg-neutral-800",
+                    "dark:text-text-0 text-text-1000 "
                 )}
             >
                 <Alert
@@ -95,8 +95,8 @@ export const CreateRuleStatusPage = ({
                 />
                 <div className={twMerge(
                     "border rounded-md p-1",
-                    "bg-white dark:bg-gray-800",
-                    "text-red-500"
+                    "bg-neutral-0 dark:bg-neutral-800",
+                    "text-base-error-500"
                 )}>
                     {errorMessage}
                 </div>
@@ -110,8 +110,8 @@ export const CreateRuleStatusPage = ({
                 "flex flex-col space-y-4",
                 "w-full h-full",
                 "p-2",
-                "bg-white dark:bg-gray-800",
-                "dark:text-white"
+                "bg-neutral-0 dark:bg-neutral-800",
+                "dark:text-text-0 text-text-1000"
             )}
         >
             <Alert
@@ -123,11 +123,11 @@ export const CreateRuleStatusPage = ({
                 tablecolumns={tablecolumns}
                 tabledata={createRuleViewModel.rules}
                 tablestyling={{
-                    "tableHeadRowStyle": "border-b border-gray-300 bg-gray-700 dark:bg-gray-800",
+                    "tableHeadRowStyle": "border-b border-neutral-300 bg-neutral-700 dark:bg-neutral-800",
                     "tableBodyRowStyle": twMerge(
-                        "bg-white odd:bg-stone-100 text-black",
-                        "dark:bg-gray-700 odd:dark:bg-gray-800 dark:text-gray-100",
-                        "border-b border-gray-300",
+                        "bg-neutral-0 odd:bg-neutral-100 text-text-1000",
+                        "dark:bg-neutral-700 odd:dark:bg-neutral-800 dark:text-text-100",
+                        "border-b border-neutral-300",
                     )
                 }}
             />
@@ -135,8 +135,8 @@ export const CreateRuleStatusPage = ({
                 You can also view all your rules by clicking&nbsp;
                 <Link
                     className={twMerge(
-                        "text-blue-500 hover:text-blue-700",
-                        "dark:text-blue-400 dark:hover:text-blue-300"
+                        "text-brand-500 hover:text-brand-700",
+                        "dark:text-brand-400 dark:hover:text-brand-300"
                     )}
                     href="/rule/list">
                     here.

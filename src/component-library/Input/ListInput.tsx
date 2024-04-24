@@ -21,9 +21,9 @@ export const ListInput = (
 
     let ClickableItem = (item: string) => {
         return (
-            <div id={props.id} className="w-full flex flex-row hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-900">
+            <div id={props.id} className="w-full flex flex-row bg-neutral-0 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-900">
                 <div className="grow text-align-center">
-                    <p className="m-2 font-mono dark:text-white">{item}</p>
+                    <p className="m-2 font-mono dark:text-text-0 text-text-1000">{item}</p>
                 </div>
                 <div className="w-12 p-1">
                     <button
@@ -34,7 +34,7 @@ export const ListInput = (
                         }}
                         className={twMerge(
                             "w-full h-full flex justify-center items-center",
-                            "text-red-500 hover:text-red-600"
+                            "text-base-error-500 hover:text-base-error-600"
                         )}
                     >
                         <HiXCircle className="text-3xl"/>

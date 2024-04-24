@@ -56,7 +56,7 @@ export const ListRSE = (
                     <TableFilterDiscrete<RSEType>
                         name="RSE Type"
                         keys={Object.values(RSEType)}
-                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <RSETypeTag rsetype={key} forcesmall />}
+                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <RSETypeTag rsetype={key} forcesmall />}
                         column={info.column}
                         stack
                     />
@@ -137,7 +137,7 @@ export const ListRSE = (
                     <label
                         className={twMerge(
                             "w-fit flex-none",
-                            "text-black dark:text-white"
+                            "text-text-1000 dark:text-text-0"
                         )}
                         htmlFor='rse-search-pattern'
                     >
