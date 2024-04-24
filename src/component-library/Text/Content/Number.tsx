@@ -24,7 +24,7 @@ export const Number: React.FC<ByteProps> = (
         <span
             className={twMerge(
                 className ?? "",
-                "text-yellow-500 text-bold", // placed here to override all other classes for Infinity
+                "text-base-warning-500 text-bold", // placed here to override all other classes for Infinity
             )}
             {...otherprops}
         >
@@ -35,7 +35,7 @@ export const Number: React.FC<ByteProps> = (
         <span
             className={twMerge(
                 className ?? "",
-                "text-red-500 text-bold", // placed here to override all other classes for NaN
+                "text-base-error-500 text-bold", // placed here to override all other classes for NaN
             )}
             {...otherprops}
         >

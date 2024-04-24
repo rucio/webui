@@ -30,6 +30,7 @@ export const PageSubscription = (
             className={twMerge("flex flex-col space-y-2 w-full")}
         >
             <Heading
+                className="text-text-1000 dark:text-text-0"
                 title="View Subscription"
                 subtitle={`For subscription ${props.subscriptionViewModel.name}`}
             />
@@ -67,54 +68,54 @@ export const PageSubscription = (
                         </div>
                         <div
                             className={twMerge(
-                                "bg-stone-100 dark:bg-gray-900 p-2 mt-2 rounded-md",
+                                "bg-neutral-100 dark:bg-neutral-900 p-2 mt-2 rounded-md",
                                 "flex flex-col space-y-2"
                             )}
                         >
-                            <Generaltable>
+                            <Generaltable >
                                 <tr>
-                                    <Titleth>Name</Titleth>
-                                    <Contenttd>{meta.name}</Contenttd>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Name</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0">{meta.name}</Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titleth>Account</Titleth>
-                                    <Contenttd>{meta.account}</Contenttd>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Account</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0">{meta.account}</Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titleth>ID</Titleth>
-                                    <Contenttd>{meta.id}</Contenttd>
-                                </tr>
-                            </Generaltable>
-                            <Generaltable>
-                                <tr>
-                                    <Titleth>Created At</Titleth>
-                                    <Contenttd><DateTag date={new Date(meta.created_at)} /></Contenttd>
-                                </tr>
-                                <tr>
-                                    <Titleth>Last Processed</Titleth>
-                                    <Contenttd><DateTag date={new Date(meta.last_processed)} /></Contenttd>
-                                </tr>
-                                <tr>
-                                    <Titleth>Updated At</Titleth>
-                                    <Contenttd><DateTag date={new Date(meta.updated_at)} /></Contenttd>
-                                </tr>
-                                <tr>
-                                    <Titleth>Lifetime</Titleth>
-                                    <Contenttd><DateTag date={new Date(meta.lifetime)} /></Contenttd>
+                                    <Titleth className="text-text-1000 dark:text-text-0">ID</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0">{meta.id}</Contenttd>
                                 </tr>
                             </Generaltable>
                             <Generaltable>
                                 <tr>
-                                    <Titleth>State</Titleth>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Created At</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0"><DateTag date={new Date(meta.created_at)} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Last Processed</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0"><DateTag date={new Date(meta.last_processed)} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Updated At</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0"><DateTag date={new Date(meta.updated_at)} /></Contenttd>
+                                </tr>
+                                <tr>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Lifetime</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0"><DateTag date={new Date(meta.lifetime)} /></Contenttd>
+                                </tr>
+                            </Generaltable>
+                            <Generaltable>
+                                <tr>
+                                    <Titleth className="text-text-1000 dark:text-text-0">State</Titleth>
                                     <Contenttd><SubscriptionStateTag state={meta.state} /></Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titleth>Retroactive</Titleth>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Retroactive</Titleth>
                                     <Contenttd><BoolTag val={meta.retroactive} /></Contenttd>
                                 </tr>
                                 <tr>
-                                    <Titleth>Policy ID</Titleth>
-                                    <Contenttd>{meta.policyid}</Contenttd>
+                                    <Titleth className="text-text-1000 dark:text-text-0">Policy ID</Titleth>
+                                    <Contenttd className="text-text-1000 dark:text-text-0">{meta.policyid}</Contenttd>
                                 </tr>
                             </Generaltable>
                         </div>

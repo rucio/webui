@@ -13,7 +13,7 @@ export const DateTag: React.FC<JSX.IntrinsicElements["span"] & { date: Date, dat
     return (
         <span
             className={twMerge(
-                "dark:text-white",
+                "text-text-1000 dark:text-text-0",
                 className ?? "",
             )}
             {...otherprops}

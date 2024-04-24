@@ -17,15 +17,15 @@ export const BasicStatusTag: React.FC<JSX.IntrinsicElements["span"] & {
     const colorFn = (status: 'success' | 'error' | 'warning' | 'info') => {
         switch(status) {
             case "success":
-                return 'bg-teal-300 dark:bg-teal-600'
+                return 'bg-base-success-300 dark:bg-base-success-600'
             case "error":
-                return 'bg-red-300 dark:bg-red-600'
+                return 'bg-base-error-300 dark:bg-base-error-600'
             case "warning":
-                return 'bg-yellow-300 dark:bg-yellow-600'
+                return 'bg-base-warning-300 dark:bg-base-warning-600'
             case "info":
-                return 'bg-blue-300 dark:bg-blue-600'
+                return 'bg-base-info-300 dark:bg-base-info-600'
             default:
-                return 'bg-teal-300 dark:bg-teal-600'
+                return 'bg-base-success-300 dark:bg-base-sucess-600'
         }
     }
     const [color, setColor] = useState<string>()
@@ -34,7 +34,7 @@ export const BasicStatusTag: React.FC<JSX.IntrinsicElements["span"] & {
     }, [status])
     return (
         <span key={status}
-            className={`${color} text-black dark:text-white font-bold w-6 md:w-24 rounded text-center select-none flex justify-center items-center`}
+            className={`${color} text-text-1000 dark:text-text-0 font-bold w-6 md:w-24 rounded text-center select-none flex justify-center items-center`}
         >
             {text}
         </span>

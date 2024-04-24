@@ -59,13 +59,14 @@ export const PageRule = (
                 return (
                     <TableFilterString
                         column={info.column}
+                        className="dark:text-text-0 text-text-1000"
                         name="DID"
                     />
                 )
             },
             cell: info => {
                 return (
-                    <P className="break-all pr-1">{info.getValue()}</P>
+                    <P className="break-all pr-1 dark:text-text-0 text-text-1000">{info.getValue()}</P>
                 )
             }
         }),
@@ -76,24 +77,25 @@ export const PageRule = (
                     <TableFilterString
                         column={info.column}
                         name="RSE"
+                        className="dark:text-text-0 text-text-1000"
                     />
                 )
             },
             cell: info => {
                 return (
-                    <P className="break-all">{info.getValue()}</P>
+                    <P className="break-all dark:text-text-0 text-text-1000">{info.getValue()}</P>
                 )
             }
         }),
         columnHelper.accessor("state", {
             id: "state",
-            cell: info => <LockStateTag lockState={info.getValue()} tiny={windowSize[0] <= 768} />,
+            cell: info => <LockStateTag className="dark:text-text-0 text-text-1000" lockState={info.getValue()} tiny={windowSize[0] <= 768} />,
             header: info => {
                 return (
                     <TableFilterDiscrete<LockState>
                         name="Lock"
                         keys={Object.values(LockState)}
-                        renderFunc={state => state === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <LockStateTag lockState={state} tiny />}
+                        renderFunc={state => state === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <LockStateTag lockState={state} tiny className="dark:text-text-0 text-text-1000"/>}
                         column={info.column}
                     />
                 )
@@ -108,7 +110,8 @@ export const PageRule = (
                 return (
                     <span
                         className={twMerge(
-                            "flex flex-row justify-start"
+                            "flex flex-row justify-start",
+                            "dark:text-text-0 text-text-1000"
                         )}
                     >
                         <H3>Links</H3>
@@ -117,7 +120,7 @@ export const PageRule = (
             },
             cell: info => {
                 return (
-                    <span className={twMerge("flex flex-row space-x-1")}>
+                    <span className={twMerge("flex flex-row space-x-1 dark:text-text-0 text-text-1000")}>
                         <TableExternalLink href={info.row.original.ddm_link} label="DDM" />
                         <TableExternalLink href={info.row.original.fts_link} label="FTS" />
                     </span>
@@ -150,7 +153,8 @@ export const PageRule = (
     return (
         <div
             className={twMerge(
-                "flex flex-col space-y-2 w-full"
+                "flex flex-col space-y-2 w-full",
+                "dark:text-text-0 text-text-1000"
             )}
         >
             <Heading
@@ -160,7 +164,7 @@ export const PageRule = (
                 <div
                     className={twMerge(
                         "w-full p-2 rounded",
-                        "bg-gray-200 dark:bg-gray-900",
+                        "bg-neutral-200 dark:bg-neutral-900",
                         props.ruleBoostShow ? "" : "hidden"
                     )}
                 >
@@ -191,32 +195,32 @@ export const PageRule = (
                 >
                     <div
                         className={twMerge(
-                            "bg-stone-100 dark:bg-gray-900 p-2 mt-2 rounded-md",
+                            "bg-neutral-100 dark:bg-neutral-900 p-2 mt-2 rounded-md",
                             "flex flex-col space-y-2"
                         )}
                     >
                         <Generaltable>
                             <tr>
-                                <Titleth>Scope</Titleth>
-                                <Contenttd>{meta.scope}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Scope</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{meta.scope}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Name</Titleth>
-                                <Contenttd>{meta.name}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Name</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{meta.name}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titleth>Created At</Titleth>
-                                <Contenttd>{format("yyyy-MM-dd", new Date(meta.created_at))}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Created At</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{format("yyyy-MM-dd", new Date(meta.created_at))}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Updated At</Titleth>
-                                <Contenttd>{format("yyyy-MM-dd", new Date(meta.updated_at))}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Updated At</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{format("yyyy-MM-dd", new Date(meta.updated_at))}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Expires At</Titleth>
-                                <Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Expires At</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">
                                     {
                                         format("yyyy-MM-dd", new Date(meta.expires_at))
                                         // add ability to extend lifetime here => or maybe not?? i think this might be bad UX
@@ -226,91 +230,91 @@ export const PageRule = (
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titleth>Locks OK</Titleth>
-                                <Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Locks OK</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">
                                     <P mono>{meta.locks_ok_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Locks Replicating</Titleth>
-                                <Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Locks Replicating</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">
                                     <P mono>{meta.locks_replicating_cnt}</P>
                                 </Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Locks Stuck</Titleth>
-                                <Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Locks Stuck</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">
                                     <P mono>{meta.locks_stuck_cnt}</P>
                                 </Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titleth>Purge Replicas</Titleth>
-                                <Contenttd>{<BoolTag val={meta.purge_replicas} />}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Purge Replicas</Titleth>
+                                <Contenttd >{<BoolTag val={meta.purge_replicas} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Split Container</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">Split Container</Titleth>
                                 <Contenttd>{<BoolTag val={meta.split_container} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Ignore Account Limit</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">Ignore Account Limit</Titleth>
                                 <Contenttd>{<BoolTag val={meta.ignore_account_limit} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Ignore Availability</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">Ignore Availability</Titleth>
                                 <Contenttd>{<BoolTag val={meta.ignore_availability} />}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Locked</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">Locked</Titleth>
                                 <Contenttd>{<BoolTag val={meta.locked} />}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titleth>Copies</Titleth>
-                                <Contenttd>{meta.copies}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Copies</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{meta.copies}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>ID</Titleth>
-                                <Contenttd className="font-mono">{meta.id}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">ID</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000 font-mono">{meta.id}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>DID Type</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">DID Type</Titleth>
                                 <Contenttd><DIDTypeTag didtype={meta.did_type} /></Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Grouping</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">Grouping</Titleth>
                                 <Contenttd><DIDTypeTag didtype={meta.grouping} /></Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Priority</Titleth>
-                                <Contenttd>{meta.priority}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Priority</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{meta.priority}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titleth>RSE Expression</Titleth>
-                                <Contenttd className="font-mono">{meta.rse_expression}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">RSE Expression</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000 font-mono">{meta.rse_expression}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Notification</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">Notification</Titleth>
                                 <Contenttd><RuleNotificationTag notificationState={meta.notification} /></Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titleth>Account</Titleth>
-                                <Contenttd>{meta.account}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Account</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{meta.account}</Contenttd>
                             </tr>
                             <tr>
-                                <Titleth>Activity</Titleth>
-                                <Contenttd>{meta.activity}</Contenttd>
+                                <Titleth className="dark:text-text-0 text-text-1000">Activity</Titleth>
+                                <Contenttd className="dark:text-text-0 text-text-1000">{meta.activity}</Contenttd>
                             </tr>
                         </Generaltable>
                         <Generaltable>
                             <tr>
-                                <Titleth>State</Titleth>
+                                <Titleth className="dark:text-text-0 text-text-1000">State</Titleth>
                                 <Contenttd><RuleStateTag state={meta.state} /></Contenttd>
                             </tr>
                         </Generaltable>

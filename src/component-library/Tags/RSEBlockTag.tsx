@@ -13,9 +13,9 @@ export const RSEBlockTag: React.FC<JSX.IntrinsicElements["span"] & { block: "Rea
     <span
       className={twMerge(
         "flex flex-row justify-start items-center space-x-1 w-fit px-1 rounded",
-        "bg-black",
-        "text-white font-semibold",
-        "dark:border dark:border-white",
+        "bg-neutral-900",
+        "text-text-0 font-semibold",
+        "dark:border dark:border-neutral-0",
         className ?? "",
       )}
       {...otherprops}

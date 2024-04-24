@@ -21,8 +21,8 @@ export const Heading: React.FC<HeadingProps> = (
         <div
             className={twMerge(
                 "rounded-md p-2 border",
-                "dark:border-2 dark:border-white",
-                "bg-white dark:bg-gray-800",
+                "dark:border-2 dark:border-neutral-0",
+                "bg-neutral-0 dark:bg-neutral-800",
                 "flex flex-col space-y-2",
                 className ?? ""
             )}
@@ -40,7 +40,7 @@ export const Heading: React.FC<HeadingProps> = (
                         !subtitle && !tag ? "hidden" : "",
                     )}
                 >
-                    <H2 className="text-gray-700 mt-1">{subtitle}</H2>
+                    <H2 className="text-text-700 mt-1">{subtitle}</H2>
                     {tag}
                 </div>
             </div>

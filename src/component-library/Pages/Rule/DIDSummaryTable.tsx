@@ -120,14 +120,14 @@ export const DIDSummaryTable = (props: {
             id: "did",
             header: info => {
                 return (
-                    <div className="text-xl text-left dark:text-white">
+                    <div className="text-xl text-left text-text-100">
                         <span>DID</span>
                     </div>
                 )
             },
             cell: info => (
                 <div className="flex flex-col items-left px-2">
-                    <P className="break-all pr-1">{info.getValue()}</P>
+                    <P className="break-all pr-1 text-text-1000 dark:text-text-100">{info.getValue()}</P>
                 </div>
             ),
             meta: {
@@ -138,14 +138,14 @@ export const DIDSummaryTable = (props: {
             id: "copies",
             header: info => {
                 return (
-                    <div className="text-left text-xl dark:text-white">
+                    <div className="text-left text-xl text-text-100">
                         <span>Copies</span>
                     </div>
                 )
             },
             cell: info => (
                 <div className="flex flex-col items-center w-36 px-2">
-                    <span className="text-left w-36 dark:text-white">{info.getValue()}</span>
+                    <span className="text-left w-36 text-text-1000 dark:text-text-100">{info.getValue()}</span>
                 </div>
             ),
             meta: {
@@ -159,14 +159,14 @@ export const DIDSummaryTable = (props: {
                     <TableSortUpDown
                         name="Files"
                         column={info.column}
-                        className="px-2"
+                        className="px-2 text-text-100"
                     />
                 )
             },
             cell: (info) => (
                 <div className={twMerge(
                     "flex flex-col items-left",
-                    "text-left dark:text-white",
+                    "text-left dark:text-text-100 text-text-1000",
                     "w-24 px-2"
                 )}
                 >
@@ -184,7 +184,7 @@ export const DIDSummaryTable = (props: {
                     <TableSortUpDown
                         name="Size"
                         column={info.column}
-                        className="px-2"
+                        className="px-2 text-text-100"
                     />
                 )
             },
@@ -192,14 +192,14 @@ export const DIDSummaryTable = (props: {
                 const value = info.getValue()
                 if (value === '-') {
                     return (
-                        <div className="flex flex-col items-justify text-center dark:text-white px-2">
+                        <div className="flex flex-col items-justify text-center text-text-1000 dark:text-text-100 px-2">
                             <span className="">-</span>
                         </div>
                     )
                 }
                 return (
                     <div className={twMerge("flex flex-col items-left",
-                        "text-right dark:text-white"
+                        "text-right text-text-1000 dark:text-text-100"
                     )}>
                         <Number number={value} />
                     </div>
@@ -217,7 +217,7 @@ export const DIDSummaryTable = (props: {
                         <TableSortUpDown
                             name="Requested Size"
                             column={info.column}
-                            className="px-2"
+                            className="px-2 text-text-100"
                         />
                     </div>
                 )
@@ -226,14 +226,14 @@ export const DIDSummaryTable = (props: {
                 const value = info.getValue()
                 if (value === '-') {
                     return (
-                        <div className="flex flex-col items-justify text-center dark:text-white px-2">
+                        <div className="flex flex-col items-justify text-center text-text-1000 dark:text-text-100 px-2">
                             <span className="">-</span>
                         </div>
                     )
                 }
                 return (
                     <div className={twMerge("flex flex-col items-left",
-                        "text-right dark:text-white"
+                        "text-right text-text-1000 dark:text-text-100"
                     )}>
                         <Number number={value} />
                     </div>
@@ -247,7 +247,7 @@ export const DIDSummaryTable = (props: {
             id: "tags",
             header: info => {
                 return (
-                    <span className="text-xl dark:text-white">Tags</span>
+                    <span className="text-xl text-text-100">Tags</span>
                 )
             },
             cell: (info) => {
@@ -274,8 +274,8 @@ export const DIDSummaryTable = (props: {
                 <div
                     className={twMerge(
                         "px-2 mx-2 rounded border dark:border-0",
-                        "bg-gray-200 dark:bg-gray-800",
-                        "dark:text-white"
+                        "bg-neutral-200 dark:bg-neutral-800",
+                        "dark:text-text-100"
                     )}
                 >
                     <ul className="">
@@ -298,11 +298,11 @@ export const DIDSummaryTable = (props: {
                 tabledata={tabledata}
                 tablecolumns={tablecolumns}
                 tablestyling={{
-                    "tableHeadRowStyle": "border-b border-gray-300 bg-gray-700 dark:bg-gray-800",
+                    "tableHeadRowStyle": "border-b border-neutral-300 bg-neutral-700 dark:bg-neutral-800 text-text-1000",
                     "tableBodyRowStyle": twMerge(
                         "bg-white odd:bg-stone-100 text-black",
-                        "dark:bg-gray-700 odd:dark:bg-gray-800 dark:text-gray-100",
-                        "border-b border-gray-300",
+                        "dark:bg-neutral-700 odd:dark:bg-neutral-800 dark:text-text-100",
+                        "border-b border-neutral-300",
                     )
                 }}
             />
@@ -311,26 +311,26 @@ export const DIDSummaryTable = (props: {
             >
                 <table className={twMerge(
                     "w-full rounded-md table-fixed relative",
-                    "bg-white dark:bg-gray-700",
-                    "text-gray-800 dark:text-gray-100"
+                    "bg-neutral-0 dark:bg-neutral-700",
+                    "text-text-800 dark:text-text-100"
                 )}
                 >
                     <tbody>
-                        <tr className="text-black dark:text-white">
-                            <th className="w-56 pl-2 py-2 text-left">Parameter</th>
+                        <tr className="text-text-1000 dark:text-text-0">
+                            <th className="w-56 pl-2 py-2 text-left text-text-1000 dark:text-text-0">Parameter</th>
                             <th className="pl-2 py-2 text-left">Value</th>
                         </tr>
-                        <tr className="border-t dark:border-gray-400">
+                        <tr className="border-t dark:border-neutral-400 text-text-1000 dark:text-text-0">
                             <td className="w-56 pl-2 py-1">Total Files</td>
                             <td className="pl-2 py-1">{totalFiles}</td>
                         </tr>
-                        <tr className="border-t dark:border-gray-400">
+                        <tr className="border-t dark:border-neutral-400 text-text-1000 dark:text-text-0">
                             <td className="w-56 pl-2 py-1">Total Size</td>
                             <td className="pl-2 py-1">{
                                 typeof totalSize === 'number' ? <Number number={totalSize} /> : totalSize
                             }</td>
                         </tr>
-                        <tr className="border-t dark:border-gray-400">
+                        <tr className="border-t dark:border-neutral-400 text-text-1000 dark:text-text-0">
                             <td className="w-56 pl-2 py-1">Total Requested Size</td>
                             <td className="pl-2 py-1">
                                 {

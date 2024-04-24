@@ -51,7 +51,7 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
                                 <span
                                     className={twMerge(
                                         "w-fit px-2.5 py-0.5",
-                                        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                        "bg-base-success-100 text-base-success-800 dark:bg-base-success-900 dark:text-base-success-300"
                                     )}
                                 >
                                     JSON is valid
@@ -60,7 +60,7 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
                                     className={twMerge(
                                         jsonError === "" ? "hidden" : "block",
                                         "w-fit px-2.5 py-0.5 rounded",
-                                        "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                                        "bg-base-error-100 text-base-error-800 dark:bg-base-error-900 dark:text-base-error-300"
                                     )}
                                 >
                                     {jsonError}
@@ -116,7 +116,7 @@ export const PageSubscriptionJSONEditor: React.FC<JSX.IntrinsicElements["div"] &
                     </div>
                 </div>
                     <Collapsible showIf={helpWanted}>
-                        <h4 className="text-gray-800 dark:text-gray-100 font-bold">Schema</h4>
+                        <h4 className="text-text-800 dark:text-text-100 font-bold">Schema</h4>
                         <Code className="h-48 overflow-y-auto mt-2">
                             {JSON.stringify(schema, null, 2)}
                         </Code>

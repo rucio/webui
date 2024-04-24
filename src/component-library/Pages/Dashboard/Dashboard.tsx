@@ -44,7 +44,7 @@ export const Dashboard = (
                 className={twMerge(
                     "flex flex-col space-y-2",
                     "rounded-md p-2 border",
-                    "bg-white dark:bg-gray-800"
+                    "bg-neutral-0 dark:bg-neutral-800"
                 )}
             >
                 <div
@@ -62,13 +62,13 @@ export const Dashboard = (
                 </div>
                 <form
                     className={twMerge(
-                        "bg-stone-100 dark:bg-gray-900 p-2 rounded-md",
+                        "bg-neutral-200 dark:bg-neutral-900 p-2 rounded-md",
                     )}
                     aria-label="Select Widgets"
                     id="select-widgets-panel"
                 >
                     <label htmlFor="select-widget-panel">
-                        <P className="font-bold">Select Widgets</P>
+                        <P className="font-bold text-text-1000 dark:text-text-0">Select Widgets</P>
                     </label>
                     <div
                         className={twMerge(

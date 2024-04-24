@@ -20,7 +20,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                 props.isProfileOpen ? "visible" : "invisible",
                 "absolute top-10 right-0",
                 "divide-y",
-                "bg-white dark:bg-slate-800",
+                "bg-neutral-100 dark:bg-neutral-800",
                 "z-[100]"
             )}
             onMouseEnter={e => e.preventDefault()}
@@ -28,18 +28,18 @@ export const AccountDropdown = forwardRef(function AccountDropdown
         >
             <Link
                 className={twMerge(
-                    "text-gray-600 hover:bg-gray-200 hover:cursor-pointer",
-                    "dark:text-gray-300 dark:hover:bg-gray-600",
+                    "text-text-600 hover:bg-neutral-200 hover:cursor-pointer",
+                    "dark:text-text-300 dark:hover:bg-neutral-600",
                     "flex items-center justify-between py-2 px-1 space-x-4",
                     "text-right"
                 )}
                 href="/accountsettings"
                 prefetch={false}
             >
-                <HiCog className="text-3xl text-gray-600 dark:text-gray-100 shrink-0" />
+                <HiCog className="text-3xl text-text-600 dark:text-text-100 shrink-0" />
                 <span>
                     <span>Settings for </span>
-                    <b className="text-gray-800 dark:text-gray-100">{props.accountActive}</b>
+                    <b className="text-text-800 dark:text-text-100">{props.accountActive}</b>
                 </span>
             </Link>
             <div
@@ -52,8 +52,8 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                         return (
                             <Link
                                 className={twMerge(
-                                    "text-gray-600 hover:bg-gray-200 hover:cursor-pointer",
-                                    "dark:text-gray-300 dark:hover:bg-gray-600",
+                                    "text-text-600 hover:bg-neutral-200 hover:cursor-pointer",
+                                    "dark:text-text-300 dark:hover:bg-neutral-600",
                                     "flex items-center justify-between py-2 px-1 space-x-4",
                                     "text-right"
                                 )}
@@ -61,10 +61,10 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                                 href="/api/account/switch"
                                 prefetch={false}
                             >
-                                <HiSwitchHorizontal className="text-2xl dark:text-gray-100 shrink-0" />
+                                <HiSwitchHorizontal className="text-2xl text-text-900 dark:text-text-100 shrink-0" />
                                 <span>
                                     <span>Switch to </span>
-                                    <b className="text-gray-800 dark:text-gray-100">{account}</b>
+                                    <b className="text-text-800 dark:text-text-100">{account}</b>
                                 </span>
                             </Link>
                         )
@@ -73,8 +73,8 @@ export const AccountDropdown = forwardRef(function AccountDropdown
             </div>
             <Link
                 className={twMerge(
-                    "text-gray-800 hover:bg-red-200 hover:cursor-pointer",
-                    "dark:text-gray-100 dark:hover:bg-red-600",
+                    "text-text-800 hover:bg-base-warning-200 hover:cursor-pointer",
+                    "dark:text-text-100 dark:hover:bg-base-warning-600",
                     "flex items-center justify-between py-2 px-1 space-x-4",
                     "text-right",
                     "w-64 sm:w-96"
@@ -82,7 +82,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                 href="/api/auth/logout"
                 prefetch={false}
             >
-                <b>Logout</b> <HiLogout className="text-3xl shrink-0" />
+                <b>Logout</b> <HiLogout className="text-3xl text-text-900 shrink-0" />
             </Link>
         </div>
     )

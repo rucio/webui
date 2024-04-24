@@ -485,7 +485,7 @@ export const CreateRule = (
                                     </div>
                                     <div className={twMerge(
                                         "flex flex-col border rounded-sm p-2",
-                                        Page2State.takesamples ? "bg-teal-300 dark:bg-teal-600" : "bg-gray-100 dark:bg-gray-800"
+                                        Page2State.takesamples ? "bg-brand-300 dark:bg-brand-600" : "bg-neutral-100 dark:bg-neutral-800"
                                     )}
                                     >
                                         <div
@@ -506,7 +506,7 @@ export const CreateRule = (
                                             />
                                             <label
                                                 htmlFor="create-sample"
-                                                className="text-black dark:text-gray-100"
+                                                className="text-text-1000 dark:text-text-100"
                                             >
                                                 Create Sample
                                             </label>

@@ -9,8 +9,8 @@ export const SamplingTag: React.FC<JSX.IntrinsicElements["span"] & { sampling: b
     return (
         <span
             className={twMerge(
-                "bg-teal-300 dark:bg-teal-600",
-                "text-black dark:text-white font-bold",
+                "bg-brand-300 dark:bg-brand-600",
+                "text-text-1000 dark:text-text-0 font-bold",
                 "w-6 md:w-24 rounded text-center select-none",
                 "flex justify-center items-center",
                 !sampling ? "hidden" : "flex"

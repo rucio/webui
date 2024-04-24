@@ -35,11 +35,11 @@ export const LifetimeWithExpirationDateInput: React.FC<LifetimeWithExpirationDat
             "p-2 space-y-4",
             "rounded-md border",
             "dark:border-2",
-            "bg-white dark:bg-gray-800"
+            "bg-neutral-0 dark:bg-neutral-800"
         )}
         >
             <div className="flex flex-col space-y-2">
-                <span className="text-xl dark:text-white">Lifetime (days)</span>
+                <span className="text-xl dark:text-text-0 text-text-1000">Lifetime (days)</span>
                 <NumInput
                     value={lifetimeInDays}
                     onChange={(event) => {
@@ -66,7 +66,7 @@ export const LifetimeWithExpirationDateInput: React.FC<LifetimeWithExpirationDat
                 />
             </div>
             <div className="flex flex-col space-y-2">
-                <span className="text-xl dark:text-white">Expiry Date</span>
+                <span className="text-xl dark:text-text-0 text-text-1000">Expiry Date</span>
                 <DateInput onchange={onDateChange} initialdate={date} disabled={disabled} placeholder={placeholder} />
             </div>
         </div>

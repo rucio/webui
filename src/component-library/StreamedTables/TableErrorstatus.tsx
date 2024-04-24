@@ -34,9 +34,9 @@ export const TableErrorstatus: React.FC<JSX.IntrinsicElements["form"] & {
             className={twMerge(
                 "p-1 rounded-md h-8",
                 "flex flex-row justify-center space-x-2 md:justify-between",
-                numBadRows === -1 ? "bg-red-200 text-red-800" : "",
-                numBadRows === 0 ? "bg-green-200 text-green-800" : "",
-                numBadRows > 0 ? "bg-amber-200 text-amber-800" : "",
+                numBadRows === -1 ? "bg-base-error-200 text-base-error-800" : "",
+                numBadRows === 0 ? "bg-base-success-200 text-base-success-800" : "",
+                numBadRows > 0 ? "bg-base-warning-200 text-base-warning-800" : "",
                 className ?? ""
             )}
         >
@@ -53,8 +53,8 @@ export const TableErrorstatus: React.FC<JSX.IntrinsicElements["form"] & {
                 }}
                 className={twMerge(
                     "rounded-full",
-                    numBadRows === -1 ? "hover:bg-red-300 text-red-900" : "",
-                    numBadRows > 0 ? "hover:bg-amber-300 text-amber-900" : "",
+                    numBadRows === -1 ? "hover:bg-base-error-300 text-base-error-900" : "",
+                    numBadRows > 0 ? "hover:bg-base-warning-300 text-base-warning-900" : "",
                 )}
                 disabled={numBadRows === 0}
                 aria-label="Show Errors"

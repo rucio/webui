@@ -60,7 +60,7 @@ export const CreateRuleDIDTable = (
                     <TableFilterDiscrete<DIDType>
                         name="DID Type"
                         keys={[DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]}
-                        renderFunc={state => state === undefined ? <HiDotsHorizontal className="text-xl text-gray-500 dark:text-gray-200" /> : <DIDTypeTag didtype={state} forcesmall />}
+                        renderFunc={state => state === undefined ? <HiDotsHorizontal className="text-xl text-text-500 dark:text-text-200" /> : <DIDTypeTag didtype={state} forcesmall />}
                         column={info.column}
                     />
                 )
@@ -81,7 +81,7 @@ export const CreateRuleDIDTable = (
                 )
             },
             cell: (info) =>
-                <p className="font-mono dark:text-gray-200">
+                <p className="font-mono dark:text-text-200 text-text-800">
                     <Number number={info.getValue()} />
                 </p>,
             meta: {

@@ -33,7 +33,7 @@ export const ListSubscription = (
                         column={info.column}
                         name="Name"
                         placeholder="Filter by Subscription Name"
-                        className="ml-1"
+                        className="ml-1 text-text-1000 dark:text-text-0"
                     />
                 )
             },
@@ -57,7 +57,7 @@ export const ListSubscription = (
                     />
                 )
             },
-            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2 text-text-1000 dark:text-text-0">{info.getValue()}</P>,
             meta: {
                 style: "w-12 lg:w-32",
             }
@@ -80,7 +80,7 @@ export const ListSubscription = (
                     />
                 )
             },
-            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2 text-text-1000 dark:text-text-0">{info.getValue()}</P>,
             meta: {
                 style: "w-12 lg:w-32",
             }
@@ -103,7 +103,7 @@ export const ListSubscription = (
                     />
                 )
             },
-            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2 text-text-1000 dark:text-text-0">{info.getValue()}</P>,
             meta: {
                 style: "w-12 lg:w-32",
             }
@@ -126,7 +126,7 @@ export const ListSubscription = (
                     />
                 )
             },
-            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2 text-text-1000 dark:text-text-0">{info.getValue()}</P>,
             meta: {
                 style: "w-12 lg:w-32",
             }
@@ -149,7 +149,7 @@ export const ListSubscription = (
                     />
                 )
             },
-            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2 text-text-1000 dark:text-text-0">{info.getValue()}</P>,
             meta: {
                 style: "w-12 lg:w-32",
             }
@@ -172,19 +172,19 @@ export const ListSubscription = (
                     />
                 )
             },
-            cell: info => <P mono className="text-right pr-2">{info.getValue()}</P>,
+            cell: info => <P mono className="text-right pr-2 text-text-1000 dark:text-text-0">{info.getValue()}</P>,
             meta: {
                 style: "w-12 lg:w-32",
             }
         }),
         columnHelper.display({
             id: "condensed_states",
-            header: info => <H3 className="text-left">States</H3>,
+            header: info => <H3 className="text-left text-text-1000 dark:text-text-0">States</H3>,
             cell: info => {
                 const MiniState = (props: { state: RuleState, amount: number }) => {
                     return (
                         <span
-                            className={twMerge("flex flex-row space-x-1")}
+                            className={twMerge("flex flex-row space-x-1 text-text-1000 dark:text-text-0")}
                         >
                             <P mono className="text-right">{props.amount}</P>
                             <RuleStateTag tiny state={props.state} />
@@ -224,6 +224,7 @@ export const ListSubscription = (
             )}
         >
             <Heading
+                className="text-text-1000 dark:text-text-0"
                 title="List Subscriptions"
                 subtitle={`For account ${props.accountname}`}
             />

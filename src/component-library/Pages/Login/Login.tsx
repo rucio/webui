@@ -76,8 +76,8 @@ export const Login = ({
             className={twMerge(
                 "rounded p-4 flex flex-col justify-center space-y-2",
                 "border dark:border-2",
-                "border-gray-300 dark:border-white",
-                "bg-white dark:bg-gray-800",
+                "border-neutral-300 dark:border-neutral-0",
+                "bg-neutral-0 dark:bg-neutral-800",
             )}
             id="root"
         >
@@ -88,7 +88,7 @@ export const Login = ({
                 className={twMerge(
                     "absolute top-32 inset-x-32 rounded shadow",
                     "border-2",
-                    "bg-white dark:bg-gray-800",
+                    "bg-neutral-0 dark:bg-neutral-800",
                     "flex flex-col space-y-2 p-2"
                 )}
                 contentLabel="Multiaccount Modal"
@@ -115,7 +115,7 @@ export const Login = ({
                     }
                 } />
             </Collapsible>
-            <div className="text-center dark:text-white">
+            <div className="text-center text-text-1000 dark:text-text-0">
                 <H1 className="mt-4 mb-2">Rucio Login</H1> 
             </div>
 

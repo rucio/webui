@@ -57,7 +57,7 @@ export const RSESummaryTable = (props: {
                 return (
                     <div className={twMerge(
                         "text-xl text-left",
-                        "dark:text-white",
+                        "text-text-0",
                     )}
                     >
                         RSE
@@ -68,7 +68,7 @@ export const RSESummaryTable = (props: {
                 return (
                     <div className={twMerge(
                         "text-left",
-                        "dark:text-white",
+                        "dark:text-text-0 text-text-1000",
                     )}>
                         <P>{info.getValue()}</P>
                     </div>
@@ -85,7 +85,7 @@ export const RSESummaryTable = (props: {
                     <TableSortUpDown
                         name="Remaining"
                         column={info.column}
-                        className="px-2 text-center"
+                        className="px-2 text-cente text-text-0"
                     />
                 )
             },
@@ -93,7 +93,7 @@ export const RSESummaryTable = (props: {
                 const value = info.getValue()
                 return (
                     <div className={twMerge("flex flex-col items-left",
-                        "text-left dark:text-white"
+                        "text-left dark:text-text-0 text-text-1000"
                     )}>
                         <Number number={value} />
                     </div>
@@ -110,7 +110,7 @@ export const RSESummaryTable = (props: {
                     <TableSortUpDown
                         name="Quota"
                         column={info.column}
-                        className="px-2"
+                        className="px-2 text-text-0"
                     />
                 )
             },
@@ -119,7 +119,7 @@ export const RSESummaryTable = (props: {
                 return (
                     <div className={twMerge("flex flex-col items-left",
                         "text-left",
-                        "dark:text-white"
+                        "dark:text-text-0 text-text-1000"
                     )}>
                         <Number number={value} />
                     </div>
@@ -133,7 +133,7 @@ export const RSESummaryTable = (props: {
             id: "tags",
             header: info => {
                 return (
-                    <span className="text-xl dark:text-white">Tags</span>
+                    <span className="text-xl text-text-0">Tags</span>
                 )
             },
             cell: (info) => {
@@ -152,7 +152,7 @@ export const RSESummaryTable = (props: {
         <div className="flex flex-col space-y-4">
             <div className="flex justify-start space-x-2">
                 <h1
-                    className={twMerge("text-2xl font-bold text-black dark:text-white")}
+                    className={twMerge("text-2xl font-bold dark:text-text-0 text-text-1000")}
                 >
                     RSE Overview
                 </h1>
@@ -160,8 +160,8 @@ export const RSESummaryTable = (props: {
             <div
                 className={twMerge(
                     "px-2 mx-2 rounded border dark:border-0",
-                    "bg-gray-200 dark:bg-gray-800",
-                    "dark:text-white"
+                    "bg-neutral-200 dark:bg-neutral-800",
+                    "dark:text-text-0 text-text-1000"
                 )}
             >
                 <ul className="">
@@ -184,9 +184,9 @@ export const RSESummaryTable = (props: {
                 tablestyling={{
                     "tableHeadRowStyle": "border-b border-gray-300 bg-gray-700 dark:bg-gray-800",
                     "tableBodyRowStyle": twMerge(
-                        "bg-white odd:bg-stone-100 text-black",
-                        "dark:bg-gray-700 odd:dark:bg-gray-800 dark:text-gray-100",
-                        "border-b border-gray-300",
+                        "bg-neutral-0 odd:bg-neutral-100 text-text-1000",
+                        "dark:bg-neutral-700 odd:dark:bg-neutral-800 dark:text-text-100",
+                        "border-b border-neutral-300",
                     )
                 }}
             />

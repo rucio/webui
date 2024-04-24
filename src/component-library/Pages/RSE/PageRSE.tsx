@@ -33,7 +33,7 @@ export const PageRSE = (
             >
                 <div
                     className={twMerge(
-                        "bg-stone-100 dark:bg-gray-900",
+                        "bg-neutral-100 dark:bg-neutral-900",
                         "rounded-md p-2",
                         "grid grid-cols-1 md:grid-cols-2 gap-2",
                         "min-h-0 w-full"

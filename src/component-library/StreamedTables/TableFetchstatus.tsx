@@ -15,9 +15,9 @@ const StateButton: (
     return (
         <button
             className={twMerge(
-                state === "fetching" ? "bg-amber-200 text-amber-800 hover:bg-amber-400" : (
-                    state === "idle" ? "bg-blue-200 text-blue-800 hover:bg-blue-400" : (
-                        state === "paused" ? "bg-stone-200 text-stone-800 hover:bg-stone-400" : ""
+                state === "fetching" ? "bg-base-warning-200 text-base-warning-800 hover:bg-base-warning-400" : (
+                    state === "idle" ? "bg-base-info-200 text-base-info-800 hover:bg-base-info-400" : (
+                        state === "paused" ? "bg-neutral-200 text-text-800 hover:bg-neutral-400" : ""
                     )
                 ),
                 "h-6 w-6",
@@ -57,9 +57,9 @@ export const TableFetchstatus: (
         return (
             <form
                 className={twMerge(
-                    state === "fetching" ? "bg-amber-200 text-amber-800" : (
-                        state === "idle" ? "bg-blue-200 text-blue-800" : (
-                            state === "paused" ? "bg-stone-200 text-stone-800" : ""
+                    state === "fetching" ? "bg-base-warning-200 text-base-warning-800" : (
+                        state === "idle" ? "bg-base-info-200 text-base-info-800" : (
+                            state === "paused" ? "bg-neutral-200 text-text-800" : ""
                         )
                     ),
                     "p-1 rounded-md h-8",

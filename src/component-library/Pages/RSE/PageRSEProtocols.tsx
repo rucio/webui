@@ -24,59 +24,59 @@ export const PageRSEProtocols = (
         columnHelper.accessor("scheme", {
             id: "scheme",
             header: info => <H3>Scheme</H3>,
-            cell: info => <P className="break-all pr-1">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-text-1000">{info.getValue()}</P>,
             meta: { style: "w-24" }
         }),
         columnHelper.accessor("hostname", {
             id: "hostname",
             header: info => <H3>Hostname</H3>,
-            cell: info => <P className="break-all pr-1">{info.getValue()}</P>
+            cell: info => <P className="break-all pr-1 text-text-1000">{info.getValue()}</P>
         }),
         columnHelper.accessor("port", {
             id: "port",
             header: info => <H3>Port</H3>,
-            cell: info => <P className="break-all pr-1">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-text-1000">{info.getValue()}</P>,
             meta: { style: "w-24" }
         }),
         columnHelper.accessor("prefix", {
             id: "prefix",
             header: info => <H3>Prefix</H3>,
-            cell: info => <P className="break-all pr-1">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-text-1000">{info.getValue()}</P>,
         }),
         columnHelper.accessor("priorities_lan.read", {
             id: "priorities_lan.read",
             header: info => <TableSortUpDown name="LAN/R" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstyleblue
         }),
         columnHelper.accessor("priorities_lan.write", {
             id: "priorities_lan.write",
             header: info => <TableSortUpDown name="LAN/W" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstyleblue
         }),
         columnHelper.accessor("priorities_lan.delete", {
             id: "priorities_lan.delete",
             header: info => <TableSortUpDown name="LAN/D" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstyleblue
         }),
         columnHelper.accessor("priorities_wan.read", {
             id: "priorities_lan.read",
             header: info => <TableSortUpDown name="WAN/R" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink
         }),
         columnHelper.accessor("priorities_wan.write", {
             id: "priorities_lan.write",
             header: info => <TableSortUpDown name="WAN/W" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink
         }),
         columnHelper.accessor("priorities_wan.delete", {
             id: "priorities_lan.delete",
             header: info => <TableSortUpDown name="WAN/D" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink,
         }),
         // columnHelper.accessor("priorities_wan.tpc", {
@@ -88,13 +88,13 @@ export const PageRSEProtocols = (
         columnHelper.accessor("priorities_wan.tpcwrite", {
             id: "priorities_lan.tpcwrite",
             header: info => <TableSortUpDown name="TPC/W" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink,
         }),
         columnHelper.accessor("priorities_wan.tpcread", {
             id: "priorities_lan.tpcread",
             header: info => <TableSortUpDown name="TPC/R" column={info.column} stack />,
-            cell: info => <P className="break-all pr-1 text-right">{info.getValue()}</P>,
+            cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink,
         }),
     ]

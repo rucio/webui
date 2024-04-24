@@ -31,7 +31,7 @@ export const SummaryPage = (
             className={twMerge(
                 "flex flex-col space-y-4",
                 "p-2",
-                "bg-white dark:bg-gray-800"
+                "bg-neutral-0 dark:bg-neutral-800"
             )}
         >
             
@@ -65,7 +65,7 @@ export const SummaryPage = (
             </div>
             <div
                 className={twMerge(
-                    "bg-gray-100 dark:bg-gray-800",
+                    "bg-neutral-100 dark:bg-neutral-800",
                     "border dark:border-2",
                     "rounded-md",
                     "flex flex-col",
@@ -74,7 +74,7 @@ export const SummaryPage = (
             >
                 <div className="flex flex-row">
                     <h3
-                        className="text-2xl font-bold p-2 text-gray-800 dark:text-white"
+                        className="text-2xl font-bold p-2 text-text-800 dark:text-text-0"
                     >
                         Options
                     </h3>
@@ -84,40 +84,40 @@ export const SummaryPage = (
                 >
                     <table className={twMerge(
                         "w-full rounded-md table-fixed",
-                        "bg-white dark:bg-gray-700",
-                        "text-gray-800 dark:text-gray-100"
+                        "bg-neutral-0 dark:bg-neutral-700",
+                        "text-text-800 dark:text-text-100"
                     )}
                     >
                         <tbody>
-                            <tr className="text-black dark:text-white">
+                            <tr className="text-text-1000 dark:text-text-0">
                                 <th className="w-56 pl-2 py-2 text-left">Parameter</th>
                                 <th className="pl-2 py-2 text-left">Value</th>
                             </tr>
-                            <tr className="border-t dark:border-gray-400">
+                            <tr className="border-t dark:border-neutral-400">
                                 <OptionTD>Expiry Date</OptionTD>
                                 <td className="select-all py-1">{format("yyyy-MM-dd", props.data.expirydate)}</td>
                             </tr>
-                            <tr className="border-t dark:border-gray-400">
+                            <tr className="border-t dark:border-neutral-400">
                                 <OptionTD>Lifetime</OptionTD>
                                 <td className="select-all py-1">{lifetimeDays} days</td>
                             </tr>
-                            <tr className="border-t dark:border-gray-400">
+                            <tr className="border-t dark:border-neutral-400">
                                 <OptionTD>Enable Notifications</OptionTD>
                                 <td><BoolTag val={props.data.notifications} /></td>
                             </tr>
-                            <tr className="border-t dark:border-gray-400">
+                            <tr className="border-t dark:border-neutral-400">
                                 <OptionTD>Asynchronous Mode</OptionTD>
                                 <td><BoolTag val={props.data.asynchronousMode} /></td>
                             </tr>
-                            <tr className="border-t dark:border-gray-400">
+                            <tr className="border-t dark:border-neutral-400">
                                 <OptionTD>Group By</OptionTD>
                                 <td><DIDTypeTag didtype={props.data.groupby} /></td>
                             </tr>
-                            <tr className="border-t dark:border-gray-400">
+                            <tr className="border-t dark:border-neutral-400">
                                 <OptionTD>Number of Copies</OptionTD>
                                 <td className="select-all py-1">{props.data.numcopies}</td>
                             </tr>
-                            <tr className="border-t dark:border-gray-400">
+                            <tr className="border-t dark:border-neutral-400">
                                 <OptionTD>Comment</OptionTD>
                                 <td className="select-all py-1">{props.data.comment}</td>
                             </tr>
@@ -127,14 +127,14 @@ export const SummaryPage = (
                 
                 <div>
                     <h3
-                        className="text-xl font-bold p-2 dark:text-white"
+                        className="text-xl font-bold p-2 dark:text-text-0 text-text-1000"
                     >
                         Samples
                     </h3>
                     <div
                         className={twMerge(
                             "px-2 mx-2 rounded border dark:border-0",
-                            props.data.numsamples >= 0 ? "bg-teal-300 dark:bg-teal-600" : "bg-gray-200 dark:bg-gray-600",
+                            props.data.numsamples >= 0 ? "bg-brand-300 dark:bg-brand-600" : "bg-neutral-200 dark:bg-neutral-600",
                             "dark:text-white"
                         )}
                     >

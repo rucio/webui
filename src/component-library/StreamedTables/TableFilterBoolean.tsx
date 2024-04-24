@@ -50,7 +50,7 @@ export function TableFilterBoolean<T>(
             {...otherdivprops}
         >
             <H3 className="hidden md:inline">{name}</H3>
-            {filter === undefined ? <HiDotsHorizontal className="text-2xl text-gray-500 dark:text-gray-200" /> : <BoolTag val={filter}/>}
+            {filter === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <BoolTag val={filter}/>}
         </div>
     );
 };

@@ -12,7 +12,7 @@ const TableErrorelement: React.FC<JSX.IntrinsicElements["div"] & {message: strin
         <div
             className={twMerge(
                 "border rounded-md p-1",
-                "bg-white",
+                "bg-neutral-0",
                 className ?? ""
             )}
         >
@@ -33,8 +33,8 @@ export const TableErrorreader: React.FC<JSX.IntrinsicElements["div"] & {
         <div
             className={twMerge(
                 "border rounded-md p-1",
-                "bg-white dark:bg-gray-800",
-                className ?? ""
+                "bg-neutral-0 dark:bg-neutral-800",
+                className ?? "text-text-1000 dark:text-text-0"
             )}
         >
             <div
@@ -50,7 +50,7 @@ export const TableErrorreader: React.FC<JSX.IntrinsicElements["div"] & {
             </div>
             <div
                 className={twMerge(
-                    "bg-stone-100",
+                    "bg-neutral-100 dark:bg-neutral-900",
                     "flex flex-col space-y-1 p-1 rounded-md",
                     "h-48 overflow-y-scroll"
                 )}
@@ -59,6 +59,7 @@ export const TableErrorreader: React.FC<JSX.IntrinsicElements["div"] & {
                     <TableErrorelement
                         key={i}
                         message={vm.message ?? "Unknown Error"}
+                        className="dark:bg-neutral-800 bg-neutral-0"
                     />
 
                 )})}

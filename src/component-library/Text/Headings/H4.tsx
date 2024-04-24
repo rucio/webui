@@ -10,7 +10,7 @@ export const H4 = (
     <h4
       className={twMerge(
         "text-lg leading-none",
-        "dark:text-white",
+        "dark:text-text-0 text-text-1000",
         className ?? "",
       )}
       {...otherprops}

@@ -11,7 +11,7 @@ export const P: React.FC<JSX.IntrinsicElements["p"] & {mono?: boolean}> = (
     return (
         <p
             className={twMerge(
-                "dark:text-white",
+                "dark:text-text-0 text-text-1000",
                 mono ? "font-mono" : "",
                 className ?? "",
             )}

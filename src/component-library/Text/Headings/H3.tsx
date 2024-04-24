@@ -7,7 +7,7 @@ export const H3: React.FC<JSX.IntrinsicElements["h3"]> = (
     return (
         <h3
             className={twMerge(
-                "text-xl leading-none dark:text-white",
+                "text-xl leading-none dark:text-text-0 text-text-1000",
                 className ?? "",
             )}
             {...otherprops}

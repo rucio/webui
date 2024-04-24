@@ -41,7 +41,7 @@ export function Dropdown<T>(
                 onClick={e => { e.preventDefault(); setActive(!isActive) }}
                 className={twMerge(
                     "py-1 px-3 rounded w-full",
-                    "bg-blue-500 hover:bg-blue-600 text-white",
+                    "bg-brand-500 hover:bg-brand-600 text-text-0",
                     "cursor-pointer",
                     "font-bold",
                     "flex justify-center space-x-2"
@@ -55,7 +55,7 @@ export function Dropdown<T>(
                 className={twMerge(
                     isActive ? "flex" : "hidden",
                     "absolute right-0 mt-1 w-full rounded border dark:border-2 z-[100]",
-                    "p-1 flex-col bg-white dark:bg-gray-700"
+                    "p-1 flex-col bg-neutral-0 dark:bg-neutral-700"
                 )}
             >
                 {keys.map((key, index) => {
@@ -64,9 +64,9 @@ export function Dropdown<T>(
                             key={index}
                             className={twMerge(
                                 "p-1 rounded select-none cursor-pointer",
-                                "bg-white odd:bg-stone-100", // bg normal
-                                "dark:bg-gray-700 dark:odd:bg-gray-800", "dark:text-white", // bg dark
-                                "hover:bg-gray-200 dark:hover:bg-gray-900", // hover (dark and light)
+                                "bg-neutral-0 odd:bg-neutral-100", // bg normal
+                                "dark:bg-neutral-700 dark:odd:bg-neutral-800", "dark:text-text-0", // bg dark
+                                "hover:bg-neutral-200 dark:hover:bg-neutral-900", // hover (dark and light)
                             )}
                             onClick={e => {
                                 setActive(!isActive)

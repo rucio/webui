@@ -99,7 +99,7 @@ export const PageDID = (
             >
                 <div
                     className={twMerge(
-                        "bg-stone-100 dark:bg-gray-900",
+                        "bg-neutral-100 dark:bg-neutral-900",
                         "rounded-md p-2",
                         "flex flex-col space-y-2",
                         "min-h-0 w-full"

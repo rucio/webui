@@ -19,7 +19,7 @@ const Filter = (props: JSX.IntrinsicElements["input"] & { column: Column<any, st
             value={column.getFilterValue() as string ?? ""}
             onChange={(e) => column.setFilterValue(e.target.value)}
             className={twMerge(
-                "w-full border dark:border-gray-400 rounded-sm px-2 pt-2 dark:bg-gray-800 dark:text-white h-8",
+                "w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 dark:bg-neutral-800 bg-neutral-0 dark:text-text-0 text-text-1000 h-8",
                 className ?? "",
             )}
             {...otherprops}
@@ -88,7 +88,7 @@ export function TableFilterString(
                     onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
                     className="sm:hidden pr-4"
                 >
-                    <HiSearch className="text-xl text-gray-500 dark:text-gray-200" />
+                    <HiSearch className="text-xl text-text-500 dark:text-text-200" />
                 </button>
             </form>
         )
@@ -97,7 +97,7 @@ export function TableFilterString(
             <form
                 className={twMerge(
                     "flex",
-                    "bg-white",
+                    "bg-neutral-0 dark:bg-neutral-800",
                     "absolute inset-0",
                     "p-2 flex-row justify-between space-x-2 items-center"
                 )}
@@ -108,7 +108,7 @@ export function TableFilterString(
                 <button
                     onClick={(e) => { setSmallScreenNameFiltering(!smallScreenNameFiltering) }}
                 >
-                    <HiCheck className="text-xl text-gray-500 dark:text-gray-200" />
+                    <HiCheck className="text-xl text-text-500 dark:text-text-200" />
                 </button>
             </form>
         )
