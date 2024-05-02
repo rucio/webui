@@ -11,6 +11,7 @@ const GATEWAYS = {
     SUBSCRIPTION: Symbol.for("SubscriptionGateway"),
     REPLICA: Symbol.for("ReplicaGateway"),
     RULE: Symbol.for("RuleGateway"),
+    TRANSFER: Symbol.for("TransferGateway"),
 }
 
 export default GATEWAYS;
