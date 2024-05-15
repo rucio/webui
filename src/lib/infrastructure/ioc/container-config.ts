@@ -62,6 +62,7 @@ import RuleGatewayOutputPort from "@/lib/core/port/secondary/rule-gateway-output
 import RuleGateway from "../gateway/rule-gateway/rule-gateway";
 import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feature";
 import GetAccountInfoFeature from "./features/get-account-info-feature";
+import UserpassLoginV2Feature from "./features/userpass-login-V2-feature";
 
 
 /**
@@ -86,6 +87,7 @@ loadFeaturesSync(appContainer, [
 // Load Auth Features/Usecases
 loadFeaturesSync(appContainer, [
     new LoginConfigFeature(appContainer),
+    new UserpassLoginV2Feature(appContainer)
 ])
 
 // Load Features

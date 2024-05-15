@@ -1,6 +1,5 @@
-import { BaseDTO } from "@/lib/sdk/dto"
-
-export interface UserPassLoginAuthServerDTO extends BaseDTO {
+export type UserPassLoginV2AuthServerDTO = {
+    status: 'success' | 'error'
     statusCode: number
     message: string
     authToken: string

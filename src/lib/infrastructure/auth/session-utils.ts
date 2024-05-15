@@ -211,7 +211,9 @@ export async function setActiveSessionUser(
 ) {
     await addOrUpdateSessionUser(session, sessionUser, false)
     session.user = sessionUser
-    saveSession ? await session.save() : null
+    if(saveSession) {
+        await session.save()
+    }
 }
 
 /**
