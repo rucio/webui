@@ -28,6 +28,7 @@ const INPUT_PORT = {
     SWITCH_ACCOUNT: Symbol.for("SwitchAccountInputPort"),
     TEST: Symbol.for("TestInputPort"),
     USERPASS_LOGIN: Symbol.for("UserPassLoginInputPort"),
+    USERPASS_LOGIN_V2: Symbol.for("UserpassLoginV2InputPort"),
 }
 
 export default INPUT_PORT;

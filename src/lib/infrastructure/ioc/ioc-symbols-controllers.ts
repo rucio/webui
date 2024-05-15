@@ -29,6 +29,7 @@ const CONTROLLERS = {
     STREAM: Symbol.for("StreamController"),
     SWITCH_ACCOUNT: Symbol.for("SwitchAccountController"),
     USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
+    USERPASS_LOGIN_V2: Symbol.for("UserpassLoginV2Controller"),
 }
 
 export default CONTROLLERS;

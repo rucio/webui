@@ -44,12 +44,27 @@ export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel>
     }
 
     /**
+     * Process the session, set active current sessionUser
+     * @param session The current session to process
+     * @param viewModel The current viewmodel
+     * @param status The current status
+     * @returns A promise that resolves to the session
+     */
+    async processSession(session: IronSession, viewModel: TViewModel, status: number ) : Promise<void> {
+        return Promise.resolve()
+    }
+
+    /**
      * Presents a successful response model.
      * @param responseModel The response model to present.
      * @returns A promise that resolves to the view model.
      */
     async presentSuccess(responseModel: TResponseModel): Promise<void> {
-        const { viewModel, status } = this.convertResponseModelToViewModel(responseModel)
+        const { viewModel, status } =  this.convertResponseModelToViewModel(responseModel)
+        if(this.session) {
+            await this.processSession(this.session, viewModel, status)
+            await this.session.save()
+        }
         await this.response.status(status).json(viewModel)
         return Promise.resolve()
     }
@@ -60,7 +75,7 @@ export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel>
      * @returns A promise that resolves to the view model.
      */
     async presentError(errorModel: TErrorModel): Promise<void> {
-        const { status, viewModel } = this.convertErrorModelToViewModel(errorModel)
+        const { status, viewModel } = await this.convertErrorModelToViewModel(errorModel)
         await this.response.status(status).json(viewModel)
         return Promise.resolve()
     }

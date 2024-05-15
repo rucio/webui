@@ -50,6 +50,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 authHost === ''
             ) {
                 dto = {
+                    status: "error",
                     statusCode: 503,
                     message:
                         'Rucio Auth Server is not configured in the WebUI settings',
@@ -59,6 +60,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 }
             } else {
                 dto = {
+                    status: "error",
                     statusCode: 500,
                     message:
                         'Rucio Auth Server error: fetch failed. Reason: ' +
@@ -72,6 +74,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
         }
         if (!response) {
             dto = {
+                status: "error",
                 statusCode: 502,
                 message: 'Rucio Auth Server did not return a response',
                 account: '',
@@ -83,6 +86,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
 
         if (response.status === 401) {
             dto = {
+                status: "error",
                 statusCode: response.status,
                 message: 'Invalid credentials',
                 account: '',
@@ -94,6 +98,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
 
         if (response.status === 200) {
             let dto: UserPassLoginAuthServerDTO = {
+                status: "success",
                 statusCode: response.status,
                 message: '',
                 account: '',

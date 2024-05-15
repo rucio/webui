@@ -40,7 +40,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
 
     generateErrorResponse(error: AccountAttributeErrorTypesDTO, account: string, message: string): AccountAttributesDTO {
         return {
-            status: 'ERROR',
+            status: 'error',
             error: error,
             account: account,
             attributes: {},
@@ -110,7 +110,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
 
 
         const dto: AccountAttributesDTO = {
-            status: 'OK',
+            status: 'success',
             account: account,
             attributes: data,
         }
