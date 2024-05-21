@@ -107,6 +107,127 @@ export const Layout = (
         )
     }
 
+    const NavBar: React.FC = () => {
+        return (
+            <nav className="bg-gray-800 p-0 m-0 w-max">
+                <div className="container mx-0 w-max flex ">
+                    <ul className="flex space-x-5 md:flex-row flex-col">
+                        <li className="group relative self-center">
+                            <HeaderLinks
+                                href="/dashboard"
+                                className="w-max bg-neutral-800 text-text-100  px-2 py-2 hover:text-brand-500 text-left align-middle"
+                            >
+                                Dashboard
+                            </HeaderLinks>
+                        </li>
+                        <li className="group relative self-center">
+                            <HeaderLinks
+                                href="/did/list"
+                                className="w-max text-text-100 bg-neutral-800 px-2 py-2 hover:text-brand-500 text-left"
+                            >
+                                DIDs
+                            </HeaderLinks>
+                        </li>
+                        <li className="group relative self-center">
+                            <HeaderLinks
+                                href="/rse/list"
+                                className="w-max text-text-100 bg-neutral-800 px-2 py-2 hover:text-brand-500 text-center "
+                            >
+                                RSEs
+                            </HeaderLinks>
+                        </li>
+                        <li className="group relative">
+                            <div className="group-hover:block text-text-100 bg-neutral-800 focus:outline-none px-2 py-2">
+                                Rules
+                                <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-700 mt-1 rounded shadow-lg z-10 p-1 ">
+                                    <HeaderLinks
+                                        href="/rule/create"
+                                        className="w-max pt-2 pl-1 pr-1 text-text-100 bg-neutral-700 block hover:text-brand-500  text-center"
+                                    >
+                                        Create Rule
+                                    </HeaderLinks>
+                                    <HeaderLinks
+                                        href="/rule/list"
+                                        className="pt-2 pb-2 pl-1 pr-1   text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                                    >
+                                        List Rules
+                                    </HeaderLinks>
+                                </div>
+                            </div>
+                        </li>
+                        <li className="group relative">
+                            <div className="group-hover:block text-text-100 bg-neutral-800 focus:outline-none px-2 py-2">
+                                ...
+                                <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-700 mt-1 rounded shadow-lg z-10 p-1">
+                                    <HeaderLinks
+                                        href="/subscription/list"
+                                        className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                                    >
+                                        Subscription
+                                    </HeaderLinks>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        )
+    }
+    const SideNavBar: React.FC = () => {
+        return (
+            <nav className="bg-gray-800 p-0 m-0 w-max">
+                <div className="container mx-0 w-max flex ">
+                <ul className="flex space-x-5 md:flex-row flex-col">
+                    <li className="group relative">
+                    <div className="group-hover:block text-text-100 bg-neutral-800 focus:outline-none px-2 py-2">
+                        <HiMenu className="text-4xl" />
+                        <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-700 mt-1 rounded shadow-lg z-10 p-1">
+                            <HeaderLinks
+                                href="/dashboard"
+                                className="w-max pt-2 pb-2  pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                            >
+                                Dashboard
+                            </HeaderLinks>
+
+                            <HeaderLinks
+                                href="/did/list"
+                                className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                            >
+                                DIDs
+                            </HeaderLinks>
+
+                            <HeaderLinks
+                                href="/rse/list"
+                                className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                            >
+                                RSEs
+                            </HeaderLinks>
+                            <HeaderLinks
+                                href="/rule/create"
+                                className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500  text-center"
+                            >
+                                Create Rule
+                            </HeaderLinks>
+                            <HeaderLinks
+                                href="/rule/list"
+                                className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                            >
+                                List Rules
+                            </HeaderLinks>
+                            <HeaderLinks
+                                href="/subscription/list"
+                                className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                            >
+                                Subscription
+                            </HeaderLinks>
+                        </div>
+                    </div>
+                    </li></ul>
+                </div>
+            </nav>
+        )
+    }
+
     const accountMenuRef = useRef<HTMLDivElement>(null)
     const accountMenuButtonRef = useRef<HTMLButtonElement>(null)
     useEffect(() => {
@@ -151,21 +272,16 @@ export const Layout = (
                     <span
                         className="flex md:hidden"
                     >
-                        <button
-                            className="text-text-100"
-                            onClick={() => { setIsHamburgerOpen(!isHamburgerOpen) }}
-                        >
-                            <HiMenu className="text-4xl" />
-                        </button>
+                        <SideNavBar></SideNavBar>
                     </span>
 
                     <span className="flex flex-row space-x-2">
-                        <a className="bg-neutral-100 w-12 h-12 rounded" href={props.LVM.rucioProjectLink}>
+                        <a className="bg-neutral-100 w-12 h-12 rounded" href={"//"+props.LVM.rucioProjectLink}>
                             <Image src="/logocropped.svg" alt="Rucio Logo" width={48} height={48}/>
                         </a>
-                        <a className="bg-brand-500 w-12 h-12" href={props.LVM.experimentProjectLink} />
+                        <a className="bg-brand-500 w-12 h-12" href={"//"+props.LVM.experimentProjectLink} />
                     </span>
-                    <span className="hidden md:visible md:flex space-x-12 items-center pl-2 pr-2">
+                    <span className="hidden md:visible md:flex space-x-16 items-center pl-2 pr-2">
                         <span className="relative">
                             <input
                                 className={twMerge(
@@ -184,43 +300,10 @@ export const Layout = (
                                 ref={searchMenuRef}
                             />
                         </span>
-                        <HeaderLinks
-                            href="/did/list"
-                            className="w-full pt-2 pb-2 text-text-100 hover:text-brand-500 text-left"
-                            
-                        >
-                           DIDs
-                        </HeaderLinks>
-                        <HeaderLinks
-                            href="/rse/list"
-                            className="w-full pt-2  pb-2 text-text-100 hover:text-brand-500 text-center"
-                        >
-                            RSEs
-                        </HeaderLinks>
-
-                        <button
-                            className="w-full pt-2 pb-2 text-text-100 hover:text-brand-500 text-center"
-                            onClick={() => {
-                                setIsRulesDropDown(!isRulesDropDown)
-                                if (isMoreDropDown)
-                                {setIsMoreDropDown(!isMoreDropDown) }
-                            }}
-                        >
-                            Rules
-                        </button>
-                        <button
-                            className="w-full pt-2 pb-2 text-text-100 hover:text-brand-500 text-center"
-                            onClick={() => {
-                                setIsMoreDropDown(!isMoreDropDown) 
-                                if(isRulesDropDown){
-                                setIsRulesDropDown(!isRulesDropDown)}
-                            }}
-                        >
-                            ...
-                        </button>
+                        <NavBar></NavBar>
                     </span>
 
-                    <span className="flex space-x-2 items-end relative pl-2 pr-2">
+                    <span className="flex space-x-1 items-end relative pl-2 pr-2">
                         <button
                             className="text-text-100 hover:text-brand-500 flex items-center"
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -237,97 +320,6 @@ export const Layout = (
                         />
                     </span>
                 </nav>
-
-                <Collapsible showIf={isRulesDropDown} className="bg-gray-800">
-                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600">
-                        <HeaderLinks
-                            href="/rule/create"
-                            className="w-full pt-2 text-text-100 hover:text-brand-500  text-center"
-                        >
-                            Create Rule
-                        </HeaderLinks>
-                        <HeaderLinks
-                            href="/rule/list"
-                            className="w-full pt-2 pb-2  text-text-100  hover:text-brand-500 text-center"
-                        >
-                            List Rules
-                        </HeaderLinks>
-                    </nav>
-                </Collapsible>
-                <Collapsible showIf={isMoreDropDown} className="bg-gray-800 w-full">
-                    <nav className="w-full md:flex flex-col md:visible hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600">
-                        <HeaderLinks
-                            href="/subscription/list"
-                            className="w-full pt-2 pb-2  text-text-100 hover:text-brand-500 text-center"
-                        >
-                            Subscription
-                        </HeaderLinks>
-                    </nav>
-                </Collapsible>
-
-                <Collapsible showIf={isHamburgerOpen}>
-                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600 ">
-                        <HeaderLinks
-                            href="/did/list"
-                            className="w-full pt-2  text-text-100 hover:text-brand-500 text-left"
-                        >
-                            List DIDs
-                        </HeaderLinks>
-                        <HeaderLinks
-                            href="/rse/list"
-                            className="w-full pt-2  text-text-100 hover:text-brand-500 text-left"
-                        >
-                            List RSEs
-                        </HeaderLinks>
-
-                        <button
-                            className="w-full pt-2 text-text-100 hover:text-brand-500 text-left"
-                            onClick={() => {
-                                setIsRulesDropDown(!isRulesDropDown)
-                                if (isMoreDropDown)
-                                {setIsMoreDropDown(!isMoreDropDown) }
-                            }}
-                        >
-                            Rules
-                        </button>
-                        <Collapsible showIf={isRulesDropDown} className='w-full'>
-                            <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600 ">
-                                <HeaderLinks
-                                    href="/rule/create"
-                                    className="w-full pt-2 text-text-100 hover:text-brand-500 text-left"
-                                >
-                                    Create Rule
-                                </HeaderLinks>
-                                <HeaderLinks
-                                    href="/rule/list"
-                                    className="w-full pt-2  text-text-100 hover:text-brand-500 text-left"
-                                >
-                                    List Rules
-                                </HeaderLinks>
-                            </nav>
-                        </Collapsible>
-                        <button
-                            className="w-full pt-1 pb-1 text-text-100 hover:text-brand-500 text-left"
-                            onClick={() => {
-                                setIsMoreDropDown(!isMoreDropDown) 
-                                if(isRulesDropDown){
-                                    setIsRulesDropDown(!isRulesDropDown)}
-                            }}
-                        >
-                            ...
-                        </button>
-                        <Collapsible showIf={isMoreDropDown} className="w-full">
-                    <nav className="w-full flex flex-col md:hidden items-start space-y-2 divide-y divide-neutral-600 border-t border-neutral-600 ">
-                        <HeaderLinks
-                            href="/subscription/list"
-                            className="w-full pt-2 pb-2  text-text-100 hover:text-brand-500 text-left"
-                        >
-                            Subscription
-                        </HeaderLinks>
-                    </nav>
-                </Collapsible>
-                    </nav>
-                </Collapsible>
             </header>
             <main
                 className={twMerge(
