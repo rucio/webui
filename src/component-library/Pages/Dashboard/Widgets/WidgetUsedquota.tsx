@@ -6,8 +6,7 @@ import { Pie } from 'react-chartjs-2';
 import { BoolTag } from "@/component-library/Tags/BoolTag";
 import { Number } from "@/component-library/Text/Content/Number";
 import { Contenttd, Generaltable, Titleth } from "@/component-library/Helpers/Metatable";
-import { useEffect, useState } from "react";
-
+import tailwind from "@/tailwind"
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const RSEPie: React.FC<JSX.IntrinsicElements["div"] & {
@@ -20,13 +19,20 @@ const RSEPie: React.FC<JSX.IntrinsicElements["div"] & {
         labels: ["Used", "Free"],
         datasets: [{
             data: [input.used, input.quota - input.used],
-            backgroundColor: ["#f87171", "#86efac"]
+            backgroundColor: [tailwind.theme.extend.colors.brand[400],tailwind.theme.extend.colors.extra.emerald[400]]
         }]
     }
+
+    const isDarkMode = () =>
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
     const options = {
         plugins: {
             legend: {
-                display: small
+                display: true,
+                labels:{
+                    color: isDarkMode() ? tailwind.theme.extend.colors.text[200] : tailwind.theme.extend.colors.text[900],
+                }
             },
         }
     }
@@ -34,7 +40,7 @@ const RSEPie: React.FC<JSX.IntrinsicElements["div"] & {
     return (
         <div
             className={twMerge(
-                "w-52 md:w-96 h-auto",
+                "h-auto",
                 "flex flex-col justify-start items-center",
                 hideWhenSmall ? "hidden md:flex" : "",
                 className ?? "",
@@ -44,13 +50,13 @@ const RSEPie: React.FC<JSX.IntrinsicElements["div"] & {
         >
             <label
                 className={twMerge(
-                    "break-all",
+                    "w-max",
                 )}
                 htmlFor={customid}
             >
                 {input.rse}
             </label>
-            <div className="relative w-24 md:w-72">
+            <div className="relative flex w-full">
                 <Pie
                     data={data}
                     options={options}
@@ -87,25 +93,6 @@ export const WidgetUsedquota: React.FC<JSX.IntrinsicElements["div"] & {
     }
 ) => {
         const { className, ...otherprops } = props
-        const [windowSize, setWindowSize] = useState([
-            1920, 1080
-        ]);
-
-        useEffect(() => {
-            setWindowSize([window.innerWidth, window.innerHeight])
-
-            const handleWindowResize = () => {
-                setWindowSize([window.innerWidth, window.innerHeight]);
-            };
-
-            window.addEventListener('resize', handleWindowResize);
-
-            return () => {
-                window.removeEventListener('resize', handleWindowResize);
-            };
-        }, []);
-
-        const isSm = () => windowSize[0] > 640  // 640px is the breakpoint for sm => is minimum sm sized
 
         return (
             <div
@@ -116,7 +103,7 @@ export const WidgetUsedquota: React.FC<JSX.IntrinsicElements["div"] & {
                 {...otherprops}
             >
                 <div>
-                    <H4 className="font-bold">Top Used RSEs</H4>
+                    <H4 className="font-bold dark:text-text-0 text-text-1000">Top Used RSEs</H4>
                 </div>
                 <div
                     className={twMerge(
@@ -124,12 +111,12 @@ export const WidgetUsedquota: React.FC<JSX.IntrinsicElements["div"] & {
                         "dark:text-text-0 text-text-1000"
                     )}
                 >
-                    <RSEPie input={input[0]} small={isSm()} />
-                    <RSEPie input={input[1]} small={isSm()} />
-                    <RSEPie input={input[2]} small={isSm()} />
-                    <RSEPie input={input[3]} small={isSm()} hideWhenSmall />
-                    <RSEPie input={input[4]} small={isSm()} hideWhenSmall />
-                    <RSEPie input={input[5]} small={isSm()} hideWhenSmall />
+                    <RSEPie input={input[0]} />
+                    <RSEPie input={input[1]} />
+                    <RSEPie input={input[2]} />
+                    <RSEPie input={input[3]} hideWhenSmall/>
+                    <RSEPie input={input[4]} hideWhenSmall />
+                    <RSEPie input={input[5]} hideWhenSmall />
                 </div>
             </div>
         );

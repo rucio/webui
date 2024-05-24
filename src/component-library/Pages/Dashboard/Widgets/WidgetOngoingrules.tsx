@@ -19,6 +19,7 @@ import {
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { TableSortUpDown } from "@/component-library/StreamedTables/TableSortUpDown.stories";
+import tailwind from "@/tailwind"
 
 ChartJS.register(
     CategoryScale,
@@ -83,6 +84,14 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
             labels: [],
             datasets: []
         })
+        const isDarkMode = () =>
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        window.matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change',() => {
+                location.reload();
+            })
+
         const options = {
             indexAxis: "y" as const,
             responsive: true,
@@ -92,13 +101,21 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
                     title: {
                         display: true,
                         text: "Percentage [%]",
+                        color: isDarkMode() ? tailwind.theme.extend.colors.text[200] : tailwind.theme.extend.colors.text[900],
                     },
                     stacked: true,
                     min: 0,
                     max: 100,
+                    ticks: {
+                        color: isDarkMode() ? tailwind.theme.extend.colors.text[200] : tailwind.theme.extend.colors.text[900],
+                    }
                 },
                 y: {
                     stacked: true,
+                    ticks: {
+                        autoSkip: false,
+                        color: isDarkMode() ? tailwind.theme.extend.colors.text[200] : tailwind.theme.extend.colors.text[900],
+                      }
                 }
             },
             plugins: {
@@ -156,17 +173,17 @@ export const WidgetOngoingrules: React.FC<JSX.IntrinsicElements["div"] & {
                     {
                         label: "OK",
                         data: rows.map(row => percentify(row.getValue("ok"), row)),
-                        backgroundColor: "#bef264"
+                        backgroundColor: tailwind.theme.extend.colors.base.success[300],
                     },
                     {
                         label: "Replicating",
                         data: rows.map(row => percentify(row.getValue("replicating"), row)),
-                        backgroundColor: "#fcd34d",
+                        backgroundColor: tailwind.theme.extend.colors.base.warning[300],
                     },
                     {
                         label: "Stuck",
                         data: rows.map(row => percentify(row.getValue("stuck"), row)),
-                        backgroundColor: "#f87171"
+                        backgroundColor: tailwind.theme.extend.colors.base.error[400],
                     }
                 ]
             } as ChartData<ChartDataNumeric>
