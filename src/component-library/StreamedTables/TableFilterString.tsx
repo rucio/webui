@@ -68,14 +68,14 @@ export function TableFilterString(
         return (
             <form
                 className={twMerge(
-                    "flex flex-row justify-between items-baseline space-x-8",
+                    "flex flex-row flex-wrap justify-between items-baseline ",
                     "pr-2",
                     className ?? "",
                 )}
                 role="search"
                 aria-label={`Filter ${name} Column`}
             >
-                <span className="shrink-0">
+                <span className="">
                     <H3>{name}</H3>
                 </span>
                 <Filter

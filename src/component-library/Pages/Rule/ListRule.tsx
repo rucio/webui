@@ -101,7 +101,7 @@ export const ListRule = (
                 )
             },
             meta: {
-                style: "w-36"
+                style: ""
             }
         }),
         columnHelper.accessor("remaining_lifetime", {
@@ -118,7 +118,7 @@ export const ListRule = (
                 )
             },
             meta: {
-                style: "w-32"
+                style: ""
             }
         }),
         columnHelper.accessor("state", {
@@ -136,12 +136,12 @@ export const ListRule = (
                 )
             },
             meta: {
-                style: "w-44"
+                style: "md:w-44 w-28"
             }
         }),
         columnHelper.accessor("locks_ok_cnt", {
             id: "locks_ok_cnt",
-            cell: info => <P className="text-right dark:text-text-0 text-text-1000">{info.getValue()}</P>,
+            cell: info => <P className="text-right dark:text-text-0  text-text-1000">{info.getValue()}</P>,
             header: info => {
                 return (
                     <TableSortUpDown
