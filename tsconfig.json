@@ -29,7 +29,8 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "@/tailwind": ["./tailwind.config.js"]
     }
   },
   "include": [
