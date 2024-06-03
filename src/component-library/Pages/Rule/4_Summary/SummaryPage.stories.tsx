@@ -15,12 +15,6 @@ export const SummaryPage = Template.bind({})
 SummaryPage.args = {
     data: {
         status: 'success',
-        DIDList: [
-            'user.AndrewJenkins:dataset-dBDUMqZWnMImKbhZCJUA',
-            'user.SandraOrtiz:file-SxbkaPRbmlZezztEiAZl',
-            'user.AnneDrake:dataset-iSbQaNzafdlsFDiugmxv'
-        ],
-        RSEList: ["rse_6"],
         DIDViewModels: [
             fixtureListDIDViewModel(),
             fixtureListDIDViewModel(),
