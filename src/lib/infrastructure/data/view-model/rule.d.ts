@@ -6,8 +6,6 @@ export interface RuleViewModel extends Rule, BaseViewModel {}
 export interface RulePageLockEntryViewModel extends RulePageLockEntry, BaseViewModel {}
 export interface RuleMetaViewModel extends RuleMeta, BaseViewModel {}
 export interface RuleSummaryViewModel extends BaseViewModel {
-    DIDList: Array<DIDName>
-    RSEList: Array<RSEName>
     RSEViewModels: Array<RSEAccountUsageLimitViewModel>
     DIDViewModels: Array<DIDLong>
     expirydate: Date
