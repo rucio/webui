@@ -1,6 +1,6 @@
-import { BoolTag } from "../../Tags/BoolTag"
+import { BoolTag } from "../../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
-import { DIDTypeTag } from "../../Tags/DIDTypeTag"
+import { DIDTypeTag } from "../../../Tags/DIDTypeTag"
 import { RuleSummaryViewModel } from "@/lib/infrastructure/data/view-model/rule"
 import { DIDSummaryTable, TDIDSummaryTableRowProps } from "./DIDSummaryTable"
 import { RSESummaryTable } from "./RSESummaryTable"
