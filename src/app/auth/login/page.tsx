@@ -75,7 +75,7 @@ export default function Login() {
             console.log(error)
             return Promise.resolve({
                 status: 'error',
-                message: 'An error occurred while trying to login with x509 certificate: ' + error,
+                message: 'An error occurred while trying to login with x509 certificate: ' + (error as Error).message,
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
