@@ -133,6 +133,11 @@ export class WebUIEnvTemplateCompiler {
 
     const requiredVariables: string[] = ["rucio_host", "rucio_auth_host", "hostname", "project_url", "vo_default", "vo_list"]
 
+    // check if NODE_TLS_REJECT_UNAUTHORIZED is set to 1, then NODE_EXTRA_TLS_CERTS should be set
+    if(env['NODE_TLS_REJECT_UNAUTHORIZED'] === '1') {
+      requiredVariables.push('CA_BUNDLE')
+    }
+
     // check if all required variables are set
     requiredVariables.forEach((key) => {
       let keyName = `${key.toUpperCase()}`
