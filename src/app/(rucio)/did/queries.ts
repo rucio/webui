@@ -1,8 +1,7 @@
 import { DIDKeyValuePairsDataViewModel, DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did";
-import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 
 export async function didMetaQueryBase(scope: string, name: string): Promise<DIDMetaViewModel> {
-    const req: HTTPRequest = {
+    const req: any = {
         method: "GET",
         url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/get-did-meta`),
         params: {
@@ -14,8 +13,7 @@ export async function didMetaQueryBase(scope: string, name: string): Promise<DID
         } as HeadersInit)
     }
 
-    const { url, requestArgs } = prepareRequestArgs(req)
-    const res = await fetch(url, {
+    const res = await fetch(req.url, {
         method: "GET",
         headers: new Headers({
             'Content-Type': 'application/json',
@@ -26,7 +24,7 @@ export async function didMetaQueryBase(scope: string, name: string): Promise<DID
 }
 
 export async function didKeyValuePairsDataQuery(scope: string, name: string): Promise<DIDKeyValuePairsDataViewModel> {
-    const req: HTTPRequest = {
+    const req: any = {
         method: "GET",
         url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/get-did-keyvaluepairs`),
         params: {
@@ -38,8 +36,7 @@ export async function didKeyValuePairsDataQuery(scope: string, name: string): Pr
         } as HeadersInit)
     }
 
-    const { url, requestArgs } = prepareRequestArgs(req)
-    const res = await fetch(url, {
+    const res = await fetch(req.url, {
         method: "GET",
         headers: new Headers({
             'Content-Type': 'application/json',

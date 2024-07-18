@@ -4,7 +4,6 @@ import { ListDID as ListDIDStory } from "@/component-library/Pages/DID/ListDID";
 import { DIDType } from "@/lib/core/entity/rucio";
 import { DIDMetaViewModel, DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
 import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 import { useEffect, useState } from "react";
 import { didMetaQueryBase } from "../queries";
 
@@ -14,9 +13,8 @@ export default function Page() {
     const didMetaQuery = async (scope: string, name: string) => {
         setDIDMetaQueryResponse(await didMetaQueryBase(scope, name))
     }
-
     const didQuery = async (query: string, type: DIDType) => {
-        const request: HTTPRequest = {
+        const request: any = {
             url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-dids`),
             method: 'GET',
             headers: new Headers({
@@ -26,6 +24,7 @@ export default function Page() {
                 "query": query,
                 "type": type
             },
+
         }
         console.log(request)
         await DIDSearchComDOM.setRequest(request)

@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { PageSubscription as PageSubscriptionStory } from "@/component-library/Pages/Subscriptions/PageSubscription";
 import { SubscriptionViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
-import { fixtureSubscriptionViewModel } from "test/fixtures/table-fixtures";
-import { HTTPRequest, prepareRequestArgs } from "@/lib/sdk/http";
 import { Loading } from "@/component-library/Pages/Helpers/Loading";
 
 async function updateSubscription(
@@ -12,7 +10,7 @@ async function updateSubscription(
     filter: string,
     replicationRules: string
 ) {
-    const req: HTTPRequest = {
+    const req: any = {
         method: "PUT",
         url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/mock-update-subscription`),
         headers: {
@@ -26,13 +24,12 @@ async function updateSubscription(
             replicationRules: replicationRules,
         },
     }
-    const { url, requestArgs } = prepareRequestArgs(req)
-    const res = await fetch(url, {
+    const res = await fetch(req.url, {
         method: "PUT",
         headers: new Headers({
             'Content-Type': 'application/json',
         } as HeadersInit),
-        body: JSON.stringify(requestArgs.body) as BodyInit,
+        body: JSON.stringify(req.body) as BodyInit,
     })
 
     return await res.json()
@@ -44,7 +41,7 @@ export default function PageSubscription({ params }: { params: { account: string
         subscriptionQuery(params.account, params.name).then(setSubscriptionViewModel)
     }, [])
     async function subscriptionQuery(account: string, name: string): Promise<SubscriptionViewModel> {
-        const req: HTTPRequest = {
+        const req: any = {
             method: "GET",
             url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/get-subscription`),
             params: {
@@ -56,8 +53,7 @@ export default function PageSubscription({ params }: { params: { account: string
             } as HeadersInit)
         }
 
-        const { url, requestArgs } = prepareRequestArgs(req)
-        const res = await fetch(url, {
+        const res = await fetch(req.url, {
             method: "GET",
             headers: new Headers({
                 'Content-Type': 'application/json',
