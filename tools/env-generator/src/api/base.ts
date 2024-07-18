@@ -135,7 +135,7 @@ export class WebUIEnvTemplateCompiler {
 
     // check if NODE_TLS_REJECT_UNAUTHORIZED is set to 1, then NODE_EXTRA_TLS_CERTS should be set
     if(env['NODE_TLS_REJECT_UNAUTHORIZED'] === '1') {
-      requiredVariables.push('CA_BUNDLE')
+      requiredVariables.push('SERVER_CA_BUNDLE')
     }
 
     // check if all required variables are set
