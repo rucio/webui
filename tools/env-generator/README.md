@@ -10,22 +10,21 @@ This tool is used to generate the `.env.production` or `.env` or `.env.developme
 cp .env.template .env.base
 ```
 
-2. Edit the `.env.base` file and add the required environment variables. All the variables **MUST** be prefixed with ` RUCIO*WEBUI*`` The variables should be added in the following format:
- `export RUCIO*WEBUI*<VARIABLE_NAME>=<VARIABLE_VALUE>`
+2. Edit the `.env.base` file and add the required environment variables. All the variables **MUST** be prefixed with ` RUCIO*WEBUI*`` The variables should be added in the following format: `export RUCIO*WEBUI*<VARIABLE_NAME>=<VARIABLE_VALUE>`
 
-| Variable Name   | Full Name                   | Description                                                                                | Example                        | Default |
-| --------------- | --------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------ | ------- |
-| RUCIO_HOST      | RUCIO_WEBUI_RUCIO_HOST      | URL for the Rucio Server                                                                   | https://rucio-lb-prod.cern.ch  |         |
-| RUCIO_AUTH_HOST | RUCIO_WEBUI_RUCIO_AUTH_HOST | URL for the Rucio authentication server                                                    | https://rucio-auth-host.ch:443 |         |
-| HOSTNAME        | RUCIO_WEBUI_HOSTNAME        | Public HOSTNAME at which Rucio WebUI will be accessible. It may include port number.       | rucio-ui.cern.ch               |         |
-| ENABLE_SSL      | RUCIO_WEBUI_ENABLE_SSL      | Enable or Disable TLS Termination (true or false)                                          | true                           | false   |
-| CA_BUNDLE       | RUCIO_WEBUI_CA_BUNDLE       | Path to the CA bundle file that can verify Rucio Server certificate. If ENABLE_SSL is set. | /path/to/ca-bundle.pem         |         |
-| PROJECT_URL     | RUCIO_WEBUI_PROJECT_URL     | Public URL for your project                                                                | https://atlas.cern.ch          |         |
-| VO_DEFAULT      | RUCIO_WEBUI_VO_DEFAULT      | Short name for the default VO used for authentication                                      | def                            | def     |
-| VO_LIST         | RUCIO_WEBUI_VO_LIST         | CSV string containing the list of supported VOs                                            | def, atl, cms                  | def     |
-| MULTIVO_ENABLED | RUCIO_WEBUI_MULTIVO_ENABLED | Whether to enable multi-VO config (true or false)                                          | true                           |         |
-| OIDC_ENABLED    | RUCIO_WEBUI_OIDC_ENABLED    | Enable or Disable OIDC Authentication (true or false)                                      | true                           |         |
-| OIDC_PROVIDERS  | RUCIO_WEBUI_OIDC_PROVIDERS  | CSV string containing names of OIDC Providers                                              | cern, indigo                   |         |
+| Variable Name    | Full Name                    | Description                                                                                | Example                        | Default |
+| ---------------- | ---------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------ | ------- |
+| RUCIO_HOST       | RUCIO_WEBUI_RUCIO_HOST       | URL for the Rucio Server                                                                   | https://rucio-lb-prod.cern.ch  |         |
+| RUCIO_AUTH_HOST  | RUCIO_WEBUI_RUCIO_AUTH_HOST  | URL for the Rucio authentication server                                                    | https://rucio-auth-host.ch:443 |         |
+| HOSTNAME         | RUCIO_WEBUI_HOSTNAME         | Public HOSTNAME at which Rucio WebUI will be accessible. It may include port number.       | rucio-ui.cern.ch               |         |
+| ENABLE_SSL       | RUCIO_WEBUI_ENABLE_SSL       | Enable or Disable TLS Termination (true or false)                                          | true                           | false   |
+| SERVER_CA_BUNDLE | RUCIO_WEBUI_SERVER_CA_BUNDLE | Path to the CA bundle file that can verify Rucio Server certificate. If ENABLE_SSL is set. | /path/to/ca-bundle.pem         |         |
+| PROJECT_URL      | RUCIO_WEBUI_PROJECT_URL      | Public URL for your project                                                                | https://atlas.cern.ch          |         |
+| VO_DEFAULT       | RUCIO_WEBUI_VO_DEFAULT       | Short name for the default VO used for authentication                                      | def                            | def     |
+| VO_LIST          | RUCIO_WEBUI_VO_LIST          | CSV string containing the list of supported VOs                                            | def, atl, cms                  | def     |
+| MULTIVO_ENABLED  | RUCIO_WEBUI_MULTIVO_ENABLED  | Whether to enable multi-VO config (true or false)                                          | true                           |         |
+| OIDC_ENABLED     | RUCIO_WEBUI_OIDC_ENABLED     | Enable or Disable OIDC Authentication (true or false)                                      | true                           |         |
+| OIDC_PROVIDERS   | RUCIO_WEBUI_OIDC_PROVIDERS   | CSV string containing names of OIDC Providers                                              | cern, indigo                   |         |
 
 For each `VO` specified in the `VO_LIST` variable, the additional variables need to be specified. The variables should be added in the following format:
 `export RUCIO_WEBUI_VO_<VO_SHORT_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>`. An example for the default VO is shown below:
