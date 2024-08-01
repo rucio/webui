@@ -29,6 +29,7 @@ const USECASE_FACTORY = {
     STREAM: Symbol.for("Factory<StreamUseCase>"),
     SWITCH_ACCOUNT: Symbol.for("Factory<SwitchAccountUseCase>"),
     USERPASS_LOGIN: Symbol.for("Factory<UserPassLoginUseCase>"),
+    USERPASS_LOGIN_V2: Symbol.for("Factory<UserPassLoginV2UseCase>"),
 
 }
 

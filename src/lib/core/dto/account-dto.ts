@@ -11,10 +11,9 @@ export type TAccountAttributes = TAccountAttribute[]
 /**
  * Account Attributes DTO to store the response from /accounts/<account>/attr/ endpoint
  */
-export type AccountAttributesDTO = {
+export type AccountAttributesDTO = BaseDTO & {
     account: string,
     attributes: TAccountAttributes,
-    status: 'OK' | 'ERROR'
     error?: AccountAttributeErrorTypesDTO
     message?: string 
 }
