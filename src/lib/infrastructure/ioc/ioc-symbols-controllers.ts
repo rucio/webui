@@ -23,6 +23,8 @@ const CONTROLLERS = {
     LIST_RSES: Symbol.for("ListRSEsController"),
     LIST_SUBSCRIPTIONS: Symbol.for("ListSubscriptionsController"),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for("ListSubscriptionRuleStatesController"),
+    LIST_TRANSFER_STATS: Symbol.for("ListTransferStatsController"),
+    LIST_TRANSFERS: Symbol.for("ListTransfersController"),
     LOGIN_CONFIG: Symbol.for("LoginConfigController"),
     SET_X509_LOGIN_SESSION: Symbol.for("SetX509LoginSessionController"),
     GET_SITE_HEADER: Symbol.for("SiteHeaderController"),

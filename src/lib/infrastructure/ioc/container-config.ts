@@ -62,6 +62,10 @@ import RuleGatewayOutputPort from "@/lib/core/port/secondary/rule-gateway-output
 import RuleGateway from "../gateway/rule-gateway/rule-gateway";
 import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feature";
 import GetAccountInfoFeature from "./features/get-account-info-feature";
+import TransferGatewayOutputPort from "@/lib/core/port/secondary/transfer-gateway-output-port";
+import TransferGateway from "../gateway/transfer-gateway/transfer-gateway";
+import ListTransferStatsFeature from "./features/list-transfer-stats-feature";
+import ListTransfersFeature from "./features/list-transfers-feature";
 
 
 /**
@@ -77,6 +81,7 @@ appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway)
 appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
 appContainer.bind<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA).to(ReplicaGateway);
 appContainer.bind<RuleGatewayOutputPort>(GATEWAYS.RULE).to(RuleGateway);
+appContainer.bind<TransferGatewayOutputPort>(GATEWAYS.TRANSFER).to(TransferGateway);
 
 // Load Common Features
 loadFeaturesSync(appContainer, [
@@ -124,6 +129,12 @@ loadFeaturesSync(appContainer, [
 //Features: List Subscriptions
 loadFeaturesSync(appContainer, [
     new ListSubscriptionRuleStatesFeature(appContainer),
+])
+
+// Features: List Transfers
+loadFeaturesSync(appContainer, [
+    new ListTransferStatsFeature(appContainer),
+    new ListTransfersFeature(appContainer),
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
