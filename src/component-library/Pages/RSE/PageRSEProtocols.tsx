@@ -62,19 +62,19 @@ export const PageRSEProtocols = (
             meta: shortstyleblue
         }),
         columnHelper.accessor("priorities_wan.read", {
-            id: "priorities_lan.read",
+            id: "priorities_wan.read",
             header: info => <TableSortUpDown name="WAN/R" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink
         }),
         columnHelper.accessor("priorities_wan.write", {
-            id: "priorities_lan.write",
+            id: "priorities_wan.write",
             header: info => <TableSortUpDown name="WAN/W" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink
         }),
         columnHelper.accessor("priorities_wan.delete", {
-            id: "priorities_lan.delete",
+            id: "priorities_wan.delete",
             header: info => <TableSortUpDown name="WAN/D" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink,
@@ -86,13 +86,13 @@ export const PageRSEProtocols = (
         //     meta: shortstylepink,
         // }),
         columnHelper.accessor("priorities_wan.tpcwrite", {
-            id: "priorities_lan.tpcwrite",
+            id: "priorities_wan.tpcwrite",
             header: info => <TableSortUpDown name="TPC/W" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink,
         }),
         columnHelper.accessor("priorities_wan.tpcread", {
-            id: "priorities_lan.tpcread",
+            id: "priorities_wan.tpcread",
             header: info => <TableSortUpDown name="TPC/R" column={info.column} stack />,
             cell: info => <P className="break-all pr-1 text-right text-text-1000">{info.getValue()}</P>,
             meta: shortstylepink,
