@@ -18,6 +18,8 @@ import { TextInput } from "@/component-library/Input/TextInput";
 import { useState } from "react";
 import { Button } from "@/component-library/Button/Button";
 
+const defaultRSEQuery = "*";
+
 export const ListRSE = (
     props: {
         comdom: UseComDOM<RSEViewModel>
@@ -25,7 +27,10 @@ export const ListRSE = (
     }
 ) => {
 
-    const [rseSearchQuery, setRSESearchQuery] = useState<string>("")
+    const [rseSearchQuery, setRSESearchQuery] = useState<string>(defaultRSEQuery)
+    const setInputAsQuery = (searchPattern: string) => {
+        setRSESearchQuery(searchPattern !== '' ? searchPattern : defaultRSEQuery)
+    }
 
     const columnHelper = createColumnHelper<RSEViewModel>()
     const tablecolumns = [
@@ -144,21 +149,22 @@ export const ListRSE = (
                         RSE Search Pattern
                     </label>
                     <TextInput
-                        onBlur={(event: any) => { setRSESearchQuery(event.target.value) }}
-                        onEnterkey={async (e: any) => {
+                        onBlur={(event: any) => { setInputAsQuery(event.target.value) }}
+                        onEnterkey={(e) => {
                             e.preventDefault()
-                            await props.setRSEQuery(e.target.value)
-                            setRSESearchQuery(e.target.value)
+                            setInputAsQuery(e.target.value)
+                            props.setRSEQuery(rseSearchQuery)
                             props.comdom.start()
                         }}
                         id="rse-search-pattern"
+                        placeholder={defaultRSEQuery}
                     />
                     <Button
                         type="button"
                         label="Search"
-                        onClick={async (e: any) => {
+                        onClick={(e: any) => {
                             e.preventDefault()
-                            await props.setRSEQuery(rseSearchQuery)
+                            props.setRSEQuery(rseSearchQuery)
                             props.comdom.start()
                         }}
                         className={twMerge(
