@@ -26,7 +26,6 @@ export default function Page() {
             },
 
         }
-        console.log(request)
         await DIDSearchComDOM.setRequest(request)
     }
 
