@@ -40,3 +40,11 @@ export type UserpassLoginError = {
     type: 'AUTH_SERVER_CONFIGURATION_ERROR' | 'AUTH_SERVER_SIDE_ERROR' | 'INVALID_CREDENTIALS' | 'UNKNOWN_ERROR';
     message: string;
 }
+
+/**
+ * IncompleteModel for {@link UserPassLoginOutputPort}, if account needs to be specified
+ * @property {string} multipleAccounts - Comma-separated list of available accounts
+ */
+export type UserpassLoginIncomplete = {
+    availableAccounts: string;
+}
