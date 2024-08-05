@@ -31,12 +31,14 @@ export interface LoginPageProps {
 interface MultipleAccountsModal {
     submitX509: (account: string | undefined) => Promise<void>,
     availableAccounts: string[],
+    onClose: () => void,
 }
 
 
 const MultipleAccountsModal = ({
     submitX509,
     availableAccounts,
+    onClose
 }: MultipleAccountsModal) => {
     const [chosenAccount, setChosenAccount] = useState<string | undefined>(undefined);
 
@@ -44,6 +46,7 @@ const MultipleAccountsModal = ({
         isOpen={availableAccounts.length !== 0}
         onRequestClose={() => {
             setChosenAccount(undefined)
+            onClose()
         }}
         ariaHideApp={false}
         overlayClassName="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50" // will not work if set with twmerge (uses custom regex)
@@ -135,7 +138,11 @@ export const Login = ({
             )}
             id="root"
         >
-            <MultipleAccountsModal submitX509={submitX509} availableAccounts={availableAccounts}></MultipleAccountsModal>
+            <MultipleAccountsModal
+                submitX509={submitX509}
+                availableAccounts={availableAccounts}
+                onClose={() => setAvailableAccounts([])}
+            />
             <Collapsible id='login-page-error' showIf={error !== undefined}>
                 <Alert variant="error" message={error} onClose={
                     () => {
