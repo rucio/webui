@@ -29,14 +29,14 @@ export interface LoginPageProps {
 
 
 interface MultipleAccountsModal {
-    submitX509: (account: string | undefined) => Promise<void>,
+    submit: (account: string | undefined) => Promise<void>,
     availableAccounts: string[],
     onClose: () => void,
 }
 
 
 const MultipleAccountsModal = ({
-    submitX509,
+    submit,
     availableAccounts,
     onClose
 }: MultipleAccountsModal) => {
@@ -74,7 +74,7 @@ const MultipleAccountsModal = ({
             label="Select"
             disabled={chosenAccount === undefined}
             onClick={async () => {
-                await submitX509(chosenAccount);
+                await submit(chosenAccount);
             }}
         />
     </Modal>
@@ -101,6 +101,7 @@ export const Login = ({
     const [error, setError] = useState<string | undefined>(undefined)
 
     const [availableAccounts, setAvailableAccounts] = useState<string[]>([])
+    const [lastAuthMethod, setLastAuthMethod] = useState<'userpass' | 'x509' | undefined>(undefined)
 
     const handleAuthViewModel = (authViewModel: AuthViewModel) => {
         if (authViewModel.status === 'error') {
@@ -117,9 +118,16 @@ export const Login = ({
 
         if (!x509AuthViewModel) return
 
+        setLastAuthMethod('x509')
         handleAuthViewModel(x509AuthViewModel)
         handleX509Session(x509AuthViewModel, account || "", vo.shortName)
     };
+
+    const submitUserPass = async (account: string | undefined) => {
+        handleUserPassSubmit(username, password, loginViewModel.voList[selectedVOTab], account)
+        setLastAuthMethod('userpass')
+        return Promise.resolve()
+    }
 
     useEffect(() => {
         if (authViewModel) {
@@ -140,7 +148,7 @@ export const Login = ({
             id="root"
         >
             <MultipleAccountsModal
-                submitX509={submitX509}
+                submit={lastAuthMethod === 'x509' ? submitX509 : submitUserPass}
                 availableAccounts={availableAccounts}
                 onClose={() => setAvailableAccounts([])}
             />
@@ -228,14 +236,7 @@ export const Login = ({
                             label="Login"
                             type="submit"
                             role="button"
-                            onClick={async () => {
-                                await handleUserPassSubmit(
-                                    username,
-                                    password,
-                                    loginViewModel.voList[selectedVOTab],
-                                    inputAccount
-                                )
-                            }}
+                            onClick={() => submitUserPass(inputAccount)}
                         />             
                     </fieldset>
                     </form>
