@@ -28,6 +28,52 @@ export interface LoginPageProps {
 }
 
 
+interface MultipleAccountsModal {
+    submitX509: (account: string | undefined) => Promise<void>,
+    availableAccounts: string[],
+}
+
+
+const MultipleAccountsModal = ({
+    submitX509,
+    availableAccounts,
+}: MultipleAccountsModal) => {
+    const [chosenAccount, setChosenAccount] = useState<string | undefined>(undefined);
+
+    return <Modal
+        isOpen={availableAccounts.length !== 0}
+        onRequestClose={() => {
+            setChosenAccount(undefined)
+        }}
+        overlayClassName="fixed bg-transparent inset-0 z-0" // will not work if set with twmerge (uses custom regex)
+        className={twMerge(
+            "absolute top-32 inset-x-32 rounded shadow",
+            "border-2",
+            "bg-neutral-0 dark:bg-neutral-800",
+            "flex flex-col space-y-2 p-2"
+        )}
+        contentLabel="Multiaccount Modal"
+    >
+        <H2>Select Account</H2>
+        <P>Multiple accounts are mapped to the passed credentials. Choose one to continue.</P>
+        <Dropdown<string>
+            keys={availableAccounts}
+            renderFunc={(key: string | undefined) => { return (<p>{key ?? "Select an account"}</p>) }}
+            handleChange={(key: string | undefined) => { setChosenAccount(key) }}
+            disableUndefined
+        />
+        <Button
+            type="submit"
+            label="Select"
+            disabled={chosenAccount === undefined}
+            onClick={async () => {
+                await submitX509(chosenAccount);
+            }}
+        />
+    </Modal>
+}
+
+
 export const Login = ({
     loginViewModel,
     authViewModel,
@@ -43,23 +89,27 @@ export const Login = ({
 
     const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    const [account, setAccount] = useState<string | undefined>(undefined)
+    const [inputAccount, setInputAccount] = useState<string | undefined>(undefined)
 
     const [error, setError] = useState<string | undefined>(undefined)
 
-    const [multiaccounts, setMultiaccounts] = useState<string[]>([])
-    const [multiaccountModal, setMultiaccountModal] = useState<boolean>(false)
+    const [availableAccounts, setAvailableAccounts] = useState<string[]>([])
 
-    useEffect(() => {
-        setMultiaccounts(authViewModel?.rucioMultiAccount?.split(',') ?? [])
-    }, [authViewModel])
-    useEffect(() => {
-        if (multiaccounts.length > 1) {
-            setMultiaccountModal(true)
-        } else {
-            setMultiaccountModal(false)
+    const submitX509 = async (account: string | undefined) => {
+        const vo = loginViewModel.voList[selectedVOTab] || DefaultVO
+        const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
+
+        if (!x509AuthViewModel) return
+
+        if (x509AuthViewModel.status === 'error') {
+            setError(x509AuthViewModel.message)
+        } else if (x509AuthViewModel.status === 'multiple_accounts') {
+            const accounts = x509AuthViewModel.message?.split(',')
+            setAvailableAccounts(accounts ?? [])
         }
-    }, [multiaccounts])
+
+        handleX509Session(x509AuthViewModel, account || "", vo.shortName)
+    };
 
     useEffect(() => {
         if (authViewModel && authViewModel.status === 'error') {
@@ -81,33 +131,7 @@ export const Login = ({
             )}
             id="root"
         >
-            <Modal
-                isOpen={multiaccountModal}
-                onRequestClose={() => { setMultiaccountModal(false) }}
-                overlayClassName="fixed bg-transparent inset-0 z-0" // will not work if set with twmerge (uses custom regex)
-                className={twMerge(
-                    "absolute top-32 inset-x-32 rounded shadow",
-                    "border-2",
-                    "bg-neutral-0 dark:bg-neutral-800",
-                    "flex flex-col space-y-2 p-2"
-                )}
-                contentLabel="Multiaccount Modal"
-            >
-                <H2>Select Account</H2>
-                <P>Multiple accounts are mapped to the passed credentials. Choose one to continue.</P>
-                <Dropdown<string>
-                    keys={multiaccounts}
-                    renderFunc={(key: string | undefined) => { return (<p>{key ?? "select an account"}</p>) }}
-                    handleChange={(key: string | undefined) => { setAccount(key) }}
-                    disableUndefined
-                />
-                <Button
-                    type="submit"
-                    label="Select"
-                    disabled={account === undefined}
-                    onClick={() => {setMultiaccountModal(false)}}
-                />
-            </Modal>
+            <MultipleAccountsModal submitX509={submitX509} availableAccounts={availableAccounts}></MultipleAccountsModal>
             <Collapsible id='login-page-error' showIf={error !== undefined}>
                 <Alert variant="error" message={error} onClose={
                     () => {
@@ -151,24 +175,7 @@ export const Login = ({
                     </div>
                     : <></>}
 
-                    <Button
-                        label="x509"
-                        onClick={async () => {
-                            const vo = loginViewModel.voList[selectedVOTab] || DefaultVO
-
-                            const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
-
-                            if (x509AuthViewModel) {
-                                if (x509AuthViewModel.status === 'error') {
-                                    setError(x509AuthViewModel.message)
-                                    return
-                                }
-                                console.log("x509AuthViewModel", x509AuthViewModel)
-                                console.log("voName", vo.shortName)
-                                await handleX509Session(x509AuthViewModel, account || "", vo.shortName)
-                            }
-                        }}
-                    />
+                    <Button label="x509" onClick={() => submitX509(inputAccount)}/>
 
                     <Button label="Userpass" onClick={() => {
                         setShowUserPassLoginForm(!showUserPassLoginForm)
@@ -202,7 +209,7 @@ export const Login = ({
                             <LabelledInput
                                 label="Account"
                                 idinput="account-input"
-                                updateFunc={(data: string) => { setAccount(data) }}                               
+                                updateFunc={(data: string) => { setInputAccount(data) }}
                             />
                         </div>
                         <Button
@@ -214,7 +221,7 @@ export const Login = ({
                                     username,
                                     password,
                                     loginViewModel.voList[selectedVOTab],
-                                    account
+                                    inputAccount
                                 )
                             }}
                         />             
@@ -231,7 +238,7 @@ export const Login = ({
                         <LabelledInput
                             label="Account"
                             idinput="account-input-nouserpass"
-                            updateFunc={(data: string) => { setAccount(data) }}
+                            updateFunc={(data: string) => { setInputAccount(data) }}
                         />
                     </fieldset>
                 </div>
