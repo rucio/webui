@@ -45,17 +45,21 @@ const MultipleAccountsModal = ({
         onRequestClose={() => {
             setChosenAccount(undefined)
         }}
-        overlayClassName="fixed bg-transparent inset-0 z-0" // will not work if set with twmerge (uses custom regex)
+        ariaHideApp={false}
+        overlayClassName="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50" // will not work if set with twmerge (uses custom regex)
         className={twMerge(
-            "absolute top-32 inset-x-32 rounded shadow",
+            "mx-2 max-w-3xl rounded shadow-lg z-50",
             "border-2",
             "bg-neutral-0 dark:bg-neutral-800",
-            "flex flex-col space-y-2 p-2"
+            "flex flex-col space-y-2 p-6",
+            "justify-center items-center overflow-hidden outline-none focus:outline-none"
         )}
         contentLabel="Multiaccount Modal"
     >
         <H2>Select Account</H2>
-        <P>Multiple accounts are mapped to the passed credentials. Choose one to continue.</P>
+        <P className="text-center py-2">
+            Multiple accounts are mapped to the passed credentials. Choose one to continue.
+        </P>
         <Dropdown<string>
             keys={availableAccounts}
             renderFunc={(key: string | undefined) => { return (<p>{key ?? "Select an account"}</p>) }}
