@@ -102,23 +102,28 @@ export const Login = ({
 
     const [availableAccounts, setAvailableAccounts] = useState<string[]>([])
 
+    const handleAuthViewModel = (authViewModel: AuthViewModel) => {
+        if (authViewModel.status === 'error') {
+            setError(authViewModel.message)
+        } else if (authViewModel.status === 'multiple_accounts') {
+            const accounts = authViewModel.message?.split(',')
+            setAvailableAccounts(accounts ?? [])
+        }
+    };
+
     const submitX509 = async (account: string | undefined) => {
         const vo = loginViewModel.voList[selectedVOTab] || DefaultVO
         const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
 
         if (!x509AuthViewModel) return
 
+        handleAuthViewModel(x509AuthViewModel)
         handleX509Session(x509AuthViewModel, account || "", vo.shortName)
     };
 
     useEffect(() => {
         if (authViewModel) {
-            if (authViewModel.status === 'error') {
-                setError(authViewModel.message)
-            } else if (authViewModel.status === 'multiple_accounts') {
-                const accounts = authViewModel.message?.split(',')
-                setAvailableAccounts(accounts ?? [])
-            }
+            handleAuthViewModel(authViewModel)
         } else if (loginViewModel && loginViewModel.status === 'error') {
             setError(loginViewModel.message)
         }
