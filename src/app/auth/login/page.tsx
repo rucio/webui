@@ -192,7 +192,6 @@ export default function Login() {
      */
     const handleX509Session = async (auth: AuthViewModel, rucioAccount: string, shortVOName: string) => {
         if (auth.status !== 'success') {
-            //auth.message = 'Cannot set session for x509 login as the login was not successful'
             setAuthViewModel(auth)
             return
         }

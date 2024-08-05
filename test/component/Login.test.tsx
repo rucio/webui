@@ -189,7 +189,7 @@ describe("Login Page Test", () => {
             rucioAuthHost: "https://rucio-auth.cern.ch",
         }
         const authViewModel: AuthViewModel = {
-            status: "success",
+            status: "multiple_accounts",
             message: "",
             rucioAccount: "",
             rucioMultiAccount: "account1,account2",
@@ -210,11 +210,6 @@ describe("Login Page Test", () => {
             x509SessionHandler = {(authViewModel) => {}}
         />))
 
-
-        const userPassButton = screen.getByRole('button', {name: /Userpass/})
-        fireEvent.click(userPassButton)
-        const loginButton = screen.getByRole('button', {name: /Login/})
-        fireEvent.click(loginButton)
         const modal = screen.getByRole("dialog", {name: /Multiaccount Modal/})
         expect(modal).toBeInTheDocument()
     })
@@ -255,7 +250,7 @@ describe("Login Page Test", () => {
                 x509ErrorModel.message = "Oops, something went wrong"
                 return Promise.resolve(x509ErrorModel)
             }}
-            x509SessionHandler = {(authViewModel) => {}}
+            x509SessionHandler = {() => {}}
         />))
         
         // check if Alert is displayed with message Invalid Credentials
