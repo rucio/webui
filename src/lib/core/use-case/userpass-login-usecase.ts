@@ -1,6 +1,11 @@
 import { injectable } from "inversify";
 import { AccountAttributesDTO } from "../dto/account-dto";
-import { UserpassLoginRequest, UserpassLoginResponse, UserpassLoginError } from "../usecase-models/userpass-login-usecase-models";
+import {
+    UserpassLoginRequest,
+    UserpassLoginResponse,
+    UserpassLoginError,
+    UserpassLoginIncomplete
+} from "../usecase-models/userpass-login-usecase-models";
 import { Role } from "../entity/auth-models";
 import UserPassLoginInputPort from "../port/primary/userpass-login-input-port";
 import type UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";
@@ -60,6 +65,13 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                 countryRole: countryRole,
             }
             await this.presenter.presentSuccess(responseModel)
+            return;
+        }
+        if (dto.statusCode === 206) {
+            const incompleteModel: UserpassLoginIncomplete = {
+                availableAccounts: dto.message
+            }
+            await this.presenter.presentIncomplete(incompleteModel)
             return;
         }
         let error_type: 'AUTH_SERVER_CONFIGURATION_ERROR' | 'AUTH_SERVER_SIDE_ERROR' | 'INVALID_CREDENTIALS' | 'UNKNOWN_ERROR'

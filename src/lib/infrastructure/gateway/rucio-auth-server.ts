@@ -118,6 +118,19 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
             }
 
             return Promise.resolve(dto)
+        } else if (response.status === 206) {
+            const multipleAccounts = response.headers.get('X-Rucio-Auth-Accounts')
+            if (multipleAccounts === null) {
+                throw new Error('Unable to extract available accounts from the response')
+            }
+            let dto: UserPassLoginAuthServerDTO = {
+                statusCode: response.status,
+                message: multipleAccounts,
+                account: '',
+                authToken: '',
+                authTokenExpires: '',
+            }
+            return Promise.resolve(dto);
         } else {
             throw new Error('Unable to handle response from Rucio Auth Server')
         }

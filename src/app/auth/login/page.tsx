@@ -29,7 +29,7 @@ export default function Login() {
                 },
                 body: JSON.stringify(body),
             })
-            if (res.status === 200 || res.status === 401) {
+            if (res.status === 200 || res.status === 401 || res.status === 206) {
                 const auth: AuthViewModel = await res.json()
                 setAuthViewModel(auth)
                 if (auth.status === 'success') {
@@ -41,6 +41,32 @@ export default function Login() {
             console.error('An unexpected error happened occurred:', error)
         }
     };
+
+    const getMultipleAccountsViewModel = (res: Response): AuthViewModel => {
+        const multiple_accounts = res.headers.get('X-Rucio-Auth-Accounts')
+        if (multiple_accounts === null) {
+            return {
+                status: 'error',
+                message: 'Cannot retrieve X-Rucio-Auth-Accounts from response headers',
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER
+            }
+        }
+        return {
+            status: 'multiple_accounts',
+            message: multiple_accounts,
+            rucioAccount: '',
+            rucioAuthType: '',
+            rucioIdentity: '',
+            rucioAuthToken: '',
+            rucioAuthTokenExpires: '',
+            role: Role.USER
+        }
+    }
 
     /**
      * Sends a request directly to the x509 endpoint of rucio auth server to retrieve a RucioAuthTOken using x509 client certificate provided via the browser
@@ -130,30 +156,8 @@ export default function Login() {
             return Promise.resolve(auth)
 
         } else if (res.status === 206) {
-            const multiple_accounts = res.headers.get('X-Rucio-Auth-Accounts')
-            if (multiple_accounts === null) {
-                return Promise.resolve({
-                    status: 'error',
-                    message: 'Cannot retrieve X-Rucio-Auth-Accounts from response headers',
-                    rucioAccount: '',
-                    rucioAuthType: '',
-                    rucioIdentity: '',
-                    rucioAuthToken: '',
-                    rucioAuthTokenExpires: '',
-                    role: Role.USER
-                })
-            }
-            const auth: AuthViewModel = {
-                status: 'multiple_accounts',
-                message: multiple_accounts,
-                rucioAccount: '',
-                rucioAuthType: '',
-                rucioIdentity: '',
-                rucioAuthToken: '',
-                rucioAuthTokenExpires: '',
-                role: Role.USER
-            }
-            return Promise.resolve(auth)
+            const viewModel = getMultipleAccountsViewModel(res);
+            return Promise.resolve(viewModel)
         } else if (res.status === 401) {
             const auth: AuthViewModel = {
                 status: 'error',
@@ -188,7 +192,7 @@ export default function Login() {
      */
     const handleX509Session = async (auth: AuthViewModel, rucioAccount: string, shortVOName: string) => {
         if (auth.status !== 'success') {
-            auth.message = 'Cannot set session for x509 login as the login was not successful'
+            //auth.message = 'Cannot set session for x509 login as the login was not successful'
             setAuthViewModel(auth)
             return
         }

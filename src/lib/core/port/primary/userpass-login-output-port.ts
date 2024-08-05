@@ -1,4 +1,4 @@
-import { UserpassLoginError, UserpassLoginResponse } from "../../usecase-models/userpass-login-usecase-models";
+import { UserpassLoginError, UserpassLoginResponse, UserpassLoginIncomplete } from "../../usecase-models/userpass-login-usecase-models";
 
 /**
  * Defines the output port for the userpass login use case. This interface muse be implemented by the
@@ -7,5 +7,6 @@ import { UserpassLoginError, UserpassLoginResponse } from "../../usecase-models/
 export default interface UserPassLoginOutputPort<T> {
     response: T;
     presentSuccess(responseModel: UserpassLoginResponse): Promise<void>;
+    presentIncomplete(incompleteModel: UserpassLoginIncomplete): Promise<void>;
     presentError(error: UserpassLoginError): Promise<void>;
 }

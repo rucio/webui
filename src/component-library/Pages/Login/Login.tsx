@@ -108,22 +108,18 @@ export const Login = ({
 
         if (!x509AuthViewModel) return
 
-        if (x509AuthViewModel.status === 'error') {
-            setError(x509AuthViewModel.message)
-        } else if (x509AuthViewModel.status === 'multiple_accounts') {
-            const accounts = x509AuthViewModel.message?.split(',')
-            setAvailableAccounts(accounts ?? [])
-        }
-
         handleX509Session(x509AuthViewModel, account || "", vo.shortName)
     };
 
     useEffect(() => {
-        if (authViewModel && authViewModel.status === 'error') {
-            setError(authViewModel.message)
-            return
-        }
-        if (loginViewModel && loginViewModel.status === 'error') {
+        if (authViewModel) {
+            if (authViewModel.status === 'error') {
+                setError(authViewModel.message)
+            } else if (authViewModel.status === 'multiple_accounts') {
+                const accounts = authViewModel.message?.split(',')
+                setAvailableAccounts(accounts ?? [])
+            }
+        } else if (loginViewModel && loginViewModel.status === 'error') {
             setError(loginViewModel.message)
         }
     }, [loginViewModel, authViewModel])

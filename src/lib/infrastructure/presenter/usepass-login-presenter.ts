@@ -1,4 +1,8 @@
-import { UserpassLoginError, UserpassLoginResponse } from "@/lib/core/usecase-models/userpass-login-usecase-models";
+import {
+    UserpassLoginError,
+    UserpassLoginIncomplete,
+    UserpassLoginResponse
+} from "@/lib/core/usecase-models/userpass-login-usecase-models";
 import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
 import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
 import { IronSession } from "iron-session";
@@ -77,5 +81,20 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
         }
 
         this.response.status(401).json(viewModel);
+    }
+
+    async presentIncomplete(incompleteModel: UserpassLoginIncomplete) {
+        const viewModel: AuthViewModel = {
+            status: 'multiple_accounts',
+            message: incompleteModel.availableAccounts,
+            role: Role.USER,
+            rucioIdentity: '',
+            rucioAccount: '',
+            rucioAuthType: '',
+            rucioAuthToken: '',
+            rucioAuthTokenExpires: '',
+        }
+
+        this.response.status(206).json(viewModel)
     }
 }
