@@ -15,7 +15,7 @@ import Modal from "react-modal";
 import {Dropdown} from '../../Input/Dropdown';
 import {H2} from '../../Text/Headings/H2';
 import {P} from '../../Text/Content/P';
-import {HiArrowRight} from "react-icons/all";
+import {HiArrowRight} from "react-icons/hi";
 import Link from "next/link";
 
 const BackToDashboardButton = () => {

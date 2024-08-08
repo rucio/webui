@@ -1,6 +1,6 @@
 import {twMerge} from "tailwind-merge"
 import {ForwardedRef, forwardRef, useState} from "react"
-import {HiLogin, HiSwitchHorizontal, HiLogout, HiUserAdd} from "react-icons/hi"
+import {HiSwitchHorizontal, HiLogout, HiUserAdd} from "react-icons/hi"
 import Link from "next/link"
 
 const AccountList = (props: { accountList: string[] }) => {
