@@ -16,7 +16,7 @@ const AccountList = (props: { accountList: string[] }) => {
                             "text-right"
                         )}
                         key={index}
-                        href="/api/account/switch"
+                        href={`/api/auth/switch?account=${account}`}
                         prefetch={false}
                     >
                         <HiSwitchHorizontal className="text-2xl text-text-900 dark:text-text-100 shrink-0"/>
