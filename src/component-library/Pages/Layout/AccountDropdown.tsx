@@ -106,11 +106,13 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                             "rounded-md"
                         )}
                     >
-                        <HiLogout className="text-2xl text-text-900 shrink-0"/>
+                        <Link href="/api/auth/logout?callbackUrl=/dashboard">
+                            <HiLogout className="text-2xl text-text-900 shrink-0"/>
+                        </Link>
                     </div>
                 </div>
                 {props.accountsPossible.length !== 1 &&
-                        <AccountList accountList={props.accountsPossible.filter(account => account !== props.accountActive)}/>
+                    <AccountList accountList={props.accountsPossible.filter(account => account !== props.accountActive)}/>
                 }
                 <SignIntoButton/>
             </div>
