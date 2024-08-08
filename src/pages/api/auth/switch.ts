@@ -25,7 +25,7 @@ async function switchUsers(req: NextApiRequest, res: NextApiResponse) {
 
     const user = session.allUsers?.at(userIdx!)
     await addOrUpdateSessionUser(session, user!, true)
-    res.redirect(callbackUrl as string ?? '/dashboard')
+    res.redirect(callbackUrl as string ?? '/')
 }
 
 export default withSessionRoute(switchUsers)
