@@ -61,10 +61,10 @@ export const Playbook_Multi_Account: Story = {
             rucioAuthHost: 'https://rucio.cern.ch',
         },
         authViewModel: {
-            status: "success",
-            message: "",
+            status: "multiple_accounts",
+            message: "mayank,ddmadmin,tester",
             rucioAccount: "",
-            rucioMultiAccount: "mayank,ddmadmin",
+            rucioMultiAccount: "",
             rucioAuthType: "",
             rucioAuthToken: "",
             rucioIdentity: "",
