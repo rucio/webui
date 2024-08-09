@@ -8,7 +8,7 @@ const AccountList = (props: { accountList: string[] }) => {
         {
             props.accountList.map((account, index) => {
                 return (
-                    <Link
+                    <a
                         className={twMerge(
                             "text-text-600 hover:bg-neutral-200 hover:cursor-pointer",
                             "dark:text-text-300 dark:hover:bg-neutral-600",
@@ -16,15 +16,14 @@ const AccountList = (props: { accountList: string[] }) => {
                             "text-right"
                         )}
                         key={index}
-                        href={`/api/auth/switch?account=${account}`}
-                        prefetch={false}
+                        href={`/api/auth/switch?account=${account}&&callbackUrl=/dashboard`}
                     >
                         <HiSwitchHorizontal className="text-2xl text-text-900 dark:text-text-100 shrink-0"/>
                         <span>
                             <span>Switch to </span>
                             <b className="text-text-800 dark:text-text-100">{account}</b>
                         </span>
-                    </Link>
+                    </a>
                 )
             })
         }
@@ -106,9 +105,9 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                             "rounded-md"
                         )}
                     >
-                        <Link href="/api/auth/logout?callbackUrl=/dashboard">
+                        <a href="/api/auth/logout?callbackUrl=/dashboard">
                             <HiLogout className="text-2xl text-text-900 shrink-0"/>
-                        </Link>
+                        </a>
                     </div>
                 </div>
                 {props.accountsPossible.length !== 1 &&
