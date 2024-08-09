@@ -57,7 +57,7 @@ const SignIntoButton = () => {
         href="/auth/login"
         prefetch={false}
     >
-        <span>Sign <b>into</b> another account</span>
+        <span>Sign <b>in to</b> another account</span>
         <HiUserAdd className="dark:text-text-100 text-2xl text-text-900 shrink-0"/>
     </Link>
 }

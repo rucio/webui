@@ -123,7 +123,7 @@ export const Login = ({
             const accounts = authViewModel.message?.split(',')
             const accountsFiltered = accounts?.filter(account => !loginViewModel.accountsAvailable?.includes(account))
             if (!accountsFiltered || accountsFiltered.length === 0) {
-                setError('All accounts associated with this identity are signed into')
+                setError('All accounts associated with this identity are signed in to')
             } else {
                 setAvailableAccounts(accountsFiltered)
             }
