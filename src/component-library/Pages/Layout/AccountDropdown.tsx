@@ -2,6 +2,7 @@ import {twMerge} from "tailwind-merge"
 import {ForwardedRef, forwardRef, useState} from "react"
 import {HiSwitchHorizontal, HiLogout, HiUserAdd} from "react-icons/hi"
 import Link from "next/link"
+import {useRouter} from "next/navigation";
 
 const AccountList = (props: { accountList: string[] }) => {
     return <div className="flex flex-col">
@@ -31,26 +32,36 @@ const AccountList = (props: { accountList: string[] }) => {
 };
 
 const SignOutOfAllButton = () => {
-    return <Link
+    const router = useRouter();
+
+    const signOut = async () => {
+        const request = new Request('/api/auth/logout', {
+            method: 'POST'
+        })
+        //TODO: handle errors
+        await fetch(request)
+        router.push('/auth/login')
+    };
+
+    return <div
         className={twMerge(
             "text-text-800 hover:bg-base-warning-200 hover:cursor-pointer",
             "dark:text-text-100 dark:hover:bg-base-warning-600",
             "flex items-center justify-between py-2 px-1 space-x-4",
             "text-right",
         )}
-        href="/api/auth/logout"
-        prefetch={false}
+        onClick={() => signOut()}
     >
-        <span><b>Sign out</b> of all accounts</span>
+        <span>Sign <b>out</b> of all accounts</span>
         <HiLogout className="dark:text-text-100 text-2xl text-text-900 shrink-0"/>
-    </Link>
+    </div>
 }
 
 const SignIntoButton = () => {
     return <Link
         className={twMerge(
-            "text-text-800 hover:bg-base-warning-200 hover:cursor-pointer",
-            "dark:text-text-100 dark:hover:bg-base-warning-600",
+            "text-text-800 hover:bg-base-success-200 hover:cursor-pointer",
+            "dark:text-text-100 dark:hover:bg-base-success-600",
             "flex items-center justify-between py-2 px-1 space-x-4",
             "text-right",
         )}
@@ -71,6 +82,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown
         },
         ref: ForwardedRef<HTMLDivElement>
     ) {
+        const hasAccountChoice = props.accountsPossible.length !== 1;
         return (
 
             <div
@@ -112,10 +124,11 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                         </a>
                     </div>
                 </div>
-                {props.accountsPossible.length !== 1 &&
+                {hasAccountChoice &&
                     <AccountList accountList={props.accountsPossible.filter(account => account !== props.accountActive)}/>
                 }
                 <SignIntoButton/>
+                {hasAccountChoice && <SignOutOfAllButton/>}
             </div>
         )
     }
