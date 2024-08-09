@@ -66,6 +66,8 @@ export const AMultiVOOIDCEnabledLogin: Story = {
             multiVOEnabled: true,
             voList: [voAtlas, voCMS, voLHCb],
             isLoggedIn: false,
+            accountActive: undefined,
+            accountsAvailable: undefined,
             rucioAuthHost: 'https://rucio.cern.ch',
         },
         authViewModel: {
