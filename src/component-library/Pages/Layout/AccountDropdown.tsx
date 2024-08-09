@@ -105,6 +105,8 @@ export const AccountDropdown = forwardRef(function AccountDropdown
                             "rounded-md"
                         )}
                     >
+                        {/* Using the <a> tag here prevents a bug with response caching */}
+                        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                         <a href="/api/auth/logout?callbackUrl=/dashboard">
                             <HiLogout className="text-2xl text-text-900 shrink-0"/>
                         </a>
