@@ -27,6 +27,8 @@ export default class LoginConfigPresenter extends BasePresenter<LoginConfigRespo
             voList: responseModel.voList,
             oidcProviders: responseModel.oidcProviders,
             isLoggedIn: loggedIn,
+            accountActive: user?.rucioAccount,
+            accountsAvailable: this.session?.allUsers?.map(user => user.rucioAccount),
             rucioAuthHost: responseModel.rucioAuthHost,
         }
         return { viewModel, status: 200 };
@@ -41,6 +43,8 @@ export default class LoginConfigPresenter extends BasePresenter<LoginConfigRespo
             voList: [],
             oidcProviders: [],
             isLoggedIn: false,
+            accountActive: undefined,
+            accountsAvailable: undefined,
             message: errorModel.message,
             rucioAuthHost: '',
         }

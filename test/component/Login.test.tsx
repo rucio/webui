@@ -140,6 +140,8 @@ describe("Login Page Test", () => {
             multiVOEnabled: true,
             voList: getSampleVOs(),
             isLoggedIn: false,
+            accountActive: undefined,
+            accountsAvailable: undefined,
             status: "success",
             rucioAuthHost: "https://rucio-auth.cern.ch",
         }
@@ -185,6 +187,8 @@ describe("Login Page Test", () => {
             multiVOEnabled: true,
             voList: getSampleVOs(),
             isLoggedIn: false,
+            accountActive: undefined,
+            accountsAvailable: undefined,
             status: "success",
             rucioAuthHost: "https://rucio-auth.cern.ch",
         }
@@ -222,6 +226,8 @@ describe("Login Page Test", () => {
             multiVOEnabled: true,
             voList: getSampleVOs(),
             isLoggedIn: false,
+            accountActive: undefined,
+            accountsAvailable: undefined,
             status: "success",
             rucioAuthHost: "https://rucio-auth.cern.ch",
         }
