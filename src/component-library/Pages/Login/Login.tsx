@@ -18,12 +18,12 @@ import {P} from '../../Text/Content/P';
 import {HiArrowRight} from "react-icons/hi";
 import Link from "next/link";
 
-const BackToDashboardButton = () => {
+const BackToDashboardButton = (props: {account: string}) => {
     return <Link href="/dashboard">
         <Button className={twMerge(
             "bg-base-success-600 hover:bg-base-success-700",
             "mb-1"
-        )} icon={<HiArrowRight/>} label="Back to dashboard"></Button>
+        )} icon={<HiArrowRight/>} label={`Back to dashboard as ${props.account}`}></Button>
     </Link>
 }
 
@@ -101,7 +101,7 @@ export const Login = ({
     oidcSubmitHandler: handleOIDCSubmit,
 }: LoginPageProps) => {
 
-    const isLoggedIn = loginViewModel.isLoggedIn
+    const isLoggedIn = loginViewModel.isLoggedIn && loginViewModel.accountActive !== undefined
 
     const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false)
 
@@ -121,11 +121,21 @@ export const Login = ({
             setError(authViewModel.message)
         } else if (authViewModel.status === 'multiple_accounts') {
             const accounts = authViewModel.message?.split(',')
-            setAvailableAccounts(accounts ?? [])
+            const accountsFiltered = accounts?.filter(account => !loginViewModel.accountsAvailable?.includes(account))
+            if (!accountsFiltered || accountsFiltered.length === 0) {
+                setError('All accounts associated with this identity are signed into')
+            } else {
+                setAvailableAccounts(accountsFiltered)
+            }
         }
     };
 
     const submitX509 = async (account: string | undefined) => {
+        if (account && loginViewModel.accountsAvailable?.includes(account)) {
+            setError(`Already authenticated as ${account}`)
+            return
+        }
+
         const vo = loginViewModel.voList[selectedVOTab] || DefaultVO
         const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
 
@@ -137,6 +147,11 @@ export const Login = ({
     };
 
     const submitUserPass = async (account: string | undefined) => {
+        if (account && loginViewModel.accountsAvailable?.includes(account)) {
+            setError(`Already authenticated as ${account}`)
+            return
+        }
+
         handleUserPassSubmit(username, password, loginViewModel.voList[selectedVOTab], account)
         setLastAuthMethod('userpass')
         return Promise.resolve()
@@ -276,7 +291,7 @@ export const Login = ({
     }
 
     return isLoggedIn ? <div>
-        <BackToDashboardButton/>
+        <BackToDashboardButton account={loginViewModel.accountActive!}/>
         {getLoginForm()}
     </div> : getLoginForm()
 }
