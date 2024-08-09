@@ -66,7 +66,7 @@ const MultipleAccountsModal = ({
             "border-2",
             "bg-neutral-0 dark:bg-neutral-800",
             "flex flex-col space-y-2 p-6",
-            "justify-center items-center overflow-hidden outline-none focus:outline-none"
+            "justify-center items-center overflow-y-visible outline-none focus:outline-none"
         )}
         contentLabel="Multiaccount Modal"
     >
