@@ -57,6 +57,8 @@ export const Playbook_Multi_Account: Story = {
             oidcProviders: [cernOIDCProvider],
             multiVOEnabled: true,
             voList: [voAtlas, voCMS],
+            accountsAvailable: undefined,
+            accountActive: undefined,
             isLoggedIn: false,
             rucioAuthHost: 'https://rucio.cern.ch',
         },

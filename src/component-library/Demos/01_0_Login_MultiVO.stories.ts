@@ -66,6 +66,8 @@ export const ABasicLogin: Story = {
             multiVOEnabled: false,
             voList: [voAtlas, voCMS],
             isLoggedIn: false,
+            accountsAvailable: undefined,
+            accountActive: undefined,
             rucioAuthHost: 'https://rucio.cern.ch',
         },
         authViewModel: {
@@ -92,6 +94,8 @@ export const ABasicMultiVOLogin: Story = {
             multiVOEnabled: true,
             voList: [voAtlas, voCMS, voLHCb],
             isLoggedIn: false,
+            accountsAvailable: undefined,
+            accountActive: undefined,
             rucioAuthHost: 'https://rucio.cern.ch',
         },
         authViewModel: {
