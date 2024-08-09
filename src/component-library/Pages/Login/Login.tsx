@@ -12,9 +12,20 @@ import { Alert } from '../../Misc/Alert';
 import { LabelledInput } from './LabelledInput';
 import { DefaultVO } from '@/lib/core/entity/auth-models';
 import Modal from "react-modal";
-import { Dropdown } from '../../Input/Dropdown';
-import { H2 } from '../../Text/Headings/H2';
-import { P } from '../../Text/Content/P';
+import {Dropdown} from '../../Input/Dropdown';
+import {H2} from '../../Text/Headings/H2';
+import {P} from '../../Text/Content/P';
+import {HiArrowRight} from "react-icons/hi";
+import Link from "next/link";
+
+const BackToDashboardButton = (props: {account: string}) => {
+    return <Link href="/dashboard">
+        <Button className={twMerge(
+            "bg-base-success-600 hover:bg-base-success-700",
+            "mb-1"
+        )} icon={<HiArrowRight/>} label={`Back to dashboard as ${props.account}`}></Button>
+    </Link>
+}
 
 export type SupportedAuthWorkflows = "oidc" | "x509" | "userpass" | "none"
 
@@ -55,7 +66,7 @@ const MultipleAccountsModal = ({
             "border-2",
             "bg-neutral-0 dark:bg-neutral-800",
             "flex flex-col space-y-2 p-6",
-            "justify-center items-center overflow-hidden outline-none focus:outline-none"
+            "justify-center items-center overflow-y-visible outline-none focus:outline-none"
         )}
         contentLabel="Multiaccount Modal"
     >
@@ -90,6 +101,8 @@ export const Login = ({
     oidcSubmitHandler: handleOIDCSubmit,
 }: LoginPageProps) => {
 
+    const isLoggedIn = loginViewModel.isLoggedIn && loginViewModel.accountActive !== undefined
+
     const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false)
 
     const [selectedVOTab, setSelectedVOTab] = useState<number>(1)
@@ -108,11 +121,21 @@ export const Login = ({
             setError(authViewModel.message)
         } else if (authViewModel.status === 'multiple_accounts') {
             const accounts = authViewModel.message?.split(',')
-            setAvailableAccounts(accounts ?? [])
+            const accountsFiltered = accounts?.filter(account => !loginViewModel.accountsAvailable?.includes(account))
+            if (!accountsFiltered || accountsFiltered.length === 0) {
+                setError('All accounts associated with this identity are signed in to')
+            } else {
+                setAvailableAccounts(accountsFiltered)
+            }
         }
     };
 
     const submitX509 = async (account: string | undefined) => {
+        if (account && loginViewModel.accountsAvailable?.includes(account)) {
+            setError(`Already authenticated as ${account}`)
+            return
+        }
+
         const vo = loginViewModel.voList[selectedVOTab] || DefaultVO
         const x509AuthViewModel = await handleX509Submit(vo, loginViewModel, account)
 
@@ -124,6 +147,11 @@ export const Login = ({
     };
 
     const submitUserPass = async (account: string | undefined) => {
+        if (account && loginViewModel.accountsAvailable?.includes(account)) {
+            setError(`Already authenticated as ${account}`)
+            return
+        }
+
         handleUserPassSubmit(username, password, loginViewModel.voList[selectedVOTab], account)
         setLastAuthMethod('userpass')
         return Promise.resolve()
@@ -137,8 +165,8 @@ export const Login = ({
         }
     }, [loginViewModel, authViewModel])
 
-    return (
-        <div
+    const getLoginForm = () => {
+        return <div
             className={twMerge(
                 "rounded p-4 flex flex-col justify-center space-y-2",
                 "border dark:border-2",
@@ -157,23 +185,25 @@ export const Login = ({
                     () => {
                         setError(undefined)
                     }
-                } />
+                }/>
             </Collapsible>
             <div className="text-center text-text-1000 dark:text-text-0">
-                <H1 className="mt-4 mb-2">Rucio Login</H1> 
+                <H1 className="mt-4 mb-2">Rucio Login</H1>
             </div>
 
             <div
                 className="flex flex-col space-y-2"
-                onSubmit={ (e) => { 
-                        e.preventDefault()
-                    }
+                onSubmit={(e) => {
+                    e.preventDefault()
+                }
                 } // TODO handle proper submit!
             >
                 <Tabs
                     tabs={loginViewModel.voList.map((vo) => vo.name)}
                     active={1}
-                    updateActive={(active: number) => { setSelectedVOTab(active) }}
+                    updateActive={(active: number) => {
+                        setSelectedVOTab(active)
+                    }}
                     className={twMerge(loginViewModel.multiVOEnabled ? "" : "hidden")}
                 />
 
@@ -181,38 +211,39 @@ export const Login = ({
                     className="flex justify-center flex-col space-y-4"
                     aria-label="Choose Login Method"
                 >
-                    { loginViewModel.oidcEnabled == true ?
-                    <div
-                        className={twMerge(
-                            "flex flex-row justify-center space-x-2",
-                            loginViewModel.voList[selectedVOTab].oidcEnabled ? "" : "hidden"
-                        )}
-                        aria-label="OIDC Login Buttons"
-                    >
-                        {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
-                            return (<Button theme='orange' label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />)
-                        })}
-                    </div>
-                    : <></>}
+                    {loginViewModel.oidcEnabled == true ?
+                        <div
+                            className={twMerge(
+                                "flex flex-row justify-center space-x-2",
+                                loginViewModel.voList[selectedVOTab].oidcEnabled ? "" : "hidden"
+                            )}
+                            aria-label="OIDC Login Buttons"
+                        >
+                            {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
+                                return (<Button theme='orange' label={provider.name} key={index.toString()}
+                                                icon={<MdAccountCircle/>}/>)
+                            })}
+                        </div>
+                        : <></>}
 
                     <Button label="x509" onClick={() => submitX509(inputAccount)}/>
 
                     <Button label="Userpass" onClick={() => {
                         setShowUserPassLoginForm(!showUserPassLoginForm)
                     }
-                    } />
+                    }/>
                     <form>
-                    <fieldset
-                        className={twMerge(
-                            "flex flex-col space-y-2",
-                            "mx-2 md:mx-10",
-                            showUserPassLoginForm ? "" : "hidden",
-                        )}
-                        aria-label="Userpass Login Fields"
-                        id="userpass-form"
-                    >
-                        <div
-                            className={twMerge("flex flex-col space-y-1")}
+                        <fieldset
+                            className={twMerge(
+                                "flex flex-col space-y-2",
+                                "mx-2 md:mx-10",
+                                showUserPassLoginForm ? "" : "hidden",
+                            )}
+                            aria-label="Userpass Login Fields"
+                            id="userpass-form"
+                        >
+                            <div
+                                className={twMerge("flex flex-col space-y-1")}
 
                         >
                             <LabelledInput
@@ -255,7 +286,12 @@ export const Login = ({
                         />
                     </fieldset>
                 </div>
-            </div >
-        </div >
-    )
+            </div>
+        </div>
+    }
+
+    return isLoggedIn ? <div>
+        <BackToDashboardButton account={loginViewModel.accountActive!}/>
+        {getLoginForm()}
+    </div> : getLoginForm()
 }

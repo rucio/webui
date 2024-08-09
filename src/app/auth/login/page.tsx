@@ -70,8 +70,8 @@ export default function Login() {
 
     /**
      * Sends a request directly to the x509 endpoint of rucio auth server to retrieve a RucioAuthTOken using x509 client certificate provided via the browser
-     * @param vo 
-     * @param account 
+     * @param vo
+     * @param account
      * @returns {@link AuthViewModel} indicating the status of the request
      */
     const handleX509Submit = async (vo: VO, loginViewModel: LoginViewModel, account?: string | undefined): Promise<AuthViewModel> => {
@@ -232,9 +232,6 @@ export default function Login() {
             .then((res) => res.json())
             .then((loginViewModel: LoginViewModel) => {
                 setViewModel(loginViewModel)
-                if (loginViewModel.isLoggedIn) {
-                    router.push(redirectURL)
-                }
             }
             )
     }, []);
