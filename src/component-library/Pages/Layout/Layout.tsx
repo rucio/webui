@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef, forwardRef } from "react"
 import { Collapsible } from "../../Helpers/Collapsible"
 import { AccountDropdown } from "./AccountDropdown"
 import Link from "next/link"
+import {Searchbar} from "@/component-library/Pages/Layout/Searchbar";
 
 export interface LayoutViewModel {
     accountActive: string,
@@ -22,72 +23,13 @@ export const Layout = (
         LVM: LayoutViewModel
     }
 ) => {
-
-    const [isSearching, setIsSearching] = useState(false)
-    const [searchString, setSearchString] = useState<string>("")
-    const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
     const [isProfileOpen, setIsProfileOpen] = useState(false)
 
+    const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
     /* Add contants with state for each section if it is clicked or not*/
 
     const [isRulesDropDown, setIsRulesDropDown] = useState(false)
     const [isMoreDropDown, setIsMoreDropDown] = useState(false)
-
-    const SearchDropdown = forwardRef(function SearchDropdown(
-        props: {
-                inputSelected: boolean,
-                searchstring: string,
-            },
-            ref: React.ForwardedRef<HTMLDivElement>
-        ) {
-        const [isMouseOver, setIsMouseOver] = useState(false)
-        const LinkElem = (props: { href: string, children: React.ReactNode }) => {
-            return (
-                <Link
-                    href={props.href}
-                    className={twMerge(
-                        "w-full p-1 rounded-sm hover:cursor-pointer",
-                        "hover:bg-neutral-200  text-text-800",
-                        "hover:dark:bg-neutral-600 dark:bg-neutral-800 dark:text-text-100"
-                    )}
-                    onMouseDown={e => { e.preventDefault() }}
-
-                >
-                    {props.children}
-                </Link>
-            )
-        }
-
-        return (
-            <div
-                className={twMerge(
-                    "w-[50rem] flex flex-col p-2",
-                    "rounded-md border shadow-md",
-                    (props.inputSelected || isMouseOver) ? "visible" : "invisible",
-                    "absolute mt-2",
-                    "text-text-900 dark:text-text-100",
-                    "bg-neutral-100 dark:bg-neutral-800",
-                    "z-[100]"
-                )}
-                onMouseEnter={() => { setIsMouseOver(true) }}
-                onMouseLeave={() => { setIsMouseOver(false) }}
-            >
-                <nav
-                    className="w-full h-full flex flex-col items-start"
-                >
-                    <LinkElem href="/dids">
-                        Search for <i>{props.searchstring}</i> in <b>DIDs</b>
-                    </LinkElem>
-                    <LinkElem href="/rules">
-                        Search for <i>{props.searchstring}</i> in <b>Rules</b>
-                    </LinkElem>
-                    <LinkElem href="/rses">
-                        Search for <i>{props.searchstring}</i> in <b>RSEs</b>
-                    </LinkElem>
-                </nav>
-            </div>
-        )
-    })
 
     const HeaderLinks: React.FC<JSX.IntrinsicElements["a"]> = (
         {
@@ -239,17 +181,6 @@ export const Layout = (
         document.addEventListener("mousedown", handleClickOutside)
     }, [accountMenuRef])
 
-    const searchMenuRef = useRef<HTMLDivElement>(null)
-    const searchMenuInputRef = useRef<HTMLInputElement>(null)
-    useEffect(() => {
-        const handleClickOutside = (event: any) => {
-            if (!searchMenuRef.current?.contains(event.target) && !searchMenuInputRef.current?.contains(event.target)) {
-                setIsSearching(false)
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside)
-    }, [searchMenuRef])
-
     // images to be returned by static nextjs
     return (
         <div
@@ -282,24 +213,7 @@ export const Layout = (
                         <a className="bg-brand-500 w-12 h-12" href={"//"+props.LVM.experimentProjectLink} />
                     </span>
                     <span className="hidden md:visible md:flex space-x-16 items-center pl-2 pr-2">
-                        <span className="relative">
-                            <input
-                                className={twMerge(
-                                    "p-2 rounded-lg w-48 lg:w-96 bg-neutral-600 text-text-100",
-                                    "focus:bg-neutral-100 focus:text-text-900"
-                                )}
-                                placeholder="Search"
-                                onFocus={() => setIsSearching(true)}
-                                // onBlur={() => setIsSearching(false)}
-                                onChange={e => setSearchString(e.target.value)}
-                                ref={searchMenuInputRef}
-                            />
-                            <SearchDropdown
-                                inputSelected={isSearching}
-                                searchstring={searchString}
-                                ref={searchMenuRef}
-                            />
-                        </span>
+                        <Searchbar/>
                         <NavBar></NavBar>
                     </span>
 
