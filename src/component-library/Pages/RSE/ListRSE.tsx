@@ -17,6 +17,7 @@ import { RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
 import { TextInput } from "@/component-library/Input/TextInput";
 import { useState } from "react";
 import { Button } from "@/component-library/Button/Button";
+import {useSearchParams} from "next/navigation";
 
 const defaultRSEQuery = "*";
 
@@ -26,8 +27,10 @@ export const ListRSE = (
         setRSEQuery: (rseExpression: string) => void
     }
 ) => {
+    const searchParams = useSearchParams()
+    const expression = searchParams?.get('expression')
 
-    const [rseSearchQuery, setRSESearchQuery] = useState<string>(defaultRSEQuery)
+    const [rseSearchQuery, setRSESearchQuery] = useState<string>(expression ?? defaultRSEQuery)
     const setInputAsQuery = (searchPattern: string) => {
         setRSESearchQuery(searchPattern !== '' ? searchPattern : defaultRSEQuery)
     }
@@ -157,6 +160,7 @@ export const ListRSE = (
                             props.comdom.start()
                         }}
                         id="rse-search-pattern"
+                        defaultValue={expression ?? ''}
                         placeholder={defaultRSEQuery}
                     />
                     <Button
