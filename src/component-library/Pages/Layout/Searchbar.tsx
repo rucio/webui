@@ -67,7 +67,7 @@ const SearchDropdown = forwardRef(function SearchDropdown(
     return (
         <div
             className={twMerge(
-                "w-[50rem] flex flex-col p-2",
+                "w-[35rem] lg:w-[50rem] flex flex-col p-2",
                 "rounded-md border shadow-md",
                 isInputFocused ? "visible" : "invisible",
                 "absolute mt-2",
