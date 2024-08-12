@@ -11,6 +11,7 @@ import { Body } from "../Helpers/Body"
 import { DIDType } from "@/lib/core/entity/rucio"
 import { Checkbox } from "../../Button/Checkbox"
 import Link from "next/link"
+import {useSearchParams} from "next/navigation";
 
 var format = require("date-format")
 
@@ -26,8 +27,11 @@ export interface ListDIDPageProps {
 export const ListDID = (
     props: ListDIDPageProps
 ) => {
+    const searchParams = useSearchParams()
+    const pattern = searchParams?.get('pattern')
+
     const meta = props.didMetaQueryResponse
-    const [didSearchQuery, setDidSearchQuery] = useState<string>("")
+    const [didSearchQuery, setDidSearchQuery] = useState<string>(pattern ?? "")
     const [didTypeAllowed, setDidTypeAllowed] = useState<DIDType>(DIDType.DATASET) // [container, dataset, file]
 
     // selection
@@ -77,6 +81,7 @@ export const ListDID = (
                                 props.comdom.start()
                             }}
                             id="did-search-pattern"
+                            defaultValue={didSearchQuery}
                         />
                     </div>
                     <div className="w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0">
