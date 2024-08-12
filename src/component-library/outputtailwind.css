@@ -958,10 +958,6 @@ html {
 .max-w-3xl {
   max-width: 48rem;
 }
-.min-w-full {
-  min-width: 100%;
-
-}
 
 .max-w-sm {
   max-width: 24rem;
@@ -1646,10 +1642,10 @@ html {
   background-color: rgb(133 77 14 / var(--tw-bg-opacity));
 }
 
-
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
+
 .p-0 {
   padding: 0px;
 }
@@ -2095,6 +2091,11 @@ html {
 .ring-white {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(255 255 255 / var(--tw-ring-opacity));
+}
+
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .filter {
@@ -2632,6 +2633,11 @@ html {
     background-color: inherit;
   }
 
+  .dark\:bg-neutral-500 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(100 116 139 / var(--tw-bg-opacity));
+  }
+
   .dark\:bg-neutral-600 {
     --tw-bg-opacity: 1;
     background-color: rgb(71 85 105 / var(--tw-bg-opacity));
@@ -2848,6 +2854,11 @@ html {
 
   .dark\:hover\:bg-transparent:hover {
     background-color: transparent;
+  }
+
+  .hover\:dark\:bg-neutral-500:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(100 116 139 / var(--tw-bg-opacity));
   }
 
   .hover\:dark\:bg-neutral-600:hover {
