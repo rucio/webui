@@ -45,7 +45,13 @@ export class NewlineDelimittedDataParser extends Transform {
      * @param chunk - The chunk to push to the next stream.
      */
     pushToNextStream(chunk: string): void {
-        this.push(JSON.stringify(chunk))
+        try {
+            // Check whether the chunk is a valid JSON string
+            JSON.parse(chunk)
+            this.push(JSON.stringify(chunk))
+        } catch (_) {
+            // Don't push an invalid chunk
+        }
     }
 
     /**
@@ -55,18 +61,30 @@ export class NewlineDelimittedDataParser extends Transform {
     extractJSONObjects(): string[] {
         const bufferData = this.readBuffer()
         const objects = bufferData.split('\n').filter((object) => object.length > 0)
+
         if (objects.length === 0) {
             return []
         }
-        if(objects.length === 1) {
+
+        if (objects.length === 1) {
             const object = objects[0]
-            this.clearBuffer()
-            return [object]
+            if (bufferData.endsWith('\n')) {
+                this.clearBuffer()
+                return [object]
+            } else {
+                return []
+            }
         }
-        const lastObject = objects[objects.length - 1]
-        this.clearBuffer()
-        this.pushToBuffer(lastObject)
-        return objects.slice(0, objects.length - 1)
+
+        if (bufferData.endsWith('\n')) {
+            this.clearBuffer()
+            return objects
+        } else {
+            const lastObject = objects[objects.length - 1]
+            this.clearBuffer()
+            this.pushToBuffer(lastObject)
+            return objects.slice(0, objects.length - 1)
+        }
     }
 
     /**
