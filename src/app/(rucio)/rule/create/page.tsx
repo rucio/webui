@@ -22,7 +22,7 @@ export default function CreateRule() {
         viewModel.status = 'pending'
         
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/create-rule`, {
+            const response = await fetch(`/api/feature/create-rule`, {
                 method: "POST",
                 headers: new Headers({
                     'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ export default function CreateRule() {
 
     const [accountInfo, setAccountInfo] = useState<AccountInfo>(generateEmptyAccountInfoViewModel())
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/account-info`)
+        fetch(`${window.location.protocol}//${window.location.host}/api/feature/account-info`)
         .then((response) => {
             if(response.ok) {
                 return response.json()

@@ -8,7 +8,7 @@ export default function Page() {
 
     const setRSEQuery = async (rseExpression: string) => {
         await RSESearchComDOM.setRequest({
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-rses`),
+            url: new URL(`${window.location.protocol}//${window.location.host}/api/feature/list-rses`),
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
