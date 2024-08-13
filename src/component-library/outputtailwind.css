@@ -1438,14 +1438,14 @@ html {
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
-.bg-blue-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
-}
-
 .bg-blue-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+}
+
+.bg-blue-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 
 .bg-blue-600 {
@@ -1597,9 +1597,9 @@ html {
   background-color: rgb(15 23 42 / var(--tw-bg-opacity));
 }
 
-.bg-pink-100 {
+.bg-pink-500 {
   --tw-bg-opacity: 1;
-  background-color: rgb(252 231 243 / var(--tw-bg-opacity));
+  background-color: rgb(236 72 153 / var(--tw-bg-opacity));
 }
 
 .bg-purple-700 {
