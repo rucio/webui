@@ -117,6 +117,19 @@ describe("NewlineDelimittedDataParser - a transform stream that parses newline-d
         ])
     })
 
+    it("Handles a single NDJSON passed in multiple chunks", () => {
+        source.write('{"hel')
+        source.write('lo": "')
+        source.write('wor')
+        source.write('ld"}')
+        source.write('\n')
+
+        const parsedChunks = outputChunks.map(parseChunk)
+        expect(parsedChunks).toEqual([
+            {'hello': 'world'}
+        ])
+    })
+
     it("Handles multiple NDJSON passed partially", () => {
         source.write('{"hello": "wor')
         source.write('ld"}\n{"test": "json"}\n{"variable"')
