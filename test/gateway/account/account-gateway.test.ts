@@ -43,7 +43,7 @@ describe("Account Gateway Tests", () => {
         const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT)
         const accoutAttrs: AccountAttributesDTO = await rucioAccountGateway.listAccountAttributes('ddmadmin', 'rucio-ddmlab-askdjljioj')
         expect(accoutAttrs).toEqual({
-            status: 'OK',
+            status: 'success',
             account: 'ddmadmin',
             attributes: [
                 {
