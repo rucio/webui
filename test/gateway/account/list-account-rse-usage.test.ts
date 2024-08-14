@@ -15,7 +15,7 @@ describe('Account Gateway : List RSE Usage for an account', () => {
             JSON.stringify({"rse_id": "5883a989c9c047d99d2fc1c074e40f58", "rse": "XRD4", "bytes": 300, "files": 6, "bytes_limit": 700, "bytes_remaining": 400}),
             JSON.stringify({"rse_id": "2bb03a45a1b64b459cdc445d9844d936", "rse": "XRD3", "bytes": 400, "files": 7, "bytes_limit": 600, "bytes_remaining": 200}),
             JSON.stringify({"rse_id": "72fb4137ba3c460090bbd3fd8d490f8b", "rse": "XRD1", "bytes": 500, "files": 8, "bytes_limit": Infinity, "bytes_remaining": Infinity}),
-        ].join('\n'))
+        ].join('\n') + '\n');
 
         const listAccountRSEUsageEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/accounts/root/usage`,

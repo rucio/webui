@@ -18,7 +18,7 @@ describe("RuleGateway", () => {
                 "rse": "XRD3",
                 "state": "REPLICATING",
                 "rule_id": "0dcdc93fab714f8b84bad116c409483b"
-            }),
+            }) + '\n',
             JSON.stringify({
                 "scope": "test",
                 "name": "file2",
@@ -26,7 +26,7 @@ describe("RuleGateway", () => {
                 "rse": "XRD3",
                 "state": "REPLICATING",
                 "rule_id": "0dcdc93fab714f8b84bad116c409483b"
-            }),
+            }) + '\n',
             JSON.stringify({
                 "scope": "test",
                 "name": "file3",
@@ -34,7 +34,7 @@ describe("RuleGateway", () => {
                 "rse": "XRD3",
                 "state": "REPLICATING",
                 "rule_id": "0dcdc93fab714f8b84bad116c409483b"
-            }),
+            }) + '\n',
             JSON.stringify({
                 "scope": "test",
                 "name": "file4",
@@ -42,7 +42,7 @@ describe("RuleGateway", () => {
                 "rse": "XRD3",
                 "state": "REPLICATING",
                 "rule_id": "0dcdc93fab714f8b84bad116c409483b"
-            })
+            }) + '\n'
         ])
 
         const listRuleReplicaLockStatesEndpoint: MockEndpoint = {

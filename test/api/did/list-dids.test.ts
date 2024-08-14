@@ -22,9 +22,9 @@ describe('DID API Tests', () => {
                 },
                 body: Readable.from(
                     [
-                        '"dataset1"',
-                        '"dataset2"',
-                        '"dataset3"',
+                        '"dataset1"\n',
+                        '"dataset2"\n',
+                        '"dataset3"\n',
                     ].join('\n'),
                 ),
             },

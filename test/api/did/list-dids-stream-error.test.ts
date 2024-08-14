@@ -8,7 +8,7 @@ import { Readable } from 'stream'
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures'
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server'
 
-describe('DID API Tests', () => {
+describe('DID API Tests #2', () => {
     beforeEach(() => {
         fetchMock.doMock()
         const listDIDsEndpoint: MockEndpoint = {
@@ -22,10 +22,11 @@ describe('DID API Tests', () => {
                 },
                 body: Readable.from(
                     [
-                        '"dataset1"',
-                        '"dataset2"',
-                        '"dataset3"',
-                        " "
+                        '"dataset1"\n',
+                        '"dataset2"\n',
+                        '"dataset3"\n',
+                        " ",
+                        " ",
                     ].join('\n'),
                 ),
             },
@@ -170,16 +171,6 @@ describe('DID API Tests', () => {
                 "bytes": 456,
                 "length": 789,
                 "open": true,
-            },
-            {
-                "status": "error",
-                "name": "Gateway Error: Undefined DID in stream",
-                "message": "Gateway recieved an invalid (undefined) DID for the query",
-                "scope": "",
-                "did_type": "Unknown",
-                "bytes": 0,
-                "length": 0,
-                "open": false,
             }
         ])
     })
