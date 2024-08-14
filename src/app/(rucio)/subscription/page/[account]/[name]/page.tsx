@@ -12,7 +12,7 @@ async function updateSubscription(
 ) {
     const req: any = {
         method: "PUT",
-        url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/mock-update-subscription`),
+        url: new URL(`/api/feature/mock-update-subscription`),
         headers: {
             'Content-Type': 'application/json',
         },
@@ -43,7 +43,7 @@ export default function PageSubscription({ params }: { params: { account: string
     async function subscriptionQuery(account: string, name: string): Promise<SubscriptionViewModel> {
         const req: any = {
             method: "GET",
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/get-subscription`),
+            url: new URL(`/api/feature/get-subscription`),
             params: {
                 "account": account,
                 "name": name

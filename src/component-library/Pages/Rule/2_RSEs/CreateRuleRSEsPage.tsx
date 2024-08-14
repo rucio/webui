@@ -71,7 +71,7 @@ export const CreateRuleRSEsPage = (props: {
         var RSEExpression = explicitRSEExpression ? explicitRSEExpression : PageRSEsState.RSEExpression
         // build request for comdom
         const request: HTTPRequest = {
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-account-rse-quotas`),
+            url: new URL(`${window.location.protocol}//${window.location.host}/api/feature/list-account-rse-quotas`),
             method: "POST",
             headers: new Headers({
                 'Content-Type': 'application/json'

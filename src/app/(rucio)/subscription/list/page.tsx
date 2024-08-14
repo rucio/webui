@@ -28,7 +28,7 @@ export default function ListSubscription({ params }: { params: { account: string
     useEffect(() => {
         const runQuery = async () => {
             await ComDOM.start({
-                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-subscription-rule-states`),
+                url: new URL(`${window.location.protocol}//${window.location.host}/api/feature/list-subscription-rule-states`),
                 method: "GET",
                 headers: new Headers({
                     'Content-Type': 'application/json'

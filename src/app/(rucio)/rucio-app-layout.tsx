@@ -14,7 +14,7 @@ export const RucioAppLayout = (props: QueryContextLayoutProps) => {
         homeUrl: ""
     })
     const fetchAccounts = async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/get-site-header`)
+        await fetch('/api/feature/get-site-header')
         .then(res => {
             if (res.ok) {
                 return res.json()

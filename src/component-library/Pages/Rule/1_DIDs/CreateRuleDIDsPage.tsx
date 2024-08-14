@@ -71,7 +71,7 @@ export const CreateRuleDIDsPage = (props: {
         // build request for comdom
         const request: HTTPRequest = {
             url: new URL(
-                `${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-dids`,
+                `${window.location.protocol}//${window.location.host}/api/feature/list-dids`,
             ),
             method: 'GET',
             headers: new Headers({

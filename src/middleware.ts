@@ -30,12 +30,12 @@ export const config = {
 }
 
 async function reLogin(request: NextRequest) {
-    const logoutPage = new URL(`/api/auth/logout?callbackUrl=${request.url}`, request.url)
+    const logoutPage = new URL(`/api/auth/logout?callbackUrl=${request.nextUrl.pathname}`, request.url)
     return NextResponse.redirect(logoutPage)
 }
 
 async function initiateLogin(request: NextRequest){
-    const loginPage = new URL(`/api/auth/login?callbackUrl=${request.url}`, request.url)
+    const loginPage = new URL(`/api/auth/login?callbackUrl=${request.nextUrl.pathname}`, request.url)
     return NextResponse.redirect(loginPage)
 }
 

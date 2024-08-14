@@ -15,7 +15,7 @@ export default function Page() {
     }
     const didQuery = async (query: string, type: DIDType) => {
         const request: any = {
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-dids`),
+            url: new URL(`${window.location.protocol}//${window.location.host}/api/feature/list-dids`),
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',

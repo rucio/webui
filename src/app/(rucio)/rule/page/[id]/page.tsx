@@ -27,7 +27,7 @@ export default function PageRule({ params }: { params: { id: string } }) {
     
     useEffect(() => {
         // TODO get from mock endpoint
-        fetch(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/mock-get-rule-meta`)
+        fetch('/api/feature/mock-get-rule-meta')
         .then(res => {
             if (res.ok) {
                 return res.json()
@@ -46,7 +46,7 @@ export default function PageRule({ params }: { params: { id: string } }) {
     useEffect(() => {
         const runQuery = async () => {
             const request: HTTPRequest = {
-                url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/mock-list-rule-page-lock`),
+                url: new URL(`${window.location.protocol}//${window.location.host}/api/feature/mock-list-rule-page-lock`),
                 method: "GET",
                 headers: new Headers({
                     'Content-Type': 'application/json'
