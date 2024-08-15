@@ -86,7 +86,7 @@ export type DIDMeta = {
     adler32: string | null
     md5: string | null
     guid: string | null
-    filesize: number | null
+    bytes: number | null
 }
 
 export type DIDRules = {

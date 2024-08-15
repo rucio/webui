@@ -25,7 +25,7 @@ export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DID
             adler32: responseModel.adler32,
             md5: responseModel.md5,
             guid: responseModel.guid,
-            filesize: responseModel.filesize,
+            bytes: responseModel.bytes,
         }
         return {
             status: 200,
@@ -56,7 +56,7 @@ export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DID
             adler32: '',
             md5: '',
             guid: '',
-            filesize: 0,
+            bytes: 0,
         };
         return { status, viewModel };
     }

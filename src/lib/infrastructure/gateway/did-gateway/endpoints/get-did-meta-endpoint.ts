@@ -139,7 +139,7 @@ export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
             adler32: data.adler32,
             md5: data.md5,
             guid: data.guid,
-            filesize: data.filesize,
+            bytes: data.bytes,
         }
         return dto
     }

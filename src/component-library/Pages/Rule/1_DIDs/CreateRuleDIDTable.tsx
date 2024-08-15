@@ -80,10 +80,11 @@ export const CreateRuleDIDTable = (
                     />
                 )
             },
-            cell: (info) =>
-                <p className="font-mono dark:text-text-200 text-text-800">
+            cell: (info) => {
+                return <p className="font-mono dark:text-text-200 text-text-800">
                     <Number number={info.getValue()} />
-                </p>,
+                </p>
+            },
             meta: {
                 style: "w-36"
             }
