@@ -300,7 +300,7 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
                 const message = await response.json();
             } catch(error) {}
             break;
-        case 500:
+        default:
             dto.errorName = BaseHttpErrorTypes.UNKNOWN_ERROR.errorName;
             dto.errorMessage = `An unknown server side error occurred while fetching ${response.url}.`;
             try {
@@ -308,8 +308,6 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
                 dto.errorMessage += ` Error Details: ${message}`;
             } catch(error) {}
             break;
-        default:
-            return undefined;
     }
     return dto;
 }
