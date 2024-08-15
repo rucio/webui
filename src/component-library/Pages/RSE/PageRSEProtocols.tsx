@@ -17,8 +17,8 @@ export const PageRSEProtocols = (
     }
 ) => {
     const shortstyle = { style: "w-20" }
-    const shortstyleblue = { style: "w-20 bg-blue-500"}
-    const shortstylepink = { style: "w-20 bg-pink-500"}
+    const shortstyleblue = { style: "w-20 bg-extra-indigo-500"}
+    const shortstylepink = { style: "w-20 bg-extra-rose-500"}
     const columnHelper = createColumnHelper<RSEProtocol>()
     const tablecolumns: any[] = [
         columnHelper.accessor("scheme", {
