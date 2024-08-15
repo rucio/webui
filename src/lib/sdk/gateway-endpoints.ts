@@ -268,11 +268,10 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
         errorMessage: `An error occurred while fetching ${response.url}`,
     } as TDTO;
 
-    
     switch(statusCode) {
         case 400:
-            dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
-            dto.errorMessage = `The requested resource was not found at ${response.url}.`
+            dto.errorName = BaseHttpErrorTypes.BAD_REQUEST.errorName;
+            dto.errorMessage = `The request had invalid syntax.`
             try {
                 const message = await response.json();
                 dto.errorMessage += ` Error Details: ${message}`; 
@@ -284,6 +283,14 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
             try {
                 const message = await response.json();
                 dto.errorMessage += ` Error Details: ${message}`; 
+            } catch(error) {}
+            break;
+        case 404:
+            dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
+            dto.errorMessage = `The requested resource was not found at ${response.url}.`
+            try {
+                const message = await response.json();
+                dto.errorMessage += ` Error Details: ${message}`;
             } catch(error) {}
             break;
         case 406:
