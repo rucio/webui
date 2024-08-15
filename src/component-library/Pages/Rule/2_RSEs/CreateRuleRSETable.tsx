@@ -3,7 +3,7 @@ import { StreamedTable } from "../../../StreamedTables/StreamedTable";
 import { createColumnHelper, Row } from "@tanstack/react-table";
 import { H3 } from "../../../Text/Headings/H3";
 import { P } from "../../../Text/Content/P";
-import { Number } from "../../../Text/Content/Number";
+import { FileSize } from "../../../Text/Content/FileSize";
 import { TableSortUpDown } from "../../../StreamedTables/TableSortUpDown";
 import { useState, useEffect } from "react";
 import { TableFilterString } from "../../../StreamedTables/TableFilterString";
@@ -80,7 +80,7 @@ export const CreateRuleRSETable = (
                         isNoQuotaLeftFunction(info.row) ? "text-base-error-500 dark:text-base-error-500 font-bold" : "text-text-1000 dark:text-text-0",
                         "text-right"
                     )}>
-                        <Number number={info.getValue()} />
+                        <FileSize bytesNumber={info.getValue()} />
                     </P>
                 )
             },
@@ -108,7 +108,7 @@ export const CreateRuleRSETable = (
                         isNoQuotaLeftFunction(info.row) ? "text-base-error-500 dark:text-base-error-500 font-bold" : "text-text-1000 dark:text-text-0",
                         "text-right"
                     )}>
-                        <Number number={info.getValue()} />
+                        <FileSize bytesNumber={info.getValue()} />
                     </P>
                 )
             },
@@ -129,7 +129,7 @@ export const CreateRuleRSETable = (
                 )
             },
             cell: (props) => {
-                return <P mono className="text-right text-text-1000 dark:text-text-0"><Number number={props.row.original.bytes_limit} /></P>
+                return <P mono className="text-right text-text-1000 dark:text-text-0"><FileSize bytesNumber={props.row.original.bytes_limit} /></P>
             },
             meta: {
                 style: "w-24"

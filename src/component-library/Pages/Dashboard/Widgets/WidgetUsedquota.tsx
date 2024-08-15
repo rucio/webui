@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { BoolTag } from "@/component-library/Tags/BoolTag";
-import { Number } from "@/component-library/Text/Content/Number";
+import { FileSize } from "@/component-library/Text/Content/FileSize";
 import { Contenttd, Generaltable, Titleth } from "@/component-library/Helpers/Metatable";
 import tailwind from "@/tailwind"
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -69,15 +69,15 @@ const RSEPie: React.FC<JSX.IntrinsicElements["div"] & {
                 </tr>
                 <tr>
                     <Titleth>Total Space</Titleth>
-                    <Contenttd><Number number={input.total} /></Contenttd>
+                    <Contenttd><FileSize bytesNumber={input.total} /></Contenttd>
                 </tr>
                 <tr>
                     <Titleth>Space Used</Titleth>
-                    <Contenttd><Number number={input.used} /></Contenttd>
+                    <Contenttd><FileSize bytesNumber={input.used} /></Contenttd>
                 </tr>
                 <tr>
                     <Titleth>Quota</Titleth>
-                    <Contenttd><Number number={input.quota} /></Contenttd>
+                    <Contenttd><FileSize bytesNumber={input.quota} /></Contenttd>
                 </tr>
             </Generaltable>
         </div>

@@ -5,7 +5,7 @@ import { P } from "@/component-library/Text/Content/P"
 import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse"
 import { createColumnHelper } from "@tanstack/react-table"
 import { twMerge } from "tailwind-merge"
-import { Number } from "@/component-library/Text/Content/Number"
+import { FileSize } from "@/component-library/Text/Content/FileSize"
 
 type TRSESummaryTableRow = {
     rseName: string,
@@ -95,7 +95,7 @@ export const RSESummaryTable = (props: {
                     <div className={twMerge("flex flex-col items-left",
                         "text-left dark:text-text-0 text-text-1000"
                     )}>
-                        <Number number={value} />
+                        <FileSize bytesNumber={value} />
                     </div>
                 )
             },
@@ -121,7 +121,7 @@ export const RSESummaryTable = (props: {
                         "text-left",
                         "dark:text-text-0 text-text-1000"
                     )}>
-                        <Number number={value} />
+                        <FileSize bytesNumber={value} />
                     </div>
                 )
             },

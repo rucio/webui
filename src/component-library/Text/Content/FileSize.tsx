@@ -1,16 +1,16 @@
 import { twMerge } from "tailwind-merge";
 
-type ByteProps = JSX.IntrinsicElements["span"] & { number: number; decimalPlaces?: number }
+type ByteProps = JSX.IntrinsicElements["span"] & { bytesNumber: number; decimalPlaces?: number }
 
-export const Number: React.FC<ByteProps> = (
+export const FileSize: React.FC<ByteProps> = (
     {
-        number,
+        bytesNumber,
         decimalPlaces,
         ...props
     }
 ) => {
     const {className, ...otherprops} = props
-    if (number === 0) return (
+    if (bytesNumber === 0) return (
         <span
             className={twMerge(
                 className ?? "",
@@ -20,7 +20,7 @@ export const Number: React.FC<ByteProps> = (
             0
         </span>
     )
-    if(number === Infinity) return (
+    if(bytesNumber === Infinity) return (
         <span
             className={twMerge(
                 className ?? "",
@@ -31,7 +31,7 @@ export const Number: React.FC<ByteProps> = (
             Infinity
         </span>
     )
-    if (isNaN(+number)) return (
+    if (isNaN(+bytesNumber)) return (
         <span
             className={twMerge(
                 className ?? "",
@@ -47,7 +47,7 @@ export const Number: React.FC<ByteProps> = (
     const dm = decimalPlaces ?? 1
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-    const absnum = Math.abs(number)
+    const absnum = Math.abs(bytesNumber)
     const i = Math.floor(Math.log(absnum) / Math.log(base))
 
     return (
@@ -57,7 +57,7 @@ export const Number: React.FC<ByteProps> = (
             )}
             {...otherprops}
         >
-            {number < 0 ? "-" : ""}{`${parseFloat((absnum / Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`}
+            {bytesNumber < 0 ? "-" : ""}{`${parseFloat((absnum / Math.pow(base, i)).toFixed(dm))} ${sizes[i]}`}
         </span>
     )
 }

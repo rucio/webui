@@ -3,7 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table"
 import { useEffect, useState } from "react"
 
 import { DateTag } from "../../Tags/DateTag";
-import { Number } from "../../Text/Content/Number";
+import { FileSize } from "../../Text/Content/FileSize";
 import { ReplicaStateTag } from "../../Tags/ReplicaStateTag";
 import { ReplicaState } from "@/lib/core/entity/rucio";
 import { RSETag } from "../../Tags/RSETag";
@@ -118,7 +118,7 @@ export const PageDIDDatasetReplicas = (
                             "font-mono text-right dark:text-text-0 text-text-1000",
                         )}
                     >
-                        <Number number={info.row.original.available_bytes} />
+                        <FileSize bytesNumber={info.row.original.available_bytes} />
                     </span>
                 )
             },

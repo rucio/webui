@@ -3,7 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table"
 import { BasicStatusTag, BasicStatusTagProps } from "@/component-library/Tags/BasicStatusTag"
 import { P } from "@/component-library/Text/Content/P"
 import { TableSortUpDown } from "@/component-library/StreamedTables/TableSortUpDown"
-import { Number } from "@/component-library/Text/Content/Number"
+import { FileSize } from "@/component-library/Text/Content/FileSize"
 import { twMerge } from "tailwind-merge"
 import { generateDerivedDIDName, generateNewScope } from "@/lib/core/utils/did-utils"
 import { AccountInfo, DID } from "@/lib/core/entity/rucio"
@@ -201,7 +201,7 @@ export const DIDSummaryTable = (props: {
                     <div className={twMerge("flex flex-col items-left",
                         "text-right text-text-1000 dark:text-text-100"
                     )}>
-                        <Number number={value} />
+                        <FileSize bytesNumber={value} />
                     </div>
                 )
             },
@@ -235,7 +235,7 @@ export const DIDSummaryTable = (props: {
                     <div className={twMerge("flex flex-col items-left",
                         "text-right text-text-1000 dark:text-text-100"
                     )}>
-                        <Number number={value} />
+                        <FileSize bytesNumber={value} />
                     </div>
                 )
             },
@@ -327,14 +327,14 @@ export const DIDSummaryTable = (props: {
                         <tr className="border-t dark:border-neutral-400 text-text-1000 dark:text-text-0">
                             <td className="w-56 pl-2 py-1">Total Size</td>
                             <td className="pl-2 py-1">{
-                                typeof totalSize === 'number' ? <Number number={totalSize} /> : totalSize
+                                typeof totalSize === 'number' ? <FileSize bytesNumber={totalSize} /> : totalSize
                             }</td>
                         </tr>
                         <tr className="border-t dark:border-neutral-400 text-text-1000 dark:text-text-0">
                             <td className="w-56 pl-2 py-1">Total Requested Size</td>
                             <td className="pl-2 py-1">
                                 {
-                                    typeof totalRequestedSize === 'number' ? <Number number={totalRequestedSize} /> : totalRequestedSize
+                                    typeof totalRequestedSize === 'number' ? <FileSize bytesNumber={totalRequestedSize} /> : totalRequestedSize
                                 }
                             </td>
                         </tr>
