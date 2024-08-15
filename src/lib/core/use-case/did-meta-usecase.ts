@@ -70,7 +70,7 @@ class DIDMetaUseCase extends BaseSingleEndpointUseCase<AuthenticatedRequestModel
                 adler32: dto.adler32,
                 md5: dto.md5,
                 guid: dto.guid,
-                filesize: dto.filesize
+                bytes: dto.bytes
             },
             status: 'success',
         }

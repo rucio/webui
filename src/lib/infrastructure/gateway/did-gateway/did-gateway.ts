@@ -121,7 +121,7 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
                 adler32: '',
                 md5: '',
                 guid: '',
-                filesize: 0
+                bytes: 0
 
             }
             return Promise.resolve(errorDTO)

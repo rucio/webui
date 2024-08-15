@@ -96,7 +96,7 @@ export const DIDMetaView = (
                 <tbody className="w-full" aria-label="File Information">
                     <tr aria-label="Size">
                         <Titletd>Size</Titletd>
-                        <Contenttd><Number number={meta.filesize as number} /></Contenttd>
+                        <Contenttd><Number number={meta.bytes as number} /></Contenttd>
                     </tr>
                     <tr aria-label="GUID">
                         <Titletd>GUID</Titletd>
