@@ -2,7 +2,7 @@ import { DIDTypeTag } from "../../Tags/DIDTypeTag"
 import { BoolTag } from "../../Tags/BoolTag"
 import { twMerge } from "tailwind-merge"
 import { AvailabilityTag } from "../../Tags/AvailabilityTag"
-import { Number } from "../../Text/Content/Number"
+import { FileSize } from "../../Text/Content/FileSize"
 import { DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did"
 var format = require("date-format")
 
@@ -96,7 +96,7 @@ export const DIDMetaView = (
                 <tbody className="w-full" aria-label="File Information">
                     <tr aria-label="Size">
                         <Titletd>Size</Titletd>
-                        <Contenttd><Number number={meta.bytes as number} /></Contenttd>
+                        <Contenttd><FileSize bytesNumber={meta.bytes as number} /></Contenttd>
                     </tr>
                     <tr aria-label="GUID">
                         <Titletd>GUID</Titletd>

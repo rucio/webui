@@ -1,7 +1,7 @@
 import { DIDType } from "@/lib/core/entity/rucio";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DIDTypeTag } from "../../../Tags/DIDTypeTag";
-import { Number } from "../../../Text/Content/Number";
+import { FileSize } from "../../../Text/Content/FileSize";
 import { P } from "../../../Text/Content/P";
 import { StreamedTable } from "../../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../../StreamedTables/TableFilterString";
@@ -82,7 +82,7 @@ export const CreateRuleDIDTable = (
             },
             cell: (info) => {
                 return <p className="font-mono dark:text-text-200 text-text-800">
-                    <Number number={info.getValue()} />
+                    <FileSize bytesNumber={info.getValue()} />
                 </p>
             },
             meta: {
