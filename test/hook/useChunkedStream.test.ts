@@ -341,4 +341,26 @@ describe('useChunkedStream', () => {
         expect(onData).toBeCalledTimes(1);
         expect(onData).toBeCalledWith({id: 1, name: 'test1'});
     });
+
+    it('Should fail at the non streamed response', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: 'Hello!'
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).not.toBeCalled();
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
+        expect(result.current.error).not.toEqual(undefined);
+    });
 });
