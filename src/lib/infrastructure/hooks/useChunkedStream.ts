@@ -1,9 +1,11 @@
 import {useCallback, useState, useRef} from "react";
 
+const PAUSE_POLLING_INTERVAL = 100;
+
 export enum StreamingStatus {
     STOPPED = 'stopped',
-    RUNNING = 'running'
-    // May be extended
+    RUNNING = 'running',
+    PAUSED = 'paused'
 }
 
 /**
@@ -49,8 +51,10 @@ async function* processStream<TData>(reader: ReadableStreamDefaultReader<Uint8Ar
  * @param onData - A callback function which subscribes to streaming updates
  * @returns status - An indication if there is ongoing streaming
  * @returns start - A function which begins the fetching if there was none prior to the call
- * @returns stop - A function which interrupts the fetching
+ * @returns stop - A function which interrupts the fetching while deleting its state
  * @returns error - A string with explanation of the error
+ * @returns pause - A function which interrupts the fetching while preserving its state
+ * @returns resume - A function that continues paused fetching
  */
 export default function useChunkedStream<TData>(
     onData: (data: TData) => void
@@ -58,7 +62,9 @@ export default function useChunkedStream<TData>(
     const [status, setStatus] = useState<StreamingStatus>(StreamingStatus.STOPPED);
     const [error, setError] = useState<string | undefined>(undefined);
     const controllerRef = useRef<AbortController | null>(null);
+    // These refs are required for the correct state handling during fetching
     const isStreaming = useRef(false);
+    const isPaused = useRef(false);
 
     const start = useCallback((url: string, options = {}) => {
         if (isStreaming.current) {
@@ -83,6 +89,11 @@ export default function useChunkedStream<TData>(
                 if (signal.aborted) {
                     return;
                 }
+                if (isPaused.current) {
+                    while (isPaused.current) {
+                        await new Promise(resolve => setTimeout(resolve, PAUSE_POLLING_INTERVAL));
+                    }
+                }
                 onData(data);
             }
         };
@@ -101,8 +112,23 @@ export default function useChunkedStream<TData>(
         if (controllerRef.current) {
             controllerRef.current.abort();
             setStatus(StreamingStatus.STOPPED);
+            isPaused.current = false;
         }
     }, []);
 
-    return {stop, start, status, error};
+    const pause = useCallback(() => {
+        if (isStreaming.current) {
+            isPaused.current = true;
+            setStatus(StreamingStatus.PAUSED);
+        }
+    }, []);
+
+    const resume = useCallback(() => {
+        if (isPaused.current) {
+            isPaused.current = false;
+            setStatus(StreamingStatus.RUNNING);
+        }
+    }, []);
+
+    return {stop, start, status, error, pause, resume};
 }
