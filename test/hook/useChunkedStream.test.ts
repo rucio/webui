@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import {BaseViewModel} from "@/lib/sdk/view-models";
-import useChunkedStream from "@/lib/infrastructure/hooks/useChunkedStream";
+import useChunkedStream, {StreamingStatus} from "@/lib/infrastructure/hooks/useChunkedStream";
 import { ReadableStream } from 'web-streams-polyfill';
 
 interface MockViewModel {
@@ -45,7 +45,7 @@ describe('useChunkedStream', () => {
     expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
     expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
 
-    expect(result.current.status).toBe('stopped');
+    expect(result.current.status).toBe(StreamingStatus.STOPPED);
   });
 
   it('Should handle a stream of full NDJSON chunks with multiple objects', async () => {
@@ -81,7 +81,7 @@ describe('useChunkedStream', () => {
     expect(onData).toHaveBeenCalledWith({id: 4, name: 'test4'});
     expect(onData).toHaveBeenCalledWith({id: 5, name: 'test5'});
 
-    expect(result.current.status).toBe('stopped');
+    expect(result.current.status).toBe(StreamingStatus.STOPPED);
   });
 
   it('Should handle a stream of partial NDJSON chunks', async () => {
@@ -114,7 +114,7 @@ describe('useChunkedStream', () => {
     expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
     expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
 
-    expect(result.current.status).toBe('stopped');
+    expect(result.current.status).toBe(StreamingStatus.STOPPED);
   });
 
   it('Should throw an error if a request is already running', async () => {
