@@ -1,4 +1,3 @@
-import {BaseViewModel} from "@/lib/sdk/view-models";
 import {useCallback, useState, useRef} from "react";
 
 export enum StreamingStatus {
@@ -50,6 +49,8 @@ async function* processStream<TData>(reader: ReadableStreamDefaultReader<Uint8Ar
  * @param onData - A callback function which subscribes to streaming updates
  * @returns status - An indication if there is ongoing streaming
  * @returns start - A function which begins the fetching if there was none prior to the call
+ * @returns stop - A function which interrupts the fetching
+ * @returns error - A string with explanation of the error
  */
 export default function useChunkedStream<TData>(
     onData: (data: TData) => void
