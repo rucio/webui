@@ -7,7 +7,51 @@ export enum StreamingStatus {
     // May be extended
 }
 
-export default function useChunkedStream<TData extends BaseViewModel>(
+/**
+ * @description An asynchronous generator which reads an NDJSON stream and yields TData objects
+ * @template TData - The expected type of received objects
+ * @param reader - A reader of the readable stream
+ */
+async function* processStream<TData>(reader: ReadableStreamDefaultReader<Uint8Array>): AsyncGenerator<TData> {
+    const decoder = new TextDecoder();
+    let partialData = '';
+
+    while (true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, {stream: true});
+        partialData += chunk;
+
+        // Split on newline characters to process complete lines
+        const lines = partialData.split('\n');
+
+        // The last element might be a partial line, so save it
+        partialData = lines.pop() ?? '';
+
+        // Parse and add complete JSON lines
+        const parsedObjects: TData[] = lines.map(line => JSON.parse(line));
+        for (const parsedObject of parsedObjects) {
+            yield parsedObject;
+        }
+    }
+
+    // Process any remaining partial data after the stream ends
+    if (partialData) {
+        yield JSON.parse(partialData);
+    }
+
+    reader.releaseLock(); // Release the reader lock when done
+}
+
+/**
+ * @description A React hook that fetches and parses NDJSON from a streamable endpoint
+ * @template TData - The expected type of received objects
+ * @param onData - A callback function which subscribes to streaming updates
+ * @returns status - An indication if there is ongoing streaming
+ * @returns start - A function which
+ */
+export default function useChunkedStream<TData>(
     onData: (data: TData) => void
 ) {
     const [status, setStatus] = useState<StreamingStatus>(StreamingStatus.STOPPED);
@@ -22,64 +66,33 @@ export default function useChunkedStream<TData extends BaseViewModel>(
         setStatus(StreamingStatus.RUNNING);
 
         controllerRef.current = new AbortController();
-        const { signal } = controllerRef.current;
+        const {signal} = controllerRef.current;
 
         const fetchStream = async () => {
-            try {
-                const response = await fetch(url, { ...options, signal });
+            const response = await fetch(url, {...options, signal});
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-                const reader = response.body!.getReader();
-                const decoder = new TextDecoder();
-                let partialData = '';
-
-                const processStream = async () => {
-                    while (true) {
-                        const {done, value} = await reader.read();
-                        if (done) break;
-
-                        const chunk = decoder.decode(value, {stream: true});
-                        partialData += chunk;
-
-                        // Split on newline characters to process complete lines
-                        const lines = partialData.split('\n');
-
-                        // The last element might be a partial line, so save it
-                        partialData = lines.pop() ?? '';
-
-                        // Parse and add complete JSON lines
-                        const parsedObjects: TData[] = lines.map(line => JSON.parse(line));
-                        parsedObjects.forEach((parsedObject) => onData(parsedObject))
-                    }
-
-                    // Process any remaining partial data after the stream ends
-                    if (partialData) {
-                        try {
-                            const parsedObject: TData = JSON.parse(partialData);
-                            onData(parsedObject);
-                        } catch (e) {
-                            console.error("Failed to parse remaining partial data", e);
-                        }
-                    }
-
-                    reader.releaseLock(); // Release the reader lock when done
-                };
-
-                await processStream();
-
-            } catch (e) {
-                console.log(e);
-            } finally {
-                setStatus(StreamingStatus.STOPPED);
-                isStreaming.current = false;
+            const reader = response.body!.getReader();
+            for await (const data of processStream<TData>(reader)) {
+                onData(data);
             }
         };
 
-        fetchStream();
+        try {
+            fetchStream().then(() => {
+                setStatus(StreamingStatus.STOPPED);
+                isStreaming.current = false;
+            });
+        } catch (e) {
+            // TODO: set error
+        }
+
     }, [onData]);
 
-    return { start, status };
+    // TODO: stop, pause and resume
+
+    return {start, status};
 }
