@@ -79,6 +79,9 @@ export default function useChunkedStream<TData>(
 
             const reader = response.body!.getReader();
             for await (const data of processStream<TData>(reader)) {
+                if (signal.aborted) {
+                    return;
+                }
                 onData(data);
             }
         };
@@ -93,7 +96,12 @@ export default function useChunkedStream<TData>(
             });
     }, [onData]);
 
-    // TODO: stop, pause and resume
+    const stop = useCallback(() => {
+        if (controllerRef.current) {
+            controllerRef.current.abort();
+            setStatus(StreamingStatus.STOPPED);
+        }
+    }, []);
 
-    return {start, status, error};
+    return {stop, start, status, error};
 }
