@@ -3,7 +3,7 @@ import {BaseViewModel} from "@/lib/sdk/view-models";
 import useChunkedStream from "@/lib/infrastructure/hooks/useChunkedStream";
 import { ReadableStream } from 'web-streams-polyfill';
 
-interface MockViewModel extends BaseViewModel {
+interface MockViewModel {
   id: number;
   name: string;
 }
