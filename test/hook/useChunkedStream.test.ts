@@ -363,4 +363,103 @@ describe('useChunkedStream', () => {
         expect(result.current.status).toBe(StreamingStatus.STOPPED);
         expect(result.current.error).not.toEqual(undefined);
     });
+
+    it('Should correctly handle pause and resume', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id": 1, "name": "test1"}\n'));
+                        }, 0);
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id": 2, "name": "test2"}\n'));
+                            controller.close();
+                        }, 100);
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+        expect(result.current.status).toEqual(StreamingStatus.RUNNING);
+
+        act(() => {
+            result.current.pause();
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        expect(result.current.status).toEqual(StreamingStatus.PAUSED);
+        // The next batch shouldn't be read
+        expect(onData).toBeCalledTimes(1);
+        expect(onData).toBeCalledWith({id: 1, name: 'test1'});
+
+        // Cannot start a new request while paused
+        expect(() => {
+            act(() => {
+                result.current.start('https://example.com/api');
+            });
+        }).toThrow();
+
+        act(() => {
+            result.current.resume();
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).toBeCalledTimes(2);
+        expect(onData).toBeCalledWith({id: 2, name: 'test2'});
+        expect(result.current.status).toEqual(StreamingStatus.STOPPED);
+    });
+
+    it('Should be able to stop during the pause', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Stream data with a delay
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id": 1, "name": "test1"}\n'));
+                            controller.enqueue(new TextEncoder().encode('{"id": 2, "name": "test2"}\n'));
+                            controller.close();
+                        }, 100);
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 25));
+        expect(result.current.status).toEqual(StreamingStatus.RUNNING);
+
+        act(() => {
+            result.current.pause();
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 200));
+        expect(result.current.status).toEqual(StreamingStatus.PAUSED);
+        expect(onData).not.toBeCalled();
+
+        act(() => {
+            result.current.stop();
+        });
+
+        await waitForNextUpdate();
+
+        expect(result.current.status).toEqual(StreamingStatus.STOPPED);
+    });
 });
