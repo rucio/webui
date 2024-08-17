@@ -269,4 +269,39 @@ describe('useChunkedStream', () => {
         expect(result.current.status).toBe(StreamingStatus.STOPPED);
         expect(result.current.error).toEqual(undefined);
     });
+
+    it('Should stop the at the fetching', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Stream data with a delay
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id": 1, "name": "test1"}\n'));
+                            controller.enqueue(new TextEncoder().encode('{"id": 2, "name": "test2"}\n'));
+                            controller.close();
+                        }, 100);
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+        expect(result.current.status).toEqual(StreamingStatus.RUNNING);
+
+        act(() => {
+            result.current.stop();
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).not.toBeCalled();
+    });
 });
