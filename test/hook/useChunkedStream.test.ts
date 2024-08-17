@@ -1,5 +1,5 @@
 import {renderHook, act, cleanup} from '@testing-library/react-hooks';
-import useChunkedStream, {StreamingStatus} from "@/lib/infrastructure/hooks/useChunkedStream";
+import useChunkedStream, {StreamingErrorType, StreamingStatus} from "@/lib/infrastructure/hooks/useChunkedStream";
 import {ReadableStream} from 'web-streams-polyfill';
 
 interface MockViewModel {
@@ -121,7 +121,7 @@ describe('useChunkedStream', () => {
         expect(result.current.status).toBe(StreamingStatus.STOPPED);
     });
 
-    it('Should throw an error if a request is already running', async () => {
+    it('Should set an error if a request is already running', async () => {
         const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
 
         act(() => {
@@ -132,7 +132,10 @@ describe('useChunkedStream', () => {
             act(() => {
                 result.current.start('https://example.com/api');
             });
-        }).toThrow();
+        }).not.toThrow();
+
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.BAD_METHOD_CALL);
 
         await waitForNextUpdate();
     });
@@ -170,9 +173,10 @@ describe('useChunkedStream', () => {
 
         expect(result.current.status).toBe(StreamingStatus.STOPPED);
         expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.NETWORK_ERROR);
     });
 
-    it('Should update the error and stop the streaming if the response has a faulty status code', async () => {
+    it('Should update the error and stop the streaming if the response has a 404 status code', async () => {
         global.fetch = jest.fn(() =>
             Promise.resolve({
                 ok: false,
@@ -194,6 +198,7 @@ describe('useChunkedStream', () => {
 
         expect(result.current.status).toBe(StreamingStatus.STOPPED);
         expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.NOT_FOUND);
     });
 
     it('Should update the error and stop the streaming if the response cannot be parsed', async () => {
@@ -227,6 +232,7 @@ describe('useChunkedStream', () => {
 
         expect(result.current.status).toBe(StreamingStatus.STOPPED);
         expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.PARSING_ERROR);
     });
 
     it('Should let the fetching restart after the error', async () => {
@@ -407,7 +413,10 @@ describe('useChunkedStream', () => {
             act(() => {
                 result.current.start('https://example.com/api');
             });
-        }).toThrow();
+        }).not.toThrow();
+
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.BAD_METHOD_CALL);
 
         act(() => {
             result.current.resume();

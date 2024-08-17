@@ -2,6 +2,30 @@ import {useCallback, useState, useRef} from "react";
 
 const PAUSE_POLLING_INTERVAL = 100;
 
+export enum StreamingErrorType {
+    BAD_METHOD_CALL,
+    NETWORK_ERROR,
+    BAD_REQUEST,
+    NOT_FOUND,
+    INVALID_RESPONSE,
+    PARSING_ERROR,
+}
+
+interface StreamingError {
+    type: StreamingErrorType,
+    message: string
+}
+
+const getResponseError = (response: Response) => {
+    const error: StreamingError = {type: StreamingErrorType.INVALID_RESPONSE, message: response.statusText};
+    if (response.status === 404) {
+        error.type = StreamingErrorType.NOT_FOUND;
+    } else if (response.status === 400) {
+        error.type = StreamingErrorType.BAD_REQUEST;
+    }
+    return error;
+}
+
 export enum StreamingStatus {
     STOPPED = 'stopped',
     RUNNING = 'running',
@@ -60,7 +84,7 @@ export default function useChunkedStream<TData>(
     onData: (data: TData) => void
 ) {
     const [status, setStatus] = useState<StreamingStatus>(StreamingStatus.STOPPED);
-    const [error, setError] = useState<string | undefined>(undefined);
+    const [error, setError] = useState<StreamingError | undefined>(undefined);
     const controllerRef = useRef<AbortController | null>(null);
     // These refs are required for the correct state handling during fetching
     const isStreaming = useRef(false);
@@ -68,7 +92,8 @@ export default function useChunkedStream<TData>(
 
     const start = useCallback((url: string, options = {}) => {
         if (isStreaming.current) {
-            throw new Error('Another request is currently running.');
+            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'Another request is currently running.'})
+            return;
         }
         isStreaming.current = true;
         setStatus(StreamingStatus.RUNNING);
@@ -78,10 +103,18 @@ export default function useChunkedStream<TData>(
         const {signal} = controllerRef.current;
 
         const fetchStream = async () => {
-            const response = await fetch(url, {...options, signal});
+            let response: Response;
+
+            try {
+                response = await fetch(url, {...options, signal});
+            } catch (e: any) {
+                setError({type: StreamingErrorType.NETWORK_ERROR, message: e.toString()});
+                return;
+            }
 
             if (!response.ok) {
-                throw new Error(`The response has sent a ${response.status} status code. ${response.statusText}`);
+                setError(getResponseError(response));
+                return;
             }
 
             const reader = response.body!.getReader();
@@ -100,7 +133,7 @@ export default function useChunkedStream<TData>(
 
         fetchStream()
             .catch((e: any) => {
-                setError(e.toString());
+                setError({type: StreamingErrorType.PARSING_ERROR, message: e.toString()});
             })
             .then(() => {
                 setStatus(StreamingStatus.STOPPED);
