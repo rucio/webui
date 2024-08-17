@@ -201,6 +201,56 @@ describe('useChunkedStream', () => {
         expect(result.current.error?.type).toEqual(StreamingErrorType.NOT_FOUND);
     });
 
+    it('Should update the error and stop the streaming if the response has a 400 status code', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                status: 400,
+                statusText: 'Bad Request',
+                body: null,
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).not.toHaveBeenCalled();
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.BAD_REQUEST);
+    });
+
+    it('Should update the error and stop the streaming if the response has other faulty status code', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                status: 500,
+                statusText: 'Internal Error',
+                body: null,
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).not.toHaveBeenCalled();
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.INVALID_RESPONSE);
+    });
+
     it('Should update the error and stop the streaming if the response cannot be parsed', async () => {
         global.fetch = jest.fn(() =>
             Promise.resolve({
@@ -470,5 +520,44 @@ describe('useChunkedStream', () => {
         await waitForNextUpdate();
 
         expect(result.current.status).toEqual(StreamingStatus.STOPPED);
+    });
+
+    it('Should set an error on trying to stop without active fetching', async () => {
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        expect(() => {
+            act(() => {
+                result.current.stop();
+            });
+        }).not.toThrow();
+
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.BAD_METHOD_CALL);
+    });
+
+    it('Should set an error on trying to pause without active fetching', async () => {
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        expect(() => {
+            act(() => {
+                result.current.pause();
+            });
+        }).not.toThrow();
+
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.BAD_METHOD_CALL);
+    });
+
+    it('Should set an error on trying to resume without calling pause', async () => {
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        expect(() => {
+            act(() => {
+                result.current.pause();
+            });
+        }).not.toThrow();
+
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.BAD_METHOD_CALL);
     });
 });

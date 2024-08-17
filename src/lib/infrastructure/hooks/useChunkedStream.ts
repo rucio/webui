@@ -92,10 +92,11 @@ export default function useChunkedStream<TData>(
 
     const start = useCallback((url: string, options = {}) => {
         if (isStreaming.current) {
-            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'Another request is currently running.'})
+            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'Another request is currently running.'});
             return;
         }
         isStreaming.current = true;
+        isPaused.current = false;
         setStatus(StreamingStatus.RUNNING);
         setError(undefined);
 
@@ -142,7 +143,9 @@ export default function useChunkedStream<TData>(
     }, [onData]);
 
     const stop = useCallback(() => {
-        if (controllerRef.current) {
+        if (!isStreaming.current) {
+            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'There is no active fetching.'});
+        } else if (controllerRef.current) {
             controllerRef.current.abort();
             setStatus(StreamingStatus.STOPPED);
             isPaused.current = false;
@@ -153,6 +156,8 @@ export default function useChunkedStream<TData>(
         if (isStreaming.current) {
             isPaused.current = true;
             setStatus(StreamingStatus.PAUSED);
+        } else {
+            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'There is no active fetching.'});
         }
     }, []);
 
@@ -160,6 +165,8 @@ export default function useChunkedStream<TData>(
         if (isPaused.current) {
             isPaused.current = false;
             setStatus(StreamingStatus.RUNNING);
+        } else {
+            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'There is no active fetching.'});
         }
     }, []);
 
