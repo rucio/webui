@@ -1,149 +1,272 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import {BaseViewModel} from "@/lib/sdk/view-models";
+import {renderHook, act, cleanup} from '@testing-library/react-hooks';
 import useChunkedStream, {StreamingStatus} from "@/lib/infrastructure/hooks/useChunkedStream";
-import { ReadableStream } from 'web-streams-polyfill';
+import {ReadableStream} from 'web-streams-polyfill';
 
 interface MockViewModel {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
 }
 
 describe('useChunkedStream', () => {
-  // Mock the onData callback
-  const onData = jest.fn();
+    // Mock the onData callback
+    const onData = jest.fn();
 
-  beforeEach(() => {
-    onData.mockClear();
-  });
-
-  it('Should handle a stream of full NDJSON chunks', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        body: new ReadableStream({
-          start(controller) {
-            // Simulate streaming data
-            setTimeout(() => {
-              controller.enqueue(new TextEncoder().encode('{"id":1,"name":"test1"}\n'));
-              controller.enqueue(new TextEncoder().encode('{"id":2,"name":"test2"}\n'));
-              controller.close();
-            }, 0);
-          },
-        }),
-      })
-    ) as jest.Mock;
-
-    const { result, waitForNextUpdate } = renderHook(() => useChunkedStream<MockViewModel>(onData));
-
-    act(() => {
-      result.current.start('https://example.com/api');
+    beforeEach(() => {
+        onData.mockClear();
+        jest.resetAllMocks(); // Resets the state of all mocks between tests
     });
 
-    await waitForNextUpdate(); // Wait for the hook to process the stream
-
-    expect(onData).toHaveBeenCalledTimes(2);
-    expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
-    expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
-
-    expect(result.current.status).toBe(StreamingStatus.STOPPED);
-  });
-
-  it('Should handle a stream of full NDJSON chunks with multiple objects', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        body: new ReadableStream({
-          start(controller) {
-            // Simulate streaming data
-            setTimeout(() => {
-              controller.enqueue(new TextEncoder().encode('{"id":1,"name":"test1"}\n{"id":2,"name":"test2"}\n'));
-              controller.enqueue(new TextEncoder().encode('{"id":3,"name":"test3"}\n'));
-              controller.enqueue(new TextEncoder().encode('{"id":4,"name":"test4"}\n{"id":5,"name":"test5"}\n'));
-              controller.close();
-            }, 0);
-          },
-        }),
-      })
-    ) as jest.Mock;
-
-    const { result, waitForNextUpdate } = renderHook(() => useChunkedStream<MockViewModel>(onData));
-
-    act(() => {
-      result.current.start('https://example.com/api');
+    afterEach(() => {
+        cleanup();
     });
 
-    await waitForNextUpdate(); // Wait for the hook to process the stream
+    it('Should handle a stream of full NDJSON chunks', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Simulate streaming data
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id":1,"name":"test1"}\n'));
+                            controller.enqueue(new TextEncoder().encode('{"id":2,"name":"test2"}\n'));
+                            controller.close();
+                        }, 0);
+                    },
+                }),
+            })
+        ) as jest.Mock;
 
-    expect(onData).toHaveBeenCalledTimes(5);
-    expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
-    expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
-    expect(onData).toHaveBeenCalledWith({id: 3, name: 'test3'});
-    expect(onData).toHaveBeenCalledWith({id: 4, name: 'test4'});
-    expect(onData).toHaveBeenCalledWith({id: 5, name: 'test5'});
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
 
-    expect(result.current.status).toBe(StreamingStatus.STOPPED);
-  });
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
 
-  it('Should handle a stream of partial NDJSON chunks', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        body: new ReadableStream({
-          start(controller) {
-            // Simulate streaming data
-            setTimeout(() => {
-              controller.enqueue(new TextEncoder().encode('{"id":1,"name":"te'));
-              controller.enqueue(new TextEncoder().encode('st1"}\n{"id":'));
-              controller.enqueue(new TextEncoder().encode('2,"name":"test2"}\n'));
-              controller.close();
-            }, 0);
-          },
-        }),
-      })
-    ) as jest.Mock;
+        await waitForNextUpdate();
 
-    const { result, waitForNextUpdate } = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        expect(onData).toHaveBeenCalledTimes(2);
+        expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
+        expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
 
-    act(() => {
-      result.current.start('https://example.com/api');
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
     });
 
-    await waitForNextUpdate(); // Wait for the hook to process the stream
+    it('Should handle a stream of full NDJSON chunks with multiple objects', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Simulate streaming data
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id":1,"name":"test1"}\n{"id":2,"name":"test2"}\n'));
+                            controller.enqueue(new TextEncoder().encode('{"id":3,"name":"test3"}\n'));
+                            controller.enqueue(new TextEncoder().encode('{"id":4,"name":"test4"}\n{"id":5,"name":"test5"}\n'));
+                            controller.close();
+                        }, 0);
+                    },
+                }),
+            })
+        ) as jest.Mock;
 
-    expect(onData).toHaveBeenCalledTimes(2);
-    expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
-    expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
 
-    expect(result.current.status).toBe(StreamingStatus.STOPPED);
-  });
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
 
-  it('Should throw an error if a request is already running', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        await waitForNextUpdate();
 
-    act(() => {
-      result.current.start('https://example.com/api');
+        expect(onData).toHaveBeenCalledTimes(5);
+        expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
+        expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
+        expect(onData).toHaveBeenCalledWith({id: 3, name: 'test3'});
+        expect(onData).toHaveBeenCalledWith({id: 4, name: 'test4'});
+        expect(onData).toHaveBeenCalledWith({id: 5, name: 'test5'});
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
     });
 
-    expect(() => {
-      act(() => {
-        result.current.start('https://example.com/api');
-      });
-    }).toThrow();
-  });
+    it('Should handle a stream of partial NDJSON chunks', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Simulate streaming data
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id":1,"name":"te'));
+                            controller.enqueue(new TextEncoder().encode('st1"}\n{"id":'));
+                            controller.enqueue(new TextEncoder().encode('2,"name":"test2"}\n'));
+                            controller.close();
+                        }, 0);
+                    },
+                }),
+            })
+        ) as jest.Mock;
 
-  it('Should restart after the first request is finished', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
 
-    act(() => {
-      result.current.start('https://example.com/api');
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).toHaveBeenCalledTimes(2);
+        expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
+        expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
     });
 
-    await waitForNextUpdate();
+    it('Should throw an error if a request is already running', async () => {
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
 
-    expect(() => {
-      act(() => {
-        result.current.start('https://example.com/api');
-      });
-    }).not.toThrow();
-  });
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        expect(() => {
+            act(() => {
+                result.current.start('https://example.com/api');
+            });
+        }).toThrow();
+
+        await waitForNextUpdate();
+    });
+
+    it('Should restart after the first request is finished', async () => {
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(() => {
+            act(() => {
+                result.current.start('https://example.com/api');
+            });
+        }).not.toThrow();
+
+        await waitForNextUpdate();
+    });
+
+    it('Should update the error and stop the streaming if the endpoint cannot be fetched', async () => {
+        global.fetch = jest.fn(() => Promise.reject(new Error('Network Error'))) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).not.toHaveBeenCalled();
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
+        expect(result.current.error).not.toEqual(undefined);
+    });
+
+    it('Should update the error and stop the streaming if the response has a faulty status code', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                status: 404,
+                statusText: 'Not Found',
+                body: null,
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).not.toHaveBeenCalled();
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
+        expect(result.current.error).not.toEqual(undefined);
+    });
+
+    it('Should update the error and stop the streaming if the response cannot be parsed', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Simulate streaming data
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id": 1, "name": "test1"}\n'));
+                            controller.enqueue(new TextEncoder().encode('faultychunk\n'));
+                            controller.enqueue(new TextEncoder().encode('{"id": 2, "name": "test2"}\n'));
+                            controller.close();
+                        }, 0);
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).toHaveBeenCalledTimes(1);
+        expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
+        expect(result.current.error).not.toEqual(undefined);
+    });
+
+    it('Should let the fetching restart after the error', async () => {
+        global.fetch = jest.fn(() => Promise.reject(new Error('Network Error'))) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Simulate streaming data
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id":1,"name":"test1"}\n'));
+                            controller.enqueue(new TextEncoder().encode('{"id":2,"name":"test2"}\n'));
+                            controller.close();
+                        }, 0);
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).toHaveBeenCalledTimes(2);
+        expect(onData).toHaveBeenCalledWith({id: 1, name: 'test1'});
+        expect(onData).toHaveBeenCalledWith({id: 2, name: 'test2'});
+
+        expect(result.current.status).toBe(StreamingStatus.STOPPED);
+        expect(result.current.error).toEqual(undefined);
+    });
 });

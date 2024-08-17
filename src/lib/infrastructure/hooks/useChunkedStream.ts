@@ -49,12 +49,13 @@ async function* processStream<TData>(reader: ReadableStreamDefaultReader<Uint8Ar
  * @template TData - The expected type of received objects
  * @param onData - A callback function which subscribes to streaming updates
  * @returns status - An indication if there is ongoing streaming
- * @returns start - A function which
+ * @returns start - A function which begins the fetching if there was none prior to the call
  */
 export default function useChunkedStream<TData>(
     onData: (data: TData) => void
 ) {
     const [status, setStatus] = useState<StreamingStatus>(StreamingStatus.STOPPED);
+    const [error, setError] = useState<string | undefined>(undefined);
     const controllerRef = useRef<AbortController | null>(null);
     const isStreaming = useRef(false);
 
@@ -64,6 +65,7 @@ export default function useChunkedStream<TData>(
         }
         isStreaming.current = true;
         setStatus(StreamingStatus.RUNNING);
+        setError(undefined);
 
         controllerRef.current = new AbortController();
         const {signal} = controllerRef.current;
@@ -72,7 +74,7 @@ export default function useChunkedStream<TData>(
             const response = await fetch(url, {...options, signal});
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`The response has sent a ${response.status} status code. ${response.statusText}`);
             }
 
             const reader = response.body!.getReader();
@@ -81,18 +83,17 @@ export default function useChunkedStream<TData>(
             }
         };
 
-        try {
-            fetchStream().then(() => {
+        fetchStream()
+            .catch((e: any) => {
+                setError(e.toString());
+            })
+            .then(() => {
                 setStatus(StreamingStatus.STOPPED);
                 isStreaming.current = false;
             });
-        } catch (e) {
-            // TODO: set error
-        }
-
     }, [onData]);
 
     // TODO: stop, pause and resume
 
-    return {start, status};
+    return {start, status, error};
 }
