@@ -304,4 +304,41 @@ describe('useChunkedStream', () => {
 
         expect(onData).not.toBeCalled();
     });
+
+    it('Should submit some data before stopping', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id": 1, "name": "test1"}\n'));
+                        }, 0);
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id": 2, "name": "test2"}\n'));
+                            controller.close();
+                        }, 100);
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+
+        act(() => {
+            result.current.start('https://example.com/api');
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+        expect(result.current.status).toEqual(StreamingStatus.RUNNING);
+
+        act(() => {
+            result.current.stop();
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).toBeCalledTimes(1);
+        expect(onData).toBeCalledWith({id: 1, name: 'test1'});
+    });
 });
