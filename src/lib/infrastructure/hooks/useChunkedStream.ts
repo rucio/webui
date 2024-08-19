@@ -69,10 +69,31 @@ async function* processStream<TData>(reader: ReadableStreamDefaultReader<Uint8Ar
     reader.releaseLock(); // Release the reader lock when done
 }
 
+type StreamingCallback<TData> = (data: TData) => void;
+
+/**
+ * @param url - A path to the streamed resource
+ * @param fetchOptions - A set of options to configure the request
+ * @param onData - A callback that accepts each resulting object
+ */
+export type StreamingSettings<TData> = {
+    url: string,
+    fetchOptions?: RequestInit,
+    onData: StreamingCallback<TData>
+}
+
+export interface UseChunkedStream<TData> {
+    status: StreamingStatus,
+    error: StreamingError | undefined,
+    start: (options: StreamingSettings<TData>) => void,
+    stop: () => void,
+    pause: () => void,
+    resume: () => void,
+}
+
 /**
  * @description A React hook that fetches and parses NDJSON from a streamable endpoint
  * @template TData - The expected type of received objects
- * @param onData - A callback function which subscribes to streaming updates
  * @returns status - An indication if there is ongoing streaming
  * @returns start - A function which begins the fetching if there was none prior to the call
  * @returns stop - A function which interrupts the fetching while deleting its state
@@ -80,9 +101,7 @@ async function* processStream<TData>(reader: ReadableStreamDefaultReader<Uint8Ar
  * @returns pause - A function which interrupts the fetching while preserving its state
  * @returns resume - A function that continues paused fetching
  */
-export default function useChunkedStream<TData>(
-    onData: (data: TData) => void
-) {
+export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
     const [status, setStatus] = useState<StreamingStatus>(StreamingStatus.STOPPED);
     const [error, setError] = useState<StreamingError | undefined>(undefined);
     const controllerRef = useRef<AbortController | null>(null);
@@ -90,7 +109,8 @@ export default function useChunkedStream<TData>(
     const isStreaming = useRef(false);
     const isPaused = useRef(false);
 
-    const start = useCallback((url: string, options = {}) => {
+
+    const start = useCallback((settings: StreamingSettings<TData>) => {
         if (isStreaming.current) {
             setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'Another request is currently running.'});
             return;
@@ -107,7 +127,8 @@ export default function useChunkedStream<TData>(
             let response: Response;
 
             try {
-                response = await fetch(url, {...options, signal});
+                const finalOptions = settings.fetchOptions ? {...settings.fetchOptions, signal} : {signal}
+                response = await fetch(settings.url, finalOptions);
             } catch (e: any) {
                 setError({type: StreamingErrorType.NETWORK_ERROR, message: e.toString()});
                 return;
@@ -128,7 +149,7 @@ export default function useChunkedStream<TData>(
                         await new Promise(resolve => setTimeout(resolve, PAUSE_POLLING_INTERVAL));
                     }
                 }
-                onData(data);
+                settings.onData(data);
             }
         };
 
@@ -140,7 +161,7 @@ export default function useChunkedStream<TData>(
                 setStatus(StreamingStatus.STOPPED);
                 isStreaming.current = false;
             });
-    }, [onData]);
+    }, []);
 
     const stop = useCallback(() => {
         if (!isStreaming.current) {
