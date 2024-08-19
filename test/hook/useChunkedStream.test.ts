@@ -1,5 +1,9 @@
 import {renderHook, act, cleanup} from '@testing-library/react-hooks';
-import useChunkedStream, {StreamingErrorType, StreamingStatus} from "@/lib/infrastructure/hooks/useChunkedStream";
+import useChunkedStream, {
+    StreamingErrorType,
+    StreamingSettings,
+    StreamingStatus
+} from "@/lib/infrastructure/hooks/useChunkedStream";
 import {ReadableStream} from 'web-streams-polyfill';
 
 interface MockViewModel {
@@ -10,6 +14,10 @@ interface MockViewModel {
 describe('useChunkedStream', () => {
     // Mock the onData callback
     const onData = jest.fn();
+    const settings: StreamingSettings<MockViewModel> = {
+        url: 'https://example.com/api',
+        onData
+    }
 
     beforeEach(() => {
         onData.mockClear();
@@ -37,10 +45,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -70,10 +78,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -106,10 +114,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -122,15 +130,15 @@ describe('useChunkedStream', () => {
     });
 
     it('Should set an error if a request is already running', async () => {
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         expect(() => {
             act(() => {
-                result.current.start('https://example.com/api');
+                result.current.start(settings);
             });
         }).not.toThrow();
 
@@ -141,17 +149,17 @@ describe('useChunkedStream', () => {
     });
 
     it('Should restart after the first request is finished', async () => {
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
 
         expect(() => {
             act(() => {
-                result.current.start('https://example.com/api');
+                result.current.start(settings);
             });
         }).not.toThrow();
 
@@ -161,10 +169,10 @@ describe('useChunkedStream', () => {
     it('Should update the error and stop the streaming if the endpoint cannot be fetched', async () => {
         global.fetch = jest.fn(() => Promise.reject(new Error('Network Error'))) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -186,10 +194,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -211,10 +219,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -236,10 +244,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -269,10 +277,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -288,10 +296,10 @@ describe('useChunkedStream', () => {
     it('Should let the fetching restart after the error', async () => {
         global.fetch = jest.fn(() => Promise.reject(new Error('Network Error'))) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -313,7 +321,7 @@ describe('useChunkedStream', () => {
         ) as jest.Mock;
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -343,10 +351,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await new Promise(resolve => setTimeout(resolve, 50));
@@ -379,10 +387,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await new Promise(resolve => setTimeout(resolve, 50));
@@ -406,10 +414,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await waitForNextUpdate();
@@ -438,10 +446,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await new Promise(resolve => setTimeout(resolve, 50));
@@ -461,7 +469,7 @@ describe('useChunkedStream', () => {
         // Cannot start a new request while paused
         expect(() => {
             act(() => {
-                result.current.start('https://example.com/api');
+                result.current.start(settings);
             });
         }).not.toThrow();
 
@@ -496,10 +504,10 @@ describe('useChunkedStream', () => {
             })
         ) as jest.Mock;
 
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         act(() => {
-            result.current.start('https://example.com/api');
+            result.current.start(settings);
         });
 
         await new Promise(resolve => setTimeout(resolve, 25));
@@ -523,7 +531,7 @@ describe('useChunkedStream', () => {
     });
 
     it('Should set an error on trying to stop without active fetching', async () => {
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         expect(() => {
             act(() => {
@@ -536,7 +544,7 @@ describe('useChunkedStream', () => {
     });
 
     it('Should set an error on trying to pause without active fetching', async () => {
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         expect(() => {
             act(() => {
@@ -549,7 +557,7 @@ describe('useChunkedStream', () => {
     });
 
     it('Should set an error on trying to resume without calling pause', async () => {
-        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>(onData));
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
 
         expect(() => {
             act(() => {
