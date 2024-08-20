@@ -1,21 +1,43 @@
-import { faker } from '@faker-js/faker'
+import {faker} from '@faker-js/faker'
 import {
-    LockState, DIDType, RuleNotification, RuleState,
-    RSEBlockState, SubscriptionState,
     DIDAvailability,
+    DIDKeyValuePair,
+    DIDType,
+    LockState,
     ReplicaState,
-    RSEType,
-    RSEProtocol,
     RSEAttribute,
+    RSEBlockState,
+    RSEProtocol,
+    RSEType,
+    RuleNotification,
+    RuleState,
+    SubscriptionState,
 } from '@/lib/core/entity/rucio'
-import { RSEAccountUsageLimitViewModel, RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
-import { SubscriptionRuleStatesViewModel, SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
-import { BaseViewModel } from '@/lib/sdk/view-models';
-import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDLongViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
-import { DIDKeyValuePair } from '@/lib/core/entity/rucio';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import {
+    RSEAccountUsageLimitViewModel,
+    RSEAttributeViewModel,
+    RSEProtocolViewModel,
+    RSEViewModel
+} from '@/lib/infrastructure/data/view-model/rse';
+import {UseComDOM} from '@/lib/infrastructure/hooks/useComDOM';
+import {
+    SubscriptionRuleStatesViewModel,
+    SubscriptionViewModel
+} from '@/lib/infrastructure/data/view-model/subscriptions';
+import {BaseViewModel} from '@/lib/sdk/view-models';
+import {
+    DIDDatasetReplicasViewModel,
+    DIDKeyValuePairsDataViewModel,
+    DIDLongViewModel,
+    DIDMetaViewModel,
+    DIDRulesViewModel,
+    DIDViewModel,
+    FilereplicaStateDViewModel,
+    FilereplicaStateViewModel
+} from '@/lib/infrastructure/data/view-model/did';
+import {RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel} from '@/lib/infrastructure/data/view-model/rule';
+import {ListDIDsViewModel} from '@/lib/infrastructure/data/view-model/list-did';
+import useChunkedStream, {StreamingSettings, StreamingStatus} from "@/lib/infrastructure/hooks/useChunkedStream";
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {
@@ -31,6 +53,19 @@ export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> 
         resume: () => { },
         pause: () => { },
     } as UseComDOM<T>
+}
+
+export function mockUseChunkedStream<T>(data: T[]): ReturnType<typeof useChunkedStream<T>> {
+    return {
+        start: (settings: StreamingSettings<T>) => {
+            data.forEach(settings.onData);
+        },
+        stop: () => {},
+        resume: () => {},
+        pause: () => {},
+        status: StreamingStatus.STOPPED,
+        error: undefined
+    };
 }
 
 export function mockBaseVM(fail?: "none" | "some" | "all"): BaseViewModel {
@@ -148,7 +183,7 @@ export function fixtureRuleMetaViewModel(): RuleMetaViewModel {
 export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
     const bytes_limit = faker.number.int({ min: 0, max: 1e12 })
     const used_bytes = faker.number.int({ min: 0, max: 1e12 })
-    const has_quota = bytes_limit > used_bytes 
+    const has_quota = bytes_limit > used_bytes
     return {
         ...mockBaseVM(),
         rse_id: faker.string.uuid(),
