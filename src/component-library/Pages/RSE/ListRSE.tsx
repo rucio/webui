@@ -48,7 +48,11 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const onSearch = (event: any) => {
         event.preventDefault();
-        startStreaming();
+        if (props.streamingHook.status !== StreamingStatus.RUNNING) {
+            startStreaming();
+        } else {
+            // TODO: display an error message (toast?) if there's streaming already
+        }
     }
 
     // TODO: add shimmer component while the table is loading
