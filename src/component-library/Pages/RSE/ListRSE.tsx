@@ -1,131 +1,55 @@
-import { twMerge } from "tailwind-merge";
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { RSEType } from "@/lib/core/entity/rucio";
-import { StreamedTable } from "../../StreamedTables/StreamedTable";
-import { createColumnHelper } from "@tanstack/react-table";
-import { TableFilterString } from "../../StreamedTables/TableFilterString";
-import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
-import { BoolTag } from "../../Tags/BoolTag";
-import { HiDotsHorizontal } from "react-icons/hi";
-import { RSETypeTag } from "../../Tags/RSETypeTag";
-import { TableFilterBoolean } from "../../StreamedTables/TableFilterBoolean";
-import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
-import useReponsiveHook from "../../Helpers/ResponsiveHook";
-import { Body } from "../Helpers/Body";
-import { Heading } from "../Helpers/Heading";
-import { RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
-import { TextInput } from "@/component-library/Input/TextInput";
-import { useState } from "react";
-import { Button } from "@/component-library/Button/Button";
+import {twMerge} from "tailwind-merge";
+import {Heading} from "../Helpers/Heading";
+import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
+import {TextInput} from "@/component-library/Input/TextInput";
+import {MouseEventHandler, useEffect, useRef, useState} from "react";
+import {Button} from "@/component-library/Button/Button";
 import {useSearchParams} from "next/navigation";
+import {UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
+import {AgGridReact} from "ag-grid-react";
+import {ListRSETable} from "@/component-library/Pages/RSE/ListRSETable";
 
-const defaultRSEQuery = "*";
+type ListRSEProps = {
+    streamingHook: UseChunkedStream<RSEViewModel>
+}
 
-export const ListRSE = (
-    props: {
-        comdom: UseComDOM<RSEViewModel>
-        setRSEQuery: (rseExpression: string) => void
-    }
-) => {
+const defaultExpression = "*";
+
+export const ListRSE = (props: ListRSEProps) => {
     const searchParams = useSearchParams()
-    const expression = searchParams?.get('expression')
+    const firstExpression = searchParams?.get('expression')
+    const [expression, setExpression] = useState<string | null>(firstExpression ?? null);
 
-    const [rseSearchQuery, setRSESearchQuery] = useState<string>(expression ?? defaultRSEQuery)
-    const setInputAsQuery = (searchPattern: string) => {
-        setRSESearchQuery(searchPattern !== '' ? searchPattern : defaultRSEQuery)
+    const tableRef = useRef<AgGridReact>(null);
+
+    const onData = (data: RSEViewModel) => {
+        tableRef.current?.api.applyTransaction({ add: [data] });
     }
 
-    const columnHelper = createColumnHelper<RSEViewModel>()
-    const tablecolumns = [
-        columnHelper.accessor("name", {
-            id: "name",
-            header: info => {
-                return (
-                    <TableFilterString
-                        column={info.column}
-                        name="Name"
-                        placeholder="Filter by RSE Name"
-                        className="ml-1"
-                    />
-                )
-            },
-            cell: info => {
-                return (
-                    <TableInternalLink href={"/rse/page/" + info.getValue()}>
-                        {info.getValue()}
-                    </TableInternalLink>
-                )
-            }
-        }),
-        columnHelper.accessor("rse_type", {
-            id: "rse_type",
-            header: info => {
-                return (
-                    <TableFilterDiscrete<RSEType>
-                        name="RSE Type"
-                        keys={Object.values(RSEType)}
-                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <RSETypeTag rsetype={key} forcesmall />}
-                        column={info.column}
-                        stack
-                    />
-                )
-            },
-            cell: info => <RSETypeTag rsetype={info.getValue()} />,
-            meta: {
-                style: "w-8 md:w-32"
-            }
-        }),
-        columnHelper.accessor("volatile", {
-            id: "volatile",
-            cell: info => <BoolTag val={info.getValue()} />,
-            header: info => {
-                return (
-                    <TableFilterBoolean
-                        name="Volatile"
-                        column={info.column}
-                        stack
-                    />
-                )
-            },
-            meta: {
-                style: "w-36"
-            }
-        }),
-        columnHelper.accessor("deterministic", {
-            id: "deterministic",
-            cell: info => <BoolTag val={info.getValue()} />,
-            header: info => {
-                return (
-                    <TableFilterBoolean
-                        name="Deterministic"
-                        column={info.column}
-                        stack
-                    />
-                )
-            },
-            meta: {
-                style: "w-36"
-            }
-        }),
-        columnHelper.accessor("staging_area", {
-            id: "staging_area",
-            cell: info => <BoolTag val={info.getValue()} />,
-            header: info => {
-                return (
-                    <TableFilterBoolean
-                        name="Staging"
-                        column={info.column}
-                        stack
-                    />
-                )
-            },
-            meta: {
-                style: "w-36"
-            }
-        })
-    ]
+    const startStreaming = () => {
+        if (tableRef.current?.api) {
+            const api = tableRef.current!.api;
+            api.setGridOption('rowData', []);
+        }
 
-    const responsive = useReponsiveHook()
+        const url = `/api/feature/list-rses?rseExpression=${expression ?? defaultExpression}`;
+        props.streamingHook.start({url, onData});
+    };
+
+    useEffect(() => {
+        if (expression === null) return;
+
+        startStreaming();
+    }, []);
+
+    const updateExpression = (value: string) => {
+        setExpression(value !== '' ? value : defaultExpression);
+    }
+
+    const onSearch = (event: any) => {
+        event.preventDefault();
+        startStreaming();
+    }
 
     return (
         <div
@@ -152,25 +76,18 @@ export const ListRSE = (
                         RSE Search Pattern
                     </label>
                     <TextInput
-                        onBlur={(event: any) => { setInputAsQuery(event.target.value) }}
-                        onEnterkey={(e) => {
-                            e.preventDefault()
-                            setInputAsQuery(e.target.value)
-                            props.setRSEQuery(rseSearchQuery)
-                            props.comdom.start()
+                        onEnterkey={onSearch}
+                        onChange={(e) => {
+                            updateExpression(e.target.value);
                         }}
                         id="rse-search-pattern"
-                        defaultValue={expression ?? ''}
-                        placeholder={defaultRSEQuery}
+                        defaultValue={firstExpression ?? ''}
+                        placeholder={defaultExpression}
                     />
                     <Button
                         type="button"
                         label="Search"
-                        onClick={(e: any) => {
-                            e.preventDefault()
-                            props.setRSEQuery(rseSearchQuery)
-                            props.comdom.start()
-                        }}
+                        onClick={onSearch}
                         className={twMerge(
                             "w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0"
                         )}
@@ -178,20 +95,7 @@ export const ListRSE = (
                     />
                 </form>
             </Heading>
-            <Body>
-                <StreamedTable<RSEViewModel>
-                    tablecomdom={props.comdom}
-                    tablecolumns={tablecolumns}
-                    tablestyling={{
-                        tableHeadRowStyle: "md:h-16",
-                        visibility: {
-                            volatile: responsive.md,
-                            deterministic: responsive.md,
-                            staging_area: responsive.md,
-                        }
-                    }}
-                />
-            </Body>
+            <ListRSETable tableRef={tableRef} streamingHook={props.streamingHook}/>
         </div>
     );
 };
