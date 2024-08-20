@@ -54,7 +54,7 @@ export const ListRSE = (props: ListRSEProps) => {
     return (
         <div
             className={twMerge(
-                "flex flex-col space-y-2 w-full"
+                "flex flex-col space-y-2 w-full grow"
             )}
         >
             <Heading
