@@ -14,7 +14,10 @@ type ListRSEProps = {
 }
 
 const defaultExpression = "*";
-
+// TODO: don't show the table before the first search
+// TODO: display error messages
+// TODO: hide pagination component if there's no data
+// TODO: add stop/pause/resume elements
 export const ListRSE = (props: ListRSEProps) => {
     const searchParams = useSearchParams()
     const firstExpression = searchParams?.get('expression')
