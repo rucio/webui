@@ -52,7 +52,6 @@ export const ListRSE = (props: ListRSEProps) => {
     }
 
     // TODO: add shimmer component while the table is loading
-    // TODO: show an error on clicking search during fetching
     return (
         <div
             className={twMerge(
@@ -86,29 +85,29 @@ export const ListRSE = (props: ListRSEProps) => {
                         defaultValue={firstExpression ?? ''}
                         placeholder={defaultExpression}
                     />
-                    <Button
-                        type="button"
-                        label="Search"
-                        onClick={onSearch}
-                        className={twMerge(
-                            "w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0"
-                        )}
-                        id="rse-button-search"
-                    />
-                </form>
-                {props.streamingHook.status !== StreamingStatus.STOPPED && <div>
-                    <Button type="button" label="Stop" className="w-24 inline mr-2 bg-base-error-500" onClick={() => {
-                        props.streamingHook.stop();
-                    }}/>
-                    {props.streamingHook.status === StreamingStatus.RUNNING ?
-                        <Button type="button" label="Pause" className="w-24 inline bg-base-warning-500" onClick={() => {
-                            props.streamingHook.pause();
-                        }}/> :
-                        <Button type="button" label="Resume" className="w-24 inline bg-base-success-500" onClick={() => {
-                            props.streamingHook.resume();
-                        }}/>
+                    {props.streamingHook.status === StreamingStatus.STOPPED ?
+                        <Button
+                            type="button"
+                            label="Search"
+                            onClick={onSearch}
+                            className={twMerge(
+                                "w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0"
+                            )}
+                            id="rse-button-search"
+                        /> :
+                        <Button
+                            type="button"
+                            label="Stop"
+                            onClick={() => {
+                                props.streamingHook.stop();
+                            }}
+                            className={twMerge(
+                                "w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0",
+                                "bg-base-error-500 hover:bg-base-error-600"
+                            )}
+                        />
                     }
-                </div>}
+                </form>
             </Heading>
             <ListRSETable tableRef={tableRef} streamingHook={props.streamingHook}/>
         </div>
