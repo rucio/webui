@@ -11,13 +11,21 @@ export enum StreamingErrorType {
     PARSING_ERROR,
 }
 
-interface StreamingError {
+export interface StreamingError {
     type: StreamingErrorType,
     message: string
 }
 
-const getResponseError = (response: Response) => {
-    const error: StreamingError = {type: StreamingErrorType.INVALID_RESPONSE, message: response.statusText};
+const getResponseError = async (response: Response) => {
+    let message = response.statusText;
+
+    try {
+        const jsonResponse = await response.json();
+        message = jsonResponse.message ?? message;
+    } catch (e) {
+    }
+
+    const error: StreamingError = {type: StreamingErrorType.INVALID_RESPONSE, message: message};
     if (response.status === 404) {
         error.type = StreamingErrorType.NOT_FOUND;
     } else if (response.status === 400) {
@@ -135,7 +143,7 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
             }
 
             if (!response.ok) {
-                setError(getResponseError(response));
+                setError(await getResponseError(response));
                 return;
             }
 
