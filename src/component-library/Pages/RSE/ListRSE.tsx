@@ -2,10 +2,10 @@ import {twMerge} from "tailwind-merge";
 import {Heading} from "../Helpers/Heading";
 import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
 import {TextInput} from "@/component-library/Input/TextInput";
-import {MouseEventHandler, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Button} from "@/component-library/Button/Button";
 import {useSearchParams} from "next/navigation";
-import {UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
+import {StreamingStatus, UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
 import {AgGridReact} from "ag-grid-react";
 import {ListRSETable} from "@/component-library/Pages/RSE/ListRSETable";
 
@@ -15,7 +15,6 @@ type ListRSEProps = {
 
 const defaultExpression = "*";
 // TODO: hide pagination component if there's no data
-// TODO: add stop/pause/resume elements
 export const ListRSE = (props: ListRSEProps) => {
     const searchParams = useSearchParams()
     const firstExpression = searchParams?.get('expression')
@@ -24,7 +23,7 @@ export const ListRSE = (props: ListRSEProps) => {
     const tableRef = useRef<AgGridReact>(null);
 
     const onData = (data: RSEViewModel) => {
-        tableRef.current?.api.applyTransaction({ add: [data] });
+        tableRef.current?.api.applyTransaction({add: [data]});
     }
 
     const startStreaming = () => {
@@ -52,6 +51,8 @@ export const ListRSE = (props: ListRSEProps) => {
         startStreaming();
     }
 
+    // TODO: add shimmer component while the table is loading
+    // TODO: show an error on clicking search during fetching
     return (
         <div
             className={twMerge(
@@ -95,6 +96,19 @@ export const ListRSE = (props: ListRSEProps) => {
                         id="rse-button-search"
                     />
                 </form>
+                {props.streamingHook.status !== StreamingStatus.STOPPED && <div>
+                    <Button type="button" label="Stop" className="w-24 inline mr-2 bg-base-error-500" onClick={() => {
+                        props.streamingHook.stop();
+                    }}/>
+                    {props.streamingHook.status === StreamingStatus.RUNNING ?
+                        <Button type="button" label="Pause" className="w-24 inline bg-base-warning-500" onClick={() => {
+                            props.streamingHook.pause();
+                        }}/> :
+                        <Button type="button" label="Resume" className="w-24 inline bg-base-success-500" onClick={() => {
+                            props.streamingHook.resume();
+                        }}/>
+                    }
+                </div>}
             </Heading>
             <ListRSETable tableRef={tableRef} streamingHook={props.streamingHook}/>
         </div>
