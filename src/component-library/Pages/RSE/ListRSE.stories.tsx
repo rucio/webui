@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/react";
-import { mockUseComDOM, fixtureRSEViewModel } from "test/fixtures/table-fixtures";
+import {fixtureRSEViewModel, mockUseChunkedStream} from "test/fixtures/table-fixtures";
 import { ListRSE as L } from "./ListRSE";
 
 export default {
@@ -11,6 +11,5 @@ const Template: StoryFn<typeof L> = (args) => <L {...args} />;
 
 export const ListRSE = Template.bind({});
 ListRSE.args = {
-    comdom: mockUseComDOM(Array.from({ length: 100 }, () => fixtureRSEViewModel())),
-    setRSEQuery: (rseExpression: string) => { },
+    streamingHook: mockUseChunkedStream(Array.from({ length: 100 }, () => fixtureRSEViewModel())),
 };
