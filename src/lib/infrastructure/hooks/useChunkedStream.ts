@@ -163,7 +163,9 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
 
         fetchStream()
             .catch((e: any) => {
-                setError({type: StreamingErrorType.PARSING_ERROR, message: e.toString()});
+                if (e.name !== 'AbortError') {
+                    setError({type: StreamingErrorType.PARSING_ERROR, message: e.toString()});
+                }
             })
             .then(() => {
                 setStatus(StreamingStatus.STOPPED);
