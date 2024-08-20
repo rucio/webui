@@ -4,6 +4,7 @@ import {StreamingError, StreamingErrorType, UseChunkedStream} from "@/lib/infras
 import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
 import '@/component-library/ag-grid-theme-rucio.css';
 import {twMerge} from "tailwind-merge";
+import Link from "next/link";
 
 type ListRSETableProps = {
     tableRef: RefObject<AgGridReact>
@@ -49,12 +50,28 @@ const NoRowsOverlay = (props: { error?: StreamingError }) => {
     }
 }
 
+const ClickableName = (props: {value: string}) => {
+    return (
+        <Link href={`/rse/page/${props.value}`}>
+            {props.value}
+        </Link>
+    );
+};
+
+
 // TODO: decompose into a generic table component
 export const ListRSETable = (props: ListRSETableProps) => {
     // TODO: implement custom filter for discrete/boolean values
     // TODO: implement styled badges for the values
     const [columnDefs] = useState([
-        {headerName: 'Name', field: 'name', filter: true, flex: 3, minWidth: 250},
+        {
+            headerName: 'Name',
+            field: 'name',
+            filter: true,
+            flex: 3,
+            minWidth: 250,
+            cellRenderer: ClickableName,
+        },
         {headerName: 'Type', field: 'rse_type', flex: 2, minWidth: 125},
         {headerName: 'Volatile', field: 'volatile', flex: 1, maxWidth: 175, minWidth: 125},
         {headerName: 'Deterministic', field: 'deterministic', flex: 1, maxWidth: 175, minWidth: 150},
