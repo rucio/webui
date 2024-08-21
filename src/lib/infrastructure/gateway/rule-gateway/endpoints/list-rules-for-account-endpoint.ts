@@ -12,6 +12,7 @@ import { convertToRuleDTO, TRucioRule } from "../rule-gateway-utils";
 export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStreamableDTO, RuleDTO> {
     constructor(
         private readonly rucioAuthToken: string,
+        private readonly account?: string,
     ){
         super(true)
     }
@@ -19,7 +20,8 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
     async initialize(): Promise<void> {
         await super.initialize()
         const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/rules/`
+        const params = this.account ? {'account': this.account!} : undefined;
+        const endpoint = `${rucioHost}/rules/` + new URLSearchParams(params);
         const request: HTTPRequest = {
             method: 'GET',
             url: endpoint,

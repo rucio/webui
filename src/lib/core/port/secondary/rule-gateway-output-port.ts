@@ -13,8 +13,9 @@ export default interface RuleGatewayOutputPort {
     /**
      * Lists all rules for a given account.
      * @param rucioAuthToken A valid Rucio Auth Token.
+     * @param account The account to list rules for.
      */
-    listRules(rucioAuthToken: string): Promise<BaseStreamableDTO>
+    listRules(rucioAuthToken: string, account?: string): Promise<BaseStreamableDTO>
 
     /**
      * Lists all locks for a given rule.

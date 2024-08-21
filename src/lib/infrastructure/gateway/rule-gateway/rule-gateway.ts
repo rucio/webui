@@ -14,9 +14,9 @@ export default class RuleGateway implements RuleGatewayOutputPort {
         return dto
     }
 
-    async listRules(rucioAuthToken: string): Promise<BaseStreamableDTO> {
+    async listRules(rucioAuthToken: string, account?: string): Promise<BaseStreamableDTO> {
         try {
-            const endpoint = new ListRulesEndpoint(rucioAuthToken)
+            const endpoint = new ListRulesEndpoint(rucioAuthToken, account)
             const errorDTO: BaseStreamableDTO | undefined = await endpoint.fetch()
             if(!errorDTO) {
                 return {
