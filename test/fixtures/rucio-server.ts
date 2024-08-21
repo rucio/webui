@@ -25,7 +25,8 @@ export interface MockEndpoint extends HTTPRequest {
     /**
      * Validate the request parameters, body, and headers.
      * @param req The request to validate.
-     * @returns undefined if the request is valid, otherwise a BaseViewModel with the error.
+     * @returns undefined if the request is valid
+     * @throws Error if the request is invalid
      */
     requestValidator?: (req: Request) => void
 }
