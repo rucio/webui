@@ -21,7 +21,7 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
         await super.initialize()
         const rucioHost = await this.envConfigGateway.rucioHost()
         const params = this.account ? {'account': this.account!} : undefined;
-        const endpoint = `${rucioHost}/rules/` + new URLSearchParams(params);
+        const endpoint = `${rucioHost}/rules?` + new URLSearchParams(params);
         const request: HTTPRequest = {
             method: 'GET',
             url: endpoint,
