@@ -1,17 +1,16 @@
+import { StoryFn, Meta } from '@storybook/react';
 
-import {StoryFn, Meta} from '@storybook/react'
-
-import {FileSize as L} from './FileSize'
+import { FileSize as L } from './FileSize';
 
 export default {
     title: 'Components/Text/Content',
     component: L,
-} as Meta<typeof L>
+} as Meta<typeof L>;
 
-const Template: StoryFn<typeof L> = args => <L {...args} />
+const Template: StoryFn<typeof L> = args => <L {...args} />;
 
-export const Number = Template.bind({})
+export const Number = Template.bind({});
 Number.args = {
     bytesNumber: 2000,
     decimalPlaces: 2,
-}
+};

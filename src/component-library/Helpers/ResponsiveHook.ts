@@ -6,16 +6,16 @@ export type ResponsiveHook = {
     lg: boolean; // lg: 1024px
     xl: boolean; // xl: 1280px
     xxl: boolean; // xxl: 1536px
-}
+};
 
 /**
  * @description A React hook that returns handlers on the current window size
  * @returns {ResponsiveHook} corresponding to tailwind pixel width breakpoints
  */
 export default function useReponsiveHook() {
-    const [windowSize, setWindowSize] = useState([1920, 1080])
+    const [windowSize, setWindowSize] = useState([1920, 1080]);
     useEffect(() => {
-        setWindowSize([window.innerWidth, window.innerHeight])
+        setWindowSize([window.innerWidth, window.innerHeight]);
 
         const handleWindowResize = () => {
             setWindowSize([window.innerWidth, window.innerHeight]);
@@ -33,5 +33,5 @@ export default function useReponsiveHook() {
         lg: windowSize[0] > 1024,
         xl: windowSize[0] > 1280,
         xxl: windowSize[0] > 1536,
-    } as ResponsiveHook
+    } as ResponsiveHook;
 }

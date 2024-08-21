@@ -1,9 +1,8 @@
-import { AddDIDDTO } from "@/lib/core/dto/did-dto";
-import { DIDType } from "@/lib/core/entity/rucio";
-import { BaseEndpoint, extractErrorMessage } from "@/lib/sdk/gateway-endpoints";
-import { HTTPRequest } from "@/lib/sdk/http";
-import { Response } from "node-fetch";
-
+import { AddDIDDTO } from '@/lib/core/dto/did-dto';
+import { DIDType } from '@/lib/core/entity/rucio';
+import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
 
 export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
     constructor(
@@ -11,15 +10,14 @@ export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
         private readonly scope: string,
         private readonly name: string,
         private readonly didType: DIDType,
-        
-    ){
-        super(true)
+    ) {
+        super(true);
     }
-    
+
     async initialize(): Promise<void> {
-        await super.initialize()
-        const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/dids/${this.scope}/${this.name}`
+        await super.initialize();
+        const rucioHost = await this.envConfigGateway.rucioHost();
+        const endpoint = `${rucioHost}/dids/${this.scope}/${this.name}`;
         const request: HTTPRequest = {
             method: 'POST',
             url: endpoint,
@@ -32,9 +30,9 @@ export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
                 name: this.name,
                 type: this.didType.toUpperCase(),
             },
-        }
-        this.request = request
-        this.initialized = true
+        };
+        this.request = request;
+        this.initialized = true;
     }
 
     async reportErrors(statusCode: number, response: Response): Promise<AddDIDDTO | undefined> {
@@ -45,23 +43,23 @@ export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
             errorCode: statusCode,
             errorName: 'Unknown Error',
             errorType: 'gateway-endpoint-error',
+        };
+        if (statusCode === 409) {
+            errorDTO.errorMessage = `DID ${this.scope}:${this.name} Already Exists`;
+            errorDTO.errorName = 'DID Already Attached';
+            return errorDTO;
         }
-        if(statusCode === 409) {
-            errorDTO.errorMessage = `DID ${this.scope}:${this.name} Already Exists`
-            errorDTO.errorName = 'DID Already Attached'
-            return errorDTO
-        }
-        const error = await extractErrorMessage(response)
-        errorDTO.errorMessage = error
-        errorDTO.errorName = 'Rucio Server Error'
-        return errorDTO
+        const error = await extractErrorMessage(response);
+        errorDTO.errorMessage = error;
+        errorDTO.errorName = 'Rucio Server Error';
+        return errorDTO;
     }
 
     createDTO(data: string): AddDIDDTO {
         const dto: AddDIDDTO = {
             status: 'success',
-            created: data.toLowerCase() === "created" ? true : false,
-        }
-        return dto
+            created: data.toLowerCase() === 'created' ? true : false,
+        };
+        return dto;
     }
 }

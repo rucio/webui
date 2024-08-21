@@ -1,6 +1,5 @@
-import { DIDDTO, DIDRulesDTO } from "@/lib/core/dto/did-dto";
-import { DIDType, RuleState } from "@/lib/core/entity/rucio";
-
+import { DIDDTO, DIDRulesDTO } from '@/lib/core/dto/did-dto';
+import { DIDType, RuleState } from '@/lib/core/entity/rucio';
 
 /**
  * The type representing a Rucio DID returned by Rucio REST API
@@ -9,7 +8,7 @@ export type TRucioDID = {
     scope: string;
     name: string;
     type: string;
-}
+};
 
 /**
  * The type representing a Rucio Rule returned by Rucio REST API
@@ -36,60 +35,60 @@ export type TRucioRules = {
     grouping: string;
     updated_at: string;
     created_at: string;
-}
+};
 
 function getRuleState(state: string): RuleState {
-    switch(state.toUpperCase()) {
+    switch (state.toUpperCase()) {
         case 'REPLICATING':
-            return RuleState.REPLICATING
+            return RuleState.REPLICATING;
         case 'OK':
-            return RuleState.OK
+            return RuleState.OK;
         case 'STUCK':
-            return RuleState.STUCK
+            return RuleState.STUCK;
         case 'SUSPENDED':
-            return RuleState.SUSPENDED
+            return RuleState.SUSPENDED;
         case 'WAITING_APPROVAL':
-            return RuleState.WAITING_APPROVAL
+            return RuleState.WAITING_APPROVAL;
         case 'INJECT':
-            return RuleState.INJECT
+            return RuleState.INJECT;
         default:
-            return RuleState.UNKNOWN
+            return RuleState.UNKNOWN;
     }
 }
 
 function getDIDType(type: string): DIDType {
-    switch(type.toUpperCase()) {
+    switch (type.toUpperCase()) {
         case 'CONTAINER':
-            return DIDType.CONTAINER
+            return DIDType.CONTAINER;
         case 'DATASET':
-            return DIDType.DATASET
+            return DIDType.DATASET;
         case 'FILE':
-            return DIDType.FILE
+            return DIDType.FILE;
         default:
-            return DIDType.UNKNOWN
+            return DIDType.UNKNOWN;
     }
 }
 export function convertToDIDRulesDTO(data: TRucioRules): DIDRulesDTO {
-    const state: RuleState = getRuleState(data.state)
+    const state: RuleState = getRuleState(data.state);
     const dto: DIDRulesDTO = {
         status: 'success',
         id: data.id,
         name: data.name,
         state: state,
-        account: data.account, 
+        account: data.account,
         last_modified: data.updated_at,
-        subscription_id: data.subscription_id?? undefined,
-    }
-    return dto
+        subscription_id: data.subscription_id ?? undefined,
+    };
+    return dto;
 }
 
 export function convertToDIDDTO(data: TRucioDID): DIDDTO {
-    const type: DIDType = getDIDType(data.type)
+    const type: DIDType = getDIDType(data.type);
     const dto: DIDDTO = {
         status: 'success',
         scope: data.scope,
         name: data.name,
         did_type: type,
-    }
-    return dto
+    };
+    return dto;
 }

@@ -1,9 +1,8 @@
-import { AttachDIDDTO } from "@/lib/core/dto/did-dto";
-import { DID } from "@/lib/core/entity/rucio";
-import { BaseEndpoint, extractErrorMessage } from "@/lib/sdk/gateway-endpoints";
-import { HTTPRequest } from "@/lib/sdk/http";
-import { Response } from "node-fetch";
-
+import { AttachDIDDTO } from '@/lib/core/dto/did-dto';
+import { DID } from '@/lib/core/entity/rucio';
+import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
 
 export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
     constructor(
@@ -11,14 +10,14 @@ export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
         private readonly scope: string,
         private readonly name: string,
         private readonly dids: DID[],
-    ){
-        super(true)
+    ) {
+        super(true);
     }
 
     async initialize(): Promise<void> {
-        await super.initialize()
-        const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/dids/${this.scope}/${this.name}/dids`
+        await super.initialize();
+        const rucioHost = await this.envConfigGateway.rucioHost();
+        const endpoint = `${rucioHost}/dids/${this.scope}/${this.name}/dids`;
         const request: HTTPRequest = {
             method: 'POST',
             url: endpoint,
@@ -33,12 +32,12 @@ export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
                     return {
                         scope: did.scope,
                         name: did.name,
-                    }
-                })
+                    };
+                }),
             },
-        }
-        this.request = request
-        this.initialized = true
+        };
+        this.request = request;
+        this.initialized = true;
     }
 
     async reportErrors(statusCode: number, response: Response): Promise<AttachDIDDTO | undefined> {
@@ -49,22 +48,22 @@ export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
             errorCode: statusCode,
             errorName: 'Unknown Error',
             errorType: 'gateway-endpoint-error',
+        };
+        if (statusCode === 409) {
+            errorDTO.errorMessage = `Already Attached`;
+            errorDTO.errorName = 'DID Already Attached';
+            return errorDTO;
         }
-        if(statusCode === 409) {
-            errorDTO.errorMessage = `Already Attached`
-            errorDTO.errorName = 'DID Already Attached'
-            return errorDTO
-        }
-        const error = await extractErrorMessage(response)
-        errorDTO.errorMessage = error
-        return errorDTO
+        const error = await extractErrorMessage(response);
+        errorDTO.errorMessage = error;
+        return errorDTO;
     }
 
     createDTO(data: string): AttachDIDDTO {
         const dto: AttachDIDDTO = {
             status: 'success',
-            created: data.toLowerCase() === "created" ? true : false,
-        }
-        return dto
+            created: data.toLowerCase() === 'created' ? true : false,
+        };
+        return dto;
     }
 }

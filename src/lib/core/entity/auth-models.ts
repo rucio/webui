@@ -4,9 +4,9 @@
  * If the auth type is oidc, the user is authenticated via OpenID Connect.
  */
 export enum AuthType {
-    x509 = "x509",
-    USERPASS = "userpass",
-    OIDC = "oidc",
+    x509 = 'x509',
+    USERPASS = 'userpass',
+    OIDC = 'oidc',
 }
 
 /**
@@ -16,20 +16,20 @@ export enum AuthType {
  * @property USER - Regular user
  */
 export enum Role {
-    ADMIN = "admin",
-    USER = "user",
+    ADMIN = 'admin',
+    USER = 'user',
 }
 /**
  * Representing information about the user that is safe to be shared with the frontend app
  */
 export type User = {
-    rucioIdentity: string
-    rucioAccount: string
-    rucioVO: string
-    role: Role
-    country?: string
-    countryRole?: Role
-}
+    rucioIdentity: string;
+    rucioAccount: string;
+    rucioVO: string;
+    role: Role;
+    country?: string;
+    countryRole?: Role;
+};
 
 /**
  * Rucio User Model obtained after a successful login via any of the supported auth methods
@@ -43,11 +43,11 @@ export type User = {
  * @property rucioVO - The Rucio VO (short name)
  */
 export interface SessionUser extends User {
-    rucioAuthToken: string
-    rucioAuthTokenExpires: string
-    rucioAuthType: AuthType | null
-    rucioOIDCProvider: string | null
-    isLoggedIn: boolean
+    rucioAuthToken: string;
+    rucioAuthTokenExpires: string;
+    rucioAuthType: AuthType | null;
+    rucioOIDCProvider: string | null;
+    isLoggedIn: boolean;
 }
 
 /**
@@ -76,7 +76,7 @@ export type VO = {
     logoUrl: string;
     oidcEnabled: boolean;
     oidcProviders: OIDCProvider[];
-}
+};
 
 export const DefaultVO: VO = {
     name: 'Default',
@@ -84,4 +84,4 @@ export const DefaultVO: VO = {
     logoUrl: '',
     oidcEnabled: false,
     oidcProviders: [],
-}
+};

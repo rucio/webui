@@ -1,46 +1,46 @@
-import { DIDLongViewModel } from "@/lib/infrastructure/data/view-model/did";
-import { StoryFn, Meta } from "@storybook/react";
-import { createColumnHelper, Column} from "@tanstack/react-table";
-import { fixtureDIDLongViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
-import { StreamedTable as S } from "./StreamedTable";
+import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { StoryFn, Meta } from '@storybook/react';
+import { createColumnHelper, Column } from '@tanstack/react-table';
+import { fixtureDIDLongViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
+import { StreamedTable as S } from './StreamedTable';
 
 export default {
     title: 'Components/StreamedTables',
     component: S,
 } as Meta<typeof S>;
 
-const Template: StoryFn<typeof S> = (args) => <S {...args} />;
+const Template: StoryFn<typeof S> = args => <S {...args} />;
 
-const columnHelper = createColumnHelper<DIDLongViewModel>()
+const columnHelper = createColumnHelper<DIDLongViewModel>();
 
 export const StreamedTable = Template.bind({});
 StreamedTable.args = {
-    tablecomdom: mockUseComDOM<DIDLongViewModel>(Array.from({length: 5}, () => fixtureDIDLongViewModel())),
+    tablecomdom: mockUseComDOM<DIDLongViewModel>(Array.from({ length: 5 }, () => fixtureDIDLongViewModel())),
     tablecolumns: [
         columnHelper.accessor(row => `${row.scope}:${row.name}`, {
-            id: "did",
+            id: 'did',
         }),
-        columnHelper.accessor("did_type", {
-            id: "did_type",
+        columnHelper.accessor('did_type', {
+            id: 'did_type',
             header: info => {
                 return (
                     // tidbit: filter column by clicking on the header
                     <div
-                        onClick={(e) => {
+                        onClick={e => {
                             const nextRecord = {
-                                "undefined": "Dataset",
-                                "Dataset": "Container",
-                                "Container": undefined, // default value of tanstack is undefined
-                            }
-                            console.log(info.column.getFilterValue())
-                            const currentFilterValue = String(info.column.getFilterValue()) as keyof typeof nextRecord 
-                            info.column.setFilterValue(nextRecord[currentFilterValue ?? "null"])
+                                undefined: 'Dataset',
+                                Dataset: 'Container',
+                                Container: undefined, // default value of tanstack is undefined
+                            };
+                            console.log(info.column.getFilterValue());
+                            const currentFilterValue = String(info.column.getFilterValue()) as keyof typeof nextRecord;
+                            info.column.setFilterValue(nextRecord[currentFilterValue ?? 'null']);
                         }}
                     >
                         <span>DID Type</span>
                     </div>
-                )
-            }
-        })
-    ]
+                );
+            },
+        }),
+    ],
 };

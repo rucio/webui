@@ -1,25 +1,28 @@
 import {
     ListSubscriptionRuleStatesError,
     ListSubscriptionRuleStatesResponse,
-} from '@/lib/core/usecase-models/list-subscription-rule-states-usecase-models'
-import { NextApiResponse } from 'next'
-import { SubscriptionRuleStatesViewModel, generateEmptySubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions'
-import { BaseStreamingPresenter } from '@/lib/sdk/presenter'
-import { ListSubscriptionRuleStatesOutputPort } from '@/lib/core/port/primary/list-subscription-rule-states-ports'
+} from '@/lib/core/usecase-models/list-subscription-rule-states-usecase-models';
+import { NextApiResponse } from 'next';
+import { SubscriptionRuleStatesViewModel, generateEmptySubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
+import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
+import { ListSubscriptionRuleStatesOutputPort } from '@/lib/core/port/primary/list-subscription-rule-states-ports';
 
-export default class ListSubscriptionRuleStatesPresenter extends BaseStreamingPresenter<ListSubscriptionRuleStatesResponse, ListSubscriptionRuleStatesError, SubscriptionRuleStatesViewModel> implements ListSubscriptionRuleStatesOutputPort {
-    response: NextApiResponse<any>
+export default class ListSubscriptionRuleStatesPresenter
+    extends BaseStreamingPresenter<ListSubscriptionRuleStatesResponse, ListSubscriptionRuleStatesError, SubscriptionRuleStatesViewModel>
+    implements ListSubscriptionRuleStatesOutputPort
+{
+    response: NextApiResponse<any>;
 
     constructor(response: NextApiResponse) {
-        super(response)
-        this.response = response
+        super(response);
+        this.response = response;
     }
 
     streamResponseModelToViewModel(responseModel: ListSubscriptionRuleStatesResponse): SubscriptionRuleStatesViewModel {
         const viewModel: SubscriptionRuleStatesViewModel = {
             ...responseModel,
-        }
-        return viewModel
+        };
+        return viewModel;
     }
 
     streamErrorModelToViewModel(error: ListSubscriptionRuleStatesError): SubscriptionRuleStatesViewModel {
@@ -35,9 +38,9 @@ export default class ListSubscriptionRuleStatesPresenter extends BaseStreamingPr
      * @param errorModel The error model to convert.
      * @returns The error view model that represents the error model.
      */
-     convertErrorModelToViewModel(errorModel: ListSubscriptionRuleStatesError): { viewModel: SubscriptionRuleStatesViewModel; status: number; } {
+    convertErrorModelToViewModel(errorModel: ListSubscriptionRuleStatesError): { viewModel: SubscriptionRuleStatesViewModel; status: number } {
         const viewModel: SubscriptionRuleStatesViewModel = generateEmptySubscriptionRuleStatesViewModel();
-        
+
         // gateway errors
         const message = errorModel.message ? errorModel.message.toString() : errorModel.name;
         const name = errorModel.name ? errorModel.name : '';
@@ -45,7 +48,7 @@ export default class ListSubscriptionRuleStatesPresenter extends BaseStreamingPr
         const errorCode = errorModel.code ? errorModel.code : 500;
         return {
             status: errorCode,
-            viewModel: viewModel
-        }
+            viewModel: viewModel,
+        };
     }
 }

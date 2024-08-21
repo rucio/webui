@@ -1,6 +1,6 @@
-import { SubscriptionDTO, SubscriptionRuleStateDTO } from "@/lib/core/dto/subscription-dto";
-import { RuleState, SubscriptionReplicationRule, SubscriptionState } from "@/lib/core/entity/rucio";
-import { de } from "@faker-js/faker";
+import { SubscriptionDTO, SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
+import { RuleState, SubscriptionReplicationRule, SubscriptionState } from '@/lib/core/entity/rucio';
+import { de } from '@faker-js/faker';
 
 /**
  * Represents the data returned by Rucio Server for a subscription.
@@ -20,17 +20,17 @@ export type TRucioSubscription = {
     expired_at: string | null;
     created_at: string;
     updated_at: string;
-}
+};
 
-export type TRucioSubscriptionRuleStates = [string, string, string, number]
+export type TRucioSubscriptionRuleStates = [string, string, string, number];
 
 /**
  * @param replicationRules A JSON formatted string representing a list of replication rules for a subscription
  * @returns Parsed {@link SubscriptionReplicationRule} objects
  */
 export function parseReplicationRules(replicationRules: string): SubscriptionReplicationRule[] {
-    const replication_rules = JSON.parse(replicationRules)
-    const rules: SubscriptionReplicationRule[] = []
+    const replication_rules = JSON.parse(replicationRules);
+    const rules: SubscriptionReplicationRule[] = [];
     for (const rule of replication_rules) {
         const r: SubscriptionReplicationRule = {
             activity: rule.activity,
@@ -40,28 +40,28 @@ export function parseReplicationRules(replicationRules: string): SubscriptionRep
             lifetime: rule.lifetime,
             comments: rule.comments,
             weight: rule.weight,
-        }
-        rules.push(r)
+        };
+        rules.push(r);
     }
     return rules;
 }
 
 export function parseReplicationRuleState(replicationRuleStateString: string): RuleState {
-    switch(replicationRuleStateString.toUpperCase()) {
-        case "REPLICATING":
-            return RuleState.REPLICATING
-        case "OK":
-            return RuleState.OK
-        case "STUCK":
-            return RuleState.STUCK
-        case "SUSPENDED":
-            return RuleState.SUSPENDED
-        case "WAITING_APPROVAL":
-            return RuleState.WAITING_APPROVAL
-        case "INJECT":
-            return RuleState.INJECT
+    switch (replicationRuleStateString.toUpperCase()) {
+        case 'REPLICATING':
+            return RuleState.REPLICATING;
+        case 'OK':
+            return RuleState.OK;
+        case 'STUCK':
+            return RuleState.STUCK;
+        case 'SUSPENDED':
+            return RuleState.SUSPENDED;
+        case 'WAITING_APPROVAL':
+            return RuleState.WAITING_APPROVAL;
+        case 'INJECT':
+            return RuleState.INJECT;
         default:
-            return RuleState.UNKNOWN
+            return RuleState.UNKNOWN;
     }
 }
 /**
@@ -69,19 +69,19 @@ export function parseReplicationRuleState(replicationRuleStateString: string): R
  * @returns SubscriptionState enum value
  */
 export function parseSubscriptionState(state: string): SubscriptionState {
-    switch(state.toUpperCase()) {
+    switch (state.toUpperCase()) {
         case 'ACTIVE':
-            return SubscriptionState.ACTIVE
+            return SubscriptionState.ACTIVE;
         case 'INACTIVE':
-            return SubscriptionState.INACTIVE
+            return SubscriptionState.INACTIVE;
         case 'NEW':
-            return SubscriptionState.NEW
+            return SubscriptionState.NEW;
         case 'UPDATED':
-            return SubscriptionState.UPDATED
+            return SubscriptionState.UPDATED;
         case 'BROKEN':
-            return SubscriptionState.BROKEN
+            return SubscriptionState.BROKEN;
         default:
-            return SubscriptionState.UNKNOWN
+            return SubscriptionState.UNKNOWN;
     }
 }
 
@@ -92,8 +92,8 @@ export function parseSubscriptionState(state: string): SubscriptionState {
  * @returns The corresponding {@link SubscriptionDTO} object.
  */
 export function convertToSubscriptionDTO(data: TRucioSubscription, account: string): SubscriptionDTO {
-    const state = parseSubscriptionState(data.state)
-    const rules = parseReplicationRules(data.replication_rules)
+    const state = parseSubscriptionState(data.state);
+    const rules = parseReplicationRules(data.replication_rules);
     return {
         status: 'success',
         name: data.name,
@@ -109,9 +109,8 @@ export function convertToSubscriptionDTO(data: TRucioSubscription, account: stri
         updated_at: data.updated_at,
         filter: data.filter,
         replication_rules: rules,
-    }
+    };
 }
-
 
 export function convertToSubscriptionRuleStatesDTO(data: TRucioSubscriptionRuleStates): SubscriptionRuleStateDTO {
     return {
@@ -120,7 +119,7 @@ export function convertToSubscriptionRuleStatesDTO(data: TRucioSubscriptionRuleS
         subscriptionName: data[1],
         state: parseReplicationRuleState(data[2]),
         count: data[3],
-    }
+    };
 }
 /**
  * @returns Base {@link SubscriptionDTO} object with all fields set to empty values.
@@ -128,20 +127,20 @@ export function convertToSubscriptionRuleStatesDTO(data: TRucioSubscriptionRuleS
 export function getEmptySubscriptionDTO(status: 'success' | 'error'): SubscriptionDTO {
     return {
         status: status,
-        name: "",
-        account: "",
-        created_at: "",
-        id: "",
-        last_processed: "",
-        lifetime: "",
-        errorName: "",
+        name: '',
+        account: '',
+        created_at: '',
+        id: '',
+        last_processed: '',
+        lifetime: '',
+        errorName: '',
         policyid: 0,
         retroactive: false,
         state: SubscriptionState.INACTIVE,
-        updated_at: "",
-        filter: "",
+        updated_at: '',
+        filter: '',
         replication_rules: [],
-    }
+    };
 }
 
 export function getEmptySubscriptionRuleStatesDTO(): SubscriptionRuleStateDTO {
@@ -155,5 +154,5 @@ export function getEmptySubscriptionRuleStatesDTO(): SubscriptionRuleStateDTO {
         subscriptionName: '',
         state: RuleState.UNKNOWN,
         count: 0,
-    }
+    };
 }

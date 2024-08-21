@@ -1,5 +1,5 @@
-import { BaseInputPort, BaseOutputPort } from "@/lib/sdk/primary-ports";
-import { LoginConfigError, LoginConfigResponse } from "../../usecase-models/login-config-usecase-models";
+import { BaseInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
+import { LoginConfigError, LoginConfigResponse } from '../../usecase-models/login-config-usecase-models';
 
 /**
  * @interface LoginConfigInputPort to fetch the login page configuration from the backend.

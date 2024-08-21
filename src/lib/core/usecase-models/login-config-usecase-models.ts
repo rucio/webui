@@ -1,5 +1,5 @@
-import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
-import { OIDCProvider, VO } from "../entity/auth-models";
+import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
+import { OIDCProvider, VO } from '../entity/auth-models';
 
 /**
  * Response Model for {@link LoginConfigOutputPort}

@@ -1,19 +1,14 @@
-import { injectable } from "inversify";
-import { IronSession } from "iron-session";
-import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from "../usecase-models/get-site-header-usecase-models";
-import type { User } from "../entity/auth-models";
-import type { GetSiteHeaderInputPort, GetSiteHeaderOutputPort } from "../port/primary/get-site-header-ports";
-import type EnvConfigGatewayOutputPort from "../port/secondary/env-config-gateway-output-port";
-import { BaseUseCase } from "@/lib/sdk/usecase";
-
+import { injectable } from 'inversify';
+import { IronSession } from 'iron-session';
+import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from '../usecase-models/get-site-header-usecase-models';
+import type { User } from '../entity/auth-models';
+import type { GetSiteHeaderInputPort, GetSiteHeaderOutputPort } from '../port/primary/get-site-header-ports';
+import type EnvConfigGatewayOutputPort from '../port/secondary/env-config-gateway-output-port';
+import { BaseUseCase } from '@/lib/sdk/usecase';
 
 @injectable()
-class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHeaderResponse, GetSiteHeaderError>implements GetSiteHeaderInputPort {
-    
-    constructor(
-        protected readonly presenter: GetSiteHeaderOutputPort,
-        private readonly envConfigGateway: EnvConfigGatewayOutputPort,
-    ) {
+class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHeaderResponse, GetSiteHeaderError> implements GetSiteHeaderInputPort {
+    constructor(protected readonly presenter: GetSiteHeaderOutputPort, private readonly envConfigGateway: EnvConfigGatewayOutputPort) {
         super(presenter);
         this.presenter = presenter;
         this.envConfigGateway = envConfigGateway;
@@ -21,18 +16,18 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
 
     async generateSiteHeader(session: IronSession): Promise<void> {
         let projectURL: string | undefined;
-        
+
         let activeUser: User | undefined;
 
         let allUsers: User[] = [];
 
         try {
-            projectURL = await this.envConfigGateway.projectURL(); 
+            projectURL = await this.envConfigGateway.projectURL();
         } catch (error) {
             projectURL = undefined;
         }
 
-        if(!session.user) {
+        if (!session.user) {
             activeUser = undefined;
         } else {
             activeUser = {
@@ -42,11 +37,11 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
                 role: session.user.role,
                 country: session.user.country,
                 countryRole: session.user.countryRole,
-            }
+            };
         }
 
-        if(session.allUsers) {
-            session.allUsers.forEach((user) => {
+        if (session.allUsers) {
+            session.allUsers.forEach(user => {
                 allUsers.push({
                     rucioIdentity: user.rucioIdentity,
                     rucioAccount: user.rucioAccount,
@@ -54,8 +49,8 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
                     role: user.role,
                     country: user.country,
                     countryRole: user.countryRole,
-                })
-            })
+                });
+            });
         }
 
         const homeUrl = `/dashboard`;
@@ -66,9 +61,9 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
             activeUser: activeUser,
             availableUsers: allUsers,
             projectURL: projectURL,
-        }
+        };
 
-        if(!activeUser){
+        if (!activeUser) {
             await this.presenter.presentError({
                 ...baseResponseModel,
                 status: 'error',
@@ -76,11 +71,11 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
                 message: 'No active user found',
                 name: 'no-active-user',
                 code: 418,
-            })
+            });
             return;
         }
-        
-        if(!projectURL) {
+
+        if (!projectURL) {
             await this.presenter.presentError({
                 ...baseResponseModel,
                 status: 'error',
@@ -88,19 +83,19 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
                 message: 'Project URL not found',
                 name: 'project-url-not-found',
                 code: 500,
-            })
+            });
             return;
         }
-        
+
         await this.presenter.presentSuccess(baseResponseModel);
     }
 
     validateRequestModel(requestModel: GetSiteHeaderRequest): GetSiteHeaderError | undefined {
         return undefined;
     }
-    
+
     async execute(requestModel: GetSiteHeaderRequest): Promise<void> {
-       await this.generateSiteHeader(requestModel.session);
+        await this.generateSiteHeader(requestModel.session);
     }
 }
 

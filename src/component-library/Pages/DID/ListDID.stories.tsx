@@ -7,11 +7,11 @@ export default {
     component: LD,
 } as Meta<typeof LD>;
 
-const Template: StoryFn<typeof LD> = (args) => <LD {...args} />;
+const Template: StoryFn<typeof LD> = args => <LD {...args} />;
 
 export const ListDID = Template.bind({});
 ListDID.args = {
-    comdom: mockUseComDOM(Array.from({length: 100}, () => fixtureDIDViewModel())),
-    didMetaQuery: (scope: string, name: string) => { },
-    didMetaQueryResponse: fixtureDIDMetaViewModel()
-}
+    comdom: mockUseComDOM(Array.from({ length: 100 }, () => fixtureDIDViewModel())),
+    didMetaQuery: (scope: string, name: string) => {},
+    didMetaQueryResponse: fixtureDIDMetaViewModel(),
+};

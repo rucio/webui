@@ -1,7 +1,7 @@
-import { CreateDIDSampleDTO } from "@/lib/core/dto/did-dto";
-import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
-import { HTTPRequest } from "@/lib/sdk/http";
-import { Response } from "node-fetch";
+import { CreateDIDSampleDTO } from '@/lib/core/dto/did-dto';
+import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
 
 export default class CreateDidSampleEndpoint extends BaseEndpoint<CreateDIDSampleDTO> {
     constructor(
@@ -11,15 +11,15 @@ export default class CreateDidSampleEndpoint extends BaseEndpoint<CreateDIDSampl
         private readonly output_scope: string,
         private readonly output_name: string,
         private readonly nbfiles: number,
-    ){
+    ) {
         // parse body as text
-        super(true)
+        super(true);
     }
 
     async initialize(): Promise<void> {
-        await super.initialize()
-        const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/dids/sample`
+        await super.initialize();
+        const rucioHost = await this.envConfigGateway.rucioHost();
+        const endpoint = `${rucioHost}/dids/sample`;
         const request: HTTPRequest = {
             method: 'POST',
             url: endpoint,
@@ -34,13 +34,13 @@ export default class CreateDidSampleEndpoint extends BaseEndpoint<CreateDIDSampl
                 output_name: this.output_name,
                 nbfiles: this.nbfiles,
             },
-        }
-        this.request = request
-        this.initialized = true
+        };
+        this.request = request;
+        this.initialized = true;
     }
 
     async reportErrors(statusCode: number, response: Response): Promise<CreateDIDSampleDTO | undefined> {
-        const data = await response.json()
+        const data = await response.json();
         const errorDTO: CreateDIDSampleDTO = {
             status: 'error',
             created: false,
@@ -48,15 +48,15 @@ export default class CreateDidSampleEndpoint extends BaseEndpoint<CreateDIDSampl
             errorCode: statusCode,
             errorName: 'Unknown Error',
             errorType: 'gateway-endpoint-error',
-        }
-        return Promise.resolve(errorDTO)
+        };
+        return Promise.resolve(errorDTO);
     }
 
     createDTO(data: string): CreateDIDSampleDTO {
         const dto: CreateDIDSampleDTO = {
             status: 'success',
-            created: data.toLowerCase() === "created" ? true : false,
-        }
-        return dto
+            created: data.toLowerCase() === 'created' ? true : false,
+        };
+        return dto;
     }
 }

@@ -1,4 +1,4 @@
-import { AuthType, Role } from "@/lib/core/entity/auth-models";
+import { AuthType, Role } from '@/lib/core/entity/auth-models';
 
 export type AuthViewModel = {
     status: 'success' | 'error' | 'multiple_accounts' | 'cannot_determine_account_role';
@@ -16,9 +16,9 @@ export type AuthViewModel = {
     countryRole?: Role;
 };
 
-export type x509AuthRequestHeaders  = {
+export type x509AuthRequestHeaders = {
     'X-Rucio-VO': string;
     'X-Rucio-Allow-Return-Multiple-Accounts': boolean;
     'X-Rucio-AppID': string = 'rucio-webui';
     'X-Rucio-Account'?: string;
-}
+};

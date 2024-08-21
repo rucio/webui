@@ -1,5 +1,5 @@
-import { BaseAuthenticatedInputPort, BaseOutputPort } from "@/lib/sdk/primary-ports";
-import { GetAccountInfoError, GetAccountInfoRequest, GetAccountInfoResponse } from "@/lib/core/usecase-models/get-account-info-usecase-models";
+import { BaseAuthenticatedInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
+import { GetAccountInfoError, GetAccountInfoRequest, GetAccountInfoResponse } from '@/lib/core/usecase-models/get-account-info-usecase-models';
 
 /**
  * @interface GetAccountInfoInputPort representing the GetAccountInfo usecase.

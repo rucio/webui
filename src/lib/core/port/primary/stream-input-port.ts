@@ -16,5 +16,4 @@ export default interface StreamInputPort<T> {
      * Writes response models to a stream that is consumed by the presenter
      */
     writeToStream(): Promise<void>;
-
 }

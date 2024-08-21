@@ -1,5 +1,5 @@
-import { DatasetReplicasDTO, FileReplicaStateDTO } from "@/lib/core/dto/replica-dto";
-import { ReplicaState } from "@/lib/core/entity/rucio";
+import { DatasetReplicasDTO, FileReplicaStateDTO } from '@/lib/core/dto/replica-dto';
+import { ReplicaState } from '@/lib/core/entity/rucio';
 
 export type TRucioFileReplica = {
     scope: string;
@@ -8,19 +8,19 @@ export type TRucioFileReplica = {
     md5: string;
     adler32: string;
     pfns: {
-      [key: string]: {
-        rse_id: string;
-        rse: string;
-        type: string;
-        volatile: boolean;
-        domain: string;
-        priority: number;
-        client_extract: boolean;
-      };
+        [key: string]: {
+            rse_id: string;
+            rse: string;
+            type: string;
+            volatile: boolean;
+            domain: string;
+            priority: number;
+            client_extract: boolean;
+        };
     };
     rses: {};
     states: {
-      [key: string]: string;
+        [key: string]: string;
     };
 };
 
@@ -43,21 +43,21 @@ export type TRucioDatasetReplica = {
 };
 
 function getReplicaState(state: string): ReplicaState {
-    switch(state.toUpperCase()) {
+    switch (state.toUpperCase()) {
         case 'AVAILABLE':
-            return ReplicaState.AVAILABLE
+            return ReplicaState.AVAILABLE;
         case 'UNAVAILABLE':
-            return ReplicaState.UNAVAILABLE
+            return ReplicaState.UNAVAILABLE;
         case 'COPYING':
-            return ReplicaState.COPYING
+            return ReplicaState.COPYING;
         case 'BEING_DELETED':
-            return ReplicaState.BEING_DELETED
+            return ReplicaState.BEING_DELETED;
         case 'BAD':
-            return ReplicaState.BAD
+            return ReplicaState.BAD;
         case 'TEMPORARY_UNAVAILABLE':
-            return ReplicaState.TEMPORARY_UNAVAILABLE
+            return ReplicaState.TEMPORARY_UNAVAILABLE;
         default:
-            return ReplicaState.UNKNOWN
+            return ReplicaState.UNKNOWN;
     }
 }
 
@@ -66,17 +66,15 @@ function getReplicaState(state: string): ReplicaState {
  * @param replica The response from Rucio Server containing the file replica states.
  * @returns A list of FileReplicaStateDTO objects.
  */
-export function convertToFileReplicaStateDTOs(
-  replica: TRucioFileReplica
-): FileReplicaStateDTO[] {
+export function convertToFileReplicaStateDTOs(replica: TRucioFileReplica): FileReplicaStateDTO[] {
     const dtoList: FileReplicaStateDTO[] = [];
-    for ( const rse in replica.rses) {
+    for (const rse in replica.rses) {
         const state: ReplicaState = getReplicaState(replica.states[rse]);
         const replicaStateDTO: FileReplicaStateDTO = {
             status: state === ReplicaState.UNKNOWN ? 'error' : 'success',
             rse: rse,
             state: state,
-        }
+        };
         dtoList.push(replicaStateDTO);
     }
     return dtoList;
@@ -87,17 +85,15 @@ export function convertToFileReplicaStateDTOs(
  * @param replica A Rucio Server response containing the dataset replicas of a given dataset DID.
  * @returns DatasetReplicasDTO object.
  */
-export function convertToDatasetReplicaDTO(
-  replica: TRucioDatasetReplica
-): DatasetReplicasDTO {
-  const dto: DatasetReplicasDTO = {
-    status: 'success',
-    rse: replica.rse,
-    availability: replica.state === 'AVAILABLE',
-    available_files: replica.available_length,
-    available_bytes: replica.available_bytes, // TODO: question: What is difference between available_bytes and bytes?
-    creation_date: replica.created_at,
-    last_accessed: replica.accessed_at? replica.accessed_at : '',
-  };
-  return dto;
+export function convertToDatasetReplicaDTO(replica: TRucioDatasetReplica): DatasetReplicasDTO {
+    const dto: DatasetReplicasDTO = {
+        status: 'success',
+        rse: replica.rse,
+        availability: replica.state === 'AVAILABLE',
+        available_files: replica.available_length,
+        available_bytes: replica.available_bytes, // TODO: question: What is difference between available_bytes and bytes?
+        creation_date: replica.created_at,
+        last_accessed: replica.accessed_at ? replica.accessed_at : '',
+    };
+    return dto;
 }

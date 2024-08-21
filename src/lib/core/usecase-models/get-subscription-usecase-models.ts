@@ -1,5 +1,5 @@
-import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
-import { Subscription } from "../entity/rucio";
+import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
+import { Subscription } from '../entity/rucio';
 
 export interface GetSubscriptionRequest {
     account: string;

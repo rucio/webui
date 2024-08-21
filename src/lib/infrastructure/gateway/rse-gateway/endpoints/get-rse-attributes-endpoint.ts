@@ -1,14 +1,11 @@
-import { RSEAttributeDTO } from "@/lib/core/dto/rse-dto";
-import { RSEAttribute } from "@/lib/core/entity/rucio";
-import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
-import { HTTPRequest } from "@/lib/sdk/http";
-import { Response } from "node-fetch";
+import { RSEAttributeDTO } from '@/lib/core/dto/rse-dto';
+import { RSEAttribute } from '@/lib/core/entity/rucio';
+import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
 
 export default class GetRSEAttributesEndpoint extends BaseEndpoint<RSEAttributeDTO> {
-    constructor(
-        private rucioAuthToken: string,
-        private rseName: string,
-    ) {
+    constructor(private rucioAuthToken: string, private rseName: string) {
         super();
     }
 
@@ -23,37 +20,36 @@ export default class GetRSEAttributesEndpoint extends BaseEndpoint<RSEAttributeD
                 'Content-Type': 'application/json',
             },
             body: null,
-            params: undefined
-        }
+            params: undefined,
+        };
         this.request = request;
         this.initialized = true;
     }
-    
+
     async reportErrors(statusCode: number, response: Response): Promise<RSEAttributeDTO | undefined> {
-        const errorMessage = await response.json()
+        const errorMessage = await response.json();
         const error = {
             status: 'error',
             errorCode: statusCode,
             errorMessage: errorMessage,
             errorName: 'Rucio Server Error',
             errorType: 'gateway_endpoint_error',
-        }
-        return error as RSEAttributeDTO
+        };
+        return error as RSEAttributeDTO;
     }
 
     createDTO(data: Object): RSEAttributeDTO {
-        const attributes: RSEAttribute[] = []
+        const attributes: RSEAttribute[] = [];
         for (const [key, value] of Object.entries(data)) {
             const attribute: RSEAttribute = {
                 key: key,
-                value: value
-            }
-            attributes.push(attribute)
+                value: value,
+            };
+            attributes.push(attribute);
         }
         return {
             status: 'success',
-            attributes: attributes
-        } as RSEAttributeDTO
+            attributes: attributes,
+        } as RSEAttributeDTO;
     }
-
 }

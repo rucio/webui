@@ -1,18 +1,26 @@
-import { getEmptySubscriptionDTO } from "@/lib/infrastructure/gateway/subscription-gateway/subscription-gateway-utils";
-import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements";
-import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { SubscriptionDTO } from "../../dto/subscription-dto";
-import SubscriptionGatewayOutputPort from "../../port/secondary/subscription-gateway-output-port";
-import { ListDIDRulesError, ListDIDRulesResponse, ListDIDRulesRequest } from "../../usecase-models/list-did-rules-usecase-models";
+import { getEmptySubscriptionDTO } from '@/lib/infrastructure/gateway/subscription-gateway/subscription-gateway-utils';
+import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements';
+import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { SubscriptionDTO } from '../../dto/subscription-dto';
+import SubscriptionGatewayOutputPort from '../../port/secondary/subscription-gateway-output-port';
+import { ListDIDRulesError, ListDIDRulesResponse, ListDIDRulesRequest } from '../../usecase-models/list-did-rules-usecase-models';
 
-export default class GetDIDSubscriptionsByIDPipelineElement extends BaseStreamingPostProcessingPipelineElement<ListDIDRulesRequest, ListDIDRulesResponse, ListDIDRulesError, SubscriptionDTO> {
+export default class GetDIDSubscriptionsByIDPipelineElement extends BaseStreamingPostProcessingPipelineElement<
+    ListDIDRulesRequest,
+    ListDIDRulesResponse,
+    ListDIDRulesError,
+    SubscriptionDTO
+> {
     constructor(private subscriptionsGateway: SubscriptionGatewayOutputPort) {
         super();
     }
 
-    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDRulesRequest>, responseModel: ListDIDRulesResponse): Promise<SubscriptionDTO> {
+    async makeGatewayRequest(
+        requestModel: AuthenticatedRequestModel<ListDIDRulesRequest>,
+        responseModel: ListDIDRulesResponse,
+    ): Promise<SubscriptionDTO> {
         try {
-            if(!responseModel.subscription_id) {
+            if (!responseModel.subscription_id) {
                 const errorDTO: SubscriptionDTO = getEmptySubscriptionDTO('error');
                 errorDTO.errorName = 'Invalid Request';
                 errorDTO.errorMessage = 'Subscription ID not provided';
@@ -20,7 +28,7 @@ export default class GetDIDSubscriptionsByIDPipelineElement extends BaseStreamin
             }
             const dto: SubscriptionDTO = await this.subscriptionsGateway.getById(requestModel.rucioAuthToken, responseModel.subscription_id);
             return Promise.resolve(dto);
-        } catch(error) {
+        } catch (error) {
             const errorDTO: SubscriptionDTO = getEmptySubscriptionDTO('error');
             errorDTO.errorName = 'Unknown Error';
             errorDTO.errorMessage = error?.toString();
@@ -34,7 +42,7 @@ export default class GetDIDSubscriptionsByIDPipelineElement extends BaseStreamin
             message: error.errorMessage ?? 'Unknown Error',
             code: error.errorCode ?? -1,
             name: error.errorName ?? 'Unknown Error',
-        }
+        };
         return errorModel;
     }
 

@@ -1,5 +1,5 @@
-import { ListReplicasDTO } from "@/lib/core/dto/replica-dto";
-import { DatasetReplicasDTO } from "@/lib/core/dto/replica-dto";
+import { ListReplicasDTO } from '@/lib/core/dto/replica-dto';
+import { DatasetReplicasDTO } from '@/lib/core/dto/replica-dto';
 
 /**
  * Output port for the Replica Gateway, responsible for defining the methods that the Gateway will use to interact with the Rucio Server.

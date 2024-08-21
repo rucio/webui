@@ -1,11 +1,11 @@
-import { injectable, inject } from "inversify";
-import { NextApiResponse } from "next";
+import { injectable, inject } from 'inversify';
+import { NextApiResponse } from 'next';
 
-import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { BaseController, TAuthenticatedControllerParameters } from "@/lib/sdk/controller";
-import { ListDatasetReplicasRequest } from "@/lib/core/usecase-models/list-dataset-replicas-usecase-models";
-import { ListDatasetReplicasInputPort } from "@/lib/core/port/primary/list-dataset-replicas-ports";
-import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factory";
+import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
+import { ListDatasetReplicasRequest } from '@/lib/core/usecase-models/list-dataset-replicas-usecase-models';
+import { ListDatasetReplicasInputPort } from '@/lib/core/port/primary/list-dataset-replicas-ports';
+import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory';
 
 export type ListDatasetReplicasControllerParameters = TAuthenticatedControllerParameters & {
     rucioAuthToken: string;
@@ -14,7 +14,10 @@ export type ListDatasetReplicasControllerParameters = TAuthenticatedControllerPa
 };
 
 @injectable()
-class ListDatasetReplicasController extends BaseController<ListDatasetReplicasControllerParameters, AuthenticatedRequestModel<ListDatasetReplicasRequest>> {
+class ListDatasetReplicasController extends BaseController<
+    ListDatasetReplicasControllerParameters,
+    AuthenticatedRequestModel<ListDatasetReplicasRequest>
+> {
     constructor(
         @inject(USECASE_FACTORY.LIST_DATASET_REPLICAS) listDatasetReplicasUseCaseFactory: (response: NextApiResponse) => ListDatasetReplicasInputPort,
     ) {

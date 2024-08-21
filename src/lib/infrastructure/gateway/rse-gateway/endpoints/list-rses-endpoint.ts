@@ -1,21 +1,18 @@
-import { ListRSEsDTO, RSEDTO } from "@/lib/core/dto/rse-dto";
-import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints";
-import { HTTPRequest } from "@/lib/sdk/http";
-import { Response } from "node-fetch";
-import { convertToRSEDTO, TRucioRSE } from "../rse-gateway-utils";
+import { ListRSEsDTO, RSEDTO } from '@/lib/core/dto/rse-dto';
+import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
+import { convertToRSEDTO, TRucioRSE } from '../rse-gateway-utils';
 
 export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO, RSEDTO> {
-    constructor(
-        private readonly rucioAuthToken: string,
-        private readonly rseExpression: string,
-    ){
-        super(true)
+    constructor(private readonly rucioAuthToken: string, private readonly rseExpression: string) {
+        super(true);
     }
 
     async initialize(): Promise<void> {
-        await super.initialize()
-        const rucioHost = await this.envConfigGateway.rucioHost()
-        const endpoint = `${rucioHost}/rses/`
+        await super.initialize();
+        const rucioHost = await this.envConfigGateway.rucioHost();
+        const endpoint = `${rucioHost}/rses/`;
         const request: HTTPRequest = {
             method: 'GET',
             url: endpoint,
@@ -25,21 +22,21 @@ export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO
             },
             body: null,
             params: {
-                expression: this.rseExpression
-            }
-        }
-        this.request = request
-        this.initialized = true
+                expression: this.rseExpression,
+            },
+        };
+        this.request = request;
+        this.initialized = true;
     }
 
     /**
      * If this method is called, it means that the response from Rucio was not or any of the error types in ${@link handleCommonGatewayEndpointErrors}
      * @param statusCode The status code returned from Rucio
      * @param response The reponse containing error data
-     * @returns 
+     * @returns
      */
     async reportErrors(statusCode: number, response: Response): Promise<ListRSEsDTO | undefined> {
-        const data = await response.json()
+        const data = await response.json();
         const errorDTO: ListRSEsDTO = {
             status: 'error',
             errorMessage: data,
@@ -47,9 +44,8 @@ export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO
             errorName: 'Unknown Error',
             errorType: 'gateway-endpoint-error',
             stream: null,
-        }
-        return Promise.resolve(errorDTO)
-
+        };
+        return Promise.resolve(errorDTO);
     }
 
     /**
@@ -58,9 +54,8 @@ export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO
      * @returns The RSEDTO object
      */
     createDTO(response: Buffer): RSEDTO {
-        const data: TRucioRSE = JSON.parse(JSON.parse(response.toString()))
-        const dto: RSEDTO = convertToRSEDTO(data)
-        return dto
+        const data: TRucioRSE = JSON.parse(JSON.parse(response.toString()));
+        const dto: RSEDTO = convertToRSEDTO(data);
+        return dto;
     }
-    
 }
