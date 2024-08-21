@@ -25,6 +25,16 @@ export interface RSEAttributeDTO extends BaseDTO {
     attributes: RSEAttribute[]
 }
 
+export interface RSEUsageDTO extends BaseDTO {
+    rse_id: string;
+    rse: string;
+    source: string;
+    used: number;
+    total: number;
+    files: number;
+    updated_at: string;
+}
+
 export function getEmptyRSEDTO(): RSEDTO {
     return {
         status: 'error',

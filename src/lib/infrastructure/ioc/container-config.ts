@@ -62,6 +62,7 @@ import RuleGatewayOutputPort from "@/lib/core/port/secondary/rule-gateway-output
 import RuleGateway from "../gateway/rule-gateway/rule-gateway";
 import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feature";
 import GetAccountInfoFeature from "./features/get-account-info-feature";
+import GetRSEUsageFeature from "@/lib/infrastructure/ioc/features/get-rse-usage-feature";
 
 
 /**
@@ -107,6 +108,7 @@ loadFeaturesSync(appContainer, [
     new GetRSEFeature(appContainer),
     new GetRSEProtocolsFeature(appContainer),
     new GetRSEAttributesFeature(appContainer),
+    new GetRSEUsageFeature(appContainer),
 ])
 
 // Features: List RSE
