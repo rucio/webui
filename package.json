@@ -9,6 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prettier:check": "prettier --check 'src/**/*.{ts,tsx}'",
+    "prettier:write": "prettier --write 'src/**/*.{ts,tsx}'",
     "test": "jest --testPathPattern test/component test/api test/gateway test/sdk --projects test/api/jest.api.config.js test/component/jest.component.config.js test/gateway/jest.gateway.config.js test/sdk/jest.sdk.config.js",
     "test:api": "jest --testPathPattern=test/api --projects test/api/jest.api.config.js",
     "test:component": "jest --testPathPattern=test/component --projects test/component/jest.component.config.js",
