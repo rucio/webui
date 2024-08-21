@@ -1,7 +1,7 @@
-import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
-import { addOrUpdateSessionUser, removeSessionUser, setActiveSessionUser, setEmptySession } from "@/lib/infrastructure/auth/session-utils";
-import { getIronSession, IronSession } from "iron-session";
-import { createMocks } from "node-mocks-http";
+import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
+import { addOrUpdateSessionUser, removeSessionUser, setActiveSessionUser, setEmptySession } from '@/lib/infrastructure/auth/session-utils';
+import { getIronSession, IronSession } from 'iron-session';
+import { createMocks } from 'node-mocks-http';
 
 describe('IronSession tests', () => {
     it('should set and get a value in the session', async () => {
@@ -9,8 +9,8 @@ describe('IronSession tests', () => {
             method: 'POST',
             body: {
                 username: 'ddmlab',
-                password: 'secret'
-            }
+                password: 'secret',
+            },
         });
         const session: IronSession = await getIronSession(req, res, {
             password: 'passwordpasswordpasswordpasswordpassword',
@@ -18,10 +18,10 @@ describe('IronSession tests', () => {
             cookieOptions: {
                 secure: false,
             },
-        })
+        });
         expect(session.user).toBeUndefined();
-        
-        await setEmptySession(session, true)
+
+        await setEmptySession(session, true);
         expect(session.user).toBeDefined();
         expect(session.allUsers).toHaveLength(1);
 
@@ -34,8 +34,8 @@ describe('IronSession tests', () => {
             role: Role.ADMIN,
             rucioOIDCProvider: 'cern',
             rucioVO: 'def',
-            isLoggedIn: true
-        }
+            isLoggedIn: true,
+        };
         await session.save();
         expect(session.user).toHaveProperty('rucioIdentity');
         expect(session.user?.rucioIdentity).toBe('ddmlab');
@@ -45,7 +45,6 @@ describe('IronSession tests', () => {
         expect(session.user?.rucioAccount).toBe('root');
         expect(session.user).toHaveProperty('isLoggedIn');
         expect(session.user?.isLoggedIn).toBe(true);
-        
     });
 
     it('should add a new, update and delete user to/from the session', async () => {
@@ -53,8 +52,8 @@ describe('IronSession tests', () => {
             method: 'POST',
             body: {
                 username: 'ddmlab',
-                password: 'secret'
-            }
+                password: 'secret',
+            },
         });
         const session: IronSession = await getIronSession(req, res, {
             password: 'passwordpasswordpasswordpasswordpassword',
@@ -62,10 +61,10 @@ describe('IronSession tests', () => {
             cookieOptions: {
                 secure: false,
             },
-        })
+        });
 
         session.allUsers = [];
-        
+
         const sessionUserPassDDMLab: SessionUser = {
             rucioAuthToken: 'rucio-ddmlab-adadadad',
             rucioAuthTokenExpires: '2021-09-01T12:00:00Z',
@@ -75,8 +74,8 @@ describe('IronSession tests', () => {
             role: Role.ADMIN,
             rucioVO: 'def',
             rucioOIDCProvider: null,
-            isLoggedIn: true
-        }
+            isLoggedIn: true,
+        };
 
         const sessionUserX509DDMLab: SessionUser = {
             rucioAuthToken: 'rucio-ddmlab-adasfgdbg',
@@ -87,8 +86,8 @@ describe('IronSession tests', () => {
             role: Role.ADMIN,
             rucioVO: 'def',
             rucioOIDCProvider: null,
-            isLoggedIn: true
-        }
+            isLoggedIn: true,
+        };
 
         await addOrUpdateSessionUser(session, sessionUserPassDDMLab);
         expect(session.allUsers).toHaveLength(1);
@@ -110,8 +109,8 @@ describe('IronSession tests', () => {
             method: 'POST',
             body: {
                 username: 'ddmlab',
-                password: 'secret'
-            }
+                password: 'secret',
+            },
         });
         const session: IronSession = await getIronSession(req, res, {
             password: 'passwordpasswordpasswordpasswordpassword',
@@ -119,7 +118,7 @@ describe('IronSession tests', () => {
             cookieOptions: {
                 secure: false,
             },
-        })
+        });
         const sessionUserPassDDMLab: SessionUser = {
             rucioAuthToken: 'rucio-ddmlab-adadadad',
             rucioAuthTokenExpires: '2021-09-01T12:00:00Z',
@@ -129,8 +128,8 @@ describe('IronSession tests', () => {
             role: Role.USER,
             rucioOIDCProvider: null,
             rucioVO: 'def',
-            isLoggedIn: true
-        }
+            isLoggedIn: true,
+        };
 
         const autreUser: SessionUser = {
             rucioAuthToken: 'rucio-autre-adagfdsfg',
@@ -141,8 +140,8 @@ describe('IronSession tests', () => {
             role: Role.USER,
             rucioOIDCProvider: null,
             rucioVO: 'def',
-            isLoggedIn: true
-        }
+            isLoggedIn: true,
+        };
 
         await setActiveSessionUser(session, sessionUserPassDDMLab);
         expect(session.user?.rucioAuthToken).toBe('rucio-ddmlab-adadadad');
@@ -158,6 +157,5 @@ describe('IronSession tests', () => {
         await removeSessionUser(session, autreUser);
         expect(session.user).toBeUndefined();
         expect(session.allUsers).toHaveLength(0);
-
     });
-})
+});

@@ -1,8 +1,8 @@
-import { getIronSession } from "iron-session";
-import { createMocks, createResponse, MockResponse } from "node-mocks-http";
-import { EventEmitter } from "stream";
-import { Response } from "express";
-import MockRucioServerFactory from "./rucio-server";
+import { getIronSession } from 'iron-session';
+import { createMocks, createResponse, MockResponse } from 'node-mocks-http';
+import { EventEmitter } from 'stream';
+import { Response } from 'express';
+import MockRucioServerFactory from './rucio-server';
 
 /**
  * Creates mock HTTP request and response objects for testing. This is used to mock the requests to NextJS endpoints.
@@ -12,10 +12,10 @@ import MockRucioServerFactory from "./rucio-server";
  * @param body The request body.
  * @returns An object containing the mock request, response, and session objects.
  */
-export async function createHttpMocks(url?: string, method?: 'GET' | 'POST', body: any = {}){
+export async function createHttpMocks(url?: string, method?: 'GET' | 'POST', body: any = {}) {
     const { req, res } = createMocks({
-        url: url? url: 'http://testhost:3000/',
-        method: method? method: 'GET',
+        url: url ? url : 'http://testhost:3000/',
+        method: method ? method : 'GET',
         body: body,
     });
     const session = await getIronSession(req, res, {
@@ -24,10 +24,9 @@ export async function createHttpMocks(url?: string, method?: 'GET' | 'POST', bod
         cookieOptions: {
             secure: false,
         },
-    })
-    return { req, res, session }
+    });
+    return { req, res, session };
 }
-
 
 /**
  * A factory for creating mock HTTP streamable responses.
@@ -43,13 +42,13 @@ export class MockHttpStreamableResponseFactory {
     static getMockResponse(): MockResponse<Response> {
         const response = createResponse<Response>({
             eventEmitter: EventEmitter,
-        })
+        });
         const oldWrite = response.write;
-        response.write = function(data: any, encoding: any, callback?: (error?: Error | null) => void) {
-            oldWrite.call(response, data, encoding, callback)
-            response.emit('data', data)
+        response.write = function (data: any, encoding: any, callback?: (error?: Error | null) => void) {
+            oldWrite.call(response, data, encoding, callback);
+            response.emit('data', data);
             return true;
-        }
-        return response
+        };
+        return response;
     }
-} 
+}
