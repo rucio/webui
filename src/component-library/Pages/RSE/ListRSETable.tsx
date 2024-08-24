@@ -5,13 +5,10 @@ import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
 import '@/component-library/ag-grid-theme-rucio.css';
 import {twMerge} from "tailwind-merge";
 import Link from "next/link";
-import {
-    IFilterOptionDef,
-    ITextFilterParams
-} from "ag-grid-community";
-import {HiChevronLeft, HiChevronRight, HiExternalLink} from "react-icons/hi";
-import {HiCheck} from "react-icons/hi";
+import {IFilterOptionDef, ITextFilterParams} from "ag-grid-community";
+import {HiCheck, HiChevronLeft, HiChevronRight, HiExternalLink} from "react-icons/hi";
 import {Skeleton} from "@/component-library/ui/skeleton";
+import {LoadingSpinner} from "@/component-library/ui/loading-spinner";
 
 type ListRSETableProps = {
     tableRef: RefObject<AgGridReact>
@@ -19,38 +16,21 @@ type ListRSETableProps = {
 }
 
 // TODO: move to a different file
-// TODO: collapse to see details
-const ErrorTableOverlay = (props: { text: string, errorMessage: string }) => {
-    return <div className="border p-2 border-base-error-600 text-base-error-600 mx-2">
-        <div>{props.text}</div>
-        <div className="text-sm">{props.errorMessage}</div>
-    </div>;
-};
 
 const LoadingTableOverlay = () => {
     return <div className="text-neutral-100">Click <b>Search</b></div>
 };
 
-// TODO: handle the situation when RSE search returns 400 with a valid expression
 const NoRowsOverlay = (props: { error?: StreamingError }) => {
+    // TODO: add icons
     if (props.error) {
-        switch (props.error.type) {
-            case StreamingErrorType.BAD_METHOD_CALL:
-                return <div className="text-neutral-100">Loading...</div>;
-            case StreamingErrorType.NETWORK_ERROR:
-                return <ErrorTableOverlay text={"Can't connect to the endpoint"} errorMessage={props.error.message}/>;
-            case StreamingErrorType.BAD_REQUEST:
-                return <ErrorTableOverlay text={"Invalid expression"} errorMessage={props.error.message}/>;
-            case StreamingErrorType.NOT_FOUND:
-                return <ErrorTableOverlay text={"Nothing found"} errorMessage={props.error.message}/>;
-            case StreamingErrorType.INVALID_RESPONSE:
-                return <ErrorTableOverlay text={"Invalid response"} errorMessage={props.error.message}/>;
-            case StreamingErrorType.PARSING_ERROR:
-                return <ErrorTableOverlay text={"Can't parse the response"} errorMessage={props.error.message}/>;
+        if (props.error.type === StreamingErrorType.NOT_FOUND) {
+            return <div className="text-neutral-100">Nothing found</div>;
+        } else if (props.error.type !== StreamingErrorType.BAD_METHOD_CALL) {
+            return <div className="text-neutral-100">An <b>error</b> has happened</div>;
         }
-    } else {
-        return <div className="text-neutral-100">Loading...</div>
     }
+    return <LoadingSpinner/>;
 }
 
 // TODO: decompose this to a different file as well
