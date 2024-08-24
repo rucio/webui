@@ -73,6 +73,30 @@ const ClickableName = (props: { value: string }) => {
     </ClickableCell>
 };
 
+const BadgeCell = (props: { value: string, colorClass: string }) => {
+    return <div className={twMerge(
+        "text-neutral-100",
+        "rounded-md",
+        "inline grow",
+        "px-3 m-2",
+        "content-center text-center",
+        "bg-opacity-50",
+        props.colorClass
+    )}>
+        {props.value}
+    </div>;
+}
+
+const typeColorClasses: Record<string, string> = {
+    'DISK': 'bg-base-info-500',
+    'TAPE': 'bg-extra-rose-500',
+    'UNKNOWN': 'bg-base-warning-400',
+}
+
+const TypeBadge =  (props: { value: string }) => {
+    return <BadgeCell value={props.value} colorClass={typeColorClasses[props.value]}/>
+}
+
 const DefaultTextFilterParams: ITextFilterParams = {
     filterOptions: ['contains'],
     buttons: ['reset'],
@@ -119,7 +143,6 @@ const buildDiscreteFilterParams = (values: string[]): ITextFilterParams => {
 
 // TODO: decompose into a generic table component
 export const ListRSETable = (props: ListRSETableProps) => {
-    // TODO: implement styled badges for the values
     const [columnDefs] = useState([
         {
             headerName: 'Name',
@@ -135,6 +158,10 @@ export const ListRSETable = (props: ListRSETableProps) => {
             field: 'rse_type',
             flex: 1,
             minWidth: 125,
+            cellStyle: {
+                display: 'flex'
+            },
+            cellRenderer: TypeBadge,
             filter: true,
             sortable: false,
             filterParams: buildDiscreteFilterParams([
