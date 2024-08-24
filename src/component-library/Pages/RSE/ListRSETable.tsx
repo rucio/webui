@@ -5,6 +5,10 @@ import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
 import '@/component-library/ag-grid-theme-rucio.css';
 import {twMerge} from "tailwind-merge";
 import Link from "next/link";
+import {
+    IFilterOptionDef,
+    ITextFilterParams
+} from "ag-grid-community";
 
 type ListRSETableProps = {
     tableRef: RefObject<AgGridReact>
@@ -50,7 +54,7 @@ const NoRowsOverlay = (props: { error?: StreamingError }) => {
     }
 }
 
-const ClickableName = (props: {value: string}) => {
+const ClickableName = (props: { value: string }) => {
     return (
         <Link href={`/rse/page/${props.value}`}>
             {props.value}
@@ -58,24 +62,106 @@ const ClickableName = (props: {value: string}) => {
     );
 };
 
+const DefaultTextFilterParams: ITextFilterParams = {
+    filterOptions: ['contains'],
+    buttons: ['reset'],
+    maxNumConditions: 1,
+};
+
+const DefaultBooleanFilterParams: ITextFilterParams = {
+    filterOptions: [
+        'empty',
+        {
+            numberOfInputs: 0,
+            displayKey: 'true',
+            displayName: 'True',
+            predicate: (_: any[], cellValue: any) => cellValue
+        },
+        {
+            numberOfInputs: 0,
+            displayKey: 'false',
+            displayName: 'False',
+            predicate: (_: any[], cellValue: any) => !cellValue
+        }
+    ],
+    buttons: ['reset'],
+};
+
+const buildDiscreteFilterParams = (values: string[]): ITextFilterParams => {
+    return {
+        filterOptions: [
+            'empty',
+            ...values.map((value) => {
+                return {
+                    numberOfInputs: 0,
+                    displayKey: value.toLowerCase(),
+                    displayName: value,
+                    predicate: (_: any[], cellValue: any) => cellValue === value
+                } as IFilterOptionDef;
+            })
+        ],
+        maxNumConditions: 1,
+        buttons: ['reset']
+    };
+};
+
 
 // TODO: decompose into a generic table component
 export const ListRSETable = (props: ListRSETableProps) => {
-    // TODO: implement custom filter for discrete/boolean values
     // TODO: implement styled badges for the values
     const [columnDefs] = useState([
         {
             headerName: 'Name',
             field: 'name',
-            filter: true,
             flex: 3,
             minWidth: 250,
             cellRenderer: ClickableName,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
-        {headerName: 'Type', field: 'rse_type', flex: 2, minWidth: 125},
-        {headerName: 'Volatile', field: 'volatile', flex: 1, maxWidth: 175, minWidth: 125},
-        {headerName: 'Deterministic', field: 'deterministic', flex: 1, maxWidth: 175, minWidth: 150},
-        {headerName: 'Staging', field: 'staging_area', flex: 1, maxWidth: 175, minWidth: 125},
+        {
+            headerName: 'Type',
+            field: 'rse_type',
+            flex: 1,
+            minWidth: 125,
+            filter: true,
+            sortable: false,
+            filterParams: buildDiscreteFilterParams([
+                'DISK',
+                'TAPE',
+                'UNKNOWN'
+            ])
+        },
+        {
+            headerName: 'Volatile',
+            field: 'volatile',
+            flex: 1,
+            maxWidth: 175,
+            minWidth: 125,
+            sortable: false,
+            filter: true,
+            filterParams: DefaultBooleanFilterParams
+        },
+        {
+            headerName: 'Deterministic',
+            field: 'deterministic',
+            flex: 1,
+            maxWidth: 175,
+            minWidth: 150,
+            sortable: false,
+            filter: true,
+            filterParams: DefaultBooleanFilterParams,
+        },
+        {
+            headerName: 'Staging',
+            field: 'staging_area',
+            flex: 1,
+            maxWidth: 175,
+            minWidth: 125,
+            sortable: false,
+            filter: true,
+            filterParams: DefaultBooleanFilterParams
+        },
     ]);
 
     useEffect(() => {
