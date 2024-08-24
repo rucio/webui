@@ -1,4 +1,4 @@
-import React, {RefObject, useEffect, useState} from "react";
+import React, {RefObject, useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {StreamingError, StreamingErrorType, UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
 import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
@@ -6,10 +6,11 @@ import '@/component-library/ag-grid-theme-rucio.css';
 import {twMerge} from "tailwind-merge";
 import Link from "next/link";
 import {
+    GridApi,
     IFilterOptionDef,
     ITextFilterParams
 } from "ag-grid-community";
-import {HiExternalLink} from "react-icons/hi";
+import {HiArrowLeft, HiArrowRight, HiChevronLeft, HiChevronRight, HiExternalLink} from "react-icons/hi";
 import {HiCheck} from "react-icons/hi";
 
 type ListRSETableProps = {
@@ -163,6 +164,38 @@ const buildDiscreteFilterParams = (values: string[]): ITextFilterParams => {
     };
 };
 
+const CustomPaginationPanel = (props: {
+    currentPageRef: RefObject<HTMLSpanElement>,
+    totalPagesRef: RefObject<HTMLSpanElement>,
+    previousPageRef: RefObject<HTMLButtonElement>,
+    nextPageRef: RefObject<HTMLButtonElement>,
+    containerRef: RefObject<HTMLDivElement>
+}) => {
+    return <div ref={props.containerRef} className={twMerge(
+        "flex items-center justify-center",
+        "text-neutral-100",
+        "py-1"
+    )}>
+        <button
+            disabled={true}
+            ref={props.previousPageRef}
+            className="disabled:text-neutral-600 text-neutral-100 text-xl"
+        >
+            <HiChevronLeft/>
+        </button>
+        <span className="px-3">
+            Page <span ref={props.currentPageRef}>0</span> of <span ref={props.totalPagesRef}>0</span>
+        </span>
+        <button
+            disabled={true}
+            ref={props.nextPageRef}
+            className="disabled:text-neutral-600 text-neutral-100 text-xl"
+        >
+            <HiChevronRight/>
+        </button>
+    </div>
+};
+
 
 // TODO: decompose into a generic table component
 export const ListRSETable = (props: ListRSETableProps) => {
@@ -170,7 +203,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
         {
             headerName: 'Name',
             field: 'name',
-            flex: 3,
+            flex: 4,
             minWidth: 250,
             cellRenderer: ClickableName,
             filter: true,
@@ -181,6 +214,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             field: 'rse_type',
             flex: 1,
             minWidth: 125,
+            maxWidth: 200,
             cellStyle: badgeCellWrapperStyle,
             cellRenderer: TypeBadge,
             filter: true,
@@ -207,8 +241,8 @@ export const ListRSETable = (props: ListRSETableProps) => {
             headerName: 'Deterministic',
             field: 'deterministic',
             flex: 1,
-            maxWidth: 175,
-            minWidth: 150,
+            maxWidth: 200,
+            minWidth: 175,
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
             sortable: false,
@@ -229,6 +263,13 @@ export const ListRSETable = (props: ListRSETableProps) => {
         },
     ]);
 
+    const currentPageRef = useRef<HTMLSpanElement>(null);
+    const totalPagesRef = useRef<HTMLSpanElement>(null);
+    const previousPageRef = useRef<HTMLButtonElement>(null);
+    const nextPageRef = useRef<HTMLButtonElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Ensure the overlay updates when streaming faces an error
     useEffect(() => {
         if (props.tableRef.current?.api) {
             props.tableRef.current!.api.showNoRowsOverlay();
@@ -236,7 +277,6 @@ export const ListRSETable = (props: ListRSETableProps) => {
     }, [props.streamingHook.error]);
 
     useEffect(() => {
-        // TODO: don't resize if the screen is too small
         const handleResize = () => {
             if (props.tableRef.current?.api) {
                 props.tableRef.current!.api.sizeColumnsToFit();
@@ -250,24 +290,66 @@ export const ListRSETable = (props: ListRSETableProps) => {
         };
     }, [props.tableRef]);
 
+    const onNextPage = () => {
+        const gridApi = props.tableRef.current!.api;
+        if (gridApi) {
+            gridApi.paginationGoToNextPage();
+        }
+    }
 
-    // TODO: custom pagination component on small screens
-    return <div className={twMerge(
-        "ag-theme-custom",
-        "grid grow w-full"
-    )}>
-        <AgGridReact
-            pagination={true}
-            paginationAutoPageSize={true}
-            ref={props.tableRef}
-            loadingOverlayComponent={LoadingTableOverlay}
-            noRowsOverlayComponent={(gridProps: any) => <NoRowsOverlay
-                error={props.streamingHook.error} {...gridProps}/>}
-            columnDefs={columnDefs}
-            onGridReady={(params) => {
-                params.api.sizeColumnsToFit(); // Ensures columns stretch to fit grid width
-            }}
-            domLayout="normal" // Ensures the grid fits within the flex container
+    const onPreviousPage = () => {
+        const gridApi = props.tableRef.current!.api;
+        if (gridApi) {
+            gridApi.paginationGoToPreviousPage();
+        }
+    }
+
+    const onPaginationChanged = () => {
+        const gridApi = props.tableRef.current!.api;
+        if (gridApi) {
+            const totalPages = gridApi.paginationGetTotalPages();
+            totalPagesRef.current!.textContent = totalPages.toString();
+            containerRef.current!.style.visibility = totalPages === 0 ? 'hidden' : 'visible';
+
+            // Pages are zero based, therefore +1
+            const currentPage = gridApi.paginationGetCurrentPage() + 1;
+            currentPageRef.current!.textContent = currentPage.toString();
+
+            previousPageRef.current!.disabled = currentPage === 1;
+            previousPageRef.current!.onclick = onPreviousPage;
+
+            nextPageRef.current!.disabled = currentPage === totalPages;
+            nextPageRef.current!.onclick = onNextPage;
+        }
+    };
+
+    return <>
+        <div className={twMerge(
+            "ag-theme-custom",
+            "grid grow w-full"
+        )}>
+            <AgGridReact
+                pagination={true}
+                paginationAutoPageSize={true}
+                ref={props.tableRef}
+                loadingOverlayComponent={LoadingTableOverlay}
+                noRowsOverlayComponent={(gridProps: any) => <NoRowsOverlay
+                    error={props.streamingHook.error} {...gridProps}/>}
+                columnDefs={columnDefs}
+                onGridReady={(params) => {
+                    params.api.sizeColumnsToFit(); // Ensures columns stretch to fit grid width
+                }}
+                domLayout="normal" // Ensures the grid fits within the flex container
+                suppressPaginationPanel={true}
+                onPaginationChanged={onPaginationChanged}
+            />
+        </div>
+        <CustomPaginationPanel
+            currentPageRef={currentPageRef}
+            totalPagesRef={totalPagesRef}
+            nextPageRef={nextPageRef}
+            previousPageRef={previousPageRef}
+            containerRef={containerRef}
         />
-    </div>
+    </>
 }

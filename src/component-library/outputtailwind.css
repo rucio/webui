@@ -2591,6 +2591,11 @@ html {
   --tw-ring-opacity: 0.5;
 }
 
+.disabled\:text-neutral-600:disabled {
+  --tw-text-opacity: 1;
+  color: rgb(71 85 105 / var(--tw-text-opacity));
+}
+
 .group:focus-within .group-focus-within\:block {
   display: block;
 }
