@@ -116,8 +116,8 @@ const CheckboxCell = (props: { value: string }) => {
 
 const checkboxCellWrapperStyle = {
     display: 'flex',
-    'justify-content': 'center',
-    'align-items': 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
 };
 
 const DefaultTextFilterParams: ITextFilterParams = {
