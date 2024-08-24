@@ -77,7 +77,7 @@ const ClickableName = (props: { value: string }) => {
 const BadgeCell = (props: { value: string, colorClass: string }) => {
     return <div className={twMerge(
         "text-neutral-100",
-        "rounded-md",
+        "rounded",
         "inline grow",
         "px-3 m-2",
         "content-center text-center",
@@ -87,6 +87,10 @@ const BadgeCell = (props: { value: string, colorClass: string }) => {
         {props.value}
     </div>;
 }
+
+const badgeCellWrapperStyle = {
+    display: 'flex'
+};
 
 const typeColorClasses: Record<string, string> = {
     'DISK': 'bg-base-info-500',
@@ -177,9 +181,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             field: 'rse_type',
             flex: 1,
             minWidth: 125,
-            cellStyle: {
-                display: 'flex'
-            },
+            cellStyle: badgeCellWrapperStyle,
             cellRenderer: TypeBadge,
             filter: true,
             sortable: false,
