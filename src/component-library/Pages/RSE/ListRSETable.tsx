@@ -1,4 +1,4 @@
-import {RefObject, useEffect, useState} from "react";
+import React, {RefObject, useEffect, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {StreamingError, StreamingErrorType, UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
 import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
@@ -9,6 +9,7 @@ import {
     IFilterOptionDef,
     ITextFilterParams
 } from "ag-grid-community";
+import {HiExternalLink} from "react-icons/all";
 
 type ListRSETableProps = {
     tableRef: RefObject<AgGridReact>
@@ -54,12 +55,22 @@ const NoRowsOverlay = (props: { error?: StreamingError }) => {
     }
 }
 
-const ClickableName = (props: { value: string }) => {
+// TODO: decompose this to a different file as well
+const ClickableCell = (props: { href: string, children: React.ReactNode }) => {
     return (
-        <Link href={`/rse/page/${props.value}`}>
-            {props.value}
+        <Link href={props.href}>
+            <div>
+                {props.children}
+                <HiExternalLink className="text-neutral-100 text-2xl pl-2 inline"/>
+            </div>
         </Link>
     );
+}
+
+const ClickableName = (props: { value: string }) => {
+    return <ClickableCell href={`/rse/page/${props.value}`}>
+        {props.value}
+    </ClickableCell>
 };
 
 const DefaultTextFilterParams: ITextFilterParams = {

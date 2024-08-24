@@ -2001,6 +2001,11 @@ html {
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
+.text-neutral-100 {
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity));
+}
+
 .text-red-500 {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
