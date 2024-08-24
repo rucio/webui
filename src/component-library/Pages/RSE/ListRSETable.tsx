@@ -6,11 +6,10 @@ import '@/component-library/ag-grid-theme-rucio.css';
 import {twMerge} from "tailwind-merge";
 import Link from "next/link";
 import {
-    GridApi,
     IFilterOptionDef,
     ITextFilterParams
 } from "ag-grid-community";
-import {HiArrowLeft, HiArrowRight, HiChevronLeft, HiChevronRight, HiExternalLink} from "react-icons/hi";
+import {HiChevronLeft, HiChevronRight, HiExternalLink} from "react-icons/hi";
 import {HiCheck} from "react-icons/hi";
 
 type ListRSETableProps = {
