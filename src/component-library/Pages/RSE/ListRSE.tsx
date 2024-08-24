@@ -14,7 +14,6 @@ type ListRSEProps = {
 }
 
 const defaultExpression = "*";
-// TODO: hide pagination component if there's no data
 export const ListRSE = (props: ListRSEProps) => {
     const searchParams = useSearchParams()
     const firstExpression = searchParams?.get('expression')
