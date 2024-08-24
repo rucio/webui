@@ -54,7 +54,6 @@ export const ListRSE = (props: ListRSEProps) => {
         }
     }
 
-    // TODO: add shimmer component while the table is loading
     return (
         <div
             className={twMerge(

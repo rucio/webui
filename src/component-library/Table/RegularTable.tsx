@@ -6,6 +6,7 @@ import {ColDef, ColGroupDef} from "ag-grid-community/dist/types/core/entities/co
 import {NoDataYetOverlay} from "@/component-library/Table/Overlays/NoDataYetOverlay";
 import {GridReadyEvent} from "ag-grid-community";
 import {SimplePaginationPanel} from "@/component-library/Table/PaginationPanels/SimplePaginationPanel";
+import '@/component-library/ag-grid-theme.css';
 
 export interface RegularTableProps {
     tableRef: RefObject<AgGridReact>,

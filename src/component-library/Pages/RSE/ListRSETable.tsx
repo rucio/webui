@@ -2,7 +2,6 @@ import React, {RefObject, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
 import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
-import '@/component-library/ag-grid-theme-rucio.css';
 import {StreamedTable} from "@/component-library/Table/StreamedTable";
 import {ClickableCell} from "@/component-library/Table/Cells/ClickableCell";
 import {BadgeCell, badgeCellWrapperStyle} from "@/component-library/Table/Cells/BadgeCell";
