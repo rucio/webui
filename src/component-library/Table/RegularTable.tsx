@@ -100,6 +100,7 @@ export const RegularTable = (props: RegularTableProps) => {
                 domLayout="normal" // Ensures the grid fits within the flex container
                 suppressPaginationPanel={true}
                 onPaginationChanged={onPaginationChanged}
+                suppressMovableColumns={true}
             />
         </div>
         <SimplePaginationPanel
