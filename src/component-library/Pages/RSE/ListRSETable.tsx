@@ -9,7 +9,8 @@ import {
     IFilterOptionDef,
     ITextFilterParams
 } from "ag-grid-community";
-import {HiExternalLink} from "react-icons/all";
+import {HiExternalLink} from "react-icons/hi";
+import {HiCheck} from "react-icons/hi";
 
 type ListRSETableProps = {
     tableRef: RefObject<AgGridReact>
@@ -93,9 +94,27 @@ const typeColorClasses: Record<string, string> = {
     'UNKNOWN': 'bg-base-warning-400',
 }
 
-const TypeBadge =  (props: { value: string }) => {
+const TypeBadge = (props: { value: string }) => {
     return <BadgeCell value={props.value} colorClass={typeColorClasses[props.value]}/>
 }
+
+const CheckboxCell = (props: { value: string }) => {
+    return <div className={twMerge(
+        "flex justify-center items-center",
+        "h-5 w-5",
+        "rounded",
+        "text-center",
+        props.value ? "bg-base-success-600 bg-opacity-60" : "bg-neutral-900 border-solid border border-neutral-100 border-opacity-20"
+    )}>
+        {props.value && <HiCheck className="text-neutral-100 text"/>}
+    </div>
+}
+
+const checkboxCellWrapperStyle = {
+    display: 'flex',
+    'justify-content': 'center',
+    'align-items': 'center'
+};
 
 const DefaultTextFilterParams: ITextFilterParams = {
     filterOptions: ['contains'],
@@ -176,6 +195,8 @@ export const ListRSETable = (props: ListRSETableProps) => {
             flex: 1,
             maxWidth: 175,
             minWidth: 125,
+            cellStyle: checkboxCellWrapperStyle,
+            cellRenderer: CheckboxCell,
             sortable: false,
             filter: true,
             filterParams: DefaultBooleanFilterParams
@@ -186,6 +207,8 @@ export const ListRSETable = (props: ListRSETableProps) => {
             flex: 1,
             maxWidth: 175,
             minWidth: 150,
+            cellStyle: checkboxCellWrapperStyle,
+            cellRenderer: CheckboxCell,
             sortable: false,
             filter: true,
             filterParams: DefaultBooleanFilterParams,
@@ -196,6 +219,8 @@ export const ListRSETable = (props: ListRSETableProps) => {
             flex: 1,
             maxWidth: 175,
             minWidth: 125,
+            cellStyle: checkboxCellWrapperStyle,
+            cellRenderer: CheckboxCell,
             sortable: false,
             filter: true,
             filterParams: DefaultBooleanFilterParams
