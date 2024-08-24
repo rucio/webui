@@ -172,6 +172,7 @@ module.exports = {
                 },
             },
             animation: {
+                'spin': 'spin 1s linear infinite',
                 'slowspin': 'spin 2s linear infinite',
                 'floatout': 'floatout 5s linear 1',
                 'fadeout': 'fadeout 5s linear 1',
