@@ -11,6 +11,7 @@ import {
 } from "ag-grid-community";
 import {HiChevronLeft, HiChevronRight, HiExternalLink} from "react-icons/hi";
 import {HiCheck} from "react-icons/hi";
+import {Skeleton} from "@/component-library/ui/skeleton";
 
 type ListRSETableProps = {
     tableRef: RefObject<AgGridReact>
@@ -26,12 +27,8 @@ const ErrorTableOverlay = (props: { text: string, errorMessage: string }) => {
     </div>;
 };
 
-const MessageTableOverlay = (props: { text: string }) => {
-    return <div className="border p-2">{props.text}</div>;
-};
-
 const LoadingTableOverlay = () => {
-    return <MessageTableOverlay text="Nothing here yet"/>
+    return <div className="text-neutral-100">Click <b>Search</b></div>
 };
 
 // TODO: handle the situation when RSE search returns 400 with a valid expression
@@ -39,7 +36,7 @@ const NoRowsOverlay = (props: { error?: StreamingError }) => {
     if (props.error) {
         switch (props.error.type) {
             case StreamingErrorType.BAD_METHOD_CALL:
-                return <MessageTableOverlay text={"Loading..."}/>;
+                return <div className="text-neutral-100">Loading...</div>;
             case StreamingErrorType.NETWORK_ERROR:
                 return <ErrorTableOverlay text={"Can't connect to the endpoint"} errorMessage={props.error.message}/>;
             case StreamingErrorType.BAD_REQUEST:
@@ -52,7 +49,7 @@ const NoRowsOverlay = (props: { error?: StreamingError }) => {
                 return <ErrorTableOverlay text={"Can't parse the response"} errorMessage={props.error.message}/>;
         }
     } else {
-        return <MessageTableOverlay text={"Loading..."}/>
+        return <div className="text-neutral-100">Loading...</div>
     }
 }
 
@@ -173,7 +170,8 @@ const CustomPaginationPanel = (props: {
     return <div ref={props.containerRef} className={twMerge(
         "flex items-center justify-center",
         "text-neutral-100",
-        "py-1"
+        "py-1",
+        "invisible"
     )}>
         <button
             disabled={true}
@@ -268,6 +266,8 @@ export const ListRSETable = (props: ListRSETableProps) => {
     const nextPageRef = useRef<HTMLButtonElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    const [isTableLoaded, setIsTableLoaded] = useState<boolean>(false);
+
     // Ensure the overlay updates when streaming faces an error
     useEffect(() => {
         if (props.tableRef.current?.api) {
@@ -305,7 +305,8 @@ export const ListRSETable = (props: ListRSETableProps) => {
 
     const onPaginationChanged = () => {
         const gridApi = props.tableRef.current!.api;
-        if (gridApi) {
+        // Make sure the table is loaded before updating the pagination component to avoid flickering
+        if (isTableLoaded && gridApi) {
             const totalPages = gridApi.paginationGetTotalPages();
             totalPagesRef.current!.textContent = totalPages.toString();
             containerRef.current!.style.visibility = totalPages === 0 ? 'hidden' : 'visible';
@@ -325,8 +326,10 @@ export const ListRSETable = (props: ListRSETableProps) => {
     return <>
         <div className={twMerge(
             "ag-theme-custom",
-            "grid grow w-full"
+            "grid grow w-full",
+            "relative"
         )}>
+            <Skeleton className="absolute flex items-center justify-center w-full h-full"/>
             <AgGridReact
                 pagination={true}
                 paginationAutoPageSize={true}
@@ -336,6 +339,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
                     error={props.streamingHook.error} {...gridProps}/>}
                 columnDefs={columnDefs}
                 onGridReady={(params) => {
+                    setIsTableLoaded(true);
                     params.api.sizeColumnsToFit(); // Ensures columns stretch to fit grid width
                 }}
                 domLayout="normal" // Ensures the grid fits within the flex container
