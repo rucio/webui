@@ -125,13 +125,24 @@ export const ListDID = (
                             defaultValue={firstPattern ?? ''}
                         />
                     </div>
+
                     <div className="w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0">
-                        <Button
+                        {props.streamingHook.status === StreamingStatus.STOPPED ? <Button
                             type="button"
                             label="Search"
                             onClick={onSearch}
                             id="did-button-search"
-                        />
+                        /> : <Button
+                            type="button"
+                            label="Stop"
+                            onClick={() => {
+                                props.streamingHook.stop();
+                            }}
+                            className={twMerge(
+                                "w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0",
+                                "bg-base-error-500 hover:bg-base-error-600"
+                            )}
+                        />}
                     </div>
                 </form>
                 <div
