@@ -192,7 +192,7 @@ export const ListDID = (
                         "bg-neutral-0 dark:bg-neutral-900",
                         "min-w-0",
                         "lg:col-span-2",
-                        "flex flex-col"
+                        "flex flex-col h-[800px]"
                     )}
                 >
                     <ListDIDTable
