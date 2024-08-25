@@ -4,7 +4,7 @@ import {Skeleton} from "@/component-library/ui/skeleton";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef, ColGroupDef} from "ag-grid-community/dist/types/core/entities/colDef";
 import {NoDataYetOverlay} from "@/component-library/Table/Overlays/NoDataYetOverlay";
-import {GridReadyEvent} from "ag-grid-community";
+import {GridReadyEvent, SelectionChangedEvent} from "ag-grid-community";
 import {SimplePaginationPanel} from "@/component-library/Table/PaginationPanels/SimplePaginationPanel";
 import '@/component-library/ag-grid-theme.css';
 
@@ -12,6 +12,8 @@ export interface RegularTableProps {
     tableRef: RefObject<AgGridReact>,
     columnDefs: (ColDef | ColGroupDef)[],
     noRowsOverlayComponent?: any,
+    rowSelection?: 'single' | 'multiple',
+    onSelectionChanged?: (event: SelectionChangedEvent) => void,
 }
 
 export const RegularTable = (props: RegularTableProps) => {
@@ -101,6 +103,8 @@ export const RegularTable = (props: RegularTableProps) => {
                 suppressPaginationPanel={true}
                 onPaginationChanged={onPaginationChanged}
                 suppressMovableColumns={true}
+                rowSelection={props.rowSelection}
+                onSelectionChanged={props.onSelectionChanged}
             />
         </div>
         <SimplePaginationPanel

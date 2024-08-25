@@ -15,13 +15,14 @@ export const StreamedTable = (props: StreamedTableProps) => {
         }
     }, [props.streamingHook.error]);
 
+    const { noRowsOverlayComponent, ...otherProps } = props;
+
     const getDefaultNoRowsElement = (gridProps: any) => {
         return <NoLoadedRowsOverlay error={props.streamingHook.error} {...gridProps}/>
     }
 
     return <RegularTable
-        tableRef={props.tableRef}
-        columnDefs={props.columnDefs}
-        noRowsOverlayComponent={props.noRowsOverlayComponent ?? getDefaultNoRowsElement}
+        noRowsOverlayComponent={noRowsOverlayComponent ?? getDefaultNoRowsElement}
+        {...otherProps}
     />
 }
