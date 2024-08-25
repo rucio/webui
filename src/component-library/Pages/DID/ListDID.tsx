@@ -1,56 +1,100 @@
-import { DIDViewModel, DIDMetaViewModel } from "@/lib/infrastructure/data/view-model/did"
-import { useEffect, useState } from "react"
-import { twMerge } from "tailwind-merge"
-import { TextInput } from "../../Input/TextInput"
-import { Button } from "../../Button/Button"
-import { DIDMetaView } from "./DIDMetaView"
-import { ListDIDTable } from "./ListDIDTable"
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM"
-import { Heading } from "../Helpers/Heading"
-import { Body } from "../Helpers/Body"
-import { DIDType } from "@/lib/core/entity/rucio"
-import { Checkbox } from "../../Button/Checkbox"
+import {DIDMetaViewModel, DIDViewModel} from "@/lib/infrastructure/data/view-model/did"
+import {useEffect, useRef, useState} from "react"
+import {twMerge} from "tailwind-merge"
+import {TextInput} from "../../Input/TextInput"
+import {Button} from "../../Button/Button"
+import {DIDMetaView} from "./DIDMetaView"
+import {ListDIDTable} from "./ListDIDTable"
+import {Heading} from "../Helpers/Heading"
+import {Body} from "../Helpers/Body"
+import {DIDType} from "@/lib/core/entity/rucio"
+import {Checkbox} from "../../Button/Checkbox"
 import Link from "next/link"
 import {useSearchParams} from "next/navigation";
-
-var format = require("date-format")
+import {StreamingStatus, UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
+import {AgGridReact} from "ag-grid-react";
+import {SelectionChangedEvent} from "ag-grid-community";
 
 export interface ListDIDPageProps {
-    comdom: UseComDOM<DIDViewModel>,
-    didQuery: (query: string, type: DIDType) => void,
-    didMetaQuery: (scope: string, name: string) => void,
-    didMetaQueryResponse: DIDMetaViewModel,
+    streamingHook: UseChunkedStream<DIDViewModel>,
+    metaQuery: (scope: string, name: string) => Promise<DIDMetaViewModel>,
 }
-
-
 
 export const ListDID = (
     props: ListDIDPageProps
 ) => {
     const searchParams = useSearchParams()
-    const pattern = searchParams?.get('pattern')
+    const firstPattern = searchParams?.get('pattern')
 
-    const meta = props.didMetaQueryResponse
-    const [didSearchQuery, setDidSearchQuery] = useState<string>(pattern ?? "")
-    const [didTypeAllowed, setDidTypeAllowed] = useState<DIDType>(DIDType.DATASET) // [container, dataset, file]
+    const tableRef = useRef<AgGridReact>(null);
 
-    // selection
-    const [selectedDID, setSelectedDID] = useState<string | null>(null) // scope:name taken from table
-    const [selection, setSelection] = useState<DIDViewModel[]>([]) // list of objects from table
+    const [meta, setMeta] = useState<DIDMetaViewModel>({status: "pending"} as DIDMetaViewModel)
+    const [pattern, setPattern] = useState<string | null>(firstPattern ?? null);
+    const [type, setType] = useState<DIDType>(DIDType.DATASET);
+
+    const [selected, setSelected] = useState<DIDViewModel | null>(null);
+
+    const getMeta = async () => {
+        // TODO: handle multiple ongoing requests for metadata
+        const newMeta = await props.metaQuery(selected!.scope, selected!.name);
+        setMeta(newMeta);
+    }
+
     useEffect(() => {
-        if (selection.length === 1) {
-            setSelectedDID(selection[0].scope + ":" + selection[0].name)
-            props.didMetaQuery(selection[0].scope, selection[0].name)
+        if (selected !== null) {
+            getMeta();
         }
-        else {
-            setSelectedDID(null)
+    }, [selected])
+
+    const onData = (data: DIDViewModel) => {
+        tableRef.current?.api.applyTransactionAsync({add: [data]});
+    }
+
+    const startStreaming = () => {
+        if (tableRef.current?.api) {
+            const api = tableRef.current!.api;
+            api.setGridOption('rowData', []);
         }
-    }, [selection])
+
+        const url = '/api/feature/list-dids?' + new URLSearchParams({
+            'query': pattern!,
+            'type': type
+        });
+        props.streamingHook.start({url, onData});
+    };
+
+    useEffect(() => {
+        if (pattern === null) return;
+
+        startStreaming();
+    }, []);
+
+    const onSearch = (event: any) => {
+        event.preventDefault();
+        // TODO: display a warning message
+        if (pattern === null || pattern === '') return;
+        // TODO: possibly check for semicolon on the client side as well
+
+        if (props.streamingHook.status !== StreamingStatus.RUNNING) {
+            startStreaming();
+        } else {
+            // TODO: display an error message
+        }
+    }
+
+    const onSelectionChanged = (event: SelectionChangedEvent) => {
+        const selectedRows = event.api.getSelectedRows();
+        if (selectedRows.length === 1) {
+            setSelected(selectedRows[0] as DIDViewModel);
+        } else {
+            setSelected(null);
+        }
+    };
 
     return (
         <div
             className={twMerge(
-                "flex flex-col space-y-2 w-full"
+                "flex flex-col space-y-2 w-full grow"
             )}
         >
             <Heading
@@ -73,26 +117,19 @@ export const ListDID = (
                     </label>
                     <div className='grow'>
                         <TextInput
-                            onBlur={(event: any) => { setDidSearchQuery(event.target.value) }}
-                            onEnterkey={async (e: any) => {
-                                e.preventDefault()
-                                await props.didQuery(e.target.value, didTypeAllowed)
-                                setDidSearchQuery(e.target.value)
-                                props.comdom.start()
+                            onChange={(event) => {
+                                setPattern(event.target.value);
                             }}
+                            onEnterkey={onSearch}
                             id="did-search-pattern"
-                            defaultValue={didSearchQuery}
+                            defaultValue={firstPattern ?? ''}
                         />
                     </div>
                     <div className="w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0">
                         <Button
                             type="button"
                             label="Search"
-                            onClick={async (e: any) => {
-                                e.preventDefault()
-                                await props.didQuery(didSearchQuery, didTypeAllowed)
-                                props.comdom.start()
-                            }}
+                            onClick={onSearch}
                             id="did-button-search"
                         />
                     </div>
@@ -111,27 +148,34 @@ export const ListDID = (
                         id="query-for-didtype-form"
                         aria-label="Select DID Types to Query"
                     >
-                        <label className={twMerge("mr-2 text-text-1000 dark:text-text-0")} htmlFor="query-for-didtype-form">Query for DID Types:</label>
+                        <label className={twMerge("mr-2 text-text-1000 dark:text-text-0")}
+                               htmlFor="query-for-didtype-form">Query for DID Types:</label>
                         <Checkbox
                             label="Container"
                             type="radio"
                             name="query-for-didtype-form"
-                            onChange={(e: any) => {setDidTypeAllowed(e.target.id as DIDType)}}
+                            onChange={(e: any) => {
+                                setType(e.target.id as DIDType)
+                            }}
                             id={DIDType.CONTAINER}
                         />
                         <Checkbox
                             label="Dataset"
                             type="radio"
                             name="query-for-didtype-form"
-                            onChange={(e: any) => {setDidTypeAllowed(e.target.id as DIDType)}}
-                            checked={didTypeAllowed === DIDType.DATASET} // default to dataset
+                            onChange={(e: any) => {
+                                setType(e.target.id as DIDType)
+                            }}
+                            checked={type === DIDType.DATASET} // default to dataset
                             id={DIDType.DATASET}
                         />
                         <Checkbox
                             label="File"
                             type="radio"
                             name="query-for-didtype-form"
-                            onChange={(e: any) => {setDidTypeAllowed(e.target.id as DIDType)}}
+                            onChange={(e: any) => {
+                                setType(e.target.id as DIDType)
+                            }}
                             id={DIDType.FILE}
                         />
                     </form>
@@ -140,21 +184,21 @@ export const ListDID = (
             <Body
                 className={twMerge(
                     "grid grid-rows-2 gap-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:gap-y-0 lg:gap-x-2",
+                    "grow"
                 )}
             >
                 <div
                     className={twMerge(
                         "bg-neutral-0 dark:bg-neutral-900",
                         "min-w-0",
-                        "lg:col-span-2"
+                        "lg:col-span-2",
+                        "flex flex-col"
                     )}
                 >
                     <ListDIDTable
-                        comdom={props.comdom}
-                        selectionFunc={(data: DIDViewModel[]) => {
-                            // pass data from child (table) into the component state
-                            setSelection(data)
-                        }}
+                        streamingHook={props.streamingHook}
+                        tableRef={tableRef}
+                        onSelectionChanged={onSelectionChanged}
                     />
                 </div>
                 <div
@@ -164,11 +208,11 @@ export const ListDID = (
                         "flex flex-col space-y-2",
                     )}
                 >
-                    <DIDMetaView data={meta} show={selectedDID ? true : false} />
+                    <DIDMetaView data={meta} show={selected !== null}/>
                     <div
                         className={twMerge(
                             "text-text-800 dark:text-text-100",
-                            !selectedDID ? "block" : "hidden",
+                            selected === null ? "block" : "hidden",
                         )}
                         aria-label="Notice: No DID selected"
                     >
@@ -176,7 +220,7 @@ export const ListDID = (
                     </div>
                     <div
                         className={twMerge(
-                            selectedDID ? "" : "hidden",
+                            selected !== null ? "" : "hidden",
                         )}
                         aria-label="Go To DID Page"
                     >
