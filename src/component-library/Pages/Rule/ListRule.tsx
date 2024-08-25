@@ -1,26 +1,26 @@
-import { twMerge } from "tailwind-merge";
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { Rule, RuleState } from "@/lib/core/entity/rucio";
-import { StreamedTable } from "../../StreamedTables/StreamedTable";
-import { Button } from "../../Button/Button";
-import { createColumnHelper } from "@tanstack/react-table";
-import { TableFilterString } from "../../StreamedTables/TableFilterString";
-import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
-import { P } from "../../Text/Content/P";
-import { DateTag } from "../../Tags/DateTag";
-import { TableSortUpDown } from "../../StreamedTables/TableSortUpDown";
-import { RuleStateTag } from "../../Tags/RuleStateTag";
-import { TableFilterDiscrete } from "../../StreamedTables/TableFilterDiscrete";
-import { HiDotsHorizontal } from "react-icons/hi";
-import { TextInput } from "../../Input/TextInput";
-import { Contenttd, Generaltable, Titleth } from "../../Helpers/Metatable";
-import { Dropdown } from "../../Input/Dropdown";
-import { DateInput } from "../../Input/DateInput";
-import { useState } from "react";
-import { Heading } from "../Helpers/Heading";
-import { Body } from "../Helpers/Body";
-import { RuleViewModel } from "@/lib/infrastructure/data/view-model/rule";
-import { HTTPRequest } from "@/lib/sdk/http";
+import {twMerge} from "tailwind-merge";
+import {UseComDOM} from "@/lib/infrastructure/hooks/useComDOM";
+import {Rule, RuleState} from "@/lib/core/entity/rucio";
+import {StreamedTable} from "../../StreamedTables/StreamedTable";
+import {Button} from "../../Button/Button";
+import {createColumnHelper} from "@tanstack/react-table";
+import {TableFilterString} from "../../StreamedTables/TableFilterString";
+import {TableInternalLink} from "../../StreamedTables/TableInternalLink";
+import {P} from "../../Text/Content/P";
+import {DateTag} from "../../Tags/DateTag";
+import {TableSortUpDown} from "../../StreamedTables/TableSortUpDown";
+import {RuleStateTag} from "../../Tags/RuleStateTag";
+import {TableFilterDiscrete} from "../../StreamedTables/TableFilterDiscrete";
+import {HiDotsHorizontal} from "react-icons/hi";
+import {TextInput} from "../../Input/TextInput";
+import {Contenttd, Generaltable, Titleth} from "../../Helpers/Metatable";
+import {Dropdown} from "../../Input/Dropdown";
+import {DateInput} from "../../Input/DateInput";
+import {useState} from "react";
+import {Heading} from "../Helpers/Heading";
+import {Body} from "../Helpers/Body";
+import {RuleViewModel} from "@/lib/infrastructure/data/view-model/rule";
+import {HTTPRequest} from "@/lib/sdk/http";
 
 type ListRuleUserDefineQuery = Partial<{
     account: string
@@ -89,7 +89,8 @@ export const ListRule = (
         }),
         columnHelper.accessor("created_at", {
             id: "created_at",
-            cell: info => <DateTag date={new Date(info.getValue())} className="flex flex-row justify-end dark:text-text-0 text-text-1000" />,
+            cell: info => <DateTag date={new Date(info.getValue())}
+                                   className="flex flex-row justify-end dark:text-text-0 text-text-1000"/>,
             header: info => {
                 return (
                     <TableSortUpDown
@@ -123,14 +124,16 @@ export const ListRule = (
         }),
         columnHelper.accessor("state", {
             id: "state",
-            cell: info => <RuleStateTag state={info.getValue()} />,
+            cell: info => <RuleStateTag state={info.getValue()}/>,
             header: info => {
                 return (
                     <TableFilterDiscrete<RuleState>
                         column={info.column}
                         name="State"
                         keys={Object.values(RuleState)}
-                        renderFunc={key => key === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <RuleStateTag state={key} tiny />}
+                        renderFunc={key => key === undefined ?
+                            <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200"/> :
+                            <RuleStateTag state={key} tiny/>}
                         stack
                     />
                 )
@@ -148,7 +151,7 @@ export const ListRule = (
                         column={info.column}
                         name="Locks OK Count"
                         className="ml-1 dark:text-text-0 text-text-1000"
-                        element={<RuleStateTag state={RuleState.OK} tiny />}
+                        element={<RuleStateTag state={RuleState.OK} tiny/>}
                         stack
                     />
                 )
@@ -166,7 +169,7 @@ export const ListRule = (
                         column={info.column}
                         name="Locks Replicating Count"
                         className="ml-1"
-                        element={<RuleStateTag state={RuleState.REPLICATING} tiny />}
+                        element={<RuleStateTag state={RuleState.REPLICATING} tiny/>}
                         stack
                     />
                 )
@@ -184,7 +187,7 @@ export const ListRule = (
                         column={info.column}
                         name="Locks Stuck Count"
                         className="ml-1"
-                        element={<RuleStateTag state={RuleState.STUCK} tiny />}
+                        element={<RuleStateTag state={RuleState.STUCK} tiny/>}
                         stack
                     />
                 )
@@ -246,7 +249,10 @@ export const ListRule = (
                                 <Titleth>Account</Titleth>
                                 <Contenttd>
                                     <TextInput
-                                        onChange={e => setUserdefinequery({ ...userdefinequery, account: e.target.value })}
+                                        onChange={e => setUserdefinequery({
+                                            ...userdefinequery,
+                                            account: e.target.value
+                                        })}
                                     />
                                 </Contenttd>
                             </tr>
@@ -254,7 +260,10 @@ export const ListRule = (
                                 <Titleth>RSE Expression</Titleth>
                                 <Contenttd>
                                     <TextInput
-                                        onChange={e => setUserdefinequery({ ...userdefinequery, rse_expression: e.target.value })}
+                                        onChange={e => setUserdefinequery({
+                                            ...userdefinequery,
+                                            rse_expression: e.target.value
+                                        })}
                                     />
                                 </Contenttd>
                             </tr>
@@ -262,7 +271,10 @@ export const ListRule = (
                                 <Titleth>Activity</Titleth>
                                 <Contenttd>
                                     <TextInput
-                                        onChange={e => setUserdefinequery({ ...userdefinequery, activity: e.target.value })}
+                                        onChange={e => setUserdefinequery({
+                                            ...userdefinequery,
+                                            activity: e.target.value
+                                        })}
                                     />
                                 </Contenttd>
                             </tr>
@@ -272,9 +284,11 @@ export const ListRule = (
                                     <Dropdown<RuleState>
                                         keys={Object.values(RuleState)}
                                         renderFunc={key => key ?
-                                            <RuleStateTag state={key} className="w-44" /> : <span>UNDEFINED</span>
+                                            <RuleStateTag state={key} className="w-44"/> : <span>UNDEFINED</span>
                                         }
-                                        handleChange={key => { setUserdefinequery({ ...userdefinequery, state: key }) }}
+                                        handleChange={key => {
+                                            setUserdefinequery({...userdefinequery, state: key})
+                                        }}
                                     />
                                 </Contenttd>
                             </tr>
@@ -290,16 +304,22 @@ export const ListRule = (
                                         )}
                                     >
                                         <div className="flex flex-row space-x-1 items-baseline">
-                                            <label className="flex-none dark:text-text-0 text-text-1000" htmlFor="from-date">From</label>
+                                            <label className="flex-none dark:text-text-0 text-text-1000"
+                                                   htmlFor="from-date">From</label>
                                             <DateInput
-                                                onchange={date => { setUserdefinequery({ ...userdefinequery, from_date: date }) }}
+                                                onchange={date => {
+                                                    setUserdefinequery({...userdefinequery, from_date: date})
+                                                }}
                                                 id="from-date"
                                             />
                                         </div>
                                         <div className="flex flex-row space-x-1 items-baseline">
-                                            <label className="flex-none dark:text-text-0 text-text-1000" htmlFor="to-date">to</label>
+                                            <label className="flex-none dark:text-text-0 text-text-1000"
+                                                   htmlFor="to-date">to</label>
                                             <DateInput
-                                                onchange={date => { setUserdefinequery({ ...userdefinequery, to_date: date }) }}
+                                                onchange={date => {
+                                                    setUserdefinequery({...userdefinequery, to_date: date})
+                                                }}
                                                 id="to-date"
                                             />
                                         </div>
@@ -311,7 +331,11 @@ export const ListRule = (
                     <Button
                         label="Search"
                         type="submit"
-                        onClick={(e: any) => {listRuleRequest}}
+                        onClick={(e: any) => {
+                            e.preventDefault();
+                            listRuleRequest()
+                        }
+                        }
                     />
                 </form>
             </Heading>
