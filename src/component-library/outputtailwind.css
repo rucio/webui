@@ -833,6 +833,10 @@ html {
   height: 2rem;
 }
 
+.h-\[800px\] {
+  height: 800px;
+}
+
 .h-auto {
   height: auto;
 }
@@ -1274,11 +1278,6 @@ html {
 .border-base-error-500 {
   --tw-border-opacity: 1;
   border-color: rgb(239 68 68 / var(--tw-border-opacity));
-}
-
-.border-base-error-600 {
-  --tw-border-opacity: 1;
-  border-color: rgb(220 38 38 / var(--tw-border-opacity));
 }
 
 .border-base-error-700 {
@@ -1920,11 +1919,6 @@ html {
 .text-base-error-500 {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
-}
-
-.text-base-error-600 {
-  --tw-text-opacity: 1;
-  color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 
 .text-base-error-700 {
