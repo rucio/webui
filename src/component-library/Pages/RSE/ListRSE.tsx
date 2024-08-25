@@ -17,7 +17,7 @@ const defaultExpression = "*";
 export const ListRSE = (props: ListRSEProps) => {
     const searchParams = useSearchParams()
     const firstExpression = searchParams?.get('expression')
-    const [expression, setExpression] = useState<string | null>(firstExpression ?? null);
+    const [expression, setExpression] = useState<string | null>(firstExpression ?? defaultExpression);
 
     const tableRef = useRef<AgGridReact>(null);
 
