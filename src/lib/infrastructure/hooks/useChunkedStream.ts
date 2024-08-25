@@ -117,7 +117,6 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
     const isStreaming = useRef(false);
     const isPaused = useRef(false);
 
-
     const start = useCallback((settings: StreamingSettings<TData>) => {
         if (isStreaming.current) {
             setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'Another request is currently running.'});
@@ -131,6 +130,9 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
         controllerRef.current = new AbortController();
         const {signal} = controllerRef.current;
 
+        let isDataReceived = false;
+        let hadFetchingError = false;
+
         const fetchStream = async () => {
             let response: Response;
 
@@ -138,11 +140,13 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
                 const finalOptions = settings.fetchOptions ? {...settings.fetchOptions, signal} : {signal}
                 response = await fetch(settings.url, finalOptions);
             } catch (e: any) {
+                hadFetchingError = true;
                 setError({type: StreamingErrorType.NETWORK_ERROR, message: e.toString()});
                 return;
             }
 
             if (!response.ok) {
+                hadFetchingError = true;
                 setError(await getResponseError(response));
                 return;
             }
@@ -158,18 +162,25 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
                     }
                 }
                 settings.onData(data);
+                if (!isDataReceived) {
+                    isDataReceived = true;
+                }
             }
         };
 
         fetchStream()
             .catch((e: any) => {
                 if (e.name !== 'AbortError') {
+                    hadFetchingError = true;
                     setError({type: StreamingErrorType.PARSING_ERROR, message: e.toString()});
                 }
             })
             .then(() => {
                 setStatus(StreamingStatus.STOPPED);
                 isStreaming.current = false;
+                if (!hadFetchingError && !isDataReceived) {
+                    setError({type: StreamingErrorType.NOT_FOUND, message: 'Received an empty response.'});
+                }
             });
     }, []);
 

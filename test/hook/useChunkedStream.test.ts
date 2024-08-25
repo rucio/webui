@@ -568,4 +568,30 @@ describe('useChunkedStream', () => {
         expect(result.current.error).not.toEqual(undefined);
         expect(result.current.error?.type).toEqual(StreamingErrorType.BAD_METHOD_CALL);
     });
+
+    it('Should set a 404 error if the response is empty', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        controller.close();
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
+
+        act(() => {
+            result.current.start(settings);
+        });
+
+        await waitForNextUpdate();
+
+        expect(onData).not.toBeCalled();
+
+        expect(result.current.error).not.toEqual(undefined);
+        expect(result.current.error?.type).toEqual(StreamingErrorType.NOT_FOUND);
+    });
 });
