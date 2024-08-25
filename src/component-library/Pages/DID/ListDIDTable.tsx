@@ -1,50 +1,30 @@
-import { twMerge } from "tailwind-merge";
-import { DIDViewModel } from "@/lib/infrastructure/data/view-model/did";
-import { createColumnHelper } from "@tanstack/react-table";
-import { TableFilterString } from "../../StreamedTables/TableFilterString";
-import { P } from "../../Text/Content/P";
-import { StreamedTable } from "../../StreamedTables/StreamedTable";
-import { useCallback } from "react";
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
+import React, {RefObject, useState} from "react";
+import {AgGridReact} from "ag-grid-react";
+import {UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
+import {StreamedTable} from "@/component-library/Table/StreamedTable";
+import {DefaultTextFilterParams} from "@/component-library/Table/FilterParameters/DefaultTextFilterParams";
+import {DIDViewModel} from "@/lib/infrastructure/data/view-model/did";
+import {SelectionChangedEvent, ValueGetterParams} from "ag-grid-community";
 
-export const ListDIDTable = (
-    props: {
-        comdom: UseComDOM<DIDViewModel>,
-        selectionFunc: (data: DIDViewModel[]) => void
-    }
-) => {
-    const tableData = props.comdom
-    const columnHelper = createColumnHelper<DIDViewModel>()
-    const tablecolumns = [
-        columnHelper.accessor(row => `${row.scope}:${row.name}`, {
-            id: "did",
-            header: info => {
-                return (
-                    <TableFilterString
-                        column={info.column}
-                        name="DID"
-                    />
-                )
+type ListDIDTableProps = {
+    tableRef: RefObject<AgGridReact>
+    streamingHook: UseChunkedStream<DIDViewModel>
+    onSelectionChanged: (event: SelectionChangedEvent) => void,
+}
+
+export const ListDIDTable = (props: ListDIDTableProps) => {
+    const [columnDefs] = useState([
+        {
+            headerName: 'Name',
+            valueGetter: (params: ValueGetterParams<DIDViewModel>) => {
+                return params.data?.scope + ':' + params.data?.name;
             },
-            cell: info => <P className="break-all">{info.getValue()}</P>
-        })
-    ]
-    const handleChange = useCallback((data: any[]) => {
-        props.selectionFunc(data)
-    }, [props])
+            flex: 4,
+            minWidth: 250,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
+        },
+    ]);
 
-    return (
-        <StreamedTable
-            tablecomdom={tableData}
-            tablecolumns={tablecolumns}
-            tablestyling={{
-                tableFooterStack: true,
-            }}
-            tableselecting={{
-                handleChange: handleChange,
-                enableRowSelection: true,
-                enableMultiRowSelection: false,
-            }}
-        />
-    );
-};
+    return <StreamedTable columnDefs={columnDefs} rowSelection="single" {...props}/>
+}
