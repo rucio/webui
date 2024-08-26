@@ -19,7 +19,6 @@ export const ListDIDTable = (props: ListDIDTableProps) => {
             valueGetter: (params: ValueGetterParams<DIDViewModel>) => {
                 return params.data?.scope + ':' + params.data?.name;
             },
-            flex: 4,
             minWidth: 250,
             filter: true,
             filterParams: DefaultTextFilterParams,
