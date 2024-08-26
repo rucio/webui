@@ -82,7 +82,7 @@ type StreamingCallback<TData> = (data: TData) => void;
 /**
  * @param url - A path to the streamed resource
  * @param fetchOptions - A set of options to configure the request
- * @param onData - A callback that accepts each resulting object
+ * @param onData - A callback that accepts each resulting object. Throws an error if the object is invalid
  */
 export type StreamingSettings<TData> = {
     url: string,
@@ -130,8 +130,9 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
         controllerRef.current = new AbortController();
         const {signal} = controllerRef.current;
 
+        // Boolean flags to determine a NOT_FOUND error
         let isDataReceived = false;
-        let hadFetchingError = false;
+        let hadFatalError = false;
 
         const fetchStream = async () => {
             let response: Response;
@@ -140,30 +141,35 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
                 const finalOptions = settings.fetchOptions ? {...settings.fetchOptions, signal} : {signal}
                 response = await fetch(settings.url, finalOptions);
             } catch (e: any) {
-                hadFetchingError = true;
+                hadFatalError = true;
                 setError({type: StreamingErrorType.NETWORK_ERROR, message: e.toString()});
                 return;
             }
 
             if (!response.ok) {
-                hadFetchingError = true;
+                hadFatalError = true;
                 setError(await getResponseError(response));
                 return;
             }
 
             const reader = response.body!.getReader();
             for await (const data of processStream<TData>(reader)) {
+                // Handle stopping
                 if (signal.aborted) {
                     return;
                 }
+                // Handle pausing
                 if (isPaused.current) {
                     while (isPaused.current) {
                         await new Promise(resolve => setTimeout(resolve, PAUSE_POLLING_INTERVAL));
                     }
                 }
-                settings.onData(data);
-                if (!isDataReceived) {
+                // Handle passing invalid data
+                try {
+                    settings.onData(data);
                     isDataReceived = true;
+                } catch (_) {
+                    // Data has been rejected
                 }
             }
         };
@@ -171,14 +177,14 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
         fetchStream()
             .catch((e: any) => {
                 if (e.name !== 'AbortError') {
-                    hadFetchingError = true;
+                    hadFatalError = true;
                     setError({type: StreamingErrorType.PARSING_ERROR, message: e.toString()});
                 }
             })
             .then(() => {
                 setStatus(StreamingStatus.STOPPED);
                 isStreaming.current = false;
-                if (!hadFetchingError && !isDataReceived) {
+                if (!hadFatalError && !isDataReceived) {
                     setError({type: StreamingErrorType.NOT_FOUND, message: 'Received an empty response.'});
                 }
             });

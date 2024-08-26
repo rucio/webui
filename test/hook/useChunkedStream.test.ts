@@ -594,4 +594,37 @@ describe('useChunkedStream', () => {
         expect(result.current.error).not.toEqual(undefined);
         expect(result.current.error?.type).toEqual(StreamingErrorType.NOT_FOUND);
     });
+
+    it('Handles data invalidation and sets a 404 status code if no data was actually received', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                body: new ReadableStream({
+                    start(controller) {
+                        // Simulate streaming data
+                        setTimeout(() => {
+                            controller.enqueue(new TextEncoder().encode('{"id":1,"name":"error"}\n'));
+                            controller.close();
+                        }, 0);
+                    },
+                }),
+            })
+        ) as jest.Mock;
+
+        let invalidatingOnData = jest.fn((data: MockViewModel) => {
+            throw Error();
+        })
+
+        const {result, waitForNextUpdate} = renderHook(() => useChunkedStream<MockViewModel>());
+
+        act(() => {
+            result.current.start({url: settings.url, onData: invalidatingOnData});
+        });
+
+        await waitForNextUpdate();
+
+        expect(invalidatingOnData).toHaveBeenCalledTimes(1);
+        expect(invalidatingOnData).toHaveBeenCalledWith({id: 1, name: 'error'});
+        expect(result.current.error?.type).toEqual(StreamingErrorType.NOT_FOUND);
+    });
 });
