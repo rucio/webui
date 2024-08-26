@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge"
 import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { DIDViewModel, FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { DIDViewModel, FileReplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 import { TableInternalLink } from "@/component-library/StreamedTables/TableInternalLink";
 
 
@@ -18,7 +18,7 @@ import { TableInternalLink } from "@/component-library/StreamedTables/TableInter
 export const PageDIDFilereplicasD = (
     props: {
         datasetComDOM: UseComDOM<DIDViewModel>, // the files in the dataset
-        replicaComDOM: UseComDOM<FilereplicaStateViewModel>, // replicas of the selected file
+        replicaComDOM: UseComDOM<FileReplicaStateViewModel>, // replicas of the selected file
         onChangeFileSelection: (scope: string, name: string) => void,
     }
 ) => {

@@ -4,14 +4,14 @@ import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
 
 import { ListFileReplicasError, ListFileReplicasRequest, ListFileReplicasResponse } from "@/lib/core/usecase-models/list-file-replicas-usecase-models";
 import { ListFileReplicasInputPort, type ListFileReplicasOutputPort } from "@/lib/core/port/primary/list-file-replicas-ports";
-import { FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { FileReplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 
 import { ListReplicasDTO } from "@/lib/core/dto/replica-dto";
 import { FileReplicaStateDTO} from "@/lib/core/dto/replica-dto";
 import type ReplicaGatewayOutputPort from "@/lib/core/port/secondary/replica-gateway-output-port";
 
 @injectable()
-export default class ListFileReplicasUseCase extends BaseSingleEndpointStreamingUseCase<AuthenticatedRequestModel<ListFileReplicasRequest>, ListFileReplicasResponse, ListFileReplicasError, ListReplicasDTO, FileReplicaStateDTO, FilereplicaStateViewModel> implements ListFileReplicasInputPort {
+export default class ListFileReplicasUseCase extends BaseSingleEndpointStreamingUseCase<AuthenticatedRequestModel<ListFileReplicasRequest>, ListFileReplicasResponse, ListFileReplicasError, ListReplicasDTO, FileReplicaStateDTO, FileReplicaStateViewModel> implements ListFileReplicasInputPort {
    
     constructor(
         protected readonly presenter: ListFileReplicasOutputPort,
