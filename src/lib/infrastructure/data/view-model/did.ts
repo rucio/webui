@@ -11,7 +11,7 @@ export interface DIDMetaViewModel extends DIDMeta, BaseViewModel {}
 export interface DIDKeyValuePairsDataViewModel extends DIDKeyValuePairsData, BaseViewModel {}
 export interface DIDRulesViewModel extends DIDRules, BaseViewModel {}
 export interface DIDDatasetReplicasViewModel extends DIDDatasetReplicas, BaseViewModel {}
-export interface FilereplicaStateViewModel extends FileReplicaState, BaseViewModel {}
+export interface FileReplicaStateViewModel extends FileReplicaState, BaseViewModel {}
 export interface FilereplicaStateDViewModel extends FileReplicaStateD, BaseViewModel {}
 
 export function generateEmptyDIDRulesViewModel(): DIDRulesViewModel {
@@ -34,7 +34,7 @@ export function generateEmptyDIDViewModel(): DIDViewModel {
     }
 }
 
-export function generateEmptyFilereplicaStateViewModel(): FilereplicaStateViewModel {
+export function generateEmptyFilereplicaStateViewModel(): FileReplicaStateViewModel {
     return {
         status: "error",
         rse: "",

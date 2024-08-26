@@ -6,7 +6,7 @@ import {
 } from "@/lib/core/usecase-models/list-file-replicas-usecase-models"
 import { ListFileReplicasControllerParameters } from "@/lib/infrastructure/controller/list-file-replicas-controller"
 import ListFileReplicasController from "@/lib/infrastructure/controller/list-file-replicas-controller"
-import { FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did"
+import { FileReplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did"
 import {
     BaseStreamableFeature,
     IOCSymbols,
@@ -28,7 +28,7 @@ export default class ListFileReplicasFeature extends BaseStreamableFeature<
     ListFileReplicasRequest,
     ListFileReplicasResponse,
     ListFileReplicasError,
-    FilereplicaStateViewModel
+    FileReplicaStateViewModel
 > {
     constructor(appContainer: Container) {
         const replicaGateway = appContainer.get<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA)

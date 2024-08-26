@@ -33,7 +33,7 @@ import {
     DIDRulesViewModel,
     DIDViewModel,
     FilereplicaStateDViewModel,
-    FilereplicaStateViewModel
+    FileReplicaStateViewModel
 } from '@/lib/infrastructure/data/view-model/did';
 import {RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel} from '@/lib/infrastructure/data/view-model/rule';
 import {ListDIDsViewModel} from '@/lib/infrastructure/data/view-model/list-did';
@@ -354,7 +354,7 @@ export function fixtureDIDRulesViewModel(): DIDRulesViewModel {
     }
 }
 
-export function fixtureFilereplicaStateViewModel(): FilereplicaStateViewModel {
+export function fixtureFilereplicaStateViewModel(): FileReplicaStateViewModel {
     return {
         ...mockBaseVM(),
         rse: createRSEName(),

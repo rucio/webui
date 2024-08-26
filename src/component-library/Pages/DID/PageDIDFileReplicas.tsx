@@ -13,17 +13,17 @@ import { StreamedTable } from "../../StreamedTables/StreamedTable";
 import { TableFilterString } from "../../StreamedTables/TableFilterString";
 import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
 import { TableInternalLink } from "../../StreamedTables/TableInternalLink";
-import { FilereplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
+import { FileReplicaStateViewModel } from "@/lib/infrastructure/data/view-model/did";
 import { TableStyling } from "@/component-library/StreamedTables/types";
 
 
 export const PageDIDFilereplicas = (
     props: {
-        comdom: UseComDOM<FilereplicaStateViewModel>,
+        comdom: UseComDOM<FileReplicaStateViewModel>,
         tablestyling?: TableStyling,
     }
 ) => {
-    const columnHelper = createColumnHelper<FilereplicaStateViewModel>()
+    const columnHelper = createColumnHelper<FileReplicaStateViewModel>()
     const tablecolumns: any[] = [
         columnHelper.accessor("rse", {
             id: "rse",
@@ -70,7 +70,7 @@ export const PageDIDFilereplicas = (
         })
     ]
     return (
-        <StreamedTable<FilereplicaStateViewModel>
+        <StreamedTable<FileReplicaStateViewModel>
             tablecomdom={props.comdom}
             tablecolumns={tablecolumns}
             tablestyling={props.tablestyling ?? {}}
