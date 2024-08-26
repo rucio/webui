@@ -21,7 +21,7 @@ const Template: StoryFn<typeof LD> = (args) => {
 export const ListDID = Template.bind({});
 ListDID.args = {
     streamingHook: mockUseChunkedStream(Array.from({length: 100}, () => fixtureDIDViewModel())),
-    metaQuery: async (): Promise<DIDMetaViewModel> => {
+    queryMeta: async (): Promise<DIDMetaViewModel> => {
         return Promise.resolve(fixtureDIDMetaViewModel());
     },
 }

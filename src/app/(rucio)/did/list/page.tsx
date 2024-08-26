@@ -11,7 +11,7 @@ export default function Page() {
     return (
         <ListDID
             streamingHook={streamingHook}
-            metaQuery={didMetaQueryBase}
+            queryMeta={didMetaQueryBase}
         />
     )
 }

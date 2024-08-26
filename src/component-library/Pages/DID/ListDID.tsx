@@ -17,7 +17,7 @@ import {SelectionChangedEvent} from "ag-grid-community";
 
 export interface ListDIDPageProps {
     streamingHook: UseChunkedStream<DIDViewModel>,
-    metaQuery: (scope: string, name: string) => Promise<DIDMetaViewModel>,
+    queryMeta: (scope: string, name: string) => Promise<DIDMetaViewModel>,
 }
 
 export const ListDID = (
@@ -28,6 +28,7 @@ export const ListDID = (
 
     const tableRef = useRef<AgGridReact>(null);
 
+    // TODO: null instead of pending
     const [meta, setMeta] = useState<DIDMetaViewModel>({status: "pending"} as DIDMetaViewModel)
     const [pattern, setPattern] = useState<string | null>(firstPattern ?? null);
     const [type, setType] = useState<DIDType>(DIDType.DATASET);
@@ -36,7 +37,7 @@ export const ListDID = (
 
     const getMeta = async () => {
         // TODO: handle multiple ongoing requests for metadata
-        const newMeta = await props.metaQuery(selected!.scope, selected!.name);
+        const newMeta = await props.queryMeta(selected!.scope, selected!.name);
         setMeta(newMeta);
     }
 
