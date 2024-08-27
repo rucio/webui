@@ -4,7 +4,7 @@ import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
 import { useEffect, useState } from "react";
 import { fixtureDIDDatasetReplicasViewModel, fixtureDIDKeyValuePairsDataViewModel, fixtureDIDMetaViewModel, fixtureDIDRulesViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
 import { HTTPRequest } from "@/lib/sdk/http";
-import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { DIDDatasetReplicasViewModel, DIDKeyValuePairsDataViewModel, DIDMetaViewModel, DIDRulesViewModel, DIDViewModel, FilereplicaStateDViewModel, FileReplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { didKeyValuePairsDataQuery, didMetaQueryBase } from '@/app/(rucio)/did/queries';
 import { Loading } from '@/component-library/Pages/Helpers/Loading';
 
@@ -25,7 +25,7 @@ export default function Page({ params }: { params: { scope: string, name: string
     const didContentsComDOM = useComDOM<DIDViewModel>(
         'page-did-contents-query', [], false, Infinity, 200, true
     )
-    const didFileReplicasComDOM = useComDOM<FilereplicaStateViewModel>(
+    const didFileReplicasComDOM = useComDOM<FileReplicaStateViewModel>(
         'page-did-filereplicas-query', [], false, Infinity, 200, true
     )
     const didFileReplicasDOnChange = (scope: string, name: string) => {
