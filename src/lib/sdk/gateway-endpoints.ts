@@ -292,8 +292,8 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
     }
 
     try {
-        const message = JSON.stringify(await response.json());
-        dto.errorMessage += ` Error Details: ${message}`;
+        const jsonResponse = await response.json();
+        dto.errorMessage = jsonResponse.ExceptionMessage;
     } catch(error) {}
 
     return dto;
