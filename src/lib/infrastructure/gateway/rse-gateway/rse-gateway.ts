@@ -36,7 +36,11 @@ export default class RSEGateway implements RSEGatewayOutputPort {
                 }
                 return listRSEsDTO
             }
+            if (errorDTO.errorCode === 400 && !errorDTO.errorMessage?.includes('syntax')) {
+                errorDTO.errorCode = 404;
+                console.log('RSEGateway: The error message indicates empty response for a valid expression. Setting status code from 400 to 404.');
+            }
             return Promise.resolve(errorDTO)
     }
-   
+
 }
