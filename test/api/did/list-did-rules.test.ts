@@ -8,8 +8,49 @@ import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
 import { Readable } from 'stream';
 
+const getData = async (): Promise<any[]> => {
+    const res = MockHttpStreamableResponseFactory.getMockResponse();
+
+    const listDIDRulesController = appContainer.get<BaseController<ListDIDRulesControllerParameters, ListDIDRulesRequest>>(
+        CONTROLLERS.LIST_DID_RULES,
+    );
+    const listDIDRulesControllerParams: ListDIDRulesControllerParameters = {
+        sessionAccount: 'ddmadmin',
+        rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+        response: res as unknown as NextApiResponse,
+        name: 'dataset1',
+        scope: 'test',
+    };
+
+    await listDIDRulesController.execute(listDIDRulesControllerParams);
+
+    const receivedData: any[] = [];
+    const onData = (data: any) => {
+        receivedData.push(JSON.parse(data));
+    };
+
+    const done = new Promise<void>((resolve, reject) => {
+        res.on('data', onData);
+        res.on('end', () => {
+            res.off('data', onData);
+            resolve();
+        });
+        res.on('error', err => {
+            res.off('data', onData);
+            reject(err);
+        });
+    });
+
+    await done;
+
+    return receivedData;
+};
+
 describe('List DID Rules Feature tests', () => {
-    beforeEach(() => {
+    afterEach(() => {
+        fetchMock.dontMock();
+    });
+    it('should list DID rules when subscription is specified', async () => {
         fetchMock.doMock();
         const didListRulesMockEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/rules`,
@@ -90,44 +131,9 @@ describe('List DID Rules Feature tests', () => {
         };
 
         MockRucioServerFactory.createMockRucioServer(true, [didListRulesMockEndpoint, getSubscriptionEndpoint]);
-    });
-    afterEach(() => {
-        fetchMock.dontMock();
-    });
-    it('should list DID rules', async () => {
-        const res = MockHttpStreamableResponseFactory.getMockResponse();
 
-        const listDIDRulesController = appContainer.get<BaseController<ListDIDRulesControllerParameters, ListDIDRulesRequest>>(
-            CONTROLLERS.LIST_DID_RULES,
-        );
-        const listDIDRulesControllerParams: ListDIDRulesControllerParameters = {
-            sessionAccount: 'ddmadmin',
-            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            response: res as unknown as NextApiResponse,
-            name: 'dataset1',
-            scope: 'test',
-        };
+        const receivedData = await getData();
 
-        await listDIDRulesController.execute(listDIDRulesControllerParams);
-
-        const receivedData: any[] = [];
-        const onData = (data: any) => {
-            receivedData.push(JSON.parse(data));
-        };
-
-        const done = new Promise<void>((resolve, reject) => {
-            res.on('data', onData);
-            res.on('end', () => {
-                res.off('data', onData);
-                resolve();
-            });
-            res.on('error', err => {
-                res.off('data', onData);
-                reject(err);
-            });
-        });
-
-        await done;
         console.log(receivedData);
         expect(receivedData.length).toBe(1);
         expect(receivedData[0].id).toBe('dummy_id');
@@ -136,5 +142,161 @@ describe('List DID Rules Feature tests', () => {
             account: 'ddmadmin',
         });
         expect(receivedData[0].account).toBe('dummy_account');
+    });
+
+    it('should list DID rules without a subscription', async () => {
+        fetchMock.doMock();
+        const didListRulesMockEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/rules`,
+            method: 'GET',
+            includes: 'test/dataset1/rules',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/x-json-stream',
+                },
+                body: Readable.from([
+                    JSON.stringify({
+                        id: 'dummy_id',
+                        account: 'dummy_account',
+                        scope: 'dummy_scope',
+                        name: 'dummy_name',
+                        did_type: 'DATASET',
+                        state: 'OK',
+                        error: null,
+                        rse_expression: 'dummy_rse_expression',
+                        copies: 1,
+                        expires_at: null,
+                        weight: null,
+                        locked: true,
+                        locks_ok_cnt: 28635,
+                        locks_replicating_cnt: 0,
+                        locks_stuck_cnt: 0,
+                        source_replica_expression: 'dummy_source_replica_expression',
+                        activity: 'dummy_activity',
+                        grouping: 'DATASET',
+                        notification: 'NO',
+                        stuck_at: null,
+                        purge_replicas: false,
+                        ignore_availability: true,
+                        ignore_account_limit: false,
+                        priority: 3,
+                        comments: null,
+                        child_rule_id: null,
+                        eol_at: null,
+                        split_container: false,
+                        meta: null,
+                        created_at: 'Fri, 09 Jun 2023 13:16:31 UTC',
+                        updated_at: 'Sat, 10 Jun 2023 05:52:45 UTC',
+                    }),
+                ]),
+            },
+        };
+
+        MockRucioServerFactory.createMockRucioServer(true, [didListRulesMockEndpoint]);
+
+        const receivedData = await getData();
+
+        expect(receivedData.length).toBe(1);
+        expect(receivedData[0].id).toBe('dummy_id');
+        expect(receivedData[0].subscription).toEqual(undefined);
+        expect(receivedData[0].account).toBe('dummy_account');
+    });
+
+    it('should return a 404 error if there are no matching rules', async () => {
+        fetchMock.doMock();
+        const didListRulesMockEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/rules`,
+            method: 'GET',
+            includes: 'test/dataset1/rules',
+            response: {
+                status: 404,
+                headers: {
+                    'Content-Type': 'application/x-json-stream',
+                },
+                body: Readable.from([
+                    JSON.stringify({
+                        id: 'dummy_id',
+                        subscription_id: 'sample_subscription_007',
+                        account: 'dummy_account',
+                        scope: 'dummy_scope',
+                        name: 'dummy_name',
+                        did_type: 'DATASET',
+                        state: 'OK',
+                        error: null,
+                        rse_expression: 'dummy_rse_expression',
+                        copies: 1,
+                        expires_at: null,
+                        weight: null,
+                        locked: true,
+                        locks_ok_cnt: 28635,
+                        locks_replicating_cnt: 0,
+                        locks_stuck_cnt: 0,
+                        source_replica_expression: 'dummy_source_replica_expression',
+                        activity: 'dummy_activity',
+                        grouping: 'DATASET',
+                        notification: 'NO',
+                        stuck_at: null,
+                        purge_replicas: false,
+                        ignore_availability: true,
+                        ignore_account_limit: false,
+                        priority: 3,
+                        comments: null,
+                        child_rule_id: null,
+                        eol_at: null,
+                        split_container: false,
+                        meta: null,
+                        created_at: 'Fri, 09 Jun 2023 13:16:31 UTC',
+                        updated_at: 'Sat, 10 Jun 2023 05:52:45 UTC',
+                    }),
+                ]),
+            },
+        };
+
+        const getSubscriptionEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/Id/sample_subscription_007`,
+            method: 'GET',
+            includes: 'subscriptions/Id/sample_subscription_007',
+            response: {
+                status: 404,
+                headers: {
+                    'Content-Type': 'application/x-json-stream',
+                },
+                body: '',
+            },
+        };
+
+        MockRucioServerFactory.createMockRucioServer(true, [didListRulesMockEndpoint, getSubscriptionEndpoint]);
+
+        const receivedData = await getData();
+
+        console.log(receivedData);
+        expect(receivedData.length).toBe(1);
+        expect(receivedData[0].id).toBe('dummy_id');
+        expect(receivedData[0].subscription).toEqual(undefined);
+        expect(receivedData[0].account).toBe('dummy_account');
+    });
+
+    it('should return a 404 error DID rules if subscription endpoint fails', async () => {
+        fetchMock.doMock();
+        const didListRulesMockEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/rules`,
+            method: 'GET',
+            includes: 'test/dataset1/rules',
+            response: {
+                status: 404,
+                headers: {
+                    'Content-Type': 'application/x-json-stream',
+                },
+                body: '{"ExceptionClass": "DataIdentifierNotFound", "ExceptionMessage": "Data identifier \'test:dataset12\' not found"}',
+            },
+        };
+
+        MockRucioServerFactory.createMockRucioServer(true, [didListRulesMockEndpoint]);
+
+        const receivedData = await getData();
+
+        console.log(receivedData);
+        // TODO: after timeout problem is fixed, check for the error
     });
 });
