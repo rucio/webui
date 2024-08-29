@@ -117,14 +117,12 @@ export abstract class BaseStreamingPostProcessingPipelineElement<
      * @returns The ResponseModel or ErrorModel returned, based on processing of the DTO.
      */
     processGatewayResponse(responseModel: TResponseModel, dto: TDTO): TResponseModel | TErrorModel {
-        if (dto.status === 'success') {
-            const data = this.transformResponseModel(responseModel, dto);
-            const status = data.status;
-            if (status === 'success') {
-                return data as TResponseModel;
-            }
-            return data as TErrorModel;
+        const data = this.transformResponseModel(responseModel, dto);
+        const status = data.status;
+        if (status === 'success') {
+            return data as TResponseModel;
         }
+
         const commonError: BaseErrorResponseModel | undefined = handleCommonGatewayErrors<TDTO>(dto);
         if (commonError) {
             return commonError as TErrorModel;
