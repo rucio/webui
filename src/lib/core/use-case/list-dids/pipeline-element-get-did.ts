@@ -86,7 +86,15 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
         };
     }
 
-    transformResponseModel(responseModel: ListDIDsResponse, dto: DIDExtendedDTO): ListDIDsResponse {
+    transformResponseModel(responseModel: ListDIDsResponse, dto: DIDExtendedDTO): ListDIDsResponse | ListDIDsError {
+        if (dto.status === 'error')
+            return {
+                status: 'error',
+                name: '',
+                message: '',
+                error: '',
+                code: 500,
+            };
         responseModel.bytes = dto.bytes;
         responseModel.length = dto.length;
         responseModel.did_type = dto.did_type;
