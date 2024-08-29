@@ -203,14 +203,14 @@ describe('List DID Rules Feature tests', () => {
         expect(receivedData[0].account).toBe('dummy_account');
     });
 
-    it('should return a 404 error if there are no matching rules', async () => {
+    it('should list DID rules if fetching its subscription fails', async () => {
         fetchMock.doMock();
         const didListRulesMockEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/rules`,
             method: 'GET',
             includes: 'test/dataset1/rules',
             response: {
-                status: 404,
+                status: 200,
                 headers: {
                     'Content-Type': 'application/x-json-stream',
                 },
