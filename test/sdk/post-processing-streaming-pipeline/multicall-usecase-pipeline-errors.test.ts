@@ -10,7 +10,7 @@ import { Readable } from 'stream';
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures';
 
 describe('Post Processing Streaming Pipeline Error Handling', () => {
-    class StupidPipelineElement extends BaseStreamingPostProcessingPipelineElement<TRequestModel, TResponseModel, BaseErrorResponseModel, TDTO> {
+    class DiscardingPipelineElement extends BaseStreamingPostProcessingPipelineElement<TRequestModel, TResponseModel, BaseErrorResponseModel, TDTO> {
         makeGatewayRequest(requestModel: { rucioAuthToken: string }, responseModel: TResponseModel): Promise<TDTO> {
             return Promise.resolve({
                 status: 'error',
@@ -24,8 +24,33 @@ describe('Post Processing Streaming Pipeline Error Handling', () => {
             throw new Error('Should not be called.');
         }
 
-        transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel {
+        transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel | BaseErrorResponseModel {
+            if (dto.status === 'error') return dto as BaseErrorResponseModel;
+            return responseModel;
+        }
+    }
+
+    class OptionalResponsePipelineElement extends BaseStreamingPostProcessingPipelineElement<
+        TRequestModel,
+        TResponseModel,
+        BaseErrorResponseModel,
+        TDTO
+    > {
+        makeGatewayRequest(requestModel: { rucioAuthToken: string }, responseModel: TResponseModel): Promise<TDTO> {
+            return Promise.resolve({
+                status: 'error',
+                errorCode: 401,
+                errorType: 'gateway_endpoint_error',
+                errorMessage: 'Failed to authenticate user',
+            } as TDTO);
+        }
+
+        handleGatewayError(error: TDTO): BaseErrorResponseModel {
             throw new Error('Should not be called.');
+        }
+
+        transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel | BaseErrorResponseModel {
+            return responseModel;
         }
     }
 
@@ -37,8 +62,10 @@ describe('Post Processing Streaming Pipeline Error Handling', () => {
         StreamDTO,
         BaseViewModel
     > {
-        constructor(response: any) {
-            const errorPipelineElement = new StupidPipelineElement();
+        constructor(
+            response: any,
+            errorPipelineElement: BaseStreamingPostProcessingPipelineElement<TRequestModel, TResponseModel, BaseErrorResponseModel, TDTO>,
+        ) {
             const validPipelineElement = new SecondPipelineElement();
             const presenter = new TestPresenter(response);
             super(presenter, [validPipelineElement, errorPipelineElement]);
@@ -93,9 +120,9 @@ describe('Post Processing Streaming Pipeline Error Handling', () => {
         }
     }
 
-    it('should stream a Error ViewModel when an error occurs in a pipeline element', async () => {
+    it('should stream a Error ViewModel when an error occurs in a pipeline element and its response is not optional', async () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse();
-        const useCase = new TestErrorInPipilineElementUseCase(res);
+        const useCase = new TestErrorInPipilineElementUseCase(res, new DiscardingPipelineElement());
         const requestModel: TRequestModel = {
             rucioAuthToken: 'does not matter',
         };
@@ -128,6 +155,44 @@ describe('Post Processing Streaming Pipeline Error Handling', () => {
             {
                 status: 'error',
                 title: 'failed: Failed to authenticate user',
+            },
+        ]);
+    });
+
+    it('should stream a success ViewModel when an error occurs in a pipeline element but its response is optional', async () => {
+        const res = MockHttpStreamableResponseFactory.getMockResponse();
+        const useCase = new TestErrorInPipilineElementUseCase(res, new OptionalResponsePipelineElement());
+        const requestModel: TRequestModel = {
+            rucioAuthToken: 'does not matter',
+        };
+
+        await useCase.execute(requestModel);
+        const receivedData: any[] = [];
+        const onData = (data: string) => {
+            receivedData.push(JSON.parse(data));
+        };
+
+        const done = new Promise<void>((resolve, reject) => {
+            res.on('data', onData);
+            res.on('end', () => {
+                res.off('data', onData);
+                resolve();
+            });
+            res.on('error', err => {
+                res.off('data', onData);
+                reject(err);
+            });
+        });
+
+        await done;
+        expect(receivedData).toEqual([
+            {
+                status: 'success',
+                title: 'success: root_element_1pipeline element 2 transformed',
+            },
+            {
+                status: 'success',
+                title: 'success: root_element_2pipeline element 2 transformed',
             },
         ]);
     });
