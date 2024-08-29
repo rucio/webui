@@ -22,6 +22,7 @@ export const ListRSE = (props: ListRSEProps) => {
     const tableRef = useRef<AgGridReact>(null);
 
     const onData = (data: RSEViewModel[]) => {
+        console.log(data);
         tableRef.current?.api.applyTransactionAsync({add: data});
     }
 
@@ -35,11 +36,11 @@ export const ListRSE = (props: ListRSEProps) => {
         props.streamingHook.start({url, onData});
     };
 
-    useEffect(() => {
+    const onGridReady = () => {
         if (expression === null) return;
 
         startStreaming();
-    }, []);
+    }
 
     const updateExpression = (value: string) => {
         setExpression(value !== '' ? value : defaultExpression);
@@ -111,7 +112,7 @@ export const ListRSE = (props: ListRSEProps) => {
                     }
                 </form>
             </Heading>
-            <ListRSETable tableRef={tableRef} streamingHook={props.streamingHook}/>
+            <ListRSETable tableRef={tableRef} streamingHook={props.streamingHook} onGridReady={onGridReady}/>
         </div>
     );
 };
