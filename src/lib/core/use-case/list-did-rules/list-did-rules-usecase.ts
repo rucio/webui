@@ -33,16 +33,6 @@ class ListDIDRulesUseCase
     }
 
     validateFinalResponseModel(responseModel: ListDIDRulesResponse): { isValid: boolean; errorModel?: ListDIDRulesError | undefined } {
-        if (!responseModel.subscription_name || !responseModel.subscription_account) {
-            return {
-                isValid: false,
-                errorModel: {
-                    status: 'error',
-                    message: 'Subscription details not found',
-                } as ListDIDRulesError,
-            };
-        }
-
         return {
             isValid: true,
         };
