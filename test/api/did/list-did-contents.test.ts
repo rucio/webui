@@ -10,7 +10,10 @@ import { ListDIDContentsControllerParameters } from '@/lib/infrastructure/contro
 import { ListDIDContentsRequest } from '@/lib/core/usecase-models/list-did-contents-usecase-models';
 
 describe('List DID Contents Feature tests', () => {
-    beforeEach(() => {
+    afterEach(() => {
+        fetchMock.dontMock();
+    });
+    it('should list DID contents', async () => {
         fetchMock.doMock();
         const didListContentsMockEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/dids`,
@@ -45,12 +48,7 @@ describe('List DID Contents Feature tests', () => {
         };
 
         MockRucioServerFactory.createMockRucioServer(true, [didListContentsMockEndpoint]);
-    });
 
-    afterEach(() => {
-        fetchMock.dontMock();
-    });
-    it('should list DID contents', async () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse();
 
         const listDIDContentsController = appContainer.get<BaseController<ListDIDContentsControllerParameters, ListDIDContentsRequest>>(
@@ -97,5 +95,38 @@ describe('List DID Contents Feature tests', () => {
             name: 'file2',
             did_type: DIDType.FILE,
         });
+    });
+
+    it('should return a 404 response for an unknown DID', async () => {
+        fetchMock.doMock();
+        const didListContentsMockEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/dids`,
+            method: 'GET',
+            includes: '/dataset1/dids',
+            response: {
+                status: 404,
+                headers: {
+                    'Content-Type': 'application/x-json-stream',
+                },
+                body: '',
+            },
+        };
+
+        MockRucioServerFactory.createMockRucioServer(true, [didListContentsMockEndpoint]);
+
+        const res = MockHttpStreamableResponseFactory.getMockResponse();
+
+        const listDIDContentsController = appContainer.get<BaseController<ListDIDContentsControllerParameters, ListDIDContentsRequest>>(
+            CONTROLLERS.LIST_DID_CONTENTS,
+        );
+        const listDIDContentsControllerParams: ListDIDContentsControllerParameters = {
+            response: res as unknown as NextApiResponse,
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            name: 'dataset1',
+            scope: 'test',
+        };
+
+        await listDIDContentsController.execute(listDIDContentsControllerParams);
+        expect(res.statusCode).toEqual(404);
     });
 });
