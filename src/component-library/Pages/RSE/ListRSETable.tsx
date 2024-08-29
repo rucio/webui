@@ -9,10 +9,12 @@ import {CheckboxCell, checkboxCellWrapperStyle} from "@/component-library/Table/
 import {DefaultTextFilterParams} from "@/component-library/Table/FilterParameters/DefaultTextFilterParams";
 import {DefaultBooleanFilterParams} from "@/component-library/Table/FilterParameters/DefaultBooleanFilterParams";
 import {buildDiscreteFilterParams} from "@/component-library/Table/FilterParameters/buildDiscreteFilterParams";
+import {GridReadyEvent} from "ag-grid-community";
 
 type ListRSETableProps = {
     tableRef: RefObject<AgGridReact>
     streamingHook: UseChunkedStream<RSEViewModel>
+    onGridReady: (event: GridReadyEvent) => void
 }
 
 const ClickableName = (props: { value: string }) => {
@@ -96,5 +98,5 @@ export const ListRSETable = (props: ListRSETableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} streamingHook={props.streamingHook} tableRef={props.tableRef}/>
+    return <StreamedTable columnDefs={columnDefs} {...props}/>
 }

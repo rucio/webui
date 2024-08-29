@@ -14,6 +14,7 @@ export interface RegularTableProps {
     noRowsOverlayComponent?: any,
     rowSelection?: 'single' | 'multiple',
     onSelectionChanged?: (event: SelectionChangedEvent) => void,
+    onGridReady?: (event: GridReadyEvent) => void,
 }
 
 export const RegularTable = (props: RegularTableProps) => {
@@ -65,6 +66,10 @@ export const RegularTable = (props: RegularTableProps) => {
     const onGridReady = (event: GridReadyEvent) => {
         setIsTableLoaded(true);
         event.api.sizeColumnsToFit(); // Ensures columns stretch to fit grid width
+
+        if (props.onGridReady) {
+            props.onGridReady(event);
+        }
     }
 
     // Resize the columns to fit the grid on changing the window dimensions

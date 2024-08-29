@@ -58,11 +58,9 @@ export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> 
 export function mockUseChunkedStream<T>(data: T[]): ReturnType<typeof useChunkedStream<T>> {
     return {
         start: (settings: StreamingSettings<T>) => {
-            data.forEach(settings.onData);
+            settings.onData(data);
         },
         stop: () => {},
-        resume: () => {},
-        pause: () => {},
         status: StreamingStatus.STOPPED,
         error: undefined
     };
