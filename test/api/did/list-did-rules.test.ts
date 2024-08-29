@@ -294,9 +294,21 @@ describe('List DID Rules Feature tests', () => {
 
         MockRucioServerFactory.createMockRucioServer(true, [didListRulesMockEndpoint]);
 
-        const receivedData = await getData();
+        const res = MockHttpStreamableResponseFactory.getMockResponse();
 
-        console.log(receivedData);
-        // TODO: after timeout problem is fixed, check for the error
+        const listDIDRulesController = appContainer.get<BaseController<ListDIDRulesControllerParameters, ListDIDRulesRequest>>(
+            CONTROLLERS.LIST_DID_RULES,
+        );
+        const listDIDRulesControllerParams: ListDIDRulesControllerParameters = {
+            sessionAccount: 'ddmadmin',
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            response: res as unknown as NextApiResponse,
+            name: 'dataset1',
+            scope: 'test',
+        };
+
+        await listDIDRulesController.execute(listDIDRulesControllerParams);
+
+        expect(res.statusCode).toEqual(404);
     });
 });
