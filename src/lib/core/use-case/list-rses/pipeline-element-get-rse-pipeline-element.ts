@@ -48,7 +48,15 @@ export default class GetRSEPipelineElement extends BaseStreamingPostProcessingPi
         return errorModel;
     }
 
-    transformResponseModel(responseModel: ListRSEsResponse, dto: RSEDetailsDTO): ListRSEsResponse {
+    transformResponseModel(responseModel: ListRSEsResponse, dto: RSEDetailsDTO): ListRSEsResponse | ListRSEsError {
+        if (dto.status === 'error') {
+            return {
+                status: 'error',
+                message: '',
+                name: '',
+                code: 500,
+            };
+        }
         responseModel.id = dto.id;
         responseModel.deterministic = dto.deterministic;
         responseModel.rse_type = dto.rse_type;
