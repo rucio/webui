@@ -105,6 +105,7 @@ export const RegularTable = (props: RegularTableProps) => {
                 suppressMovableColumns={true}
                 rowSelection={props.rowSelection}
                 onSelectionChanged={props.onSelectionChanged}
+                //asyncTransactionWaitMillis={500}
             />
         </div>
         <SimplePaginationPanel

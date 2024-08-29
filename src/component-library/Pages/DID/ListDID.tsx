@@ -47,8 +47,8 @@ export const ListDID = (
         }
     }, [selected])
 
-    const onData = (data: DIDViewModel) => {
-        tableRef.current?.api.applyTransactionAsync({add: [data]});
+    const onData = (data: DIDViewModel[]) => {
+        tableRef.current?.api.applyTransactionAsync({add: data});
     }
 
     const startStreaming = () => {

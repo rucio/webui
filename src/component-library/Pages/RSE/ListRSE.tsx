@@ -21,8 +21,8 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const tableRef = useRef<AgGridReact>(null);
 
-    const onData = (data: RSEViewModel) => {
-        tableRef.current?.api.applyTransaction({add: [data]});
+    const onData = (data: RSEViewModel[]) => {
+        tableRef.current?.api.applyTransactionAsync({add: data});
     }
 
     const startStreaming = () => {
