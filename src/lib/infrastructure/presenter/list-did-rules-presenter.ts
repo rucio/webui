@@ -34,6 +34,14 @@ export default class ListDIDRulesPresenter extends BaseStreamingPresenter<ListDI
     }
 
     streamResponseModelToViewModel(responseModel: ListDIDRulesResponse): DIDRulesViewModel {
+        let subscription = undefined;
+        if (responseModel.subscription_name && responseModel.subscription_account) {
+            subscription = {
+                name: responseModel.subscription_name,
+                account: responseModel.subscription_account
+            }
+        }
+
         const viewModel: DIDRulesViewModel = {
             status: 'success',
             id: responseModel.id,
@@ -41,10 +49,7 @@ export default class ListDIDRulesPresenter extends BaseStreamingPresenter<ListDI
             state: responseModel.state,
             account: responseModel.account,
             last_modified: responseModel.last_modified,
-            subscription: {
-                name: responseModel.subscription_name?? '',
-                account: responseModel.subscription_account?? '',
-            }
+            subscription: subscription
         }
         return viewModel;
     }

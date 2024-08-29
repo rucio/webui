@@ -202,11 +202,15 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
     async listDIDRules(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDRulesDTO> {
         try {
             const endpoint = new ListDIDRulesEndpoint(rucioAuthToken, scope, name)
-            await endpoint.fetch()
-            return {
-                status: 'success',
-                stream: endpoint,
+            const errorDTO: ListDIDDTO | undefined = await endpoint.fetch()
+            if(!errorDTO) {
+                const dto: ListDIDDTO = {
+                    status: 'success',
+                    stream: endpoint,
+                }
+                return dto
             }
+            return Promise.resolve(errorDTO)
         } catch(error) {
             const errorDTO: ListDIDRulesDTO = {
                 status: 'error',
@@ -222,11 +226,15 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
     async listDIDContents(rucioAuthToken: string, scope: string, name: string): Promise<ListDIDDTO> {
         try {
             const endpoint = new ListDIDContentsEndpoint(rucioAuthToken, scope, name)
-            await endpoint.fetch()
-            return {
-                status: 'success',
-                stream: endpoint,
+            const errorDTO: ListDIDDTO | undefined = await endpoint.fetch()
+            if(!errorDTO) {
+                const dto: ListDIDDTO = {
+                    status: 'success',
+                    stream: endpoint,
+                }
+                return dto
             }
+            return Promise.resolve(errorDTO)
         } catch(error) {
             const errorDTO: ListDIDRulesDTO = {
                 status: 'error',
