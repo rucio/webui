@@ -13,36 +13,42 @@ export const SimplePaginationPanel = (props: {
     nextPageRef: RefObject<HTMLButtonElement>,
     containerRef: RefObject<HTMLDivElement>
 }) => {
-    const enabledClasses = 'text-neutral-900 dark:text-neutral-100';
-    const disabledClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-600';
+    const enabledTextClasses = 'text-neutral-900 dark:text-neutral-100';
+    const disabledTextClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-500';
     const buttonClasses = twMerge(
         "text-xl",
-        enabledClasses,
-        disabledClasses
+        enabledTextClasses,
+        disabledTextClasses
     );
 
-    return <div ref={props.containerRef} className={twMerge(
+    return <div className={twMerge(
         "flex items-center justify-center",
-        enabledClasses,
-        "py-1",
-        "invisible"
+        enabledTextClasses,
+        "py-2 !m-0",
+        "bg-neutral-200 dark:bg-neutral-700",
+        "border border-solid",
+        "border-neutral-900 dark:border-neutral-100",
+        "border-opacity-10 dark:border-opacity-10",
+        "rounded-b-md",
     )}>
-        <button
-            disabled={true}
-            ref={props.previousPageRef}
-            className={buttonClasses}
-        >
-            <HiChevronLeft/>
-        </button>
-        <span className="px-3">
+        <div className="flex justify-center invisible" ref={props.containerRef}>
+            <button
+                disabled={true}
+                ref={props.previousPageRef}
+                className={buttonClasses}
+            >
+                <HiChevronLeft/>
+            </button>
+            <span className="px-3">
             Page <span ref={props.currentPageRef}>0</span> of <span ref={props.totalPagesRef}>0</span>
         </span>
-        <button
-            disabled={true}
-            ref={props.nextPageRef}
-            className={buttonClasses}
-        >
-            <HiChevronRight/>
-        </button>
+            <button
+                disabled={true}
+                ref={props.nextPageRef}
+                className={buttonClasses}
+            >
+                <HiChevronRight/>
+            </button>
+        </div>
     </div>
 };

@@ -6,6 +6,11 @@
 
 @import url('https://fonts.googleapis.com/css2?family=IBM%20Plex%20Sans:wght@400;500&display=swap');
 
+.ag-root-wrapper {
+	border-bottom-left-radius: 0!important;
+	border-bottom-right-radius: 0!important;
+	border-bottom: none!important;
+}
 
 :where(.ag-root-wrapper, .ag-measurement-container, .ag-apply-theme-variables, .ag-popup) {
 	--ag-background-color: var(--ag-inherited-background-color, #1E293B);
