@@ -1,0 +1,16 @@
+/*
+ * This file is a theme downloaded from the AG Grid Theme Builder for AG Grid 32.1.0.
+ *
+ * See installation docs at https://www.ag-grid.com/javascript-data-grid/applying-theme-builder-styling-grid/
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM%20Plex%20Sans:wght@400;500&display=swap');
+@import url('ag-grid-theme-rucio.css');
+
+.ag-grid-theme-rucio-dark {
+	--ag-background-color: var(--ag-inherited-background-color, #1E293B);
+	--ag-foreground-color: var(--ag-inherited-foreground-color, #F1F5F9);
+	--ag-text-color: var(--ag-inherited-text-color, var(--ag-foreground-color));
+	--ag-header-background-color: var(--ag-inherited-header-background-color, #334155);
+	--ag-header-text-color: var(--ag-inherited-header-text-color, --ag-foreground-color);
+}
