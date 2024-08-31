@@ -8,6 +8,7 @@ import {useSearchParams} from "next/navigation";
 import {StreamingStatus, UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
 import {AgGridReact} from "ag-grid-react";
 import {ListRSETable} from "@/component-library/Pages/RSE/ListRSETable";
+import {useToast} from "@/component-library/hooks/use-toast";
 
 type ListRSEProps = {
     streamingHook: UseChunkedStream<RSEViewModel>
@@ -19,10 +20,11 @@ export const ListRSE = (props: ListRSEProps) => {
     const firstExpression = searchParams?.get('expression')
     const [expression, setExpression] = useState<string | null>(firstExpression ?? defaultExpression);
 
+    const {toast} = useToast();
+
     const tableRef = useRef<AgGridReact>(null);
 
     const onData = (data: RSEViewModel[]) => {
-        console.log(data);
         tableRef.current?.api.applyTransactionAsync({add: data});
     }
 
@@ -51,7 +53,11 @@ export const ListRSE = (props: ListRSEProps) => {
         if (props.streamingHook.status !== StreamingStatus.RUNNING) {
             startStreaming();
         } else {
-            // TODO: display an error message (toast?) if there's streaming already
+            toast({
+                title: 'Oops!',
+                description: 'Please stop the streaming before trying to search again.',
+                variant: 'info',
+            });
         }
     }
 
