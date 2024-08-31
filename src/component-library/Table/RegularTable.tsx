@@ -6,7 +6,9 @@ import {ColDef, ColGroupDef} from "ag-grid-community/dist/types/core/entities/co
 import {NoDataYetOverlay} from "@/component-library/Table/Overlays/NoDataYetOverlay";
 import {GridReadyEvent, SelectionChangedEvent} from "ag-grid-community";
 import {SimplePaginationPanel} from "@/component-library/Table/PaginationPanels/SimplePaginationPanel";
-import '@/component-library/ag-grid-theme.css';
+import useDarkMode from "@/lib/infrastructure/hooks/useDarkMode";
+import '@/component-library/ag-grid-theme-rucio-dark.css';
+import '@/component-library/ag-grid-theme-rucio-light.css';
 
 export interface RegularTableProps {
     tableRef: RefObject<AgGridReact>,
@@ -87,11 +89,13 @@ export const RegularTable = (props: RegularTableProps) => {
         };
     }, [props.tableRef]);
 
+    const isDarkMode = useDarkMode();
+
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
     return <>
         <div className={twMerge(
-            "ag-theme-custom",
+            isDarkMode ? "ag-grid-theme-rucio-dark" : "ag-grid-theme-rucio-light",
             "grid grow w-full",
             "relative"
         )}>
