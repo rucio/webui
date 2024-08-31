@@ -1,16 +1,18 @@
-import {twMerge} from "tailwind-merge";
 import React from "react";
+import {twMerge} from "tailwind-merge";
 
 export const BadgeCell = (props: { value: string, colorClass: string }) => {
-    return <div className={twMerge(
-        "text-neutral-100",
-        "rounded",
+    const badgeClasses = twMerge(
         "inline grow",
+        "rounded",
         "px-3 m-2",
         "content-center text-center",
-        "bg-opacity-50",
-        props.colorClass
-    )}>
+        "text-neutral-900 dark:text-neutral-100",
+        props.colorClass,
+        "bg-opacity-50"
+    );
+
+    return <div className={badgeClasses}>
         {props.value}
     </div>;
 }

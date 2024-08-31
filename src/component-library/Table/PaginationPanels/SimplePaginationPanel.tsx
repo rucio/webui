@@ -13,16 +13,24 @@ export const SimplePaginationPanel = (props: {
     nextPageRef: RefObject<HTMLButtonElement>,
     containerRef: RefObject<HTMLDivElement>
 }) => {
+    const enabledClasses = 'text-neutral-900 dark:text-neutral-100';
+    const disabledClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-600';
+    const buttonClasses = twMerge(
+        "text-xl",
+        enabledClasses,
+        disabledClasses
+    );
+
     return <div ref={props.containerRef} className={twMerge(
         "flex items-center justify-center",
-        "text-neutral-100",
+        enabledClasses,
         "py-1",
         "invisible"
     )}>
         <button
             disabled={true}
             ref={props.previousPageRef}
-            className="disabled:text-neutral-600 text-neutral-100 text-xl"
+            className={buttonClasses}
         >
             <HiChevronLeft/>
         </button>
@@ -32,7 +40,7 @@ export const SimplePaginationPanel = (props: {
         <button
             disabled={true}
             ref={props.nextPageRef}
-            className="disabled:text-neutral-600 text-neutral-100 text-xl"
+            className={buttonClasses}
         >
             <HiChevronRight/>
         </button>

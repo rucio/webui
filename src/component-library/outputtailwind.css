@@ -1355,11 +1355,6 @@ html {
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
 }
 
-.border-neutral-100 {
-  --tw-border-opacity: 1;
-  border-color: rgb(241 245 249 / var(--tw-border-opacity));
-}
-
 .border-neutral-300 {
   --tw-border-opacity: 1;
   border-color: rgb(203 213 225 / var(--tw-border-opacity));
@@ -1373,6 +1368,11 @@ html {
 .border-neutral-700 {
   --tw-border-opacity: 1;
   border-color: rgb(51 65 85 / var(--tw-border-opacity));
+}
+
+.border-neutral-800 {
+  --tw-border-opacity: 1;
+  border-color: rgb(30 41 59 / var(--tw-border-opacity));
 }
 
 .border-opacity-20 {
@@ -1692,8 +1692,8 @@ html {
   --tw-bg-opacity: 0.5;
 }
 
-.bg-opacity-60 {
-  --tw-bg-opacity: 0.6;
+.bg-opacity-80 {
+  --tw-bg-opacity: 0.8;
 }
 
 .p-0 {
@@ -2039,6 +2039,11 @@ html {
 .text-neutral-100 {
   --tw-text-opacity: 1;
   color: rgb(241 245 249 / var(--tw-text-opacity));
+}
+
+.text-neutral-900 {
+  --tw-text-opacity: 1;
+  color: rgb(15 23 42 / var(--tw-text-opacity));
 }
 
 .text-red-500 {
@@ -2469,9 +2474,9 @@ html {
   --tw-ring-opacity: 0.5;
 }
 
-.disabled\:text-neutral-600:disabled {
+.disabled\:text-neutral-400:disabled {
   --tw-text-opacity: 1;
-  color: rgb(71 85 105 / var(--tw-text-opacity));
+  color: rgb(148 163 184 / var(--tw-text-opacity));
 }
 
 .group:focus-within .group-focus-within\:block {
@@ -2566,6 +2571,10 @@ html {
 .dark .dark\:border-neutral-400 {
   --tw-border-opacity: 1;
   border-color: rgb(148 163 184 / var(--tw-border-opacity));
+}
+
+.dark .dark\:border-opacity-20 {
+  --tw-border-opacity: 0.2;
 }
 
 .dark .dark\:bg-base-error-600 {
@@ -2732,6 +2741,10 @@ html {
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
 
+.dark .dark\:bg-opacity-60 {
+  --tw-bg-opacity: 0.6;
+}
+
 .dark .dark\:bg-clip-content {
   background-clip: content-box;
 }
@@ -2803,6 +2816,11 @@ html {
 .dark .dark\:text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+
+.dark .dark\:text-neutral-100 {
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity));
 }
 
 .dark .dark\:text-red-400 {
@@ -2973,6 +2991,11 @@ html {
 .dark .dark\:focus\:ring-yellow-900:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(113 63 18 / var(--tw-ring-opacity));
+}
+
+.dark .disabled\:dark\:text-neutral-600:disabled {
+  --tw-text-opacity: 1;
+  color: rgb(71 85 105 / var(--tw-text-opacity));
 }
 
 @media (min-width: 640px) {

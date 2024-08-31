@@ -7,7 +7,7 @@ export default {
     component: L,
 } as Meta<typeof L>;
 
-const Template: StoryFn<typeof L> = (args) => <div className="flex flex-col h-screen bg-neutral-900"><L {...args} /></div>;
+const Template: StoryFn<typeof L> = (args) => <div className="flex flex-col h-screen dark:bg-neutral-900"><L {...args} /></div>;
 
 export const ListRSE = Template.bind({});
 ListRSE.args = {
