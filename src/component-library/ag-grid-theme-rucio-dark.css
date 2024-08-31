@@ -13,4 +13,5 @@
 	--ag-text-color: var(--ag-inherited-text-color, var(--ag-foreground-color));
 	--ag-header-background-color: var(--ag-inherited-header-background-color, #334155);
 	--ag-header-text-color: var(--ag-inherited-header-text-color, --ag-foreground-color);
+	--ag-color-scheme: var(--ag-inherited-color-scheme, dark);
 }
