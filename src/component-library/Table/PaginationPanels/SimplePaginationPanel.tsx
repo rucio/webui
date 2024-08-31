@@ -1,4 +1,8 @@
-import {HiChevronLeft, HiChevronRight} from "react-icons/hi";
+import {
+    HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight,
+    HiOutlineChevronLeft,
+    HiOutlineChevronRight
+} from "react-icons/hi";
 import {RefObject} from "react";
 import {twMerge} from "tailwind-merge";
 
@@ -11,12 +15,15 @@ export const SimplePaginationPanel = (props: {
     totalPagesRef: RefObject<HTMLSpanElement>,
     previousPageRef: RefObject<HTMLButtonElement>,
     nextPageRef: RefObject<HTMLButtonElement>,
+    lastPageRef: RefObject<HTMLButtonElement>,
+    firstPageRef: RefObject<HTMLButtonElement>,
     containerRef: RefObject<HTMLDivElement>
 }) => {
     const enabledTextClasses = 'text-neutral-900 dark:text-neutral-100';
     const disabledTextClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-500';
     const buttonClasses = twMerge(
-        "text-xl",
+        "text-l",
+        "px-1",
         enabledTextClasses,
         disabledTextClasses
     );
@@ -34,20 +41,34 @@ export const SimplePaginationPanel = (props: {
         <div className="flex justify-center invisible" ref={props.containerRef}>
             <button
                 disabled={true}
+                ref={props.firstPageRef}
+                className={buttonClasses}
+            >
+                <HiOutlineChevronDoubleLeft/>
+            </button>
+            <button
+                disabled={true}
                 ref={props.previousPageRef}
                 className={buttonClasses}
             >
-                <HiChevronLeft/>
+                <HiOutlineChevronLeft/>
             </button>
             <span className="px-3">
-            Page <span ref={props.currentPageRef}>0</span> of <span ref={props.totalPagesRef}>0</span>
-        </span>
+                Page <span ref={props.currentPageRef}>0</span> of <span ref={props.totalPagesRef}>0</span>
+            </span>
             <button
                 disabled={true}
                 ref={props.nextPageRef}
                 className={buttonClasses}
             >
-                <HiChevronRight/>
+                <HiOutlineChevronRight/>
+            </button>
+            <button
+                disabled={true}
+                ref={props.lastPageRef}
+                className={buttonClasses}
+            >
+                <HiOutlineChevronDoubleRight/>
             </button>
         </div>
     </div>

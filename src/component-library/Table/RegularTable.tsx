@@ -25,6 +25,8 @@ export const RegularTable = (props: RegularTableProps) => {
     const totalPagesRef = useRef<HTMLSpanElement>(null);
     const previousPageRef = useRef<HTMLButtonElement>(null);
     const nextPageRef = useRef<HTMLButtonElement>(null);
+    const firstPageRef = useRef<HTMLButtonElement>(null);
+    const lastPageRef = useRef<HTMLButtonElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const onNextPage = () => {
@@ -41,6 +43,20 @@ export const RegularTable = (props: RegularTableProps) => {
         }
     }
 
+    const onFirstPage = () => {
+        const gridApi = props.tableRef.current!.api;
+        if (gridApi) {
+            gridApi.paginationGoToFirstPage();
+        }
+    };
+
+    const onLastPage = () => {
+        const gridApi = props.tableRef.current!.api;
+        if (gridApi) {
+            gridApi.paginationGoToLastPage();
+        }
+    };
+
     const onPaginationChanged = () => {
         const gridApi = props.tableRef.current!.api;
         // Make sure the table is loaded before updating the pagination component to avoid flickering
@@ -55,10 +71,14 @@ export const RegularTable = (props: RegularTableProps) => {
             currentPageRef.current!.textContent = currentPage.toString();
 
             previousPageRef.current!.disabled = currentPage === 1;
+            firstPageRef.current!.disabled = currentPage === 1;
             previousPageRef.current!.onclick = onPreviousPage;
+            firstPageRef.current!.onclick = onFirstPage;
 
             nextPageRef.current!.disabled = currentPage === totalPages;
+            lastPageRef.current!.disabled = currentPage === totalPages;
             nextPageRef.current!.onclick = onNextPage;
+            lastPageRef.current!.onclick = onLastPage;
         }
     };
 
@@ -123,6 +143,8 @@ export const RegularTable = (props: RegularTableProps) => {
             nextPageRef={nextPageRef}
             previousPageRef={previousPageRef}
             containerRef={containerRef}
+            firstPageRef={firstPageRef}
+            lastPageRef={lastPageRef}
         />
     </>
 }
