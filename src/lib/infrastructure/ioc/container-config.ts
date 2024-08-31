@@ -63,6 +63,7 @@ import RuleGateway from "../gateway/rule-gateway/rule-gateway";
 import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feature";
 import GetAccountInfoFeature from "./features/get-account-info-feature";
 import GetRSEUsageFeature from "@/lib/infrastructure/ioc/features/get-rse-usage-feature";
+import ListRulesFeature from "@/lib/infrastructure/ioc/features/list-rules-feature";
 
 
 /**
@@ -126,6 +127,11 @@ loadFeaturesSync(appContainer, [
 //Features: List Subscriptions
 loadFeaturesSync(appContainer, [
     new ListSubscriptionRuleStatesFeature(appContainer),
+])
+
+// Features: List Rules
+loadFeaturesSync(appContainer, [
+    new ListRulesFeature(appContainer)
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();

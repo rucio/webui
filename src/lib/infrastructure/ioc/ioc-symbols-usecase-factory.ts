@@ -30,6 +30,7 @@ const USECASE_FACTORY = {
     SWITCH_ACCOUNT: Symbol.for("Factory<SwitchAccountUseCase>"),
     USERPASS_LOGIN: Symbol.for("Factory<UserPassLoginUseCase>"),
     GET_RSE_USAGE: Symbol.for("Factory<GetRSEUsageUseCase>"),
+    LiST_RULES: Symbol.for("Factory<ListRulesUseCase>")
 }
 
 export default USECASE_FACTORY;

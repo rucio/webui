@@ -29,6 +29,7 @@ const INPUT_PORT = {
     TEST: Symbol.for("TestInputPort"),
     USERPASS_LOGIN: Symbol.for("UserPassLoginInputPort"),
     GET_RSE_USAGE: Symbol.for("GetRSEUsageInputPort"),
+    LIST_RULES: Symbol.for("ListRulesInputPort")
 }
 
 export default INPUT_PORT;
