@@ -6,5 +6,8 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  darkMode: {
+    stylePreview: true
+  }
 }
 import '../src/component-library/outputtailwind.css'

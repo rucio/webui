@@ -1,4 +1,5 @@
 module.exports = {
+    darkMode: 'selector',
     content: {
         files: ["./src/**/*.{html,js,tsx,ts}"],
         extract: {
