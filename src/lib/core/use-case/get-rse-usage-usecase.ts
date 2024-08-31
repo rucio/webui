@@ -37,8 +37,6 @@ export default class GetRSEUsageUseCase extends BaseSingleEndpointUseCase<Authen
     }
 
     processDTO(dto: RSEUsageDTO): { data: GetRSEUsageResponse | GetRSEUsageError; status: "success" | "error"; } {
-        // TODO: check if dto is error or response and populate the return model appropriately
-        // copy all fields from dto to response model except success
         const responseModel: GetRSEUsageResponse = {
             ...dto,
             status: 'success',

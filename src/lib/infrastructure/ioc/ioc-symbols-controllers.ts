@@ -30,7 +30,8 @@ const CONTROLLERS = {
     SWITCH_ACCOUNT: Symbol.for("SwitchAccountController"),
     USERPASS_LOGIN: Symbol.for("UserPassLoginController"),
     GET_RSE_USAGE: Symbol.for("GetRSEUsageController"),
-    LIST_RULES: Symbol.for("ListRulesController")
+    LIST_RULES: Symbol.for("ListRulesController"),
+    LIST_ACCOUNT_RSE_USAGE: Symbol.for("ListAccountRSEUsageController")
 }
 
 export default CONTROLLERS;

@@ -64,6 +64,7 @@ import ListAccountRSEQuotasFeature from "./features/list-account-rse-quotas-feat
 import GetAccountInfoFeature from "./features/get-account-info-feature";
 import GetRSEUsageFeature from "@/lib/infrastructure/ioc/features/get-rse-usage-feature";
 import ListRulesFeature from "@/lib/infrastructure/ioc/features/list-rules-feature";
+import ListAccountRSEUsageFeature from "@/lib/infrastructure/ioc/features/list-account-rse-usage-feature";
 
 
 /**
@@ -132,6 +133,11 @@ loadFeaturesSync(appContainer, [
 // Features: List Rules
 loadFeaturesSync(appContainer, [
     new ListRulesFeature(appContainer)
+])
+
+// Features: Dashboard
+loadFeaturesSync(appContainer, [
+    new ListAccountRSEUsageFeature(appContainer)
 ])
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
