@@ -9,6 +9,7 @@ import { Collapsible } from "../../Helpers/Collapsible"
 import { AccountDropdown } from "./AccountDropdown"
 import Link from "next/link"
 import {Searchbar} from "@/component-library/Pages/Layout/Searchbar";
+import {Toaster} from "@/component-library/ui/toaster";
 
 export interface LayoutViewModel {
     accountActive: string,
@@ -244,6 +245,7 @@ export const Layout = (
             >
                 {props.children}
             </main>
+            <Toaster/>
             <footer
                 className={twMerge(
                     "border-t",
