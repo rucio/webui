@@ -79,7 +79,7 @@ function getReplicaLockState(state: string): LockState {
             return LockState.UNKNOWN
     }
 }
-    
+
 export function convertToRuleDTO(rule: TRucioRule): RuleDTO {
     return {
         status: 'success',
@@ -129,4 +129,9 @@ export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
         rse: '',
         state: LockState.UNKNOWN,
     }
+}
+
+export type ListRulesFilter = {
+    account?: string,
+    scope?: string,
 }

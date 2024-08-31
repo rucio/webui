@@ -3,16 +3,17 @@ import { BaseStreamableDTO } from "@/lib/sdk/dto";
 import { BaseStreamableEndpoint } from "@/lib/sdk/gateway-endpoints";
 import { HTTPRequest } from "@/lib/sdk/http";
 import { Response } from "node-fetch";
-import { convertToRuleDTO, TRucioRule } from "../rule-gateway-utils";
+import {convertToRuleDTO, ListRulesFilter, TRucioRule} from "../rule-gateway-utils";
 
+const DEFAULT_PARAMETER = '*';
 
 /**
- * Endpoint for listing rules for an account
+ * Endpoint for listing rules with an optional filter
  */
 export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStreamableDTO, RuleDTO> {
     constructor(
         private readonly rucioAuthToken: string,
-        private readonly account?: string,
+        private readonly filter?: ListRulesFilter,
     ){
         super(true)
     }
@@ -20,7 +21,10 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
     async initialize(): Promise<void> {
         await super.initialize()
         const rucioHost = await this.envConfigGateway.rucioHost()
-        const params = this.account ? {'account': this.account!} : undefined;
+        const params = {
+            'account': this.filter?.account ?? DEFAULT_PARAMETER,
+            'scope': this.filter?.scope ?? DEFAULT_PARAMETER
+        }
         const endpoint = `${rucioHost}/rules?` + new URLSearchParams(params);
         const request: HTTPRequest = {
             method: 'GET',
