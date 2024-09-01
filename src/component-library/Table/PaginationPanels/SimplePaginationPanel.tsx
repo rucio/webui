@@ -19,7 +19,7 @@ export const SimplePaginationPanel = (props: {
     firstPageRef: RefObject<HTMLButtonElement>,
     containerRef: RefObject<HTMLDivElement>
 }) => {
-    const enabledTextClasses = 'text-neutral-900 dark:text-neutral-100';
+    const enabledTextClasses = 'text-neutral-800 dark:text-neutral-100';
     const disabledTextClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-500';
     const buttonClasses = twMerge(
         "text-l",
