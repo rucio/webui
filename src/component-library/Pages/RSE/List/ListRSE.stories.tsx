@@ -2,10 +2,11 @@ import { StoryFn, Meta } from '@storybook/react';
 import { fixtureRSEViewModel } from '../../../../../test/fixtures/table-fixtures';
 import { ListRSE as L } from './ListRSE';
 import { Toaster } from '@/component-library/ui/toaster';
-import { getMockStreamEndpoint } from '../../../../../test/mocks/handlers/streaming';
 import { useToast } from '@/component-library/hooks/use-toast';
 import { useEffect } from 'react';
 import { getDecoratorWithWorker } from '../../../../../test/mocks/handlers/storyDecorators';
+import {getMockStreamEndpoint} from "../../../../../test/mocks/handlers/streamingHandlers";
+import {getMockErrorEndpoint} from "../../../../../test/mocks/handlers/errorHandlers";
 
 export default {
     title: 'Components/Pages/RSE/List',
@@ -29,6 +30,7 @@ const Template: StoryFn<typeof L> = args => {
 
 // We don't want to generate several of these
 const hugeArray = Array.from({ length: 100000 }, () => fixtureRSEViewModel());
+const endpointUrl = '/api/feature/list-rses';
 
 export const InitialDataNoEndpoint = Template.bind({});
 InitialDataNoEndpoint.args = {
@@ -38,7 +40,7 @@ InitialDataNoEndpoint.args = {
 export const RegularStreaming = Template.bind({});
 RegularStreaming.decorators = [
     getDecoratorWithWorker([
-        getMockStreamEndpoint('/api/feature/list-rses', {
+        getMockStreamEndpoint(endpointUrl, {
             data: Array.from({ length: 140 }, () => fixtureRSEViewModel()),
             delay: 1,
         }),
@@ -48,7 +50,7 @@ RegularStreaming.decorators = [
 export const SlowStreaming = Template.bind({});
 SlowStreaming.decorators = [
     getDecoratorWithWorker([
-        getMockStreamEndpoint('/api/feature/list-rses', {
+        getMockStreamEndpoint(endpointUrl, {
             data: Array.from({ length: 140 }, () => fixtureRSEViewModel()),
             delay: 200,
         }),
@@ -58,7 +60,7 @@ SlowStreaming.decorators = [
 export const HugeStreaming = Template.bind({});
 HugeStreaming.decorators = [
     getDecoratorWithWorker([
-        getMockStreamEndpoint('/api/feature/list-rses', {
+        getMockStreamEndpoint(endpointUrl, {
             data: hugeArray,
             delay: 1,
         }),
@@ -68,7 +70,7 @@ HugeStreaming.decorators = [
 export const InstantStreaming = Template.bind({});
 InstantStreaming.decorators = [
     getDecoratorWithWorker([
-        getMockStreamEndpoint('/api/feature/list-rses', {
+        getMockStreamEndpoint(endpointUrl, {
             data: hugeArray,
         }),
     ]),
@@ -86,7 +88,7 @@ ValidatedExpression.args = {
 };
 ValidatedExpression.decorators = [
     getDecoratorWithWorker([
-        getMockStreamEndpoint('/api/feature/list-rses', {
+        getMockStreamEndpoint(endpointUrl, {
             data: Array.from({ length: 10 }, () => fixtureRSEViewModel()),
             isRequestValid: request => {
                 const url = new URL(request.url);
@@ -94,5 +96,15 @@ ValidatedExpression.decorators = [
                 return expression === 'test';
             },
         }),
+    ]),
+];
+
+export const NotFound = Template.bind({});
+NotFound.decorators = [
+    getDecoratorWithWorker([
+        getMockErrorEndpoint(endpointUrl, {
+            statusCode: 404,
+            message: 'No RSEs found.'
+        })
     ]),
 ];
