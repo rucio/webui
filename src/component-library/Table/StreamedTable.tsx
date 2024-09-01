@@ -9,19 +9,24 @@ export interface StreamedTableProps extends RegularTableProps {
 }
 
 export const StreamedTable = (props: StreamedTableProps) => {
-    const { toast } = useToast();
-    const { error, status } = props.streamingHook;
+    const {toast} = useToast();
+    const {error, status} = props.streamingHook;
 
     const showErrorToast = () => {
-        if (error) {
-            const isErrorFatal = error.type !== StreamingErrorType.NOT_FOUND && error.type !== StreamingErrorType.BAD_METHOD_CALL;
-            if (isErrorFatal) {
-                toast({
-                    title: 'Error',
-                    description: error.message,
-                    variant: 'error',
-                });
-            }
+        if (!error) return;
+        if (error.type === StreamingErrorType.BAD_METHOD_CALL) return;
+        if (error.type === StreamingErrorType.NOT_FOUND) {
+            toast({
+                title: 'Oops!',
+                description: error.message,
+                variant: 'info',
+            });
+        } else {
+            toast({
+                title: 'Fatal error',
+                description: error.message,
+                variant: 'error',
+            });
         }
     };
 
@@ -34,7 +39,7 @@ export const StreamedTable = (props: StreamedTableProps) => {
         showErrorToast();
     }, [error, status]);
 
-    const { noRowsOverlayComponent, ...otherProps } = props;
+    const {noRowsOverlayComponent, ...otherProps} = props;
 
     const getDefaultNoRowsElement = (gridProps: any) => {
         return <NoLoadedRowsOverlay error={error} status={status} {...gridProps} />;
