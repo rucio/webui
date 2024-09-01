@@ -5,8 +5,8 @@ import { Toaster } from '@/component-library/ui/toaster';
 import { useToast } from '@/component-library/hooks/use-toast';
 import { useEffect } from 'react';
 import { getDecoratorWithWorker } from '../../../../../test/mocks/handlers/storyDecorators';
-import {getMockStreamEndpoint} from "../../../../../test/mocks/handlers/streamingHandlers";
-import {getMockErrorEndpoint} from "../../../../../test/mocks/handlers/errorHandlers";
+import { getMockStreamEndpoint } from '../../../../../test/mocks/handlers/streamingHandlers';
+import { getMockErrorEndpoint } from '../../../../../test/mocks/handlers/errorHandlers';
 
 export default {
     title: 'Components/Pages/RSE/List',
@@ -21,7 +21,7 @@ const Template: StoryFn<typeof L> = args => {
     }, []);
 
     return (
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen dark:bg-neutral-900">
             <L {...args} />
             <Toaster />
         </div>
@@ -104,7 +104,7 @@ NotFound.decorators = [
     getDecoratorWithWorker([
         getMockErrorEndpoint(endpointUrl, {
             statusCode: 404,
-            message: 'No RSEs found.'
-        })
+            message: 'No RSEs found.',
+        }),
     ]),
 ];

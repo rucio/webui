@@ -1,19 +1,18 @@
-import {http, HttpResponse} from 'msw';
+import { http, HttpResponse } from 'msw';
 
 export interface MockErrorOptions {
-    statusCode: number,
-    message: string
+    statusCode: number;
+    message: string;
 }
 
 export const getMockErrorEndpoint = (url: string, options: MockErrorOptions) => {
-    return http.get(url, async ({request}) => {
-        const {statusCode, message} = options;
+    return http.get(url, async ({ request }) => {
+        const { statusCode, message } = options;
         return HttpResponse.json(
-            {message: message},
+            { message: message },
             {
                 status: statusCode,
             },
         );
-
     });
 };

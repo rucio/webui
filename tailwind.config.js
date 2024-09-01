@@ -180,6 +180,9 @@ module.exports = {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
             },
+            boxShadow: {
+                'brand': "0 0 0 3px color-mix(in srgb, transparent, theme('colors.brand.500') 50%)",
+            }
         },
     },
     plugins: [
