@@ -1,16 +1,16 @@
-import React, {useEffect} from 'react';
-import {RegularTable, RegularTableProps} from '@/component-library/Table/RegularTable';
-import {StreamingErrorType, StreamingStatus, UseChunkedStream} from '@/lib/infrastructure/hooks/useChunkedStream';
-import {NoLoadedRowsOverlay} from '@/component-library/Table/Overlays/NoLoadedRowsOverlay';
-import {useToast} from '@/component-library/hooks/use-toast';
+import React, { useEffect } from 'react';
+import { RegularTable, RegularTableProps } from '@/component-library/Table/RegularTable';
+import { StreamingErrorType, StreamingStatus, UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { NoLoadedRowsOverlay } from '@/component-library/Table/Overlays/NoLoadedRowsOverlay';
+import { useToast } from '@/component-library/hooks/use-toast';
 
 export interface StreamedTableProps extends RegularTableProps {
     streamingHook: UseChunkedStream<any>;
 }
 
 export const StreamedTable = (props: StreamedTableProps) => {
-    const {toast} = useToast();
-    const {error, status} = props.streamingHook;
+    const { toast } = useToast();
+    const { error, status } = props.streamingHook;
 
     const showErrorToast = () => {
         if (!error) return;
@@ -39,7 +39,7 @@ export const StreamedTable = (props: StreamedTableProps) => {
         showErrorToast();
     }, [error, status]);
 
-    const {noRowsOverlayComponent, ...otherProps} = props;
+    const { noRowsOverlayComponent, ...otherProps } = props;
 
     const getDefaultNoRowsElement = (gridProps: any) => {
         return <NoLoadedRowsOverlay error={error} status={status} {...gridProps} />;

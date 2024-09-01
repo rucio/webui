@@ -1,4 +1,3 @@
-// Define the type for the icon prop
 import { Button, ButtonProps } from '@/component-library/ui/button';
 import { cn } from '@/component-library/utils';
 import React from 'react';

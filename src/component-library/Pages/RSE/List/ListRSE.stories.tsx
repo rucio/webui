@@ -11,6 +11,9 @@ import { getMockErrorEndpoint } from '../../../../../test/mocks/handlers/errorHa
 export default {
     title: 'Components/Pages/RSE/List',
     component: L,
+    parameters: {
+        docs: { disable: true },
+    },
 } as Meta<typeof L>;
 
 const Template: StoryFn<typeof L> = args => {
@@ -76,17 +79,11 @@ InstantStreaming.decorators = [
     ]),
 ];
 
-export const InitialExpression = Template.bind({});
-InitialExpression.args = {
-    firstExpression: 'test',
-    initialData: Array.from({ length: 10 }, () => fixtureRSEViewModel()),
-};
-
-export const ValidatedExpression = Template.bind({});
-ValidatedExpression.args = {
+export const InitialValidatedExpression = Template.bind({});
+InitialValidatedExpression.args = {
     firstExpression: 'test',
 };
-ValidatedExpression.decorators = [
+InitialValidatedExpression.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(endpointUrl, {
             data: Array.from({ length: 10 }, () => fixtureRSEViewModel()),

@@ -25,10 +25,15 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const { toast, dismiss } = useToast();
 
-    const onGridReady = (event: GridReadyEvent) => {
+    const feedInitialData = async (api: GridApi<RSEViewModel>) => {
         if (props.initialData) {
-            event.api.setGridOption('rowData', props.initialData);
+            // TODO: possibly handle huge arrays
+            api.applyTransactionAsync({ add: props.initialData });
         }
+    };
+
+    const onGridReady = (event: GridReadyEvent) => {
+        feedInitialData(event.api);
         setGridApi(event.api);
     };
 
