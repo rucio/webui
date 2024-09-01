@@ -1,8 +1,9 @@
-import { StreamingError, StreamingErrorType } from '@/lib/infrastructure/hooks/useChunkedStream';
-import { LoadingSpinner } from '@/component-library/ui/loading-spinner';
+import {StreamingError, StreamingErrorType, StreamingStatus} from '@/lib/infrastructure/hooks/useChunkedStream';
+import {LoadingSpinner} from '@/component-library/ui/loading-spinner';
 import React from 'react';
+import {NoDataYetOverlay} from "@/component-library/Table/Overlays/NoDataYetOverlay";
 
-export const NoLoadedRowsOverlay = (props: { error?: StreamingError }) => {
+export const NoLoadedRowsOverlay = (props: { error?: StreamingError, status: StreamingStatus }) => {
     // TODO: add icons
     if (props.error) {
         if (props.error.type === StreamingErrorType.NOT_FOUND) {
@@ -15,5 +16,9 @@ export const NoLoadedRowsOverlay = (props: { error?: StreamingError }) => {
             );
         }
     }
-    return <LoadingSpinner />;
+    if (props.status == StreamingStatus.RUNNING) {
+        return <LoadingSpinner/>;
+    } else {
+        return <NoDataYetOverlay/>;
+    }
 };
