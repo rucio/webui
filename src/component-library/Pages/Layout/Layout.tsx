@@ -164,7 +164,7 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
 
     // images to be returned by static nextjs
     return (
-        <div className={twMerge('dark:bg-neutral-900 bg-neutral-100', 'h-full min-h-screen', 'flex flex-col')}>
+        <div className={twMerge('dark:bg-neutral-900 bg-neutral-0', 'h-full min-h-screen', 'flex flex-col')}>
             <header className={twMerge('w-full flex flex-col bg-neutral-800 space-y-2 p-2', 'md:h-16', 'z-[100]')}>
                 <nav className="w-full h-full flex justify-between items-center">
                     <span className="flex md:hidden">
