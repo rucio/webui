@@ -1,5 +1,5 @@
-import { Role } from "../entity/auth-models";
-import UserPassLoginOutputPort from "../port/primary/userpass-login-output-port";
+import { Role } from '../entity/auth-models';
+import UserPassLoginOutputPort from '../port/primary/userpass-login-output-port';
 
 /**
  * RequestModel for {@link UserPassLoginInputPort}
@@ -10,7 +10,7 @@ export type UserpassLoginRequest = {
     account: string;
     vo: string;
     redirectTo: string;
-}
+};
 
 /**
  * ResponseModel for {@link UserPassLoginOutputPort}, if login was successful
@@ -25,11 +25,11 @@ export type UserpassLoginResponse = {
     // ATLAS specific, used for country-{} account attribute in Rucio
     country?: string;
     countryRole?: Role;
-}
+};
 
 /**
  * ErrorModel for {@link UserPassLoginOutputPort}, if login was not successful
- * @property {string} type - Type of error: 
+ * @property {string} type - Type of error:
  * 'AUTH_SERVER_CONFIGURATION_ERROR':If webui's environment file is missing the configuration variable for rucio auth server
  * 'AUTH_SERVER_SIDE_ERROR': If rucio auth server returns an error
  * 'INVALID_CREDENTIALS': If the user entered invalid credentials
@@ -39,7 +39,7 @@ export type UserpassLoginResponse = {
 export type UserpassLoginError = {
     type: 'AUTH_SERVER_CONFIGURATION_ERROR' | 'AUTH_SERVER_SIDE_ERROR' | 'INVALID_CREDENTIALS' | 'UNKNOWN_ERROR';
     message: string;
-}
+};
 
 /**
  * IncompleteModel for {@link UserPassLoginOutputPort}, if account needs to be specified
@@ -47,4 +47,4 @@ export type UserpassLoginError = {
  */
 export type UserpassLoginIncomplete = {
     availableAccounts: string;
-}
+};

@@ -1,14 +1,14 @@
-import { ListSubscriptionsInputPort } from "@/lib/core/port/primary/list-subscriptions-port";
-import { ListSubscriptionsRequest } from "@/lib/core/usecase-models/list-subscriptions-usecase-models";
-import { BaseController, TAuthenticatedControllerParameters } from "@/lib/sdk/controller";
-import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { inject, injectable } from "inversify";
-import { NextApiResponse } from "next";
-import USECASE_FACTORY from "../ioc/ioc-symbols-usecase-factory";
+import { ListSubscriptionsInputPort } from '@/lib/core/port/primary/list-subscriptions-port';
+import { ListSubscriptionsRequest } from '@/lib/core/usecase-models/list-subscriptions-usecase-models';
+import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
+import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { inject, injectable } from 'inversify';
+import { NextApiResponse } from 'next';
+import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 export type ListSubscriptionsControllerParameters = TAuthenticatedControllerParameters & {
     sessionAccount: string;
-}
+};
 
 @injectable()
 class ListSubscriptionsController extends BaseController<ListSubscriptionsControllerParameters, AuthenticatedRequestModel<ListSubscriptionsRequest>> {
@@ -21,7 +21,7 @@ class ListSubscriptionsController extends BaseController<ListSubscriptionsContro
         return {
             rucioAuthToken: parameters.rucioAuthToken,
             account: parameters.sessionAccount,
-        }
+        };
     }
 }
 

@@ -1,9 +1,6 @@
-import { Type } from "@sinclair/typebox"
+import { Type } from '@sinclair/typebox';
 
-const singleOrArray = () => Type.Union([
-    Type.String(),
-    Type.Array(Type.String())
-])
+const singleOrArray = () => Type.Union([Type.String(), Type.Array(Type.String())]);
 
 export const SubscriptionFilter = Type.Partial(
     Type.Object({
@@ -15,8 +12,8 @@ export const SubscriptionFilter = Type.Partial(
         did_type: singleOrArray(),
         min_avg_file_size: Type.Number(),
         max_avg_file_size: Type.Number(),
-    })
-)
+    }),
+);
 
 export const SubscriptionReplicationRules = Type.Array(
     Type.Partial(
@@ -24,9 +21,7 @@ export const SubscriptionReplicationRules = Type.Array(
             account: Type.String(),
             copies: Type.Union([Type.Number(), Type.String()]),
             rse_expression: Type.String(),
-            grouping: Type.Union([
-                Type.Literal("ALL"), Type.Literal("DATASET"), Type.Literal("NONE")
-            ]),
+            grouping: Type.Union([Type.Literal('ALL'), Type.Literal('DATASET'), Type.Literal('NONE')]),
             weight: Type.Number(),
             lifetime: Type.Number(),
             locked: Type.Boolean(),
@@ -37,6 +32,6 @@ export const SubscriptionReplicationRules = Type.Array(
             ignore_availability: Type.Boolean(),
             comment: Type.String(),
             delay_injection: Type.Boolean(),
-        })
-    )
-)
+        }),
+    ),
+);

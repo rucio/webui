@@ -1,4 +1,4 @@
-import { DIDLong, RSEAccountUsage } from "./rucio";
+import { DIDLong, RSEAccountUsage } from './rucio';
 
 /**
  * @interface TDIDSummaryRow represents the DID Summary Row for DID Summary Table used to Create New Rules.
@@ -9,7 +9,7 @@ import { DIDLong, RSEAccountUsage } from "./rucio";
 export type TDIDSummaryRow = DIDLong & {
     copies: number;
     requested_bytes: number | 'cannot be determined as DID has not been sampled';
-}
+};
 
 /**
  * @interface TRSESummaryRow represents the RSE Summary Row for RSE Summary Table used to Create New Rules.
@@ -18,21 +18,20 @@ export type TDIDSummaryRow = DIDLong & {
  * @property total_expected_usage - The total expected usage of the account on the RSE after the rule is created
  */
 export interface TRSESummaryRow extends RSEAccountUsage {
-    bytes_remaining: number,
-    has_quota: boolean,
-    total_expected_usage: number,
+    bytes_remaining: number;
+    has_quota: boolean;
+    total_expected_usage: number;
 }
-
 
 /**
  * @interface TAccountRSEUsageAndLimit represents the remaining bytes and limit of an account.
  */
 type TAccountRSEUsageAndLimit = {
-    limit: number | undefined
-    bytesRemaining: number | undefined
-}
+    limit: number | undefined;
+    bytesRemaining: number | undefined;
+};
 
 /**
  * @interface TAccountRSEUsageAndLimits represents the remaining bytes and limit of an account on an RSE.
  */
-export type TAccountRSEUsageAndLimits = Record<string, TAccountRSEUsageAndLimit>
+export type TAccountRSEUsageAndLimits = Record<string, TAccountRSEUsageAndLimit>;

@@ -1,11 +1,11 @@
-import { injectable, inject } from "inversify";
-import { NextApiResponse } from "next";
+import { injectable, inject } from 'inversify';
+import { NextApiResponse } from 'next';
 
-import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { BaseController, TAuthenticatedControllerParameters } from "@/lib/sdk/controller";
-import { GetRSEAttributesRequest } from "@/lib/core/usecase-models/get-rse-attributes-usecase-models";
-import { GetRSEAttributesInputPort } from "@/lib/core/port/primary/get-rse-attributes-ports";
-import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factory";
+import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
+import { GetRSEAttributesRequest } from '@/lib/core/usecase-models/get-rse-attributes-usecase-models';
+import { GetRSEAttributesInputPort } from '@/lib/core/port/primary/get-rse-attributes-ports';
+import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory';
 
 export type GetRSEAttributesControllerParameters = TAuthenticatedControllerParameters & {
     rseName: string;
@@ -22,7 +22,7 @@ class GetRSEAttributesController extends BaseController<GetRSEAttributesControll
         return {
             rucioAuthToken: parameters.rucioAuthToken,
             rseName: parameters.rseName,
-        }
+        };
     }
 }
 

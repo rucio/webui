@@ -1,51 +1,52 @@
-import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { Collapsible } from '../../Helpers/Collapsible'
-import { HiChevronDown } from 'react-icons/hi'
-import { twMerge } from 'tailwind-merge'
-import { DIDTypeTag } from '../../Tags/DIDTypeTag'
-import { DIDType } from '@/lib/core/entity/rucio'
+import React, { useEffect, useState, forwardRef, useRef } from 'react';
+import { Collapsible } from '../../Helpers/Collapsible';
+import { HiChevronDown } from 'react-icons/hi';
+import { twMerge } from 'tailwind-merge';
+import { DIDTypeTag } from '../../Tags/DIDTypeTag';
+import { DIDType } from '@/lib/core/entity/rucio';
 
-export const Dropdown = forwardRef(function Dropdown
-    (
-        props: {
-            handleChange: (args: any) => void,
-            id?: string
-        },
-        outsideref?: React.ForwardedRef<HTMLDivElement>
-    ) {
-
-    const options: DIDType[] = Object.values(DIDType)
+export const Dropdown = forwardRef(function Dropdown(
+    props: {
+        handleChange: (args: any) => void;
+        id?: string;
+    },
+    outsideref?: React.ForwardedRef<HTMLDivElement>,
+) {
+    const options: DIDType[] = Object.values(DIDType);
     const nodes: React.ReactNode[] = [
         <DIDTypeTag didtype={DIDType.DATASET} neversmall key={0} className="w-full md:w-full" />,
         <DIDTypeTag didtype={DIDType.CONTAINER} neversmall key={1} className="w-full md:w-full" />,
         <DIDTypeTag didtype={DIDType.COLLECTION} neversmall key={2} className="w-full md:w-full" />,
         <DIDTypeTag didtype={DIDType.FILE} neversmall key={3} className="w-full md:w-full" />,
-    ]
+    ];
 
-    const [isActive, setActive] = useState<boolean>(false)
-    const [selectedLabel, setSelectedLabel] = useState<DIDType>(DIDType.DATASET)
+    const [isActive, setActive] = useState<boolean>(false);
+    const [selectedLabel, setSelectedLabel] = useState<DIDType>(DIDType.DATASET);
 
-    const ref = useRef<HTMLDivElement>(null)
-    const buttonRef = useRef<HTMLButtonElement>(null)
+    const ref = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
     useEffect(() => {
         const handleClickOutside = (event: any) => {
             if (!ref.current?.contains(event.target) && !buttonRef.current?.contains(event.target)) {
-                setActive(false)
+                setActive(false);
             }
-        }
-        document.addEventListener("mousedown", handleClickOutside)
-    }, [ref])
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+    }, [ref]);
 
     return (
         <div className="w-full relative">
             <button
-                onClick={() => { setActive(!isActive) }} ref={buttonRef}
+                onClick={() => {
+                    setActive(!isActive);
+                }}
+                ref={buttonRef}
                 className={twMerge(
-                    "py-1 px-3 rounded w-full",
-                    "bg-brand-500 hover:bg-brand-600 text-text-0",
-                    "cursor-pointer",
-                    "font-bold",
-                    "flex justify-center space-x-2"
+                    'py-1 px-3 rounded w-full',
+                    'bg-brand-500 hover:bg-brand-600 text-text-0',
+                    'cursor-pointer',
+                    'font-bold',
+                    'flex justify-center space-x-2',
                 )}
             >
                 <span>Group Items By</span>
@@ -66,19 +67,19 @@ export const Dropdown = forwardRef(function Dropdown
                                             setSelectedLabel(element);
                                         }}
                                         className={twMerge(
-                                            "p-1 rounded select-none cursor-pointer",
-                                            "bg-neutral-0 hover:bg-neutral-200",
-                                            "dark:bg-neutral-700 hover:dark:bg-neutral-900 dark:text-text-100"
+                                            'p-1 rounded select-none cursor-pointer',
+                                            'bg-neutral-0 hover:bg-neutral-200',
+                                            'dark:bg-neutral-700 hover:dark:bg-neutral-900 dark:text-text-100',
                                         )}
                                     >
                                         {nodes[index]}
                                     </li>
-                                )
+                                );
                             })}
                         </ol>
                     </div>
                 </div>
             </Collapsible>
         </div>
-    )
-})
+    );
+});

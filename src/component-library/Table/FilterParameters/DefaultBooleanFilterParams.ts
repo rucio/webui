@@ -1,4 +1,4 @@
-import {ITextFilterParams} from "ag-grid-community";
+import { ITextFilterParams } from 'ag-grid-community';
 
 export const DefaultBooleanFilterParams: ITextFilterParams = {
     filterOptions: [
@@ -7,14 +7,14 @@ export const DefaultBooleanFilterParams: ITextFilterParams = {
             numberOfInputs: 0,
             displayKey: 'true',
             displayName: 'True',
-            predicate: (_: any[], cellValue: any) => cellValue
+            predicate: (_: any[], cellValue: any) => cellValue,
         },
         {
             numberOfInputs: 0,
             displayKey: 'false',
             displayName: 'False',
-            predicate: (_: any[], cellValue: any) => !cellValue
-        }
+            predicate: (_: any[], cellValue: any) => !cellValue,
+        },
     ],
     buttons: ['reset'],
 };

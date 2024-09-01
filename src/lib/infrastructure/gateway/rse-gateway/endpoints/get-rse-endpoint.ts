@@ -1,23 +1,20 @@
-import { RSEDTO } from "@/lib/core/dto/rse-dto";
-import { RSEType } from "@/lib/core/entity/rucio";
-import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
-import { HTTPRequest } from "@/lib/sdk/http";
-import { Response } from "node-fetch";
+import { RSEDTO } from '@/lib/core/dto/rse-dto';
+import { RSEType } from '@/lib/core/entity/rucio';
+import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
 
 export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
-    constructor(
-        private rucioAuthToken: string,
-        private rseName: string,
-    ) {
-        super()
+    constructor(private rucioAuthToken: string, private rseName: string) {
+        super();
     }
 
     /**
      * @override
      */
     async initialize(): Promise<void> {
-        await super.initialize()
-        this.url = `${this.rucioHost}/rses/${this.rseName}`
+        await super.initialize();
+        this.url = `${this.rucioHost}/rses/${this.rseName}`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,
@@ -26,10 +23,10 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
                 'Content-Type': 'application/json',
             },
             body: null,
-            params: undefined
-        }
-        this.request = request
-        this.initialized = true
+            params: undefined,
+        };
+        this.request = request;
+        this.initialized = true;
     }
 
     /**
@@ -46,18 +43,18 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
             volatile: false,
             deterministic: false,
             staging_area: false,
-        }
+        };
 
         switch (statusCode) {
             case 404:
-                const error = await response.json()
-                dto.errorMessage = error
+                const error = await response.json();
+                dto.errorMessage = error;
                 break;
             default:
-                dto.errorMessage = 'Unknown Error'
+                dto.errorMessage = 'Unknown Error';
                 break;
         }
-        return dto
+        return dto;
     }
 
     /**
@@ -65,23 +62,23 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
      */
     createDTO(data: any): RSEDTO {
         data = data as {
-            id: string,
-            rse: string,
-            rse_type: string,
-            volatile: boolean,
-            deterministic: boolean,
-            staging_area: boolean,
-        }
+            id: string;
+            rse: string;
+            rse_type: string;
+            volatile: boolean;
+            deterministic: boolean;
+            staging_area: boolean;
+        };
 
-        switch(data.rse_type.toUpperCase()) {
-            case "DISK":
-                data.rse_type = RSEType.DISK
+        switch (data.rse_type.toUpperCase()) {
+            case 'DISK':
+                data.rse_type = RSEType.DISK;
                 break;
-            case "TAPE":
-                data.rse_type = RSEType.TAPE
+            case 'TAPE':
+                data.rse_type = RSEType.TAPE;
                 break;
             default:
-                data.rse_type = RSEType.UNKNOWN
+                data.rse_type = RSEType.UNKNOWN;
                 break;
         }
         const dto: RSEDTO = {
@@ -92,7 +89,7 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
             volatile: data.volatile,
             deterministic: data.deterministic,
             staging_area: data.staging_area,
-        }
-        return dto
+        };
+        return dto;
     }
 }

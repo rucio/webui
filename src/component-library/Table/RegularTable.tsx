@@ -1,22 +1,22 @@
-import React, {RefObject, useEffect, useRef, useState} from "react";
-import {twMerge} from "tailwind-merge";
-import {Skeleton} from "@/component-library/ui/skeleton";
-import {AgGridReact} from "ag-grid-react";
-import {ColDef, ColGroupDef} from "ag-grid-community/dist/types/core/entities/colDef";
-import {NoDataYetOverlay} from "@/component-library/Table/Overlays/NoDataYetOverlay";
-import {GridReadyEvent, SelectionChangedEvent} from "ag-grid-community";
-import {SimplePaginationPanel} from "@/component-library/Table/PaginationPanels/SimplePaginationPanel";
-import useDarkMode from "@/lib/infrastructure/hooks/useDarkMode";
+import React, { RefObject, useEffect, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { Skeleton } from '@/component-library/ui/skeleton';
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef, ColGroupDef } from 'ag-grid-community/dist/types/core/entities/colDef';
+import { NoDataYetOverlay } from '@/component-library/Table/Overlays/NoDataYetOverlay';
+import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { SimplePaginationPanel } from '@/component-library/Table/PaginationPanels/SimplePaginationPanel';
+import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
 import '@/component-library/ag-grid-theme-rucio-dark.css';
 import '@/component-library/ag-grid-theme-rucio-light.css';
 
 export interface RegularTableProps {
-    tableRef: RefObject<AgGridReact>,
-    columnDefs: (ColDef | ColGroupDef)[],
-    noRowsOverlayComponent?: any,
-    rowSelection?: 'single' | 'multiple',
-    onSelectionChanged?: (event: SelectionChangedEvent) => void,
-    onGridReady?: (event: GridReadyEvent) => void,
+    tableRef: RefObject<AgGridReact>;
+    columnDefs: (ColDef | ColGroupDef)[];
+    noRowsOverlayComponent?: any;
+    rowSelection?: 'single' | 'multiple';
+    onSelectionChanged?: (event: SelectionChangedEvent) => void;
+    onGridReady?: (event: GridReadyEvent) => void;
 }
 
 export const RegularTable = (props: RegularTableProps) => {
@@ -34,14 +34,14 @@ export const RegularTable = (props: RegularTableProps) => {
         if (gridApi) {
             gridApi.paginationGoToNextPage();
         }
-    }
+    };
 
     const onPreviousPage = () => {
         const gridApi = props.tableRef.current!.api;
         if (gridApi) {
             gridApi.paginationGoToPreviousPage();
         }
-    }
+    };
 
     const onFirstPage = () => {
         const gridApi = props.tableRef.current!.api;
@@ -92,7 +92,7 @@ export const RegularTable = (props: RegularTableProps) => {
         if (props.onGridReady) {
             props.onGridReady(event);
         }
-    }
+    };
 
     // Resize the columns to fit the grid on changing the window dimensions
     useEffect(() => {
@@ -113,38 +113,36 @@ export const RegularTable = (props: RegularTableProps) => {
 
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
-    return <>
-        <div className={twMerge(
-            isDarkMode ? "ag-grid-theme-rucio-dark" : "ag-grid-theme-rucio-light",
-            "grid grow w-full",
-            "relative"
-        )}>
-            {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full"/>}
-            <AgGridReact
-                pagination={true}
-                paginationAutoPageSize={true}
-                ref={props.tableRef}
-                loadingOverlayComponent={NoDataYetOverlay}
-                noRowsOverlayComponent={props.noRowsOverlayComponent}
-                columnDefs={props.columnDefs}
-                onGridReady={onGridReady}
-                domLayout="normal" // Ensures the grid fits within the flex container
-                suppressPaginationPanel={true}
-                onPaginationChanged={onPaginationChanged}
-                suppressMovableColumns={true}
-                rowSelection={props.rowSelection}
-                onSelectionChanged={props.onSelectionChanged}
-                //asyncTransactionWaitMillis={500}
+    return (
+        <>
+            <div className={twMerge(isDarkMode ? 'ag-grid-theme-rucio-dark' : 'ag-grid-theme-rucio-light', 'grid grow w-full', 'relative')}>
+                {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full" />}
+                <AgGridReact
+                    pagination={true}
+                    paginationAutoPageSize={true}
+                    ref={props.tableRef}
+                    loadingOverlayComponent={NoDataYetOverlay}
+                    noRowsOverlayComponent={props.noRowsOverlayComponent}
+                    columnDefs={props.columnDefs}
+                    onGridReady={onGridReady}
+                    domLayout="normal" // Ensures the grid fits within the flex container
+                    suppressPaginationPanel={true}
+                    onPaginationChanged={onPaginationChanged}
+                    suppressMovableColumns={true}
+                    rowSelection={props.rowSelection}
+                    onSelectionChanged={props.onSelectionChanged}
+                    //asyncTransactionWaitMillis={500}
+                />
+            </div>
+            <SimplePaginationPanel
+                currentPageRef={currentPageRef}
+                totalPagesRef={totalPagesRef}
+                nextPageRef={nextPageRef}
+                previousPageRef={previousPageRef}
+                containerRef={containerRef}
+                firstPageRef={firstPageRef}
+                lastPageRef={lastPageRef}
             />
-        </div>
-        <SimplePaginationPanel
-            currentPageRef={currentPageRef}
-            totalPagesRef={totalPagesRef}
-            nextPageRef={nextPageRef}
-            previousPageRef={previousPageRef}
-            containerRef={containerRef}
-            firstPageRef={firstPageRef}
-            lastPageRef={lastPageRef}
-        />
-    </>
-}
+        </>
+    );
+};

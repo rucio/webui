@@ -1,5 +1,5 @@
-import { Remote, wrap } from "comlink"
-import type { HTTPRequest } from "@/lib/sdk/http";
+import { Remote, wrap } from 'comlink';
+import type { HTTPRequest } from '@/lib/sdk/http';
 
 /**
  * @description Represents the status of the ComDOM web worker
@@ -20,7 +20,7 @@ export enum ComDOMStatus {
     PREPARING_BATCH = 'preparing_batch',
     ERROR = 'error',
     DONE = 'done',
-    UNKNOWN = "UNKNOWN"
+    UNKNOWN = 'UNKNOWN',
 }
 
 /**
@@ -28,24 +28,24 @@ export enum ComDOMStatus {
  */
 export type BatchResponse<TData> = {
     /** @description The batch id */
-    id: number
+    id: number;
     /** @description The batch of data */
-    data: TData[]
+    data: TData[];
     /** @description True if there is another batch available, false otherwise */
-    next: boolean
-}
+    next: boolean;
+};
 
 /**
  * @description Represents the ComDOM web worker
  */
 export interface ComDOM<TData> {
-    new(verbose: boolean): ComDOM<TData>
-    run: (request: HTTPRequest) => Promise<any>
-    getNextBatch: () => Promise<BatchResponse<TData> | null>
-    isDone: () => Promise<boolean>
-    isBatchAvailable: () => Promise<boolean>
-    getStatus: () => Promise<ComDOMStatus>
-    status: () => Promise<string>
+    new (verbose: boolean): ComDOM<TData>;
+    run: (request: HTTPRequest) => Promise<any>;
+    getNextBatch: () => Promise<BatchResponse<TData> | null>;
+    isDone: () => Promise<boolean>;
+    isBatchAvailable: () => Promise<boolean>;
+    getStatus: () => Promise<ComDOMStatus>;
+    status: () => Promise<string>;
 }
 
 /**
@@ -58,168 +58,165 @@ export interface IComDOMWrapper<TData> {
     /**
      * @description Initializes the ComDOM web worker
      */
-    init(): Promise<void>
+    init(): Promise<void>;
     /**
      * @description Starts the ComDOM web worker
      * @returns Promise<boolean> true if worker was successfully started, Promise is rejected otherwise
      * */
-    start: (request: HTTPRequest) => Promise<boolean>
+    start: (request: HTTPRequest) => Promise<boolean>;
     /**
      * @description Terminates the ComDOM web worker
      * @returns true if worker was successfully terminated, false otherwise
      **/
-    destroy() : boolean
+    destroy(): boolean;
     /**
      * @description Returns the next batch of data from the ComDOM web worker
      * @returns Promise<BatchResponse<TData> | null>. If the ComDOM web worker is done, it will be terminated and null will be returned.
      * If the ComDOM web worker is not done, the promise will be rejected if next batch is not yet available.
      */
-    next: () => Promise<BatchResponse<TData> | null>
+    next: () => Promise<BatchResponse<TData> | null>;
     /**
      * @description Returns the status of the ComDOM web worker
      */
-    getComDOMStatus(): Promise<ComDOMStatus>
+    getComDOMStatus(): Promise<ComDOMStatus>;
 }
-
 
 /**
  * @description This class is the implementation of the {@link IComDOMWrapper} interface
  */
 export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
-    private worker: Worker | null = null
-    private verbose: boolean
-    private wrappedComDOM: Remote<ComDOM<TData>> | null = null
-    private comDOM: Remote<ComDOM<TData>> | undefined
+    private worker: Worker | null = null;
+    private verbose: boolean;
+    private wrappedComDOM: Remote<ComDOM<TData>> | null = null;
+    private comDOM: Remote<ComDOM<TData>> | undefined;
 
     constructor(verbose: boolean = false) {
-        this.verbose = verbose
+        this.verbose = verbose;
     }
-   
+
     log(...args: any[]) {
         if (this.verbose) {
-            console.log('ComDOM Wrapper:',new Date().toTimeString() , ...args)
+            console.log('ComDOM Wrapper:', new Date().toTimeString(), ...args);
         }
     }
 
     async init() {
-        if(this.worker === null || this.wrappedComDOM === null){
-            this.worker = new Worker('/comdom.js')
-            this.wrappedComDOM = wrap<ComDOM<TData>>(this.worker)
+        if (this.worker === null || this.wrappedComDOM === null) {
+            this.worker = new Worker('/comdom.js');
+            this.wrappedComDOM = wrap<ComDOM<TData>>(this.worker);
         }
-        this.log('Initializing ComDOM')
+        this.log('Initializing ComDOM');
         try {
-            this.comDOM = await new this.wrappedComDOM(this.verbose)
+            this.comDOM = await new this.wrappedComDOM(this.verbose);
         } catch (error) {
-            this.log('Error initializing ComDOM', error)
-            
-            Promise.reject(error)
+            this.log('Error initializing ComDOM', error);
+
+            Promise.reject(error);
         }
-        this.log('ComDOM initialized')
+        this.log('ComDOM initialized');
     }
-    
+
     async start(request: HTTPRequest): Promise<boolean> {
         if (!this.comDOM || this.comDOM === undefined) {
-            this.log('ComDOM not initialized. Initializing ComDOM...')
-            await this.init()
+            this.log('ComDOM not initialized. Initializing ComDOM...');
+            await this.init();
         }
         try {
-            if(this.comDOM === undefined){
-                Promise.reject('Failed to start web worker. ComDOM worker did not initialize')
-                return Promise.resolve(false)
+            if (this.comDOM === undefined) {
+                Promise.reject('Failed to start web worker. ComDOM worker did not initialize');
+                return Promise.resolve(false);
             }
-            this.log('Starting Fetching of data via ComDOM Web Worker')
-            
-            if ( request.url instanceof URL){
-                request.url = request.url.toString()
-                if(request.params) {
-                    request.url = request.url + '?' + new URLSearchParams(request.params).toString()
+            this.log('Starting Fetching of data via ComDOM Web Worker');
+
+            if (request.url instanceof URL) {
+                request.url = request.url.toString();
+                if (request.params) {
+                    request.url = request.url + '?' + new URLSearchParams(request.params).toString();
                 }
             }
 
-            if ( request.headers instanceof Headers){
-                request.headers = Object.fromEntries(request.headers.entries())
+            if (request.headers instanceof Headers) {
+                request.headers = Object.fromEntries(request.headers.entries());
             }
-            
-            this.comDOM.run(request)
-            return Promise.resolve(true)
-        } catch (error) {
-            Promise.reject(error)
-        }
-        return Promise.resolve(false)
-    }
 
+            this.comDOM.run(request);
+            return Promise.resolve(true);
+        } catch (error) {
+            Promise.reject(error);
+        }
+        return Promise.resolve(false);
+    }
 
     destroy(): boolean {
         try {
-            this.comDOM = undefined
-            this.worker?.terminate()
-            this.worker = null
-            return true
+            this.comDOM = undefined;
+            this.worker?.terminate();
+            this.worker = null;
+            return true;
         } catch (error) {
-            console.error('Error terminating background thread', error)
-            return false
+            console.error('Error terminating background thread', error);
+            return false;
         }
     }
 
     async getComDOMStatus(): Promise<ComDOMStatus> {
         try {
-            if (this.worker === null || this.wrappedComDOM === null || this.comDOM === null || this.comDOM === undefined){
-                return Promise.resolve(ComDOMStatus.NOT_CREATED)
+            if (this.worker === null || this.wrappedComDOM === null || this.comDOM === null || this.comDOM === undefined) {
+                return Promise.resolve(ComDOMStatus.NOT_CREATED);
             }
-            const status = await this.comDOM.getStatus()
+            const status = await this.comDOM.getStatus();
             switch (status) {
                 case 'stopped':
-                    return Promise.resolve(ComDOMStatus.STOPPED)
+                    return Promise.resolve(ComDOMStatus.STOPPED);
                 case 'running':
-                    return Promise.resolve(ComDOMStatus.RUNNING)
+                    return Promise.resolve(ComDOMStatus.RUNNING);
                 case 'preparing_batch':
-                    return Promise.resolve(ComDOMStatus.PREPARING_BATCH)
+                    return Promise.resolve(ComDOMStatus.PREPARING_BATCH);
                 case 'error':
-                    return Promise.resolve(ComDOMStatus.ERROR)
+                    return Promise.resolve(ComDOMStatus.ERROR);
                 case 'done':
-                    return Promise.resolve(ComDOMStatus.DONE)
+                    return Promise.resolve(ComDOMStatus.DONE);
                 default:
-                    return Promise.resolve(ComDOMStatus.UNKNOWN)
+                    return Promise.resolve(ComDOMStatus.UNKNOWN);
             }
         } catch (error) {
-            Promise.reject(error)
+            Promise.reject(error);
         }
-        return Promise.resolve(ComDOMStatus.UNKNOWN)
+        return Promise.resolve(ComDOMStatus.UNKNOWN);
     }
 
-    
     async next(): Promise<BatchResponse<TData> | null> {
-        if(this.comDOM === undefined || this.comDOM === null){
-            return Promise.reject('ComDOM Web Worker is not initialized')
+        if (this.comDOM === undefined || this.comDOM === null) {
+            return Promise.reject('ComDOM Web Worker is not initialized');
         }
-        let isNewBatchAvailable = null
-        let comDOMStatus = null
+        let isNewBatchAvailable = null;
+        let comDOMStatus = null;
         try {
-            isNewBatchAvailable = await this.comDOM.isBatchAvailable()
+            isNewBatchAvailable = await this.comDOM.isBatchAvailable();
         } catch (error) {
-            this.log('Error getting batch availability', error)
-            return Promise.reject(error)
+            this.log('Error getting batch availability', error);
+            return Promise.reject(error);
         }
 
         try {
-             comDOMStatus = await this.getComDOMStatus()
+            comDOMStatus = await this.getComDOMStatus();
         } catch (error) {
-            this.log('Error getting ComDOM status', error)
-            return Promise.reject(error)
+            this.log('Error getting ComDOM status', error);
+            return Promise.reject(error);
         }
 
-        if(isNewBatchAvailable) {
+        if (isNewBatchAvailable) {
             if (this.comDOM === undefined) {
-                return Promise.reject('ComDOM is undefined')
+                return Promise.reject('ComDOM is undefined');
             }
-            return this.comDOM.getNextBatch()
+            return this.comDOM.getNextBatch();
         }
         if (comDOMStatus == ComDOMStatus.DONE) {
             // TODO check if this is the right way to terminate the worker
             // this.destroy()
-            return null
+            return null;
         } else {
-            return Promise.reject('No new batch available yet! Try again later.')
+            return Promise.reject('No new batch available yet! Try again later.');
         }
     }
 }

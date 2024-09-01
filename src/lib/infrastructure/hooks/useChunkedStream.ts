@@ -1,4 +1,4 @@
-import {useCallback, useState, useRef, useEffect} from "react";
+import { useCallback, useState, useRef, useEffect } from 'react';
 
 export enum StreamingErrorType {
     BAD_METHOD_CALL = 'bad_method_call',
@@ -10,10 +10,9 @@ export enum StreamingErrorType {
 }
 
 export interface StreamingError {
-    type: StreamingErrorType,
-    message: string
+    type: StreamingErrorType;
+    message: string;
 }
-
 
 export enum StreamingStatus {
     STOPPED = 'stopped',
@@ -28,18 +27,18 @@ type StreamingCallback<TData> = (data: TData[]) => void;
  * @param onData - A callback that accepts each resulting object. Throws an error if the object is invalid
  */
 export type StreamingSettings<TData> = {
-    url: string,
-    fetchOptions?: RequestInit,
-    onData: StreamingCallback<TData>,
-    updateDelay?: number,
-    maxUpdateLength?: number
-}
+    url: string;
+    fetchOptions?: RequestInit;
+    onData: StreamingCallback<TData>;
+    updateDelay?: number;
+    maxUpdateLength?: number;
+};
 
 export interface UseChunkedStream<TData> {
-    status: StreamingStatus,
-    error: StreamingError | undefined,
-    start: (options: StreamingSettings<TData>) => void,
-    stop: () => void,
+    status: StreamingStatus;
+    error: StreamingError | undefined;
+    start: (options: StreamingSettings<TData>) => void;
+    stop: () => void;
 }
 
 /**
@@ -68,7 +67,7 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
 
     const start = useCallback((settings: StreamingSettings<TData>) => {
         if (workerRef.current) {
-            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'Another request is currently running.'});
+            setError({ type: StreamingErrorType.BAD_METHOD_CALL, message: 'Another request is currently running.' });
             return;
         }
 
@@ -78,8 +77,8 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
         const worker = new Worker('/streamWorker.js');
         workerRef.current = worker;
 
-        worker.onmessage = (event) => {
-            const {type, data, error} = event.data;
+        worker.onmessage = event => {
+            const { type, data, error } = event.data;
 
             if (type === 'data') {
                 settings.onData(data);
@@ -95,7 +94,7 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
             url: settings.url,
             fetchOptions: settings.fetchOptions,
             updateDelay: settings.updateDelay,
-            maxUpdateLength: settings.maxUpdateLength
+            maxUpdateLength: settings.maxUpdateLength,
         });
     }, []);
 
@@ -105,9 +104,9 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
             workerRef.current = null;
             setStatus(StreamingStatus.STOPPED);
         } else {
-            setError({type: StreamingErrorType.BAD_METHOD_CALL, message: 'There is no active fetching.'});
+            setError({ type: StreamingErrorType.BAD_METHOD_CALL, message: 'There is no active fetching.' });
         }
     }, []);
 
-    return {stop, start, status, error};
+    return { stop, start, status, error };
 }

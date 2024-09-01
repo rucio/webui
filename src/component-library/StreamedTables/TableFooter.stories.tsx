@@ -1,16 +1,16 @@
-import { StoryFn, Meta } from "@storybook/react";
-import { Column, Row, Table, TableState } from "@tanstack/react-table";
-import { FetchStatus } from '@tanstack/react-query'
-import { TableFooter as T } from "./TableFooter";
-import { UseComDOM } from "@/lib/infrastructure/hooks/useComDOM";
-import { mockUseComDOM } from "test/fixtures/table-fixtures";
+import { StoryFn, Meta } from '@storybook/react';
+import { Column, Row, Table, TableState } from '@tanstack/react-table';
+import { FetchStatus } from '@tanstack/react-query';
+import { TableFooter as T } from './TableFooter';
+import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
+import { mockUseComDOM } from 'test/fixtures/table-fixtures';
 
 export default {
     title: 'Components/StreamedTables',
     component: T,
 } as Meta<typeof T>;
 
-const Template: StoryFn<typeof T> = (args) => <T {...args} />;
+const Template: StoryFn<typeof T> = args => <T {...args} />;
 
 export const TableFooter = Template.bind({});
 TableFooter.args = {
@@ -18,26 +18,26 @@ TableFooter.args = {
         getVisibleLeafColumns: () => [{} as Column<any, any>],
         getSelectedRowModel: () => {
             return {
-                flatRows: [{} as Row<any>]
-            }
+                flatRows: [{} as Row<any>],
+            };
         },
-        setPageIndex: (num: number) => { },
+        setPageIndex: (num: number) => {},
         getCanPreviousPage: () => false,
-        previousPage: () => { },
+        previousPage: () => {},
         getPageCount: () => 1,
-        nextPage: () => { },
+        nextPage: () => {},
         getCanNextPage: () => false,
         getState: () => {
             return {
                 pagination: {
-                    pageIndex: 0
-                }
-            } as TableState
+                    pageIndex: 0,
+                },
+            } as TableState;
         },
     } as Table<any>,
     comdom: mockUseComDOM([]),
     breakout: {
         breakoutVisibility: true,
-        keys: {}
-    }
+        keys: {},
+    },
 };

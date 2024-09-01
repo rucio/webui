@@ -1,4 +1,4 @@
-import {ITextFilterParams} from "ag-grid-community";
+import { ITextFilterParams } from 'ag-grid-community';
 
 export const DefaultTextFilterParams: ITextFilterParams = {
     filterOptions: ['contains'],

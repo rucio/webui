@@ -1,37 +1,35 @@
-import React, {RefObject, useState} from "react";
-import {AgGridReact} from "ag-grid-react";
-import {UseChunkedStream} from "@/lib/infrastructure/hooks/useChunkedStream";
-import {RSEViewModel} from "@/lib/infrastructure/data/view-model/rse";
-import {StreamedTable} from "@/component-library/Table/StreamedTable";
-import {ClickableCell} from "@/component-library/Table/Cells/ClickableCell";
-import {BadgeCell, badgeCellWrapperStyle} from "@/component-library/Table/Cells/BadgeCell";
-import {CheckboxCell, checkboxCellWrapperStyle} from "@/component-library/Table/Cells/CheckboxCell";
-import {DefaultTextFilterParams} from "@/component-library/Table/FilterParameters/DefaultTextFilterParams";
-import {DefaultBooleanFilterParams} from "@/component-library/Table/FilterParameters/DefaultBooleanFilterParams";
-import {buildDiscreteFilterParams} from "@/component-library/Table/FilterParameters/buildDiscreteFilterParams";
-import {GridReadyEvent} from "ag-grid-community";
+import React, { RefObject, useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { StreamedTable } from '@/component-library/Table/StreamedTable';
+import { ClickableCell } from '@/component-library/Table/Cells/ClickableCell';
+import { BadgeCell, badgeCellWrapperStyle } from '@/component-library/Table/Cells/BadgeCell';
+import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/Table/Cells/CheckboxCell';
+import { DefaultTextFilterParams } from '@/component-library/Table/FilterParameters/DefaultTextFilterParams';
+import { DefaultBooleanFilterParams } from '@/component-library/Table/FilterParameters/DefaultBooleanFilterParams';
+import { buildDiscreteFilterParams } from '@/component-library/Table/FilterParameters/buildDiscreteFilterParams';
+import { GridReadyEvent } from 'ag-grid-community';
 
 type ListRSETableProps = {
-    tableRef: RefObject<AgGridReact>
-    streamingHook: UseChunkedStream<RSEViewModel>
-    onGridReady: (event: GridReadyEvent) => void
-}
+    tableRef: RefObject<AgGridReact>;
+    streamingHook: UseChunkedStream<RSEViewModel>;
+    onGridReady: (event: GridReadyEvent) => void;
+};
 
 const ClickableName = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>
-        {props.value}
-    </ClickableCell>
+    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 const typeColorClasses: Record<string, string> = {
-    'DISK': 'bg-base-info-500',
-    'TAPE': 'bg-extra-rose-500',
-    'UNKNOWN': 'bg-base-warning-400',
-}
+    DISK: 'bg-base-info-500',
+    TAPE: 'bg-extra-rose-500',
+    UNKNOWN: 'bg-base-warning-400',
+};
 
 const TypeBadge = (props: { value: string }) => {
-    return <BadgeCell value={props.value} colorClass={typeColorClasses[props.value]}/>
-}
+    return <BadgeCell value={props.value} colorClass={typeColorClasses[props.value]} />;
+};
 
 export const ListRSETable = (props: ListRSETableProps) => {
     const [columnDefs] = useState([
@@ -54,11 +52,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellRenderer: TypeBadge,
             filter: true,
             sortable: false,
-            filterParams: buildDiscreteFilterParams([
-                'DISK',
-                'TAPE',
-                'UNKNOWN'
-            ])
+            filterParams: buildDiscreteFilterParams(['DISK', 'TAPE', 'UNKNOWN']),
         },
         {
             headerName: 'Volatile',
@@ -70,7 +64,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellRenderer: CheckboxCell,
             sortable: false,
             filter: true,
-            filterParams: DefaultBooleanFilterParams
+            filterParams: DefaultBooleanFilterParams,
         },
         {
             headerName: 'Deterministic',
@@ -94,9 +88,9 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellRenderer: CheckboxCell,
             sortable: false,
             filter: true,
-            filterParams: DefaultBooleanFilterParams
+            filterParams: DefaultBooleanFilterParams,
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} {...props}/>
-}
+    return <StreamedTable columnDefs={columnDefs} {...props} />;
+};

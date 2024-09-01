@@ -5,30 +5,28 @@ import { useEffect, useState } from 'react';
  * It is intended for use inside components that cannot be styled with Tailwind.
  */
 const useDarkMode = () => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(
-    document.body.classList.contains('dark')
-  );
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(document.body.classList.contains('dark'));
 
-  useEffect(() => {
-    const className = 'dark';
-    const element = document.body;
+    useEffect(() => {
+        const className = 'dark';
+        const element = document.body;
 
-    const toggleDarkMode = () => {
-      setIsDarkMode(element.classList.contains(className));
-    };
+        const toggleDarkMode = () => {
+            setIsDarkMode(element.classList.contains(className));
+        };
 
-    const observer = new MutationObserver(toggleDarkMode);
-    observer.observe(element, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
+        const observer = new MutationObserver(toggleDarkMode);
+        observer.observe(element, {
+            attributes: true,
+            attributeFilter: ['class'],
+        });
 
-    toggleDarkMode();
+        toggleDarkMode();
 
-    return () => observer.disconnect();
-  }, []);
+        return () => observer.disconnect();
+    }, []);
 
-  return isDarkMode;
+    return isDarkMode;
 };
 
 export default useDarkMode;

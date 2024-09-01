@@ -1,6 +1,6 @@
-import { BaseInputPort, BaseOutputPort } from "@/lib/sdk/primary-ports";
-import { IronSession } from "iron-session";
-import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from "../../usecase-models/get-site-header-usecase-models";
+import { BaseInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
+import { IronSession } from 'iron-session';
+import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from '../../usecase-models/get-site-header-usecase-models';
 
 /**
  * Interface that represents a UseCase that will gather information from avilable gateways to help generate the site header.

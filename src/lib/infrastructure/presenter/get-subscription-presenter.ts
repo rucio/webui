@@ -1,20 +1,20 @@
-import { SubscriptionState } from "@/lib/core/entity/rucio";
-import { GetSubscriptionError, GetSubscriptionResponse } from "@/lib/core/usecase-models/get-subscription-usecase-models";
-import { BasePresenter } from "@/lib/sdk/presenter";
-import { getEmptySubscriptionViewModel, SubscriptionViewModel } from "../data/view-model/subscriptions";
+import { SubscriptionState } from '@/lib/core/entity/rucio';
+import { GetSubscriptionError, GetSubscriptionResponse } from '@/lib/core/usecase-models/get-subscription-usecase-models';
+import { BasePresenter } from '@/lib/sdk/presenter';
+import { getEmptySubscriptionViewModel, SubscriptionViewModel } from '../data/view-model/subscriptions';
 
 export default class GetSubscriptionPresenter extends BasePresenter<GetSubscriptionResponse, GetSubscriptionError, SubscriptionViewModel> {
-    convertResponseModelToViewModel(responseModel: GetSubscriptionResponse): { viewModel: SubscriptionViewModel; status: number; } {
+    convertResponseModelToViewModel(responseModel: GetSubscriptionResponse): { viewModel: SubscriptionViewModel; status: number } {
         const viewModel: SubscriptionViewModel = {
             ...responseModel,
             replication_rules: JSON.stringify(responseModel.replication_rules),
-        }
+        };
         return {
             status: 200,
-            viewModel: viewModel
-        }
+            viewModel: viewModel,
+        };
     }
-    convertErrorModelToViewModel(errorModel: GetSubscriptionError): { viewModel: SubscriptionViewModel; status: number; } {
+    convertErrorModelToViewModel(errorModel: GetSubscriptionError): { viewModel: SubscriptionViewModel; status: number } {
         const viewModel: SubscriptionViewModel = getEmptySubscriptionViewModel();
         let status = 400;
         switch (errorModel.error) {
@@ -33,8 +33,7 @@ export default class GetSubscriptionPresenter extends BasePresenter<GetSubscript
         }
         return {
             status: status,
-            viewModel: viewModel
-        }
+            viewModel: viewModel,
+        };
     }
-
 }

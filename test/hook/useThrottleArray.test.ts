@@ -1,5 +1,5 @@
-import {act, cleanup, renderHook} from "@testing-library/react-hooks";
-import {useThrottleArray} from "@/lib/infrastructure/hooks/useThrottleArray";
+import { act, cleanup, renderHook } from '@testing-library/react-hooks';
+import { useThrottleArray } from '@/lib/infrastructure/hooks/useThrottleArray';
 
 describe('useThrottleArray', () => {
     afterEach(() => {
@@ -7,10 +7,12 @@ describe('useThrottleArray', () => {
     });
 
     it('Should delay updating the state', async () => {
-        const {result, waitForNextUpdate} = renderHook(() => useThrottleArray<string>({
-            interval: 50,
-            maxUpdateLength: 10
-        }));
+        const { result, waitForNextUpdate } = renderHook(() =>
+            useThrottleArray<string>({
+                interval: 50,
+                maxUpdateLength: 10,
+            }),
+        );
 
         act(() => {
             const pushData = result.current[1];
@@ -31,10 +33,12 @@ describe('useThrottleArray', () => {
     });
 
     it('Should only update the state by maxUpdateLength', async () => {
-        const {result, waitForNextUpdate} = renderHook(() => useThrottleArray<string>({
-            interval: 50,
-            maxUpdateLength: 2
-        }));
+        const { result, waitForNextUpdate } = renderHook(() =>
+            useThrottleArray<string>({
+                interval: 50,
+                maxUpdateLength: 2,
+            }),
+        );
 
         act(() => {
             const pushData = result.current[1];
@@ -62,10 +66,12 @@ describe('useThrottleArray', () => {
     });
 
     it('Does not keep updating the state on unmount', async () => {
-        const {result, waitForNextUpdate, unmount} = renderHook(() => useThrottleArray<string>({
-            interval: 50,
-            maxUpdateLength: 2
-        }));
+        const { result, waitForNextUpdate, unmount } = renderHook(() =>
+            useThrottleArray<string>({
+                interval: 50,
+                maxUpdateLength: 2,
+            }),
+        );
 
         act(() => {
             const pushData = result.current[1];

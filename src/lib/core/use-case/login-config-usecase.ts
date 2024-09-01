@@ -1,23 +1,23 @@
-import { injectable } from "inversify";
-import { LoginConfigError, LoginConfigResponse } from "../usecase-models/login-config-usecase-models";
-import type { LoginConfigInputPort, LoginConfigOutputPort } from "../port/primary/login-config-ports";
-import type EnvConfigGatewayOutputPort from "../port/secondary/env-config-gateway-output-port";
-import { BaseSingleEndpointUseCase } from "@/lib/sdk/usecase";
-import { LoginConfigDTO } from "../dto/login-config-dto";
-import { ConfigNotFound, InvalidConfig } from "../exceptions/env-config-exceptions";
+import { injectable } from 'inversify';
+import { LoginConfigError, LoginConfigResponse } from '../usecase-models/login-config-usecase-models';
+import type { LoginConfigInputPort, LoginConfigOutputPort } from '../port/primary/login-config-ports';
+import type EnvConfigGatewayOutputPort from '../port/secondary/env-config-gateway-output-port';
+import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
+import { LoginConfigDTO } from '../dto/login-config-dto';
+import { ConfigNotFound, InvalidConfig } from '../exceptions/env-config-exceptions';
 
 @injectable()
-class LoginConfigUseCase extends BaseSingleEndpointUseCase<void, LoginConfigResponse, LoginConfigError, LoginConfigDTO> implements LoginConfigInputPort {
-    constructor(
-        protected presenter: LoginConfigOutputPort,
-        private envConfigGateway: EnvConfigGatewayOutputPort,
-    ) {
-        super(presenter)
+class LoginConfigUseCase
+    extends BaseSingleEndpointUseCase<void, LoginConfigResponse, LoginConfigError, LoginConfigDTO>
+    implements LoginConfigInputPort
+{
+    constructor(protected presenter: LoginConfigOutputPort, private envConfigGateway: EnvConfigGatewayOutputPort) {
+        super(presenter);
         this.envConfigGateway = envConfigGateway;
     }
-    
+
     validateRequestModel(): LoginConfigError | undefined {
-        return undefined
+        return undefined;
     }
 
     async makeGatewayRequest(requestModel: void): Promise<LoginConfigDTO> {
@@ -29,7 +29,7 @@ class LoginConfigUseCase extends BaseSingleEndpointUseCase<void, LoginConfigResp
                 this.envConfigGateway.voList(),
                 this.envConfigGateway.oidcProviders(),
                 this.envConfigGateway.rucioAuthHost(),
-            ])
+            ]);
             const responseModel: LoginConfigDTO = {
                 status: 'success',
                 x509Enabled: config[0],
@@ -38,15 +38,14 @@ class LoginConfigUseCase extends BaseSingleEndpointUseCase<void, LoginConfigResp
                 voList: config[3],
                 oidcProviders: config[4],
                 rucioAuthHost: config[5],
-            }
-            return responseModel
-            
+            };
+            return responseModel;
         } catch (error) {
-            let type = 'UnknownError'
-            if(error instanceof ConfigNotFound) {
-                type = 'ConfigNotFound'
-            } else if(error instanceof InvalidConfig) {
-                type = 'InvalidConfig'
+            let type = 'UnknownError';
+            if (error instanceof ConfigNotFound) {
+                type = 'ConfigNotFound';
+            } else if (error instanceof InvalidConfig) {
+                type = 'InvalidConfig';
             }
             const errorDTO: LoginConfigDTO = {
                 status: 'error',
@@ -58,8 +57,8 @@ class LoginConfigUseCase extends BaseSingleEndpointUseCase<void, LoginConfigResp
                 voList: [],
                 oidcProviders: [],
                 rucioAuthHost: '',
-            }
-            return errorDTO
+            };
+            return errorDTO;
         }
     }
 
@@ -67,33 +66,31 @@ class LoginConfigUseCase extends BaseSingleEndpointUseCase<void, LoginConfigResp
         if (error.errorName === 'ConfigNotFound') {
             return {
                 status: 'error',
-                code: error.errorCode? error.errorCode : 500,
+                code: error.errorCode ? error.errorCode : 500,
                 name: 'ConfigNotFound',
                 type: 'ConfigNotFound',
-                message: error.errorMessage? error.errorMessage : 'Configuration not found on the server.',
-            }
-        }
-        else if (error.errorName === 'InvalidConfig') {
+                message: error.errorMessage ? error.errorMessage : 'Configuration not found on the server.',
+            };
+        } else if (error.errorName === 'InvalidConfig') {
             return {
                 status: 'error',
-                code: error.errorCode? error.errorCode : 500,
+                code: error.errorCode ? error.errorCode : 500,
                 name: 'InvalidConfig',
                 type: 'InvalidConfig',
-                message: error.errorMessage? error.errorMessage : 'Invalid configuration found on the server.',
-            }
-        }
-        else {
+                message: error.errorMessage ? error.errorMessage : 'Invalid configuration found on the server.',
+            };
+        } else {
             return {
                 status: 'error',
-                code: error.errorCode? error.errorCode : 500,
+                code: error.errorCode ? error.errorCode : 500,
                 name: 'UnknownError',
                 type: 'UnknownError',
                 message: 'An unknown error occurred while fetching the configuration of login page from the server.',
-            }
+            };
         }
     }
 
-    processDTO(dto: LoginConfigDTO): { data: LoginConfigResponse | LoginConfigError; status: "success" | "error"; } {
+    processDTO(dto: LoginConfigDTO): { data: LoginConfigResponse | LoginConfigError; status: 'success' | 'error' } {
         return {
             data: {
                 status: 'success',
@@ -105,7 +102,7 @@ class LoginConfigUseCase extends BaseSingleEndpointUseCase<void, LoginConfigResp
                 rucioAuthHost: dto.rucioAuthHost,
             } as LoginConfigResponse,
             status: 'success',
-        }
+        };
     }
 }
 

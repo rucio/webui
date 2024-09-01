@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type ThrottleArrayOptions = {
     interval: number;
@@ -26,7 +26,7 @@ export function useThrottleArray<T>(options: ThrottleArrayOptions): [T[], (item:
 
         if (bufferRef.current.length > options.maxUpdateLength) {
             // Remove the first {options.maxUpdateLength} elements from the buffer
-            const newBuffer: T[] = bufferRef.current.splice(0, options.maxUpdateLength)
+            const newBuffer: T[] = bufferRef.current.splice(0, options.maxUpdateLength);
             setData(prevData => [...prevData, ...newBuffer]);
         } else {
             setData(prevData => [...prevData, ...bufferRef.current]);

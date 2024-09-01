@@ -1,8 +1,8 @@
 export class InvalidConfig extends Error {
-  constructor(message: any) {
-    super(message);
-    this.name = 'InvalidConfig';
-  }
+    constructor(message: any) {
+        super(message);
+        this.name = 'InvalidConfig';
+    }
 }
 
 export class ConfigNotFound extends Error {

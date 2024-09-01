@@ -1,15 +1,10 @@
-import {
-    UserpassLoginError,
-    UserpassLoginIncomplete,
-    UserpassLoginResponse
-} from "@/lib/core/usecase-models/userpass-login-usecase-models";
-import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
-import UserPassLoginOutputPort from "@/lib/core/port/primary/userpass-login-output-port";
-import { IronSession } from "iron-session";
-import { NextApiResponse } from "next";
-import { setActiveSessionUser, setEmptySession } from "../auth/session-utils";
-import type { AuthViewModel } from "../data/auth/auth";
-
+import { UserpassLoginError, UserpassLoginIncomplete, UserpassLoginResponse } from '@/lib/core/usecase-models/userpass-login-usecase-models';
+import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
+import UserPassLoginOutputPort from '@/lib/core/port/primary/userpass-login-output-port';
+import { IronSession } from 'iron-session';
+import { NextApiResponse } from 'next';
+import { setActiveSessionUser, setEmptySession } from '../auth/session-utils';
+import type { AuthViewModel } from '../data/auth/auth';
 
 /**
  * Provides an implementation of the {@link UserPassLoginOutputPort} interface.
@@ -33,13 +28,13 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             status: 'success',
             role: Role.USER,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
-        }
+        };
 
         const role = responseModel.role;
-        if(role) {
+        if (role) {
             viewModel.role = role;
         } else {
-            viewModel.role = Role.USER
+            viewModel.role = Role.USER;
         }
 
         const sessionUser: SessionUser = {
@@ -52,13 +47,13 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             role: viewModel.role || Role.USER,
             isLoggedIn: true,
             rucioAuthTokenExpires: responseModel.rucioAuthTokenExpires,
-        }
-        
-        if(responseModel.country) {
+        };
+
+        if (responseModel.country) {
             viewModel.country = responseModel.country;
             sessionUser.country = responseModel.country;
         }
-        if(responseModel.countryRole) {
+        if (responseModel.countryRole) {
             viewModel.countryRole = responseModel.countryRole;
             sessionUser.countryRole = responseModel.countryRole;
         }
@@ -78,7 +73,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             role: Role.USER,
             message: error.message,
             error_cause: error.type,
-        }
+        };
 
         this.response.status(401).json(viewModel);
     }
@@ -93,8 +88,8 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             rucioAuthType: '',
             rucioAuthToken: '',
             rucioAuthTokenExpires: '',
-        }
+        };
 
-        this.response.status(206).json(viewModel)
+        this.response.status(206).json(viewModel);
     }
 }

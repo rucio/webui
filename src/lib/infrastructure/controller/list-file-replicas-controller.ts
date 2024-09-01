@@ -1,11 +1,11 @@
-import { injectable, inject } from "inversify";
-import { NextApiResponse } from "next";
+import { injectable, inject } from 'inversify';
+import { NextApiResponse } from 'next';
 
-import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { BaseController, TAuthenticatedControllerParameters } from "@/lib/sdk/controller";
-import { ListFileReplicasRequest } from "@/lib/core/usecase-models/list-file-replicas-usecase-models";
-import { ListFileReplicasInputPort } from "@/lib/core/port/primary/list-file-replicas-ports";
-import USECASE_FACTORY from "@/lib/infrastructure/ioc/ioc-symbols-usecase-factory";
+import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
+import { ListFileReplicasRequest } from '@/lib/core/usecase-models/list-file-replicas-usecase-models';
+import { ListFileReplicasInputPort } from '@/lib/core/port/primary/list-file-replicas-ports';
+import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory';
 
 export type ListFileReplicasControllerParameters = TAuthenticatedControllerParameters & {
     rucioAuthToken: string;
@@ -25,7 +25,7 @@ class ListFileReplicasController extends BaseController<ListFileReplicasControll
             rucioAuthToken: parameters.rucioAuthToken,
             scope: parameters.scope,
             name: parameters.name,
-        }
+        };
     }
 }
 

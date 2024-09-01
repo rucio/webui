@@ -1,26 +1,26 @@
-import {
-    ListDatasetReplicasError,
-    ListDatasetReplicasResponse,
-} from '@/lib/core/usecase-models/list-dataset-replicas-usecase-models'
-import { NextApiResponse } from 'next'
-import { DIDDatasetReplicasViewModel, generateEmptyDIDDatasetReplicasViewModel } from '@/lib/infrastructure/data/view-model/did'
-import { BaseStreamingPresenter } from '@/lib/sdk/presenter'
-import { ListDatasetReplicasOutputPort } from '@/lib/core/port/primary/list-dataset-replicas-ports'
+import { ListDatasetReplicasError, ListDatasetReplicasResponse } from '@/lib/core/usecase-models/list-dataset-replicas-usecase-models';
+import { NextApiResponse } from 'next';
+import { DIDDatasetReplicasViewModel, generateEmptyDIDDatasetReplicasViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
+import { ListDatasetReplicasOutputPort } from '@/lib/core/port/primary/list-dataset-replicas-ports';
 
-export default class ListDatasetReplicasPresenter extends BaseStreamingPresenter<ListDatasetReplicasResponse, ListDatasetReplicasError, DIDDatasetReplicasViewModel> implements ListDatasetReplicasOutputPort {
-    response: NextApiResponse<any>
+export default class ListDatasetReplicasPresenter
+    extends BaseStreamingPresenter<ListDatasetReplicasResponse, ListDatasetReplicasError, DIDDatasetReplicasViewModel>
+    implements ListDatasetReplicasOutputPort
+{
+    response: NextApiResponse<any>;
 
     constructor(response: NextApiResponse) {
-        super(response)
-        this.response = response
+        super(response);
+        this.response = response;
     }
 
     streamResponseModelToViewModel(responseModel: ListDatasetReplicasResponse): DIDDatasetReplicasViewModel {
         const viewModel: DIDDatasetReplicasViewModel = {
             rseblocked: 0, // Needs a rucio endpoint and probably a post processing pipeline
             ...responseModel,
-        }
-        return viewModel
+        };
+        return viewModel;
     }
 
     streamErrorModelToViewModel(error: ListDatasetReplicasError): DIDDatasetReplicasViewModel {
@@ -35,7 +35,7 @@ export default class ListDatasetReplicasPresenter extends BaseStreamingPresenter
      * @param errorModel The error model to convert.
      * @returns The error view model that represents the error model.
      */
-     convertErrorModelToViewModel(errorModel: ListDatasetReplicasError): { viewModel: DIDDatasetReplicasViewModel; status: number; } {
+    convertErrorModelToViewModel(errorModel: ListDatasetReplicasError): { viewModel: DIDDatasetReplicasViewModel; status: number } {
         const viewModel: DIDDatasetReplicasViewModel = generateEmptyDIDDatasetReplicasViewModel();
         // gateway errors
         const message = errorModel.message ? errorModel.message.toString() : errorModel.name;
@@ -43,7 +43,7 @@ export default class ListDatasetReplicasPresenter extends BaseStreamingPresenter
         const errorCode = errorModel.code ? errorModel.code : 500;
         return {
             status: errorCode,
-            viewModel: viewModel
-        }
+            viewModel: viewModel,
+        };
     }
 }

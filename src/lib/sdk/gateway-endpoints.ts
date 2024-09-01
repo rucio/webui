@@ -1,5 +1,5 @@
 import { Transform, TransformCallback } from 'stream';
-import{ HTTPRequest, prepareRequestArgs} from '@/lib/sdk/http';
+import { HTTPRequest, prepareRequestArgs } from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import type StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
@@ -41,7 +41,6 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
      */
     protected rucioHost: string = 'http://rucio-host.com';
 
-
     /**
      * Creates a new instance of the `BaseStreamableEndpoint` class.
      * @param streamAsNDJSON A boolean value that indicates whether the stream should be formatted as NDJSON (newline-delimited JSON) or not.
@@ -62,12 +61,12 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
     async initialize(): Promise<void> {
         this.rucioHost = await this.envConfigGateway.rucioHost();
     }
-    
+
     /**
      * Fetches the API response from the server.
      * @returns A DTO if an error occurred, undefined if request was successful and retrned a stream.
      */
-    async fetch (): Promise<TDTO | undefined> {
+    async fetch(): Promise<TDTO | undefined> {
         if (!this.initialized) {
             try {
                 await this.initialize();
@@ -78,15 +77,15 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
         if (!this.request) {
             throw new Error(`Request not initialized for ${this.constructor.name}`);
         }
-        
+
         const { type, content } = await this.streamingGateway.getJSONChunks(this.request, this.streamAsNDJSON);
         if (type == 'response') {
             const response = content as Response;
-            const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response)
+            const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response);
             if (commonErrors) {
                 return commonErrors as TDTO;
             }
-            
+
             const error = await this.reportErrors(response.status, response);
             if (error) {
                 return error;
@@ -97,7 +96,7 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
         stream.pipe(this);
     }
 
-     /**
+    /**
      * Reports any errors that occurred during the API request except HTTP status codes 400, 401, 406 and 500, which are automatically
      * handled by the `handleCommonGatewayEndpointErrors` function.
      * The implementation must check the response status code and return a suitable data transfer object (DTO) if an error occurred.
@@ -124,8 +123,8 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
     _transform(chunk: any, encoding: BufferEncoding, callback: TransformCallback): void {
         try {
             const dto = this.createDTO(chunk);
-            if(Array.isArray(dto)) {
-                dto.forEach((d) => this.push(d));
+            if (Array.isArray(dto)) {
+                dto.forEach(d => this.push(d));
                 callback();
                 return;
             }
@@ -158,10 +157,8 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
     protected url: string = '';
 
     protected envConfigGateway: EnvConfigGatewayOutputPort;
-    
-    constructor(
-        parseBodyAsText: boolean = false
-    ) {
+
+    constructor(parseBodyAsText: boolean = false) {
         this.envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
         this.parsedBodyAsText = parseBodyAsText;
     }
@@ -181,11 +178,11 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
      * Reports any errors that occurred during the API request.
      * @param statusCode The HTTP status code returned by the API.
      * @param response The response object returned by the API.
-     * @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error, 
+     * @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error,
      * or `undefined` if the error could not be identified clearly.
      */
-    abstract reportErrors(statusCode: number, response: Response): Promise<TDTO | undefined> 
-    
+    abstract reportErrors(statusCode: number, response: Response): Promise<TDTO | undefined>;
+
     /**
      * Creates a data transfer object (DTO) from the API response.
      * @param data The response.json() object returned by the API.
@@ -211,12 +208,9 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
 
         const preparedRequest = prepareRequestArgs(this.request);
 
-        const response: Response = await fetch(
-            preparedRequest.url,
-            preparedRequest.requestArgs
-        )
-        if(!response.ok) {
-            const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response)
+        const response: Response = await fetch(preparedRequest.url, preparedRequest.requestArgs);
+        if (!response.ok) {
+            const commonErrors = await handleCommonGatewayEndpointErrors(response.status, response);
             if (commonErrors) {
                 return commonErrors as TDTO;
             }
@@ -231,7 +225,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             } as TDTO;
         } else {
             try {
-                if(!this.parsedBodyAsText) {
+                if (!this.parsedBodyAsText) {
                     const data = await response.text();
                     // TODO: Handle better: replace Infinity with -1
                     const infinityPatch = data.replace(/Infinity/g, '-1');
@@ -241,7 +235,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
                     const text = await response.text();
                     return this.createDTO(text);
                 }
-            } catch(error) {
+            } catch (error) {
                 return {
                     status: 'error',
                     errorMessage: `An error occurred while fetching and parsing response from ${this.request.url}. Error: ${error}}`,
@@ -252,13 +246,13 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
 }
 
 /**
-* Reports any common errors that occurred during the Gateway request.
-* Handles HTTP status codes 400, 401, 406 and 500.
-* @param statusCode The HTTP status code returned by the API.
-* @param response The response object returned by the API.
-* @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error,
-* or `undefined` if the error could not be identified clearly.
-*/
+ * Reports any common errors that occurred during the Gateway request.
+ * Handles HTTP status codes 400, 401, 406 and 500.
+ * @param statusCode The HTTP status code returned by the API.
+ * @param response The response object returned by the API.
+ * @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error,
+ * or `undefined` if the error could not be identified clearly.
+ */
 async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCode: number, response: Response): Promise<TDTO | undefined> {
     const dto: TDTO = {
         status: 'error',
@@ -268,10 +262,10 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
         errorMessage: `An error occurred while fetching ${response.url}`,
     } as TDTO;
 
-    switch(statusCode) {
+    switch (statusCode) {
         case 400:
             dto.errorName = BaseHttpErrorTypes.BAD_REQUEST.errorName;
-            dto.errorMessage = `The request had invalid syntax.`
+            dto.errorMessage = `The request had invalid syntax.`;
             break;
         case 401:
             dto.errorName = BaseHttpErrorTypes.INVALID_AUTH_TOKEN.errorName;
@@ -279,7 +273,7 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
             break;
         case 404:
             dto.errorName = BaseHttpErrorTypes.NOT_FOUND.errorName;
-            dto.errorMessage = `The requested resource was not found at ${response.url}.`
+            dto.errorMessage = `The requested resource was not found at ${response.url}.`;
             break;
         case 406:
             dto.errorName = BaseHttpErrorTypes.NOT_ACCEPTABLE.errorName;
@@ -294,13 +288,13 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
     try {
         const jsonResponse = await response.json();
         dto.errorMessage = jsonResponse.ExceptionMessage;
-    } catch(error) {}
+    } catch (error) {}
 
     return dto;
 }
 
 /**
- * 
+ *
  * @param response The HTTPResponse object returned by the API.
  * @returns undefined if no error details could be extracted from the response, or a json object containing the error details.
  */
@@ -308,7 +302,7 @@ export async function extractErrorMessage(response: Response): Promise<any | und
     try {
         const error = await response.json();
         return error;
-    } catch(error: any) {
+    } catch (error: any) {
         return undefined;
     }
 }
