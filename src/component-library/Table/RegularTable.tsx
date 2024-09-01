@@ -30,35 +30,27 @@ export const RegularTable = (props: RegularTableProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const onNextPage = () => {
-        const gridApi = props.tableRef.current!.api;
-        if (gridApi) {
-            gridApi.paginationGoToNextPage();
-        }
+        const gridApi = props.tableRef.current?.api;
+        gridApi?.paginationGoToNextPage();
     };
 
     const onPreviousPage = () => {
-        const gridApi = props.tableRef.current!.api;
-        if (gridApi) {
-            gridApi.paginationGoToPreviousPage();
-        }
+        const gridApi = props.tableRef.current?.api;
+        gridApi?.paginationGoToPreviousPage();
     };
 
     const onFirstPage = () => {
-        const gridApi = props.tableRef.current!.api;
-        if (gridApi) {
-            gridApi.paginationGoToFirstPage();
-        }
+        const gridApi = props.tableRef.current?.api;
+        gridApi?.paginationGoToFirstPage();
     };
 
     const onLastPage = () => {
-        const gridApi = props.tableRef.current!.api;
-        if (gridApi) {
-            gridApi.paginationGoToLastPage();
-        }
+        const gridApi = props.tableRef.current?.api;
+        gridApi?.paginationGoToLastPage();
     };
 
     const onPaginationChanged = () => {
-        const gridApi = props.tableRef.current!.api;
+        const gridApi = props.tableRef.current?.api;
         // Make sure the table is loaded before updating the pagination component to avoid flickering
         if (isTableLoaded && gridApi) {
             const totalPages = gridApi.paginationGetTotalPages();
@@ -116,7 +108,7 @@ export const RegularTable = (props: RegularTableProps) => {
     return (
         <>
             <div className={twMerge(isDarkMode ? 'ag-grid-theme-rucio-dark' : 'ag-grid-theme-rucio-light', 'grid grow w-full', 'relative')}>
-                {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full" />}
+                {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
                 <AgGridReact
                     pagination={true}
                     paginationAutoPageSize={true}
