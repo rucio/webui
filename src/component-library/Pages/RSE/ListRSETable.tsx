@@ -1,4 +1,4 @@
-import React, { RefObject, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
@@ -12,7 +12,6 @@ import { buildDiscreteFilterParams } from '@/component-library/Table/FilterParam
 import { GridReadyEvent } from 'ag-grid-community';
 
 type ListRSETableProps = {
-    tableRef: RefObject<AgGridReact>;
     streamingHook: UseChunkedStream<RSEViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
 };
@@ -32,6 +31,8 @@ const TypeBadge = (props: { value: string }) => {
 };
 
 export const ListRSETable = (props: ListRSETableProps) => {
+    const tableRef = useRef<AgGridReact<RSEViewModel>>(null);
+
     const [columnDefs] = useState([
         {
             headerName: 'Name',
@@ -92,5 +93,5 @@ export const ListRSETable = (props: ListRSETableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
 };

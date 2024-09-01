@@ -2,46 +2,51 @@ import { twMerge } from 'tailwind-merge';
 import { Heading } from '../Helpers/Heading';
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { TextInput } from '@/component-library/Input/TextInput';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/component-library/Button/Button';
-import { useSearchParams } from 'next/navigation';
-import { StreamingStatus, UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
-import { AgGridReact } from 'ag-grid-react';
+import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
 import { ListRSETable } from '@/component-library/Pages/RSE/ListRSETable';
 import { useToast } from '@/component-library/hooks/use-toast';
+import { GridApi, GridReadyEvent } from 'ag-grid-community';
 
 type ListRSEProps = {
-    streamingHook: UseChunkedStream<RSEViewModel>;
+    firstExpression?: string;
+    initialData?: RSEViewModel[];
 };
 
 const defaultExpression = '*';
 export const ListRSE = (props: ListRSEProps) => {
-    const searchParams = useSearchParams();
-    const firstExpression = searchParams?.get('expression');
-    const [expression, setExpression] = useState<string | null>(firstExpression ?? defaultExpression);
+    const streamingHook = useChunkedStream<RSEViewModel>();
+    const [expression, setExpression] = useState<string | null>(props.firstExpression ?? defaultExpression);
 
     const { toast } = useToast();
 
-    const tableRef = useRef<AgGridReact>(null);
+    const [gridApi, setGridApi] = useState<GridApi<RSEViewModel> | null>(null);
 
     const onData = (data: RSEViewModel[]) => {
-        tableRef.current?.api.applyTransactionAsync({ add: data });
+        // TODO: check for invalid models
+        gridApi?.applyTransactionAsync({ add: data });
     };
 
     const startStreaming = () => {
-        if (tableRef.current?.api) {
-            const api = tableRef.current!.api;
-            api.setGridOption('rowData', []);
+        if (gridApi) {
+            gridApi.setGridOption('rowData', []);
+            const url = `/api/feature/list-rses?rseExpression=${expression ?? defaultExpression}`;
+            streamingHook.start({ url, onData });
+        } else {
+            toast({
+                title: 'Warning',
+                description: 'Cannot start the streaming while the grid is not ready.',
+                variant: 'warning',
+            });
         }
-
-        const url = `/api/feature/list-rses?rseExpression=${expression ?? defaultExpression}`;
-        props.streamingHook.start({ url, onData });
     };
 
-    const onGridReady = () => {
-        if (expression === null) return;
-
-        startStreaming();
+    const onGridReady = (event: GridReadyEvent) => {
+        if (props.initialData) {
+            event.api.setGridOption('rowData', props.initialData);
+        }
+        setGridApi(event.api);
     };
 
     const updateExpression = (value: string) => {
@@ -50,7 +55,7 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const onSearch = (event: any) => {
         event.preventDefault();
-        if (props.streamingHook.status !== StreamingStatus.RUNNING) {
+        if (streamingHook.status !== StreamingStatus.RUNNING) {
             startStreaming();
         } else {
             toast({
@@ -74,10 +79,10 @@ export const ListRSE = (props: ListRSEProps) => {
                             updateExpression(e.target.value);
                         }}
                         id="rse-search-pattern"
-                        defaultValue={firstExpression ?? ''}
+                        defaultValue={props.firstExpression ?? ''}
                         placeholder={defaultExpression}
                     />
-                    {props.streamingHook.status === StreamingStatus.STOPPED ? (
+                    {streamingHook.status === StreamingStatus.STOPPED ? (
                         <Button
                             type="button"
                             label="Search"
@@ -90,14 +95,14 @@ export const ListRSE = (props: ListRSEProps) => {
                             type="button"
                             label="Stop"
                             onClick={() => {
-                                props.streamingHook.stop();
+                                streamingHook.stop();
                             }}
                             className={twMerge('w-full mt-2 sm:mt-0 sm:w-24 sm:grow-0', 'bg-base-error-500 hover:bg-base-error-600')}
                         />
                     )}
                 </form>
             </Heading>
-            <ListRSETable tableRef={tableRef} streamingHook={props.streamingHook} onGridReady={onGridReady} />
+            <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />
         </div>
     );
 };
