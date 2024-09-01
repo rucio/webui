@@ -56,7 +56,7 @@ self.onmessage = async function (event) {
                     const parsedObject = JSON.parse(line);
                     buffer.push(parsedObject);
                 } catch (e) {
-                    self.postMessage({type: 'error', error: {type: 'PARSING_ERROR', message: e.message}});
+                    self.postMessage({type: 'error', error: {type: 'parsing_error', message: e.message}});
                     clearInterval(whileFetchingInterval);
                     return;
                 }
@@ -68,7 +68,7 @@ self.onmessage = async function (event) {
                 const parsedObject = JSON.parse(partialData);
                 buffer.push(parsedObject);
             } catch (e) {
-                self.postMessage({type: 'error', error: {type: 'PARSING_ERROR', message: e.message}});
+                self.postMessage({type: 'error', error: {type: 'parsing_error', message: e.message}});
                 clearInterval(whileFetchingInterval);
                 return;
             }
@@ -82,7 +82,7 @@ self.onmessage = async function (event) {
             setInterval(updateAfterFetching, updateDelay);
         }
     } catch (e) {
-        self.postMessage({type: 'error', error: {type: 'NETWORK_ERROR', message: e.message}});
+        self.postMessage({type: 'error', error: {type: 'network_error', message: e.message}});
     } finally {
         clearInterval(whileFetchingInterval);
     }
@@ -97,11 +97,11 @@ async function getResponseError(response) {
     } catch (e) {
     }
 
-    const error = {type: 'INVALID_RESPONSE', message: message};
+    const error = {type: 'invalid_response', message: message};
     if (response.status === 404) {
-        error.type = 'NOT_FOUND';
+        error.type = 'not_found';
     } else if (response.status === 400) {
-        error.type = 'BAD_REQUEST';
+        error.type = 'bad_request';
     }
     return error;
 }

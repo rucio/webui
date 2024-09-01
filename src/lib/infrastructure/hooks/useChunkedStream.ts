@@ -1,12 +1,12 @@
 import {useCallback, useState, useRef, useEffect} from "react";
 
 export enum StreamingErrorType {
-    BAD_METHOD_CALL,
-    NETWORK_ERROR,
-    BAD_REQUEST,
-    NOT_FOUND,
-    INVALID_RESPONSE,
-    PARSING_ERROR,
+    BAD_METHOD_CALL = 'bad_method_call',
+    NETWORK_ERROR = 'network_error',
+    BAD_REQUEST = 'bad_request',
+    NOT_FOUND = 'not_found',
+    INVALID_RESPONSE = 'invalid_response',
+    PARSING_ERROR = 'parsing_error',
 }
 
 export interface StreamingError {
