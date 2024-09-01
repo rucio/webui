@@ -1,14 +1,14 @@
-import {RSEViewModel} from '@/lib/infrastructure/data/view-model/rse';
-import {ChangeEvent, useState} from 'react';
-import useChunkedStream, {StreamingStatus} from '@/lib/infrastructure/hooks/useChunkedStream';
-import {ListRSETable} from '@/component-library/Pages/RSE/List/ListRSETable';
-import {useToast} from '@/component-library/hooks/use-toast';
-import {GridApi, GridReadyEvent} from 'ag-grid-community';
-import {Heading} from '@/component-library/ui/heading';
-import {Input} from '@/component-library/ui/input';
-import {HintLink} from '@/component-library/ui/hint-link';
-import {HiPlay, HiStop} from 'react-icons/hi';
-import {SearchButton} from '@/component-library/Pages/RSE/List/SearchButton';
+import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { ChangeEvent, useState } from 'react';
+import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { ListRSETable } from '@/component-library/Pages/RSE/List/ListRSETable';
+import { useToast } from '@/component-library/hooks/use-toast';
+import { GridApi, GridReadyEvent } from 'ag-grid-community';
+import { Heading } from '@/component-library/ui/heading';
+import { Input } from '@/component-library/ui/input';
+import { HintLink } from '@/component-library/ui/hint-link';
+import { HiPlay, HiStop } from 'react-icons/hi';
+import { SearchButton } from '@/component-library/Pages/RSE/List/SearchButton';
 
 type ListRSEProps = {
     firstExpression?: string;
@@ -23,7 +23,7 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const [gridApi, setGridApi] = useState<GridApi<RSEViewModel> | null>(null);
 
-    const {toast, dismiss} = useToast();
+    const { toast, dismiss } = useToast();
 
     const onGridReady = (event: GridReadyEvent) => {
         if (props.initialData) {
@@ -34,7 +34,7 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const onData = (data: RSEViewModel[]) => {
         // TODO: check for invalid models
-        gridApi?.applyTransactionAsync({add: data});
+        gridApi?.applyTransactionAsync({ add: data });
     };
 
     const startStreaming = () => {
@@ -42,7 +42,7 @@ export const ListRSE = (props: ListRSEProps) => {
             dismiss();
             gridApi.setGridOption('rowData', []);
             const url = `/api/feature/list-rses?rseExpression=${expression ?? defaultExpression}`;
-            streamingHook.start({url, onData});
+            streamingHook.start({ url, onData });
         } else {
             toast({
                 title: 'Warning',
@@ -81,17 +81,13 @@ export const ListRSE = (props: ListRSEProps) => {
 
     return (
         <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="RSEs"/>
+            <Heading text="RSEs" />
             <div className="space-y-2">
                 <div className="text-neutral-900 dark:text-neutral-100">
                     Expression
-                    <HintLink
-                        href="https://rucio.github.io/documentation/started/concepts/rse_expressions"
-                        className="pl-2"
-                    />
+                    <HintLink href="https://rucio.github.io/documentation/started/concepts/rse_expressions" className="pl-2" />
                 </div>
-                <div
-                    className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-center sm:items-start">
+                <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-center sm:items-start">
                     <Input
                         className="w-full sm:flex-grow"
                         onChange={onInputChange}
@@ -100,7 +96,7 @@ export const ListRSE = (props: ListRSEProps) => {
                         placeholder={defaultExpression}
                     />
                     <SearchButton
-                        icon={isRunning ? <HiStop className="text-xl"/> : <HiPlay className="text-xl"/>}
+                        icon={isRunning ? <HiStop className="text-xl" /> : <HiPlay className="text-xl" />}
                         onClick={isRunning ? onStop : onSearch}
                         variant={isRunning ? 'error' : 'success'}
                     >
@@ -108,7 +104,7 @@ export const ListRSE = (props: ListRSEProps) => {
                     </SearchButton>
                 </div>
             </div>
-            <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady}/>
+            <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />
         </div>
     );
 };
