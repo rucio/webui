@@ -73,7 +73,7 @@ self.onmessage = async function (event) {
                 return;
             }
         }
-        
+
         clearInterval(whileFetchingInterval);
         postData();
         if (buffer.length === 0) {
@@ -89,18 +89,21 @@ self.onmessage = async function (event) {
 };
 
 async function getResponseError(response) {
-    let message = response.statusText;
+    const error = {type: 'invalid_response', message: response.statusText};
 
     try {
         const jsonResponse = await response.json();
-        message = jsonResponse.message ?? message;
+        if (jsonResponse.message) {
+            error.message = jsonResponse.message;
+            // NOT_FOUND should be from the rucio server, not a nonexistent endpoint
+            if (response.status === 404) {
+                error.type = 'not_found';
+            }
+        }
     } catch (e) {
     }
 
-    const error = {type: 'invalid_response', message: message};
-    if (response.status === 404) {
-        error.type = 'not_found';
-    } else if (response.status === 400) {
+    if (response.status === 400) {
         error.type = 'bad_request';
     }
     return error;

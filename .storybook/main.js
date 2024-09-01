@@ -1,4 +1,6 @@
 module.exports = {
+  staticDirs: ['../public'],
+
   stories: [
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|ts|tsx)"

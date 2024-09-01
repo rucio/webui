@@ -1,11 +1,11 @@
 import { twMerge } from 'tailwind-merge';
-import { Heading } from '../Helpers/Heading';
+import { Heading } from '../../Helpers/Heading';
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { TextInput } from '@/component-library/Input/TextInput';
 import { useState } from 'react';
 import { Button } from '@/component-library/Button/Button';
 import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
-import { ListRSETable } from '@/component-library/Pages/RSE/ListRSETable';
+import { ListRSETable } from '@/component-library/Pages/RSE/List/ListRSETable';
 import { useToast } from '@/component-library/hooks/use-toast';
 import { GridApi, GridReadyEvent } from 'ag-grid-community';
 
