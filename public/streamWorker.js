@@ -3,32 +3,43 @@ self.onmessage = async function (event) {
     const buffer = [];
 
     const postData = () => {
-        if (buffer.length > maxUpdateLength) {
-            // Remove the first {maxUpdateLength} elements from the buffer
-            const newBuffer = buffer.splice(0, maxUpdateLength);
-            self.postMessage({type: 'data', data: newBuffer});
-        } else {
-            self.postMessage({type: 'data', data: buffer});
-            buffer.length = 0;
-        }
+        // Remove the first {maxUpdateLength} or all elements from the buffer
+        const dataToSend = buffer.length > maxUpdateLength ? buffer.splice(0, maxUpdateLength) : buffer.splice(0);
+        self.postMessage({type: 'data', data: dataToSend});
     };
 
-    const updateWhileFetching = () => {
-        if (buffer.length === 0) return;
-        postData();
+    const handleUpdate = () => {
+        if (buffer.length > 0) postData();
     };
 
-    const updateAfterFetching = () => {
+    const updateInterval = setInterval(handleUpdate, updateDelay);
+
+    const finalize = () => {
+        handleUpdate();
         if (buffer.length === 0) {
             self.postMessage({type: 'finish'});
         }
-        postData();
-        if (buffer.length === 0) {
-            self.postMessage({type: 'finish'});
-        }
-    }
+    };
 
-    const whileFetchingInterval = setInterval(updateWhileFetching, updateDelay);
+    const handleError = (errorType, message) => {
+        self.postMessage({type: 'error', error: {type: errorType, message}});
+        clearInterval(updateInterval);
+    };
+
+    const tryParse = (line) => {
+        try {
+            const parsedObject = JSON.parse(line);
+            buffer.push(parsedObject);
+        } catch (e) {
+            handleError(
+                'parsing_error',
+                'The response could not be parsed. Please see the console for details.'
+            );
+            console.error(`Parsing error\nElement: ${line}\nMessage: ${e.message}`);
+            return false;
+        }
+        return true;
+    };
 
     try {
         const response = await fetch(url, fetchOptions);
@@ -52,39 +63,21 @@ self.onmessage = async function (event) {
             partialData = lines.pop() || '';
 
             for (const line of lines) {
-                try {
-                    const parsedObject = JSON.parse(line);
-                    buffer.push(parsedObject);
-                } catch (e) {
-                    self.postMessage({type: 'error', error: {type: 'parsing_error', message: e.message}});
-                    clearInterval(whileFetchingInterval);
-                    return;
-                }
+                if (!tryParse(line)) return;
             }
         }
 
-        if (partialData) {
-            try {
-                const parsedObject = JSON.parse(partialData);
-                buffer.push(parsedObject);
-            } catch (e) {
-                self.postMessage({type: 'error', error: {type: 'parsing_error', message: e.message}});
-                clearInterval(whileFetchingInterval);
-                return;
-            }
-        }
+        if (partialData && !tryParse(partialData)) return;
 
-        clearInterval(whileFetchingInterval);
-        postData();
-        if (buffer.length === 0) {
-            self.postMessage({type: 'finish'});
-        } else {
-            setInterval(updateAfterFetching, updateDelay);
+        clearInterval(updateInterval);
+        finalize();
+        if (buffer.length > 0) {
+            setInterval(finalize, updateDelay);
         }
     } catch (e) {
-        self.postMessage({type: 'error', error: {type: 'network_error', message: e.message}});
+        self.postMessage({type: 'error', error: {type: 'unknown_error', message: e.message}});
     } finally {
-        clearInterval(whileFetchingInterval);
+        clearInterval(updateInterval);
     }
 };
 

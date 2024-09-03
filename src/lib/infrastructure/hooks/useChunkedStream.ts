@@ -7,6 +7,7 @@ export enum StreamingErrorType {
     NOT_FOUND = 'not_found',
     INVALID_RESPONSE = 'invalid_response',
     PARSING_ERROR = 'parsing_error',
+    UNKNOWN_ERROR = 'unknown_error',
 }
 
 export interface StreamingError {

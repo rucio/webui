@@ -5,7 +5,11 @@ import { Toaster } from '@/component-library/ui/toaster';
 import { useToast } from '@/component-library/hooks/use-toast';
 import { useEffect } from 'react';
 import { getDecoratorWithWorker } from '../../../../../test/mocks/handlers/storyDecorators';
-import { getMockStreamEndpoint } from '../../../../../test/mocks/handlers/streamingHandlers';
+import {
+    getMockInvalidStreamEndpoint,
+    getMockPartialStreamEndpoint,
+    getMockStreamEndpoint,
+} from '../../../../../test/mocks/handlers/streamingHandlers';
 import { getMockErrorEndpoint } from '../../../../../test/mocks/handlers/errorHandlers';
 
 export default {
@@ -121,6 +125,18 @@ SomeInvalidData.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(endpointUrl, {
             data: [...Array.from({ length: 20 }, fixtureErrorViewModel), ...Array.from({ length: 30 }, fixtureRSEViewModel)],
+        }),
+    ]),
+];
+
+export const ParsingError = Template.bind({});
+ParsingError.decorators = [getDecoratorWithWorker([getMockInvalidStreamEndpoint(endpointUrl)])];
+
+export const PartialStreaming = Template.bind({});
+PartialStreaming.decorators = [
+    getDecoratorWithWorker([
+        getMockPartialStreamEndpoint(endpointUrl, {
+            data: Array.from({ length: 140 }, fixtureRSEViewModel),
         }),
     ]),
 ];
