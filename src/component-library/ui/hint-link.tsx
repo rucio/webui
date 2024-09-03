@@ -6,7 +6,7 @@ export const HintLink = ({ className, href, ...props }: { className?: string; hr
             href={href}
             target="_blank"
             rel="noreferrer"
-            className={cn('text-neutral-500 dark:text-neutral-400 font-semibold hover:text-brand-500', className)}
+            className={cn('text-neutral-500 dark:text-neutral-400 font-semibold hover:text-brand-500 hover:dark:text-brand-500', className)}
             {...props}
         >
             ?

@@ -3270,6 +3270,11 @@ html {
   color: rgb(167 139 250 / var(--tw-text-opacity));
 }
 
+.dark .hover\:dark\:text-brand-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(139 92 246 / var(--tw-text-opacity));
+}
+
 .dark .dark\:focus\:border-brand-500:focus {
   --tw-border-opacity: 1;
   border-color: rgb(139 92 246 / var(--tw-border-opacity));
