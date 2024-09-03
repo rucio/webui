@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
  * It is intended for use inside components that cannot be styled with Tailwind.
  */
 const useDarkMode = () => {
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(document.body.classList.contains('dark'));
+    // TODO: load from whatever holds this state
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
     useEffect(() => {
         const className = 'dark';

@@ -6,7 +6,7 @@ import { ColDef, ColGroupDef } from 'ag-grid-community/dist/types/core/entities/
 import { NoDataYetOverlay } from '@/component-library/Table/Overlays/NoDataYetOverlay';
 import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { SimplePaginationPanel } from '@/component-library/Table/PaginationPanels/SimplePaginationPanel';
-import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
+import useDarkMode from '@/component-library/hooks/useDarkMode';
 import '@/component-library/ag-grid-theme-rucio-dark.css';
 import '@/component-library/ag-grid-theme-rucio-light.css';
 
