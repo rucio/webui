@@ -107,7 +107,14 @@ export const RegularTable = (props: RegularTableProps) => {
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
     return (
         <>
-            <div className={twMerge(isDarkMode ? 'ag-grid-theme-rucio-dark' : 'ag-grid-theme-rucio-light', 'grid grow w-full', 'relative')}>
+            <div
+                className={twMerge(
+                    isDarkMode ? 'ag-grid-theme-rucio-dark' : 'ag-grid-theme-rucio-light',
+                    'grid grow w-full',
+                    'relative',
+                    'min-h-[300px]',
+                )}
+            >
                 {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
                 <AgGridReact
                     pagination={true}
