@@ -9,6 +9,7 @@ import { Input } from '@/component-library/ui/input';
 import { HintLink } from '@/component-library/ui/hint-link';
 import { HiPlay, HiStop } from 'react-icons/hi';
 import { SearchButton } from '@/component-library/Pages/RSE/List/SearchButton';
+import { BaseViewModelValidator } from '@/component-library/utils';
 
 type ListRSEProps = {
     firstExpression?: string;
@@ -24,22 +25,19 @@ export const ListRSE = (props: ListRSEProps) => {
     const [gridApi, setGridApi] = useState<GridApi<RSEViewModel> | null>(null);
 
     const { toast, dismiss } = useToast();
-
-    const feedInitialData = async (api: GridApi<RSEViewModel>) => {
-        if (props.initialData) {
-            // TODO: possibly handle huge arrays
-            api.applyTransactionAsync({ add: props.initialData });
-        }
-    };
+    const validator = new BaseViewModelValidator(toast);
 
     const onGridReady = (event: GridReadyEvent) => {
-        feedInitialData(event.api);
+        if (props.initialData) {
+            // TODO: possibly handle huge arrays
+            event.api.applyTransactionAsync({ add: props.initialData });
+        }
         setGridApi(event.api);
     };
 
     const onData = (data: RSEViewModel[]) => {
-        // TODO: check for invalid models
-        gridApi?.applyTransactionAsync({ add: data });
+        const validData = data.filter(element => validator.isValid(element));
+        gridApi?.applyTransactionAsync({ add: validData });
     };
 
     const startStreaming = () => {

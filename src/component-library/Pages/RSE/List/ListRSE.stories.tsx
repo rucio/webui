@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { fixtureRSEViewModel } from '../../../../../test/fixtures/table-fixtures';
+import { fixtureErrorViewModel, fixtureRSEViewModel } from '../../../../../test/fixtures/table-fixtures';
 import { ListRSE as L } from './ListRSE';
 import { Toaster } from '@/component-library/ui/toaster';
 import { useToast } from '@/component-library/hooks/use-toast';
@@ -32,19 +32,19 @@ const Template: StoryFn<typeof L> = args => {
 };
 
 // We don't want to generate several of these
-const hugeArray = Array.from({ length: 100000 }, () => fixtureRSEViewModel());
+const hugeArray = Array.from({ length: 100000 }, fixtureRSEViewModel);
 const endpointUrl = '/api/feature/list-rses';
 
 export const InitialDataNoEndpoint = Template.bind({});
 InitialDataNoEndpoint.args = {
-    initialData: Array.from({ length: 140 }, () => fixtureRSEViewModel()),
+    initialData: Array.from({ length: 140 }, fixtureRSEViewModel),
 };
 
 export const RegularStreaming = Template.bind({});
 RegularStreaming.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(endpointUrl, {
-            data: Array.from({ length: 140 }, () => fixtureRSEViewModel()),
+            data: Array.from({ length: 140 }, fixtureRSEViewModel),
             delay: 1,
         }),
     ]),
@@ -54,7 +54,7 @@ export const SlowStreaming = Template.bind({});
 SlowStreaming.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(endpointUrl, {
-            data: Array.from({ length: 140 }, () => fixtureRSEViewModel()),
+            data: Array.from({ length: 140 }, fixtureRSEViewModel),
             delay: 200,
         }),
     ]),
@@ -86,7 +86,7 @@ InitialValidatedExpression.args = {
 InitialValidatedExpression.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(endpointUrl, {
-            data: Array.from({ length: 10 }, () => fixtureRSEViewModel()),
+            data: Array.from({ length: 10 }, fixtureRSEViewModel),
             isRequestValid: request => {
                 const url = new URL(request.url);
                 const expression = url.searchParams.get('rseExpression');
@@ -102,6 +102,25 @@ NotFound.decorators = [
         getMockErrorEndpoint(endpointUrl, {
             statusCode: 404,
             message: 'No RSEs found.',
+        }),
+    ]),
+];
+
+export const NoValidData = Template.bind({});
+NoValidData.decorators = [
+    getDecoratorWithWorker([
+        getMockStreamEndpoint(endpointUrl, {
+            data: Array.from({ length: 50 }, fixtureErrorViewModel),
+            delay: 10,
+        }),
+    ]),
+];
+
+export const SomeInvalidData = Template.bind({});
+SomeInvalidData.decorators = [
+    getDecoratorWithWorker([
+        getMockStreamEndpoint(endpointUrl, {
+            data: [...Array.from({ length: 20 }, fixtureErrorViewModel), ...Array.from({ length: 30 }, fixtureRSEViewModel)],
         }),
     ]),
 ];

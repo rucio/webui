@@ -430,6 +430,13 @@ export function fixtureSubscriptionViewModel(): SubscriptionViewModel {
     };
 }
 
+export function fixtureErrorViewModel(): BaseViewModel {
+    return {
+        message: faker.word.words(16),
+        status: 'error',
+    };
+}
+
 export function generateSequenceArray(length: number, generator: () => any): any[] {
     const result: number[] = [];
     for (let i = 1; i <= length; i++) {
