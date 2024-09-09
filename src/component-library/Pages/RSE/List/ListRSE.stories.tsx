@@ -1,16 +1,16 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { fixtureErrorViewModel, fixtureRSEViewModel } from '../../../../../test/fixtures/table-fixtures';
+import { fixtureErrorViewModel, fixtureRSEViewModel } from '@/test/fixtures/table-fixtures';
 import { ListRSE as L } from './ListRSE';
 import { Toaster } from '@/component-library/ui/toaster';
 import { useToast } from '@/component-library/hooks/use-toast';
 import { useEffect } from 'react';
-import { getDecoratorWithWorker } from '../../../../../test/mocks/handlers/storyDecorators';
+import { getDecoratorWithWorker } from '@/test/mocks/handlers/storyDecorators';
 import {
     getMockInvalidStreamEndpoint,
     getMockPartialStreamEndpoint,
     getMockStreamEndpoint,
-} from '../../../../../test/mocks/handlers/streamingHandlers';
-import { getMockErrorEndpoint } from '../../../../../test/mocks/handlers/errorHandlers';
+} from '@/test/mocks/handlers/streamingHandlers';
+import { getMockErrorEndpoint } from '@/test/mocks/handlers/errorHandlers';
 
 export default {
     title: 'Components/Pages/RSE/List',
