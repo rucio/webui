@@ -42,8 +42,15 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const startStreaming = () => {
         if (gridApi) {
+            // Hide active toasts
             dismiss();
+
+            // Empty the grid
             gridApi.setGridOption('rowData', []);
+
+            // Reset the validator
+            validator.reset();
+
             const url = `/api/feature/list-rses?rseExpression=${expression ?? defaultExpression}`;
             streamingHook.start({ url, onData });
         } else {

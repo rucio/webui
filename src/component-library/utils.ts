@@ -31,4 +31,8 @@ export class BaseViewModelValidator {
         console.error(`Invalid element\nStatus: ${model.status}\nMessage: ${model.message}`);
         return false;
     }
+
+    reset() {
+        this.invalidCount = 0;
+    }
 }
