@@ -13,9 +13,8 @@
 }
 
 :where(.ag-root-wrapper, .ag-measurement-container, .ag-apply-theme-variables, .ag-popup) {
-	--ag-background-color: var(--ag-inherited-background-color, #1E293B);
-	--ag-foreground-color: var(--ag-inherited-foreground-color, #F1F5F9);
 	--ag-text-color: var(--ag-inherited-text-color, var(--ag-foreground-color));
+	/* Equals to tailwind's brand.500 */
 	--ag-accent-color: var(--ag-inherited-accent-color, #8B5CF6);
 	--ag-invalid-color: var(--ag-inherited-invalid-color, #e02525);
 	--ag-border-color: var(--ag-inherited-border-color, color-mix(in srgb, transparent, var(--ag-foreground-color) 15%));

@@ -5,13 +5,17 @@
  */
 
 @import url('https://fonts.googleapis.com/css2?family=IBM%20Plex%20Sans:wght@400;500&display=swap');
-@import url('ag-grid-theme-rucio.css');
+@import url('agGridThemeRucio.css');
 
 .ag-grid-theme-rucio-light {
+	/* Equals to tailwind's neutral.0 */
 	--ag-background-color: var(--ag-inherited-background-color, #ffffff);
+	/* Equals to tailwind's neutral.900 */
 	--ag-foreground-color: var(--ag-inherited-foreground-color, #0f172a);
 	--ag-text-color: var(--ag-inherited-text-color, var(--ag-foreground-color));
+	/* Equals to tailwind's neutral.200 */
 	--ag-header-background-color: var(--ag-inherited-header-background-color, #e2e8f0);
+	/* Equals to tailwind's neutral.700 */
 	--ag-header-text-color: var(--ag-inherited-header-text-color, #334155);
 	--ag-color-scheme: var(--ag-inherited-color-scheme, light);
 }

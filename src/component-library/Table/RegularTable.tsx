@@ -7,8 +7,8 @@ import { NoDataYetOverlay } from '@/component-library/Table/Overlays/NoDataYetOv
 import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { SimplePaginationPanel } from '@/component-library/Table/PaginationPanels/SimplePaginationPanel';
 import useDarkMode from '@/component-library/hooks/useDarkMode';
-import '@/component-library/ag-grid-theme-rucio-dark.css';
-import '@/component-library/ag-grid-theme-rucio-light.css';
+import './styles/agGridThemeRucioDark.css';
+import './styles/agGridThemeRucioLight.css';
 
 export interface RegularTableProps {
     tableRef: RefObject<AgGridReact>;
