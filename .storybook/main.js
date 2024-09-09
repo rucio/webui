@@ -1,5 +1,5 @@
 module.exports = {
-  staticDirs: ['../public'],
+  staticDirs: ['../public', '../test/static'],
 
   stories: [
     "../src/**/*.mdx",
