@@ -59,6 +59,24 @@ export const getMockInvalidStreamEndpoint = (url: string) => {
     });
 };
 
+export const getMockValidBeforeFailStreamEndpoint = (url: string, data: any[]) => {
+    return http.get(url, async () => {
+        // Create a stream that is not valid ndjson
+        const stream = new ReadableStream({
+            async start(controller) {
+                const dataString = data.map(element => JSON.stringify(element)).join('\n') + '\n';
+                let jsonString = dataString;
+                jsonString += '{bad:formatting\n';
+                jsonString += dataString;
+                controller.enqueue(encoder.encode(jsonString));
+                controller.close();
+            },
+        });
+
+        return new Response(stream, { headers: streamHeaders });
+    });
+};
+
 const splitStringRandomly = (str: string): string[] => {
     const chunkCount = Math.floor(Math.random() * (str.length - 1)) + 1;
 

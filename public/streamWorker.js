@@ -52,6 +52,8 @@ self.onmessage = async function (event) {
         const decoder = new TextDecoder();
         let partialData = '';
 
+        let parsingFailed = false;
+
         while (true) {
             const {done, value} = await reader.read();
             if (done) break;
@@ -63,11 +65,18 @@ self.onmessage = async function (event) {
             partialData = lines.pop() || '';
 
             for (const line of lines) {
-                if (!tryParse(line)) return;
+                if (!tryParse(line)) {
+                    parsingFailed = true;
+                    break;
+                }
             }
+
+            if (parsingFailed) break;
         }
 
-        if (partialData && !tryParse(partialData)) return;
+        if (!parsingFailed && partialData) {
+            tryParse(partialData);
+        }
 
         clearInterval(updateInterval);
         finalize();

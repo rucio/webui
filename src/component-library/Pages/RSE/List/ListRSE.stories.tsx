@@ -9,6 +9,7 @@ import {
     getMockInvalidStreamEndpoint,
     getMockPartialStreamEndpoint,
     getMockStreamEndpoint,
+    getMockValidBeforeFailStreamEndpoint,
 } from '@/test/mocks/handlers/streamingHandlers';
 import { getMockErrorEndpoint } from '@/test/mocks/handlers/errorHandlers';
 
@@ -129,8 +130,13 @@ SomeInvalidData.decorators = [
     ]),
 ];
 
-export const ParsingError = Template.bind({});
-ParsingError.decorators = [getDecoratorWithWorker([getMockInvalidStreamEndpoint(endpointUrl)])];
+export const FullParsingError = Template.bind({});
+FullParsingError.decorators = [getDecoratorWithWorker([getMockInvalidStreamEndpoint(endpointUrl)])];
+
+export const PartialParsingError = Template.bind({});
+PartialParsingError.decorators = [
+    getDecoratorWithWorker([getMockValidBeforeFailStreamEndpoint(endpointUrl, Array.from({ length: 5 }, fixtureRSEViewModel))]),
+];
 
 export const PartialStreaming = Template.bind({});
 PartialStreaming.decorators = [

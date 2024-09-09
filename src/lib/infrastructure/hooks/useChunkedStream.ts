@@ -85,7 +85,9 @@ export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
                 settings.onData(data);
             } else if (type === 'error') {
                 setError(error);
-                stop();
+                if (error.type !== StreamingErrorType.PARSING_ERROR) {
+                    stop();
+                }
             } else if (type === 'finish') {
                 stop();
             }
