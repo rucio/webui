@@ -2,7 +2,7 @@ import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { ChangeEvent, useState } from 'react';
 import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
 import { ListRSETable } from '@/component-library/Pages/RSE/List/ListRSETable';
-import { useToast } from '@/component-library/hooks/use-toast';
+import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Heading } from '@/component-library/ui/heading';
 import { Input } from '@/component-library/ui/input';

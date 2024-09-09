@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 import { Toaster } from '@/component-library/ui/toaster';
-import { useToast } from '@/component-library/hooks/use-toast';
+import { useToast } from '@/lib/infrastructure/hooks/useToast';
 
 export default {
     title: 'Components/Toast',

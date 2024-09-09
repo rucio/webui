@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { RegularTable, RegularTableProps } from '@/component-library/Table/RegularTable';
 import { StreamingErrorType, StreamingStatus, UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
 import { NoLoadedRowsOverlay } from '@/component-library/Table/Overlays/NoLoadedRowsOverlay';
-import { useToast } from '@/component-library/hooks/use-toast';
+import { useToast } from '@/lib/infrastructure/hooks/useToast';
 
 export interface StreamedTableProps extends RegularTableProps {
     streamingHook: UseChunkedStream<any>;

@@ -2,7 +2,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import { fixtureErrorViewModel, fixtureRSEViewModel } from '@/test/fixtures/table-fixtures';
 import { ListRSE as L } from './ListRSE';
 import { Toaster } from '@/component-library/ui/toaster';
-import { useToast } from '@/component-library/hooks/use-toast';
+import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { useEffect } from 'react';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/storyDecorators';
 import {
