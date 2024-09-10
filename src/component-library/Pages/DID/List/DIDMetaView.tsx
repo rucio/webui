@@ -1,8 +1,8 @@
-import { DIDTypeTag } from '../../Tags/DIDTypeTag';
-import { BoolTag } from '../../Tags/BoolTag';
+import { DIDTypeTag } from '../../../Tags/DIDTypeTag';
+import { BoolTag } from '../../../Tags/BoolTag';
 import { twMerge } from 'tailwind-merge';
-import { AvailabilityTag } from '../../Tags/AvailabilityTag';
-import { FileSize } from '../../Text/Content/FileSize';
+import { AvailabilityTag } from '../../../Tags/AvailabilityTag';
+import { FileSize } from '../../../Text/Content/FileSize';
 import { DIDMetaViewModel } from '@/lib/infrastructure/data/view-model/did';
 var format = require('date-format');
 

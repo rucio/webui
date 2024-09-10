@@ -2,13 +2,13 @@ import { Button, ButtonProps } from '@/component-library/ui/button';
 import { cn } from '@/component-library/utils';
 import React from 'react';
 
-interface SearchButtonProps extends ButtonProps {
+interface IconButtonProps extends ButtonProps {
     icon: React.ReactElement;
 }
 
-export const SearchButton: React.FC<SearchButtonProps> = ({ icon, className, children, ...props }) => {
+export const IconButton: React.FC<IconButtonProps> = ({ icon, className, children, ...props }) => {
     return (
-        <Button className={cn(className, 'sm:w-48 w-full justify-between')} {...props}>
+        <Button className={cn('sm:w-48 w-full justify-between', className)} {...props}>
             {children}
             {icon}
         </Button>

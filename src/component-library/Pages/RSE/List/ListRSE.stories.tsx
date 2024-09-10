@@ -1,9 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react';
 import { fixtureErrorViewModel, fixtureRSEViewModel } from '@/test/fixtures/table-fixtures';
-import { ListRSE as L } from './ListRSE';
-import { Toaster } from '@/component-library/ui/toaster';
-import { useToast } from '@/lib/infrastructure/hooks/useToast';
-import { useEffect } from 'react';
+import { ListRSE } from './ListRSE';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/storyDecorators';
 import {
     getMockInvalidStreamEndpoint,
@@ -12,29 +9,21 @@ import {
     getMockValidBeforeFailStreamEndpoint,
 } from '@/test/mocks/handlers/streamingHandlers';
 import { getMockErrorEndpoint } from '@/test/mocks/handlers/errorHandlers';
+import { ToastedTemplate } from '@/component-library/Templates/ToastedTemplate';
 
 export default {
     title: 'Components/Pages/RSE/List',
-    component: L,
+    component: ListRSE,
     parameters: {
         docs: { disable: true },
     },
-} as Meta<typeof L>;
+} as Meta<typeof ListRSE>;
 
-const Template: StoryFn<typeof L> = args => {
-    const { dismiss } = useToast();
-
-    useEffect(() => {
-        return () => dismiss();
-    }, []);
-
-    return (
-        <div className="flex flex-col h-screen dark:bg-neutral-900">
-            <L {...args} />
-            <Toaster />
-        </div>
-    );
-};
+const Template: StoryFn<typeof ListRSE> = args => (
+    <ToastedTemplate>
+        <ListRSE {...args} />
+    </ToastedTemplate>
+);
 
 // We don't want to generate several of these
 const hugeArray = Array.from({ length: 100000 }, fixtureRSEViewModel);

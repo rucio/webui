@@ -1,5 +1,5 @@
 // components
-import { DIDMetaView } from './DIDMetaView';
+import { DIDMetaView } from './List/DIDMetaView';
 import { Tabs } from '../../Misc/Tabs';
 import { DIDTypeTag } from '../../Tags/DIDTypeTag';
 import { SubPage } from '../../Helpers/SubPage';

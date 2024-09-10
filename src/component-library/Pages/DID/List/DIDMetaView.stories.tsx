@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react';
 import { DIDMetaView as DM } from './DIDMetaView';
-import { fixtureDIDMetaViewModel } from 'test/fixtures/table-fixtures';
+import { fixtureDIDMetaViewModel } from '../../../../../test/fixtures/table-fixtures';
 
 export default {
     title: 'Components/Pages/DID',

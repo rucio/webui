@@ -7,9 +7,9 @@ import { GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Heading } from '@/component-library/ui/heading';
 import { Input } from '@/component-library/ui/input';
 import { HintLink } from '@/component-library/ui/hint-link';
-import { HiPlay, HiStop } from 'react-icons/hi';
-import { SearchButton } from '@/component-library/Pages/RSE/List/SearchButton';
 import { BaseViewModelValidator } from '@/component-library/utils';
+import { SearchButton } from '@/component-library/Common/Buttons/SearchButton';
+import { alreadyStreamingToast, noApiToast } from '@/component-library/Common/Toasts/listToasts';
 
 type ListRSEProps = {
     firstExpression?: string;
@@ -45,6 +45,9 @@ export const ListRSE = (props: ListRSEProps) => {
             // Hide active toasts
             dismiss();
 
+            // Make sure there are no pending transactions
+            gridApi.flushAsyncTransactions();
+
             // Empty the grid
             gridApi.setGridOption('rowData', []);
 
@@ -54,11 +57,7 @@ export const ListRSE = (props: ListRSEProps) => {
             const url = `/api/feature/list-rses?rseExpression=${expression ?? defaultExpression}`;
             streamingHook.start({ url, onData });
         } else {
-            toast({
-                title: 'Warning',
-                description: 'Cannot start the streaming while the grid is not ready.',
-                variant: 'warning',
-            });
+            toast(noApiToast);
         }
     };
 
@@ -74,11 +73,7 @@ export const ListRSE = (props: ListRSEProps) => {
         if (!isRunning) {
             startStreaming();
         } else {
-            toast({
-                title: 'Oops!',
-                description: 'Please stop the streaming before trying to search again.',
-                variant: 'info',
-            });
+            toast(alreadyStreamingToast);
         }
     };
 
@@ -105,13 +100,7 @@ export const ListRSE = (props: ListRSEProps) => {
                         defaultValue={props.firstExpression ?? ''}
                         placeholder={defaultExpression}
                     />
-                    <SearchButton
-                        icon={isRunning ? <HiStop className="text-xl" /> : <HiPlay className="text-xl" />}
-                        onClick={isRunning ? onStop : onSearch}
-                        variant={isRunning ? 'error' : 'success'}
-                    >
-                        {isRunning ? 'Stop' : 'Search'}
-                    </SearchButton>
+                    <SearchButton isRunning={streamingHook.status === StreamingStatus.RUNNING} onStop={onStop} onSearch={onSearch} />
                 </div>
             </div>
             <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />

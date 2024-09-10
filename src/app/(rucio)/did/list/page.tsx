@@ -1,12 +1,14 @@
 'use client';
 
-import { ListDID } from '@/component-library/Pages/DID/ListDID';
-import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { ListDID } from '@/component-library/Pages/DID/List/ListDID';
 import { didMetaQueryBase } from '../queries';
-import useChunkedStream from '@/lib/infrastructure/hooks/useChunkedStream';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
-    const streamingHook = useChunkedStream<DIDViewModel>();
+    const searchParams = useSearchParams();
+    const firstPattern = searchParams?.get('pattern');
 
-    return <ListDID streamingHook={streamingHook} queryMeta={didMetaQueryBase} />;
+    // TODO: fetch initial data
+
+    return <ListDID queryMeta={didMetaQueryBase} firstPattern={firstPattern ?? undefined} />;
 }

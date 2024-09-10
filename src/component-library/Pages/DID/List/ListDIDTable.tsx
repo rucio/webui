@@ -1,18 +1,20 @@
-import React, { RefObject, useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
+import React, { useRef, useState } from 'react';
 import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
 import { StreamedTable } from '@/component-library/Table/StreamedTable';
 import { DefaultTextFilterParams } from '@/component-library/Table/FilterParameters/DefaultTextFilterParams';
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
+import { GridReadyEvent, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
 
 type ListDIDTableProps = {
-    tableRef: RefObject<AgGridReact>;
     streamingHook: UseChunkedStream<DIDViewModel>;
     onSelectionChanged: (event: SelectionChangedEvent) => void;
+    onGridReady: (event: GridReadyEvent) => void;
 };
 
 export const ListDIDTable = (props: ListDIDTableProps) => {
+    const tableRef = useRef<AgGridReact<DIDViewModel>>(null);
+
     const [columnDefs] = useState([
         {
             headerName: 'Name',
@@ -25,5 +27,5 @@ export const ListDIDTable = (props: ListDIDTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} rowSelection="single" {...props} />;
+    return <StreamedTable columnDefs={columnDefs} rowSelection="single" tableRef={tableRef} {...props} />;
 };
