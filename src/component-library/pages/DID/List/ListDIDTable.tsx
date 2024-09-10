@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { DefaultTextFilterParams } from '@/component-library/features/table/filter-parameters/DefaultTextFilterParams';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';

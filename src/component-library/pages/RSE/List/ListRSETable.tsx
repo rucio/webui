@@ -6,9 +6,7 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { BadgeCell, badgeCellWrapperStyle } from '@/component-library/features/table/cells/BadgeCell';
 import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
-import { DefaultTextFilterParams } from '@/component-library/features/table/filter-parameters/DefaultTextFilterParams';
-import { DefaultBooleanFilterParams } from '@/component-library/features/table/filter-parameters/DefaultBooleanFilterParams';
-import { buildDiscreteFilterParams } from '@/component-library/features/table/filter-parameters/buildDiscreteFilterParams';
+import { DefaultTextFilterParams, DefaultBooleanFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent } from 'ag-grid-community';
 
 type ListRSETableProps = {
