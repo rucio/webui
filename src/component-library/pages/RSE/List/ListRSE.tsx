@@ -7,7 +7,7 @@ import { GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 import { Input } from '@/component-library/atoms/form/input';
 import { HintLink } from '@/component-library/atoms/misc/HintLink';
-import { BaseViewModelValidator } from '@/component-library/utils';
+import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { alreadyStreamingToast, noApiToast } from '@/component-library/features/utils/list-toasts';
 

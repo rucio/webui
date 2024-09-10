@@ -9,7 +9,7 @@ import { Input } from '@/component-library/atoms/form/input';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { useQuery } from '@tanstack/react-query';
 import { ListDIDTable } from '@/component-library/pages/DID/List/ListDIDTable';
-import { BaseViewModelValidator } from '@/component-library/utils';
+import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { alreadyStreamingToast, noApiToast } from '@/component-library/features/utils/list-toasts';
 import { DIDMetaView } from '@/component-library/pages/DID/List/DIDMetaView';
