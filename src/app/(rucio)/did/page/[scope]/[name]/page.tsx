@@ -1,5 +1,5 @@
 'use client';
-import { PageDID as PageDIDStory } from '@/component-library/Pages/DID/PageDID';
+import { PageDID as PageDIDStory } from '@/component-library/pages/legacy/DID/PageDID';
 import useComDOM from '@/lib/infrastructure/hooks/useComDOM';
 import { useEffect, useState } from 'react';
 import {
@@ -20,7 +20,7 @@ import {
     FileReplicaStateViewModel,
 } from '@/lib/infrastructure/data/view-model/did';
 import { didKeyValuePairsDataQuery, didMetaQueryBase } from '@/app/(rucio)/did/queries';
-import { Loading } from '@/component-library/Pages/Helpers/Loading';
+import { Loading } from '@/component-library/pages/legacy/Helpers/Loading';
 
 export default function Page({ params }: { params: { scope: string; name: string } }) {
     const [didMeta, setDIDMeta] = useState<DIDMetaViewModel>({ status: 'pending' } as DIDMetaViewModel);

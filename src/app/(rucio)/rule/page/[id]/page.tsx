@@ -1,5 +1,5 @@
 'use client';
-import { PageRule as PageRuleStory } from '@/component-library/Pages/Rule/PageRule';
+import { PageRule as PageRuleStory } from '@/component-library/pages/legacy/Rule/PageRule';
 import { fixtureRuleMetaViewModel } from 'test/fixtures/table-fixtures';
 import { useState, useEffect } from 'react';
 import useComDOM from '@/lib/infrastructure/hooks/useComDOM';

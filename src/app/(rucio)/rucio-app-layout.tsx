@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout } from '@/component-library/Pages/Layout/Layout';
+import { Layout } from '@/component-library/pages/legacy/Layout/Layout';
 import { useQuery } from '@tanstack/react-query';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { User } from '@/lib/core/entity/auth-models';

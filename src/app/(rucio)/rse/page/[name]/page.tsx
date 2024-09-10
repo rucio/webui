@@ -1,6 +1,6 @@
 'use client';
-import { Loading } from '@/component-library/Pages/Helpers/Loading';
-import { PageRSE as PageRSEStory } from '@/component-library/Pages/RSE/PageRSE';
+import { Loading } from '@/component-library/pages/legacy/Helpers/Loading';
+import { PageRSE as PageRSEStory } from '@/component-library/pages/legacy/RSE/PageRSE';
 import { RSEBlockState } from '@/lib/core/entity/rucio';
 import { RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { useEffect, useState } from 'react';

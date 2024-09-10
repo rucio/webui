@@ -4,7 +4,7 @@
 
 import { render, act, screen, cleanup, fireEvent, getByRole } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { PageRule as PageRuleStory } from '@/component-library/Pages/Rule/PageRule';
+import { PageRule as PageRuleStory } from '@/component-library/pages/legacy/Rule/PageRule';
 import { fixtureRulePageLockEntryViewModel, fixtureRuleMetaViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
 var format = require('date-format');
 

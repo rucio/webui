@@ -1,5 +1,5 @@
 'use client';
-import { CreateRule as CreateRuleStory } from '@/component-library/Pages/Rule/CreateRule';
+import { CreateRule as CreateRuleStory } from '@/component-library/pages/legacy/Rule/CreateRule';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import {
     CreateRulesViewModel,

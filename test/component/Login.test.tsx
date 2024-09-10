@@ -3,7 +3,7 @@
  */
 
 import Login from '@/app/auth/login/page';
-import { Login as LoginStory } from '@/component-library/Pages/Login/Login';
+import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
 import { render, act, screen, cleanup, fireEvent } from '@testing-library/react';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { useSearchParams } from 'next/navigation';

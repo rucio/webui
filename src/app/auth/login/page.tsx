@@ -3,7 +3,7 @@ import { AuthViewModel, x509AuthRequestHeaders as X509AuthRequestHeaders } from 
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Login as LoginStory } from '@/component-library/Pages/Login/Login';
+import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
 import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
 
 export default function Login() {

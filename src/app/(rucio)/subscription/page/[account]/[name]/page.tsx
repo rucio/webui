@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { PageSubscription as PageSubscriptionStory } from '@/component-library/Pages/Subscriptions/PageSubscription';
+import { PageSubscription as PageSubscriptionStory } from '@/component-library/pages/legacy/Subscriptions/PageSubscription';
 import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
-import { Loading } from '@/component-library/Pages/Helpers/Loading';
+import { Loading } from '@/component-library/pages/legacy/Helpers/Loading';
 
 async function updateSubscription(id: string, filter: string, replicationRules: string) {
     const req: any = {

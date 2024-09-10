@@ -1,6 +1,6 @@
 'use client';
 
-import { ListDID } from '@/component-library/Pages/DID/List/ListDID';
+import { ListDID } from '@/component-library/pages/DID/List/ListDID';
 import { didMetaQueryBase } from '../queries';
 import { useSearchParams } from 'next/navigation';
 

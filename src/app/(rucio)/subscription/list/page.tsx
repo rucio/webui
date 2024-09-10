@@ -1,5 +1,5 @@
 'use client';
-import { ListSubscription as ListSubscriptionStory } from '@/component-library/Pages/Subscriptions/ListSubscription';
+import { ListSubscription as ListSubscriptionStory } from '@/component-library/pages/legacy/Subscriptions/ListSubscription';
 import { Component, useEffect, useState } from 'react';
 import useComDOM from '@/lib/infrastructure/hooks/useComDOM';
 import { SubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';

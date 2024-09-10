@@ -1,11 +1,11 @@
 'use client';
 import { fixtureOngoingrules, fixtureUsedquota } from 'test/fixtures/widget-fixtures';
-import { Dashboard as DashboardStory } from '@/component-library/Pages/Dashboard/Dashboard';
+import { Dashboard as DashboardStory } from '@/component-library/pages/legacy/Dashboard/Dashboard';
 import { Role } from '@/lib/core/entity/account';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { useEffect, useState } from 'react';
 import { getSiteHeader } from '../queries';
-import { Loading } from '@/component-library/Pages/Helpers/Loading';
+import { Loading } from '@/component-library/pages/legacy/Helpers/Loading';
 import { User } from '@/lib/core/entity/auth-models';
 export default function Page() {
     const [siteHeader, setSiteHeader] = useState<SiteHeaderViewModel>({ status: 'pending' } as SiteHeaderViewModel);

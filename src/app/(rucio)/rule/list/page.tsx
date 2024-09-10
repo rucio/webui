@@ -1,6 +1,6 @@
 'use client';
 
-import { ListRule } from '@/component-library/Pages/Rule/ListRule';
+import { ListRule } from '@/component-library/pages/legacy/Rule/ListRule';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import useComDOM from '@/lib/infrastructure/hooks/useComDOM';
 import { HTTPRequest } from '@/lib/sdk/http';
