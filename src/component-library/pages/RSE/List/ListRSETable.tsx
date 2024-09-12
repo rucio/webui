@@ -1,13 +1,19 @@
-import React, { useRef, useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
-import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
-import { BadgeCell, badgeCellWrapperStyle } from '@/component-library/features/table/cells/BadgeCell';
-import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
-import { DefaultTextFilterParams, DefaultBooleanFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
-import { GridReadyEvent } from 'ag-grid-community';
+import React, {useRef, useState} from 'react';
+import {AgGridReact} from 'ag-grid-react';
+import {UseChunkedStream} from '@/lib/infrastructure/hooks/useChunkedStream';
+import {RSEViewModel} from '@/lib/infrastructure/data/view-model/rse';
+import {StreamedTable} from '@/component-library/features/table/StreamedTable/StreamedTable';
+import {ClickableCell} from '@/component-library/features/table/cells/ClickableCell';
+import {badgeCellClasses, badgeCellWrapperStyle} from '@/component-library/features/table/cells/badge-cell';
+import {CheckboxCell, checkboxCellWrapperStyle} from '@/component-library/features/table/cells/CheckboxCell';
+import {
+    DefaultTextFilterParams,
+    DefaultBooleanFilterParams,
+    buildDiscreteFilterParams
+} from '@/component-library/features/utils/filter-parameters';
+import {GridReadyEvent} from 'ag-grid-community';
+import {RSETypeBadge} from '@/component-library/features/badges/RSE/RSETypeBadge';
+import {RSEType} from "@/lib/core/entity/rucio";
 
 type ListRSETableProps = {
     streamingHook: UseChunkedStream<RSEViewModel>;
@@ -16,16 +22,6 @@ type ListRSETableProps = {
 
 const ClickableName = (props: { value: string }) => {
     return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
-};
-
-const typeColorClasses: Record<string, string> = {
-    DISK: 'bg-base-info-500',
-    TAPE: 'bg-extra-rose-500',
-    UNKNOWN: 'bg-base-warning-400',
-};
-
-const TypeBadge = (props: { value: string }) => {
-    return <BadgeCell value={props.value} colorClass={typeColorClasses[props.value]} />;
 };
 
 export const ListRSETable = (props: ListRSETableProps) => {
@@ -48,10 +44,13 @@ export const ListRSETable = (props: ListRSETableProps) => {
             minWidth: 125,
             maxWidth: 200,
             cellStyle: badgeCellWrapperStyle,
-            cellRenderer: TypeBadge,
+            cellRenderer: RSETypeBadge,
+            cellRendererParams: {
+                className: badgeCellClasses,
+            },
             filter: true,
             sortable: false,
-            filterParams: buildDiscreteFilterParams(['DISK', 'TAPE', 'UNKNOWN']),
+            filterParams: buildDiscreteFilterParams(Object.values(RSEType)),
         },
         {
             headerName: 'Volatile',

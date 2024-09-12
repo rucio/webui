@@ -11,3 +11,13 @@ export const alreadyStreamingToast: Toast = {
     description: 'Please stop the streaming before trying to search again.',
     variant: 'info',
 };
+
+export const copiedToast: Toast = {
+    title: 'Copied!',
+    variant: 'info'
+}
+
+export const errorCopyingToast: Toast = {
+    title: 'Cannot copy the text',
+    variant: 'error'
+}

@@ -1,5 +1,5 @@
 // components
-import { DIDMetaView } from '@/component-library/pages/DID/List/DIDMetaView';
+import { ListDIDMeta } from '@/component-library/pages/DID/List/Meta/ListDIDMeta';
 import { Tabs } from '../../../atoms/legacy/Tabs/Tabs';
 import { DIDTypeTag } from '@/component-library/features/legacy/Tags/DIDTypeTag';
 import { SubPage } from '../../../atoms/legacy/helpers/SubPage/SubPage';
@@ -98,7 +98,7 @@ export const PageDID = (props: PageDIDPageProps) => {
                 tag={<DIDTypeTag didtype={props.didMeta.did_type} />}
             >
                 <div className={twMerge('bg-neutral-100 dark:bg-neutral-900', 'rounded-md p-2', 'flex flex-col space-y-2', 'min-h-0 w-full')}>
-                    <DIDMetaView data={props.didMeta} show horizontal />
+                    <ListDIDMeta meta={props.didMeta} />
                 </div>
             </Heading>
 

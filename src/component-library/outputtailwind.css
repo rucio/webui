@@ -677,6 +677,11 @@ html {
   margin-right: 0.5rem;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .-mb-2 {
   margin-bottom: -0.5rem;
 }
@@ -865,6 +870,10 @@ html {
   height: 2.25rem;
 }
 
+.h-\[52px\] {
+  height: 52px;
+}
+
 .h-\[var\(--radix-select-trigger-height\)\] {
   height: var(--radix-select-trigger-height);
 }
@@ -891,6 +900,10 @@ html {
 
 .min-h-0 {
   min-height: 0px;
+}
+
+.min-h-\[10rem\] {
+  min-height: 10rem;
 }
 
 .min-h-\[300px\] {
@@ -1003,12 +1016,20 @@ html {
   width: max-content;
 }
 
+.min-w-\[10rem\] {
+  min-width: 10rem;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
 
 .min-w-\[var\(--radix-select-trigger-width\)\] {
   min-width: var(--radix-select-trigger-width);
+}
+
+.min-w-full {
+  min-width: 100%;
 }
 
 .max-w-3xl {
@@ -1200,10 +1221,6 @@ html {
   row-gap: 0px;
 }
 
-.gap-y-2 {
-  row-gap: 0.5rem;
-}
-
 .space-x-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.25rem * var(--tw-space-x-reverse));
@@ -1220,12 +1237,6 @@ html {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.space-x-3 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
-  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -1272,6 +1283,10 @@ html {
 
 .self-center {
   align-self: center;
+}
+
+.overflow-auto {
+  overflow: auto;
 }
 
 .overflow-hidden {
@@ -1350,6 +1365,10 @@ html {
 
 .border-b-4 {
   border-bottom-width: 4px;
+}
+
+.border-l {
+  border-left-width: 1px;
 }
 
 .border-l-4 {
@@ -1442,6 +1461,11 @@ html {
 .border-gray-700 {
   --tw-border-opacity: 1;
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
+}
+
+.border-neutral-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(241 245 249 / var(--tw-border-opacity));
 }
 
 .border-neutral-300 {
@@ -1632,6 +1656,11 @@ html {
   background-color: rgb(209 250 229 / var(--tw-bg-opacity));
 }
 
+.bg-extra-emerald-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 185 129 / var(--tw-bg-opacity));
+}
+
 .bg-extra-indigo-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(165 180 252 / var(--tw-bg-opacity));
@@ -1660,6 +1689,11 @@ html {
 .bg-extra-yellow-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 252 232 / var(--tw-bg-opacity));
+}
+
+.bg-extra-yellow-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 204 21 / var(--tw-bg-opacity));
 }
 
 .bg-gray-200 {
@@ -1933,6 +1967,10 @@ html {
 
 .pr-2 {
   padding-right: 0.5rem;
+}
+
+.pr-3 {
+  padding-right: 0.75rem;
 }
 
 .pr-4 {
@@ -2963,6 +3001,11 @@ html {
   border-color: rgb(148 163 184 / var(--tw-border-opacity));
 }
 
+.dark .dark\:border-neutral-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(51 65 85 / var(--tw-border-opacity));
+}
+
 .dark .dark\:border-slate-800 {
   --tw-border-opacity: 1;
   border-color: rgb(30 41 59 / var(--tw-border-opacity));
@@ -3224,6 +3267,11 @@ html {
 .dark .dark\:text-neutral-100 {
   --tw-text-opacity: 1;
   color: rgb(241 245 249 / var(--tw-text-opacity));
+}
+
+.dark .dark\:text-neutral-300 {
+  --tw-text-opacity: 1;
+  color: rgb(203 213 225 / var(--tw-text-opacity));
 }
 
 .dark .dark\:text-neutral-400 {
@@ -3650,6 +3698,10 @@ html {
     height: 2rem;
   }
 
+  .md\:max-h-\[0px\] {
+    max-height: 0px;
+  }
+
   .md\:w-24 {
     width: 6rem;
   }
@@ -3702,6 +3754,10 @@ html {
     max-width: 600px;
   }
 
+  .md\:flex-1 {
+    flex: 1 1 0%;
+  }
+
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -3748,6 +3804,12 @@ html {
     margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
+  .md\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   .md\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
     --tw-space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
@@ -3790,17 +3852,8 @@ html {
     width: 50rem;
   }
 
-  .lg\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .lg\:gap-x-2 {
-    -moz-column-gap: 0.5rem;
-         column-gap: 0.5rem;
   }
 
   .lg\:px-24 {

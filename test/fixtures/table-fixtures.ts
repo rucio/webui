@@ -281,9 +281,9 @@ export function fixtureRuleViewModel(): RuleViewModel {
     };
 }
 
-export function fixtureDIDMetaViewModel(): DIDMetaViewModel {
+export function fixtureDIDMetaViewModel(type?: DIDType): DIDMetaViewModel {
     // ignore Collections
-    const did_type = faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]);
+    const did_type = type ?? faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]);
     return {
         ...mockBaseVM(),
         name: faker.lorem.words(3).replace(/\s/g, '.'),

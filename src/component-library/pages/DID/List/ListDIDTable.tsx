@@ -5,6 +5,7 @@ import { DefaultTextFilterParams } from '@/component-library/features/utils/filt
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
+import {ClickableCell} from "@/component-library/features/table/cells/ClickableCell";
 
 type ListDIDTableProps = {
     streamingHook: UseChunkedStream<DIDViewModel>;
@@ -17,7 +18,7 @@ export const ListDIDTable = (props: ListDIDTableProps) => {
 
     const [columnDefs] = useState([
         {
-            headerName: 'Name',
+            headerName: 'Identifier',
             valueGetter: (params: ValueGetterParams<DIDViewModel>) => {
                 return params.data?.scope + ':' + params.data?.name;
             },
