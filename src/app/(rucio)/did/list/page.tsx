@@ -10,5 +10,5 @@ export default function Page() {
 
     // TODO: fetch initial data
 
-    return <ListDID queryMeta={didMetaQueryBase} firstPattern={firstPattern ?? undefined} />;
+    return <ListDID firstPattern={firstPattern ?? undefined} />;
 }
