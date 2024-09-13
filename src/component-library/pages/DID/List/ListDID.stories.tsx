@@ -32,6 +32,10 @@ const Template: StoryFn<typeof ListDID> = args => {
 const listEndpoint = '/api/feature/list-dids';
 const metaEndpoint = '/api/feature/get-did-meta';
 
+const smallList = Array.from({ length: 50 }, fixtureDIDViewModel);
+const mediumList = Array.from({ length: 200 }, fixtureDIDViewModel);
+const hugeList = Array.from({ length: 50000 }, fixtureDIDViewModel);
+
 export const ValidInitialPatternNoEndpoint = Template.bind({});
 ValidInitialPatternNoEndpoint.args = {
     firstPattern: 'test:file',
@@ -54,7 +58,7 @@ RegularStreaming.args = {
 RegularStreaming.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(listEndpoint, {
-            data: Array.from({ length: 200 }, fixtureDIDViewModel),
+            data: mediumList,
         }),
         getMockSingleEndpoint(metaEndpoint, {
             getData: () => fixtureDIDMetaViewModel(),
@@ -83,7 +87,7 @@ SlowMeta.args = {
 SlowMeta.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(listEndpoint, {
-            data: Array.from({ length: 200 }, fixtureDIDViewModel),
+            data: mediumList,
         }),
         getMockSingleEndpoint(metaEndpoint, {
             getData: getControlledMetaRetriever(),
@@ -112,7 +116,7 @@ IrregularDelayMeta.args = {
 IrregularDelayMeta.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(listEndpoint, {
-            data: Array.from({ length: 200 }, fixtureDIDViewModel),
+            data: mediumList,
         }),
         getMockSingleEndpoint(metaEndpoint, {
             getData: getControlledMetaRetriever(),
@@ -123,7 +127,7 @@ IrregularDelayMeta.decorators = [
 
 export const InitialData = Template.bind({});
 InitialData.args = {
-    initialData: Array.from({ length: 50 }, fixtureDIDViewModel),
+    initialData: smallList,
 };
 
 const didError: DIDViewModel = {
@@ -144,7 +148,7 @@ HugeStreaming.args = {
 HugeStreaming.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint(listEndpoint, {
-            data: Array.from({ length: 20000 }, fixtureDIDViewModel),
+            data: hugeList,
             delay: 1,
         }),
         getMockSingleEndpoint(metaEndpoint, {
@@ -156,7 +160,7 @@ HugeStreaming.decorators = [
 
 export const MetaInvalidModel = Template.bind({});
 MetaInvalidModel.args = {
-    initialData: Array.from({ length: 20 }, fixtureDIDViewModel),
+    initialData: smallList,
 };
 MetaInvalidModel.decorators = [
     getDecoratorWithWorker([
@@ -168,7 +172,7 @@ MetaInvalidModel.decorators = [
 
 export const MetaResponseError = Template.bind({});
 MetaResponseError.args = {
-    initialData: Array.from({ length: 20 }, fixtureDIDViewModel),
+    initialData: smallList,
 };
 MetaResponseError.decorators = [
     getDecoratorWithWorker([
