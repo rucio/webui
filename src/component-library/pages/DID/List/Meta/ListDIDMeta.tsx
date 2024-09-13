@@ -120,21 +120,22 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
     );
 };
 
-const MetaStub = ({ isLoading }: { isLoading: boolean }) => {
-    return (
-        <div className="justify-center flex grow">
-            {isLoading ? <LoadingSpinner /> : <span className="text-sm text-neutral-800 dark:text-neutral-100">Select an identifier</span>}
-        </div>
-    );
+const MetaStub = ({ isLoading, hasError }: { isLoading: boolean; hasError: boolean }) => {
+    const getTextStub = () => {
+        return <span className="text-sm text-neutral-800 dark:text-neutral-100">{hasError ? 'An error has happened' : 'Select an identifier'}</span>;
+    };
+
+    return <div className="justify-center flex grow">{isLoading ? <LoadingSpinner /> : getTextStub()}</div>;
 };
 
 export interface ListDIDMetaProps {
     meta?: DIDMetaViewModel;
     isLoading: boolean;
+    hasError: boolean;
 }
 
-export const ListDIDMeta = ({ meta, isLoading }: ListDIDMetaProps) => {
-    const showMeta = meta && !isLoading;
+export const ListDIDMeta = ({ meta, isLoading, hasError }: ListDIDMetaProps) => {
+    const showMeta = meta && !isLoading && !hasError;
 
     return (
         <div
@@ -145,7 +146,7 @@ export const ListDIDMeta = ({ meta, isLoading }: ListDIDMetaProps) => {
                 'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
             )}
         >
-            {showMeta ? <MetaContents meta={meta} /> : <MetaStub isLoading={isLoading} />}
+            {showMeta ? <MetaContents meta={meta} /> : <MetaStub isLoading={isLoading} hasError={hasError} />}
         </div>
     );
 };

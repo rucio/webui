@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { fixtureErrorViewModel, fixtureRSEViewModel } from '@/test/fixtures/table-fixtures';
 import { ListRSE } from './ListRSE';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
@@ -10,6 +10,8 @@ import {
 } from '@/test/mocks/handlers/streaming-handlers';
 import { getMockErrorEndpoint } from '@/test/mocks/handlers/error-handlers';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
+import { RSEViewModel } from '@/lib/infrastructure/data/view-model/list-rse';
+import { RSEType } from '@/lib/core/entity/rucio';
 
 export default {
     title: 'Components/Pages/RSE/List',
@@ -135,3 +137,17 @@ PartialStreaming.decorators = [
         }),
     ]),
 ];
+
+const rseError: RSEViewModel = {
+    deterministic: false,
+    id: '',
+    name: '',
+    rse_type: RSEType.UNKNOWN,
+    staging_area: false,
+    volatile: false,
+    ...fixtureErrorViewModel(),
+};
+export const BadInitialData = Template.bind({});
+BadInitialData.args = {
+    initialData: Array.from({ length: 20 }, () => rseError),
+};

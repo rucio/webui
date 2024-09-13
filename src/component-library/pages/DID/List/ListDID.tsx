@@ -156,11 +156,14 @@ export const ListDID = (props: ListDIDProps) => {
     const validator = new BaseViewModelValidator(toast);
 
     const onGridReady = (event: GridReadyEvent) => {
-        if (props.initialData) {
-            event.api.applyTransactionAsync({ add: props.initialData });
-        }
         setGridApi(event.api);
     };
+
+    useEffect(() => {
+        if (props.initialData) {
+            onData(props.initialData);
+        }
+    }, [gridApi]);
 
     const onData = (data: DIDViewModel[]) => {
         const validData = data.filter(element => validator.isValid(element));
@@ -205,8 +208,11 @@ export const ListDID = (props: ListDIDProps) => {
                     name: selected.name,
                 });
             const res = await fetch(url);
-            return await res.json();
+            if (!res.ok) throw new Error(res.statusText);
+            const json = await res.json();
+            if (validator.isValid(json)) return json;
         }
+        return null;
     };
     const metaQueryKey = ['meta'];
     const queryClient = useQueryClient();
@@ -217,10 +223,11 @@ export const ListDID = (props: ListDIDProps) => {
         isFetching: isMetaFetching,
         refetch: refetchMeta,
         remove: removeMeta,
-    } = useQuery({
+    } = useQuery<DIDMetaViewModel>({
         queryKey: metaQueryKey,
         queryFn: queryMeta,
         enabled: false,
+        retry: false,
     });
 
     const onSelectionChanged = (event: SelectionChangedEvent) => {
@@ -243,6 +250,16 @@ export const ListDID = (props: ListDIDProps) => {
         }
     }, [selected]);
 
+    useEffect(() => {
+        if (metaError !== null) {
+            toast({
+                variant: 'error',
+                title: 'Fatal error',
+                description: 'Cannot retrieve metadata.',
+            });
+        }
+    }, [metaError]);
+
     return (
         <div className="flex flex-col space-y-3 w-full grow">
             <Heading text="DIDs" />
@@ -256,7 +273,7 @@ export const ListDID = (props: ListDIDProps) => {
                 <div className="flex flex-col md:flex-1">
                     <ListDIDTable streamingHook={streamingHook} onSelectionChanged={onSelectionChanged} onGridReady={onGridReady} />
                 </div>
-                <ListDIDMeta meta={meta} isLoading={isMetaFetching} />
+                <ListDIDMeta meta={meta} isLoading={isMetaFetching} hasError={metaError !== null} />
             </div>
         </div>
     );

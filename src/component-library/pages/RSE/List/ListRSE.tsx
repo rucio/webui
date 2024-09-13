@@ -1,5 +1,5 @@
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
 import { ListRSETable } from '@/component-library/pages/RSE/List/ListRSETable';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
@@ -28,12 +28,14 @@ export const ListRSE = (props: ListRSEProps) => {
     const validator = new BaseViewModelValidator(toast);
 
     const onGridReady = (event: GridReadyEvent) => {
-        if (props.initialData) {
-            // TODO: possibly handle huge arrays
-            event.api.applyTransactionAsync({ add: props.initialData });
-        }
         setGridApi(event.api);
     };
+
+    useEffect(() => {
+        if (props.initialData) {
+            onData(props.initialData);
+        }
+    }, [gridApi]);
 
     const onData = (data: RSEViewModel[]) => {
         const validData = data.filter(element => validator.isValid(element));
