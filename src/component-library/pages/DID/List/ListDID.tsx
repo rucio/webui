@@ -21,24 +21,27 @@ const delimiterToastMessage = 'Neither scope nor name should contain ":".';
 interface SearchPanelProps {
     startStreaming: (pattern: string, type: DIDType) => void;
     stopStreaming: () => void;
-    firstPattern?: string;
+    initialPattern?: string;
     isRunning: boolean;
 }
 
 const SearchPanel = (props: SearchPanelProps) => {
-    let firstScope: string | undefined, firstName: string | undefined;
-    const firstPatternParts = props.firstPattern?.split(SCOPE_DELIMITER);
-    if (firstPatternParts && firstPatternParts.length === 2) {
-        [firstScope, firstName] = firstPatternParts;
+    // Try retrieving initial search parameters
+    let initialScope: string | undefined, initialName: string | undefined;
+    const initialPatternParts = props.initialPattern?.split(SCOPE_DELIMITER);
+    if (initialPatternParts && initialPatternParts.length === 2) {
+        [initialScope, initialName] = initialPatternParts;
     }
 
+    // Check the validity of the initial pattern
     useEffect(() => {
+        // A short timeout is required for the toast context to initialize
         const timeout = setTimeout(() => {
-            if (props.firstPattern && !firstScope && !firstName) {
+            if (props.initialPattern && !initialScope && !initialName) {
                 toast({
                     variant: 'warning',
                     title: 'Invalid initial pattern',
-                    description: `Could not resolve "${props.firstPattern}"`,
+                    description: `Could not resolve "${props.initialPattern}"`,
                 });
             }
         }, 0);
@@ -46,8 +49,8 @@ const SearchPanel = (props: SearchPanelProps) => {
         return () => clearTimeout(timeout);
     }, []);
 
-    const [scope, setScope] = useState<string | null>(firstScope ?? null);
-    const [name, setName] = useState<string | null>(firstName ?? null);
+    const [scope, setScope] = useState<string | null>(initialScope ?? null);
+    const [name, setName] = useState<string | null>(initialName ?? null);
     const [type, setType] = useState<DIDType>(DIDType.DATASET);
 
     const scopeInputRef = useRef<HTMLInputElement>(null);
@@ -89,8 +92,7 @@ const SearchPanel = (props: SearchPanelProps) => {
         if (!validateScope() || !validateName()) return;
 
         if (!props.isRunning) {
-            const pattern = scope + SCOPE_DELIMITER + name;
-            props.startStreaming(pattern, type);
+            props.startStreaming(`${scope}${SCOPE_DELIMITER}${name}`, type);
         } else {
             toast(alreadyStreamingToast);
         }
@@ -121,7 +123,7 @@ const SearchPanel = (props: SearchPanelProps) => {
                         ref={scopeInputRef}
                         placeholder="scope"
                         className="max-w-[250px]"
-                        defaultValue={firstScope}
+                        defaultValue={initialScope}
                         onInput={(event: ChangeEvent<HTMLInputElement>) => {
                             setScope(event.target.value);
                         }}
@@ -131,7 +133,7 @@ const SearchPanel = (props: SearchPanelProps) => {
                     <Input
                         ref={nameInputRef}
                         placeholder="name"
-                        defaultValue={firstName}
+                        defaultValue={initialName}
                         onInput={(event: ChangeEvent<HTMLInputElement>) => {
                             setName(event.target.value);
                         }}
@@ -150,10 +152,14 @@ export interface ListDIDProps {
 }
 
 export const ListDID = (props: ListDIDProps) => {
+    const { toast, dismiss } = useToast();
+    // A shared validator
+    const validator = new BaseViewModelValidator(toast);
+
+    // List handling
+
     const streamingHook = useChunkedStream<DIDViewModel>();
     const [gridApi, setGridApi] = useState<GridApi<DIDViewModel> | null>(null);
-    const { toast, dismiss } = useToast();
-    const validator = new BaseViewModelValidator(toast);
 
     const onGridReady = (event: GridReadyEvent) => {
         setGridApi(event.api);
@@ -197,26 +203,35 @@ export const ListDID = (props: ListDIDProps) => {
         }
     };
 
-    const [selected, setSelected] = useState<DIDViewModel | null>(null);
+    // Meta handling
+
+    const [selectedItem, setSelectedItem] = useState<DIDViewModel | null>(null);
+
+    // A function passed to the table
+    const onSelectionChanged = (event: SelectionChangedEvent) => {
+        const selectedRows = event.api.getSelectedRows();
+        if (selectedRows.length === 1) {
+            setSelectedItem(selectedRows[0] as DIDViewModel);
+        } else {
+            setSelectedItem(null);
+        }
+    };
 
     const queryMeta = async () => {
-        if (selected !== null) {
-            const url =
-                '/api/feature/get-did-meta?' +
-                new URLSearchParams({
-                    scope: selected.scope,
-                    name: selected.name,
-                });
+        if (selectedItem !== null) {
+            const params = new URLSearchParams({scope: selectedItem.scope, name: selectedItem.name});
+            const url = '/api/feature/get-did-meta?' + params;
+
             const res = await fetch(url);
             if (!res.ok) throw new Error(res.statusText);
+
             const json = await res.json();
             if (validator.isValid(json)) return json;
         }
         return null;
     };
-    const metaQueryKey = ['meta'];
-    const queryClient = useQueryClient();
 
+    const metaQueryKey = ['meta'];
     const {
         data: meta,
         error: metaError,
@@ -229,35 +244,27 @@ export const ListDID = (props: ListDIDProps) => {
         enabled: false,
         retry: false,
     });
+    const queryClient = useQueryClient();
 
-    const onSelectionChanged = (event: SelectionChangedEvent) => {
-        const selectedRows = event.api.getSelectedRows();
-        if (selectedRows.length === 1) {
-            setSelected(selectedRows[0] as DIDViewModel);
-        } else {
-            setSelected(null);
-        }
-    };
-
+    // When an item in the table is selected, update the meta
     useEffect(() => {
         const refetch = async () => {
+            // Make sure the result is always fresh
             await queryClient.cancelQueries(metaQueryKey);
             refetchMeta();
         };
 
-        if (selected !== null) {
-            refetch();
-        }
-    }, [selected]);
+        if (selectedItem !== null) refetch();
+    }, [selectedItem]);
 
+    // Handle errors with loading the meta
     useEffect(() => {
-        if (metaError !== null) {
-            toast({
-                variant: 'error',
-                title: 'Fatal error',
-                description: 'Cannot retrieve metadata.',
-            });
-        }
+        if (metaError === null) return;
+        toast({
+            variant: 'error',
+            title: 'Fatal error',
+            description: 'Cannot retrieve metadata.',
+        });
     }, [metaError]);
 
     return (
@@ -267,7 +274,7 @@ export const ListDID = (props: ListDIDProps) => {
                 isRunning={streamingHook.status === StreamingStatus.RUNNING}
                 startStreaming={startStreaming}
                 stopStreaming={stopStreaming}
-                firstPattern={props.firstPattern}
+                initialPattern={props.firstPattern}
             />
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3 grow">
                 <div className="flex flex-col md:flex-1">
