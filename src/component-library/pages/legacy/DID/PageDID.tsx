@@ -1,5 +1,4 @@
 // components
-import { ListDIDMeta } from '@/component-library/pages/DID/List/Meta/ListDIDMeta';
 import { Tabs } from '../../../atoms/legacy/Tabs/Tabs';
 import { DIDTypeTag } from '@/component-library/features/legacy/Tags/DIDTypeTag';
 import { SubPage } from '../../../atoms/legacy/helpers/SubPage/SubPage';
@@ -29,6 +28,7 @@ import {
     FileReplicaStateViewModel,
 } from '@/lib/infrastructure/data/view-model/did';
 import { HTTPRequest } from '@/lib/sdk/http';
+import {DIDMetaView} from "@/component-library/pages/legacy/DID/DIDMetaView";
 
 export interface PageDIDPageProps {
     didMeta: DIDMetaViewModel;
@@ -98,7 +98,7 @@ export const PageDID = (props: PageDIDPageProps) => {
                 tag={<DIDTypeTag didtype={props.didMeta.did_type} />}
             >
                 <div className={twMerge('bg-neutral-100 dark:bg-neutral-900', 'rounded-md p-2', 'flex flex-col space-y-2', 'min-h-0 w-full')}>
-                    <ListDIDMeta meta={props.didMeta} />
+                    <DIDMetaView data={props.didMeta} show horizontal />
                 </div>
             </Heading>
 
