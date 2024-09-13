@@ -1,11 +1,12 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { ListDID } from './ListDID';
 import { fixtureDIDMetaViewModel, fixtureDIDViewModel } from '@/test/fixtures/table-fixtures';
-import { DIDMetaViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { getDecoratorWithWorker } from '@/test/mocks/handlers/storyDecorators';
-import { getMockStreamEndpoint } from '@/test/mocks/handlers/streamingHandlers';
+import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
+import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
+import { getMockSingleEndpoint } from '@/test/mocks/handlers/single-handlers';
+import { DIDType } from '@/lib/core/entity/rucio';
 
 export default {
     title: 'Components/Pages/DID/List',
@@ -23,43 +24,94 @@ const Template: StoryFn<typeof ListDID> = args => {
     );
 };
 
-const endpointUrl = '/api/feature/list-dids';
+const listEndpoint = '/api/feature/list-dids';
+const metaEndpoint = '/api/feature/get-did-meta';
 
 export const ValidInitialPatternNoEndpoint = Template.bind({});
 ValidInitialPatternNoEndpoint.args = {
     firstPattern: 'test:file',
-    queryMeta: async (): Promise<DIDMetaViewModel> => {
-        return Promise.resolve(fixtureDIDMetaViewModel());
-    },
 };
 
 export const InvalidInitialPatternNoDelimiter = Template.bind({});
 InvalidInitialPatternNoDelimiter.args = {
     firstPattern: 'test',
-    queryMeta: async (): Promise<DIDMetaViewModel> => {
-        return Promise.resolve(fixtureDIDMetaViewModel());
-    },
 };
 
 export const InvalidInitialPatternTwoDelimiters = Template.bind({});
 InvalidInitialPatternTwoDelimiters.args = {
     firstPattern: 'test:file:line',
-    queryMeta: async (): Promise<DIDMetaViewModel> => {
-        return Promise.resolve(fixtureDIDMetaViewModel());
-    },
 };
 
 export const RegularStreaming = Template.bind({});
 RegularStreaming.args = {
-    firstPattern: 'test:file',
-    queryMeta: async (): Promise<DIDMetaViewModel> => {
-        return Promise.resolve(fixtureDIDMetaViewModel());
-    },
+    firstPattern: 'regular:streaming',
 };
 RegularStreaming.decorators = [
     getDecoratorWithWorker([
-        getMockStreamEndpoint(endpointUrl, {
+        getMockStreamEndpoint(listEndpoint, {
             data: Array.from({ length: 200 }, fixtureDIDViewModel),
+        }),
+        getMockSingleEndpoint(metaEndpoint, {
+            getData: () => fixtureDIDMetaViewModel(),
+        }),
+    ]),
+];
+
+const controlledMeta = [fixtureDIDMetaViewModel(DIDType.FILE), fixtureDIDMetaViewModel(DIDType.DATASET), fixtureDIDMetaViewModel(DIDType.CONTAINER)];
+
+const getControlledMetaRetriever = () => {
+    let i = 0;
+    return () => {
+        const meta = controlledMeta[i];
+        i++;
+        if (i === controlledMeta.length) {
+            i = 0;
+        }
+        return meta;
+    };
+};
+
+export const SlowMeta = Template.bind({});
+SlowMeta.args = {
+    firstPattern: 'slow:meta',
+};
+SlowMeta.decorators = [
+    getDecoratorWithWorker([
+        getMockStreamEndpoint(listEndpoint, {
+            data: Array.from({ length: 200 }, fixtureDIDViewModel),
+        }),
+        getMockSingleEndpoint(metaEndpoint, {
+            getData: getControlledMetaRetriever(),
+            getDelay: () => 1000,
+        }),
+    ]),
+];
+
+const controlledDelay = [2000, 1000, 500];
+const getControlledDelayRetriever = () => {
+    let i = 0;
+    return () => {
+        const meta = controlledDelay[i];
+        i++;
+        if (i === controlledDelay.length) {
+            i = 0;
+        }
+        return meta;
+    };
+};
+
+export const IrregularDelayMeta = Template.bind({});
+IrregularDelayMeta.args = {
+    firstPattern: 'irregular:delay',
+};
+IrregularDelayMeta.decorators = [
+    getDecoratorWithWorker([
+        getMockStreamEndpoint(listEndpoint, {
+            data: Array.from({ length: 200 }, fixtureDIDViewModel),
+        }),
+        getMockSingleEndpoint(metaEndpoint, {
+            getData: getControlledMetaRetriever(),
+            getDelay: getControlledDelayRetriever(),
         }),
     ]),
 ];

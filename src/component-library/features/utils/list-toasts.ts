@@ -14,10 +14,10 @@ export const alreadyStreamingToast: Toast = {
 
 export const copiedToast: Toast = {
     title: 'Copied!',
-    variant: 'info'
-}
+    variant: 'info',
+};
 
 export const errorCopyingToast: Toast = {
     title: 'Cannot copy the text',
-    variant: 'error'
-}
+    variant: 'error',
+};

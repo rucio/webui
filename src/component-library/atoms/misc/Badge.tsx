@@ -9,8 +9,12 @@ export const Badge = ({ value, className, ...props }: { value: string; className
         'text-neutral-900 dark:text-neutral-100',
         'bg-opacity-50',
         'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
-        className
+        className,
     );
 
-    return <div className={badgeClasses} {...props}>{value}</div>;
+    return (
+        <div className={badgeClasses} {...props}>
+            {value}
+        </div>
+    );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import {twMerge} from "tailwind-merge";
-import {HiCheck} from "react-icons/hi";
+import { twMerge } from 'tailwind-merge';
+import { HiCheck } from 'react-icons/hi';
 
 interface CheckboxProps {
     checked?: boolean;
@@ -8,7 +8,7 @@ interface CheckboxProps {
     className?: string;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({checked = false, onClick, className}) => {
+const Checkbox: React.FC<CheckboxProps> = ({ checked = false, onClick, className }) => {
     const enabledClasses = twMerge('bg-base-success-600', 'bg-opacity-80 dark:bg-opacity-60');
 
     const disabledClasses = twMerge(
@@ -30,7 +30,7 @@ const Checkbox: React.FC<CheckboxProps> = ({checked = false, onClick, className}
             )}
             onClick={onClick}
         >
-            {checked && <HiCheck className="text-neutral-100"/>}
+            {checked && <HiCheck className="text-neutral-100" />}
         </div>
     );
 };

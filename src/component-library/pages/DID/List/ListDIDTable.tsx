@@ -5,7 +5,7 @@ import { DefaultTextFilterParams } from '@/component-library/features/utils/filt
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-import {ClickableCell} from "@/component-library/features/table/cells/ClickableCell";
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 
 type ListDIDTableProps = {
     streamingHook: UseChunkedStream<DIDViewModel>;

@@ -1,38 +1,31 @@
-import {DIDMetaViewModel, DIDViewModel} from '@/lib/infrastructure/data/view-model/did';
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
-import {DIDType} from '@/lib/core/entity/rucio';
-import useChunkedStream, {StreamingStatus} from '@/lib/infrastructure/hooks/useChunkedStream';
-import {GridApi, GridReadyEvent, SelectionChangedEvent} from 'ag-grid-community';
-import {Heading} from '@/component-library/atoms/misc/Heading';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/component-library/atoms/form/select';
-import {Input} from '@/component-library/atoms/form/input';
-import {useToast} from '@/lib/infrastructure/hooks/useToast';
-import {useQuery} from '@tanstack/react-query';
-import {ListDIDTable} from '@/component-library/pages/DID/List/ListDIDTable';
-import {BaseViewModelValidator} from '@/component-library/features/utils/BaseViewModelValidator';
-import {SearchButton} from '@/component-library/features/search/SearchButton';
-import {alreadyStreamingToast, noApiToast} from '@/component-library/features/utils/list-toasts';
-import {ListDIDMeta} from '@/component-library/pages/DID/List/Meta/ListDIDMeta';
+import { DIDMetaViewModel, DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { DIDType } from '@/lib/core/entity/rucio';
+import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { Heading } from '@/component-library/atoms/misc/Heading';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
+import { Input } from '@/component-library/atoms/form/input';
+import { useToast } from '@/lib/infrastructure/hooks/useToast';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ListDIDTable } from '@/component-library/pages/DID/List/ListDIDTable';
+import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
+import { SearchButton } from '@/component-library/features/search/SearchButton';
+import { alreadyStreamingToast, noApiToast } from '@/component-library/features/utils/list-toasts';
+import { ListDIDMeta } from '@/component-library/pages/DID/List/Meta/ListDIDMeta';
 
 const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
 const delimiterToastMessage = 'Neither scope nor name should contain ":".';
 
-interface PatternInputProps {
+interface SearchPanelProps {
     startStreaming: (pattern: string, type: DIDType) => void;
     stopStreaming: () => void;
     firstPattern?: string;
     isRunning: boolean;
 }
 
-const SearchPanel = (props: PatternInputProps) => {
+const SearchPanel = (props: SearchPanelProps) => {
     let firstScope: string | undefined, firstName: string | undefined;
     const firstPatternParts = props.firstPattern?.split(SCOPE_DELIMITER);
     if (firstPatternParts && firstPatternParts.length === 2) {
@@ -60,7 +53,7 @@ const SearchPanel = (props: PatternInputProps) => {
     const scopeInputRef = useRef<HTMLInputElement>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
 
-    const {toast} = useToast();
+    const { toast } = useToast();
 
     const showToastAndFocus = (title: string, description: string, inputRef: React.RefObject<HTMLInputElement>) => {
         toast({
@@ -113,7 +106,7 @@ const SearchPanel = (props: PatternInputProps) => {
             <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
                 <Select onValueChange={value => setType(value as DIDType)} defaultValue={type}>
                     <SelectTrigger className="w-full sm:w-48">
-                        <SelectValue placeholder="Type"/>
+                        <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -146,33 +139,32 @@ const SearchPanel = (props: PatternInputProps) => {
                     />
                 </div>
             </div>
-            <SearchButton isRunning={props.isRunning} onStop={onStop} onSearch={onSearch}/>
+            <SearchButton isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
         </div>
     );
 };
 
-export interface ListDIDPageProps {
+export interface ListDIDProps {
     firstPattern?: string;
     initialData?: DIDViewModel[];
-    queryMeta: (scope: string, name: string) => Promise<DIDMetaViewModel>;
 }
 
-export const ListDID = (props: ListDIDPageProps) => {
+export const ListDID = (props: ListDIDProps) => {
     const streamingHook = useChunkedStream<DIDViewModel>();
     const [gridApi, setGridApi] = useState<GridApi<DIDViewModel> | null>(null);
-    const {toast, dismiss} = useToast();
+    const { toast, dismiss } = useToast();
     const validator = new BaseViewModelValidator(toast);
 
     const onGridReady = (event: GridReadyEvent) => {
         if (props.initialData) {
-            event.api.applyTransactionAsync({add: props.initialData});
+            event.api.applyTransactionAsync({ add: props.initialData });
         }
         setGridApi(event.api);
     };
 
     const onData = (data: DIDViewModel[]) => {
         const validData = data.filter(element => validator.isValid(element));
-        gridApi?.applyTransactionAsync({add: validData});
+        gridApi?.applyTransactionAsync({ add: validData });
     };
 
     const startStreaming = (pattern: string, type: DIDType) => {
@@ -190,7 +182,7 @@ export const ListDID = (props: ListDIDPageProps) => {
             });
 
             const url = '/api/feature/list-dids?' + params;
-            streamingHook.start({url, onData});
+            streamingHook.start({ url, onData });
         } else {
             toast(noApiToast);
         }
@@ -204,19 +196,30 @@ export const ListDID = (props: ListDIDPageProps) => {
 
     const [selected, setSelected] = useState<DIDViewModel | null>(null);
 
+    const queryMeta = async () => {
+        if (selected !== null) {
+            const url =
+                '/api/feature/get-did-meta?' +
+                new URLSearchParams({
+                    scope: selected.scope,
+                    name: selected.name,
+                });
+            const res = await fetch(url);
+            return await res.json();
+        }
+    };
+    const metaQueryKey = ['meta'];
+    const queryClient = useQueryClient();
+
     const {
         data: meta,
         error: metaError,
-        isLoading: isMetaLoading,
+        isFetching: isMetaFetching,
         refetch: refetchMeta,
         remove: removeMeta,
     } = useQuery({
-        queryKey: ['meta'],
-        queryFn: () => {
-            if (selected !== null) {
-                return props.queryMeta(selected.scope, selected.name);
-            }
-        },
+        queryKey: metaQueryKey,
+        queryFn: queryMeta,
         enabled: false,
     });
 
@@ -230,14 +233,19 @@ export const ListDID = (props: ListDIDPageProps) => {
     };
 
     useEffect(() => {
-        if (selected !== null) {
+        const refetch = async () => {
+            await queryClient.cancelQueries(metaQueryKey);
             refetchMeta();
+        };
+
+        if (selected !== null) {
+            refetch();
         }
     }, [selected]);
 
     return (
         <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="DIDs"/>
+            <Heading text="DIDs" />
             <SearchPanel
                 isRunning={streamingHook.status === StreamingStatus.RUNNING}
                 startStreaming={startStreaming}
@@ -246,13 +254,9 @@ export const ListDID = (props: ListDIDPageProps) => {
             />
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3 grow">
                 <div className="flex flex-col md:flex-1">
-                    <ListDIDTable
-                        streamingHook={streamingHook}
-                        onSelectionChanged={onSelectionChanged}
-                        onGridReady={onGridReady}
-                    />
+                    <ListDIDTable streamingHook={streamingHook} onSelectionChanged={onSelectionChanged} onGridReady={onGridReady} />
                 </div>
-                <ListDIDMeta meta={meta}/>
+                <ListDIDMeta meta={meta} isLoading={isMetaFetching} />
             </div>
         </div>
     );

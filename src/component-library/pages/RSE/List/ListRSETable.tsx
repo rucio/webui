@@ -1,19 +1,15 @@
-import React, {useRef, useState} from 'react';
-import {AgGridReact} from 'ag-grid-react';
-import {UseChunkedStream} from '@/lib/infrastructure/hooks/useChunkedStream';
-import {RSEViewModel} from '@/lib/infrastructure/data/view-model/rse';
-import {StreamedTable} from '@/component-library/features/table/StreamedTable/StreamedTable';
-import {ClickableCell} from '@/component-library/features/table/cells/ClickableCell';
-import {badgeCellClasses, badgeCellWrapperStyle} from '@/component-library/features/table/cells/badge-cell';
-import {CheckboxCell, checkboxCellWrapperStyle} from '@/component-library/features/table/cells/CheckboxCell';
-import {
-    DefaultTextFilterParams,
-    DefaultBooleanFilterParams,
-    buildDiscreteFilterParams
-} from '@/component-library/features/utils/filter-parameters';
-import {GridReadyEvent} from 'ag-grid-community';
-import {RSETypeBadge} from '@/component-library/features/badges/RSE/RSETypeBadge';
-import {RSEType} from "@/lib/core/entity/rucio";
+import React, { useRef, useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
+import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
+import { DefaultTextFilterParams, DefaultBooleanFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { GridReadyEvent } from 'ag-grid-community';
+import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
+import { RSEType } from '@/lib/core/entity/rucio';
 
 type ListRSETableProps = {
     streamingHook: UseChunkedStream<RSEViewModel>;
