@@ -1,21 +1,17 @@
 import React, {useRef, useState} from 'react';
 import {AgGridReact} from 'ag-grid-react';
 import {UseChunkedStream} from '@/lib/infrastructure/hooks/useChunkedStream';
-import {RSEViewModel} from '@/lib/infrastructure/data/view-model/rse';
 import {StreamedTable} from '@/component-library/features/table/StreamedTable/StreamedTable';
 import {ClickableCell} from '@/component-library/features/table/cells/ClickableCell';
 import {badgeCellClasses, badgeCellWrapperStyle} from '@/component-library/features/table/cells/badge-cell';
-import {CheckboxCell, checkboxCellWrapperStyle} from '@/component-library/features/table/cells/CheckboxCell';
 import {
     DefaultTextFilterParams,
-    DefaultBooleanFilterParams,
-    buildDiscreteFilterParams, DefaultDateFilterParams
+    DefaultDateFilterParams
 } from '@/component-library/features/utils/filter-parameters';
 import {GridReadyEvent, ValueFormatterParams} from 'ag-grid-community';
-import {RSETypeBadge} from '@/component-library/features/badges/RSE/RSETypeBadge';
-import {RSEType} from '@/lib/core/entity/rucio';
 import {RuleViewModel} from "@/lib/infrastructure/data/view-model/rule";
 import {formatDate} from "@/component-library/features/utils/text-formatters";
+import {RuleStateBadge} from "@/component-library/features/badges/Rule/RuleStateBadge";
 
 type ListRuleTableProps = {
     streamingHook: UseChunkedStream<RuleViewModel>;
@@ -68,6 +64,15 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             headerName: 'Remaining Lifetime',
             field: 'remaining_lifetime',
         },
+        {
+            headerName: 'State',
+            field: 'state',
+            cellStyle: badgeCellWrapperStyle,
+            cellRenderer: RuleStateBadge,
+            cellRendererParams: {
+                className: badgeCellClasses,
+            },
+        }
     ]);
 
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
