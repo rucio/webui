@@ -9,7 +9,7 @@ import {CheckboxCell, checkboxCellWrapperStyle} from '@/component-library/featur
 import {
     DefaultTextFilterParams,
     DefaultBooleanFilterParams,
-    buildDiscreteFilterParams
+    buildDiscreteFilterParams, DefaultDateFilterParams
 } from '@/component-library/features/utils/filter-parameters';
 import {GridReadyEvent, ValueFormatterParams} from 'ag-grid-community';
 import {RSETypeBadge} from '@/component-library/features/badges/RSE/RSETypeBadge';
@@ -61,6 +61,8 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             valueFormatter: (params: ValueFormatterParams) => {
                 return formatDate(params.value);
             },
+            filter: 'agDateColumnFilter',
+            filterParams: DefaultDateFilterParams,
         },
         {
             headerName: 'Remaining Lifetime',
