@@ -6,12 +6,13 @@ import {ClickableCell} from '@/component-library/features/table/cells/ClickableC
 import {badgeCellClasses, badgeCellWrapperStyle} from '@/component-library/features/table/cells/badge-cell';
 import {
     DefaultTextFilterParams,
-    DefaultDateFilterParams
+    DefaultDateFilterParams, buildDiscreteFilterParams
 } from '@/component-library/features/utils/filter-parameters';
 import {GridReadyEvent, ValueFormatterParams} from 'ag-grid-community';
 import {RuleViewModel} from "@/lib/infrastructure/data/view-model/rule";
 import {formatDate, formatSeconds} from "@/component-library/features/utils/text-formatters";
 import {RuleStateBadge} from "@/component-library/features/badges/Rule/RuleStateBadge";
+import {RuleState} from "@/lib/core/entity/rucio";
 
 type ListRuleTableProps = {
     streamingHook: UseChunkedStream<RuleViewModel>;
@@ -39,6 +40,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
+        // TODO: find out if stating account is needed
         // {
         //     headerName: 'Account',
         //     field: 'account',
@@ -75,6 +77,23 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             cellRendererParams: {
                 className: badgeCellClasses,
             },
+            filter: true,
+            sortable: false,
+            // TODO: fix the string values
+            filterParams: buildDiscreteFilterParams(Object.values(RuleState)),
+        },
+        // TODO: minified header with a tooltip
+        {
+            headerName: 'OK',
+            field: 'locks_ok_cnt'
+        },
+        {
+            headerName: 'Replicating',
+            field: 'locks_replicating_cnt'
+        },
+        {
+            headerName: 'Stuck',
+            field: 'locks_stuck_cnt'
         }
     ]);
 
