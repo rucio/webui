@@ -10,7 +10,7 @@ import {
 } from '@/component-library/features/utils/filter-parameters';
 import {GridReadyEvent, ValueFormatterParams} from 'ag-grid-community';
 import {RuleViewModel} from "@/lib/infrastructure/data/view-model/rule";
-import {formatDate} from "@/component-library/features/utils/text-formatters";
+import {formatDate, formatSeconds} from "@/component-library/features/utils/text-formatters";
 import {RuleStateBadge} from "@/component-library/features/badges/Rule/RuleStateBadge";
 
 type ListRuleTableProps = {
@@ -63,6 +63,9 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         {
             headerName: 'Remaining Lifetime',
             field: 'remaining_lifetime',
+            valueFormatter: (params: ValueFormatterParams) => {
+                return formatSeconds(params.value)
+            }
         },
         {
             headerName: 'State',
