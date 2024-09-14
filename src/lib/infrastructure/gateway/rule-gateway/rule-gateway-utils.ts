@@ -1,5 +1,5 @@
-import { RuleDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
-import { LockState, RuleState } from '@/lib/core/entity/rucio';
+import { RuleDTO, RuleReplicaLockStateDTO } from "@/lib/core/dto/rule-dto";
+import { LockState, RuleState } from "@/lib/core/entity/rucio";
 
 export type TRucioRule = {
     error: null | string;
@@ -44,39 +44,39 @@ export type TRucioRuleReplicaLock = {
     rse: string;
     state: string;
     rule_id: string;
-};
+}
 
 function getRuleState(state: string): RuleState {
-    const cleanState = state.trim().toUpperCase();
-    switch (cleanState) {
+    const cleanState = state.trim().toUpperCase()
+    switch(cleanState) {
         case 'REPLICATING':
-            return RuleState.REPLICATING;
+            return RuleState.REPLICATING
         case 'OK':
-            return RuleState.OK;
+            return RuleState.OK
         case 'STUCK':
-            return RuleState.STUCK;
+            return RuleState.STUCK
         case 'SUSPENDED':
-            return RuleState.SUSPENDED;
+            return RuleState.SUSPENDED
         case 'WAITING_APPROVAL':
-            return RuleState.WAITING_APPROVAL;
+            return RuleState.WAITING_APPROVAL
         case 'INJECT':
-            return RuleState.INJECT;
+            return RuleState.INJECT
         default:
-            return RuleState.UNKNOWN;
+            return RuleState.UNKNOWN
     }
 }
 
 function getReplicaLockState(state: string): LockState {
-    const cleanState = state.trim().toUpperCase();
-    switch (cleanState) {
+    const cleanState = state.trim().toUpperCase()
+    switch(cleanState) {
         case 'REPLICATING':
-            return LockState.REPLICATING;
+            return LockState.REPLICATING
         case 'OK':
-            return LockState.OK;
+            return LockState.OK
         case 'STUCK':
-            return LockState.STUCK;
+            return LockState.STUCK
         default:
-            return LockState.UNKNOWN;
+            return LockState.UNKNOWN
     }
 }
 
@@ -93,7 +93,7 @@ export function convertToRuleDTO(rule: TRucioRule): RuleDTO {
         locks_ok_cnt: rule.locks_ok_cnt,
         locks_replicating_cnt: rule.locks_replicating_cnt,
         locks_stuck_cnt: rule.locks_stuck_cnt,
-    };
+    }
 }
 
 export function convertToRuleReplicaLockDTO(ruleReplicaLockState: TRucioRuleReplicaLock): RuleReplicaLockStateDTO {
@@ -103,7 +103,7 @@ export function convertToRuleReplicaLockDTO(ruleReplicaLockState: TRucioRuleRepl
         name: ruleReplicaLockState.name,
         rse: ruleReplicaLockState.rse,
         state: getReplicaLockState(ruleReplicaLockState.state),
-    };
+    }
 }
 export function getEmptyRuleDTO(): RuleDTO {
     return {
@@ -118,7 +118,7 @@ export function getEmptyRuleDTO(): RuleDTO {
         locks_ok_cnt: 0,
         locks_replicating_cnt: 0,
         locks_stuck_cnt: 0,
-    };
+    }
 }
 
 export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
@@ -128,5 +128,10 @@ export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
         name: '',
         rse: '',
         state: LockState.UNKNOWN,
-    };
+    }
+}
+
+export type ListRulesFilter = {
+    account?: string,
+    scope?: string,
 }

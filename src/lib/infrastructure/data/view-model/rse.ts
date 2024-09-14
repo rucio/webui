@@ -1,20 +1,37 @@
-import { BaseViewModel } from '@/lib/sdk/view-models';
-import { RSE, RSEAttribute, RSEAccountUsage, RSEProtocol, RSEType } from '@/lib/core/entity/rucio';
+import {BaseViewModel} from "@/lib/sdk/view-models"
+import {RSE, RSEAttribute, RSEAccountUsage, RSEProtocol, RSEType} from "@/lib/core/entity/rucio"
 
-export interface RSEViewModel extends RSE, BaseViewModel {}
+
+export interface RSEViewModel extends RSE, BaseViewModel {
+}
 
 export interface RSEProtocolViewModel extends BaseViewModel {
-    protocols: RSEProtocol[];
+    protocols: RSEProtocol[]
 }
 
 export interface RSEAttributeViewModel extends BaseViewModel {
-    attributes: RSEAttribute[];
+    attributes: RSEAttribute[]
+}
+
+export interface RSEAccountUsageViewModel extends RSEAccountUsage, BaseViewModel {
+}
+
+export function generateEmptyRSEAccountUsageViewModel(): RSEAccountUsageViewModel {
+    return {
+        status: 'error',
+        rse_id: '',
+        rse: '',
+        bytes_limit: 0,
+        files: 0,
+        account: '',
+        used_bytes: 0,
+    }
 }
 
 export interface RSEAccountUsageLimitViewModel extends RSEAccountUsage, BaseViewModel {
-    bytes_remaining: number;
-    has_quota: boolean;
-    total_expected_usage: number;
+    bytes_remaining: number,
+    has_quota: boolean,
+    total_expected_usage: number,
 }
 
 export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitViewModel {
@@ -22,10 +39,9 @@ export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitVie
         status: 'error',
         rse_id: '',
         rse: '',
-        account: '',
-        used_bytes: 0,
+        bytes_remaining: 0,
         bytes_limit: 0,
-    } as RSEAccountUsageLimitViewModel;
+    } as RSEAccountUsageLimitViewModel
 }
 
 export function generateEmptyRSEViewModel(): RSEViewModel {
@@ -37,12 +53,14 @@ export function generateEmptyRSEViewModel(): RSEViewModel {
         volatile: false,
         deterministic: false,
         staging_area: false,
-    } as RSEViewModel;
+
+
+    } as RSEViewModel
 }
 
 export function generateEmptyRSEProtocolViewModel(): RSEProtocolViewModel {
     return {
         status: 'error',
         protocols: [],
-    };
+    }
 }

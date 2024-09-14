@@ -1,29 +1,30 @@
-import { ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO } from '@/lib/core/dto/rse-dto';
-import RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
-import { injectable } from 'inversify';
-import ListRSEsEndpoint from './endpoints/list-rses-endpoint';
-import GetRSEEndpoint from './endpoints/get-rse-endpoint';
-import GetRSEAttributesEndpoint from './endpoints/get-rse-attributes-endpoint';
-import GetRSEProtocolsEndpoint from './endpoints/get-rse-protocols-endpoint';
+import {ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO, RSEUsageDTO} from "@/lib/core/dto/rse-dto";
+import RSEGatewayOutputPort from "@/lib/core/port/secondary/rse-gateway-output-port";
+import { injectable } from "inversify";
+import ListRSEsEndpoint from "./endpoints/list-rses-endpoint";
+import GetRSEEndpoint from "./endpoints/get-rse-endpoint";
+import GetRSEAttributesEndpoint from "./endpoints/get-rse-attributes-endpoint";
+import GetRSEProtocolsEndpoint from "./endpoints/get-rse-protocols-endpoint";
+import GetRSEUsageEndpoint from "@/lib/infrastructure/gateway/rse-gateway/endpoints/get-rse-usage-endpoint";
 
 @injectable()
 export default class RSEGateway implements RSEGatewayOutputPort {
     async getRSE(rucioAuthToken: string, rseName: string): Promise<RSEDTO> {
-        const endpoint = new GetRSEEndpoint(rucioAuthToken, rseName);
-        const dto = await endpoint.fetch();
-        return dto;
+        const endpoint = new GetRSEEndpoint(rucioAuthToken, rseName)
+        const dto = await endpoint.fetch()
+        return dto
     }
 
     getRSEProtocols(rucioAuthToken: string, rseName: string): Promise<RSEProtocolDTO> {
-        const endpoint = new GetRSEProtocolsEndpoint(rucioAuthToken, rseName);
-        const dto = endpoint.fetch();
-        return dto;
+        const endpoint = new GetRSEProtocolsEndpoint(rucioAuthToken, rseName)
+        const dto = endpoint.fetch()
+        return dto
     }
 
     async getRSEAttributes(rucioAuthToken: string, rseName: string): Promise<RSEAttributeDTO> {
-        const endpoint = new GetRSEAttributesEndpoint(rucioAuthToken, rseName);
-        const dto = await endpoint.fetch();
-        return dto;
+        const endpoint = new GetRSEAttributesEndpoint(rucioAuthToken, rseName)
+        const dto = await endpoint.fetch()
+        return dto
     }
 
     async listRSEs(rucioAuthToken: string, rseExpression: string): Promise<ListRSEsDTO> {
@@ -42,4 +43,11 @@ export default class RSEGateway implements RSEGatewayOutputPort {
         }
         return Promise.resolve(errorDTO);
     }
+
+    async getRSEUsage(rucioAuthToken: string, rseName: string): Promise<RSEUsageDTO> {
+        const endpoint = new GetRSEUsageEndpoint(rucioAuthToken, rseName)
+        const dto = await endpoint.fetch()
+        return dto
+    }
+
 }
