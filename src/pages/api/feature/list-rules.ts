@@ -6,17 +6,23 @@ import { ListRulesRequest } from "@/lib/core/usecase-models/list-rules-usecase-m
 import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
 import { BaseController } from "@/lib/sdk/controller";
 import { NextApiRequest, NextApiResponse } from "next";
+import {SessionUser} from "@/lib/core/entity/auth-models";
 
 
-async function listRules(req:NextApiRequest, res: NextApiResponse, rucioAuthToken: string){
-
+async function listRules(req:NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser){
     if(req.method !== 'GET') {
         res.status(405).json({ error: 'Method Not Allowed' })
         return
     }
 
-    const { account, scope } = req.query as { account?: string, scope?: string }
-    // TODO: possibly validate the presence of either account or scope
+    if (!sessionUser) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+
+    const account = sessionUser.rucioAccount;
+
+    const { scope } = req.query as { scope?: string }
 
     const controllerParameters: ListRulesControllerParameters = {
         response: res,

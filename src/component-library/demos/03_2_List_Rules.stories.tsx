@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { fixtureRuleViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
-import { ListRule as CR } from '@/component-library/pages/legacy/Rule/ListRule';
+import { ListRule as CR } from '@/component-library/pages/Rule/list/ListRule';
 
 export default {
     title: 'Demos/04_ListRules',

@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { ListDIDMeta } from '@/component-library/pages/DID/List/Meta/ListDIDMeta';
+import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
 import { fixtureDIDMetaViewModel } from '@/test/fixtures/table-fixtures';
 import { DIDType } from '@/lib/core/entity/rucio';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
