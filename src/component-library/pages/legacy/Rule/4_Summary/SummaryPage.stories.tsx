@@ -1,8 +1,8 @@
-import {AccountStatus, AccountType} from '@/lib/core/entity/rucio';
-import {RuleSummaryViewModel} from '@/lib/infrastructure/data/view-model/rule';
-import {Meta, StoryFn} from '@storybook/react';
-import {fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel} from '@/test/fixtures/table-fixtures';
-import {SummaryPage as SP} from './SummaryPage';
+import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
+import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { Meta, StoryFn } from '@storybook/react';
+import { fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel } from '@/test/fixtures/table-fixtures';
+import { SummaryPage as SP } from './SummaryPage';
 
 export default {
     title: 'Components/Pages/Rule/Components',

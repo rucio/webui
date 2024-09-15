@@ -1,22 +1,19 @@
-import {BaseEndpoint} from "@/lib/sdk/gateway-endpoints";
-import {HTTPRequest} from "@/lib/sdk/http";
-import {Response} from "node-fetch";
-import {RSEUsageDTO} from "@/lib/core/dto/rse-dto";
+import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
+import { RSEUsageDTO } from '@/lib/core/dto/rse-dto';
 
 export default class GetRSEUsageEndpoint extends BaseEndpoint<RSEUsageDTO> {
-    constructor(
-        private rucioAuthToken: string,
-        private rseName: string,
-    ) {
-        super()
+    constructor(private rucioAuthToken: string, private rseName: string) {
+        super();
     }
 
     /**
      * @override
      */
     async initialize(): Promise<void> {
-        await super.initialize()
-        this.url = `${this.rucioHost}/rses/${this.rseName}/usage`
+        await super.initialize();
+        this.url = `${this.rucioHost}/rses/${this.rseName}/usage`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,
@@ -25,10 +22,10 @@ export default class GetRSEUsageEndpoint extends BaseEndpoint<RSEUsageDTO> {
                 'Content-Type': 'application/json',
             },
             body: null,
-            params: undefined
-        }
-        this.request = request
-        this.initialized = true
+            params: undefined,
+        };
+        this.request = request;
+        this.initialized = true;
     }
 
     /**
@@ -45,19 +42,19 @@ export default class GetRSEUsageEndpoint extends BaseEndpoint<RSEUsageDTO> {
             used: 0,
             files: 0,
             total: 0,
-            updated_at: ''
-        }
+            updated_at: '',
+        };
 
         switch (statusCode) {
             case 404:
-                const error = await response.json()
-                dto.errorMessage = error
+                const error = await response.json();
+                dto.errorMessage = error;
                 break;
             default:
-                dto.errorMessage = 'Unknown Error'
+                dto.errorMessage = 'Unknown Error';
                 break;
         }
-        return dto
+        return dto;
     }
 
     /**
@@ -72,11 +69,11 @@ export default class GetRSEUsageEndpoint extends BaseEndpoint<RSEUsageDTO> {
             total: number;
             files: number;
             updated_at: string;
-        }
+        };
 
         return {
             status: 'success',
-            ...data
-        }
+            ...data,
+        };
     }
 }

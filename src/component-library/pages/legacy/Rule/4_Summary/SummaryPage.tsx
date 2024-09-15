@@ -4,8 +4,8 @@ import { DIDTypeTag } from '@/component-library/features/legacy/Tags/DIDTypeTag'
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { DIDSummaryTable, TDIDSummaryTableRowProps } from './DIDSummaryTable';
 import { RSESummaryTable } from './RSESummaryTable';
-import {DIDLong} from "@/lib/core/entity/rucio";
-import {ListDIDsViewModel} from "@/lib/infrastructure/data/view-model/list-did";
+import { DIDLong } from '@/lib/core/entity/rucio';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 var format = require('date-format');
 

@@ -77,5 +77,5 @@ const dateComparator = (filterLocalDateAtMidnight: Date, cellValue: string | Dat
 export const DefaultDateFilterParams = {
     maxNumConditions: 1,
     comparator: dateComparator,
-    buttons: ['reset']
+    buttons: ['reset'],
 };

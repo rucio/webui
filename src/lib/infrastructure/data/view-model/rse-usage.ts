@@ -1,4 +1,4 @@
-import {BaseViewModel} from "@/lib/sdk/view-models";
+import { BaseViewModel } from '@/lib/sdk/view-models';
 
 export interface RSEUsageViewModel extends BaseViewModel {
     rse_id: string;
@@ -18,6 +18,6 @@ export const getEmptyRSEUsageViewModel = (): RSEUsageViewModel => {
         used: 0,
         total: 0,
         files: 0,
-        updated_at: ''
+        updated_at: '',
     };
-}
+};

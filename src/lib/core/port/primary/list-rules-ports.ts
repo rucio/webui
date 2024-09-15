@@ -1,6 +1,6 @@
-import { BaseAuthenticatedInputPort, BaseStreamingOutputPort } from "@/lib/sdk/primary-ports";
-import { ListRulesResponse, ListRulesRequest, ListRulesError } from "@/lib/core/usecase-models/list-rules-usecase-models";
-import {RuleViewModel} from "@/lib/infrastructure/data/view-model/rule";
+import { BaseAuthenticatedInputPort, BaseStreamingOutputPort } from '@/lib/sdk/primary-ports';
+import { ListRulesResponse, ListRulesRequest, ListRulesError } from '@/lib/core/usecase-models/list-rules-usecase-models';
+import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 /**
  * @interface ListRulesInputPort that abstracts the usecase.
  */

@@ -28,7 +28,7 @@ import {
     FileReplicaStateViewModel,
 } from '@/lib/infrastructure/data/view-model/did';
 import { HTTPRequest } from '@/lib/sdk/http';
-import {DIDMetaView} from "@/component-library/pages/legacy/DID/DIDMetaView";
+import { DIDMetaView } from '@/component-library/pages/legacy/DID/DIDMetaView';
 
 export interface PageDIDPageProps {
     didMeta: DIDMetaViewModel;

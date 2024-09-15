@@ -1,18 +1,15 @@
-import React, {useRef, useState} from 'react';
-import {AgGridReact} from 'ag-grid-react';
-import {UseChunkedStream} from '@/lib/infrastructure/hooks/useChunkedStream';
-import {StreamedTable} from '@/component-library/features/table/StreamedTable/StreamedTable';
-import {ClickableCell} from '@/component-library/features/table/cells/ClickableCell';
-import {badgeCellClasses, badgeCellWrapperStyle} from '@/component-library/features/table/cells/badge-cell';
-import {
-    DefaultTextFilterParams,
-    DefaultDateFilterParams, buildDiscreteFilterParams
-} from '@/component-library/features/utils/filter-parameters';
-import {GridReadyEvent, ValueFormatterParams} from 'ag-grid-community';
-import {RuleViewModel} from "@/lib/infrastructure/data/view-model/rule";
-import {formatDate, formatSeconds} from "@/component-library/features/utils/text-formatters";
-import {RuleStateBadge} from "@/component-library/features/badges/Rule/RuleStateBadge";
-import {RuleState} from "@/lib/core/entity/rucio";
+import React, { useRef, useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
+import { DefaultTextFilterParams, DefaultDateFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { GridReadyEvent, ValueFormatterParams } from 'ag-grid-community';
+import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
+import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
+import { RuleState } from '@/lib/core/entity/rucio';
 
 type ListRuleTableProps = {
     streamingHook: UseChunkedStream<RuleViewModel>;
@@ -73,8 +70,8 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             minWidth: 125,
             maxWidth: 125,
             valueFormatter: (params: ValueFormatterParams) => {
-                return formatSeconds(params.value)
-            }
+                return formatSeconds(params.value);
+            },
         },
         {
             headerName: 'State',
@@ -112,7 +109,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             minWidth: 90,
             maxWidth: 90,
             sortable: false,
-        }
+        },
     ]);
 
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;

@@ -1,25 +1,25 @@
-import {
-    ListRulesError,
-    ListRulesResponse,
-} from '@/lib/core/usecase-models/list-rules-usecase-models'
-import {NextApiResponse} from 'next'
-import {BaseStreamingPresenter} from '@/lib/sdk/presenter'
-import {ListRulesOutputPort} from '@/lib/core/port/primary/list-rules-ports'
-import {generateEmptyRuleViewModel, RuleViewModel} from "@/lib/infrastructure/data/view-model/rule";
+import { ListRulesError, ListRulesResponse } from '@/lib/core/usecase-models/list-rules-usecase-models';
+import { NextApiResponse } from 'next';
+import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
+import { ListRulesOutputPort } from '@/lib/core/port/primary/list-rules-ports';
+import { generateEmptyRuleViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 
-export default class ListRulesPresenter extends BaseStreamingPresenter<ListRulesResponse, ListRulesError, RuleViewModel> implements ListRulesOutputPort {
-    response: NextApiResponse<any>
+export default class ListRulesPresenter
+    extends BaseStreamingPresenter<ListRulesResponse, ListRulesError, RuleViewModel>
+    implements ListRulesOutputPort
+{
+    response: NextApiResponse<any>;
 
     constructor(response: NextApiResponse) {
-        super(response)
-        this.response = response
+        super(response);
+        this.response = response;
     }
 
     streamResponseModelToViewModel(responseModel: ListRulesResponse): RuleViewModel {
         const viewModel: RuleViewModel = {
             ...responseModel,
-        }
-        return viewModel
+        };
+        return viewModel;
     }
 
     streamErrorModelToViewModel(error: ListRulesError): RuleViewModel {
@@ -34,7 +34,7 @@ export default class ListRulesPresenter extends BaseStreamingPresenter<ListRules
      * @param errorModel The error model to convert.
      * @returns The error view model that represents the error model.
      */
-    convertErrorModelToViewModel(errorModel: ListRulesError): { viewModel: RuleViewModel; status: number; } {
+    convertErrorModelToViewModel(errorModel: ListRulesError): { viewModel: RuleViewModel; status: number } {
         const viewModel: RuleViewModel = generateEmptyRuleViewModel();
 
         // gateway errors
@@ -44,7 +44,7 @@ export default class ListRulesPresenter extends BaseStreamingPresenter<ListRules
         const errorCode = errorModel.code ? errorModel.code : 500;
         return {
             status: errorCode,
-            viewModel: viewModel
-        }
+            viewModel: viewModel,
+        };
     }
 }

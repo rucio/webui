@@ -38,4 +38,4 @@ export const formatSeconds = (seconds: number): string => {
     } else {
         return DEFAULT_VALUE;
     }
-}
+};
