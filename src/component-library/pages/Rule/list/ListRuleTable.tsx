@@ -30,13 +30,15 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         {
             headerName: 'ID',
             field: 'id',
-            flex: 4,
-            minWidth: 250,
+            minWidth: 390,
+            maxWidth: 390,
+            sortable: false,
             cellRenderer: ClickableId,
         },
         {
             headerName: 'Name',
             field: 'name',
+            minWidth: 150,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
@@ -50,12 +52,15 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         {
             headerName: 'RSE',
             field: 'rse_expression',
+            minWidth: 150,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'Created At',
             field: 'created_at',
+            minWidth: 150,
+            maxWidth: 150,
             valueFormatter: (params: ValueFormatterParams) => {
                 return formatDate(params.value);
             },
@@ -63,8 +68,10 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             filterParams: DefaultDateFilterParams,
         },
         {
-            headerName: 'Remaining Lifetime',
+            headerName: 'Remaining',
             field: 'remaining_lifetime',
+            minWidth: 125,
+            maxWidth: 125,
             valueFormatter: (params: ValueFormatterParams) => {
                 return formatSeconds(params.value)
             }
@@ -72,6 +79,8 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         {
             headerName: 'State',
             field: 'state',
+            minWidth: 200,
+            maxWidth: 200,
             cellStyle: badgeCellWrapperStyle,
             cellRenderer: RuleStateBadge,
             cellRendererParams: {
@@ -85,15 +94,24 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         // TODO: minified header with a tooltip
         {
             headerName: 'OK',
-            field: 'locks_ok_cnt'
+            field: 'locks_ok_cnt',
+            minWidth: 75,
+            maxWidth: 75,
+            sortable: false,
         },
         {
             headerName: 'Replicating',
-            field: 'locks_replicating_cnt'
+            field: 'locks_replicating_cnt',
+            minWidth: 135,
+            maxWidth: 135,
+            sortable: false,
         },
         {
             headerName: 'Stuck',
-            field: 'locks_stuck_cnt'
+            field: 'locks_stuck_cnt',
+            minWidth: 90,
+            maxWidth: 90,
+            sortable: false,
         }
     ]);
 
