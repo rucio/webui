@@ -32,6 +32,7 @@ const CONTROLLERS = {
     GET_RSE_USAGE: Symbol.for('GetRSEUsageController'),
     LIST_RULES: Symbol.for('ListRulesController'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageController'),
+    CREATE_RULE: Symbol.for('CreateRuleController'),
 };
 
 export default CONTROLLERS;

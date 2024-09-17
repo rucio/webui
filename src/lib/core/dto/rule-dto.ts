@@ -17,3 +17,7 @@ export interface RuleReplicaLockStateDTO extends BaseDTO {
 }
 
 export interface ListRulesDTO extends BaseStreamableDTO {}
+
+export interface CreateRuleDTO extends BaseDTO {
+    rule_ids: string[];
+}

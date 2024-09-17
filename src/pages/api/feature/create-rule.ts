@@ -1,41 +1,60 @@
-import { DIDType } from '@/lib/core/entity/rucio';
+import { SessionUser } from '@/lib/core/entity/auth-models';
+
 import { withAuthenticatedSessionRoute } from '@/lib/infrastructure/auth/session-utils';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
-import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { CreateRuleControllerParameters } from '@/lib/infrastructure/controller/create-rule-controller';
+import appContainer from '@/lib/infrastructure/ioc/container-config';
+import { CreateRuleRequest } from '@/lib/core/usecase-models/create-rule-usecase-models';
+import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
+import { BaseController } from '@/lib/sdk/controller';
+import { z } from 'zod';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-/**
- * Data structure that represents the HTTP request body to invoke the CreateRule Feature
- * on the NextJS server.
- */
-export type TCreateRuleFeatureRequestParams = {
-    RSEViewModels: Array<RSEAccountUsageLimitViewModel>;
-    DIDViewModels: Array<ListDIDsViewModel>;
-    expirydate: Date;
-    lifetime: number;
-    notifications: boolean;
-    asynchronousMode: boolean;
-    numcopies: number;
-    numsamples: number;
-    groupby: DIDType;
-    comment: string;
-    approval: boolean;
-};
+const schema = z.object({
+    dids: z
+        .array(
+            z.object({
+                scope: z.string().min(1),
+                name: z.string().min(1),
+            }),
+        )
+        .nonempty(),
+    copies: z.number().min(1),
+    rse_expression: z.string().min(1),
+    grouping: z.enum(['ALL', 'DATASET', 'NONE']).optional(),
+    lifetime_days: z.number().int().positive().optional(),
+    notify: z.boolean().optional(),
+    comments: z.string().optional(),
+    ask_approval: z.boolean().optional(),
+    asynchronous: z.boolean().optional(),
+});
 
-async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string) {
+async function createRule(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser) {
     if (req.method !== 'POST') {
         res.status(405).json({ error: 'Method Not Allowed' });
         return;
     }
 
-    const data = req.body;
-
-    if (!data) {
-        res.status(400).json({ error: 'Missing body' });
+    if (!sessionUser) {
+        res.status(401).json({ error: 'Unauthorized' });
         return;
     }
 
-    res.status(200).json(req.body);
+    const params = schema.safeParse(req.body);
+    if (!params.success) {
+        // TODO: more detailed response
+        res.status(400).json({ error: 'Missing required parameters or provided parameters are invalid' });
+        return;
+    }
+
+    const controllerParameters: CreateRuleControllerParameters = {
+        response: res,
+        rucioAuthToken: rucioAuthToken,
+        account: sessionUser.rucioAccount,
+        ...params.data,
+    };
+
+    const controller = appContainer.get<BaseController<CreateRuleControllerParameters, CreateRuleRequest>>(CONTROLLERS.CREATE_RULE);
+    await controller.execute(controllerParameters);
 }
 
-export default withAuthenticatedSessionRoute(endpoint);
+export default withAuthenticatedSessionRoute(createRule);

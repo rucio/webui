@@ -179,6 +179,34 @@ export type Rule = {
     locks_stuck_cnt: number;
 };
 
+// TODO: add explanatory comments
+export type RuleCreationParameters = {
+    dids: {
+        scope: string;
+        name: string;
+    }[];
+    copies: number;
+    rse_expression: string;
+    account: string;
+    grouping?: 'ALL' | 'DATASET' | 'NONE';
+    weight?: number;
+    // In seconds
+    lifetime?: number;
+    locked?: boolean;
+    subscription_id?: string;
+    source_replica_expression?: string;
+    activity?: string;
+    notify?: 'Y' | 'N' | 'C' | 'P';
+    purge_replicas?: boolean;
+    ignore_availability?: boolean;
+    comments?: string;
+    ask_approval?: boolean;
+    asynchronous?: boolean;
+    priority?: number;
+    split_container?: boolean;
+    meta?: string;
+};
+
 /**
  * Represents the replication rule metadata avilable for a rule in a subscription.
  */

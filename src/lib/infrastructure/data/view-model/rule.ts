@@ -39,3 +39,14 @@ export const generateEmptyRuleViewModel = (): RuleViewModel => {
         status: 'error',
     };
 };
+
+export interface CreateRuleViewModel extends BaseViewModel {
+    rule_ids: string[];
+}
+
+export const getEmptyCreateRuleViewModel = (): CreateRuleViewModel => {
+    return {
+        status: 'error',
+        rule_ids: [],
+    };
+};
