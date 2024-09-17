@@ -3,6 +3,7 @@ import { Headers } from 'node-fetch';
 import { Readable } from 'stream';
 import { Response } from 'node-fetch';
 import { BaseViewModel } from '@/lib/sdk/view-models';
+
 /**
  * Represents a mock HTTP request endpoint.
  */
@@ -25,10 +26,9 @@ export interface MockEndpoint extends HTTPRequest {
     /**
      * Validate the request parameters, body, and headers.
      * @param req The request to validate.
-     * @returns undefined if the request is valid
-     * @throws Error if the request is invalid
+     * @returns whether the request is valid
      */
-    requestValidator?: (req: Request) => Promise<void>;
+    requestValidator?: (req: Request) => Promise<boolean>;
 }
 
 /**
@@ -72,7 +72,7 @@ export default class MockRucioServerFactory {
      */
     static createMockRucioServer(checkAuth: boolean = true, endpoints: MockEndpoint[]) {
         // @ts-ignore
-        fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, req => {
+        fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, async req => {
             if (checkAuth) {
                 const rucioToken = req.headers.get('X-Rucio-Auth-Token');
                 if (rucioToken !== MockRucioServerFactory.VALID_RUCIO_TOKEN) {
@@ -102,7 +102,13 @@ export default class MockRucioServerFactory {
                 } as MockGatewayResponse);
             }
             if (endpoint.requestValidator) {
-                endpoint.requestValidator(req);
+                const isValid = await endpoint.requestValidator(req);
+                if (!isValid) {
+                    return Promise.resolve({
+                        status: 400,
+                        body: JSON.stringify('Bad request'),
+                    } as MockGatewayResponse);
+                }
             }
             return Promise.resolve(endpoint.response);
         });
