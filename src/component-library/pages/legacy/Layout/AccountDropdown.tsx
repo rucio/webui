@@ -120,7 +120,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown(
                 <div className={twMerge('bg-neutral-200 hover:bg-base-warning-600', 'p-1', 'rounded-md')}>
                     {/* Using the <a> tag here prevents a bug with response caching */}
                     {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                    <a href="/src/pages/api/auth/logout?callbackUrl=/dashboard">
+                    <a href="/api/auth/logout?callbackUrl=/dashboard">
                         <HiLogout className="text-2xl text-text-900 shrink-0" />
                     </a>
                 </div>
