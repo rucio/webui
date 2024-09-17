@@ -39,14 +39,11 @@ describe('Rule Gateway', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    status: 'success',
-                    rule_ids: ['817b3030097446a38b3b842bf528e112'],
-                }),
+                body: JSON.stringify(['817b3030097446a38b3b842bf528e112']),
             },
             requestValidator: async req => {
                 const bodyJson = await req.text();
-                if (bodyJson !== JSON.stringify(creationParams)) throw Error('Invalid parameters');
+                return bodyJson === JSON.stringify(creationParams);
             },
         };
         MockRucioServerFactory.createMockRucioServer(true, [createRuleEndpoint]);
@@ -59,5 +56,6 @@ describe('Rule Gateway', () => {
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
         const createRuleDTO: CreateRuleDTO = await ruleGateway.createRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, creationParams);
         expect(createRuleDTO.status).toEqual('success');
+        expect(createRuleDTO.rule_ids.length).toEqual(1);
     });
 });

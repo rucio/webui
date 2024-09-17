@@ -14,9 +14,7 @@ describe('DID Gateway Tests: Add DID, Attach DIDs, Set DIDStatus', () => {
             method: 'POST',
             requestValidator: async (req: Request) => {
                 const body = await req.json();
-                if (body.type !== 'CONTAINER') {
-                    throw new Error('Invalid DID Type');
-                }
+                return body.type === 'CONTAINER';
             },
             response: {
                 status: 201,
