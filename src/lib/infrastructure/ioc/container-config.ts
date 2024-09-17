@@ -65,6 +65,7 @@ import GetAccountInfoFeature from './features/get-account-info-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
 import ListAccountRSEUsageFeature from '@/lib/infrastructure/ioc/features/list-account-rse-usage-feature';
+import CreateRuleFeature from '@/lib/infrastructure/ioc/features/create-rule-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -116,6 +117,7 @@ loadFeaturesSync(appContainer, [
     new ListAllRSEsFeature(appContainer),
     new ListAccountRSEQuotasFeature(appContainer),
     new GetAccountInfoFeature(appContainer),
+    new CreateRuleFeature(appContainer),
 ]);
 
 //Features: List Subscriptions

@@ -1,6 +1,7 @@
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
-import { ListRulesDTO, RuleDTO } from '../../dto/rule-dto';
+import { CreateRuleDTO, ListRulesDTO, RuleDTO } from '../../dto/rule-dto';
 import { ListRulesFilter } from '@/lib/infrastructure/gateway/rule-gateway/rule-gateway-utils';
+import { RuleCreationParameters } from '@/lib/core/entity/rucio';
 
 export default interface RuleGatewayOutputPort {
     /**
@@ -23,4 +24,11 @@ export default interface RuleGatewayOutputPort {
      * @param ruleId The rule to list locks for.
      */
     listRuleReplicaLockStates(rucioAuthToken: string, ruleId: string): Promise<BaseStreamableDTO>;
+
+    /**
+     * Create a new rule.
+     * @param rucioAuthToken A valid Rucio Auth Token.
+     * @param params An object containing parameters for rule creation.
+     */
+    createRule(rucioAuthToken: string, params: RuleCreationParameters): Promise<CreateRuleDTO>;
 }
