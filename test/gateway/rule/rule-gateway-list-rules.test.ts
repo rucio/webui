@@ -206,7 +206,7 @@ describe('RuleGateway', () => {
                 },
                 body: mockRuleStream,
             },
-            requestValidator: req => {
+            requestValidator: async req => {
                 if (!req.url.includes('account=tester')) {
                     throw Error('Account is not specified or is specified incorrectly');
                 }
@@ -276,7 +276,7 @@ describe('RuleGateway', () => {
                 },
                 body: mockRuleStream,
             },
-            requestValidator: req => {
+            requestValidator: async req => {
                 if (!req.url.includes('scope=test')) {
                     throw Error('Scope is not specified or is specified incorrectly');
                 }
@@ -346,7 +346,7 @@ describe('RuleGateway', () => {
                 },
                 body: mockRuleStream,
             },
-            requestValidator: req => {
+            requestValidator: async req => {
                 if (!req.url.includes('account=*') || !req.url.includes('scope=*')) {
                     throw Error('Filter parameters do not default to *');
                 }
