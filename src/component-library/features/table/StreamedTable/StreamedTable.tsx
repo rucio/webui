@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { RegularTable, RegularTableProps } from '@/component-library/features/table/RegularTable/RegularTable';
-import { StreamingErrorType, StreamingStatus, UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { StreamingErrorType, StreamingStatus, UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { NoLoadedRowsOverlay } from '@/component-library/features/table/overlays/NoLoadedRowsOverlay';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 
 export interface StreamedTableProps extends RegularTableProps {
-    streamingHook: UseChunkedStream<any>;
+    streamingHook: UseStreamReader<any>;
 }
 
 export const StreamedTable = (props: StreamedTableProps) => {

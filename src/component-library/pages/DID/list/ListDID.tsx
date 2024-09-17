@@ -1,8 +1,8 @@
 import { DIDMetaViewModel, DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { DIDType } from '@/lib/core/entity/rucio';
-import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
-import { GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
+import { SelectionChangedEvent } from 'ag-grid-community';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
 import { Input } from '@/component-library/atoms/form/input';
@@ -11,15 +11,15 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ListDIDTable } from '@/component-library/pages/DID/list/ListDIDTable';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
-import { alreadyStreamingToast, noApiToast } from '@/component-library/features/utils/list-toasts';
 import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
+import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 
 const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
 const delimiterToastMessage = 'Neither scope nor name should contain ":".';
 
 interface SearchPanelProps {
-    startStreaming: (pattern: string, type: DIDType) => void;
+    startStreaming: (url: string) => void;
     stopStreaming: () => void;
     initialPattern?: string;
     isRunning: boolean;
@@ -91,11 +91,13 @@ const SearchPanel = (props: SearchPanelProps) => {
 
         if (!validateScope() || !validateName()) return;
 
-        if (!props.isRunning) {
-            props.startStreaming(`${scope}${SCOPE_DELIMITER}${name}`, type);
-        } else {
-            toast(alreadyStreamingToast);
-        }
+        const params = new URLSearchParams({
+            query: `${scope}${SCOPE_DELIMITER}${name}`,
+            type: type,
+        });
+
+        const url = '/api/feature/list-dids?' + params;
+        props.startStreaming(url);
     };
 
     const onStop = (event: any) => {
@@ -152,56 +154,12 @@ export interface ListDIDProps {
 }
 
 export const ListDID = (props: ListDIDProps) => {
-    const { toast, dismiss } = useToast();
+    const { toast } = useToast();
     // A shared validator
     const validator = new BaseViewModelValidator(toast);
 
     // List handling
-
-    const streamingHook = useChunkedStream<DIDViewModel>();
-    const [gridApi, setGridApi] = useState<GridApi<DIDViewModel> | null>(null);
-
-    const onGridReady = (event: GridReadyEvent) => {
-        setGridApi(event.api);
-    };
-
-    useEffect(() => {
-        if (props.initialData) {
-            onData(props.initialData);
-        }
-    }, [gridApi]);
-
-    const onData = (data: DIDViewModel[]) => {
-        const validData = data.filter(element => validator.isValid(element));
-        gridApi?.applyTransactionAsync({ add: validData });
-    };
-
-    const startStreaming = (pattern: string, type: DIDType) => {
-        if (gridApi) {
-            // Hide active toasts
-            dismiss();
-            gridApi.flushAsyncTransactions();
-            gridApi.setGridOption('rowData', []);
-            validator.reset();
-            removeMeta();
-
-            const params = new URLSearchParams({
-                query: pattern,
-                type: type,
-            });
-
-            const url = '/api/feature/list-dids?' + params;
-            streamingHook.start({ url, onData });
-        } else {
-            toast(noApiToast);
-        }
-    };
-
-    const stopStreaming = () => {
-        if (streamingHook.status === StreamingStatus.RUNNING) {
-            streamingHook.stop();
-        }
-    };
+    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDViewModel>(props.initialData);
 
     // Meta handling
 

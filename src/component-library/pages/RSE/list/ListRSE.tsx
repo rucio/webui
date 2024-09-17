@@ -1,15 +1,12 @@
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { ChangeEvent, useEffect, useState } from 'react';
-import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { ChangeEvent, useState } from 'react';
+import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 import { ListRSETable } from '@/component-library/pages/RSE/list/ListRSETable';
-import { useToast } from '@/lib/infrastructure/hooks/useToast';
-import { GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 import { Input } from '@/component-library/atoms/form/input';
 import { HintLink } from '@/component-library/atoms/misc/HintLink';
-import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
-import { alreadyStreamingToast, noApiToast } from '@/component-library/features/utils/list-toasts';
+import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 
 type ListRSEProps = {
     firstExpression?: string;
@@ -19,71 +16,23 @@ type ListRSEProps = {
 const DEFAULT_EXPRESSION = '*';
 
 export const ListRSE = (props: ListRSEProps) => {
-    const streamingHook = useChunkedStream<RSEViewModel>();
     const [expression, setExpression] = useState<string | null>(props.firstExpression ?? DEFAULT_EXPRESSION);
-
-    const [gridApi, setGridApi] = useState<GridApi<RSEViewModel> | null>(null);
-
-    const { toast, dismiss } = useToast();
-    const validator = new BaseViewModelValidator(toast);
-
-    const onGridReady = (event: GridReadyEvent) => {
-        setGridApi(event.api);
-    };
-
-    useEffect(() => {
-        if (props.initialData) {
-            onData(props.initialData);
-        }
-    }, [gridApi]);
-
-    const onData = (data: RSEViewModel[]) => {
-        const validData = data.filter(element => validator.isValid(element));
-        gridApi?.applyTransactionAsync({ add: validData });
-    };
-
-    const startStreaming = () => {
-        if (gridApi) {
-            // Hide active toasts
-            dismiss();
-
-            // Make sure there are no pending transactions
-            gridApi.flushAsyncTransactions();
-
-            // Empty the grid
-            gridApi.setGridOption('rowData', []);
-
-            // Reset the validator
-            validator.reset();
-
-            const url = `/api/feature/list-rses?rseExpression=${expression ?? DEFAULT_EXPRESSION}`;
-            streamingHook.start({ url, onData });
-        } else {
-            toast(noApiToast);
-        }
-    };
-
-    const isRunning = streamingHook.status === StreamingStatus.RUNNING;
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setExpression(value !== '' ? value : DEFAULT_EXPRESSION);
     };
 
+    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<RSEViewModel>(props.initialData);
+
     const onSearch = (event: any) => {
         event.preventDefault();
-        if (!isRunning) {
-            startStreaming();
-        } else {
-            toast(alreadyStreamingToast);
-        }
+        startStreaming(`/api/feature/list-rses?rseExpression=${expression ?? DEFAULT_EXPRESSION}`);
     };
 
     const onStop = (event: any) => {
         event.preventDefault();
-        if (isRunning) {
-            streamingHook.stop();
-        }
+        stopStreaming();
     };
 
     return (
@@ -102,7 +51,7 @@ export const ListRSE = (props: ListRSEProps) => {
                         defaultValue={props.firstExpression ?? ''}
                         placeholder={DEFAULT_EXPRESSION}
                     />
-                    <SearchButton isRunning={isRunning} onStop={onStop} onSearch={onSearch} />
+                    <SearchButton isRunning={streamingHook.status === StreamingStatus.RUNNING} onStop={onStop} onSearch={onSearch} />
                 </div>
             </div>
             <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
@@ -12,7 +12,7 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { RuleState } from '@/lib/core/entity/rucio';
 
 type ListRuleTableProps = {
-    streamingHook: UseChunkedStream<RuleViewModel>;
+    streamingHook: UseStreamReader<RuleViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
 };
 

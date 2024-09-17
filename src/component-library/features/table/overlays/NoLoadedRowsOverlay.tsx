@@ -1,4 +1,4 @@
-import { StreamingError, StreamingErrorType, StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { StreamingError, StreamingErrorType, StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import React from 'react';
 import { NoDataYetOverlay } from '@/component-library/features/table/overlays/NoDataYetOverlay';

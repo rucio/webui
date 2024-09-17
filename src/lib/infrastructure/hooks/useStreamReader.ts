@@ -35,7 +35,7 @@ export type StreamingSettings<TData> = {
     maxUpdateLength?: number;
 };
 
-export interface UseChunkedStream<TData> {
+export interface UseStreamReader<TData> {
     status: StreamingStatus;
     error: StreamingError | undefined;
     start: (options: StreamingSettings<TData>) => void;
@@ -50,7 +50,7 @@ export interface UseChunkedStream<TData> {
  * @returns stop - A function which interrupts the fetching while deleting its state
  * @returns error - A string with explanation of the error
  */
-export default function useChunkedStream<TData>(): UseChunkedStream<TData> {
+export default function useStreamReader<TData>(): UseStreamReader<TData> {
     const [status, setStatus] = useState<StreamingStatus>(StreamingStatus.STOPPED);
     const [error, setError] = useState<StreamingError | undefined>(undefined);
     // These refs are required for the correct state handling during fetching
