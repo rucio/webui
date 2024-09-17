@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
@@ -12,7 +12,7 @@ import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBad
 import { RSEType } from '@/lib/core/entity/rucio';
 
 type ListRSETableProps = {
-    streamingHook: UseChunkedStream<RSEViewModel>;
+    streamingHook: UseStreamReader<RSEViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
 };
 

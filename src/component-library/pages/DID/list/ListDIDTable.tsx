@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { UseChunkedStream } from '@/lib/infrastructure/hooks/useChunkedStream';
+import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
@@ -8,7 +8,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 
 type ListDIDTableProps = {
-    streamingHook: UseChunkedStream<DIDViewModel>;
+    streamingHook: UseStreamReader<DIDViewModel>;
     onSelectionChanged: (event: SelectionChangedEvent) => void;
     onGridReady: (event: GridReadyEvent) => void;
 };

@@ -29,7 +29,7 @@ import {
 } from '@/lib/infrastructure/data/view-model/did';
 import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
-import useChunkedStream, { StreamingSettings, StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
+import useStreamReader, { StreamingSettings, StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
     return {
@@ -47,7 +47,7 @@ export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> 
     } as UseComDOM<T>;
 }
 
-export function mockUseChunkedStream<T>(data: T[]): ReturnType<typeof useChunkedStream<T>> {
+export function mockUseChunkedStream<T>(data: T[]): ReturnType<typeof useStreamReader<T>> {
     return {
         start: (settings: StreamingSettings<T>) => {
             settings.onData(data);
