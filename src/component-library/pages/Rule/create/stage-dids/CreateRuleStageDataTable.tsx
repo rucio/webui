@@ -21,7 +21,7 @@ const CreateRuleSelectableCell = (props: { onSelect: () => void; selected: boole
 };
 
 interface SelectableDIDViewModel extends DIDLongViewModel {
-    selected: boolean;
+    selected?: boolean;
 }
 
 type StageDataTableProps = {
@@ -43,6 +43,9 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
             },
             cellRenderer: (params: ICellRendererParams<SelectableDIDViewModel>) => {
                 const did = params.data!;
+                if (did.selected === undefined) {
+                    did.selected = selectedItems.some(element => element.scope === did.scope && element.name === did.name);
+                }
                 const onSelect = () => (did.selected ? removeDID(did) : addDID(did));
                 return <CreateRuleSelectableCell selected={did.selected} onSelect={onSelect} {...params} />;
             },
@@ -67,7 +70,7 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
             const selected = selectedItems.some(element => element.scope === did.scope && element.name === did.name);
             node.setData({ ...did, selected });
         });
-    }, [selectedItems, props.streamingHook.status]);
+    }, [selectedItems]);
 
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
 };
