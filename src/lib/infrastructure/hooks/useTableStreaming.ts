@@ -41,7 +41,7 @@ export default function useTableStreaming<T extends BaseViewModel>(initialData?:
 
     const isRunning = streamingHook.status === StreamingStatus.RUNNING;
 
-    const startStreaming = (url: string) => {
+    const startStreaming = (url: string, fetchOptions?: RequestInit) => {
         if (isRunning) {
             toast(alreadyStreamingToast);
             return;
@@ -60,7 +60,7 @@ export default function useTableStreaming<T extends BaseViewModel>(initialData?:
             // Reset the validator
             validator.reset();
 
-            streamingHook.start({ url, onData });
+            streamingHook.start({ url, onData, fetchOptions });
         } else {
             toast(noApiToast);
         }
