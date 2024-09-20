@@ -84,36 +84,35 @@ export const getQuotaInfo = (
     account: string,
     accountRSEUsageAndLimits: TAccountRSEUsageAndLimits,
     totalDIDBytesRequested: number,
-): (TRSESummaryRow & { status: 'success' }) | BaseErrorResponseModel => {
+):
+    | (TRSESummaryRow & {
+          status: 'success';
+      })
+    | BaseErrorResponseModel => {
     const rseName = rse.name;
-    if (!accountRSEUsageAndLimits[rseName]) {
-        const errorModel: BaseErrorResponseModel = {
-            status: 'error',
-            code: 500,
-            message: `Could not get usage and quota for ${rseName}`,
-            name: 'UseCase Stream Error',
+    const data = accountRSEUsageAndLimits[rseName];
+
+    if (!data || !data.limit) {
+        return {
+            status: 'success',
+            rse: rse.name,
+            rse_id: rse.id,
+            account: account,
+            files: -1,
+            used_bytes: -1,
+            bytes_limit: -1,
+            bytes_remaining: -1,
+            has_quota: false,
+            total_expected_usage: -1,
         };
-        return errorModel;
     }
 
-    const accountRSEUsageAndLimit = accountRSEUsageAndLimits[rseName];
-
-    let bytesLimit = accountRSEUsageAndLimit.limit;
-    if (bytesLimit === undefined) {
-        const errorModel: BaseErrorResponseModel = {
-            status: 'error',
-            code: 500,
-            message: `Could not get usage and quota for ${rseName}. Account has no limits specified!`,
-            name: 'UseCase Stream Error',
-        };
-        return errorModel;
-    }
-
+    let bytesLimit = data.limit;
     if (bytesLimit < 0) {
         bytesLimit = 0;
     }
 
-    let bytesRemaining = accountRSEUsageAndLimit.bytesRemaining ? accountRSEUsageAndLimit.bytesRemaining : 0;
+    let bytesRemaining = data.bytesRemaining ? data.bytesRemaining : 0;
 
     let bytesUsed = bytesLimit - bytesRemaining;
 
