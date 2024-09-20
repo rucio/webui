@@ -18,13 +18,14 @@ async function endpoint(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
         return;
     }
 
-    const requestedDIDs: DIDLong[] = req.body.requestedDIDs;
+    const jsonBody = JSON.parse(req.body);
+    const requestedDIDs: DIDLong[] = jsonBody.requestedDIDs;
     if (requestedDIDs === undefined || requestedDIDs === null || requestedDIDs.length === 0) {
         res.status(400).json({ error: 'Bad Request. List of DIDs must be provided in request body.' });
         return;
     }
 
-    let rseExpression: string = req.body.rseExpression;
+    let rseExpression: string = jsonBody.rseExpression;
     if (rseExpression === undefined || rseExpression === null || rseExpression.length === 0) {
         rseExpression = '';
     }
