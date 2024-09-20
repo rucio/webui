@@ -1,9 +1,10 @@
-import { DefaultBodyType, http, HttpResponse, StrictRequest } from 'msw';
+import {DefaultBodyType, http, HttpResponse, StrictRequest} from 'msw';
 
 export interface MockStreamOptions {
     data: any[];
     delay?: number;
     isRequestValid?: (request: StrictRequest<DefaultBodyType>) => boolean;
+    method?: 'GET' | 'POST';
 }
 
 const encoder = new TextEncoder();
@@ -13,15 +14,15 @@ const streamHeaders = {
 };
 const getBadRequestResponse = () =>
     HttpResponse.json(
-        { message: 'Unsuccessful validation' },
+        {message: 'Unsuccessful validation'},
         {
             status: 400,
         },
     );
 
 export const getMockStreamEndpoint = (url: string, options: MockStreamOptions) => {
-    return http.get(url, async ({ request }) => {
-        const { data, delay, isRequestValid } = options;
+    const resolver = async ({request}: { request: StrictRequest<DefaultBodyType> }) => {
+        const {data, delay, isRequestValid} = options;
         if (isRequestValid && !isRequestValid(request)) {
             return getBadRequestResponse();
         }
@@ -40,8 +41,14 @@ export const getMockStreamEndpoint = (url: string, options: MockStreamOptions) =
             },
         });
 
-        return new Response(stream, { headers: streamHeaders });
-    });
+        return new Response(stream, {headers: streamHeaders});
+    };
+
+    if (options.method === 'POST') {
+        return http.post(url, resolver);
+    } else {
+        return http.get(url, resolver);
+    }
 };
 
 export const getMockInvalidStreamEndpoint = (url: string) => {
@@ -55,7 +62,7 @@ export const getMockInvalidStreamEndpoint = (url: string) => {
             },
         });
 
-        return new Response(stream, { headers: streamHeaders });
+        return new Response(stream, {headers: streamHeaders});
     });
 };
 
@@ -73,7 +80,7 @@ export const getMockValidBeforeFailStreamEndpoint = (url: string, data: any[]) =
             },
         });
 
-        return new Response(stream, { headers: streamHeaders });
+        return new Response(stream, {headers: streamHeaders});
     });
 };
 
@@ -107,8 +114,8 @@ const splitStringRandomly = (str: string): string[] => {
 
 // Pushes random partial chunks which combine into a valid ndjson
 export const getMockPartialStreamEndpoint = (url: string, options: MockStreamOptions) => {
-    return http.get(url, async ({ request }) => {
-        const { data, delay, isRequestValid } = options;
+    return http.get(url, async ({request}) => {
+        const {data, delay, isRequestValid} = options;
         if (isRequestValid && !isRequestValid(request)) {
             return getBadRequestResponse();
         }
@@ -132,6 +139,6 @@ export const getMockPartialStreamEndpoint = (url: string, options: MockStreamOpt
             },
         });
 
-        return new Response(stream, { headers: streamHeaders });
+        return new Response(stream, {headers: streamHeaders});
     });
 };
