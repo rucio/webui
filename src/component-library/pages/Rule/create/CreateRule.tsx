@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react';
-import { CreateRuleOptions, CreateRuleParameters, CreateRuleStorage, getEmptyCreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
-import { Heading } from '@/component-library/atoms/misc/Heading';
+import {useEffect, useState} from 'react';
+import {
+    CreateRuleOptions,
+    CreateRuleParameters,
+    CreateRuleStorage,
+    getEmptyCreateRuleParameters
+} from '@/lib/infrastructure/data/view-model/rule';
+import {Heading} from '@/component-library/atoms/misc/Heading';
 import Timeline from '@/component-library/features/Timeline';
-import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
-import { Button } from '@/component-library/atoms/form/button';
-import { CreateRuleStageData } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageData';
-import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
+import {HiArrowLeft, HiArrowRight} from 'react-icons/hi';
+import {Button} from '@/component-library/atoms/form/button';
+import {CreateRuleStageData} from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageData';
+import {DIDLongViewModel} from '@/lib/infrastructure/data/view-model/did';
 
 const PARAMS_KEY = 'create_rule_parameters';
 const ACTIVE_KEY = 'create_rule_active';
@@ -62,20 +67,45 @@ export const CreateRule = () => {
         localStorage.setItem(ACTIVE_KEY, activeIndex.toString());
     }, [activeIndex]);
 
+    const getPreviousButton = () => {
+        const disabled = activeIndex === 0;
+        return <Button className="w-full sm:w-48 justify-between" disabled={disabled}
+                       onClick={() => setActiveIndex(prevState => prevState - 1)}>
+            <HiArrowLeft/>
+            <span>Previous</span>
+        </Button>
+    }
+
+    // TODO: refactor for being reused
+    const isStepIncomplete = (): boolean => {
+        if (activeIndex === 0) {
+            return parameters.dids.length === 0;
+        } else if (activeIndex === 1) {
+            // TODO: or there's not enough quota
+            return parameters.rses.length === 0;
+        }
+        return true;
+    };
+
+    const getNextButton = () => {
+        const disabled = activeIndex === steps.length - 1 || isStepIncomplete();
+        return <Button className="w-full sm:w-48 ml-auto justify-between" disabled={disabled} onClick={() => setActiveIndex(prevState => prevState + 1)}>
+            <span>Next</span>
+            <HiArrowRight/>
+        </Button>
+    }
+
     return (
         <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="New Rule" />
-            <Timeline steps={steps} activeIndex={activeIndex} onSwitch={setActiveIndex} />
+            <Heading text="New Rule"/>
+            <Timeline steps={steps} activeIndex={activeIndex} onSwitch={setActiveIndex}/>
             <div className="flex grow">
-                <CreateRuleStageData parameters={parameters} addDID={addDID} removeDID={removeDID} visible={activeIndex === 0} />
+                <CreateRuleStageData parameters={parameters} addDID={addDID} removeDID={removeDID}
+                                     visible={activeIndex === 0}/>
             </div>
-            <div className="flex justify-between">
-                <Button className="w-fit justify-between" onClick={() => setActiveIndex(prevState => prevState - 1)}>
-                    <HiArrowLeft />
-                </Button>
-                <Button className="w-fit justify-between" onClick={() => setActiveIndex(prevState => prevState + 1)}>
-                    <HiArrowRight />
-                </Button>
+            <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
+                {getPreviousButton()}
+                {getNextButton()}
             </div>
         </div>
     );
