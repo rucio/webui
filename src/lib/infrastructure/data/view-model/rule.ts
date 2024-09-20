@@ -1,7 +1,7 @@
 import { Rule, RuleMeta, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import {DIDLongViewModel} from "@/lib/infrastructure/data/view-model/did";
+import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 
 export interface RuleViewModel extends Rule, BaseViewModel {}
 
@@ -16,11 +16,11 @@ enum CreateRuleGrouping {
 }
 
 export interface CreateRuleOptions {
-    copies: number,
+    copies: number;
 
-    daysLifetime: number,
-    notify: boolean,
-    asynchronous: boolean,
+    daysLifetime: number;
+    notify: boolean;
+    asynchronous: boolean;
     grouping: CreateRuleGrouping;
 
     hasSampling: boolean;
@@ -28,13 +28,13 @@ export interface CreateRuleOptions {
 }
 
 export interface CreateRuleStorage {
-    rses: RSEAccountUsageLimitViewModel[],
-    rseExpression?: string,
-    askApproval: boolean,
+    rses: RSEAccountUsageLimitViewModel[];
+    rseExpression?: string;
+    askApproval: boolean;
 }
 
 export interface CreateRuleParameters extends CreateRuleOptions, CreateRuleStorage {
-    dids: DIDLongViewModel[],
+    dids: DIDLongViewModel[];
 }
 
 export const getEmptyCreateRuleParameters = (): CreateRuleParameters => {
@@ -47,9 +47,9 @@ export const getEmptyCreateRuleParameters = (): CreateRuleParameters => {
         grouping: CreateRuleGrouping.ALL,
         hasSampling: false,
         notify: false,
-        rses: []
-    }
-}
+        rses: [],
+    };
+};
 
 export const generateEmptyRuleViewModel = (): RuleViewModel => {
     return {

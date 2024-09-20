@@ -9,7 +9,7 @@ import { ListDIDTable } from '@/component-library/pages/DID/list/ListDIDTable';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
-import {DIDSearchPanel} from "@/component-library/features/search/DIDSearchPanel";
+import { DIDSearchPanel } from '@/component-library/features/search/DIDSearchPanel';
 
 export interface ListDIDProps {
     firstPattern?: string;
