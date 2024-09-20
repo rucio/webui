@@ -1,16 +1,9 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
-import {DIDType} from "@/lib/core/entity/rucio";
-import {useToast} from "@/lib/infrastructure/hooks/useToast";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from "@/component-library/atoms/form/select";
-import {Input} from "@/component-library/atoms/form/input";
-import {SearchButton} from "@/component-library/features/search/SearchButton";
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { DIDType } from '@/lib/core/entity/rucio';
+import { useToast } from '@/lib/infrastructure/hooks/useToast';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
+import { Input } from '@/component-library/atoms/form/input';
+import { SearchButton } from '@/component-library/features/search/SearchButton';
 
 const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
