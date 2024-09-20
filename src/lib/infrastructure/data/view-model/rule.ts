@@ -1,6 +1,7 @@
-import { AccountInfo, DIDLong, DIDType, Rule, RuleMeta, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
+import { Rule, RuleMeta, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import {DIDLongViewModel} from "@/lib/infrastructure/data/view-model/did";
 
 export interface RuleViewModel extends Rule, BaseViewModel {}
 
@@ -8,20 +9,46 @@ export interface RulePageLockEntryViewModel extends RulePageLockEntry, BaseViewM
 
 export interface RuleMetaViewModel extends RuleMeta, BaseViewModel {}
 
-export interface RuleSummaryViewModel extends BaseViewModel {
-    RSEViewModels: Array<RSEAccountUsageLimitViewModel>;
-    DIDViewModels: Array<DIDLong>;
-    expirydate: Date;
-    lifetime: number;
-    notifications: boolean;
-    asynchronousMode: boolean;
-    numcopies: number;
-    takeSamples: boolean;
-    numsamples: number;
-    groupby: DIDType;
-    comment: string;
-    approval: boolean;
-    accountInfo: AccountInfo;
+enum CreateRuleGrouping {
+    ALL,
+    DATASET,
+    NONE,
+}
+
+export interface CreateRuleOptions {
+    copies: number,
+
+    daysLifetime: number,
+    notify: boolean,
+    asynchronous: boolean,
+    grouping: CreateRuleGrouping;
+
+    hasSampling: boolean;
+    sampleCount?: number;
+}
+
+export interface CreateRuleStorage {
+    rses: RSEAccountUsageLimitViewModel[],
+    rseExpression?: string,
+    askApproval: boolean,
+}
+
+export interface CreateRuleParameters extends CreateRuleOptions, CreateRuleStorage {
+    dids: DIDLongViewModel[],
+}
+
+export const getEmptyCreateRuleParameters = (): CreateRuleParameters => {
+    return {
+        askApproval: false,
+        asynchronous: false,
+        copies: 1,
+        daysLifetime: 0,
+        dids: [],
+        grouping: CreateRuleGrouping.ALL,
+        hasSampling: false,
+        notify: false,
+        rses: []
+    }
 }
 
 export const generateEmptyRuleViewModel = (): RuleViewModel => {

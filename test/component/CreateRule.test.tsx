@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { CreateRule } from '@/component-library/pages/legacy/Rule/CreateRule';
+import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
 import {
     DIDSearchQuery,
     TypedDIDValidationQuery,
