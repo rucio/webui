@@ -10,9 +10,6 @@ import { HiInformationCircle } from 'react-icons/hi';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
 
-// TODO: move to shared constants file
-//const DATA_KEY = 'create_rule_dids';
-
 type CreateRuleStageData = {
     visible: boolean;
     parameters: CreateRuleParameters;
@@ -21,38 +18,10 @@ type CreateRuleStageData = {
 };
 
 export const CreateRuleStageData = (props: CreateRuleStageData) => {
-    //const initialDataString = localStorage.getItem(DATA_KEY);
-
     const selectedItems = props.parameters.dids;
-    const totalSize = props.parameters.dids.reduce((accumulator, current) => accumulator + current.bytes, 0);
+    const totalSize = selectedItems.reduce((accumulator, current) => accumulator + current.bytes, 0);
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDLongViewModel>();
-    //initialDataString ? JSON.parse(initialDataString) : undefined
-
-    // const onGridReady = (event: GridReadyEvent) => {
-    //     defaultOnGridReady(event);
-    //     const selectedNodes: IRowNode[] = [];
-    //     console.log(selectedNodes);
-    //     gridApi?.forEachNode(node => {
-    //         if (props.parameters.dids.includes(node.data)) {
-    //             selectedNodes.push(node);
-    //         }
-    //     });
-    //     event.api.setNodesSelected({
-    //         nodes: selectedNodes,
-    //         newValue: true
-    //     })
-    // }
-    //
-    // useEffect(() => {
-    //     if (streamingHook.status === StreamingStatus.STOPPED) {
-    //         const rowData: DIDLongViewModel[] = [];
-    //         gridApi?.forEachNode(node => rowData.push(node.data));
-    //         if (rowData.length !== 0) {
-    //             localStorage.setItem(DATA_KEY, JSON.stringify(rowData));
-    //         }
-    //     }
-    // }, [streamingHook.status]);
 
     return (
         <div className={cn('flex flex-col space-y-3 w-full grow', props.visible ? 'visible' : 'hidden')}>
