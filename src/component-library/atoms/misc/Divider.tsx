@@ -2,11 +2,12 @@ import React from 'react';
 import cn from 'classnames';
 
 export const Divider = ({
-    orientation = 'horizontal',
-    thickness = 'border',
-    color = 'border-neutral-100 dark:border-neutral-700',
-    margin = 'my-2',
-}) => {
+                            orientation = 'horizontal',
+                            thickness = 'border',
+                            color = 'border-neutral-100 dark:border-neutral-700',
+                            margin = 'my-2',
+                            className = ''
+                        }) => {
     const isHorizontal = orientation === 'horizontal';
 
     const classNames = cn(color, thickness, margin, {
@@ -14,7 +15,7 @@ export const Divider = ({
         'h-full': !isHorizontal,
         'border-t': isHorizontal,
         'border-l': !isHorizontal,
-    });
+    }, className);
 
     return <div className={classNames}></div>;
 };

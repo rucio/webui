@@ -180,7 +180,9 @@ export const RegularTable = (props: RegularTableProps) => {
                     onPaginationChanged={onPaginationChanged}
                     suppressMovableColumns={true}
                     rowSelection={props.rowSelection}
+                    rowMultiSelectWithClick={true}
                     onSelectionChanged={props.onSelectionChanged}
+                    rowBuffer={0}
                     //asyncTransactionWaitMillis={500}
                 />
             </div>

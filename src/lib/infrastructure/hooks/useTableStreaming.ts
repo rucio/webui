@@ -29,7 +29,7 @@ export default function useTableStreaming<T extends BaseViewModel>(initialData?:
     };
 
     useEffect(() => {
-        if (initialData) {
+        if (gridApi && initialData) {
             onData(initialData);
         }
     }, [gridApi]);
@@ -72,5 +72,5 @@ export default function useTableStreaming<T extends BaseViewModel>(initialData?:
         }
     };
 
-    return { streamingHook, onGridReady, startStreaming, stopStreaming };
+    return { streamingHook, onGridReady, startStreaming, stopStreaming, gridApi };
 }

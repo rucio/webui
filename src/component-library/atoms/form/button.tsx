@@ -13,7 +13,7 @@ const buttonVariants = cva(
     {
         variants: {
             variant: {
-                default: 'bg-brand-600 text-neutral-100 hover:bg-brand-700 dark:hover:bg-brand-500',
+                default: 'bg-opacity-80 bg-brand-600 text-neutral-100 hover:bg-brand-700 dark:hover:bg-brand-500',
                 success: 'bg-base-success-600 text-neutral-100 hover:bg-base-success-700 dark:hover:bg-base-success-500',
                 error: 'bg-base-error-600 text-neutral-100 hover:bg-base-error-700 dark:hover:bg-base-error-500',
             },
@@ -21,7 +21,7 @@ const buttonVariants = cva(
                 default: 'h-10 px-4 py-2',
                 sm: 'h-9 rounded-md px-3',
                 lg: 'h-11 rounded-md px-8',
-                icon: 'h-10 w-10',
+                icon: 'h-7 w-7 rounded',
             },
         },
         defaultVariants: {
