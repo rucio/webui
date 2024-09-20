@@ -101,6 +101,8 @@ async function getResponseError(response) {
             if (response.status === 404) {
                 error.type = 'not_found';
             }
+        } else if (jsonResponse.error) {
+            error.message = jsonResponse.error;
         }
     } catch (e) {
     }
