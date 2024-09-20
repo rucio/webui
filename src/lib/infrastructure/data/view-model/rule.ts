@@ -30,6 +30,7 @@ export interface CreateRuleOptions {
 export interface CreateRuleStorage {
     rses: RSEAccountUsageLimitViewModel[];
     rseExpression?: string;
+    needsApproval: boolean;
     askApproval: boolean;
 }
 
@@ -40,6 +41,7 @@ export interface CreateRuleParameters extends CreateRuleOptions, CreateRuleStora
 export const getEmptyCreateRuleParameters = (): CreateRuleParameters => {
     return {
         askApproval: false,
+        needsApproval: false,
         asynchronous: false,
         copies: 1,
         daysLifetime: 0,
