@@ -14,11 +14,16 @@ export const formatDate = (isoString: string): string => {
 };
 
 export const formatFileSize = (bytes: number): string => {
-    if (isNaN(bytes) || bytes < 0) return DEFAULT_VALUE;
+    if (isNaN(bytes)) return DEFAULT_VALUE;
     if (bytes === 0) return '0 Bytes';
+
+    const sign = bytes < 0 ? '-' : '';  // Check if the number is negative
+    bytes = Math.abs(bytes);  // Use the absolute value of the bytes
+
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
+
+    return `${sign}${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 };
 
 export const formatSeconds = (seconds: number): string => {
