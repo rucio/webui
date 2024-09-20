@@ -17,6 +17,7 @@ export interface RegularTableProps {
     rowSelection?: 'single' | 'multiple';
     onSelectionChanged?: (event: SelectionChangedEvent) => void;
     onGridReady?: (event: GridReadyEvent) => void;
+    rowData?: any[];
 }
 
 // This implementation of the pagination panel uses refs to prevent excessive state updates
@@ -137,6 +138,10 @@ export const RegularTable = (props: RegularTableProps) => {
         }
     };
 
+    useEffect(() => {
+        onPaginationChanged();
+    }, [isTableLoaded]);
+
     // Resize the columns to fit the grid on changing the window dimensions
     useEffect(() => {
         const handleResize = () => {
@@ -182,7 +187,7 @@ export const RegularTable = (props: RegularTableProps) => {
                     rowSelection={props.rowSelection}
                     rowMultiSelectWithClick={true}
                     onSelectionChanged={props.onSelectionChanged}
-                    rowBuffer={0}
+                    rowData={props.rowData}
                     //asyncTransactionWaitMillis={500}
                 />
             </div>

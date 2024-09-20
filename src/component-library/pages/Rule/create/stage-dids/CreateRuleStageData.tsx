@@ -5,6 +5,12 @@ import {DIDSearchPanel} from "@/component-library/features/search/DIDSearchPanel
 import {CreateRuleParameters} from "@/lib/infrastructure/data/view-model/rule";
 import {CreateRuleStageDataTable} from "@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataTable";
 import {cn} from "@/component-library/utils";
+import {Field} from "@/component-library/atoms/misc/Field";
+import {HiInformationCircle} from "react-icons/hi";
+import {formatFileSize} from "@/component-library/features/utils/text-formatters";
+import {
+    CreateRuleStageDataSelectedTable
+} from "@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable";
 
 // TODO: move to shared constants file
 //const DATA_KEY = 'create_rule_dids';
@@ -18,6 +24,9 @@ type CreateRuleStageData = {
 
 export const CreateRuleStageData = (props: CreateRuleStageData) => {
     //const initialDataString = localStorage.getItem(DATA_KEY);
+
+    const selectedItems = props.parameters.dids;
+    const totalSize = props.parameters.dids.reduce((accumulator, current) => accumulator + current.bytes, 0);
 
     const {onGridReady, streamingHook, startStreaming, stopStreaming, gridApi} = useTableStreaming<DIDLongViewModel>(
         //initialDataString ? JSON.parse(initialDataString) : undefined
@@ -50,16 +59,32 @@ export const CreateRuleStageData = (props: CreateRuleStageData) => {
 
     return (
         <div className={cn("flex flex-col space-y-3 w-full grow", props.visible ? 'visible' : 'hidden')}>
-            <DIDSearchPanel startStreaming={startStreaming} stopStreaming={stopStreaming}
-                            isRunning={streamingHook.status === StreamingStatus.RUNNING}/>
-            <CreateRuleStageDataTable
-                streamingHook={streamingHook}
-                onGridReady={onGridReady}
-                addDID={(did) => props.addDID(did)}
-                removeDID={(did) => props.removeDID(did)}
-                selectedItems={props.parameters.dids}
+            <Field className="bg-neutral-100 dark:bg-neutral-800 items-center py-2 space-x-2">
+                <HiInformationCircle className="h-6 w-6"/>
+                {selectedItems.length === 0 ?
+                    <span>Please select at least one identifier</span> :
+                    <span><b>{selectedItems.length}</b> chosen, <b>{formatFileSize(totalSize)}</b> in total</span>}
+            </Field>
+            {selectedItems.length !== 0 && <div className="h-[500px] flex flex-col">
+                <CreateRuleStageDataSelectedTable
+                    rowData={selectedItems}
+                    removeDID={(did) => props.removeDID(did)}
+                />
+            </div>}
+            <DIDSearchPanel
+                startStreaming={startStreaming}
+                stopStreaming={stopStreaming}
+                isRunning={streamingHook.status === StreamingStatus.RUNNING}
             />
-            <p>{props.parameters.dids.length} chosen</p>
+            <div className="h-[500px] flex flex-col">
+                <CreateRuleStageDataTable
+                    streamingHook={streamingHook}
+                    onGridReady={onGridReady}
+                    addDID={(did) => props.addDID(did)}
+                    removeDID={(did) => props.removeDID(did)}
+                    selectedItems={selectedItems}
+                />
+            </div>
         </div>
     );
 };
