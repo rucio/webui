@@ -3036,6 +3036,11 @@ html {
   --tw-border-opacity: 0.2;
 }
 
+.dark .dark\:bg-base-error-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
+}
+
 .dark .dark\:bg-base-error-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
@@ -3202,6 +3207,10 @@ html {
 
 .dark .dark\:bg-opacity-70 {
   --tw-bg-opacity: 0.7;
+}
+
+.dark .dark\:bg-opacity-90 {
+  --tw-bg-opacity: 0.9;
 }
 
 .dark .dark\:bg-clip-content {
@@ -3406,6 +3415,11 @@ html {
 .dark .dark\:hover\:bg-neutral-600:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(71 85 105 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:hover\:bg-neutral-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
 }
 
 .dark .dark\:hover\:bg-neutral-900:hover {
