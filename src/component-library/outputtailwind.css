@@ -1861,6 +1861,10 @@ html {
   --tw-bg-opacity: 0.5;
 }
 
+.bg-opacity-60 {
+  --tw-bg-opacity: 0.6;
+}
+
 .bg-opacity-80 {
   --tw-bg-opacity: 0.8;
 }
