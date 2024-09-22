@@ -78,10 +78,23 @@ export function generateEmptyDIDDatasetReplicasViewModel(): DIDDatasetReplicasVi
 }
 
 export interface AddDIDViewModel extends BaseViewModel {
+    created: boolean;
 }
 
 export const getEmptyAddDIDViewModel = (): AddDIDViewModel => {
     return {
-        status: 'error'
+        status: 'error',
+        created: false
+    }
+}
+
+export interface AttachDIDsViewModel extends BaseViewModel {
+    created: boolean;
+}
+
+export const getEmptyAttachDIDsViewModel = (): AttachDIDsViewModel => {
+    return {
+        status: 'error',
+        created: false
     }
 }
