@@ -7,22 +7,15 @@ import {
 } from 'react-icons/hi';
 import {twMerge} from 'tailwind-merge';
 import {Skeleton} from '@/component-library/atoms/loading/Skeleton';
-import {AgGridReact} from 'ag-grid-react';
-import {ColDef, ColGroupDef} from 'ag-grid-community/dist/types/core/entities/colDef';
+import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
 import {NoDataYetOverlay} from '@/component-library/features/table/overlays/NoDataYetOverlay';
-import {AgGridEvent, GridReadyEvent, GridSizeChangedEvent, SelectionChangedEvent} from 'ag-grid-community';
+import {AgGridEvent, GridReadyEvent} from 'ag-grid-community';
 import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
 import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioDark.css';
 import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioLight.css';
 
-export interface RegularTableProps {
+export interface RegularTableProps extends AgGridReactProps {
     tableRef: RefObject<AgGridReact>;
-    columnDefs: (ColDef | ColGroupDef)[];
-    noRowsOverlayComponent?: any;
-    rowSelection?: 'single' | 'multiple';
-    onSelectionChanged?: (event: SelectionChangedEvent) => void;
-    onGridReady?: (event: GridReadyEvent) => void;
-    rowData?: any[];
 }
 
 // This implementation of the pagination panel uses refs to prevent excessive state updates
@@ -168,21 +161,17 @@ export const RegularTable = (props: RegularTableProps) => {
                 {!isTableLoaded &&
                     <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none"/>}
                 <AgGridReact
+                    {...props}
                     pagination={true}
                     paginationAutoPageSize={true}
                     ref={props.tableRef}
                     loadingOverlayComponent={NoDataYetOverlay}
-                    noRowsOverlayComponent={props.noRowsOverlayComponent}
-                    columnDefs={props.columnDefs}
                     onGridReady={onGridReady}
                     domLayout="normal" // Ensures the grid fits within the flex container
                     suppressPaginationPanel={true}
                     onPaginationChanged={onPaginationChanged}
                     suppressMovableColumns={true}
-                    rowSelection={props.rowSelection}
                     rowMultiSelectWithClick={true}
-                    onSelectionChanged={props.onSelectionChanged}
-                    rowData={props.rowData}
                     onGridSizeChanged={handleResize}
                     //asyncTransactionWaitMillis={500}
                 />
