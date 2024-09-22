@@ -16,6 +16,7 @@ const buttonVariants = cva(
                 default: 'bg-opacity-80 bg-brand-600 text-neutral-100 hover:bg-brand-700 dark:hover:bg-brand-500',
                 success: 'bg-base-success-600 text-neutral-100 hover:bg-base-success-700 dark:hover:bg-base-success-500',
                 error: 'bg-base-error-600 text-neutral-100 hover:bg-base-error-700 dark:hover:bg-base-error-500',
+                neutral: 'bg-neutral-300 text-neutral-900 dark:bg-opacity-90 dark:bg-neutral-700 dark:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-800'
             },
             size: {
                 default: 'h-10 px-4 py-2',
