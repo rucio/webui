@@ -58,7 +58,6 @@ export const ListDID = (props: ListDIDProps) => {
         error: metaError,
         isFetching: isMetaFetching,
         refetch: refetchMeta,
-        remove: removeMeta,
     } = useQuery<DIDMetaViewModel>({
         queryKey: metaQueryKey,
         queryFn: queryMeta,
@@ -75,7 +74,7 @@ export const ListDID = (props: ListDIDProps) => {
             refetchMeta();
         };
 
-        if (selectedItem !== null) refetch();
+        refetch();
     }, [selectedItem]);
 
     // Handle errors with loading the meta
