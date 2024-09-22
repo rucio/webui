@@ -14,6 +14,7 @@ import { WarningField } from '@/component-library/features/fields/WarningField';
 import Checkbox from '@/component-library/atoms/form/Checkbox';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
+import { RSESearchPanel } from '@/component-library/features/search/RSESearchPanel';
 
 const DEFAULT_EXPRESSION = '*';
 
@@ -29,18 +30,12 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
     const totalDataSize = props.parameters.dids.reduce((accumulator, current) => accumulator + current.bytes, 0);
     const selectedItems = props.parameters.rses;
 
-    const [expression, setExpression] = useState<string | null>(DEFAULT_EXPRESSION);
     const [needsApproval, setNeedsApproval] = useState<boolean>(false);
     const [askApproval, setAskApproval] = useState<boolean>(false);
 
-    const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setExpression(value !== '' ? value : DEFAULT_EXPRESSION);
-    };
-
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<RSEAccountUsageLimitViewModel>();
 
-    const onSearch = () => {
+    const onSearch = (expression: string) => {
         startStreaming('/api/feature/list-account-rse-quotas', {
             method: 'POST',
             // TODO: redo the endpoint to only accept the rseExpression via GET
@@ -49,15 +44,6 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
                 requestedDIDs: props.parameters.dids,
             }),
         });
-    };
-
-    useEffect(() => {
-        if (gridApi) onSearch();
-    }, [gridApi]);
-
-    const onStop = (event: any) => {
-        event.preventDefault();
-        stopStreaming();
     };
 
     const onSelectionChanged = (event: SelectionChangedEvent) => {
@@ -102,8 +88,8 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
         } else {
             text = (
                 <span>
-                    Out of <b>{selectedItems.length}</b> chosen RSEs, none has enough quota left. Please choose different RSEs or mark the rule as in
-                    need of approval.
+                    Out of <b>{selectedItems.length}</b> chosen RSEs, none have enough quota left.
+                    Please choose different RSEs or mark the rule as needing approval.
                 </span>
             );
         }
@@ -112,16 +98,12 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
 
     return (
         <div className={cn('flex flex-col space-y-3 w-full grow', props.visible ? 'visible' : 'hidden')}>
-            <div className="space-y-2">
-                <div className="text-neutral-900 dark:text-neutral-100">
-                    Expression
-                    <HintLink href="https://rucio.github.io/documentation/started/concepts/rse_expressions" className="pl-2" />
-                </div>
-                <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-center sm:items-start">
-                    <Input className="w-full sm:flex-grow" onChange={onInputChange} onEnterKey={onSearch} placeholder={DEFAULT_EXPRESSION} />
-                    <SearchButton isRunning={streamingHook.status === StreamingStatus.RUNNING} onStop={onStop} onSearch={onSearch} />
-                </div>
-            </div>
+            <RSESearchPanel
+                onSearch={onSearch}
+                stopStreaming={stopStreaming}
+                isRunning={streamingHook.status === StreamingStatus.RUNNING}
+                gridApi={gridApi ?? undefined}
+            />
             <CreateRuleTableWrapper>
                 <CreateRuleStageStorageTable
                     streamingHook={streamingHook}
