@@ -33,8 +33,10 @@ export const StreamedTable = (props: StreamedTableProps) => {
     // Ensure the overlay updates when streaming faces an error
     useEffect(() => {
         const gridApi = props.tableRef.current?.api;
-        if (status === StreamingStatus.RUNNING || error || gridApi?.getDisplayedRowCount() === 0) {
+        if (status === StreamingStatus.RUNNING || error) {
             gridApi?.showNoRowsOverlay();
+        } else {
+            gridApi?.hideOverlay();
         }
         showErrorToast();
     }, [error, status]);
