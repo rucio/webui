@@ -7,6 +7,7 @@ import { Button } from '@/component-library/atoms/form/button';
 import { CreateRuleStageData } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageData';
 import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { CreateRuleStageStorage } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorage';
+import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 
 const PreviousButton = ({ activeIndex, setActiveIndex }: { activeIndex: number; setActiveIndex: React.Dispatch<React.SetStateAction<number>> }) => {
     const disabled = activeIndex === 0;
@@ -49,19 +50,32 @@ const PARAMS_KEY = 'create_rule_parameters';
 const ACTIVE_KEY = 'create_rule_active';
 
 export const CreateRule = () => {
-    const initialParametersString = localStorage.getItem(PARAMS_KEY);
-    const initialActiveString = localStorage.getItem(ACTIVE_KEY);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [parameters, setParameters] = useState<CreateRuleParameters>(getEmptyCreateRuleParameters());
+    const [activeIndex, setActiveIndex] = useState<number>(0);
 
-    const [parameters, setParameters] = useState<CreateRuleParameters>(
-        initialParametersString ? JSON.parse(initialParametersString) : getEmptyCreateRuleParameters(),
-    );
-    const [activeIndex, setActiveIndex] = useState<number>(initialActiveString ? parseInt(initialActiveString) : 0);
+    useEffect(() => {
+        const initialParametersString = localStorage.getItem(PARAMS_KEY);
+        const initialActiveString = localStorage.getItem(ACTIVE_KEY);
+
+        if (initialParametersString) {
+            setParameters(JSON.parse(initialParametersString));
+        }
+
+        if (initialActiveString) {
+            setActiveIndex(parseInt(initialActiveString));
+        }
+
+        setIsLoading(false);
+    }, []);
 
     // Effects to sync parameters and activeIndex with localStorage
     useEffect(() => {
+        if (isLoading) return;
         localStorage.setItem(PARAMS_KEY, JSON.stringify(parameters));
     }, [parameters]);
     useEffect(() => {
+        if (isLoading) return;
         localStorage.setItem(ACTIVE_KEY, activeIndex.toString());
     }, [activeIndex]);
 
@@ -103,19 +117,28 @@ export const CreateRule = () => {
 
     const steps = ['DIDs', 'RSEs', 'Options', 'Summary', 'Results'];
 
+    if (isLoading) {
+        return (
+            <div className="flex w-full grow items-center justify-center">
+                <LoadingSpinner />
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col space-y-3 w-full grow">
             <Heading text="New Rule" />
             <Timeline steps={steps} activeIndex={activeIndex} onSwitch={setActiveIndex} />
             <div className="flex grow">
                 <CreateRuleStageData visible={activeIndex === 0} parameters={parameters} addDID={addDID} removeDID={removeDID} />
-                <CreateRuleStageStorage
-                    visible={activeIndex === 1}
-                    parameters={parameters}
-                    updateStorage={updateStorage}
-                    updateNeedsApproval={updateNeedsApproval}
-                    updateAskApproval={updateAskApproval}
-                />
+                {activeIndex === 1 && (
+                    <CreateRuleStageStorage
+                        parameters={parameters}
+                        updateStorage={updateStorage}
+                        updateNeedsApproval={updateNeedsApproval}
+                        updateAskApproval={updateAskApproval}
+                    />
+                )}
             </div>
             <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
                 <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
