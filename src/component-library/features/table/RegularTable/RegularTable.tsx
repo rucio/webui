@@ -1,15 +1,10 @@
-import React, {RefObject, useEffect, useRef, useState} from 'react';
-import {
-    HiOutlineChevronDoubleLeft,
-    HiOutlineChevronDoubleRight,
-    HiOutlineChevronLeft,
-    HiOutlineChevronRight
-} from 'react-icons/hi';
-import {twMerge} from 'tailwind-merge';
-import {Skeleton} from '@/component-library/atoms/loading/Skeleton';
-import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
-import {NoDataYetOverlay} from '@/component-library/features/table/overlays/NoDataYetOverlay';
-import {AgGridEvent, GridReadyEvent} from 'ag-grid-community';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
+import { HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight, HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+import { twMerge } from 'tailwind-merge';
+import { Skeleton } from '@/component-library/atoms/loading/Skeleton';
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
+import { NoDataYetOverlay } from '@/component-library/features/table/overlays/NoDataYetOverlay';
+import { AgGridEvent, GridReadyEvent } from 'ag-grid-community';
 import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
 import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioDark.css';
 import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioLight.css';
@@ -50,19 +45,19 @@ export const SimplePaginationPanel = (props: {
         >
             <div className="flex justify-center invisible" ref={props.containerRef}>
                 <button disabled={true} ref={props.firstPageRef} className={buttonClasses}>
-                    <HiOutlineChevronDoubleLeft/>
+                    <HiOutlineChevronDoubleLeft />
                 </button>
                 <button disabled={true} ref={props.previousPageRef} className={buttonClasses}>
-                    <HiOutlineChevronLeft/>
+                    <HiOutlineChevronLeft />
                 </button>
                 <span className="px-3">
                     Page <span ref={props.currentPageRef}>0</span> of <span ref={props.totalPagesRef}>0</span>
                 </span>
                 <button disabled={true} ref={props.nextPageRef} className={buttonClasses}>
-                    <HiOutlineChevronRight/>
+                    <HiOutlineChevronRight />
                 </button>
                 <button disabled={true} ref={props.lastPageRef} className={buttonClasses}>
-                    <HiOutlineChevronDoubleRight/>
+                    <HiOutlineChevronDoubleRight />
                 </button>
             </div>
         </div>
@@ -142,7 +137,7 @@ export const RegularTable = (props: RegularTableProps) => {
 
     const handleResize = (event: AgGridEvent) => {
         event.api.sizeColumnsToFit();
-    }
+    };
 
     const isDarkMode = useDarkMode();
 
@@ -158,8 +153,7 @@ export const RegularTable = (props: RegularTableProps) => {
                     'min-h-[300px]',
                 )}
             >
-                {!isTableLoaded &&
-                    <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none"/>}
+                {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
                 <AgGridReact
                     {...props}
                     pagination={true}

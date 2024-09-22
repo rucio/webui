@@ -9,7 +9,7 @@ import { Field } from '@/component-library/atoms/misc/Field';
 import { HiInformationCircle } from 'react-icons/hi';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
-import {useEffect} from "react";
+import { useEffect } from 'react';
 
 type CreateRuleStageData = {
     visible: boolean;

@@ -8,7 +8,7 @@ import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { CreateRuleStageStorageTable } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorageTable';
-import {GridReadyEvent, SelectionChangedEvent} from 'ag-grid-community';
+import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import Checkbox from '@/component-library/atoms/form/Checkbox';
