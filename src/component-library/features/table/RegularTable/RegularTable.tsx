@@ -150,6 +150,7 @@ export const RegularTable = (props: RegularTableProps) => {
             }
         };
 
+        // TODO: debounce
         window.addEventListener('resize', handleResize);
 
         return () => {
