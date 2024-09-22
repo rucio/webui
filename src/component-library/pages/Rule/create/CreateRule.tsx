@@ -80,7 +80,7 @@ export const CreateRule = () => {
     const getPreviousButton = () => {
         const disabled = activeIndex === 0;
         return (
-            <Button className="w-full sm:w-48 justify-between" disabled={disabled} onClick={() => setActiveIndex(prevState => prevState - 1)}>
+            <Button variant="neutral" className="w-full sm:w-48 justify-between" disabled={disabled} onClick={() => setActiveIndex(prevState => prevState - 1)}>
                 <HiArrowLeft />
                 <span>Previous</span>
             </Button>
@@ -100,7 +100,7 @@ export const CreateRule = () => {
     const getNextButton = () => {
         const disabled = activeIndex === steps.length - 1 || isStepIncomplete();
         return (
-            <Button className="w-full sm:w-48 ml-auto justify-between" disabled={disabled} onClick={() => setActiveIndex(prevState => prevState + 1)}>
+            <Button variant="neutral" className="w-full sm:w-48 ml-auto justify-between" disabled={disabled} onClick={() => setActiveIndex(prevState => prevState + 1)}>
                 <span>Next</span>
                 <HiArrowRight />
             </Button>
