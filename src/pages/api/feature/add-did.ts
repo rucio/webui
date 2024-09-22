@@ -16,7 +16,6 @@ const schema = z.object({
     type: z.enum(['Dataset', 'Container']),
 });
 
-
 async function addDID(req:NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser){
 
     if(req.method !== 'POST') {
@@ -34,9 +33,7 @@ async function addDID(req:NextApiRequest, res: NextApiResponse, rucioAuthToken: 
     const controllerParameters: AddDIDControllerParameters = {
         response: res,
         rucioAuthToken: rucioAuthToken,
-        scope: params.data.scope,
-        name: params.data.name,
-        type: params.data.type
+        ...params.data
     }
 
     const controller = appContainer.get<BaseController<AddDIDControllerParameters, AddDIDRequest>>(CONTROLLERS.ADD_DID)
