@@ -30,12 +30,12 @@ export interface CreateRuleOptions {
 export interface CreateRuleStorage {
     rses: RSEAccountUsageLimitViewModel[];
     rseExpression?: string;
-    needsApproval: boolean;
-    askApproval: boolean;
 }
 
 export interface CreateRuleParameters extends CreateRuleOptions, CreateRuleStorage {
     dids: DIDLongViewModel[];
+    needsApproval: boolean;
+    askApproval: boolean;
 }
 
 export const getEmptyCreateRuleParameters = (): CreateRuleParameters => {
