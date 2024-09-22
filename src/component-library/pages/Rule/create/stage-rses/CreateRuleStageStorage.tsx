@@ -29,8 +29,8 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
     const totalDataSize = props.parameters.dids.reduce((accumulator, current) => accumulator + current.bytes, 0);
     const selectedItems = props.parameters.rses;
 
-    const [needsApproval, setNeedsApproval] = useState<boolean>(false);
-    const [askApproval, setAskApproval] = useState<boolean>(false);
+    const [needsApproval, setNeedsApproval] = useState<boolean>(props.parameters.needsApproval);
+    const [askApproval, setAskApproval] = useState<boolean>(props.parameters.askApproval);
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<RSEAccountUsageLimitViewModel>();
 

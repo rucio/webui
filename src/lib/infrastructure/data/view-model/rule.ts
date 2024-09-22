@@ -9,22 +9,24 @@ export interface RulePageLockEntryViewModel extends RulePageLockEntry, BaseViewM
 
 export interface RuleMetaViewModel extends RuleMeta, BaseViewModel {}
 
-enum CreateRuleGrouping {
-    ALL,
-    DATASET,
-    NONE,
+export enum CreateRuleGrouping {
+    ALL = 'All',
+    DATASET = 'Dataset',
+    NONE = 'None',
 }
 
 export interface CreateRuleOptions {
     copies: number;
 
-    daysLifetime: number;
+    daysLifetime?: number;
     notify: boolean;
     asynchronous: boolean;
-    grouping: CreateRuleGrouping;
+    grouping?: CreateRuleGrouping;
 
     hasSampling: boolean;
     sampleCount?: number;
+
+    comments?: string;
 }
 
 export interface CreateRuleStorage {
