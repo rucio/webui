@@ -26,8 +26,6 @@ export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
                 'Content-Type': 'application/json',
             },
             body: {
-                scope: this.scope,
-                name: this.name,
                 dids: this.dids.map(did => {
                     return {
                         scope: did.scope,

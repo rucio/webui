@@ -33,6 +33,7 @@ const INPUT_PORT = {
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageInputPort'),
     CREATE_RULE: Symbol.for('CreateRuleInputPort'),
     ADD_DID: Symbol.for('AddDIDInputPort'),
+    ATTACH_DIDS: Symbol.for('AttachDIDsInputPort')
 };
 
 export default INPUT_PORT;

@@ -67,6 +67,7 @@ import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-featu
 import ListAccountRSEUsageFeature from '@/lib/infrastructure/ioc/features/list-account-rse-usage-feature';
 import CreateRuleFeature from '@/lib/infrastructure/ioc/features/create-rule-feature';
 import AddDIDFeature from "@/lib/infrastructure/ioc/features/add-did-feature";
+import AttachDIDsFeature from "@/lib/infrastructure/ioc/features/attach-dids-feature";
 
 /**
  * IoC Container configuration for the application.
@@ -119,7 +120,8 @@ loadFeaturesSync(appContainer, [
     new ListAccountRSEQuotasFeature(appContainer),
     new GetAccountInfoFeature(appContainer),
     new CreateRuleFeature(appContainer),
-    new AddDIDFeature(appContainer)
+    new AddDIDFeature(appContainer),
+    new AttachDIDsFeature(appContainer),
 ]);
 
 //Features: List Subscriptions
