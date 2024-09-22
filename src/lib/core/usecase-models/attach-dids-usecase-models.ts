@@ -1,4 +1,4 @@
-import {BaseErrorResponseModel, BaseResponseModel} from "@/lib/sdk/usecase-models"
+import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
 
 /**
  * @interface AttachDIDsRequest represents the RequestModel for attach_dids usecase
@@ -9,7 +9,7 @@ export interface AttachDIDsRequest {
     dids: {
         scope: string;
         name: string;
-    }[],
+    }[];
 }
 
 /**
@@ -19,9 +19,7 @@ export interface AttachDIDsResponse extends BaseResponseModel {
     created: boolean;
 }
 
-
 /**
  * @interface AttachDIDsError represents the ErrorModel for attach_dids usecase
  */
-export interface AttachDIDsError extends BaseErrorResponseModel {
-}
+export interface AttachDIDsError extends BaseErrorResponseModel {}

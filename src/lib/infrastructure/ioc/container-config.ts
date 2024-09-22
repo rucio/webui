@@ -66,8 +66,8 @@ import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
 import ListAccountRSEUsageFeature from '@/lib/infrastructure/ioc/features/list-account-rse-usage-feature';
 import CreateRuleFeature from '@/lib/infrastructure/ioc/features/create-rule-feature';
-import AddDIDFeature from "@/lib/infrastructure/ioc/features/add-did-feature";
-import AttachDIDsFeature from "@/lib/infrastructure/ioc/features/attach-dids-feature";
+import AddDIDFeature from '@/lib/infrastructure/ioc/features/add-did-feature';
+import AttachDIDsFeature from '@/lib/infrastructure/ioc/features/attach-dids-feature';
 
 /**
  * IoC Container configuration for the application.

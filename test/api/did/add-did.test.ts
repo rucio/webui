@@ -6,8 +6,8 @@ import { BaseController } from '@/lib/sdk/controller';
 import { NextApiResponse } from 'next';
 import { createHttpMocks } from 'test/fixtures/http-fixtures';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
-import {AddDIDControllerParameters} from "@/lib/infrastructure/controller/add-did-controller";
-import {AddDIDRequest} from "@/lib/core/usecase-models/add-did-usecase-models";
+import { AddDIDControllerParameters } from '@/lib/infrastructure/controller/add-did-controller';
+import { AddDIDRequest } from '@/lib/core/usecase-models/add-did-usecase-models';
 
 describe('Add DID API Tests', () => {
     beforeEach(() => {
@@ -20,12 +20,12 @@ describe('Add DID API Tests', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: 'Created'
+                body: 'Created',
             },
-            requestValidator: async (req) => {
+            requestValidator: async req => {
                 const jsonBody = await req.json();
                 return jsonBody.type !== undefined;
-            }
+            },
         };
         MockRucioServerFactory.createMockRucioServer(true, [addDIDMockEndpoint]);
     });

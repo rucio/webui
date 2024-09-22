@@ -1,14 +1,13 @@
+import { SessionUser } from '@/lib/core/entity/auth-models';
 
-import { SessionUser } from "@/lib/core/entity/auth-models";
-
-import { withAuthenticatedSessionRoute } from "@/lib/infrastructure/auth/session-utils";
-import { AttachDIDsControllerParameters } from "@/lib/infrastructure/controller/attach-dids-controller";
-import appContainer from "@/lib/infrastructure/ioc/container-config";
-import { AttachDIDsRequest } from "@/lib/core/usecase-models/attach-dids-usecase-models";
-import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
-import { BaseController } from "@/lib/sdk/controller";
-import { NextApiRequest, NextApiResponse } from "next";
-import {z} from "zod";
+import { withAuthenticatedSessionRoute } from '@/lib/infrastructure/auth/session-utils';
+import { AttachDIDsControllerParameters } from '@/lib/infrastructure/controller/attach-dids-controller';
+import appContainer from '@/lib/infrastructure/ioc/container-config';
+import { AttachDIDsRequest } from '@/lib/core/usecase-models/attach-dids-usecase-models';
+import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
+import { BaseController } from '@/lib/sdk/controller';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { z } from 'zod';
 
 const schema = z.object({
     dids: z
@@ -20,14 +19,13 @@ const schema = z.object({
         )
         .nonempty(),
     scope: z.string().min(1),
-    name: z.string().min(1)
+    name: z.string().min(1),
 });
 
-async function attachDIDs(req:NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser){
-
-    if(req.method !== 'POST') {
-        res.status(405).json({ error: 'Method Not Allowed' })
-        return
+async function attachDIDs(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser) {
+    if (req.method !== 'POST') {
+        res.status(405).json({ error: 'Method Not Allowed' });
+        return;
     }
 
     const params = schema.safeParse(req.body);
@@ -41,10 +39,10 @@ async function attachDIDs(req:NextApiRequest, res: NextApiResponse, rucioAuthTok
         response: res,
         rucioAuthToken: rucioAuthToken,
         ...params.data,
-    }
+    };
 
-    const controller = appContainer.get<BaseController<AttachDIDsControllerParameters, AttachDIDsRequest>>(CONTROLLERS.ATTACH_DIDS)
-    await controller.execute(controllerParameters)
+    const controller = appContainer.get<BaseController<AttachDIDsControllerParameters, AttachDIDsRequest>>(CONTROLLERS.ATTACH_DIDS);
+    await controller.execute(controllerParameters);
 }
 
-export default withAuthenticatedSessionRoute(attachDIDs)
+export default withAuthenticatedSessionRoute(attachDIDs);

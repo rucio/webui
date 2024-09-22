@@ -1,5 +1,5 @@
-import { BaseAuthenticatedInputPort, BaseOutputPort } from "@/lib/sdk/primary-ports";
-import { AttachDIDsError, AttachDIDsRequest, AttachDIDsResponse } from "@/lib/core/usecase-models/attach-dids-usecase-models";
+import { BaseAuthenticatedInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
+import { AttachDIDsError, AttachDIDsRequest, AttachDIDsResponse } from '@/lib/core/usecase-models/attach-dids-usecase-models';
 
 /**
  * @interface AttachDIDsInputPort representing the AttachDIDs usecase.
