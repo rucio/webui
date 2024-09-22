@@ -1,6 +1,6 @@
-import { RSEAccountUsageLimitViewModel } from "@/lib/infrastructure/data/view-model/rse";
-import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
-import { DID, DIDLong } from "../entity/rucio";
+import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
+import { DID, DIDLong } from '../entity/rucio';
 
 export interface TCreateRuleWithSamplesSummaryRequest {
     withSamples: true;
@@ -12,7 +12,7 @@ export interface TCreateRuleWithoutSamplesSummaryRequest {
 }
 
 export type CreateRuleSummaryRequest = {
-    selectedDIDs: DIDLong[]
+    selectedDIDs: DIDLong[];
     selectedRSEs: RSEAccountUsageLimitViewModel[];
     askApproval: boolean;
     account: string;
@@ -22,7 +22,7 @@ export type CreateRuleSummaryRequest = {
 export interface CreateRuleSummaryResponse extends BaseResponseModel {
     // dids: DIDSummary[];
     // rses: RSESummary[];
-    // messages: string[]; 
+    // messages: string[];
 }
 
 export interface CreateRuleSummaryError extends BaseErrorResponseModel {}

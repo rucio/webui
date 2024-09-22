@@ -1,8 +1,8 @@
-import { Subscription, SubscriptionState, SubscriptionRuleStates } from "@/lib/core/entity/rucio";
-import { BaseViewModel } from "@/lib/sdk/view-models";
+import { Subscription, SubscriptionState, SubscriptionRuleStates } from '@/lib/core/entity/rucio';
+import { BaseViewModel } from '@/lib/sdk/view-models';
 
 export interface SubscriptionViewModel extends BaseViewModel, Omit<Subscription, 'replication_rules'> {
-    replication_rules: string
+    replication_rules: string;
 }
 
 export interface SubscriptionRuleStatesViewModel extends BaseViewModel, SubscriptionRuleStates {}
@@ -26,20 +26,20 @@ export function getEmptySubscriptionViewModel(): SubscriptionViewModel {
         updated_at: '',
         filter: '',
         replication_rules: '',
-    }
-    return viewModel
+    };
+    return viewModel;
 }
 
 export function generateEmptySubscriptionRuleStatesViewModel(): SubscriptionRuleStatesViewModel {
     const viewModel: SubscriptionRuleStatesViewModel = {
         status: 'error',
-        name: '' ,
+        name: '',
         state_ok: 0,
         state_replicating: 0,
         state_stuck: 0,
         state_suspended: 0,
         state_waiting_approval: 0,
         state_inject: 0,
-    }
-    return viewModel
+    };
+    return viewModel;
 }

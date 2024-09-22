@@ -1,4 +1,5 @@
 module.exports = {
+    darkMode: 'class',
     content: {
         files: ["./src/**/*.{html,js,tsx,ts}"],
         extract: {
@@ -12,7 +13,7 @@ module.exports = {
     },
     theme: {
         extend: {
-            colors:{
+            colors: {
                 neutral: { // Slate
                     0: '#ffffff',
                     100: '#f1f5f9',
@@ -24,9 +25,9 @@ module.exports = {
                     700: '#334155',
                     800: '#1e293b',
                     900: '#0f172a',
-                    1000: '#000000',          
+                    1000: '#000000',
                 },
-                text:{// Slate
+                text: {// Slate
                     0: '#ffffff',
                     100: '#f1f5f9',
                     200: '#e2e8f0',
@@ -36,9 +37,9 @@ module.exports = {
                     600: '#475569',
                     700: '#334155',
                     800: '#1e293b',
-                    900: '#0f172a',   
-                    1000: '#000000',  
-                    
+                    900: '#0f172a',
+                    1000: '#000000',
+
                 },
                 brand: {
                     100: '#ede9fe',
@@ -85,7 +86,7 @@ module.exports = {
                         800: '#92400e',
                         900: '#78350f',
                     },
-                    info:{// blue
+                    info: {// blue
                         100: '#e0f2fe',
                         200: '#bae6fd',
                         300: '#7dd3fc',
@@ -97,8 +98,8 @@ module.exports = {
                         900: '#0c4a6e',
                     },
                 },
-                extra: { 
-                    indigo:{
+                extra: {
+                    indigo: {
                         100: '#e0e7ff',
                         200: '#c7d2fe',
                         300: '#a5b4fc',
@@ -109,7 +110,7 @@ module.exports = {
                         800: '#3730a3',
                         900: '#312e81',
                     },
-                    rose:{
+                    rose: {
                         100: '#ffe4e6',
                         200: '#fecdd3',
                         300: '#fda4af',
@@ -120,7 +121,7 @@ module.exports = {
                         800: '#9f1239',
                         900: '#881337',
                     },
-                    emerald:{
+                    emerald: {
                         100: '#d1fae5',
                         200: '#a7f3d0',
                         300: '#6ee7b7',
@@ -131,7 +132,7 @@ module.exports = {
                         800: '#065f46',
                         900: '#064e3b',
                     },
-                    yellow:{
+                    yellow: {
                         100: '#fefce8',
                         200: '#fef08a',
                         300: '#fde047',
@@ -153,21 +154,35 @@ module.exports = {
             },
             keyframes: {
                 floatout: {
-                    "0%": { opacity: "1", left: "0px", },
-                    "80%": { opacity: "1", left: "0px", },
-                    "100%": { opacity: "0", left: "100px", }
+                    "0%": {opacity: "1", left: "0px",},
+                    "80%": {opacity: "1", left: "0px",},
+                    "100%": {opacity: "0", left: "100px",}
                 },
                 fadeout: {
-                    "0%": { opacity: "1" },
-                    "80%": { opacity: "1" },
-                    "100%": { opacity: "0" }
+                    "0%": {opacity: "1"},
+                    "80%": {opacity: "1"},
+                    "100%": {opacity: "0"}
+                },
+                "accordion-down": {
+                    from: {height: "0"},
+                    to: {height: "var(--radix-accordion-content-height)"},
+                },
+                "accordion-up": {
+                    from: {height: "var(--radix-accordion-content-height)"},
+                    to: {height: "0"},
                 },
             },
             animation: {
+                'spin': 'spin 1s linear infinite',
                 'slowspin': 'spin 2s linear infinite',
                 'floatout': 'floatout 5s linear 1',
                 'fadeout': 'fadeout 5s linear 1',
+                "accordion-down": "accordion-down 0.2s ease-out",
+                "accordion-up": "accordion-up 0.2s ease-out",
             },
+            boxShadow: {
+                'brand': "0 0 0 3px color-mix(in srgb, transparent, theme('colors.brand.500') 50%)",
+            }
         },
     },
     plugins: [

@@ -2,61 +2,58 @@
  * @jest-environment jsdom
  */
 
-import { render, act, screen, cleanup, fireEvent, getByRole } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { PageRule as PageRuleStory } from "@/component-library/Pages/Rule/PageRule";
-import { fixtureRulePageLockEntryViewModel, fixtureRuleMetaViewModel, mockUseComDOM } from "test/fixtures/table-fixtures";
-var format = require("date-format")
+import { render, act, screen, cleanup, fireEvent, getByRole } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { PageRule as PageRuleStory } from '@/component-library/pages/legacy/Rule/PageRule';
+import { fixtureRulePageLockEntryViewModel, fixtureRuleMetaViewModel, mockUseComDOM } from 'test/fixtures/table-fixtures';
+var format = require('date-format');
 
-const ruleMeta = fixtureRuleMetaViewModel()
+const ruleMeta = fixtureRuleMetaViewModel();
 
-describe("PageRule Story Test", () => {
-    it("Check Subpage Movement", async () => {
-        await act(async () => render(
-            <PageRuleStory
-                ruleMeta={ruleMeta}
-                ruleLocks={mockUseComDOM(Array.from({length: 100}, (v,k) => fixtureRulePageLockEntryViewModel()))}
-                ruleBoostFunc={() => {}}
-                ruleBoostShow={false}
-            />
-        ))
-        const user = userEvent.setup()
-        const selectedTabExpect = () => expect(screen.getByRole("tab", { selected: true }))
+describe('PageRule Story Test', () => {
+    it('Check Subpage Movement', async () => {
+        await act(async () =>
+            render(
+                <PageRuleStory
+                    ruleMeta={ruleMeta}
+                    ruleLocks={mockUseComDOM(Array.from({ length: 100 }, (v, k) => fixtureRulePageLockEntryViewModel()))}
+                    ruleBoostFunc={() => {}}
+                    ruleBoostShow={false}
+                />,
+            ),
+        );
+        const user = userEvent.setup();
+        const selectedTabExpect = () => expect(screen.getByRole('tab', { selected: true }));
         // check if the metadata tab is active
-        selectedTabExpect().toHaveTextContent("Metadata")
+        selectedTabExpect().toHaveTextContent('Metadata');
         // assert metadata is visible
-        expect(screen.queryByRole("tabpanel", { name: "Metadata" })).toBeVisible()
+        expect(screen.queryByRole('tabpanel', { name: 'Metadata' })).toBeVisible();
         // click on locks tab
-        await user.click(screen.getByRole("tab", { name: "Locks"}))
-        selectedTabExpect().toHaveTextContent("Locks")
-        expect(screen.queryByRole("tabpanel", { name: "Locks" })).toBeVisible()
+        await user.click(screen.getByRole('tab', { name: 'Locks' }));
+        selectedTabExpect().toHaveTextContent('Locks');
+        expect(screen.queryByRole('tabpanel', { name: 'Locks' })).toBeVisible();
 
         // assert header is properly done
-        expect(
-            screen.getByRole("heading", { name: /For rule/})
-        ).toHaveTextContent(
-            `${ruleMeta.scope}:${ruleMeta.name}`
-        )
+        expect(screen.getByRole('heading', { name: /For rule/ })).toHaveTextContent(`${ruleMeta.scope}:${ruleMeta.name}`);
 
-
-        await user.click(screen.getByRole("tab", { name: "Locks"}))
+        await user.click(screen.getByRole('tab', { name: 'Locks' }));
         // arrow right to focus the `metadata` tab (test cycling!)
-        await user.keyboard("{arrowright}")
-        selectedTabExpect().toHaveTextContent("Metadata")
+        await user.keyboard('{arrowright}');
+        selectedTabExpect().toHaveTextContent('Metadata');
         // arrow right to focus `locks`
-        await user.keyboard("{arrowright}")
-        selectedTabExpect().toHaveTextContent("Locks")
+        await user.keyboard('{arrowright}');
+        selectedTabExpect().toHaveTextContent('Locks');
         // tab again to focus `filter DID` input
-        await user.tab()
-        expect(screen.getByPlaceholderText(/Filter DID/)).toHaveFocus()
+        await user.tab();
+        expect(screen.getByPlaceholderText(/Filter DID/)).toHaveFocus();
         // NB: we cant test further tabbing, because the testing library doesnt
         // support responsive design: this means that the next tab will lead to
         // the `Magnifying Glass` button which would be hidden otherwise.
 
         // back to `locks` tab
-        await user.tab({shift: true})
+        await user.tab({ shift: true });
         // arrow left to focus the `metadata` tab
-        await user.keyboard("{arrowleft}")
-        selectedTabExpect().toHaveTextContent("Metadata")
-    })
-})
+        await user.keyboard('{arrowleft}');
+        selectedTabExpect().toHaveTextContent('Metadata');
+    });
+});

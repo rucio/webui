@@ -1,5 +1,9 @@
-import { BaseAuthenticatedInputPort, BaseOutputPort } from "@/lib/sdk/primary-ports";
-import { DIDKeyValuePairsDataRequest, DIDKeyValuePairsDataResponse, DIDKeyValuePairsDataError } from "../../usecase-models/did-keyvaluepairs-usecase-models";
+import { BaseAuthenticatedInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
+import {
+    DIDKeyValuePairsDataRequest,
+    DIDKeyValuePairsDataResponse,
+    DIDKeyValuePairsDataError,
+} from '../../usecase-models/did-keyvaluepairs-usecase-models';
 
 /**
  * @interface DIDKeyValuePairsDataInputPort representing the DIDKeyValuePairs usecase.

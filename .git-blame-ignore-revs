@@ -1,0 +1,6 @@
+# This file lists commits that will be ignored when assigning blame.
+
+# Reformatting src/
+b006cec23dc9b059239789f7d6ab51e242fef404
+# Reformatting test/
+2fd31caeab8d8d664de69360ad88311d7e115d5c

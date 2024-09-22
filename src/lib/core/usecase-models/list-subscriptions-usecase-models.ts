@@ -1,6 +1,6 @@
-import { SubscriptionViewModel } from "@/lib/infrastructure/data/view-model/subscriptions";
-import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
-import { Subscription } from "../entity/rucio";
+import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
+import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
+import { Subscription } from '../entity/rucio';
 
 /**
  * Represents the request to list subscriptions.
@@ -19,5 +19,5 @@ export interface ListSubscriptionsResponse extends Subscription, BaseResponseMod
  * INVALID_ACCOUNT: The account specified in the request is not same as the account present in the session
  */
 export interface ListSubscriptionsError extends BaseErrorResponseModel {
-    error: 'INVALID_ACCOUNT' | string
+    error: 'INVALID_ACCOUNT' | string;
 }

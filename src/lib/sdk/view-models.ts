@@ -6,4 +6,4 @@
 export type BaseViewModel = {
     status: 'success' | 'error' | 'pending';
     message?: string;
-}
+};

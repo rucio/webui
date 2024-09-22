@@ -1,5 +1,5 @@
-import { SessionUser, User } from "@/lib/core/entity/auth-models"
-import { BaseViewModel } from "@/lib/sdk/view-models";
+import { SessionUser, User } from '@/lib/core/entity/auth-models';
+import { BaseViewModel } from '@/lib/sdk/view-models';
 
 /**
  * Represents the view model for the site header
@@ -9,8 +9,8 @@ import { BaseViewModel } from "@/lib/sdk/view-models";
  * @property projectUrl - The URL to the project page corresponding to a VO, Experiment or Community which is configured via ENV variables
  */
 export interface SiteHeaderViewModel extends BaseViewModel {
-    activeAccount?: User
-    availableAccounts?: User[]
-    homeUrl: string
-    projectUrl?: string
+    activeAccount?: User;
+    availableAccounts?: User[];
+    homeUrl: string;
+    projectUrl?: string;
 }

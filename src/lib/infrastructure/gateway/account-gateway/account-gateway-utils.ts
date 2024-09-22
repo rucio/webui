@@ -1,5 +1,5 @@
-import { AccountInfoDTO, AccountRSEUsageDTO } from "@/lib/core/dto/account-dto";
-import { AccountStatus, AccountType } from "@/lib/core/entity/rucio";
+import { AccountInfoDTO, AccountRSEUsageDTO } from '@/lib/core/dto/account-dto';
+import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 
 /**
  * Represents the Rucio response for {@link ListAccountRSEUsageEndpoint}
@@ -11,7 +11,7 @@ export type TRucioAccountRSEUsage = {
     files: number;
     bytes_limit: number;
     bytes_remaining: number;
-}
+};
 
 export type TRucioAccountInfo = {
     status: string;
@@ -22,7 +22,7 @@ export type TRucioAccountInfo = {
     updated_at: string;
     deleted_at: string | null;
     suspended_at: null | string;
-}
+};
 
 /**
  * Converts the {@link TRucioAccountRSEUsage} object returned by Rucio Server to {@link AccountRSEUsageDTO} object
@@ -39,35 +39,35 @@ export function convertToAccountRSEUsageDTO(data: TRucioAccountRSEUsage, account
         used_bytes: data.bytes,
         files: data.files,
         bytes_limit: data.bytes_limit,
-    }
-    return dto
+    };
+    return dto;
 }
 
 function getAccountType(accountType: string): AccountType {
-    const cleanedAccountType = accountType.toUpperCase().trim()
-    switch(cleanedAccountType) {
+    const cleanedAccountType = accountType.toUpperCase().trim();
+    switch (cleanedAccountType) {
         case 'USER':
-            return AccountType.USER
+            return AccountType.USER;
         case 'GROUP':
-            return AccountType.GROUP
+            return AccountType.GROUP;
         case 'SERVICE':
-            return AccountType.SERVICE
+            return AccountType.SERVICE;
         default:
-            return AccountType.UNKNOWN
+            return AccountType.UNKNOWN;
     }
 }
 
 function getAccountStatus(accountStatus: string): AccountStatus {
-    const cleanedAccountStatus = accountStatus.toUpperCase().trim()
-    switch(cleanedAccountStatus) {
+    const cleanedAccountStatus = accountStatus.toUpperCase().trim();
+    switch (cleanedAccountStatus) {
         case 'ACTIVE':
-            return AccountStatus.ACTIVE
+            return AccountStatus.ACTIVE;
         case 'DELETED':
-            return AccountStatus.DELETED
+            return AccountStatus.DELETED;
         case 'SUSPENDED':
-            return AccountStatus.SUSPENDED
+            return AccountStatus.SUSPENDED;
         default:
-            return AccountStatus.UNKNOWN
+            return AccountStatus.UNKNOWN;
     }
 }
 
@@ -82,7 +82,7 @@ export function getEmptyAccountInfoDTO(): AccountInfoDTO {
         updatedAt: '',
         deletedAt: undefined,
         suspendedAt: undefined,
-    }
+    };
 }
 export function convertToAccountInfoDTO(data: TRucioAccountInfo): AccountInfoDTO {
     const dto: AccountInfoDTO = {
@@ -90,11 +90,11 @@ export function convertToAccountInfoDTO(data: TRucioAccountInfo): AccountInfoDTO
         account: data.account,
         accountType: getAccountType(data.account_type),
         accountStatus: getAccountStatus(data.status),
-        email: data.email ?? "",
+        email: data.email ?? '',
         createdAt: data.created_at,
         updatedAt: data.updated_at,
         deletedAt: data.deleted_at ?? undefined,
         suspendedAt: data.suspended_at ?? undefined,
-    }
-    return dto
+    };
+    return dto;
 }

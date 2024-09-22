@@ -1,5 +1,5 @@
-import { Role, VO } from "../entity/auth-models"
-import SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-session-output-port"
+import { Role, VO } from '../entity/auth-models';
+import SetX509LoginSessionOutputPort from '../port/primary/set-x509-login-session-output-port';
 
 /**
  * Request Model for {@link SetX509LoginSessionInputPort}
@@ -9,28 +9,28 @@ import SetX509LoginSessionOutputPort from "../port/primary/set-x509-login-sessio
  * @property {string} rucioAuthTokenExpires - Expiry time of the Rucio Auth Token
  */
 export type SetX509LoginSessionRequest = {
-    rucioAuthToken: string
-    rucioAuthTokenExpires: string
-    rucioAccount: string
-    shortVOName: string  
-}
+    rucioAuthToken: string;
+    rucioAuthTokenExpires: string;
+    rucioAccount: string;
+    shortVOName: string;
+};
 
 /**
  * Response Model for {@link SetX509LoginSessionOutputPort}
  * @property {boolean} isLoggedIn - true if the user is logged in
  * @property {string} rucioIdentity - Rucio Identity of the user extracted from the token
  * @property {VO} vo - VO to which the user belongs
- * @property {Role} role - {@link Role} of the user 
+ * @property {Role} role - {@link Role} of the user
  * @property {string} country - Country of the user
  * @property {Role} countryRole - {@link Role} of the user in the country
  */
 export interface SetX509LoginSessionResponse extends SetX509LoginSessionRequest {
-    isLoggedIn: boolean
-    rucioIdentity: string
-    vo: VO,
-    role: Role | undefined
-    country?: string
-    countryRole?: Role
+    isLoggedIn: boolean;
+    rucioIdentity: string;
+    vo: VO;
+    role: Role | undefined;
+    country?: string;
+    countryRole?: Role;
 }
 
 /**
@@ -40,8 +40,8 @@ export interface SetX509LoginSessionResponse extends SetX509LoginSessionRequest 
  * 'InvalidToken': If the token is invalid i.e. we could not extract rucioIdentity from the token
  * 'UnknownError': If the error is not one of the above
  * @property {string} message - Error message
- */ 
+ */
 export type SetX509LoginSessionError = {
-    type: 'InvalidVO' | 'InvalidToken' | 'UnknownError'
-    message: string
-}
+    type: 'InvalidVO' | 'InvalidToken' | 'UnknownError';
+    message: string;
+};

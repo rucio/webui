@@ -1,6 +1,6 @@
-import type { UserPassLoginAuthServerDTO } from '@/lib/core/dto/auth-server-dto'
-import AuthServerGatewayOutputPort from '@/lib/core/port/secondary/auth-server-gateway-output-port'
-import { injectable } from 'inversify'
+import type { UserPassLoginAuthServerDTO } from '@/lib/core/dto/auth-server-dto';
+import AuthServerGatewayOutputPort from '@/lib/core/port/secondary/auth-server-gateway-output-port';
+import { injectable } from 'inversify';
 
 /**
  * Provides an implementation of the {@link AuthServerGatewayOutputPort} interface.
@@ -8,17 +8,12 @@ import { injectable } from 'inversify'
  */
 @injectable()
 class RucioAuthServer implements AuthServerGatewayOutputPort {
-    async userpassLogin(
-        username: string,
-        password: string,
-        account: string,
-        vo: string,
-    ): Promise<UserPassLoginAuthServerDTO> {
-        const authHost = process.env.RUCIO_AUTH_HOST
-        const userpassEndpoint = '/auth/userpass'
-        const url = authHost + userpassEndpoint
-        let response = null
-        let dto: UserPassLoginAuthServerDTO
+    async userpassLogin(username: string, password: string, account: string, vo: string): Promise<UserPassLoginAuthServerDTO> {
+        const authHost = process.env.RUCIO_AUTH_HOST;
+        const userpassEndpoint = '/auth/userpass';
+        const url = authHost + userpassEndpoint;
+        let response = null;
+        let dto: UserPassLoginAuthServerDTO;
 
         try {
             if (account === undefined || account === null || account === '') {
@@ -30,7 +25,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                         'X-Rucio-Password': password,
                         'X-Rucio-VO': vo,
                     },
-                })
+                });
             } else {
                 response = await fetch(url, {
                     method: 'GET',
@@ -41,34 +36,27 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                         'X-Rucio-Account': account,
                         'X-Rucio-VO': vo,
                     },
-                })
+                });
             }
         } catch (error: Error | any) {
-            if (
-                authHost === undefined ||
-                authHost === null ||
-                authHost === ''
-            ) {
+            if (authHost === undefined || authHost === null || authHost === '') {
                 dto = {
                     statusCode: 503,
-                    message:
-                        'Rucio Auth Server is not configured in the WebUI settings',
+                    message: 'Rucio Auth Server is not configured in the WebUI settings',
                     account: '',
                     authToken: '',
                     authTokenExpires: '',
-                }
+                };
             } else {
                 dto = {
                     statusCode: 500,
-                    message:
-                        'Rucio Auth Server error: fetch failed. Reason: ' +
-                        error.cause.message,
+                    message: 'Rucio Auth Server error: fetch failed. Reason: ' + error.cause.message,
                     account: '',
                     authToken: '',
                     authTokenExpires: '',
-                }
+                };
             }
-            return Promise.resolve(dto)
+            return Promise.resolve(dto);
         }
         if (!response) {
             dto = {
@@ -77,8 +65,8 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 account: '',
                 authToken: '',
                 authTokenExpires: '',
-            }
-            return Promise.resolve(dto)
+            };
+            return Promise.resolve(dto);
         }
 
         if (response.status === 401) {
@@ -88,8 +76,8 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 account: '',
                 authToken: '',
                 authTokenExpires: '',
-            }
-            return Promise.resolve(dto)
+            };
+            return Promise.resolve(dto);
         }
 
         if (response.status === 200) {
@@ -99,29 +87,26 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 account: '',
                 authToken: '',
                 authTokenExpires: '',
-            }
-            const authToken = response.headers.get('X-Rucio-Auth-Token')
-            const account = response.headers.get('X-Rucio-Auth-Account')
-            const authTokenExpires = response.headers.get(
-                'X-Rucio-Auth-Token-Expires',
-            )
+            };
+            const authToken = response.headers.get('X-Rucio-Auth-Token');
+            const account = response.headers.get('X-Rucio-Auth-Account');
+            const authTokenExpires = response.headers.get('X-Rucio-Auth-Token-Expires');
 
             if (!authToken || !account || !authTokenExpires) {
-                dto.message =
-                    'Rucio Auth Server returned 200 but no auth token or account headers'
-                dto.account = ''
-                dto.authToken = ''
+                dto.message = 'Rucio Auth Server returned 200 but no auth token or account headers';
+                dto.account = '';
+                dto.authToken = '';
             } else {
-                dto.authToken = authToken
-                dto.account = account
-                dto.authTokenExpires = authTokenExpires
+                dto.authToken = authToken;
+                dto.account = account;
+                dto.authTokenExpires = authTokenExpires;
             }
 
-            return Promise.resolve(dto)
+            return Promise.resolve(dto);
         } else if (response.status === 206) {
-            const multipleAccounts = response.headers.get('X-Rucio-Auth-Accounts')
+            const multipleAccounts = response.headers.get('X-Rucio-Auth-Accounts');
             if (multipleAccounts === null) {
-                throw new Error('Unable to extract available accounts from the response')
+                throw new Error('Unable to extract available accounts from the response');
             }
             let dto: UserPassLoginAuthServerDTO = {
                 statusCode: response.status,
@@ -129,12 +114,12 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 account: '',
                 authToken: '',
                 authTokenExpires: '',
-            }
+            };
             return Promise.resolve(dto);
         } else {
-            throw new Error('Unable to handle response from Rucio Auth Server')
+            throw new Error('Unable to handle response from Rucio Auth Server');
         }
     }
 }
 
-export default RucioAuthServer
+export default RucioAuthServer;

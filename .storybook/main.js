@@ -1,4 +1,6 @@
 module.exports = {
+  staticDirs: ['../public', '../test/static'],
+
   stories: [
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
@@ -8,6 +10,7 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
+    "storybook-dark-mode"
   ],
 
   framework: {

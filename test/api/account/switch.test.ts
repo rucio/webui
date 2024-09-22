@@ -1,10 +1,10 @@
-import { AuthType, Role, SessionUser } from "@/lib/core/entity/auth-models";
-import { addOrUpdateSessionUser } from "@/lib/infrastructure/auth/session-utils";
-import appContainer from "@/lib/infrastructure/ioc/container-config";
-import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
-import { ISwitchAccountController } from "@/lib/infrastructure/controller/switch-account-controller";
-import { getIronSession } from "iron-session";
-import { createMocks } from "node-mocks-http";
+import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
+import { addOrUpdateSessionUser } from '@/lib/infrastructure/auth/session-utils';
+import appContainer from '@/lib/infrastructure/ioc/container-config';
+import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
+import { ISwitchAccountController } from '@/lib/infrastructure/controller/switch-account-controller';
+import { getIronSession } from 'iron-session';
+import { createMocks } from 'node-mocks-http';
 
 describe('Switch Account API Test', () => {
     it('should switch to existing account in the session and redirect', async () => {
@@ -17,9 +17,9 @@ describe('Switch Account API Test', () => {
             cookieOptions: {
                 secure: false,
             },
-        })
+        });
 
-        res.redirect = jest.fn()
+        res.redirect = jest.fn();
 
         const mockUser: SessionUser = {
             rucioIdentity: 'ddmlab',
@@ -33,7 +33,7 @@ describe('Switch Account API Test', () => {
             role: Role.ADMIN,
             countryRole: Role.ADMIN,
             isLoggedIn: true,
-        }
+        };
 
         const mockUser2: SessionUser = {
             rucioIdentity: 'maany',
@@ -47,27 +47,27 @@ describe('Switch Account API Test', () => {
             role: Role.ADMIN,
             countryRole: Role.ADMIN,
             isLoggedIn: true,
-        }
+        };
 
-        await addOrUpdateSessionUser(session, mockUser2)
-        await addOrUpdateSessionUser(session, mockUser)
+        await addOrUpdateSessionUser(session, mockUser2);
+        await addOrUpdateSessionUser(session, mockUser);
 
-        expect(session.user?.rucioIdentity).toBe('ddmlab')
+        expect(session.user?.rucioIdentity).toBe('ddmlab');
 
-        const switchAccountController: ISwitchAccountController = appContainer.get(CONTROLLERS.SWITCH_ACCOUNT)
+        const switchAccountController: ISwitchAccountController = appContainer.get(CONTROLLERS.SWITCH_ACCOUNT);
         await switchAccountController.handle(
             session,
             res as undefined as NextApiRequest,
             mockUser2.rucioIdentity,
             mockUser2.rucioAccount,
-            mockUser2.rucioAuthType, 
-            '/rse'
+            mockUser2.rucioAuthType,
+            '/rse',
         );
-        
-        expect(session.user?.rucioIdentity).toBe('maany')
-        expect(res.redirect).toBeCalledWith('/rse')
+
+        expect(session.user?.rucioIdentity).toBe('maany');
+        expect(res.redirect).toBeCalledWith('/rse');
     });
-    it('should not switch to non-existing account', async() => {
+    it('should not switch to non-existing account', async () => {
         const { req, res } = createMocks({
             url: 'http://testhost:3000/api/site-header',
         });
@@ -77,9 +77,9 @@ describe('Switch Account API Test', () => {
             cookieOptions: {
                 secure: false,
             },
-        })
+        });
 
-        res.redirect = jest.fn()
+        res.redirect = jest.fn();
 
         const mockUser: SessionUser = {
             rucioIdentity: 'ddmlab',
@@ -93,7 +93,7 @@ describe('Switch Account API Test', () => {
             role: Role.ADMIN,
             countryRole: Role.ADMIN,
             isLoggedIn: true,
-        }
+        };
 
         const mockUser2: SessionUser = {
             rucioIdentity: 'maany',
@@ -107,23 +107,22 @@ describe('Switch Account API Test', () => {
             role: Role.ADMIN,
             countryRole: Role.ADMIN,
             isLoggedIn: true,
-        }
+        };
 
-        await addOrUpdateSessionUser(session, mockUser)
+        await addOrUpdateSessionUser(session, mockUser);
 
-        const switchAccountController: ISwitchAccountController = appContainer.get(CONTROLLERS.SWITCH_ACCOUNT)
+        const switchAccountController: ISwitchAccountController = appContainer.get(CONTROLLERS.SWITCH_ACCOUNT);
         await switchAccountController.handle(
             session,
             res as undefined as NextApiRequest,
             mockUser2.rucioIdentity,
             mockUser2.rucioAccount,
-            mockUser2.rucioAuthType, 
-            '/rse'
+            mockUser2.rucioAuthType,
+            '/rse',
         );
 
-        expect(res._getStatusCode()).toBe(500)
-        const data = JSON.parse(res._getData())
-        expect(data.error).toBe('Cannot switch to non-existing/logged-in account')
-
-    })
+        expect(res._getStatusCode()).toBe(500);
+        const data = JSON.parse(res._getData());
+        expect(data.error).toBe('Cannot switch to non-existing/logged-in account');
+    });
 });

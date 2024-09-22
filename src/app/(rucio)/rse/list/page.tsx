@@ -1,38 +1,12 @@
 'use client';
-import { ListRSE as ListRSEStory } from "@/component-library/Pages/RSE/ListRSE";
-import { RSEViewModel } from "@/lib/infrastructure/data/view-model/rse";
-import useComDOM from "@/lib/infrastructure/hooks/useComDOM";
-import { HTTPRequest } from "@/lib/sdk/http";
-import { mockUseComDOM, fixtureRSEViewModel } from "test/fixtures/table-fixtures";
+
+import { ListRSE } from '@/component-library/pages/RSE/List/ListRSE';
+import { useSearchParams } from 'next/navigation';
 export default function Page() {
+    const searchParams = useSearchParams();
+    const firstExpression = searchParams?.get('expression');
 
-    const setRSEQuery = async (rseExpression: string) => {
-        await RSESearchComDOM.setRequest({
-            url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/feature/list-rses`),
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-            } as HeadersInit),
-            params: {
-                "rseExpression": rseExpression
-            },
-        } as HTTPRequest)
-    }
+    // TODO: fetch initial data
 
-    const RSESearchComDOM = useComDOM<RSEViewModel>(
-        'list-rse-query',
-        [],
-        false,
-        Infinity,
-        200,
-        true
-    )
-
-    return (
-        <ListRSEStory
-            comdom={RSESearchComDOM}
-            setRSEQuery={setRSEQuery}
-        />
-    )
+    return <ListRSE firstExpression={firstExpression ?? undefined} />;
 }
-            

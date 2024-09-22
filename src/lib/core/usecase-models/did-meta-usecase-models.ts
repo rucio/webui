@@ -1,5 +1,5 @@
-import { BaseErrorResponseModel, BaseResponseModel } from "@/lib/sdk/usecase-models";
-import { DIDMeta } from "../entity/rucio";
+import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
+import { DIDMeta } from '../entity/rucio';
 
 export interface DIDMetaRequest {
     did: string;

@@ -4,7 +4,7 @@
  * @remarks
  * The rucioAuthToken is made available by the session
  */
-export type AuthenticatedRequestModel<TRequestModel> = TRequestModel & { rucioAuthToken: string }
+export type AuthenticatedRequestModel<TRequestModel> = TRequestModel & { rucioAuthToken: string };
 
 /**
  * A base type for response models.
@@ -12,7 +12,7 @@ export type AuthenticatedRequestModel<TRequestModel> = TRequestModel & { rucioAu
  */
 export type BaseResponseModel = {
     status: 'success';
-}
+};
 
 /**
  * A base type for error response models.

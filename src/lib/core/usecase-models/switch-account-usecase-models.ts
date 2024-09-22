@@ -1,4 +1,4 @@
-import { AuthType } from "../entity/auth-models"
+import { AuthType } from '../entity/auth-models';
 
 /**
  * Switch Account Use Case Models
@@ -8,15 +8,14 @@ import { AuthType } from "../entity/auth-models"
  * @property {string} redirectTo - Redirect URL
  */
 export interface SwitchAccountRequest {
-    rucioIdentity: string,
-    rucioAccount: string,
-    rucioAuthType: AuthType,
-    redirectTo?: string
+    rucioIdentity: string;
+    rucioAccount: string;
+    rucioAuthType: AuthType;
+    redirectTo?: string;
 }
 
-
-export interface SwitchAccountResponse{
-    redirectTo: string
+export interface SwitchAccountResponse {
+    redirectTo: string;
 }
 
 /**
@@ -27,6 +26,6 @@ export interface SwitchAccountResponse{
  * 'cannot_switch_account': If the account switching process failed
  */
 export interface SwitchAccountError {
-    message: string
-    type: 'invalid_auth_type' | 'bad request' | 'cannot_switch_account'
+    message: string;
+    type: 'invalid_auth_type' | 'bad request' | 'cannot_switch_account';
 }

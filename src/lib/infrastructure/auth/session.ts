@@ -1,16 +1,16 @@
-import type { IronSessionOptions } from 'iron-session'
-import type { SessionUser } from '@/lib/core/entity/auth-models'
+import type { IronSessionOptions } from 'iron-session';
+import type { SessionUser } from '@/lib/core/entity/auth-models';
 
 /**
  * Iron session options
  */
 export const sessionOptions: IronSessionOptions = {
     password: process.env.SESSION_PASSWORD as string,
-    cookieName: process.env.NEXT_SESSION_COOKIE_NAME as string || "rucio_webui_session",
+    cookieName: (process.env.NEXT_SESSION_COOKIE_NAME as string) || 'rucio_webui_session',
     cookieOptions: {
         secure: process.env.NODE_ENV === 'production',
     },
-}
+};
 
 /**
  * Extend the default session type with the user property
@@ -19,8 +19,7 @@ export const sessionOptions: IronSessionOptions = {
  */
 declare module 'iron-session' {
     interface IronSessionData {
-        user?: SessionUser
-        allUsers?: SessionUser[]
+        user?: SessionUser;
+        allUsers?: SessionUser[];
     }
 }
-

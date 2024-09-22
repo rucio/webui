@@ -1,28 +1,28 @@
-import { injectable } from "inversify"
-import { IronSession } from "iron-session"
-import { NextApiResponse } from "next"
-import { BaseInputPort } from "./primary-ports"
-import { TUseCase } from "./usecase"
-import type TUseCaseFactory from "./usecase-factory"
-import { AuthenticatedRequestModel } from "./usecase-models"
+import { injectable } from 'inversify';
+import { IronSession } from 'iron-session';
+import { NextApiResponse } from 'next';
+import { BaseInputPort } from './primary-ports';
+import { TUseCase } from './usecase';
+import type TUseCaseFactory from './usecase-factory';
+import { AuthenticatedRequestModel } from './usecase-models';
 
-export type TSimpleControllerParameters = {response: NextApiResponse, session?: IronSession, }
-export type TAuthenticatedControllerParameters = TSimpleControllerParameters & {rucioAuthToken: string}
-export type TParameters = TSimpleControllerParameters | TAuthenticatedControllerParameters
+export type TSimpleControllerParameters = { response: NextApiResponse; session?: IronSession };
+export type TAuthenticatedControllerParameters = TSimpleControllerParameters & { rucioAuthToken: string };
+export type TParameters = TSimpleControllerParameters | TAuthenticatedControllerParameters;
 
-export interface IBaseController<T extends TParameters, TRequestModel>{
-    useCaseFactory: TUseCaseFactory<TRequestModel>
-    execute(parameters: T): Promise<void>
+export interface IBaseController<T extends TParameters, TRequestModel> {
+    useCaseFactory: TUseCaseFactory<TRequestModel>;
+    execute(parameters: T): Promise<void>;
 }
 
 @injectable()
-export abstract class BaseController<TParams extends TParameters, TRequestModel > implements IBaseController<TParams, TRequestModel>{
-    useCaseFactory: TUseCaseFactory<TRequestModel>
-    
-    constructor(useCaseFactory: TUseCaseFactory<TRequestModel>){
+export abstract class BaseController<TParams extends TParameters, TRequestModel> implements IBaseController<TParams, TRequestModel> {
+    useCaseFactory: TUseCaseFactory<TRequestModel>;
+
+    constructor(useCaseFactory: TUseCaseFactory<TRequestModel>) {
         this.useCaseFactory = useCaseFactory;
     }
-    
+
     abstract prepareRequestModel(parameters: TParams): TRequestModel;
 
     async execute(parameters: TParams) {
@@ -31,7 +31,7 @@ export abstract class BaseController<TParams extends TParameters, TRequestModel 
             authenticatedRequest = true;
         }
         let useCase: TUseCase<TRequestModel>;
-        if(parameters.session){
+        if (parameters.session) {
             useCase = this.useCaseFactory(parameters.response, parameters.session) as TUseCase<TRequestModel>;
         } else {
             useCase = this.useCaseFactory(parameters.response) as TUseCase<TRequestModel>;

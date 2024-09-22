@@ -1,16 +1,16 @@
-import { PassThrough, Transform } from 'stream'
-import { BaseDTO } from './dto'
-import { AuthenticatedRequestModel, BaseErrorResponseModel, BaseResponseModel } from './usecase-models'
-import { BaseStreamingPostProcessingPipelineElement } from './postprocessing-pipeline-elements'
-import { TWebResponse } from './web'
-import { BaseViewModel } from './view-models'
+import { PassThrough, Transform } from 'stream';
+import { BaseDTO } from './dto';
+import { AuthenticatedRequestModel, BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
+import { BaseStreamingPostProcessingPipelineElement } from './postprocessing-pipeline-elements';
+import { TWebResponse } from './web';
+import { BaseViewModel } from './view-models';
 
 /**
  * A base interface for input ports.
  * @typeparam TRequestModel The type of the request model for the input port.
  */
 export interface BaseInputPort<TRequestModel> {
-    execute(requestModel: TRequestModel): Promise<void>
+    execute(requestModel: TRequestModel): Promise<void>;
 }
 
 /**
@@ -18,16 +18,15 @@ export interface BaseInputPort<TRequestModel> {
  * @typeparam AuthenticatedRequestModel The type of the authenticated request model for the input port.
  */
 export interface BaseAuthenticatedInputPort<TRequestModel> {
-    execute(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<void>
+    execute(requestModel: AuthenticatedRequestModel<TRequestModel>): Promise<void>;
 }
 
 /**
  * A base interface for streamable input ports.
  * @typeparam AuthenticatedRequestModel The type of the authenticated request model for the input port.
  */
-export interface BaseStreamableInputPort<AuthenticatedRequestModel>
-    extends Transform {
-    execute(requestModel: AuthenticatedRequestModel): Promise<void>
+export interface BaseStreamableInputPort<AuthenticatedRequestModel> extends Transform {
+    execute(requestModel: AuthenticatedRequestModel): Promise<void>;
 }
 
 /**
@@ -38,15 +37,19 @@ export interface BaseStreamableInputPort<AuthenticatedRequestModel>
  * @typeparam TResponseModel The type of the response model for the input port.
  * @typeparam TErrorModel The type of the error model for the input port.
  */
-export interface BaseMultiCallStreamableInputPort<AuthenticatedRequestModel, TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel>{
+export interface BaseMultiCallStreamableInputPort<
+    AuthenticatedRequestModel,
+    TResponseModel extends BaseResponseModel,
+    TErrorModel extends BaseErrorResponseModel,
+> {
     /**
      * Validates the final response model.
      * @param responseModel The response model to validate.
      */
     validateFinalResponseModel(responseModel: TResponseModel): {
-        isValid: boolean,
-        errorModel?: TErrorModel
-    }
+        isValid: boolean;
+        errorModel?: TErrorModel;
+    };
 }
 
 /**
@@ -55,9 +58,9 @@ export interface BaseMultiCallStreamableInputPort<AuthenticatedRequestModel, TRe
  * @typeparam TErrorModel The type of the error model for the output port.
  */
 export interface BaseOutputPort<TResponseModel, TErrorModel> {
-    response: TWebResponse
-    presentSuccess(responseModel: TResponseModel): Promise<void>
-    presentError(errorModel: TErrorModel): Promise<void>
+    response: TWebResponse;
+    presentSuccess(responseModel: TResponseModel): Promise<void>;
+    presentError(errorModel: TErrorModel): Promise<void>;
 }
 
 /**
@@ -66,21 +69,23 @@ export interface BaseOutputPort<TResponseModel, TErrorModel> {
  * @typeparam TErrorModel The type of the error model for the streaming output port.
  * @typeparam TStreamViewModel The type of the view model for the streamed data.
  */
-export interface BaseStreamingOutputPort<TResponseModel extends BaseResponseModel, TErrorModel extends BaseErrorResponseModel, TStreamViewModel extends BaseViewModel> extends Transform{
-    response: TWebResponse
-    
-    setupStream(stream: PassThrough): void
-    
-    presentError(errorModel: TErrorModel): void
-    
-    convertErrorModelToViewModel(errorModel: TErrorModel): {
-        status: number,
-        viewModel: TStreamViewModel
-    }
-    
-    streamResponseModelToViewModel(
-        responseModel: TResponseModel,
-    ): TStreamViewModel
+export interface BaseStreamingOutputPort<
+    TResponseModel extends BaseResponseModel,
+    TErrorModel extends BaseErrorResponseModel,
+    TStreamViewModel extends BaseViewModel,
+> extends Transform {
+    response: TWebResponse;
 
-    streamErrorModelToViewModel(error: TErrorModel): TStreamViewModel
+    setupStream(stream: PassThrough): void;
+
+    presentError(errorModel: TErrorModel): void;
+
+    convertErrorModelToViewModel(errorModel: TErrorModel): {
+        status: number;
+        viewModel: TStreamViewModel;
+    };
+
+    streamResponseModelToViewModel(responseModel: TResponseModel): TStreamViewModel;
+
+    streamErrorModelToViewModel(error: TErrorModel): TStreamViewModel;
 }

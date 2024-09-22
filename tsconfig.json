@@ -30,7 +30,8 @@
       "@/*": [
         "./src/*"
       ],
-      "@/tailwind": ["./tailwind.config.js"]
+      "@/tailwind": ["./tailwind.config.js"],
+      "@/test/*": ["./test/*"],
     }
   },
   "include": [

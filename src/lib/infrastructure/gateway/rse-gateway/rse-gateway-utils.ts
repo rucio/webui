@@ -4,53 +4,53 @@ import { RSEProtocol, RSEType } from '@/lib/core/entity/rucio';
  * Represents the data returned by Rucio Server for a RSE.
  */
 export type TRucioRSE = {
-  id: string;
-  rse: string;
-  vo: string;
-  rse_type: string;
-  deterministic: boolean;
-  volatile: boolean;
-  staging_area: boolean;
-  city: string | null;
-  region_code: string | null;
-  country_name: string | null;
-  continent: string | null;
-  time_zone: string | null;
-  ISP: string | null;
-  ASN: string | null;
-  longitude: number | null;
-  latitude: number | null;
-  availability: number;
-  availability_read: boolean;
-  availability_write: boolean;
-  availability_delete: boolean;
-  qos_class: string | null;
-  deleted: boolean;
-  deleted_at: string | null;
-  created_at: string;
-  updated_at: string;
-}
+    id: string;
+    rse: string;
+    vo: string;
+    rse_type: string;
+    deterministic: boolean;
+    volatile: boolean;
+    staging_area: boolean;
+    city: string | null;
+    region_code: string | null;
+    country_name: string | null;
+    continent: string | null;
+    time_zone: string | null;
+    ISP: string | null;
+    ASN: string | null;
+    longitude: number | null;
+    latitude: number | null;
+    availability: number;
+    availability_read: boolean;
+    availability_write: boolean;
+    availability_delete: boolean;
+    qos_class: string | null;
+    deleted: boolean;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string;
+};
 
 export type TRucioRSEProtocol = {
     domains: {
         [key: string]: {
-          delete: number;
-          read: number;
-          third_party_copy_read?: number;
-          third_party_copy_write?: number;
-          write: number;
+            delete: number;
+            read: number;
+            third_party_copy_read?: number;
+            third_party_copy_write?: number;
+            write: number;
         };
-      };
-      extended_attributes: {
+    };
+    extended_attributes: {
         space_token: string;
         web_service_path: string;
-      } | null;
-      hostname: string;
-      impl: string;
-      port: number;
-      prefix: string;
-      scheme: string;
-}
+    } | null;
+    hostname: string;
+    impl: string;
+    port: number;
+    prefix: string;
+    scheme: string;
+};
 
 /**
  * Converts a string representing the RSE Type to a {@link RSEType} enum value.
@@ -58,16 +58,16 @@ export type TRucioRSEProtocol = {
  * @returns {@link RSEType}
  */
 function getRSEType(rseType: string): RSEType {
-    if(rseType === undefined || rseType === null || rseType === ''){
-        return RSEType.UNKNOWN
+    if (rseType === undefined || rseType === null || rseType === '') {
+        return RSEType.UNKNOWN;
     }
-    switch(rseType.toUpperCase()) {
+    switch (rseType.toUpperCase()) {
         case 'DISK':
-            return RSEType.DISK
+            return RSEType.DISK;
         case 'TAPE':
-            return RSEType.TAPE
+            return RSEType.TAPE;
         default:
-            return RSEType.UNKNOWN
+            return RSEType.UNKNOWN;
     }
 }
 
@@ -84,8 +84,8 @@ export function convertToRSEDTO(rse: TRucioRSE): RSEDTO {
         volatile: rse.volatile,
         deterministic: rse.deterministic,
         staging_area: rse.staging_area,
-    }
-    return dto
+    };
+    return dto;
 }
 
 /**
@@ -95,7 +95,7 @@ export function convertToRSEDTO(rse: TRucioRSE): RSEDTO {
  * @returns A {@link RSEProtocol} object
  */
 export function covertToRSEProtocol(protocol: TRucioRSEProtocol, rseName: string): RSEProtocol {
-    const domains = protocol.domains
+    const domains = protocol.domains;
     const rseProtocol: RSEProtocol = {
         rseid: rseName,
         scheme: protocol.scheme,
@@ -115,7 +115,6 @@ export function covertToRSEProtocol(protocol: TRucioRSEProtocol, rseName: string
             tpcread: domains.wan.third_party_copy_read || 0,
             tpcwrite: domains.wan.third_party_copy_write || 0,
         },
-
-    }
-    return rseProtocol
+    };
+    return rseProtocol;
 }

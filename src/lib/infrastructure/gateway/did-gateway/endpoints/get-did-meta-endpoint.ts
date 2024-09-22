@@ -1,21 +1,17 @@
-import { HTTPRequest } from "@/lib/sdk/http";
-import { DIDMetaDTO } from "@/lib/core/dto/did-dto";
-import { DIDAvailability, DIDType } from "@/lib/core/entity/rucio";
-import { BaseEndpoint } from "@/lib/sdk/gateway-endpoints";
-import { Response } from "node-fetch";
+import { HTTPRequest } from '@/lib/sdk/http';
+import { DIDMetaDTO } from '@/lib/core/dto/did-dto';
+import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio';
+import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { Response } from 'node-fetch';
 
 export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
-    constructor(
-        private rucioAuthToken: string,
-        private scope: string,
-        private name: string,
-    ) {
-        super()
+    constructor(private rucioAuthToken: string, private scope: string, private name: string) {
+        super();
     }
 
     async initialize(): Promise<void> {
-        await super.initialize()
-        this.url = `${this.rucioHost}/dids/${this.scope}/${this.name}/meta`
+        await super.initialize();
+        this.url = `${this.rucioHost}/dids/${this.scope}/${this.name}/meta`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,
@@ -24,17 +20,16 @@ export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
                 'Content-Type': 'application/json',
             },
             body: null,
-            params: undefined
-        }
-        this.request = request
-        this.initialized = true
+            params: undefined,
+        };
+        this.request = request;
+        this.initialized = true;
     }
-    
+
     reportErrors(statusCode: number, response: Response): Promise<DIDMetaDTO | undefined> {
         return Promise.resolve(undefined);
     }
-    
-    
+
     createDTO(data: any): DIDMetaDTO {
         data = data as {
             scope: string;
@@ -79,46 +74,46 @@ export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
             access_cnt: null | any;
             created_at: string;
             updated_at: string;
-        }
+        };
 
-        let didType: DIDType = DIDType.UNKNOWN
+        let didType: DIDType = DIDType.UNKNOWN;
         switch (data.did_type.toLowerCase()) {
             case 'collection':
-                didType = DIDType.COLLECTION
+                didType = DIDType.COLLECTION;
                 break;
             case 'container':
-                didType = DIDType.CONTAINER
+                didType = DIDType.CONTAINER;
                 break;
             case 'dataset':
-                didType = DIDType.DATASET
+                didType = DIDType.DATASET;
                 break;
             case 'file':
-                didType = DIDType.FILE
+                didType = DIDType.FILE;
                 break;
             case 'all':
-                didType = DIDType.ALL
+                didType = DIDType.ALL;
                 break;
             default:
-                didType = DIDType.UNKNOWN
+                didType = DIDType.UNKNOWN;
                 break;
         }
 
-        let didAvailability: DIDAvailability = DIDAvailability.UNKNOWN
+        let didAvailability: DIDAvailability = DIDAvailability.UNKNOWN;
         switch (data.availability.toLowerCase()) {
             case 'available':
-                didAvailability = DIDAvailability.AVAILABLE
+                didAvailability = DIDAvailability.AVAILABLE;
                 break;
             case 'deleted':
-                didAvailability = DIDAvailability.DELETED
+                didAvailability = DIDAvailability.DELETED;
                 break;
             case 'lost':
-                didAvailability = DIDAvailability.LOST
+                didAvailability = DIDAvailability.LOST;
                 break;
             default:
-                didAvailability = DIDAvailability.UNKNOWN
+                didAvailability = DIDAvailability.UNKNOWN;
                 break;
         }
-        
+
         const dto: DIDMetaDTO = {
             status: 'success',
             name: data.name,
@@ -140,8 +135,7 @@ export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
             md5: data.md5,
             guid: data.guid,
             bytes: data.bytes,
-        }
-        return dto
+        };
+        return dto;
     }
-    
 }

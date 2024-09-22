@@ -1,5 +1,5 @@
-import { IronSession } from "iron-session";
-import { SwitchAccountRequest } from "../../usecase-models/switch-account-usecase-models";
+import { IronSession } from 'iron-session';
+import { SwitchAccountRequest } from '../../usecase-models/switch-account-usecase-models';
 
 /**
  * Provides an interface for the {@link SwitchAccountUseCase}.
@@ -10,5 +10,5 @@ export default interface SwitchAccountInputPort {
      * @param request {@link SwitchAccountRequest}
      * @param session The IronSession object
      */
-    switchAccount(request: SwitchAccountRequest, session: IronSession): Promise<void>
+    switchAccount(request: SwitchAccountRequest, session: IronSession): Promise<void>;
 }

@@ -1,103 +1,102 @@
-import { DIDLong, DIDType, RSEAccountUsage } from "@/lib/core/entity/rucio";
-import { BaseViewModel } from "@/lib/sdk/view-models";
-import { FetchStatus } from "@tanstack/react-query";
-import { RSEAccountUsageLimitViewModel } from "./rse";
+import { DIDLong, DIDType, RSEAccountUsage } from '@/lib/core/entity/rucio';
+import { BaseViewModel } from '@/lib/sdk/view-models';
+import { FetchStatus } from '@tanstack/react-query';
+import { RSEAccountUsageLimitViewModel } from './rse';
 
 /**
  * Represents a pair of Rule ID and corresponding DID for a newly created rule.
  */
 export interface TRuleIDDIDPair {
-    RuleID: string
-    DID: string
+    RuleID: string;
+    DID: string;
 }
 /**
  * View model for the Create Rule Request.
  * @property rules - The list of pairs of Rule ID and corresponding DID.
  */
 export interface CreateRulesViewModel extends BaseViewModel {
-    rules: TRuleIDDIDPair[]
+    rules: TRuleIDDIDPair[];
 }
 
 export const generateEmptyCreateRulesViewModel = (): CreateRulesViewModel => ({
     status: 'error',
     rules: [],
-})
+});
 
 /*
-*  Data structures
-*/
-export type DIDName = string
-export type RSEName = string
+ *  Data structures
+ */
+export type DIDName = string;
+export type RSEName = string;
 
 export interface DIDElement {
-    DID: DIDName
-    DIDType: DIDType
+    DID: DIDName;
+    DIDType: DIDType;
 }
 
 export interface DIDQueryError {
-    DID: DIDName
-    ErrorCodes: Array<number>
-    Message?: string
+    DID: DIDName;
+    ErrorCodes: Array<number>;
+    Message?: string;
 }
 
 export interface RSEInformation {
-    RSEName: RSEName
-    RSEID: string
-    RemainingQuota: number
-    TotalQuota: number
+    RSEName: RSEName;
+    RSEID: string;
+    RemainingQuota: number;
+    TotalQuota: number;
 }
 
 /*
-*  Queries
-*/
+ *  Queries
+ */
 export interface TFetchCreateRuleSummaryRequest {
-    RSEViewModels: Array<RSEAccountUsageLimitViewModel>
-    DIDViewModels: Array<DIDLong>
-    expirydate: Date
-    lifetime: number
-    notifications: boolean
-    asynchronousMode: boolean
-    numcopies: number
-    numsamples: number
-    groupby: DIDType
-    comment: string
-    approval: boolean
+    RSEViewModels: Array<RSEAccountUsageLimitViewModel>;
+    DIDViewModels: Array<DIDLong>;
+    expirydate: Date;
+    lifetime: number;
+    notifications: boolean;
+    asynchronousMode: boolean;
+    numcopies: number;
+    numsamples: number;
+    groupby: DIDType;
+    comment: string;
+    approval: boolean;
 }
 
 export interface TypedDIDValidationQuery {
-    DIDList: Array<DIDName>
+    DIDList: Array<DIDName>;
 }
 
 // TODO move to a separate file
 export interface DIDSearchQuery {
-    DIDSearchString: string
+    DIDSearchString: string;
 }
 
 // TODO move to a separate file
 export interface RSESearchQuery {
-    RSEExpression: string
+    RSEExpression: string;
 }
 
-
 /*
-*  Responses
-*/
+ *  Responses
+ */
 export interface CreateRuleResponse {
     // To be run at the end of the function (`submit` pressed)
-    success: boolean
-    errormessage?: string
+    success: boolean;
+    errormessage?: string;
 }
 
 export interface TypedDIDValidationResponse {
-    ErrorList: Array<DIDQueryError>
+    ErrorList: Array<DIDQueryError>;
 }
 
 export interface DIDSearchResponse {
-    data: any, // TODO type this properly
-    fetchStatus: FetchStatus
+    data: any; // TODO type this properly
+    fetchStatus: FetchStatus;
 }
 
 export interface RSESearchResponse {
-    data: RSEAccountUsage[],
-    fetchStatus: FetchStatus
+    data: RSEAccountUsage[];
+    fetchStatus: FetchStatus;
 }

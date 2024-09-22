@@ -1,37 +1,37 @@
-import { BaseSingleEndpointUseCase } from "@/lib/sdk/usecase";
-import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { injectable } from "inversify";
-import { DIDMetaDTO } from "../dto/did-dto";
-import { DIDMetaInputPort, type DIDMetaOutputPort } from "../port/primary/did-meta-ports";
-import type DIDGatewayOutputPort from "../port/secondary/did-gateway-output-port";
-import { DIDMetaError, DIDMetaRequest, DIDMetaResponse } from "../usecase-models/did-meta-usecase-models";
+import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
+import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { injectable } from 'inversify';
+import { DIDMetaDTO } from '../dto/did-dto';
+import { DIDMetaInputPort, type DIDMetaOutputPort } from '../port/primary/did-meta-ports';
+import type DIDGatewayOutputPort from '../port/secondary/did-gateway-output-port';
+import { DIDMetaError, DIDMetaRequest, DIDMetaResponse } from '../usecase-models/did-meta-usecase-models';
 
 @injectable()
-class DIDMetaUseCase extends BaseSingleEndpointUseCase<AuthenticatedRequestModel<DIDMetaRequest>, DIDMetaResponse, DIDMetaError, DIDMetaDTO> implements DIDMetaInputPort {
-    constructor(
-        protected readonly presenter: DIDMetaOutputPort,
-        private readonly gateway: DIDGatewayOutputPort,
-    ){
-        super(presenter)
+class DIDMetaUseCase
+    extends BaseSingleEndpointUseCase<AuthenticatedRequestModel<DIDMetaRequest>, DIDMetaResponse, DIDMetaError, DIDMetaDTO>
+    implements DIDMetaInputPort
+{
+    constructor(protected readonly presenter: DIDMetaOutputPort, private readonly gateway: DIDGatewayOutputPort) {
+        super(presenter);
     }
     validateRequestModel(requestModel: AuthenticatedRequestModel<DIDMetaRequest>): DIDMetaError | undefined {
-        if(requestModel.scope === '' || requestModel.scope === undefined) {
+        if (requestModel.scope === '' || requestModel.scope === undefined) {
             return {
                 error: 'INVALID_REQUEST',
                 message: 'Scope is required',
-            } as DIDMetaError
+            } as DIDMetaError;
         }
-        if(requestModel.did === '' || requestModel.did === undefined) {
+        if (requestModel.did === '' || requestModel.did === undefined) {
             return {
                 error: 'INVALID_REQUEST',
                 message: 'DID is required',
-            } as DIDMetaError
+            } as DIDMetaError;
         }
-        if(requestModel.rucioAuthToken === '' || requestModel.rucioAuthToken === undefined) {
+        if (requestModel.rucioAuthToken === '' || requestModel.rucioAuthToken === undefined) {
             return {
                 error: 'INVALID_AUTH',
                 message: 'Auth token is required',
-            } as DIDMetaError
+            } as DIDMetaError;
         }
         return undefined;
     }
@@ -44,11 +44,11 @@ class DIDMetaUseCase extends BaseSingleEndpointUseCase<AuthenticatedRequestModel
     handleGatewayError(error: DIDMetaDTO): DIDMetaError {
         return {
             status: 'error',
-            error: error.errorMessage
-        } as DIDMetaError
+            error: error.errorMessage,
+        } as DIDMetaError;
     }
 
-    processDTO(dto: DIDMetaDTO): { data: DIDMetaResponse | DIDMetaError; status: "success" | "error"; } {
+    processDTO(dto: DIDMetaDTO): { data: DIDMetaResponse | DIDMetaError; status: 'success' | 'error' } {
         return {
             data: {
                 status: 'success',
@@ -70,10 +70,10 @@ class DIDMetaUseCase extends BaseSingleEndpointUseCase<AuthenticatedRequestModel
                 adler32: dto.adler32,
                 md5: dto.md5,
                 guid: dto.guid,
-                bytes: dto.bytes
+                bytes: dto.bytes,
             },
             status: 'success',
-        }
+        };
     }
 }
 

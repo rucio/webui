@@ -1,5 +1,5 @@
-import { BaseAuthenticatedInputPort, BaseOutputPort } from "@/lib/sdk/primary-ports";
-import { GetRSEError, GetRSERequest, GetRSEResponse } from "@/lib/core/usecase-models/get-rse-usecase-models";
+import { BaseAuthenticatedInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
+import { GetRSEError, GetRSERequest, GetRSEResponse } from '@/lib/core/usecase-models/get-rse-usecase-models';
 
 /**
  * @interface GetRSEInputPort representing the GetRSE usecase.

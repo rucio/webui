@@ -1,17 +1,27 @@
-import { BaseStreamingPostProcessingPipelineElement } from "@/lib/sdk/postprocessing-pipeline-elements";
-import { AuthenticatedRequestModel } from "@/lib/sdk/usecase-models";
-import { DIDExtendedDTO, DIDMetaDTO } from "../../dto/did-dto";
-import { DIDType } from "../../entity/rucio";
-import DIDGatewayOutputPort from "../../port/secondary/did-gateway-output-port";
-import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from "../../usecase-models/list-dids-usecase-models";
+import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements';
+import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { DIDExtendedDTO, DIDMetaDTO } from '../../dto/did-dto';
+import { DIDType } from '../../entity/rucio';
+import DIDGatewayOutputPort from '../../port/secondary/did-gateway-output-port';
+import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from '../../usecase-models/list-dids-usecase-models';
 
-export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingPipelineElement<ListDIDsRequest, ListDIDsResponse, ListDIDsError, DIDExtendedDTO>{
+export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingPipelineElement<
+    ListDIDsRequest,
+    ListDIDsResponse,
+    ListDIDsError,
+    DIDExtendedDTO
+> {
     constructor(private didGateway: DIDGatewayOutputPort) {
         super();
     }
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>, responseModel: ListDIDsResponse): Promise<DIDExtendedDTO> {
         try {
-            const dto: DIDExtendedDTO = await this.didGateway.getDID(requestModel.rucioAuthToken, responseModel.scope, responseModel.name, DIDType.FILE);
+            const dto: DIDExtendedDTO = await this.didGateway.getDID(
+                requestModel.rucioAuthToken,
+                responseModel.scope,
+                responseModel.name,
+                DIDType.FILE,
+            );
             return dto;
         } catch (error: any) {
             const errorDTO: DIDExtendedDTO = {
@@ -26,15 +36,15 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
                 monotonic: false,
                 expired_at: '',
                 bytes: 0,
-                length: 0
-            }
+                length: 0,
+            };
             return errorDTO;
         }
     }
 
     handleGatewayError(dto: DIDExtendedDTO): ListDIDsError {
         let error: 'Unknown Error' | 'Invalid DID Query' | 'Invalid Request' = 'Unknown Error';
-        switch(dto.errorMessage) {
+        switch (dto.errorMessage) {
             case 'Invalid Auth Token':
                 error = 'Invalid Request';
                 break;
@@ -54,29 +64,28 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
                 error = 'Unknown Error';
                 break;
         }
-            
+
         const errorModel: ListDIDsError = {
             status: 'error',
             name: dto.name,
             error: error,
-            code: dto.errorCode? dto.errorCode : 400,
+            code: dto.errorCode ? dto.errorCode : 400,
             message: dto.errorName + ': ' + dto.errorMessage + ' for DID ' + dto.scope + ':' + dto.name,
-        }
+        };
         return errorModel;
     }
 
-    validateDTO(dto: DIDExtendedDTO): { status: "success" | "error" | "critical"; data: ListDIDsError | DIDExtendedDTO; } {
-        if(dto.expired_at === '') {
+    validateDTO(dto: DIDExtendedDTO): { status: 'success' | 'error' | 'critical'; data: ListDIDsError | DIDExtendedDTO } {
+        if (dto.expired_at === '') {
             dto.expired_at = 'Never';
         }
 
         return {
             status: 'success',
-            data: dto
-        }
+            data: dto,
+        };
     }
 
-   
     transformResponseModel(responseModel: ListDIDsResponse, dto: DIDExtendedDTO): ListDIDsResponse {
         responseModel.bytes = dto.bytes;
         responseModel.length = dto.length;
@@ -84,5 +93,4 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
         responseModel.open = dto.open;
         return responseModel;
     }
-
 }

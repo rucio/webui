@@ -1,10 +1,10 @@
-import { DIDAvailability, DIDType } from "@/lib/core/entity/rucio";
-import { DIDMetaError, DIDMetaResponse } from "@/lib/core/usecase-models/did-meta-usecase-models";
-import { BasePresenter } from "@/lib/sdk/presenter";
-import { DIDMetaViewModel } from "../data/view-model/did";
+import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio';
+import { DIDMetaError, DIDMetaResponse } from '@/lib/core/usecase-models/did-meta-usecase-models';
+import { BasePresenter } from '@/lib/sdk/presenter';
+import { DIDMetaViewModel } from '../data/view-model/did';
 
 export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DIDMetaError, DIDMetaViewModel> {
-    convertResponseModelToViewModel(responseModel: DIDMetaResponse): { viewModel: DIDMetaViewModel; status: number; } {
+    convertResponseModelToViewModel(responseModel: DIDMetaResponse): { viewModel: DIDMetaViewModel; status: number } {
         const viewModel: DIDMetaViewModel = {
             status: 'success',
             name: responseModel.name,
@@ -26,13 +26,13 @@ export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DID
             md5: responseModel.md5,
             guid: responseModel.guid,
             bytes: responseModel.bytes,
-        }
+        };
         return {
             status: 200,
-            viewModel: viewModel
-        }
+            viewModel: viewModel,
+        };
     }
-    convertErrorModelToViewModel(errorModel: DIDMetaError): { viewModel: DIDMetaViewModel; status: number; } {
+    convertErrorModelToViewModel(errorModel: DIDMetaError): { viewModel: DIDMetaViewModel; status: number } {
         const status = errorModel.code; // TODO: check error type
         const message = errorModel.message ? errorModel.message.toString() : errorModel.error;
         const viewModel: DIDMetaViewModel = {
@@ -60,5 +60,4 @@ export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DID
         };
         return { status, viewModel };
     }
-
 }
