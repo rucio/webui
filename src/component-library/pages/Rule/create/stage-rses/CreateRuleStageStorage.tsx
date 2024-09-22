@@ -19,7 +19,6 @@ import { RSESearchPanel } from '@/component-library/features/search/RSESearchPan
 const DEFAULT_EXPRESSION = '*';
 
 type CreateRuleStageStorage = {
-    visible: boolean;
     parameters: CreateRuleParameters;
     updateStorage: (storage: CreateRuleStorage) => void;
     updateNeedsApproval: (needsApproval: boolean) => void;
@@ -88,8 +87,8 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
         } else {
             text = (
                 <span>
-                    Out of <b>{selectedItems.length}</b> chosen RSEs, none have enough quota left.
-                    Please choose different RSEs or mark the rule as needing approval.
+                    Out of <b>{selectedItems.length}</b> chosen RSEs, none have enough quota left. Please choose different RSEs or mark the rule as
+                    needing approval.
                 </span>
             );
         }
@@ -97,7 +96,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
     };
 
     return (
-        <div className={cn('flex flex-col space-y-3 w-full grow', props.visible ? 'visible' : 'hidden')}>
+        <div className="flex flex-col space-y-3 w-full grow">
             <RSESearchPanel
                 onSearch={onSearch}
                 stopStreaming={stopStreaming}
