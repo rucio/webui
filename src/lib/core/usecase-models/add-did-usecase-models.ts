@@ -12,6 +12,7 @@ export interface AddDIDRequest {
  * @interface AddDIDResponse represents the ResponseModel for add_did usecase
 */
 export interface AddDIDResponse extends BaseResponseModel {
+    created: boolean;
 }
 
 
