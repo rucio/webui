@@ -26,8 +26,6 @@ export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
                 'Content-Type': 'application/json',
             },
             body: {
-                scope: this.scope,
-                name: this.name,
                 type: this.didType.toUpperCase(),
             },
         };
