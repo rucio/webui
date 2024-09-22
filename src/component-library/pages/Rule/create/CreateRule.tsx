@@ -129,7 +129,7 @@ export const CreateRule = () => {
         <div className="flex flex-col space-y-3 w-full grow">
             <Heading text="New Rule" />
             <Timeline steps={steps} activeIndex={activeIndex} onSwitch={setActiveIndex} />
-            <div className="flex grow">
+            <div>
                 <CreateRuleStageData visible={activeIndex === 0} parameters={parameters} addDID={addDID} removeDID={removeDID} />
                 {activeIndex === 1 && (
                     <CreateRuleStageStorage
