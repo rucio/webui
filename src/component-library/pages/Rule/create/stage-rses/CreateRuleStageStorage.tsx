@@ -127,9 +127,9 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
                 />
             </div>
             {isChoiceInvalid ? getWarningField() : getInfoField()}
-            <div className="flex flex-row items-center space-x-2" onClick={() => setAskApproval(prevState => !prevState)}>
+            <div className="flex flex-row items-center space-x-2 w-fit" onClick={() => setAskApproval(prevState => !prevState)}>
                 <Checkbox checked={askApproval} />
-                <span className="cursor-pointer">The rule needs approval</span>
+                <span className="cursor-pointer select-none">The rule needs approval</span>
             </div>
         </div>
     );
