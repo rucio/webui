@@ -83,7 +83,7 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
                 <MetaRow name="Account">
                     <Field>{meta.account}</Field>
                 </MetaRow>
-                {meta.is_open && (
+                {meta.is_open !== null && (
                     <MetaRow name="Is Open">
                         <Checkbox checked={meta.is_open} />
                     </MetaRow>
