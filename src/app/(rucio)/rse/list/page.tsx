@@ -8,5 +8,5 @@ export default function Page() {
 
     // TODO: fetch initial data
 
-    return <ListRSE firstExpression={firstExpression ?? undefined} />;
+    return <ListRSE initialExpression={firstExpression ?? undefined} />;
 }

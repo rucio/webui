@@ -79,7 +79,7 @@ InstantStreaming.decorators = [
 
 export const InitialValidatedExpression = Template.bind({});
 InitialValidatedExpression.args = {
-    firstExpression: 'test',
+    initialExpression: 'test',
 };
 InitialValidatedExpression.decorators = [
     getDecoratorWithWorker([
