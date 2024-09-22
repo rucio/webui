@@ -10,8 +10,8 @@ import { HiInformationCircle } from 'react-icons/hi';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
 import { useEffect } from 'react';
-import {InfoField} from "@/component-library/features/fields/InfoField";
-import {CreateRuleTableWrapper} from "@/component-library/pages/Rule/create/CreateRuleTableWrapper";
+import { InfoField } from '@/component-library/features/fields/InfoField';
+import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 
 type CreateRuleStageData = {
     visible: boolean;
@@ -31,7 +31,11 @@ export const CreateRuleStageData = (props: CreateRuleStageData) => {
         if (selectedItems.length === 0) {
             text = <span>Please select at least one identifier</span>;
         } else {
-            text = <span><b>{selectedItems.length}</b> chosen, <b>{formatFileSize(totalSize)}</b> in total</span>
+            text = (
+                <span>
+                    <b>{selectedItems.length}</b> chosen, <b>{formatFileSize(totalSize)}</b> in total
+                </span>
+            );
         }
         return <InfoField className="flex-shrink-0">{text}</InfoField>;
     };

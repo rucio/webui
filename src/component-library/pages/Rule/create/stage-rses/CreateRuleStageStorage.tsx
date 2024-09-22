@@ -12,7 +12,8 @@ import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import Checkbox from '@/component-library/atoms/form/Checkbox';
-import {CreateRuleTableWrapper} from "@/component-library/pages/Rule/create/CreateRuleTableWrapper";
+import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
+import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
 
 const DEFAULT_EXPRESSION = '*';
 
@@ -131,10 +132,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
                 />
             </CreateRuleTableWrapper>
             {isChoiceInvalid ? getWarningField() : getInfoField()}
-            <div className="flex flex-row items-center space-x-3 w-fit" onClick={() => setAskApproval(prevState => !prevState)}>
-                <Checkbox checked={askApproval} />
-                <span className="cursor-pointer select-none text-neutral-900 dark:text-neutral-100">The rule needs approval</span>
-            </div>
+            <LabeledCheckbox checked={askApproval} onChange={() => setAskApproval(prevState => !prevState)} label="Ask for approval" />
         </div>
     );
 };
