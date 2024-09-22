@@ -8,7 +8,7 @@ import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { CreateRuleStageStorageTable } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorageTable';
-import { SelectionChangedEvent } from 'ag-grid-community';
+import {GridReadyEvent, SelectionChangedEvent} from 'ag-grid-community';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import Checkbox from '@/component-library/atoms/form/Checkbox';
@@ -36,10 +36,9 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
         setExpression(value !== '' ? value : DEFAULT_EXPRESSION);
     };
 
-    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<RSEAccountUsageLimitViewModel>();
+    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<RSEAccountUsageLimitViewModel>();
 
-    const onSearch = (event: any) => {
-        event.preventDefault();
+    const onSearch = () => {
         startStreaming('/api/feature/list-account-rse-quotas', {
             method: 'POST',
             // TODO: redo the endpoint to only accept the rseExpression via GET
@@ -49,6 +48,10 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
             }),
         });
     };
+
+    useEffect(() => {
+        if (gridApi) onSearch();
+    }, [gridApi]);
 
     const onStop = (event: any) => {
         event.preventDefault();
