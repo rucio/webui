@@ -64,13 +64,17 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
         },
     ]);
 
-    useEffect(() => {
+    const updateSelection = () => {
         tableRef.current?.api?.forEachNode(node => {
             const did: DIDLongViewModel = node.data;
             const selected = selectedItems.some(element => element.scope === did.scope && element.name === did.name);
             node.setData({ ...did, selected });
         });
+    };
+
+    useEffect(() => {
+        updateSelection();
     }, [selectedItems]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} onAsyncTransactionsFlushed={() => updateSelection()} {...props} />;
 };
