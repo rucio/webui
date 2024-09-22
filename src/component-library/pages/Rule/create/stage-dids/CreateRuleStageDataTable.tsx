@@ -12,7 +12,7 @@ import { HiCheck, HiPlus } from 'react-icons/hi';
 const CreateRuleSelectableCell = (props: { onSelect: () => void; selected: boolean; value: string }) => {
     return (
         <div className="flex flex-row items-center" onClick={props.onSelect}>
-            <Button variant={props.selected ? 'success' : 'default'} size="icon" className="mr-3">
+            <Button variant={props.selected ? 'success' : 'default'} size="icon" className="mr-3 flex-shrink-0">
                 {props.selected ? <HiCheck /> : <HiPlus />}
             </Button>
             <span>{props.value}</span>

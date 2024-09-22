@@ -13,7 +13,7 @@ import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/fea
 const CreateRuleRemovableCell = (props: { onClick: () => void; value: string }) => {
     return (
         <div className="flex flex-row items-center" onClick={props.onClick}>
-            <Button variant="error" size="icon" className="mr-3">
+            <Button variant="error" size="icon" className="mr-3 flex-shrink-0">
                 <HiMinus />
             </Button>
             <span>{props.value}</span>
