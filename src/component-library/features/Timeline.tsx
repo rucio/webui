@@ -23,10 +23,16 @@ const Timeline = ({ steps, activeIndex, onSwitch }: TimelineProps) => {
                     color = 'bg-neutral-0 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100';
                 }
 
+                const switchActive = () => onSwitch(index);
+
                 return (
                     <React.Fragment key={step}>
                         <div className="flex flex-row items-center space-x-2">
-                            <CircleWithText className={cn('bg-opacity-80 font-semibold', color)} text={indexStr} />
+                            <CircleWithText
+                                className={cn('bg-opacity-80 font-semibold', color)}
+                                text={indexStr}
+                                onClick={index < activeIndex ? switchActive : undefined}
+                            />
                             <span className="text-neutral-900 dark:text-neutral-100 hidden md:inline">{step}</span>
                         </div>
                         {index < steps.length - 1 && <Divider className="height-fit mx-3" color="bg-neutral-300 dark:bg-neutral-700" />}
