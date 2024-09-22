@@ -1,22 +1,22 @@
-import {StoryFn, Meta} from '@storybook/react';
-import {ToastedTemplate} from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
-import {CreateRule} from '@/component-library/pages/Rule/create/CreateRule';
-import {getDecoratorWithWorker} from '@/test/mocks/handlers/story-decorators';
-import {getMockStreamEndpoint} from '@/test/mocks/handlers/streaming-handlers';
-import {fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel} from '@/test/fixtures/table-fixtures';
-import {RSEAccountUsageLimitViewModel} from '@/lib/infrastructure/data/view-model/rse';
+import { StoryFn, Meta } from '@storybook/react';
+import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
+import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
+import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
+import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
+import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel } from '@/test/fixtures/table-fixtures';
+import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 
 export default {
     title: 'Components/Pages/Rule/Create',
     component: CreateRule,
     parameters: {
-        docs: {disable: true},
+        docs: { disable: true },
     },
 } as Meta<typeof CreateRule>;
 
 const Template: StoryFn<typeof CreateRule> = () => (
     <ToastedTemplate>
-        <CreateRule/>
+        <CreateRule />
     </ToastedTemplate>
 );
 
@@ -57,14 +57,14 @@ const staticRses: RSEAccountUsageLimitViewModel[] = [
         status: 'success',
         total_expected_usage: 900,
         used_bytes: 800,
-    }
-]
+    },
+];
 
 export const Regular = Template.bind({});
 Regular.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint('/api/feature/list-dids', {
-            data: Array.from({length: 200}, fixtureDIDLongViewModel),
+            data: Array.from({ length: 200 }, fixtureDIDLongViewModel),
             delay: 1,
         }),
         getMockStreamEndpoint('/api/feature/list-account-rse-quotas', {

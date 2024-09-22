@@ -8,6 +8,7 @@ import { CreateRuleStageData } from '@/component-library/pages/Rule/create/stage
 import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { CreateRuleStageStorage } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorage';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { CreateRuleStageOptions } from '@/component-library/pages/Rule/create/stage-options/CreateRuleStageOptions';
 
 const PreviousButton = ({ activeIndex, setActiveIndex }: { activeIndex: number; setActiveIndex: React.Dispatch<React.SetStateAction<number>> }) => {
     const disabled = activeIndex === 0;
@@ -87,7 +88,12 @@ export const CreateRule = () => {
     const updateStorage = (storage: CreateRuleStorage) => updateParameters(storage);
     const updateNeedsApproval = (needsApproval: boolean) => updateParameters({ needsApproval });
     const updateAskApproval = (askApproval: boolean) => updateParameters({ askApproval });
-    const updateOptions = (options: CreateRuleOptions) => updateParameters(options);
+    const updateOptionValue = (key: keyof CreateRuleOptions, value: any) => {
+        setParameters(prevState => ({
+            ...prevState,
+            [key]: value,
+        }));
+    };
 
     const addDID = (did: DIDLongViewModel) => {
         setParameters(prevState => {
@@ -125,6 +131,7 @@ export const CreateRule = () => {
         );
     }
 
+    // Keep stage DIDs rendered, as it may contain large streamed data
     return (
         <div className="flex flex-col space-y-3 w-full grow">
             <Heading text="New Rule" />
@@ -139,6 +146,7 @@ export const CreateRule = () => {
                         updateAskApproval={updateAskApproval}
                     />
                 )}
+                {activeIndex === 2 && <CreateRuleStageOptions parameters={parameters} updateOptionValue={updateOptionValue} />}
             </div>
             <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
                 <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
