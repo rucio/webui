@@ -22,7 +22,7 @@ export default class SetDIDStatusEndpoint extends BaseEndpoint<SetDIDStatusDTO> 
                 'Content-Type': 'application/json',
             },
             body: {
-                open: open,
+                open: this.open,
             },
             params: undefined,
         };
