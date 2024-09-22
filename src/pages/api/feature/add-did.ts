@@ -1,14 +1,13 @@
+import { SessionUser } from '@/lib/core/entity/auth-models';
 
-import { SessionUser } from "@/lib/core/entity/auth-models";
-
-import { withAuthenticatedSessionRoute } from "@/lib/infrastructure/auth/session-utils";
-import { AddDIDControllerParameters } from "@/lib/infrastructure/controller/add-did-controller";
-import appContainer from "@/lib/infrastructure/ioc/container-config";
-import { AddDIDRequest } from "@/lib/core/usecase-models/add-did-usecase-models";
-import CONTROLLERS from "@/lib/infrastructure/ioc/ioc-symbols-controllers";
-import { BaseController } from "@/lib/sdk/controller";
-import { NextApiRequest, NextApiResponse } from "next";
-import {z} from "zod";
+import { withAuthenticatedSessionRoute } from '@/lib/infrastructure/auth/session-utils';
+import { AddDIDControllerParameters } from '@/lib/infrastructure/controller/add-did-controller';
+import appContainer from '@/lib/infrastructure/ioc/container-config';
+import { AddDIDRequest } from '@/lib/core/usecase-models/add-did-usecase-models';
+import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
+import { BaseController } from '@/lib/sdk/controller';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { z } from 'zod';
 
 const schema = z.object({
     scope: z.string().min(1),
@@ -16,11 +15,10 @@ const schema = z.object({
     type: z.enum(['Dataset', 'Container']),
 });
 
-async function addDID(req:NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser){
-
-    if(req.method !== 'POST') {
-        res.status(405).json({ error: 'Method Not Allowed' })
-        return
+async function addDID(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser) {
+    if (req.method !== 'POST') {
+        res.status(405).json({ error: 'Method Not Allowed' });
+        return;
     }
 
     const params = schema.safeParse(req.body);
@@ -33,11 +31,11 @@ async function addDID(req:NextApiRequest, res: NextApiResponse, rucioAuthToken: 
     const controllerParameters: AddDIDControllerParameters = {
         response: res,
         rucioAuthToken: rucioAuthToken,
-        ...params.data
-    }
+        ...params.data,
+    };
 
-    const controller = appContainer.get<BaseController<AddDIDControllerParameters, AddDIDRequest>>(CONTROLLERS.ADD_DID)
-    await controller.execute(controllerParameters)
+    const controller = appContainer.get<BaseController<AddDIDControllerParameters, AddDIDRequest>>(CONTROLLERS.ADD_DID);
+    await controller.execute(controllerParameters);
 }
 
-export default withAuthenticatedSessionRoute(addDID)
+export default withAuthenticatedSessionRoute(addDID);

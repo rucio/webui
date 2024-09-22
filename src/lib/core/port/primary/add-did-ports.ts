@@ -1,5 +1,5 @@
-import { BaseAuthenticatedInputPort, BaseOutputPort } from "@/lib/sdk/primary-ports";
-import { AddDIDError, AddDIDRequest, AddDIDResponse } from "@/lib/core/usecase-models/add-did-usecase-models";
+import { BaseAuthenticatedInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
+import { AddDIDError, AddDIDRequest, AddDIDResponse } from '@/lib/core/usecase-models/add-did-usecase-models';
 
 /**
  * @interface AddDIDInputPort representing the AddDID usecase.

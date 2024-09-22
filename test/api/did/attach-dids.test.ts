@@ -4,8 +4,8 @@ import { BaseController } from '@/lib/sdk/controller';
 import { NextApiResponse } from 'next';
 import { createHttpMocks } from 'test/fixtures/http-fixtures';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
-import {AttachDIDsControllerParameters} from "@/lib/infrastructure/controller/attach-dids-controller";
-import {AttachDIDsRequest} from "@/lib/core/usecase-models/attach-dids-usecase-models";
+import { AttachDIDsControllerParameters } from '@/lib/infrastructure/controller/attach-dids-controller';
+import { AttachDIDsRequest } from '@/lib/core/usecase-models/attach-dids-usecase-models';
 
 describe('Attach DIDs API Tests', () => {
     beforeEach(() => {
@@ -18,12 +18,12 @@ describe('Attach DIDs API Tests', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: 'Created'
+                body: 'Created',
             },
-            requestValidator: async (req) => {
+            requestValidator: async req => {
                 const jsonBody = await req.json();
                 return jsonBody.dids !== undefined;
-            }
+            },
         };
         MockRucioServerFactory.createMockRucioServer(true, [addDIDMockEndpoint]);
     });
@@ -40,12 +40,12 @@ describe('Attach DIDs API Tests', () => {
             dids: [
                 {
                     scope: 'test',
-                    name: 'file1'
+                    name: 'file1',
                 },
                 {
                     scope: 'test',
-                    name: 'file2'
-                }
+                    name: 'file2',
+                },
             ],
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
             response: res as unknown as NextApiResponse,

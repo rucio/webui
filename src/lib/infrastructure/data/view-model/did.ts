@@ -11,31 +11,23 @@ import {
     FileReplicaStateD,
     DIDDatasetReplicas,
 } from '@/lib/core/entity/rucio';
-import {BaseViewModel} from '@/lib/sdk/view-models';
+import { BaseViewModel } from '@/lib/sdk/view-models';
 
-export interface DIDViewModel extends DID, BaseViewModel {
-}
+export interface DIDViewModel extends DID, BaseViewModel {}
 
-export interface DIDLongViewModel extends DIDLong, BaseViewModel {
-}
+export interface DIDLongViewModel extends DIDLong, BaseViewModel {}
 
-export interface DIDMetaViewModel extends DIDMeta, BaseViewModel {
-}
+export interface DIDMetaViewModel extends DIDMeta, BaseViewModel {}
 
-export interface DIDKeyValuePairsDataViewModel extends DIDKeyValuePairsData, BaseViewModel {
-}
+export interface DIDKeyValuePairsDataViewModel extends DIDKeyValuePairsData, BaseViewModel {}
 
-export interface DIDRulesViewModel extends DIDRules, BaseViewModel {
-}
+export interface DIDRulesViewModel extends DIDRules, BaseViewModel {}
 
-export interface DIDDatasetReplicasViewModel extends DIDDatasetReplicas, BaseViewModel {
-}
+export interface DIDDatasetReplicasViewModel extends DIDDatasetReplicas, BaseViewModel {}
 
-export interface FileReplicaStateViewModel extends FileReplicaState, BaseViewModel {
-}
+export interface FileReplicaStateViewModel extends FileReplicaState, BaseViewModel {}
 
-export interface FilereplicaStateDViewModel extends FileReplicaStateD, BaseViewModel {
-}
+export interface FilereplicaStateDViewModel extends FileReplicaStateD, BaseViewModel {}
 
 export function generateEmptyDIDRulesViewModel(): DIDRulesViewModel {
     return {
@@ -84,9 +76,9 @@ export interface AddDIDViewModel extends BaseViewModel {
 export const getEmptyAddDIDViewModel = (): AddDIDViewModel => {
     return {
         status: 'error',
-        created: false
-    }
-}
+        created: false,
+    };
+};
 
 export interface AttachDIDsViewModel extends BaseViewModel {
     created: boolean;
@@ -95,6 +87,6 @@ export interface AttachDIDsViewModel extends BaseViewModel {
 export const getEmptyAttachDIDsViewModel = (): AttachDIDsViewModel => {
     return {
         status: 'error',
-        created: false
-    }
-}
+        created: false,
+    };
+};
