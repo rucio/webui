@@ -34,6 +34,7 @@ const INPUT_PORT = {
     CREATE_RULE: Symbol.for('CreateRuleInputPort'),
     ADD_DID: Symbol.for('AddDIDInputPort'),
     ATTACH_DIDS: Symbol.for('AttachDIDsInputPort'),
+    SET_DID_STATUS: Symbol.for('SetDIDStatusInputPort'),
 };
 
 export default INPUT_PORT;
