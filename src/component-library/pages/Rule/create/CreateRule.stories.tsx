@@ -3,10 +3,7 @@ import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/T
 import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
 import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
-import {
-    fixtureDIDLongViewModel,
-    fixtureRSEAccountUsageLimitViewModel,
-} from '@/test/fixtures/table-fixtures';
+import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel } from '@/test/fixtures/table-fixtures';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 
 export default {

@@ -1,42 +1,34 @@
-import React, {useEffect, useState} from 'react';
-import {
-    CreateRuleOptions,
-    CreateRuleParameters,
-    CreateRuleStorage,
-    getEmptyCreateRuleParameters
-} from '@/lib/infrastructure/data/view-model/rule';
-import {Heading} from '@/component-library/atoms/misc/Heading';
+import React, { useEffect, useState } from 'react';
+import { CreateRuleOptions, CreateRuleParameters, CreateRuleStorage, getEmptyCreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
+import { Heading } from '@/component-library/atoms/misc/Heading';
 import Timeline from '@/component-library/features/Timeline';
-import {HiArrowLeft, HiArrowRight} from 'react-icons/hi';
-import {Button} from '@/component-library/atoms/form/button';
-import {CreateRuleStageData} from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageData';
-import {DIDLongViewModel} from '@/lib/infrastructure/data/view-model/did';
-import {CreateRuleStageStorage} from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorage';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import { Button } from '@/component-library/atoms/form/button';
+import { CreateRuleStageData } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageData';
+import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { CreateRuleStageStorage } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorage';
 
-const PreviousButton = ({activeIndex, setActiveIndex}: {
-    activeIndex: number,
-    setActiveIndex: React.Dispatch<React.SetStateAction<number>>
-}) => {
+const PreviousButton = ({ activeIndex, setActiveIndex }: { activeIndex: number; setActiveIndex: React.Dispatch<React.SetStateAction<number>> }) => {
     const disabled = activeIndex === 0;
 
     return (
-        <Button
-            variant="neutral"
-            className="w-full sm:w-48 justify-between"
-            disabled={disabled}
-            onClick={() => setActiveIndex(prev => prev - 1)}
-        >
-            <HiArrowLeft/>
+        <Button variant="neutral" className="w-full sm:w-48 justify-between" disabled={disabled} onClick={() => setActiveIndex(prev => prev - 1)}>
+            <HiArrowLeft />
             <span>Previous</span>
         </Button>
     );
 };
 
-const NextButton = ({activeIndex, setActiveIndex, stepsLength, isStepIncomplete}: {
-    activeIndex: number,
-    setActiveIndex: React.Dispatch<React.SetStateAction<number>>,
-    stepsLength: number,
-    isStepIncomplete: boolean
+const NextButton = ({
+    activeIndex,
+    setActiveIndex,
+    stepsLength,
+    isStepIncomplete,
+}: {
+    activeIndex: number;
+    setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+    stepsLength: number;
+    isStepIncomplete: boolean;
 }) => {
     const disabled = activeIndex === stepsLength - 1 || isStepIncomplete;
 
@@ -48,7 +40,7 @@ const NextButton = ({activeIndex, setActiveIndex, stepsLength, isStepIncomplete}
             onClick={() => setActiveIndex(prev => prev + 1)}
         >
             <span>Next</span>
-            <HiArrowRight/>
+            <HiArrowRight />
         </Button>
     );
 };
@@ -61,11 +53,9 @@ export const CreateRule = () => {
     const initialActiveString = localStorage.getItem(ACTIVE_KEY);
 
     const [parameters, setParameters] = useState<CreateRuleParameters>(
-        initialParametersString ? JSON.parse(initialParametersString) : getEmptyCreateRuleParameters()
+        initialParametersString ? JSON.parse(initialParametersString) : getEmptyCreateRuleParameters(),
     );
-    const [activeIndex, setActiveIndex] = useState<number>(
-        initialActiveString ? parseInt(initialActiveString) : 0
-    );
+    const [activeIndex, setActiveIndex] = useState<number>(initialActiveString ? parseInt(initialActiveString) : 0);
 
     // Effects to sync parameters and activeIndex with localStorage
     useEffect(() => {
@@ -75,25 +65,22 @@ export const CreateRule = () => {
         localStorage.setItem(ACTIVE_KEY, activeIndex.toString());
     }, [activeIndex]);
 
-
     // Utility to partially update parameters
     const updateParameters = (newParams: Partial<CreateRuleParameters>) => {
-        setParameters(prevState => ({...prevState, ...newParams}));
+        setParameters(prevState => ({ ...prevState, ...newParams }));
     };
 
     const updateStorage = (storage: CreateRuleStorage) => updateParameters(storage);
-    const updateNeedsApproval = (needsApproval: boolean) => updateParameters({needsApproval});
-    const updateAskApproval = (askApproval: boolean) => updateParameters({askApproval});
+    const updateNeedsApproval = (needsApproval: boolean) => updateParameters({ needsApproval });
+    const updateAskApproval = (askApproval: boolean) => updateParameters({ askApproval });
     const updateOptions = (options: CreateRuleOptions) => updateParameters(options);
 
     const addDID = (did: DIDLongViewModel) => {
         setParameters(prevState => {
-            const didExists = prevState.dids.some(
-                element => element.scope === did.scope && element.name === did.name
-            );
+            const didExists = prevState.dids.some(element => element.scope === did.scope && element.name === did.name);
             if (didExists) return prevState;
 
-            return {...prevState, dids: [...prevState.dids, did]};
+            return { ...prevState, dids: [...prevState.dids, did] };
         });
     };
 
@@ -118,15 +105,10 @@ export const CreateRule = () => {
 
     return (
         <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="New Rule"/>
-            <Timeline steps={steps} activeIndex={activeIndex} onSwitch={setActiveIndex}/>
+            <Heading text="New Rule" />
+            <Timeline steps={steps} activeIndex={activeIndex} onSwitch={setActiveIndex} />
             <div className="flex grow">
-                <CreateRuleStageData
-                    visible={activeIndex === 0}
-                    parameters={parameters}
-                    addDID={addDID}
-                    removeDID={removeDID}
-                />
+                <CreateRuleStageData visible={activeIndex === 0} parameters={parameters} addDID={addDID} removeDID={removeDID} />
                 <CreateRuleStageStorage
                     visible={activeIndex === 1}
                     parameters={parameters}
@@ -136,7 +118,7 @@ export const CreateRule = () => {
                 />
             </div>
             <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
-                <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex}/>
+                <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
                 <NextButton
                     activeIndex={activeIndex}
                     setActiveIndex={setActiveIndex}
