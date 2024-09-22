@@ -1,7 +1,7 @@
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { ChangeEvent, useEffect, useState } from 'react';
 import useChunkedStream, { StreamingStatus } from '@/lib/infrastructure/hooks/useChunkedStream';
-import { ListRSETable } from '@/component-library/pages/RSE/List/ListRSETable';
+import { ListRSETable } from '@/component-library/pages/RSE/list/ListRSETable';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Heading } from '@/component-library/atoms/misc/Heading';
@@ -16,11 +16,11 @@ type ListRSEProps = {
     initialData?: RSEViewModel[];
 };
 
-const defaultExpression = '*';
+const DEFAULT_EXPRESSION = '*';
 
 export const ListRSE = (props: ListRSEProps) => {
     const streamingHook = useChunkedStream<RSEViewModel>();
-    const [expression, setExpression] = useState<string | null>(props.firstExpression ?? defaultExpression);
+    const [expression, setExpression] = useState<string | null>(props.firstExpression ?? DEFAULT_EXPRESSION);
 
     const [gridApi, setGridApi] = useState<GridApi<RSEViewModel> | null>(null);
 
@@ -56,7 +56,7 @@ export const ListRSE = (props: ListRSEProps) => {
             // Reset the validator
             validator.reset();
 
-            const url = `/api/feature/list-rses?rseExpression=${expression ?? defaultExpression}`;
+            const url = `/api/feature/list-rses?rseExpression=${expression ?? DEFAULT_EXPRESSION}`;
             streamingHook.start({ url, onData });
         } else {
             toast(noApiToast);
@@ -67,7 +67,7 @@ export const ListRSE = (props: ListRSEProps) => {
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        setExpression(value !== '' ? value : defaultExpression);
+        setExpression(value !== '' ? value : DEFAULT_EXPRESSION);
     };
 
     const onSearch = (event: any) => {
@@ -100,9 +100,9 @@ export const ListRSE = (props: ListRSEProps) => {
                         onChange={onInputChange}
                         onEnterKey={onSearch}
                         defaultValue={props.firstExpression ?? ''}
-                        placeholder={defaultExpression}
+                        placeholder={DEFAULT_EXPRESSION}
                     />
-                    <SearchButton isRunning={streamingHook.status === StreamingStatus.RUNNING} onStop={onStop} onSearch={onSearch} />
+                    <SearchButton isRunning={isRunning} onStop={onStop} onSearch={onSearch} />
                 </div>
             </div>
             <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />

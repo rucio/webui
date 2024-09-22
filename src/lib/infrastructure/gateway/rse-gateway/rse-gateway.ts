@@ -1,10 +1,11 @@
-import { ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO } from '@/lib/core/dto/rse-dto';
+import { ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO, RSEUsageDTO } from '@/lib/core/dto/rse-dto';
 import RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
 import { injectable } from 'inversify';
 import ListRSEsEndpoint from './endpoints/list-rses-endpoint';
 import GetRSEEndpoint from './endpoints/get-rse-endpoint';
 import GetRSEAttributesEndpoint from './endpoints/get-rse-attributes-endpoint';
 import GetRSEProtocolsEndpoint from './endpoints/get-rse-protocols-endpoint';
+import GetRSEUsageEndpoint from '@/lib/infrastructure/gateway/rse-gateway/endpoints/get-rse-usage-endpoint';
 
 @injectable()
 export default class RSEGateway implements RSEGatewayOutputPort {
@@ -41,5 +42,11 @@ export default class RSEGateway implements RSEGatewayOutputPort {
             console.log('RSEGateway: The error message indicates empty response for a valid expression. Setting status code from 400 to 404.');
         }
         return Promise.resolve(errorDTO);
+    }
+
+    async getRSEUsage(rucioAuthToken: string, rseName: string): Promise<RSEUsageDTO> {
+        const endpoint = new GetRSEUsageEndpoint(rucioAuthToken, rseName);
+        const dto = await endpoint.fetch();
+        return dto;
     }
 }

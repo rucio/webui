@@ -4,6 +4,8 @@ import { DIDTypeTag } from '@/component-library/features/legacy/Tags/DIDTypeTag'
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { DIDSummaryTable, TDIDSummaryTableRowProps } from './DIDSummaryTable';
 import { RSESummaryTable } from './RSESummaryTable';
+import { DIDLong } from '@/lib/core/entity/rucio';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 var format = require('date-format');
 
@@ -19,7 +21,7 @@ export const SummaryPage = (props: { data: RuleSummaryViewModel }) => {
         <div className={twMerge('flex flex-col space-y-4', 'p-2', 'bg-neutral-0 dark:bg-neutral-800')}>
             <div className={twMerge('flex flex-row space-x-2', 'p-2', 'rounded-md border', 'dark:border-2')}>
                 <DIDSummaryTable
-                    listDIDViewModels={props.data.DIDViewModels}
+                    listDIDViewModels={props.data.DIDViewModels as ListDIDsViewModel[]}
                     numSamples={sampleFiles}
                     takeSamples={props.data.takeSamples}
                     accountInfo={props.data.accountInfo}

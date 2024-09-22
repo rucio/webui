@@ -1,6 +1,6 @@
-import { AccountType } from '@/lib/core/entity/rucio';
+import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 import { RuleSummaryViewModel } from '@/lib/infrastructure/data/view-model/rule';
-import { StoryFn, Meta } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { fixtureListDIDViewModel, fixtureRSEAccountUsageLimitViewModel } from '@/test/fixtures/table-fixtures';
 import { SummaryPage as SP } from './SummaryPage';
 
@@ -30,6 +30,10 @@ SummaryPage.args = {
             email: '',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
+            accountStatus: AccountStatus.ACTIVE,
         },
+        lifetime: 100,
+        takeSamples: false,
+        approval: true,
     } as RuleSummaryViewModel,
 };

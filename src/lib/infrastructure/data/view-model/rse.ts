@@ -11,6 +11,20 @@ export interface RSEAttributeViewModel extends BaseViewModel {
     attributes: RSEAttribute[];
 }
 
+export interface RSEAccountUsageViewModel extends RSEAccountUsage, BaseViewModel {}
+
+export function generateEmptyRSEAccountUsageViewModel(): RSEAccountUsageViewModel {
+    return {
+        status: 'error',
+        rse_id: '',
+        rse: '',
+        bytes_limit: 0,
+        files: 0,
+        account: '',
+        used_bytes: 0,
+    };
+}
+
 export interface RSEAccountUsageLimitViewModel extends RSEAccountUsage, BaseViewModel {
     bytes_remaining: number;
     has_quota: boolean;
@@ -22,8 +36,7 @@ export function getEmptyRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitVie
         status: 'error',
         rse_id: '',
         rse: '',
-        account: '',
-        used_bytes: 0,
+        bytes_remaining: 0,
         bytes_limit: 0,
     } as RSEAccountUsageLimitViewModel;
 }

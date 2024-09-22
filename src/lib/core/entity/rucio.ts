@@ -171,6 +171,7 @@ export type Rule = {
     account: string;
     rse_expression: string;
     created_at: DateISO;
+    // Seconds
     remaining_lifetime: number;
     state: RuleState;
     locks_ok_cnt: number;

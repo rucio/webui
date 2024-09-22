@@ -28,7 +28,7 @@ const Template: StoryFn<typeof ListRSE> = args => (
 );
 
 // We don't want to generate several of these
-const smallList =  Array.from({ length: 20 }, fixtureRSEViewModel);
+const smallList = Array.from({ length: 20 }, fixtureRSEViewModel);
 const mediumList = Array.from({ length: 140 }, fixtureRSEViewModel);
 const hugeList = Array.from({ length: 100000 }, fixtureRSEViewModel);
 const endpointUrl = '/api/feature/list-rses';

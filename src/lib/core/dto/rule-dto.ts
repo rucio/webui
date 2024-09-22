@@ -1,4 +1,4 @@
-import { BaseDTO } from '@/lib/sdk/dto';
+import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
 import { LockState, Rule } from '../entity/rucio';
 
 /**
@@ -15,3 +15,5 @@ export interface RuleReplicaLockStateDTO extends BaseDTO {
     rse: string;
     state: LockState;
 }
+
+export interface ListRulesDTO extends BaseStreamableDTO {}

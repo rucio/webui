@@ -8,11 +8,11 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Input } from '@/component-library/atoms/form/input';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ListDIDTable } from '@/component-library/pages/DID/List/ListDIDTable';
+import { ListDIDTable } from '@/component-library/pages/DID/list/ListDIDTable';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { alreadyStreamingToast, noApiToast } from '@/component-library/features/utils/list-toasts';
-import { ListDIDMeta } from '@/component-library/pages/DID/List/Meta/ListDIDMeta';
+import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
 
 const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
@@ -219,7 +219,7 @@ export const ListDID = (props: ListDIDProps) => {
 
     const queryMeta = async () => {
         if (selectedItem !== null) {
-            const params = new URLSearchParams({scope: selectedItem.scope, name: selectedItem.name});
+            const params = new URLSearchParams({ scope: selectedItem.scope, name: selectedItem.name });
             const url = '/api/feature/get-did-meta?' + params;
 
             const res = await fetch(url);

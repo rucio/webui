@@ -62,6 +62,9 @@ import RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output
 import RuleGateway from '../gateway/rule-gateway/rule-gateway';
 import ListAccountRSEQuotasFeature from './features/list-account-rse-quotas-feature';
 import GetAccountInfoFeature from './features/get-account-info-feature';
+import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
+import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
+import ListAccountRSEUsageFeature from '@/lib/infrastructure/ioc/features/list-account-rse-usage-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -102,6 +105,7 @@ loadFeaturesSync(appContainer, [
     new GetRSEFeature(appContainer),
     new GetRSEProtocolsFeature(appContainer),
     new GetRSEAttributesFeature(appContainer),
+    new GetRSEUsageFeature(appContainer),
 ]);
 
 // Features: List RSE
@@ -116,6 +120,12 @@ loadFeaturesSync(appContainer, [
 
 //Features: List Subscriptions
 loadFeaturesSync(appContainer, [new ListSubscriptionRuleStatesFeature(appContainer)]);
+
+// Features: List Rules
+loadFeaturesSync(appContainer, [new ListRulesFeature(appContainer)]);
+
+// Features: Dashboard
+loadFeaturesSync(appContainer, [new ListAccountRSEUsageFeature(appContainer)]);
 
 appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);

@@ -1,4 +1,4 @@
-import { ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO } from '@/lib/core/dto/rse-dto';
+import { ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO, RSEUsageDTO } from '@/lib/core/dto/rse-dto';
 
 export default interface RSEGatewayOutputPort {
     /**
@@ -28,4 +28,11 @@ export default interface RSEGatewayOutputPort {
      * @param rseExpression The RSE Expression to list RSEs for.
      */
     listRSEs(rucioAuthToken: string, rseExpression: string): Promise<ListRSEsDTO>;
+
+    /**
+     * Get current usage for a given RSE.
+     * @param rucioAuthToken A valid Rucio Auth Token.
+     * @param rseName The RSE to list usage for.
+     */
+    getRSEUsage(rucioAuthToken: string, rseName: string): Promise<RSEUsageDTO>;
 }

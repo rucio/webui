@@ -1,6 +1,6 @@
 'use client';
 
-import { ListRSE } from '@/component-library/pages/RSE/List/ListRSE';
+import { ListRSE } from '@/component-library/pages/RSE/list/ListRSE';
 import { useSearchParams } from 'next/navigation';
 export default function Page() {
     const searchParams = useSearchParams();

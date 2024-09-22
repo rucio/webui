@@ -28,6 +28,9 @@ const INPUT_PORT = {
     SWITCH_ACCOUNT: Symbol.for('SwitchAccountInputPort'),
     TEST: Symbol.for('TestInputPort'),
     USERPASS_LOGIN: Symbol.for('UserPassLoginInputPort'),
+    GET_RSE_USAGE: Symbol.for('GetRSEUsageInputPort'),
+    LIST_RULES: Symbol.for('ListRulesInputPort'),
+    LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageInputPort'),
 };
 
 export default INPUT_PORT;

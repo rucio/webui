@@ -130,3 +130,8 @@ export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
         state: LockState.UNKNOWN,
     };
 }
+
+export type ListRulesFilter = {
+    account?: string;
+    scope?: string;
+};
