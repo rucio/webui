@@ -9,6 +9,9 @@ import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-mo
 export default {
     title: 'Components/Pages/Rule/Create',
     component: CreateRule,
+    parameters: {
+        docs: { disable: true },
+    },
 } as Meta<typeof CreateRule>;
 
 const Template: StoryFn<typeof CreateRule> = () => (

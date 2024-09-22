@@ -8,6 +8,9 @@ import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers'
 export default {
     title: 'Components/Pages/Rule/List',
     component: ListRule,
+    parameters: {
+        docs: { disable: true },
+    },
 } as Meta<typeof ListRule>;
 
 const Template: StoryFn<typeof ListRule> = args => (
