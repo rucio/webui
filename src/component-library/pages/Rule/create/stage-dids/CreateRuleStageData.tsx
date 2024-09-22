@@ -9,6 +9,7 @@ import { Field } from '@/component-library/atoms/misc/Field';
 import { HiInformationCircle } from 'react-icons/hi';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
+import {useEffect} from "react";
 
 type CreateRuleStageData = {
     visible: boolean;
@@ -22,6 +23,10 @@ export const CreateRuleStageData = (props: CreateRuleStageData) => {
     const totalSize = selectedItems.reduce((accumulator, current) => accumulator + current.bytes, 0);
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDLongViewModel>();
+
+    useEffect(() => {
+        gridApi?.sizeColumnsToFit();
+    }, [props.visible]);
 
     return (
         <div className={cn('flex flex-col space-y-3 w-full grow', props.visible ? 'visible' : 'hidden')}>
