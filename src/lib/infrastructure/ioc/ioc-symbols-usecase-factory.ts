@@ -33,6 +33,7 @@ const USECASE_FACTORY = {
     LiST_RULES: Symbol.for('Factory<ListRulesUseCase>'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('Factory<ListAccountRSEUsageUseCase>'),
     CREATE_RULE: Symbol.for('Factory<CreateRuleUseCase>'),
+    ADD_DID: Symbol.for('Factory<AddDIDUseCase>')
 };
 
 export default USECASE_FACTORY;

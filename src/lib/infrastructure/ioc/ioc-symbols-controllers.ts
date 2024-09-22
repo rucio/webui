@@ -33,6 +33,7 @@ const CONTROLLERS = {
     LIST_RULES: Symbol.for('ListRulesController'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageController'),
     CREATE_RULE: Symbol.for('CreateRuleController'),
+    ADD_DID: Symbol.for('AddDIDController'),
 };
 
 export default CONTROLLERS;
