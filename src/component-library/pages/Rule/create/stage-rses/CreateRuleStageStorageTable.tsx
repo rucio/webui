@@ -33,18 +33,29 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
             filterParams: DefaultTextFilterParams,
         },
         {
-            headerName: 'Expected usage',
+            headerName: 'Quota',
+            field: 'bytes_limit',
+            cellRenderer: (params: ICellRendererParams) => {
+                const item: RSEAccountUsageLimitViewModel = params.data;
+                const value = params.value < 0 ? 'No quota' : formatFileSize(params.value);
+                return <WarningCell warn={!item.has_quota} {...params} value={value} />;
+            },
+            colSpan: (params: ColSpanParams) => {
+                // Take up all the subsequent columns
+                return params.data.bytes_limit < 0 ? 3 : 1;
+            },
+            minWidth: 200,
+            maxWidth: 200,
+        },
+        {
+            headerName: 'Total usage',
             // TODO: for some reason total expected usage doesn't include the passed DIDs...
             field: 'used_bytes',
             cellRenderer: (params: ICellRendererParams) => {
                 const item: RSEAccountUsageLimitViewModel = params.data;
                 // Aggregating usage
-                const value = item.used_bytes < 0 ? 'No quota' : formatFileSize(item.used_bytes + props.totalDataSize);
+                const value = formatFileSize(item.used_bytes + props.totalDataSize);
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
-            },
-            colSpan: (params: ColSpanParams) => {
-                // Take up all the subsequent columns
-                return params.data.used_bytes < 0 ? 3 : 1;
             },
             minWidth: 200,
             maxWidth: 200,
@@ -54,17 +65,8 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
             field: 'bytes_remaining',
             cellRenderer: (params: ICellRendererParams) => {
                 const item: RSEAccountUsageLimitViewModel = params.data;
-                const value = formatFileSize(item.bytes_remaining);
+                const value = formatFileSize(item.bytes_remaining - props.totalDataSize);
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
-            },
-            minWidth: 200,
-            maxWidth: 200,
-        },
-        {
-            headerName: 'Quota',
-            field: 'bytes_limit',
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatFileSize(params.value);
             },
             minWidth: 200,
             maxWidth: 200,
