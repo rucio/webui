@@ -38,14 +38,10 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
     const [columnDefs] = useState([
         {
             headerName: 'Identifier',
-            valueGetter: (params: ValueGetterParams<DIDLongViewModel>) => {
-                return params.data?.scope + ':' + params.data?.name;
-            },
+            valueGetter: (params: ValueGetterParams<DIDLongViewModel>) => `${params.data?.scope}:${params.data?.name}`,
             cellRenderer: (params: ICellRendererParams<SelectableDIDViewModel>) => {
                 const did = params.data!;
-                if (did.selected === undefined) {
-                    did.selected = selectedItems.some(element => element.scope === did.scope && element.name === did.name);
-                }
+                did.selected = did.selected ?? selectedItems.some(item => item.scope === did.scope && item.name === did.name);
                 const onSelect = () => (did.selected ? removeDID(did) : addDID(did));
                 return <CreateRuleSelectableCell selected={did.selected} onSelect={onSelect} {...params} />;
             },
@@ -56,9 +52,7 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
         {
             headerName: 'Size',
             field: 'bytes',
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatFileSize(params.value);
-            },
+            valueFormatter: (params: ValueFormatterParams) => formatFileSize(params.value),
             minWidth: 200,
             maxWidth: 200,
         },
