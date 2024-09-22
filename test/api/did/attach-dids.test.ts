@@ -31,7 +31,7 @@ describe('Attach DIDs API Tests', () => {
         fetchMock.dontMock();
     });
     it('should return a base view model signifying success', async () => {
-        const { req, res, session } = await createHttpMocks('/api/add-did', 'POST', {});
+        const { req, res, session } = await createHttpMocks('/api/attach-dids', 'POST', {});
 
         const attachDIDsController = appContainer.get<BaseController<AttachDIDsControllerParameters, AttachDIDsRequest>>(CONTROLLERS.ATTACH_DIDS);
         const attachDIDsControllerParams: AttachDIDsControllerParameters = {
