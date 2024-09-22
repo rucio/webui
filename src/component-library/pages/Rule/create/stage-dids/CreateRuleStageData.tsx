@@ -10,6 +10,8 @@ import { HiInformationCircle } from 'react-icons/hi';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
 import { useEffect } from 'react';
+import {InfoField} from "@/component-library/features/fields/InfoField";
+import {CreateRuleTableWrapper} from "@/component-library/pages/Rule/create/CreateRuleTableWrapper";
 
 type CreateRuleStageData = {
     visible: boolean;
@@ -24,29 +26,30 @@ export const CreateRuleStageData = (props: CreateRuleStageData) => {
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDLongViewModel>();
 
+    const getInfoField = () => {
+        let text;
+        if (selectedItems.length === 0) {
+            text = <span>Please select at least one identifier</span>;
+        } else {
+            text = <span><b>{selectedItems.length}</b> chosen, <b>{formatFileSize(totalSize)}</b> in total</span>
+        }
+        return <InfoField className="flex-shrink-0">{text}</InfoField>;
+    };
+
     return (
         <div className={cn('flex flex-col space-y-3 w-full grow', props.visible ? 'visible' : 'hidden')}>
-            <Field className="bg-neutral-100 dark:bg-neutral-800 items-center py-2 space-x-2">
-                <HiInformationCircle className="h-6 w-6" />
-                {selectedItems.length === 0 ? (
-                    <span>Please select at least one identifier</span>
-                ) : (
-                    <span>
-                        <b>{selectedItems.length}</b> chosen, <b>{formatFileSize(totalSize)}</b> in total
-                    </span>
-                )}
-            </Field>
+            {getInfoField()}
             {selectedItems.length !== 0 && (
-                <div className="h-[500px] flex flex-col">
+                <CreateRuleTableWrapper>
                     <CreateRuleStageDataSelectedTable rowData={selectedItems} removeDID={did => props.removeDID(did)} />
-                </div>
+                </CreateRuleTableWrapper>
             )}
             <DIDSearchPanel
                 startStreaming={startStreaming}
                 stopStreaming={stopStreaming}
                 isRunning={streamingHook.status === StreamingStatus.RUNNING}
             />
-            <div className="h-[500px] flex flex-col">
+            <CreateRuleTableWrapper>
                 <CreateRuleStageDataTable
                     streamingHook={streamingHook}
                     onGridReady={onGridReady}
@@ -54,7 +57,7 @@ export const CreateRuleStageData = (props: CreateRuleStageData) => {
                     removeDID={did => props.removeDID(did)}
                     selectedItems={selectedItems}
                 />
-            </div>
+            </CreateRuleTableWrapper>
         </div>
     );
 };

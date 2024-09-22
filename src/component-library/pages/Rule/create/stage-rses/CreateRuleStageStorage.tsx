@@ -12,6 +12,7 @@ import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import Checkbox from '@/component-library/atoms/form/Checkbox';
+import {CreateRuleTableWrapper} from "@/component-library/pages/Rule/create/CreateRuleTableWrapper";
 
 const DEFAULT_EXPRESSION = '*';
 
@@ -120,7 +121,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
                     <SearchButton isRunning={streamingHook.status === StreamingStatus.RUNNING} onStop={onStop} onSearch={onSearch} />
                 </div>
             </div>
-            <div className="h-[500px] flex flex-col">
+            <CreateRuleTableWrapper>
                 <CreateRuleStageStorageTable
                     streamingHook={streamingHook}
                     onSelectionChanged={onSelectionChanged}
@@ -128,7 +129,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
                     totalDataSize={totalDataSize}
                     selectedItems={selectedItems}
                 />
-            </div>
+            </CreateRuleTableWrapper>
             {isChoiceInvalid ? getWarningField() : getInfoField()}
             <div className="flex flex-row items-center space-x-3 w-fit" onClick={() => setAskApproval(prevState => !prevState)}>
                 <Checkbox checked={askApproval} />
