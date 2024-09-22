@@ -22,11 +22,7 @@ export const CreateRuleStageData = (props: CreateRuleStageData) => {
     const selectedItems = props.parameters.dids;
     const totalSize = selectedItems.reduce((accumulator, current) => accumulator + current.bytes, 0);
 
-    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDLongViewModel>();
-
-    useEffect(() => {
-        gridApi?.sizeColumnsToFit();
-    }, [props.visible]);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDLongViewModel>();
 
     return (
         <div className={cn('flex flex-col space-y-3 w-full grow', props.visible ? 'visible' : 'hidden')}>

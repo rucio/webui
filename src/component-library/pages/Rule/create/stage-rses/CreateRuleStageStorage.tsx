@@ -36,11 +36,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
         setExpression(value !== '' ? value : DEFAULT_EXPRESSION);
     };
 
-    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<RSEAccountUsageLimitViewModel>();
-
-    useEffect(() => {
-        gridApi?.sizeColumnsToFit();
-    }, [props.visible]);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<RSEAccountUsageLimitViewModel>();
 
     const onSearch = (event: any) => {
         event.preventDefault();
