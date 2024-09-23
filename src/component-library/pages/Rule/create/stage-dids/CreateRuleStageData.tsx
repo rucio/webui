@@ -1,30 +1,27 @@
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
-import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { DIDSearchPanel } from '@/component-library/features/search/DIDSearchPanel';
 import { CreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
 import { CreateRuleStageDataTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataTable';
 import { cn } from '@/component-library/utils';
-import { Field } from '@/component-library/atoms/misc/Field';
-import { HiInformationCircle } from 'react-icons/hi';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
-import { useEffect } from 'react';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 type CreateRuleStageData = {
     visible: boolean;
     parameters: CreateRuleParameters;
-    addDID: (did: DIDLongViewModel) => void;
-    removeDID: (did: DIDLongViewModel) => void;
+    addDID: (did: ListDIDsViewModel) => void;
+    removeDID: (did: ListDIDsViewModel) => void;
 };
 
 export const CreateRuleStageData = (props: CreateRuleStageData) => {
     const selectedItems = props.parameters.dids;
     const totalSize = selectedItems.reduce((accumulator, current) => accumulator + current.bytes, 0);
 
-    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDLongViewModel>();
+    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<ListDIDsViewModel>();
 
     const getInfoField = () => {
         let text;

@@ -19,6 +19,7 @@ import {
     CreateRuleStageOptions,
     getEmptyOptionsErrors,
 } from '@/component-library/pages/Rule/create/stage-options/CreateRuleStageOptions';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 const PreviousButton = ({ activeIndex, setActiveIndex }: { activeIndex: number; setActiveIndex: React.Dispatch<React.SetStateAction<number>> }) => {
     const disabled = activeIndex === 0;
@@ -73,7 +74,8 @@ export const CreateRule = () => {
         const { copies, daysLifetime, grouping, comments } = parameters;
 
         newOptionErrors.copiesInvalid = isNaN(copies) || copies < 1 || copies > parameters.rses.length;
-        newOptionErrors.tooManyCopies = !parameters.askApproval && parameters.rses.filter(rse => rse.bytes_remaining >= totalDataSize).length < copies;
+        newOptionErrors.tooManyCopies =
+            !parameters.askApproval && parameters.rses.filter(rse => rse.bytes_remaining >= totalDataSize).length < copies;
 
         newOptionErrors.lifetimeInvalid = daysLifetime !== undefined && (isNaN(daysLifetime) || daysLifetime < 1);
 
@@ -125,7 +127,7 @@ export const CreateRule = () => {
         }));
     };
 
-    const addDID = (did: DIDLongViewModel) => {
+    const addDID = (did: ListDIDsViewModel) => {
         setParameters(prevState => {
             const didExists = prevState.dids.some(element => element.scope === did.scope && element.name === did.name);
             if (didExists) return prevState;
@@ -134,7 +136,7 @@ export const CreateRule = () => {
         });
     };
 
-    const removeDID = (did: DIDLongViewModel) => {
+    const removeDID = (did: ListDIDsViewModel) => {
         setParameters(prevState => ({
             ...prevState,
             dids: prevState.dids.filter(element => element.scope !== did.scope || element.name !== did.name),
@@ -148,7 +150,7 @@ export const CreateRule = () => {
         } else if (activeIndex === 1) {
             return parameters.rses.length === 0 || (parameters.needsApproval && !parameters.askApproval);
         } else if (activeIndex === 2) {
-            return Object.values(optionsErrors).some((error) => error);
+            return Object.values(optionsErrors).some(error => error);
         }
         return true;
     };
