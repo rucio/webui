@@ -1,17 +1,10 @@
-import {CreateRuleGrouping, CreateRuleOptions, CreateRuleParameters} from '@/lib/infrastructure/data/view-model/rule';
-import {cn} from '@/component-library/utils';
-import React, {ChangeEvent, FormEvent} from 'react';
-import {Input, Textarea} from '@/component-library/atoms/form/input';
-import {LabeledCheckbox} from '@/component-library/features/form/LabeledCheckbox';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/component-library/atoms/form/select';
-import {WarningField} from '@/component-library/features/fields/WarningField';
+import { CreateRuleGrouping, CreateRuleOptions, CreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
+import { cn } from '@/component-library/utils';
+import React, { ChangeEvent, FormEvent } from 'react';
+import { Input, Textarea } from '@/component-library/atoms/form/input';
+import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
+import { WarningField } from '@/component-library/features/fields/WarningField';
 
 interface FieldWithLabelProps {
     label: string;
@@ -19,7 +12,7 @@ interface FieldWithLabelProps {
     className?: string;
 }
 
-const InputWithLabel: React.FC<FieldWithLabelProps> = ({label, children, className}) => {
+const InputWithLabel: React.FC<FieldWithLabelProps> = ({ label, children, className }) => {
     return (
         <div className={cn('space-y-1', className)}>
             <label className="text-neutral-900 dark:text-neutral-100">{label}</label>
@@ -54,7 +47,7 @@ type CreateRuleStageOptionsProps = {
     errors: CreateRuleOptionsErrors;
 };
 
-export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: CreateRuleStageOptionsProps) => {
+export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }: CreateRuleStageOptionsProps) => {
     const onLifetimeInput = (event: FormEvent<HTMLInputElement>) => {
         let value;
         if (event.currentTarget.validity.valid) {
@@ -67,7 +60,7 @@ export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: 
 
     const onCopiesInput = (event: ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value, 10);
-        updateOptionValue('copies', value)
+        updateOptionValue('copies', value);
     };
 
     const defaultCopies = isNaN(parameters.copies) ? '' : parameters.copies;
@@ -80,25 +73,13 @@ export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: 
     return (
         <div className="flex flex-col space-y-5 w-full grow">
             <InputWithLabel label="Copies">
-                <Input
-                    onChange={onCopiesInput}
-                    type="number"
-                    min="1"
-                    max={parameters.rses.length}
-                    defaultValue={defaultCopies}
-                />
+                <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length} defaultValue={defaultCopies} />
             </InputWithLabel>
             <InputWithLabel label="Lifetime (days)">
-                <Input
-                    onInput={onLifetimeInput}
-                    type="number"
-                    min="1"
-                    defaultValue={getDefaultLifetime()}
-                />
+                <Input onInput={onLifetimeInput} type="number" min="1" defaultValue={getDefaultLifetime()} />
             </InputWithLabel>
             <InputWithLabel label="Comments">
-                <Textarea onChange={event => updateOptionValue('comments', event.target.value)}
-                          defaultValue={parameters.comments}/>
+                <Textarea onChange={event => updateOptionValue('comments', event.target.value)} defaultValue={parameters.comments} />
             </InputWithLabel>
             <LabeledCheckbox
                 checked={parameters.notify}
@@ -106,10 +87,9 @@ export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: 
                 label="Receive notifications"
             />
             <InputWithLabel label="Grouping">
-                <Select onValueChange={value => updateOptionValue('grouping', value as CreateRuleGrouping)}
-                        defaultValue={parameters.grouping}>
+                <Select onValueChange={value => updateOptionValue('grouping', value as CreateRuleGrouping)} defaultValue={parameters.grouping}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Grouping"/>
+                        <SelectValue placeholder="Grouping" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -125,32 +105,46 @@ export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: 
                 onChange={() => updateOptionValue('asynchronous', !parameters.asynchronous)}
                 label="Asynchronous"
             />
+
+            {/* Error handling */}
             {errors.copiesInvalid && (
                 <WarningField>
-                    <span>Invalid value for <b>copies</b>. It should range from 1 to the number of chosen RSEs.</span>
-                </WarningField>
-            )}
-            {!errors.copiesInvalid && errors.tooManyCopies && (
-                <WarningField>
                     <span>
-                        There are less than <b>{parameters.copies}</b> chosen RSEs with enough quota left.
-                        Please change the number of <b>copies</b> or mark the rule as needing approval.
+                        Invalid value for <b>copies</b>. It should range from 1 to the number of chosen RSEs.
                     </span>
                 </WarningField>
             )}
+
+            {!errors.copiesInvalid && errors.tooManyCopies && (
+                <WarningField>
+                    <span>
+                        There are less than <b>{parameters.copies}</b> chosen RSEs with enough quota left. Please change the number of <b>copies</b>{' '}
+                        or mark the rule as needing approval.
+                    </span>
+                </WarningField>
+            )}
+
             {errors.lifetimeInvalid && (
                 <WarningField>
-                    <span>Invalid value for <b>lifetime</b>. It should be greater than 1 or not specified.</span>
+                    <span>
+                        Invalid value for <b>lifetime</b>. It should be greater than 1 or not specified.
+                    </span>
                 </WarningField>
             )}
+
             {errors.commentsEmpty && (
                 <WarningField>
-                    <span>A <b>comment</b> should be specified if there is a need for rule approval.</span>
+                    <span>
+                        A <b>comment</b> should be specified if there is a need for rule approval.
+                    </span>
                 </WarningField>
             )}
+
             {errors.groupingInvalid && (
                 <WarningField>
-                    <span>The value of <b>grouping</b> is invalid.</span>
+                    <span>
+                        The value of <b>grouping</b> is invalid.
+                    </span>
                 </WarningField>
             )}
         </div>
