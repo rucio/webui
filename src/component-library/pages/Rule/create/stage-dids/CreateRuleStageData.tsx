@@ -10,14 +10,14 @@ import { InfoField } from '@/component-library/features/fields/InfoField';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
-type CreateRuleStageData = {
+type CreateRuleStageDataProps = {
     visible: boolean;
     parameters: CreateRuleParameters;
     addDID: (did: ListDIDsViewModel) => void;
     removeDID: (did: ListDIDsViewModel) => void;
 };
 
-export const CreateRuleStageData = (props: CreateRuleStageData) => {
+export const CreateRuleStageData = (props: CreateRuleStageDataProps) => {
     const selectedItems = props.parameters.dids;
     const totalSize = selectedItems.reduce((accumulator, current) => accumulator + current.bytes, 0);
 

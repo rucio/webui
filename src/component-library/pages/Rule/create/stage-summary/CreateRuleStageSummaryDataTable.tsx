@@ -10,34 +10,20 @@ import { RegularTable } from '@/component-library/features/table/RegularTable/Re
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
 
-const CreateRuleRemovableCell = (props: { onClick: () => void; value: string }) => {
-    return (
-        <div className="flex flex-row items-center" onClick={props.onClick}>
-            <Button variant="error" size="icon" className="mr-3 flex-shrink-0">
-                <HiMinus />
-            </Button>
-            <span>{props.value}</span>
-        </div>
-    );
-};
-
-type StageDataTableProps = {
+type StageSummaryDataTableProps = {
     rowData: ListDIDsViewModel[];
-    removeDID: (item: ListDIDsViewModel) => void;
+    copies: number;
 };
 
-export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => {
+export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProps) => {
     const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null);
 
     const [columnDefs] = useState([
         {
             headerName: 'Identifier',
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
-            cellRenderer: (params: ICellRendererParams<ListDIDsViewModel>) => {
-                const did = params.data!;
-                return <CreateRuleRemovableCell onClick={() => props.removeDID(did)} {...params} />;
-            },
             minWidth: 250,
             sortable: false,
         },
@@ -54,6 +40,20 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
             sortable: false,
         },
         {
+            headerName: 'Copies',
+            valueGetter: () => props.copies,
+            minWidth: 100,
+            maxWidth: 100,
+            sortable: false,
+        },
+        {
+            headerName: 'Files',
+            field: 'length',
+            minWidth: 100,
+            maxWidth: 100,
+            sortable: false,
+        },
+        {
             headerName: 'Size',
             field: 'bytes',
             valueFormatter: (params: ValueFormatterParams) => {
@@ -61,6 +61,15 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
             },
             minWidth: 200,
             maxWidth: 200,
+            sortable: false,
+        },
+        {
+            headerName: 'Is Open',
+            field: 'open',
+            cellStyle: checkboxCellWrapperStyle,
+            cellRenderer: CheckboxCell,
+            minWidth: 100,
+            maxWidth: 100,
             sortable: false,
         },
     ]);
