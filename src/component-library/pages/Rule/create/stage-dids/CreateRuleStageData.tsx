@@ -37,7 +37,7 @@ export const CreateRuleStageData = (props: CreateRuleStageData) => {
                 </span>
             );
         }
-        return <InfoField className="flex-shrink-0">{text}</InfoField>;
+        return <InfoField>{text}</InfoField>;
     };
 
     return (
