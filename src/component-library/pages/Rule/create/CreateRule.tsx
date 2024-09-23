@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { CreateRuleOptions, CreateRuleParameters, CreateRuleStorage, getEmptyCreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
+import {
+    CreateRuleGrouping,
+    CreateRuleOptions,
+    CreateRuleParameters,
+    CreateRuleStorage,
+    getEmptyCreateRuleParameters,
+} from '@/lib/infrastructure/data/view-model/rule';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 import Timeline from '@/component-library/features/Timeline';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
@@ -8,7 +14,11 @@ import { CreateRuleStageData } from '@/component-library/pages/Rule/create/stage
 import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { CreateRuleStageStorage } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorage';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
-import { CreateRuleStageOptions } from '@/component-library/pages/Rule/create/stage-options/CreateRuleStageOptions';
+import {
+    CreateRuleOptionsErrors,
+    CreateRuleStageOptions,
+    getEmptyOptionsErrors,
+} from '@/component-library/pages/Rule/create/stage-options/CreateRuleStageOptions';
 
 const PreviousButton = ({ activeIndex, setActiveIndex }: { activeIndex: number; setActiveIndex: React.Dispatch<React.SetStateAction<number>> }) => {
     const disabled = activeIndex === 0;
@@ -54,6 +64,25 @@ export const CreateRule = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [parameters, setParameters] = useState<CreateRuleParameters>(getEmptyCreateRuleParameters());
     const [activeIndex, setActiveIndex] = useState<number>(0);
+    const [optionsErrors, setOptionsErrors] = useState<CreateRuleOptionsErrors>(getEmptyOptionsErrors());
+
+    const checkOptionsErrors = () => {
+        const totalDataSize = parameters.dids.reduce((accumulator, current) => accumulator + current.bytes, 0);
+
+        const newOptionErrors = getEmptyOptionsErrors();
+        const { copies, daysLifetime, grouping, comments } = parameters;
+
+        newOptionErrors.copiesInvalid = isNaN(copies) || copies < 1 || copies > parameters.rses.length;
+        newOptionErrors.tooManyCopies = !parameters.askApproval && parameters.rses.filter(rse => rse.bytes_remaining >= totalDataSize).length < copies;
+
+        newOptionErrors.lifetimeInvalid = daysLifetime !== undefined && (isNaN(daysLifetime) || daysLifetime < 1);
+
+        newOptionErrors.commentsEmpty = parameters.askApproval && !comments;
+        newOptionErrors.groupingInvalid =
+            grouping !== CreateRuleGrouping.DATASET && grouping !== CreateRuleGrouping.ALL && grouping !== CreateRuleGrouping.NONE;
+
+        setOptionsErrors(newOptionErrors);
+    };
 
     useEffect(() => {
         const initialParametersString = localStorage.getItem(PARAMS_KEY);
@@ -74,6 +103,7 @@ export const CreateRule = () => {
     useEffect(() => {
         if (isLoading) return;
         localStorage.setItem(PARAMS_KEY, JSON.stringify(parameters));
+        checkOptionsErrors();
     }, [parameters]);
     useEffect(() => {
         if (isLoading) return;
@@ -117,6 +147,8 @@ export const CreateRule = () => {
             return parameters.dids.length === 0;
         } else if (activeIndex === 1) {
             return parameters.rses.length === 0 || (parameters.needsApproval && !parameters.askApproval);
+        } else if (activeIndex === 2) {
+            return Object.values(optionsErrors).some((error) => error);
         }
         return true;
     };
@@ -146,7 +178,7 @@ export const CreateRule = () => {
                         updateAskApproval={updateAskApproval}
                     />
                 )}
-                {activeIndex === 2 && <CreateRuleStageOptions parameters={parameters} updateOptionValue={updateOptionValue} />}
+                {activeIndex === 2 && <CreateRuleStageOptions parameters={parameters} updateOptionValue={updateOptionValue} errors={optionsErrors} />}
             </div>
             <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
                 <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
