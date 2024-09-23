@@ -8,6 +8,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { Button } from '@/component-library/atoms/form/button';
 import { HiCheck, HiPlus } from 'react-icons/hi';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 const CreateRuleSelectableCell = (props: { onSelect: () => void; selected: boolean; value: string }) => {
     return (
@@ -20,16 +21,16 @@ const CreateRuleSelectableCell = (props: { onSelect: () => void; selected: boole
     );
 };
 
-interface SelectableDIDViewModel extends DIDLongViewModel {
+interface SelectableDIDViewModel extends ListDIDsViewModel {
     selected?: boolean;
 }
 
 type StageDataTableProps = {
-    streamingHook: UseStreamReader<DIDLongViewModel>;
+    streamingHook: UseStreamReader<ListDIDsViewModel>;
     addDID: (item: SelectableDIDViewModel) => void;
     removeDID: (item: SelectableDIDViewModel) => void;
     onGridReady: (event: GridReadyEvent) => void;
-    selectedItems: DIDLongViewModel[];
+    selectedItems: ListDIDsViewModel[];
 };
 
 export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID, removeDID, selectedItems, ...props }) => {
@@ -38,7 +39,7 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
     const [columnDefs] = useState([
         {
             headerName: 'Identifier',
-            valueGetter: (params: ValueGetterParams<DIDLongViewModel>) => `${params.data?.scope}:${params.data?.name}`,
+            valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
             cellRenderer: (params: ICellRendererParams<SelectableDIDViewModel>) => {
                 const did = params.data!;
                 did.selected = did.selected ?? selectedItems.some(item => item.scope === did.scope && item.name === did.name);

@@ -9,6 +9,7 @@ import { HiMinus } from 'react-icons/hi';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 const CreateRuleRemovableCell = (props: { onClick: () => void; value: string }) => {
     return (
@@ -22,20 +23,20 @@ const CreateRuleRemovableCell = (props: { onClick: () => void; value: string }) 
 };
 
 type StageDataTableProps = {
-    rowData: DIDLongViewModel[];
-    removeDID: (item: DIDLongViewModel) => void;
+    rowData: ListDIDsViewModel[];
+    removeDID: (item: ListDIDsViewModel) => void;
 };
 
 export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => {
-    const tableRef = useRef<AgGridReact<DIDLongViewModel>>(null);
+    const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null);
 
     const [columnDefs] = useState([
         {
             headerName: 'Identifier',
-            valueGetter: (params: ValueGetterParams<DIDLongViewModel>) => {
+            valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
                 return params.data?.scope + ':' + params.data?.name;
             },
-            cellRenderer: (params: ICellRendererParams<DIDLongViewModel>) => {
+            cellRenderer: (params: ICellRendererParams<ListDIDsViewModel>) => {
                 const did = params.data!;
                 return <CreateRuleRemovableCell onClick={() => props.removeDID(did)} {...params} />;
             },

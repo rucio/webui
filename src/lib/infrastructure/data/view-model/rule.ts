@@ -2,6 +2,7 @@ import { Rule, RuleMeta, RulePageLockEntry, RuleState } from '@/lib/core/entity/
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface RuleViewModel extends Rule, BaseViewModel {}
 
@@ -35,7 +36,7 @@ export interface CreateRuleStorage {
 }
 
 export interface CreateRuleParameters extends CreateRuleOptions, CreateRuleStorage {
-    dids: DIDLongViewModel[];
+    dids: ListDIDsViewModel[];
     needsApproval: boolean;
     askApproval: boolean;
 }
