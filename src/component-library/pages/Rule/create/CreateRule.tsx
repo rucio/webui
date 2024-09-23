@@ -20,6 +20,7 @@ import {
     getEmptyOptionsErrors,
 } from '@/component-library/pages/Rule/create/stage-options/CreateRuleStageOptions';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { CreateRuleStageSummary } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummary';
 
 const PreviousButton = ({ activeIndex, setActiveIndex }: { activeIndex: number; setActiveIndex: React.Dispatch<React.SetStateAction<number>> }) => {
     const disabled = activeIndex === 0;
@@ -181,6 +182,7 @@ export const CreateRule = () => {
                     />
                 )}
                 {activeIndex === 2 && <CreateRuleStageOptions parameters={parameters} updateOptionValue={updateOptionValue} errors={optionsErrors} />}
+                {activeIndex === 3 && <CreateRuleStageSummary parameters={parameters} />}
             </div>
             <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
                 <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex} />

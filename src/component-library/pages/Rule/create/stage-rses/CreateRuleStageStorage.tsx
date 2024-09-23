@@ -18,14 +18,14 @@ import { RSESearchPanel } from '@/component-library/features/search/RSESearchPan
 
 const DEFAULT_EXPRESSION = '*';
 
-type CreateRuleStageStorage = {
+type CreateRuleStageStorageProps = {
     parameters: CreateRuleParameters;
     updateStorage: (storage: CreateRuleStorage) => void;
     updateNeedsApproval: (needsApproval: boolean) => void;
     updateAskApproval: (askApproval: boolean) => void;
 };
 
-export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
+export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
     const totalDataSize = props.parameters.dids.reduce((accumulator, current) => accumulator + current.bytes, 0);
     const selectedItems = props.parameters.rses;
 
