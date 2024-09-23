@@ -77,7 +77,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
                 </span>
             );
         }
-        return <InfoField className="whitespace-normal">{text}</InfoField>;
+        return <InfoField>{text}</InfoField>;
     };
 
     const getWarningField = () => {
@@ -92,7 +92,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorage) => {
                 </span>
             );
         }
-        return <WarningField className="whitespace-normal">{text}</WarningField>;
+        return <WarningField>{text}</WarningField>;
     };
 
     return (
