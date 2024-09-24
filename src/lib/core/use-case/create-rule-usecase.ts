@@ -66,7 +66,7 @@ export default class CreateRuleUseCase
             } else {
                 return {
                     status: 'error',
-                    errorMessage: `Received a DID of an unsupported type ${did.did_type}`,
+                    errorMessage: `Cannot ask for approving multiple DIDs when one of them has unsupported type ${did.did_type}`,
                     errorType: 'Request Type',
                     scope: '',
                     name: '',

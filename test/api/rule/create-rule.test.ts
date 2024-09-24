@@ -367,7 +367,7 @@ describe('Feature: CreateRule', () => {
             { scope: 'scope', name: 'dataset' },
         ];
 
-        // Should create one dataset to include all the files
+        // Should create one dataset to include all the files, and then a container to contain this dataset
         const validatedCreateRuleEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/rules/`,
             method: 'POST',
@@ -413,5 +413,39 @@ describe('Feature: CreateRule', () => {
 
         const viewModel: CreateRuleViewModel = res._getJSONData();
         expect(viewModel.status).toEqual('success');
+    });
+
+    it('Should not support multiple containers with approval', async () => {
+        const dids = [
+            { scope: 'scope', name: 'container1' },
+            { scope: 'scope', name: 'container2' },
+        ];
+
+        MockRucioServerFactory.createMockRucioServer(true, [
+            createRuleEndpoint,
+            getAccountInfoEndpoint(AccountType.USER),
+            getDIDInfoEndpoint('scope', 'container1', DIDType.CONTAINER),
+            getDIDInfoEndpoint('scope', 'container2', DIDType.CONTAINER),
+            getAddAttachDIDEndpoint(approvalUserScope),
+            getSetStatusDIDEndpoint(approvalUserScope, approvalDIDName),
+        ]);
+
+        const res = MockHttpStreamableResponseFactory.getMockResponse();
+
+        const createRuleController = appContainer.get<BaseController<CreateRuleControllerParameters, CreateRuleRequest>>(CONTROLLERS.CREATE_RULE);
+        const createRuleControllerParams: CreateRuleControllerParameters = {
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            response: res as unknown as NextApiResponse,
+            ...commonControllerParameters,
+            dids,
+            ask_approval: true,
+            grouping: 'ALL',
+        };
+
+        await createRuleController.execute(createRuleControllerParams);
+
+        const viewModel: CreateRuleViewModel = res._getJSONData();
+        expect(viewModel.status).toEqual('error');
+        expect(viewModel.message).toContain('Container');
     });
 });
