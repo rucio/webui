@@ -19,7 +19,7 @@ const KeyValueDIDs = ({dids}: { dids: ListDIDsViewModel[] }) => {
     const totalFiles = dids.reduce((previous, current) => previous + current.length, 0);
     const totalBytes = dids.reduce((previous, current) => previous + current.bytes, 0);
 
-    return <KeyValueWrapper className="overflow-x-auto">
+    return <KeyValueWrapper className="overflow-x-auto py-2">
         <KeyValueRow name="Total files">
             <Field>{totalFiles}</Field>
         </KeyValueRow>
@@ -30,7 +30,7 @@ const KeyValueDIDs = ({dids}: { dids: ListDIDsViewModel[] }) => {
 }
 
 const KeyValueOptions = ({parameters}: {parameters: CreateRuleParameters}) => {
-    return <KeyValueWrapper className="overflow-x-auto">
+    return <KeyValueWrapper className="overflow-x-auto py-2">
         <KeyValueRow name="Lifetime">
             <Field>{parameters.daysLifetime} days</Field>
         </KeyValueRow>
