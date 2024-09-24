@@ -33,6 +33,7 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
     const [columnDefs] = useState([
         {
             headerName: 'Identifier',
+            flex: 1,
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
             cellRenderer: (params: ICellRendererParams<ListDIDsViewModel>) => {
                 const did = params.data!;
