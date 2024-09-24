@@ -13,6 +13,8 @@ import { Container } from 'inversify';
 import CreateRuleUseCase from '@/lib/core/use-case/create-rule-usecase';
 
 import CreateRulePresenter from '@/lib/infrastructure/presenter/create-rule-presenter';
+import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
+import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
 
 export default class CreateRuleFeature extends BaseFeature<
     CreateRuleControllerParameters,
@@ -23,13 +25,15 @@ export default class CreateRuleFeature extends BaseFeature<
 > {
     constructor(appContainer: Container) {
         const ruleGateway = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
+        const accountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
+        const didGateway = appContainer.get<DIDGatewayOutputPort>(GATEWAYS.DID);
 
         const symbols: IOCSymbols = {
             CONTROLLER: CONTROLLERS.CREATE_RULE,
             USECASE_FACTORY: USECASE_FACTORY.CREATE_RULE,
             INPUT_PORT: INPUT_PORT.CREATE_RULE,
         };
-        const useCaseConstructorArgs = [ruleGateway];
+        const useCaseConstructorArgs = [ruleGateway, accountGateway, didGateway];
         super('CreateRule', CreateRuleController, CreateRuleUseCase, useCaseConstructorArgs, CreateRulePresenter, false, symbols);
     }
 }

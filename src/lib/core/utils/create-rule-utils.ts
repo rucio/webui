@@ -3,6 +3,9 @@ import { AccountRSELimitDTO, AccountRSEUsageDTO } from '../dto/account-dto';
 import { RSEDTO } from '../dto/rse-dto';
 import { DIDLong, DIDType, RSEAccountUsage } from '../entity/rucio';
 import { TAccountRSEUsageAndLimits, TDIDSummaryRow, TRSESummaryRow } from '../entity/rule-summary';
+import { BaseDTO } from '@/lib/sdk/dto';
+import { CreateRuleDTO } from '@/lib/core/dto/rule-dto';
+import { SetDIDStatusDTO } from '@/lib/core/dto/did-dto';
 
 /**
  * Creates a DID Summary Row for the DID Summary Table used to Create New Rules. bytes and requested_bytes are set to -1 if the DID is a derived DID.
@@ -145,5 +148,29 @@ export const getQuotaInfo = (
         bytes_remaining: bytesRemaining,
         has_quota: hasQuota,
         total_expected_usage: totalExpectedUsage,
+    };
+};
+
+export const buildIntermediateCreateRuleError = (errorDTO: BaseDTO, type: string): CreateRuleDTO => {
+    return {
+        status: 'error',
+        errorCode: errorDTO.errorCode,
+        errorMessage: errorDTO.errorMessage,
+        errorName: errorDTO.errorName,
+        errorType: type,
+        rule_ids: [],
+    };
+};
+
+export const buildIntermediateSetStatusError = (errorDTO: BaseDTO, type: string): SetDIDStatusDTO => {
+    return {
+        status: 'error',
+        errorCode: errorDTO.errorCode,
+        errorMessage: errorDTO.errorMessage,
+        errorName: errorDTO.errorName,
+        errorType: type,
+        scope: '',
+        name: '',
+        open: false,
     };
 };
