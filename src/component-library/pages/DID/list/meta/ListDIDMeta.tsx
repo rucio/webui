@@ -9,14 +9,16 @@ import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBad
 import { CopyableField } from '@/component-library/features/fields/CopyableField';
 import { DIDAvailabilityBadge } from '@/component-library/features/badges/DID/DIDAvailabilityBadge';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
-import {KeyValueLinkHeader} from "@/component-library/features/key-value/headers";
-import {KeyValueRow} from "@/component-library/features/key-value/KeyValueRow";
-import {KeyValueWrapper} from "@/component-library/features/key-value/KeyValueWrapper";
+import { KeyValueLinkHeader } from '@/component-library/features/key-value/headers';
+import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
+import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 
 const MetaHeader = ({ scope, name }: { scope: string; name: string }) => {
     return (
         <KeyValueLinkHeader href={`/did/page/${scope}/${name}`}>
-            <span>{scope}:{name}</span>
+            <span>
+                {scope}:{name}
+            </span>
         </KeyValueLinkHeader>
     );
 };
@@ -115,12 +117,7 @@ export const ListDIDMeta = ({ meta, isLoading, hasError }: ListDIDMetaProps) => 
     const showMeta = meta && !isLoading && !hasError;
 
     return (
-        <KeyValueWrapper
-            className={cn(
-                showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]',
-                'md:flex-1 overflow-auto',
-            )}
-        >
+        <KeyValueWrapper className={cn(showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]', 'md:flex-1 overflow-auto')}>
             {showMeta ? <MetaContents meta={meta} /> : <MetaStub isLoading={isLoading} hasError={hasError} />}
         </KeyValueWrapper>
     );

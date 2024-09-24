@@ -1,59 +1,59 @@
-import {CreateRuleParameters} from '@/lib/infrastructure/data/view-model/rule';
-import {InfoField} from '@/component-library/features/fields/InfoField';
-import {CreateRuleTableWrapper} from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
-import {
-    CreateRuleStageSummaryDataTable
-} from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryDataTable';
-import {
-    CreateRuleStageSummaryStorageTable
-} from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryStorageTable';
-import {ListDIDsViewModel} from "@/lib/infrastructure/data/view-model/list-did";
-import {KeyValueRow} from "@/component-library/features/key-value/KeyValueRow";
-import {Field} from "@/component-library/atoms/misc/Field";
-import {KeyValueWrapper} from "@/component-library/features/key-value/KeyValueWrapper";
-import {formatFileSize} from "@/component-library/features/utils/text-formatters";
-import Checkbox from "@/component-library/atoms/form/Checkbox";
-import {Heading} from "@/component-library/atoms/misc/Heading";
+import { CreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
+import { InfoField } from '@/component-library/features/fields/InfoField';
+import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
+import { CreateRuleStageSummaryDataTable } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryDataTable';
+import { CreateRuleStageSummaryStorageTable } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryStorageTable';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
+import { Field } from '@/component-library/atoms/misc/Field';
+import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
+import { formatFileSize } from '@/component-library/features/utils/text-formatters';
+import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Heading } from '@/component-library/atoms/misc/Heading';
 
-const KeyValueDIDs = ({dids}: { dids: ListDIDsViewModel[] }) => {
+const KeyValueDIDs = ({ dids }: { dids: ListDIDsViewModel[] }) => {
     const totalFiles = dids.reduce((previous, current) => previous + current.length, 0);
     const totalBytes = dids.reduce((previous, current) => previous + current.bytes, 0);
 
-    return <KeyValueWrapper className="overflow-x-auto py-2">
-        <KeyValueRow name="Total files">
-            <Field>{totalFiles}</Field>
-        </KeyValueRow>
-        <KeyValueRow name="Total size">
-            <Field>{formatFileSize(totalBytes)}</Field>
-        </KeyValueRow>
-    </KeyValueWrapper>;
-}
+    return (
+        <KeyValueWrapper className="overflow-x-auto py-2">
+            <KeyValueRow name="Total files">
+                <Field>{totalFiles}</Field>
+            </KeyValueRow>
+            <KeyValueRow name="Total size">
+                <Field>{formatFileSize(totalBytes)}</Field>
+            </KeyValueRow>
+        </KeyValueWrapper>
+    );
+};
 
-const KeyValueOptions = ({parameters}: {parameters: CreateRuleParameters}) => {
-    return <KeyValueWrapper className="overflow-x-auto py-2">
-        <KeyValueRow name="Lifetime">
-            <Field>{parameters.daysLifetime} days</Field>
-        </KeyValueRow>
-        <KeyValueRow name="Notifications">
-            <Checkbox checked={parameters.notify} />
-        </KeyValueRow>
-        <KeyValueRow name="Asynchronous">
-            <Checkbox checked={parameters.asynchronous} />
-        </KeyValueRow>
-        <KeyValueRow name="Group by">
-            <Field>{parameters.grouping}</Field>
-        </KeyValueRow>
-        <KeyValueRow name="Comment">
-            <Field>{parameters.comments}</Field>
-        </KeyValueRow>
-    </KeyValueWrapper>;
+const KeyValueOptions = ({ parameters }: { parameters: CreateRuleParameters }) => {
+    return (
+        <KeyValueWrapper className="overflow-x-auto py-2">
+            <KeyValueRow name="Lifetime">
+                <Field>{parameters.daysLifetime} days</Field>
+            </KeyValueRow>
+            <KeyValueRow name="Notifications">
+                <Checkbox checked={parameters.notify} />
+            </KeyValueRow>
+            <KeyValueRow name="Asynchronous">
+                <Checkbox checked={parameters.asynchronous} />
+            </KeyValueRow>
+            <KeyValueRow name="Group by">
+                <Field>{parameters.grouping}</Field>
+            </KeyValueRow>
+            <KeyValueRow name="Comment">
+                <Field>{parameters.comments}</Field>
+            </KeyValueRow>
+        </KeyValueWrapper>
+    );
 };
 
 type CreateRuleStageSummaryProps = {
     parameters: CreateRuleParameters;
 };
 
-export const CreateRuleStageSummary = ({parameters}: CreateRuleStageSummaryProps) => {
+export const CreateRuleStageSummary = ({ parameters }: CreateRuleStageSummaryProps) => {
     const getDefaultDataInfoField = () => {
         const plural = parameters.dids.length > 1 ? 's' : '';
 
@@ -86,7 +86,7 @@ export const CreateRuleStageSummary = ({parameters}: CreateRuleStageSummaryProps
 
     return (
         <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="DIDs" size="md"/>
+            <Heading text="DIDs" size="md" />
             {getDefaultDataInfoField()}
             {parameters.dids.some(did => did.open) && (
                 <InfoField>
@@ -97,16 +97,16 @@ export const CreateRuleStageSummary = ({parameters}: CreateRuleStageSummaryProps
                 </InfoField>
             )}
             <CreateRuleTableWrapper>
-                <CreateRuleStageSummaryDataTable rowData={parameters.dids} copies={parameters.copies}/>
+                <CreateRuleStageSummaryDataTable rowData={parameters.dids} copies={parameters.copies} />
             </CreateRuleTableWrapper>
-            <KeyValueDIDs dids={parameters.dids}/>
-            <Heading text="RSEs" size="md"/>
+            <KeyValueDIDs dids={parameters.dids} />
+            <Heading text="RSEs" size="md" />
             {getDefaultStorageInfoField()}
             <CreateRuleTableWrapper>
-                <CreateRuleStageSummaryStorageTable rowData={parameters.rses}/>
+                <CreateRuleStageSummaryStorageTable rowData={parameters.rses} />
             </CreateRuleTableWrapper>
-            <Heading text="Options" size="md"/>
-            <KeyValueOptions parameters={parameters}/>
+            <Heading text="Options" size="md" />
+            <KeyValueOptions parameters={parameters} />
         </div>
     );
 };
