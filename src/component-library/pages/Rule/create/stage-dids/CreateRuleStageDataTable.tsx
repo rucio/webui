@@ -39,6 +39,7 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
     const [columnDefs] = useState([
         {
             headerName: 'Identifier',
+            flex: 1,
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
             cellRenderer: (params: ICellRendererParams<SelectableDIDViewModel>) => {
                 const did = params.data!;

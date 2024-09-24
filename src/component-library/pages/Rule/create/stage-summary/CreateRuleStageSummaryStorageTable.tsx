@@ -24,6 +24,7 @@ export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTable
             headerName: 'Name',
             field: 'rse',
             minWidth: 250,
+            flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
