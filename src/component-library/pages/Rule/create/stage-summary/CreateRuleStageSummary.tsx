@@ -1,23 +1,58 @@
-import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
-import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
-import { DIDSearchPanel } from '@/component-library/features/search/DIDSearchPanel';
-import { CreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
-import { CreateRuleStageDataTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataTable';
-import { cn } from '@/component-library/utils';
-import { formatFileSize } from '@/component-library/features/utils/text-formatters';
-import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
-import { InfoField } from '@/component-library/features/fields/InfoField';
-import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
-import { CreateRuleStageSummaryDataTable } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryDataTable';
-import { Heading } from '@/component-library/atoms/misc/Heading';
-import { CreateRuleStageSummaryStorageTable } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryStorageTable';
+import {CreateRuleParameters} from '@/lib/infrastructure/data/view-model/rule';
+import {InfoField} from '@/component-library/features/fields/InfoField';
+import {CreateRuleTableWrapper} from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
+import {
+    CreateRuleStageSummaryDataTable
+} from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryDataTable';
+import {
+    CreateRuleStageSummaryStorageTable
+} from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryStorageTable';
+import {ListDIDsViewModel} from "@/lib/infrastructure/data/view-model/list-did";
+import {KeyValueRow} from "@/component-library/features/key-value/KeyValueRow";
+import {Field} from "@/component-library/atoms/misc/Field";
+import {KeyValueWrapper} from "@/component-library/features/key-value/KeyValueWrapper";
+import {formatFileSize} from "@/component-library/features/utils/text-formatters";
+import Checkbox from "@/component-library/atoms/form/Checkbox";
+
+const KeyValueDIDs = ({dids}: { dids: ListDIDsViewModel[] }) => {
+    const totalFiles = dids.reduce((previous, current) => previous + current.length, 0);
+    const totalBytes = dids.reduce((previous, current) => previous + current.bytes, 0);
+
+    return <KeyValueWrapper className="overflow-x-auto">
+        <KeyValueRow name="Total files">
+            <Field>{totalFiles}</Field>
+        </KeyValueRow>
+        <KeyValueRow name="Total size">
+            <Field>{formatFileSize(totalBytes)}</Field>
+        </KeyValueRow>
+    </KeyValueWrapper>;
+}
+
+const KeyValueOptions = ({parameters}: {parameters: CreateRuleParameters}) => {
+    return <KeyValueWrapper className="overflow-x-auto">
+        <KeyValueRow name="Lifetime">
+            <Field>{parameters.daysLifetime} days</Field>
+        </KeyValueRow>
+        <KeyValueRow name="Notifications">
+            <Checkbox checked={parameters.notify} />
+        </KeyValueRow>
+        <KeyValueRow name="Asynchronous">
+            <Checkbox checked={parameters.asynchronous} />
+        </KeyValueRow>
+        <KeyValueRow name="Group by">
+            <Field>{parameters.grouping}</Field>
+        </KeyValueRow>
+        <KeyValueRow name="Comment">
+            <Field>{parameters.comments}</Field>
+        </KeyValueRow>
+    </KeyValueWrapper>;
+};
 
 type CreateRuleStageSummaryProps = {
     parameters: CreateRuleParameters;
 };
 
-export const CreateRuleStageSummary = ({ parameters }: CreateRuleStageSummaryProps) => {
+export const CreateRuleStageSummary = ({parameters}: CreateRuleStageSummaryProps) => {
     const getDefaultDataInfoField = () => {
         const plural = parameters.dids.length > 1 ? 's' : '';
 
@@ -60,12 +95,14 @@ export const CreateRuleStageSummary = ({ parameters }: CreateRuleStageSummaryPro
                 </InfoField>
             )}
             <CreateRuleTableWrapper>
-                <CreateRuleStageSummaryDataTable rowData={parameters.dids} copies={parameters.copies} />
+                <CreateRuleStageSummaryDataTable rowData={parameters.dids} copies={parameters.copies}/>
             </CreateRuleTableWrapper>
+            <KeyValueDIDs dids={parameters.dids}/>
             {getDefaultStorageInfoField()}
             <CreateRuleTableWrapper>
-                <CreateRuleStageSummaryStorageTable rowData={parameters.rses} />
+                <CreateRuleStageSummaryStorageTable rowData={parameters.rses}/>
             </CreateRuleTableWrapper>
+            <KeyValueOptions parameters={parameters}/>
         </div>
     );
 };
