@@ -9,7 +9,7 @@ import {
     AttachDIDDTO as AttachDIDsDTO,
     SetDIDStatusDTO,
 } from '../../dto/did-dto';
-import { DID, DIDType } from '../../entity/rucio';
+import { DIDShort, DIDType } from '../../entity/rucio';
 
 /**
  * Output port for the DID Gateway, responsible for defining the methods that the Gateway will use to interact with the Rucio Server.
@@ -50,7 +50,7 @@ export default interface DIDGatewayOutputPort {
      * @param name The name of the parent DID
      * @param dids A list of DIDs to attach to the parent DID
      */
-    attachDIDs(rucioAuthToken: string, scope: string, name: string, dids: DID[]): Promise<AttachDIDsDTO>;
+    attachDIDs(rucioAuthToken: string, scope: string, name: string, dids: DIDShort[]): Promise<AttachDIDsDTO>;
 
     /**
      * Retrieves a DID from the Rucio Server.

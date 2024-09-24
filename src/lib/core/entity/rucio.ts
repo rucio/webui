@@ -31,10 +31,14 @@ export type AccountInfo = {
     suspendedAt?: DateISO;
 };
 
-// results of core::did::list_dids (with `long` option)
-export type DID = {
-    name: string;
+// Sent to certain endpoints
+export type DIDShort = {
     scope: string;
+    name: string;
+};
+
+// results of core::did::list_dids (with `long` option)
+export type DID = DIDShort & {
     did_type: DIDType;
 };
 
@@ -181,10 +185,7 @@ export type Rule = {
 
 // TODO: add explanatory comments
 export type RuleCreationParameters = {
-    dids: {
-        scope: string;
-        name: string;
-    }[];
+    dids: DIDShort[];
     copies: number;
     rse_expression: string;
     account: string;

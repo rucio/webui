@@ -1,15 +1,15 @@
 import { AttachDIDDTO } from '@/lib/core/dto/did-dto';
-import { DID } from '@/lib/core/entity/rucio';
 import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
+import { DIDShort } from '@/lib/core/entity/rucio';
 
 export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
     constructor(
         private readonly rucioAuthToken: string,
         private readonly scope: string,
         private readonly name: string,
-        private readonly dids: DID[],
+        private readonly dids: DIDShort[],
     ) {
         super(true);
     }
