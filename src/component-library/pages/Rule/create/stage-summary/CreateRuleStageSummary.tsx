@@ -13,6 +13,7 @@ import {Field} from "@/component-library/atoms/misc/Field";
 import {KeyValueWrapper} from "@/component-library/features/key-value/KeyValueWrapper";
 import {formatFileSize} from "@/component-library/features/utils/text-formatters";
 import Checkbox from "@/component-library/atoms/form/Checkbox";
+import {Heading} from "@/component-library/atoms/misc/Heading";
 
 const KeyValueDIDs = ({dids}: { dids: ListDIDsViewModel[] }) => {
     const totalFiles = dids.reduce((previous, current) => previous + current.length, 0);
@@ -85,6 +86,7 @@ export const CreateRuleStageSummary = ({parameters}: CreateRuleStageSummaryProps
 
     return (
         <div className="flex flex-col space-y-3 w-full grow">
+            <Heading text="DIDs" size="md"/>
             {getDefaultDataInfoField()}
             {parameters.dids.some(did => did.open) && (
                 <InfoField>
@@ -98,10 +100,12 @@ export const CreateRuleStageSummary = ({parameters}: CreateRuleStageSummaryProps
                 <CreateRuleStageSummaryDataTable rowData={parameters.dids} copies={parameters.copies}/>
             </CreateRuleTableWrapper>
             <KeyValueDIDs dids={parameters.dids}/>
+            <Heading text="RSEs" size="md"/>
             {getDefaultStorageInfoField()}
             <CreateRuleTableWrapper>
                 <CreateRuleStageSummaryStorageTable rowData={parameters.rses}/>
             </CreateRuleTableWrapper>
+            <Heading text="Options" size="md"/>
             <KeyValueOptions parameters={parameters}/>
         </div>
     );
