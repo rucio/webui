@@ -1,7 +1,7 @@
-import {cn} from "@/component-library/utils";
-import Link from "next/link";
-import {HiExternalLink} from "react-icons/hi";
-import {ReactNode} from "react";
+import { cn } from '@/component-library/utils';
+import Link from 'next/link';
+import { HiExternalLink } from 'react-icons/hi';
+import { ReactNode } from 'react';
 
 const headerCommonClasses = cn(
     'h-[52px] px-4 py-2 space-x-2',
@@ -12,25 +12,15 @@ const headerCommonClasses = cn(
     'whitespace-nowrap',
 );
 
-export const KeyValueLinkHeader = ({href, children}: { href: string; children: ReactNode }) => {
+export const KeyValueLinkHeader = ({ href, children }: { href: string; children: ReactNode }) => {
     return (
-        <Link
-            href={href}
-            className={cn(
-                headerCommonClasses,
-                'hover:text-brand-600 dark:hover:text-brand-400',
-            )}
-        >
-            <HiExternalLink className="h-5 w-5"/>
+        <Link href={href} className={cn(headerCommonClasses, 'hover:text-brand-600 dark:hover:text-brand-400')}>
+            <HiExternalLink className="h-5 w-5" />
             {children}
         </Link>
     );
 };
 
-export const KeyValueHeader = ({href, children}: { href: string; children: ReactNode }) => {
-    return (
-        <div className={headerCommonClasses}>
-            {children}
-        </div>
-    );
+export const KeyValueHeader = ({ href, children }: { href: string; children: ReactNode }) => {
+    return <div className={headerCommonClasses}>{children}</div>;
 };
