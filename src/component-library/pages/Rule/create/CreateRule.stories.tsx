@@ -3,8 +3,11 @@ import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/T
 import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
 import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
-import { fixtureDIDLongViewModel, fixtureRSEAccountUsageLimitViewModel } from '@/test/fixtures/table-fixtures';
+import { fixtureDIDLongViewModel } from '@/test/fixtures/table-fixtures';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { getMockSingleEndpoint } from '@/test/mocks/handlers/single-handlers';
+import { CreateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 
 export default {
     title: 'Components/Pages/Rule/Create',
@@ -14,11 +17,23 @@ export default {
     },
 } as Meta<typeof CreateRule>;
 
-const Template: StoryFn<typeof CreateRule> = () => (
-    <ToastedTemplate>
-        <CreateRule />
-    </ToastedTemplate>
-);
+const Template: StoryFn<typeof CreateRule> = () => {
+    const queryClient = new QueryClient();
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ToastedTemplate>
+                <CreateRule
+                    getSavedParameters={() => undefined}
+                    getSavedIndex={() => undefined}
+                    setSavedIndex={() => {}}
+                    setSavedParameters={() => {}}
+                    removeSavedParameters={() => {}}
+                    removeSavedIndex={() => {}}
+                />
+            </ToastedTemplate>
+        </QueryClientProvider>
+    );
+};
 
 const staticRses: RSEAccountUsageLimitViewModel[] = [
     {
@@ -71,6 +86,17 @@ Regular.decorators = [
             data: staticRses,
             delay: 1,
             method: 'POST',
+        }),
+        getMockSingleEndpoint('/api/feature/create-rule', {
+            getDelay: () => 500,
+            method: 'POST',
+            getData: () => {
+                const viewModel: CreateRuleViewModel = {
+                    rule_ids: ['test'],
+                    status: 'success',
+                };
+                return viewModel;
+            },
         }),
     ]),
 ];

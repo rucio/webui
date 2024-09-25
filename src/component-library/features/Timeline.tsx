@@ -6,7 +6,7 @@ import { Divider } from '@/component-library/atoms/misc/Divider';
 interface TimelineProps {
     steps: string[];
     activeIndex: number;
-    onSwitch: (idx: number) => void;
+    onSwitch?: (idx: number) => void;
 }
 
 const Timeline = ({ steps, activeIndex, onSwitch }: TimelineProps) => {
@@ -23,7 +23,7 @@ const Timeline = ({ steps, activeIndex, onSwitch }: TimelineProps) => {
                     color = 'bg-neutral-0 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100';
                 }
 
-                const switchActive = () => onSwitch(index);
+                const isClickable = index < activeIndex && onSwitch;
 
                 return (
                     <React.Fragment key={step}>
@@ -31,7 +31,7 @@ const Timeline = ({ steps, activeIndex, onSwitch }: TimelineProps) => {
                             <CircleWithText
                                 className={cn('bg-opacity-80 font-semibold', color)}
                                 text={indexStr}
-                                onClick={index < activeIndex ? switchActive : undefined}
+                                onClick={isClickable ? () => onSwitch(index) : undefined}
                             />
                             <span className="text-neutral-900 dark:text-neutral-100 hidden md:inline">{step}</span>
                         </div>

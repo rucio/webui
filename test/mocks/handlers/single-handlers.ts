@@ -3,6 +3,7 @@ import { DefaultBodyType, http, HttpResponse, StrictRequest } from 'msw';
 export interface MockSingleOptions {
     getData: () => any;
     getDelay?: () => number;
+    method?: 'GET' | 'POST';
     isRequestValid?: (request: StrictRequest<DefaultBodyType>) => boolean;
 }
 
@@ -11,7 +12,7 @@ const singleHeaders = {
 };
 
 export const getMockSingleEndpoint = (url: string, options: MockSingleOptions) => {
-    return http.get(url, async ({ request }) => {
+    const resolver = async ({ request }: { request: StrictRequest<DefaultBodyType> }) => {
         const { getData, getDelay, isRequestValid } = options;
         if (isRequestValid && !isRequestValid(request)) {
             return HttpResponse.json(
@@ -26,6 +27,13 @@ export const getMockSingleEndpoint = (url: string, options: MockSingleOptions) =
         if (getDelay) {
             await new Promise(resolve => setTimeout(resolve, getDelay()));
         }
+
         return new Response(responseJson, { headers: singleHeaders });
-    });
+    };
+
+    if (options.method === 'POST') {
+        return http.post(url, resolver);
+    } else {
+        return http.get(url, resolver);
+    }
 };

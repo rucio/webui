@@ -11,7 +11,6 @@ import Timeline from '@/component-library/features/Timeline';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { Button } from '@/component-library/atoms/form/button';
 import { CreateRuleStageData } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageData';
-import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { CreateRuleStageStorage } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorage';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import {
@@ -21,6 +20,7 @@ import {
 } from '@/component-library/pages/Rule/create/stage-options/CreateRuleStageOptions';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { CreateRuleStageSummary } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummary';
+import { CreateRuleStageSubmission } from '@/component-library/pages/Rule/create/stage-submission/CreateRuleStageSubmission';
 
 const PreviousButton = ({ activeIndex, setActiveIndex }: { activeIndex: number; setActiveIndex: React.Dispatch<React.SetStateAction<number>> }) => {
     const disabled = activeIndex === 0;
@@ -47,7 +47,7 @@ const NextButton = ({
     const disabled = activeIndex === stepsLength - 1 || isStepIncomplete;
 
     return (
-        <Button
+        <Button // TODO: pass account info
             variant="neutral"
             className="w-full sm:w-48 ml-auto justify-between"
             disabled={disabled}
@@ -59,10 +59,16 @@ const NextButton = ({
     );
 };
 
-const PARAMS_KEY = 'create_rule_parameters';
-const ACTIVE_KEY = 'create_rule_active';
+interface CreateRuleProps {
+    getSavedParameters: () => CreateRuleParameters | undefined;
+    getSavedIndex: () => number | undefined;
+    setSavedParameters: (parameters: CreateRuleParameters) => void;
+    setSavedIndex: (activeIndex: number) => void;
+    removeSavedParameters: () => void;
+    removeSavedIndex: () => void;
+}
 
-export const CreateRule = () => {
+export const CreateRule = (props: CreateRuleProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [parameters, setParameters] = useState<CreateRuleParameters>(getEmptyCreateRuleParameters());
     const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -88,16 +94,12 @@ export const CreateRule = () => {
     };
 
     useEffect(() => {
-        const initialParametersString = localStorage.getItem(PARAMS_KEY);
-        const initialActiveString = localStorage.getItem(ACTIVE_KEY);
+        const savedParameters = props.getSavedParameters();
+        if (savedParameters) setParameters(savedParameters);
 
-        if (initialParametersString) {
-            setParameters(JSON.parse(initialParametersString));
-        }
-
-        if (initialActiveString) {
-            setActiveIndex(parseInt(initialActiveString));
-        }
+        const savedIndex = props.getSavedIndex();
+        // TODO: check for range
+        if (savedIndex) setActiveIndex(savedIndex);
 
         setIsLoading(false);
     }, []);
@@ -105,12 +107,13 @@ export const CreateRule = () => {
     // Effects to sync parameters and activeIndex with localStorage
     useEffect(() => {
         if (isLoading) return;
-        localStorage.setItem(PARAMS_KEY, JSON.stringify(parameters));
+        props.setSavedParameters(parameters);
         checkOptionsErrors();
     }, [parameters]);
     useEffect(() => {
-        if (isLoading) return;
-        localStorage.setItem(ACTIVE_KEY, activeIndex.toString());
+        // Don't save submission
+        if (isLoading || activeIndex === 4) return;
+        props.setSavedIndex(activeIndex);
     }, [activeIndex]);
 
     // Utility to partially update parameters
@@ -144,16 +147,20 @@ export const CreateRule = () => {
         }));
     };
 
-    // TODO: refactor for being reused
     const isStepIncomplete = (): boolean => {
-        if (activeIndex === 0) {
-            return parameters.dids.length === 0;
-        } else if (activeIndex === 1) {
-            return parameters.rses.length === 0 || (parameters.needsApproval && !parameters.askApproval);
-        } else if (activeIndex === 2) {
-            return Object.values(optionsErrors).some(error => error);
+        let isIncomplete = false;
+
+        if (activeIndex >= 0) {
+            isIncomplete = isIncomplete || parameters.dids.length === 0;
         }
-        return true;
+        if (activeIndex >= 1) {
+            isIncomplete = isIncomplete || parameters.rses.length === 0 || (parameters.needsApproval && !parameters.askApproval);
+        }
+        if (activeIndex >= 2) {
+            isIncomplete = isIncomplete || Object.values(optionsErrors).some(error => error);
+        }
+
+        return isIncomplete;
     };
 
     const steps = ['DIDs', 'RSEs', 'Options', 'Summary', 'Results'];
@@ -166,11 +173,25 @@ export const CreateRule = () => {
         );
     }
 
+    const getPaginationPanel = () => {
+        return (
+            <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
+                <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+                <NextButton
+                    activeIndex={activeIndex}
+                    setActiveIndex={setActiveIndex}
+                    stepsLength={steps.length}
+                    isStepIncomplete={isStepIncomplete()}
+                />
+            </div>
+        );
+    };
+
     // Keep stage DIDs rendered, as it may contain large streamed data
     return (
         <div className="flex flex-col space-y-3 w-full grow">
             <Heading text="New Rule" />
-            <Timeline steps={steps} activeIndex={activeIndex} onSwitch={setActiveIndex} />
+            <Timeline steps={steps} activeIndex={activeIndex} onSwitch={activeIndex !== 4 ? setActiveIndex : undefined} />
             <div>
                 <CreateRuleStageData visible={activeIndex === 0} parameters={parameters} addDID={addDID} removeDID={removeDID} />
                 {activeIndex === 1 && (
@@ -184,15 +205,16 @@ export const CreateRule = () => {
                 {activeIndex === 2 && <CreateRuleStageOptions parameters={parameters} updateOptionValue={updateOptionValue} errors={optionsErrors} />}
                 {activeIndex === 3 && <CreateRuleStageSummary parameters={parameters} />}
             </div>
-            <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
-                <PreviousButton activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
-                <NextButton
-                    activeIndex={activeIndex}
-                    setActiveIndex={setActiveIndex}
-                    stepsLength={steps.length}
-                    isStepIncomplete={isStepIncomplete()}
+            {activeIndex === 4 && (
+                <CreateRuleStageSubmission
+                    parameters={parameters}
+                    removeSaved={() => {
+                        props.removeSavedIndex();
+                        props.removeSavedParameters();
+                    }}
                 />
-            </div>
+            )}
+            {activeIndex !== 4 && getPaginationPanel()}
         </div>
     );
 };
