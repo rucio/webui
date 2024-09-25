@@ -84,6 +84,7 @@ export function convertToRuleDTO(rule: TRucioRule): RuleDTO {
     return {
         status: 'success',
         id: rule.id,
+        scope: rule.scope,
         name: rule.name,
         account: rule.account,
         rse_expression: rule.rse_expression,
@@ -108,6 +109,7 @@ export function convertToRuleReplicaLockDTO(ruleReplicaLockState: TRucioRuleRepl
 export function getEmptyRuleDTO(): RuleDTO {
     return {
         status: 'error',
+        scope: '',
         id: '',
         name: '',
         account: '',

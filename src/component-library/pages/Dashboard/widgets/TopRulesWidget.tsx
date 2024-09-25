@@ -29,7 +29,7 @@ const LinkTick = (props: any) => {
 
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-        const { locksOk, locksReplicating, locksStuck, name, rseExpression } = payload[0].payload;
+        const { locksOk, locksReplicating, locksStuck, name, scope, rseExpression } = payload[0].payload;
 
         return (
             <KeyValueWrapper className="p-2 space-y-2 text-neutral-900 dark:text-neutral-100">
@@ -38,7 +38,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                         <HiExternalLink />
                         <span>{label}</span>
                     </div>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">For {name}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                        For {scope}:{name}
+                    </p>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400">On {rseExpression}</p>
                 </div>
 
@@ -75,7 +77,7 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
 
         return {
             id: rule.id,
-            //scope: rule.scope,
+            scope: rule.scope,
             name: rule.name,
             rseExpression: rule.rse_expression,
             locksOkPercentage: locksOkPercentage,
