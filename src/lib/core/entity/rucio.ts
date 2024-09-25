@@ -171,6 +171,7 @@ export type RulePageLockEntry = {
 
 export type Rule = {
     id: string;
+    scope: string;
     name: string;
     account: string;
     rse_expression: string;

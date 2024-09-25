@@ -5,7 +5,7 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { DefaultTextFilterParams, DefaultDateFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
-import { GridReadyEvent, ValueFormatterParams } from 'ag-grid-community';
+import { GridReadyEvent, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
@@ -33,8 +33,10 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             cellRenderer: ClickableId,
         },
         {
-            headerName: 'Name',
-            field: 'name',
+            headerName: 'DID',
+            valueGetter: (params: ValueGetterParams<RuleViewModel>) => {
+                return params.data?.scope + ':' + params.data?.name;
+            },
             minWidth: 150,
             flex: 1,
             filter: true,
