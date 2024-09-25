@@ -268,7 +268,7 @@ export function fixtureRSEAttributeViewModel(): RSEAttributeViewModel {
 export function fixtureRuleViewModel(): RuleViewModel {
     return {
         ...mockBaseVM(),
-        id: faker.string.uuid(),
+        id: faker.string.uuid().replace(/-/g, ''),
         name: faker.lorem.words(3).replace(/\s/g, '.'),
         account: faker.internet.userName(),
         rse_expression: createRSEExpression(),

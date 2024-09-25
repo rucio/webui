@@ -827,6 +827,10 @@ html {
   height: 3rem;
 }
 
+.h-14 {
+  height: 3.5rem;
+}
+
 .h-16 {
   height: 4rem;
 }
@@ -885,6 +889,10 @@ html {
 
 .h-\[450px\] {
   height: 450px;
+}
+
+.h-\[500px\] {
+  height: 500px;
 }
 
 .h-\[52px\] {
@@ -1031,6 +1039,10 @@ html {
 
 .min-w-\[10rem\] {
   min-width: 10rem;
+}
+
+.min-w-\[700px\] {
+  min-width: 700px;
 }
 
 .min-w-\[8rem\] {
@@ -1242,6 +1254,12 @@ html {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.25rem * var(--tw-space-x-reverse));
   margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-x-10 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(2.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(2.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-16 > :not([hidden]) ~ :not([hidden]) {
@@ -1875,6 +1893,10 @@ html {
   --tw-bg-opacity: 0.6;
 }
 
+.bg-opacity-70 {
+  --tw-bg-opacity: 0.7;
+}
+
 .bg-opacity-80 {
   --tw-bg-opacity: 0.8;
 }
@@ -1893,6 +1915,10 @@ html {
 
 .p-2 {
   padding: 0.5rem;
+}
+
+.p-3 {
+  padding: 0.75rem;
 }
 
 .p-4 {
@@ -3483,11 +3509,6 @@ html {
 
 .dark .dark\:hover\:bg-opacity-70:hover {
   --tw-bg-opacity: 0.7;
-}
-
-.dark .dark\:hover\:text-base-error-200:hover {
-  --tw-text-opacity: 1;
-  color: rgb(254 202 202 / var(--tw-text-opacity));
 }
 
 .dark .dark\:hover\:text-brand-300:hover {
