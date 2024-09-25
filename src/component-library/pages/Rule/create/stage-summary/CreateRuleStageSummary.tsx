@@ -30,21 +30,27 @@ const KeyValueDIDs = ({ dids }: { dids: ListDIDsViewModel[] }) => {
 const KeyValueOptions = ({ parameters }: { parameters: CreateRuleParameters }) => {
     return (
         <KeyValueWrapper className="overflow-x-auto py-2">
-            {parameters.daysLifetime && <KeyValueRow name="Lifetime">
-                <Field>{parameters.daysLifetime} days</Field>
-            </KeyValueRow>}
+            {parameters.daysLifetime && (
+                <KeyValueRow name="Lifetime">
+                    <Field>{parameters.daysLifetime} days</Field>
+                </KeyValueRow>
+            )}
             <KeyValueRow name="Notifications">
                 <Checkbox checked={parameters.notify} />
             </KeyValueRow>
             <KeyValueRow name="Asynchronous">
                 <Checkbox checked={parameters.asynchronous} />
             </KeyValueRow>
-            {parameters.grouping && <KeyValueRow name="Group by">
-                <Field>{parameters.grouping}</Field>
-            </KeyValueRow>}
-            {parameters.comments && <KeyValueRow name="Comment">
-                <Field>{parameters.comments}</Field>
-            </KeyValueRow>}
+            {parameters.grouping && (
+                <KeyValueRow name="Group by">
+                    <Field>{parameters.grouping}</Field>
+                </KeyValueRow>
+            )}
+            {parameters.comments && (
+                <KeyValueRow name="Comment">
+                    <Field>{parameters.comments}</Field>
+                </KeyValueRow>
+            )}
         </KeyValueWrapper>
     );
 };

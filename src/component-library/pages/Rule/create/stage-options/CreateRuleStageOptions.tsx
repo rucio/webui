@@ -1,17 +1,10 @@
-import {CreateRuleGrouping, CreateRuleOptions, CreateRuleParameters} from '@/lib/infrastructure/data/view-model/rule';
-import {cn} from '@/component-library/utils';
-import React, {ChangeEvent, FormEvent} from 'react';
-import {Input, Textarea} from '@/component-library/atoms/form/input';
-import {LabeledCheckbox} from '@/component-library/features/form/LabeledCheckbox';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/component-library/atoms/form/select';
-import {WarningField} from '@/component-library/features/fields/WarningField';
+import { CreateRuleGrouping, CreateRuleOptions, CreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
+import { cn } from '@/component-library/utils';
+import React, { ChangeEvent, FormEvent } from 'react';
+import { Input, Textarea } from '@/component-library/atoms/form/input';
+import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
+import { WarningField } from '@/component-library/features/fields/WarningField';
 
 interface FieldWithLabelProps {
     label: string;
@@ -19,7 +12,7 @@ interface FieldWithLabelProps {
     className?: string;
 }
 
-const InputWithLabel: React.FC<FieldWithLabelProps> = ({label, children, className}) => {
+const InputWithLabel: React.FC<FieldWithLabelProps> = ({ label, children, className }) => {
     return (
         <div className={cn('space-y-1', className)}>
             <label className="text-neutral-900 dark:text-neutral-100">{label}</label>
@@ -56,7 +49,7 @@ type CreateRuleStageOptionsProps = {
 
 const UNDEFINED_GROUPING = 'undefined';
 
-export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: CreateRuleStageOptionsProps) => {
+export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }: CreateRuleStageOptionsProps) => {
     const onLifetimeInput = (event: FormEvent<HTMLInputElement>) => {
         let value;
         if (event.currentTarget.validity.valid) {
@@ -82,15 +75,13 @@ export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: 
     return (
         <div className="flex flex-col space-y-5 w-full grow">
             <InputWithLabel label="Copies">
-                <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length}
-                       defaultValue={defaultCopies}/>
+                <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length} defaultValue={defaultCopies} />
             </InputWithLabel>
             <InputWithLabel label="Lifetime (days)">
-                <Input onInput={onLifetimeInput} type="number" min="1" defaultValue={getDefaultLifetime()}/>
+                <Input onInput={onLifetimeInput} type="number" min="1" defaultValue={getDefaultLifetime()} />
             </InputWithLabel>
             <InputWithLabel label="Comments">
-                <Textarea onChange={event => updateOptionValue('comments', event.target.value)}
-                          defaultValue={parameters.comments}/>
+                <Textarea onChange={event => updateOptionValue('comments', event.target.value)} defaultValue={parameters.comments} />
             </InputWithLabel>
             <LabeledCheckbox
                 checked={parameters.notify}
@@ -100,13 +91,13 @@ export const CreateRuleStageOptions = ({parameters, updateOptionValue, errors}: 
             <InputWithLabel label="Grouping">
                 <Select
                     onValueChange={value => {
-                        const grouping = value === UNDEFINED_GROUPING ? undefined : value as CreateRuleGrouping;
+                        const grouping = value === UNDEFINED_GROUPING ? undefined : (value as CreateRuleGrouping);
                         updateOptionValue('grouping', grouping);
                     }}
                     defaultValue={parameters.grouping ?? UNDEFINED_GROUPING}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder="Grouping"/>
+                        <SelectValue placeholder="Grouping" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
