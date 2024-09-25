@@ -9,6 +9,8 @@ import { LockState } from '@/lib/core/entity/rucio';
 import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
 import CircleWithText from '@/component-library/atoms/misc/CircleWithText';
 import { cn } from '@/component-library/utils';
+import { InfoField } from '@/component-library/features/fields/InfoField';
+import { WarningField } from '@/component-library/features/fields/WarningField';
 
 const openRule = (id: string) => {
     window.open(`/rule/page/${id}`, '_blank');
@@ -171,7 +173,7 @@ const CustomLegend = () => {
 };
 
 interface TopRulesWidgetProps {
-    rules: RuleViewModel[];
+    rules?: RuleViewModel[];
     isLoading: boolean;
     errorMessage?: string;
 }
@@ -179,7 +181,7 @@ interface TopRulesWidgetProps {
 export const TopRulesWidget = ({ rules, isLoading, errorMessage }: TopRulesWidgetProps) => {
     // Take top 10 latest rules
     const displayedRules = rules
-        .filter(rule => rule.locks_stuck_cnt + rule.locks_replicating_cnt + rule.locks_ok_cnt > 0)
+        ?.filter(rule => rule.locks_stuck_cnt + rule.locks_replicating_cnt + rule.locks_ok_cnt > 0)
         .sort((a, b) => {
             const dateA = new Date(a.created_at);
             const dateB = new Date(b.created_at);
@@ -187,14 +189,27 @@ export const TopRulesWidget = ({ rules, isLoading, errorMessage }: TopRulesWidge
         })
         .slice(0, 10);
 
+    const hasRules = displayedRules && displayedRules.length !== 0;
+    const isResultEmpty = !hasRules && !errorMessage && !isLoading;
+
     return (
         <KeyValueWrapper className="w-full p-3 overflow-x-auto">
             <Heading text="Locks of latest rules" size="md" />
             <div className="flex min-w-[700px] h-[500px] items-center justify-center">
-                {displayedRules.length !== 0 && <RuleBarChart rules={displayedRules} />}
+                {isResultEmpty && (
+                    <InfoField>
+                        <span>No rules to show</span>
+                    </InfoField>
+                )}
+                {errorMessage && (
+                    <WarningField>
+                        <span>{errorMessage}</span>
+                    </WarningField>
+                )}
+                {hasRules && displayedRules.length !== 0 && <RuleBarChart rules={displayedRules} />}
                 {isLoading && <LoadingSpinner />}
             </div>
-            {displayedRules.length !== 0 && <CustomLegend />}
+            {hasRules && <CustomLegend />}
         </KeyValueWrapper>
     );
 };

@@ -6,7 +6,7 @@ import { Heading } from '@/component-library/atoms/misc/Heading';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { AccountRoleBadge } from '@/component-library/features/badges/account/AccountRoleBadge';
 import { TopRulesWidget } from '@/component-library/pages/Dashboard/widgets/TopRulesWidget';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import useStreamReader, { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 
@@ -51,23 +51,34 @@ const AccountHeading = () => {
 };
 
 const RulesView = () => {
-    const [rules, setRules] = useState<RuleViewModel[]>([]);
+    const rulesBuffer = useRef<RuleViewModel[] | undefined>([]);
+    const [rules, setRules] = useState<RuleViewModel[]>();
     const { start, stop, error, status } = useStreamReader<RuleViewModel>();
 
     useEffect(() => {
-        setTimeout(() => {
-            start({
-                url: '/api/feature/list-rules?scope=*',
-                onData: data => {
-                    setRules(prevState => [...prevState, ...data]);
-                },
-            });
-        }, 1000);
+        // TODO: handle error view models
+        start({
+            url: '/api/feature/list-rules?scope=*',
+            onData: data => {
+                if (!rulesBuffer.current) {
+                    rulesBuffer.current = data;
+                } else {
+                    rulesBuffer.current.push(...data);
+                }
+            },
+        });
+        rulesBuffer.current = [];
     }, []);
 
-    useEffect(() => {}, [status]);
+    useEffect(() => {
+        if (status === StreamingStatus.STOPPED && rulesBuffer.current) {
+            setRules(rulesBuffer.current);
+        }
+    }, [status]);
 
-    return <TopRulesWidget rules={rules} isLoading={status === StreamingStatus.RUNNING} errorMessage={error?.message} />;
+    const isLoading = (!rules && !error) || status === StreamingStatus.RUNNING;
+
+    return <TopRulesWidget rules={rules} isLoading={isLoading} errorMessage={error?.message} />;
 };
 
 export const Dashboard = () => {
