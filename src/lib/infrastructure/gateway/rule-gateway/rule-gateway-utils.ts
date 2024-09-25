@@ -81,6 +81,8 @@ function getReplicaLockState(state: string): LockState {
 }
 
 export function convertToRuleDTO(rule: TRucioRule): RuleDTO {
+    const millisecondsRemaining = rule.expires_at ? new Date(rule.expires_at).getTime() - Date.now() : 0;
+
     return {
         status: 'success',
         id: rule.id,
@@ -89,7 +91,8 @@ export function convertToRuleDTO(rule: TRucioRule): RuleDTO {
         account: rule.account,
         rse_expression: rule.rse_expression,
         created_at: rule.created_at,
-        remaining_lifetime: rule.expires_at ? new Date(rule.expires_at).getTime() - Date.now() : 0,
+        // Convert to seconds
+        remaining_lifetime: millisecondsRemaining / 1000,
         state: getRuleState(rule.state),
         locks_ok_cnt: rule.locks_ok_cnt,
         locks_replicating_cnt: rule.locks_replicating_cnt,
