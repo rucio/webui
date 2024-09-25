@@ -87,8 +87,7 @@ export const CreateRule = (props: CreateRuleProps) => {
         newOptionErrors.lifetimeInvalid = daysLifetime !== undefined && (isNaN(daysLifetime) || daysLifetime < 1);
 
         newOptionErrors.commentsEmpty = parameters.askApproval && !comments;
-        newOptionErrors.groupingInvalid =
-            grouping !== CreateRuleGrouping.DATASET && grouping !== CreateRuleGrouping.ALL && grouping !== CreateRuleGrouping.NONE;
+        newOptionErrors.groupingInvalid = grouping !== undefined && grouping !== CreateRuleGrouping.DATASET && grouping !== CreateRuleGrouping.ALL && grouping !== CreateRuleGrouping.NONE;
 
         setOptionsErrors(newOptionErrors);
     };
