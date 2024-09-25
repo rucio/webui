@@ -855,6 +855,10 @@ html {
   height: 1rem;
 }
 
+.h-40 {
+  height: 10rem;
+}
+
 .h-48 {
   height: 12rem;
 }
@@ -3479,6 +3483,11 @@ html {
 
 .dark .dark\:hover\:bg-opacity-70:hover {
   --tw-bg-opacity: 0.7;
+}
+
+.dark .dark\:hover\:text-base-error-200:hover {
+  --tw-text-opacity: 1;
+  color: rgb(254 202 202 / var(--tw-text-opacity));
 }
 
 .dark .dark\:hover\:text-brand-300:hover {
