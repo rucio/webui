@@ -177,9 +177,9 @@ export const TopRulesWidget = ({ rules, isLoading, errorMessage }: TopRulesWidge
     const isResultEmpty = !hasRules && !errorMessage && !isLoading;
 
     return (
-        <KeyValueWrapper className="w-full p-3 overflow-x-auto">
+        <KeyValueWrapper className="w-full p-5 overflow-x-auto">
             <Heading text="Locks of latest rules" size="md" />
-            <div className="flex min-w-[700px] h-[500px] items-center justify-center">
+            <div className="flex min-w-[700px] h-[500px] items-center justify-center my-5">
                 {isResultEmpty && (
                     <InfoField>
                         <span>No rules to show</span>
