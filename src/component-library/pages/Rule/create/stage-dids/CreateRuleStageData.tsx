@@ -9,6 +9,8 @@ import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { useState } from 'react';
+import ToggleHeader from '@/component-library/features/search/ToggleHeader';
 
 type CreateRuleStageDataProps = {
     visible: boolean;
@@ -22,6 +24,7 @@ export const CreateRuleStageData = (props: CreateRuleStageDataProps) => {
     const totalSize = selectedItems.reduce((accumulator, current) => accumulator + current.bytes, 0);
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<ListDIDsViewModel>();
+    const [isSearchOpen, setIsSearchOpen] = useState<boolean>(selectedItems.length === 0);
 
     const getInfoField = () => {
         let text;
@@ -39,26 +42,29 @@ export const CreateRuleStageData = (props: CreateRuleStageDataProps) => {
 
     return (
         <div className={cn('flex flex-col space-y-3 w-full grow', props.visible ? 'visible' : 'hidden')}>
-            {getInfoField()}
+            <ToggleHeader text="Search" isOpen={isSearchOpen} onClick={() => setIsSearchOpen(prevState => !prevState)} />
+            <div className={`space-y-3 ${isSearchOpen ? 'visible' : 'hidden'}`}>
+                <DIDSearchPanel
+                    startStreaming={startStreaming}
+                    stopStreaming={stopStreaming}
+                    isRunning={streamingHook.status === StreamingStatus.RUNNING}
+                />
+                <CreateRuleTableWrapper>
+                    <CreateRuleStageDataTable
+                        streamingHook={streamingHook}
+                        onGridReady={onGridReady}
+                        addDID={did => props.addDID(did)}
+                        removeDID={did => props.removeDID(did)}
+                        selectedItems={selectedItems}
+                    />
+                </CreateRuleTableWrapper>
+            </div>
             {selectedItems.length !== 0 && (
                 <CreateRuleTableWrapper>
                     <CreateRuleStageDataSelectedTable rowData={selectedItems} removeDID={did => props.removeDID(did)} />
                 </CreateRuleTableWrapper>
             )}
-            <DIDSearchPanel
-                startStreaming={startStreaming}
-                stopStreaming={stopStreaming}
-                isRunning={streamingHook.status === StreamingStatus.RUNNING}
-            />
-            <CreateRuleTableWrapper>
-                <CreateRuleStageDataTable
-                    streamingHook={streamingHook}
-                    onGridReady={onGridReady}
-                    addDID={did => props.addDID(did)}
-                    removeDID={did => props.removeDID(did)}
-                    selectedItems={selectedItems}
-                />
-            </CreateRuleTableWrapper>
+            {getInfoField()}
         </div>
     );
 };
