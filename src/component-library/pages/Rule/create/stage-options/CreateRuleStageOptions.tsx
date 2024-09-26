@@ -1,10 +1,12 @@
 import { CreateRuleGrouping, CreateRuleOptions, CreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
 import { cn } from '@/component-library/utils';
-import React, { ChangeEvent, FormEvent } from 'react';
+import React, { ChangeEvent, FormEvent, useRef } from 'react';
 import { Input, Textarea } from '@/component-library/atoms/form/input';
 import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
 import { WarningField } from '@/component-library/features/fields/WarningField';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component-library/atoms/misc/collapsible';
+import { HiChevronUpDown } from 'react-icons/hi2';
 
 interface FieldWithLabelProps {
     label: string;
@@ -45,15 +47,29 @@ export const getEmptyOptionsErrors = (): CreateRuleOptionsErrors => {
     };
 };
 
-type CreateRuleStageOptionsProps = {
-    parameters: CreateRuleParameters;
-    updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
-    errors: CreateRuleOptionsErrors;
+interface OptionsCollapsibleTriggerProps {
+    label: string;
+    className?: string;
+}
+
+const OptionsCollapsibleTrigger: React.FC<OptionsCollapsibleTriggerProps> = ({ label, className }) => {
+    return (
+        <CollapsibleTrigger className={cn('flex w-full items-center justify-between space-x-2 text-neutral-900 dark:text-neutral-100', className)}>
+            <span>{label}</span>
+            <HiChevronUpDown className="h-6 w-6" />
+        </CollapsibleTrigger>
+    );
 };
 
-const UNDEFINED_GROUPING = 'undefined';
+const LifetimeInput = ({
+    parameters,
+    updateOptionValue,
+}: {
+    parameters: CreateRuleParameters;
+    updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
+}) => {
+    const lifetimeInputRef = useRef<HTMLInputElement>(null);
 
-export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }: CreateRuleStageOptionsProps) => {
     const onLifetimeInput = (event: FormEvent<HTMLInputElement>) => {
         let value;
         if (event.currentTarget.validity.valid) {
@@ -64,12 +80,26 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
         updateOptionValue('daysLifetime', value);
     };
 
-    const onCopiesInput = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value, 10);
-        updateOptionValue('copies', value);
+    const onDateInput = (event: FormEvent<HTMLInputElement>) => {
+        const selectedDate = new Date(event.currentTarget.value);
+        const currentDate = new Date();
+        const differenceInDays = Math.ceil((selectedDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+        updateOptionValue('daysLifetime', differenceInDays);
+        if (lifetimeInputRef.current) {
+            lifetimeInputRef.current.value = differenceInDays.toString();
+        }
     };
 
-    const defaultCopies = isNaN(parameters.copies) ? '' : parameters.copies;
+    const getExpiryDate = () => {
+        const currentDate = new Date();
+        if (parameters.daysLifetime) {
+            const expiryDate = new Date(currentDate.setDate(currentDate.getDate() + parameters.daysLifetime));
+            // Returns date in yyyy-mm-dd format
+            return expiryDate.toISOString().split('T')[0];
+        }
+        return '';
+    };
+
     const getDefaultLifetime = () => {
         if (parameters.daysLifetime === undefined) return '';
         if (isNaN(parameters.daysLifetime)) return -1;
@@ -77,13 +107,45 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
     };
 
     return (
+        <Collapsible>
+            <OptionsCollapsibleTrigger label="Lifetime" />
+            <CollapsibleContent className="pt-3 space-y-3">
+                <InputWithLabel label="Days">
+                    <Input onInput={onLifetimeInput} type="number" min="1" defaultValue={getDefaultLifetime()} ref={lifetimeInputRef} />
+                </InputWithLabel>
+
+                <InputWithLabel label="Expires on">
+                    <Input type="date" value={getExpiryDate()} onInput={onDateInput} />
+                </InputWithLabel>
+            </CollapsibleContent>
+        </Collapsible>
+    );
+};
+
+type CreateRuleStageOptionsProps = {
+    parameters: CreateRuleParameters;
+    updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
+    errors: CreateRuleOptionsErrors;
+};
+
+const UNDEFINED_GROUPING = 'undefined';
+
+export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }: CreateRuleStageOptionsProps) => {
+    const onCopiesInput = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(event.target.value, 10);
+        updateOptionValue('copies', value);
+    };
+
+    const defaultCopies = isNaN(parameters.copies) ? '' : parameters.copies;
+
+    return (
         <div className="flex flex-col space-y-5 w-full grow">
             <InputWithLabel label="Copies" required>
                 <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length} defaultValue={defaultCopies} />
             </InputWithLabel>
-            <InputWithLabel label="Lifetime (days)">
-                <Input onInput={onLifetimeInput} type="number" min="1" defaultValue={getDefaultLifetime()} />
-            </InputWithLabel>
+
+            <LifetimeInput parameters={parameters} updateOptionValue={updateOptionValue} />
+
             <InputWithLabel label="Comments" required={parameters.askApproval}>
                 <Textarea onChange={event => updateOptionValue('comments', event.target.value)} defaultValue={parameters.comments} />
             </InputWithLabel>
