@@ -105,7 +105,7 @@ export const TopStorageUsageWidget = ({ usages, isLoading, errorMessage }: TopSt
     };
 
     return (
-        <KeyValueWrapper className="w-full p-3 overflow-x-auto space-y-2">
+        <KeyValueWrapper className="w-full p-5 overflow-x-auto space-y-2">
             <Heading text="RSE Usage" size="md" />
             {hasUsages && <CustomLegend legendOptions={legendOptions} />}
             <div className="flex min-w-[700px] h-[740px] items-center justify-center">
