@@ -10,12 +10,16 @@ interface FieldWithLabelProps {
     label: string;
     children: React.ReactNode;
     className?: string;
+    required?: boolean;
 }
 
-const InputWithLabel: React.FC<FieldWithLabelProps> = ({ label, children, className }) => {
+const InputWithLabel: React.FC<FieldWithLabelProps> = ({ label, children, className, required }) => {
     return (
         <div className={cn('space-y-1', className)}>
-            <label className="text-neutral-900 dark:text-neutral-100">{label}</label>
+            <label className="text-neutral-900 dark:text-neutral-100">
+                {label}
+                {required && <span className="text-base-error-500 font-medium ml-1">*</span>}
+            </label>
             {children}
         </div>
     );
@@ -74,13 +78,13 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
 
     return (
         <div className="flex flex-col space-y-5 w-full grow">
-            <InputWithLabel label="Copies">
+            <InputWithLabel label="Copies" required>
                 <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length} defaultValue={defaultCopies} />
             </InputWithLabel>
             <InputWithLabel label="Lifetime (days)">
                 <Input onInput={onLifetimeInput} type="number" min="1" defaultValue={getDefaultLifetime()} />
             </InputWithLabel>
-            <InputWithLabel label="Comments">
+            <InputWithLabel label="Comments" required={parameters.askApproval}>
                 <Textarea onChange={event => updateOptionValue('comments', event.target.value)} defaultValue={parameters.comments} />
             </InputWithLabel>
             <LabeledCheckbox
