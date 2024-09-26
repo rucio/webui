@@ -151,6 +151,7 @@ describe('Feature: CreateRule', () => {
             comments: commonControllerParameters.comments,
             asynchronous: commonControllerParameters.asynchronous,
             ask_approval: false,
+            activity: 'User Subscriptions',
         };
 
         MockRucioServerFactory.createMockRucioServer(true, [
