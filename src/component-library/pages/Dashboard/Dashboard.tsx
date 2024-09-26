@@ -9,6 +9,8 @@ import { TopRulesWidget } from '@/component-library/pages/Dashboard/widgets/TopR
 import { useEffect, useRef, useState } from 'react';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import useStreamReader, { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
+import { RSEAccountUsageViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { TopStorageUsageWidget } from '@/component-library/pages/Dashboard/widgets/TopStorageUsageWidget';
 
 const AccountHeading = () => {
     const querySiteHeader = async () => {
@@ -50,6 +52,37 @@ const AccountHeading = () => {
     );
 };
 
+const UsageView = () => {
+    const usageBuffer = useRef<RSEAccountUsageViewModel[] | undefined>([]);
+    const [usages, setUsages] = useState<RSEAccountUsageViewModel[]>();
+    const { start, stop, error, status } = useStreamReader<RSEAccountUsageViewModel>();
+
+    useEffect(() => {
+        // TODO: handle error view models
+        start({
+            url: '/api/feature/list-account-rse-usage',
+            onData: data => {
+                if (!usageBuffer.current) {
+                    usageBuffer.current = data;
+                } else {
+                    usageBuffer.current.push(...data);
+                }
+            },
+        });
+        usageBuffer.current = [];
+    }, []);
+
+    useEffect(() => {
+        if (status === StreamingStatus.STOPPED && usageBuffer.current) {
+            setUsages(usageBuffer.current);
+        }
+    }, [status]);
+
+    const isLoading = (!usages && !error) || status === StreamingStatus.RUNNING;
+
+    return <TopStorageUsageWidget usages={usages} isLoading={isLoading} errorMessage={error?.message} />;
+};
+
 const RulesView = () => {
     const rulesBuffer = useRef<RuleViewModel[] | undefined>([]);
     const [rules, setRules] = useState<RuleViewModel[]>();
@@ -82,16 +115,13 @@ const RulesView = () => {
 };
 
 export const Dashboard = () => {
-    // Widget with top 10 rses
-
-    // Widgets handle fetching themselves
-
     return (
-        <div className="flex flex-col space-y-2 w-full">
+        <div className="flex flex-col space-y-3 w-full">
             <div className="h-14">
                 <AccountHeading />
             </div>
             <RulesView />
+            <UsageView />
         </div>
     );
 };
