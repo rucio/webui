@@ -17,19 +17,12 @@ export default {
     },
 } as Meta<typeof CreateRule>;
 
-const Template: StoryFn<typeof CreateRule> = () => {
+const Template: StoryFn<typeof CreateRule> = args => {
     const queryClient = new QueryClient();
     return (
         <QueryClientProvider client={queryClient}>
             <ToastedTemplate>
-                <CreateRule
-                    getSavedParameters={() => undefined}
-                    getSavedIndex={() => undefined}
-                    setSavedIndex={() => {}}
-                    setSavedParameters={() => {}}
-                    removeSavedParameters={() => {}}
-                    removeSavedIndex={() => {}}
-                />
+                <CreateRule {...args} />
             </ToastedTemplate>
         </QueryClientProvider>
     );
@@ -76,6 +69,14 @@ const staticRses: RSEAccountUsageLimitViewModel[] = [
 ];
 
 export const Regular = Template.bind({});
+Regular.args = {
+    getSavedParameters: () => undefined,
+    getSavedIndex: () => undefined,
+    setSavedIndex: () => {},
+    setSavedParameters: () => {},
+    removeSavedParameters: () => {},
+    removeSavedIndex: () => {},
+};
 Regular.decorators = [
     getDecoratorWithWorker([
         getMockStreamEndpoint('/api/feature/list-dids', {
@@ -100,3 +101,13 @@ Regular.decorators = [
         }),
     ]),
 ];
+
+export const FromOptions = Template.bind({});
+FromOptions.args = {
+    getSavedParameters: () => undefined,
+    getSavedIndex: () => 2,
+    setSavedIndex: () => {},
+    setSavedParameters: () => {},
+    removeSavedParameters: () => {},
+    removeSavedIndex: () => {},
+};
