@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 const headingStyles = cva('text-neutral-900 dark:text-neutral-100 font-bold', {
     variants: {
         size: {
-            sm: 'text-xl',
+            sm: 'text-xl font-medium',
             md: 'text-2xl',
             lg: 'text-4xl',
         },
