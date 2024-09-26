@@ -54,12 +54,22 @@ interface OptionsCollapsibleTriggerProps {
 
 const OptionsCollapsibleTrigger: React.FC<OptionsCollapsibleTriggerProps> = ({ label, className }) => {
     return (
-        <CollapsibleTrigger className={cn('flex w-full items-center justify-between space-x-2 text-neutral-900 dark:text-neutral-100', className)}>
+        <CollapsibleTrigger
+            className={cn(
+                'flex w-full items-center justify-between space-x-2',
+                'py-2 px-3',
+                'text-neutral-900 dark:text-neutral-100',
+                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                className,
+            )}
+        >
             <span>{label}</span>
             <HiChevronUpDown className="h-6 w-6" />
         </CollapsibleTrigger>
     );
 };
+
+const collapsibleContentStyle = 'pt-3 space-y-5';
 
 const LifetimeInput = ({
     parameters,
@@ -109,14 +119,56 @@ const LifetimeInput = ({
     return (
         <Collapsible>
             <OptionsCollapsibleTrigger label="Lifetime" />
-            <CollapsibleContent className="pt-3 space-y-3">
+            <CollapsibleContent className={collapsibleContentStyle}>
                 <InputWithLabel label="Days">
-                    <Input onInput={onLifetimeInput} type="number" min="1" defaultValue={getDefaultLifetime()} ref={lifetimeInputRef} />
+                    <Input onInput={onLifetimeInput} type="number" min="1" max="1000" defaultValue={getDefaultLifetime()} ref={lifetimeInputRef} />
                 </InputWithLabel>
 
                 <InputWithLabel label="Expires on">
                     <Input type="date" value={getExpiryDate()} onInput={onDateInput} />
                 </InputWithLabel>
+            </CollapsibleContent>
+        </Collapsible>
+    );
+};
+
+const AdvancedInput = ({
+    parameters,
+    updateOptionValue,
+}: {
+    parameters: CreateRuleParameters;
+    updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
+}) => {
+    return (
+        <Collapsible>
+            <OptionsCollapsibleTrigger label="Advanced" />
+            <CollapsibleContent className={collapsibleContentStyle}>
+                <InputWithLabel label="Grouping">
+                    <Select
+                        onValueChange={value => {
+                            const grouping = value === UNDEFINED_GROUPING ? undefined : (value as CreateRuleGrouping);
+                            updateOptionValue('grouping', grouping);
+                        }}
+                        defaultValue={parameters.grouping ?? UNDEFINED_GROUPING}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Grouping" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value={UNDEFINED_GROUPING}>Undefined</SelectItem>
+                                <SelectItem value={CreateRuleGrouping.ALL}>All</SelectItem>
+                                <SelectItem value={CreateRuleGrouping.DATASET}>Dataset</SelectItem>
+                                <SelectItem value={CreateRuleGrouping.NONE}>None</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </InputWithLabel>
+                <LabeledCheckbox
+                    checked={parameters.asynchronous}
+                    onChange={() => updateOptionValue('asynchronous', !parameters.asynchronous)}
+                    label="Asynchronous"
+                />
             </CollapsibleContent>
         </Collapsible>
     );
@@ -154,32 +206,7 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
                 onChange={() => updateOptionValue('notify', !parameters.notify)}
                 label="Receive notifications"
             />
-            <InputWithLabel label="Grouping">
-                <Select
-                    onValueChange={value => {
-                        const grouping = value === UNDEFINED_GROUPING ? undefined : (value as CreateRuleGrouping);
-                        updateOptionValue('grouping', grouping);
-                    }}
-                    defaultValue={parameters.grouping ?? UNDEFINED_GROUPING}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Grouping" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem value={UNDEFINED_GROUPING}>Undefined</SelectItem>
-                            <SelectItem value={CreateRuleGrouping.ALL}>All</SelectItem>
-                            <SelectItem value={CreateRuleGrouping.DATASET}>Dataset</SelectItem>
-                            <SelectItem value={CreateRuleGrouping.NONE}>None</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </InputWithLabel>
-            <LabeledCheckbox
-                checked={parameters.asynchronous}
-                onChange={() => updateOptionValue('asynchronous', !parameters.asynchronous)}
-                label="Asynchronous"
-            />
+            <AdvancedInput parameters={parameters} updateOptionValue={updateOptionValue} />
 
             {/* Error handling */}
             {errors.copiesInvalid && (
