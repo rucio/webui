@@ -33,7 +33,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         const { locksOk, locksReplicating, locksStuck, name, scope, rseExpression } = payload[0].payload;
 
         return (
-            <KeyValueWrapper className="p-2 space-y-2 text-neutral-900 dark:text-neutral-100">
+            <KeyValueWrapper className="p-3 space-y-2 text-neutral-900 dark:text-neutral-100">
                 <div className="mb-2">
                     <div className="flex space-x-2 items-center">
                         <HiExternalLink />
