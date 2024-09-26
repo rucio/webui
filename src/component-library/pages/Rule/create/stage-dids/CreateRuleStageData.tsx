@@ -33,7 +33,7 @@ export const CreateRuleStageData = (props: CreateRuleStageDataProps) => {
         } else {
             text = (
                 <span>
-                    <b>{selectedItems.length}</b> chosen, <b>{formatFileSize(totalSize)}</b> in total
+                    {selectedItems.length} chosen, {formatFileSize(totalSize)} in total
                 </span>
             );
         }
