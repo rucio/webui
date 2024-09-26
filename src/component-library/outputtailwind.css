@@ -2217,6 +2217,11 @@ html {
   color: rgb(7 89 133 / var(--tw-text-opacity));
 }
 
+.text-base-success-600 {
+  --tw-text-opacity: 1;
+  color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
 .text-base-success-700 {
   --tw-text-opacity: 1;
   color: rgb(21 128 61 / var(--tw-text-opacity));

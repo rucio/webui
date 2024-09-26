@@ -6,20 +6,8 @@ import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, ICellRendererParams, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
-import { Button } from '@/component-library/atoms/form/button';
-import { HiCheck, HiPlus } from 'react-icons/hi';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
-
-const CreateRuleSelectableCell = (props: { onSelect: () => void; selected: boolean; value: string }) => {
-    return (
-        <div className="flex flex-row items-center" onClick={props.onSelect}>
-            <Button variant={props.selected ? 'success' : 'default'} size="icon" className="mr-3 flex-shrink-0">
-                {props.selected ? <HiCheck /> : <HiPlus />}
-            </Button>
-            <span>{props.value}</span>
-        </div>
-    );
-};
+import { SelectableCell } from '@/component-library/features/table/cells/selection-cells';
 
 interface SelectableDIDViewModel extends ListDIDsViewModel {
     selected?: boolean;
@@ -45,7 +33,7 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
                 const did = params.data!;
                 did.selected = did.selected ?? selectedItems.some(item => item.scope === did.scope && item.name === did.name);
                 const onSelect = () => (did.selected ? removeDID(did) : addDID(did));
-                return <CreateRuleSelectableCell selected={did.selected} onSelect={onSelect} {...params} />;
+                return <SelectableCell selected={did.selected} onSelect={onSelect} {...params} />;
             },
             minWidth: 250,
             filter: true,
