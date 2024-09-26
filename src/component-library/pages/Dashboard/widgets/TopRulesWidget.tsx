@@ -7,10 +7,9 @@ import { HiExternalLink } from 'react-icons/hi';
 import { LockStateBadge } from '@/component-library/features/badges/Rule/LockStateBadge';
 import { LockState } from '@/lib/core/entity/rucio';
 import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
-import CircleWithText from '@/component-library/atoms/misc/CircleWithText';
-import { cn } from '@/component-library/utils';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
+import CustomLegend, { LegendOption } from './CustomLegend';
 
 const openRule = (id: string) => {
     window.open(`/rule/page/${id}`, '_blank');
@@ -151,26 +150,11 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
     );
 };
 
-const CustomLegend = () => {
-    const commonCircleClasses = 'bg-opacity-70 h-6 w-6';
-
-    return (
-        <div className="flex justify-center space-x-10 text-sm text-neutral-900 dark:text-neutral-100">
-            <div className="flex space-x-2 items-center">
-                <CircleWithText text="" className={cn(commonCircleClasses, 'bg-base-success-500')} />
-                <span>OK</span>
-            </div>
-            <div className="flex space-x-2 items-center">
-                <CircleWithText text="" className={cn(commonCircleClasses, 'bg-base-warning-400')} />
-                <span>Replicating</span>
-            </div>
-            <div className="flex space-x-2 items-center">
-                <CircleWithText text="" className={cn(commonCircleClasses, 'bg-base-error-500')} />
-                <span>Error</span>
-            </div>
-        </div>
-    );
-};
+const legendOptions: LegendOption[] = [
+    { label: 'OK', color: 'bg-base-success-500' },
+    { label: 'Replicating', color: 'bg-base-warning-400' },
+    { label: 'Error', color: 'bg-base-error-500' },
+];
 
 interface TopRulesWidgetProps {
     rules?: RuleViewModel[];
@@ -206,10 +190,10 @@ export const TopRulesWidget = ({ rules, isLoading, errorMessage }: TopRulesWidge
                         <span>{errorMessage}</span>
                     </WarningField>
                 )}
-                {hasRules && displayedRules.length !== 0 && <RuleBarChart rules={displayedRules} />}
+                {hasRules && <RuleBarChart rules={displayedRules} />}
                 {isLoading && <LoadingSpinner />}
             </div>
-            {hasRules && <CustomLegend />}
+            {hasRules && <CustomLegend legendOptions={legendOptions} />}
         </KeyValueWrapper>
     );
 };

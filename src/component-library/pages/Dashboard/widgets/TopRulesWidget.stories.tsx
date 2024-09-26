@@ -12,8 +12,8 @@ export default {
 
 const Template: StoryFn<typeof TopRulesWidget> = args => <TopRulesWidget {...args} />;
 
-export const Regular = Template.bind({});
-Regular.args = {
+export const TopRules = Template.bind({});
+TopRules.args = {
     rules: Array.from({ length: 100 }, fixtureRuleViewModel),
     isLoading: false,
 };

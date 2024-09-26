@@ -13,7 +13,13 @@ import {
     RuleState,
     SubscriptionState,
 } from '@/lib/core/entity/rucio';
-import { RSEAccountUsageLimitViewModel, RSEAttributeViewModel, RSEProtocolViewModel, RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import {
+    RSEAccountUsageLimitViewModel,
+    RSEAccountUsageViewModel,
+    RSEAttributeViewModel,
+    RSEProtocolViewModel,
+    RSEViewModel,
+} from '@/lib/infrastructure/data/view-model/rse';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 import { SubscriptionRuleStatesViewModel, SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 import { BaseViewModel } from '@/lib/sdk/view-models';
@@ -200,6 +206,20 @@ export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitView
     };
 }
 
+export function fixtureRSEAccountUsageViewModel(): RSEAccountUsageViewModel {
+    const bytes_limit = faker.number.int({ min: 1e6, max: 1e9 });
+    const used_bytes = faker.number.int({ min: 1e6, max: 1e9 });
+    return {
+        ...mockBaseVM(),
+        rse_id: faker.string.uuid(),
+        rse: createRSEName(),
+        account: faker.internet.userName(),
+        files: faker.number.int({ min: 0, max: 1e6 }),
+        used_bytes: used_bytes,
+        bytes_limit: bytes_limit,
+    };
+}
+
 export function fixtureRSEViewModel(): RSEViewModel {
     return {
         ...mockBaseVM(),
@@ -269,6 +289,7 @@ export function fixtureRuleViewModel(): RuleViewModel {
     return {
         ...mockBaseVM(),
         id: faker.string.uuid().replace(/-/g, ''),
+        scope: createRandomScope(),
         name: faker.lorem.words(3).replace(/\s/g, '.'),
         account: faker.internet.userName(),
         rse_expression: createRSEExpression(),

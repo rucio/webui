@@ -687,6 +687,11 @@ html {
   margin-bottom: 0.5rem;
 }
 
+.my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
 .-mb-2 {
   margin-bottom: -0.5rem;
 }
@@ -899,12 +904,21 @@ html {
   height: 52px;
 }
 
+.h-\[730px\] {
+  height: 730px;
+}
+
 .h-\[var\(--radix-select-trigger-height\)\] {
   height: var(--radix-select-trigger-height);
 }
 
 .h-auto {
   height: auto;
+}
+
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .h-full {
@@ -1039,6 +1053,10 @@ html {
 
 .min-w-\[10rem\] {
   min-width: 10rem;
+}
+
+.min-w-\[300px\] {
+  min-width: 300px;
 }
 
 .min-w-\[700px\] {
@@ -1354,6 +1372,12 @@ html {
 
 .overflow-y-scroll {
   overflow-y: scroll;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .whitespace-normal {
@@ -3519,6 +3543,11 @@ html {
 .dark .dark\:hover\:text-brand-400:hover {
   --tw-text-opacity: 1;
   color: rgb(167 139 250 / var(--tw-text-opacity));
+}
+
+.dark .dark\:hover\:text-brand-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(139 92 246 / var(--tw-text-opacity));
 }
 
 .dark .hover\:dark\:text-brand-500:hover {
