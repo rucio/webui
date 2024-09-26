@@ -13,6 +13,9 @@ export default class CreateRuleEndpoint extends BaseEndpoint<CreateRuleDTO> {
         await super.initialize();
         const rucioHost = await this.envConfigGateway.rucioHost();
         const endpoint = `${rucioHost}/rules/`;
+
+        this.params.activity = 'User Subscriptions';
+
         const request: HTTPRequest = {
             method: 'POST',
             url: endpoint,
