@@ -28,6 +28,8 @@ const KeyValueDIDs = ({ dids }: { dids: ListDIDsViewModel[] }) => {
 };
 
 const KeyValueOptions = ({ parameters }: { parameters: CreateRuleParameters }) => {
+    const hasSampling = parameters.sample && parameters.sampleFileCount;
+
     return (
         <KeyValueWrapper className="overflow-x-auto py-2">
             {parameters.daysLifetime && (
@@ -51,6 +53,11 @@ const KeyValueOptions = ({ parameters }: { parameters: CreateRuleParameters }) =
                     <Field>{parameters.comments}</Field>
                 </KeyValueRow>
             )}
+            {hasSampling && (
+                <KeyValueRow name="Files to sample">
+                    <Field>{parameters.sampleFileCount}</Field>
+                </KeyValueRow>
+            )}
         </KeyValueWrapper>
     );
 };
@@ -62,16 +69,21 @@ type CreateRuleStageSummaryProps = {
 export const CreateRuleStageSummary = ({ parameters }: CreateRuleStageSummaryProps) => {
     const getDefaultDataInfoField = () => {
         const plural = parameters.dids.length > 1 ? 's' : '';
+        const sample = parameters.sample ? <b>samples of</b> : '';
 
         let text;
         if (parameters.askApproval) {
             text = (
                 <span>
-                    This request will <b>ask for approval</b> to create a rule for the following DID{plural}.
+                    This request will <b>ask for approval</b> to create a rule for {sample} the following DID{plural}.
                 </span>
             );
         } else {
-            text = <span>This request will create rules for the following DID{plural}.</span>;
+            text = (
+                <span>
+                    This request will create a rule for {sample} the following DID{plural}.
+                </span>
+            );
         }
 
         return <InfoField>{text}</InfoField>;

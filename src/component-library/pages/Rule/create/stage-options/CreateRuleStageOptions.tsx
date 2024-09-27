@@ -192,7 +192,7 @@ const AdvancedInput = ({
                 />
                 {parameters.sample && (
                     <InputWithLabel label="Number of files">
-                        <Input type="number" min="1" onInput={onFileCountInput} defaultValue={getDefaultFileCount()}/>
+                        <Input type="number" min="1" onInput={onFileCountInput} defaultValue={getDefaultFileCount()} />
                     </InputWithLabel>
                 )}
             </CollapsibleContent>
