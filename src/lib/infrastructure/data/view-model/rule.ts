@@ -61,6 +61,7 @@ export const generateEmptyRuleViewModel = (): RuleViewModel => {
         account: '',
         created_at: '',
         id: '',
+        scope: '',
         locks_ok_cnt: 0,
         locks_replicating_cnt: 0,
         locks_stuck_cnt: 0,

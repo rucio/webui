@@ -31,9 +31,9 @@ export type CreateRuleOptionsErrors = {
     tooManyCopies: boolean;
     copiesInvalid: boolean;
     lifetimeInvalid: boolean;
-    lifetimeScratchDisk: boolean;
     commentsEmpty: boolean;
     groupingInvalid: boolean;
+    sampleCountInvalid: boolean;
 };
 
 export const getEmptyOptionsErrors = (): CreateRuleOptionsErrors => {
@@ -42,8 +42,8 @@ export const getEmptyOptionsErrors = (): CreateRuleOptionsErrors => {
         copiesInvalid: false,
         groupingInvalid: false,
         lifetimeInvalid: false,
-        lifetimeScratchDisk: false,
         tooManyCopies: false,
+        sampleCountInvalid: false,
     };
 };
 
@@ -139,6 +139,16 @@ const AdvancedInput = ({
     parameters: CreateRuleParameters;
     updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
 }) => {
+    const onSampleInput = (event: FormEvent<HTMLInputElement>) => {
+        let value;
+        if (event.currentTarget.validity.valid) {
+            value = event.currentTarget.value === '' ? undefined : parseInt(event.currentTarget.value, 10);
+        } else {
+            value = NaN;
+        }
+        updateOptionValue('sampleCount', value);
+    };
+
     return (
         <Collapsible>
             <OptionsCollapsibleTrigger label="Advanced" />
@@ -169,6 +179,16 @@ const AdvancedInput = ({
                     onChange={() => updateOptionValue('asynchronous', !parameters.asynchronous)}
                     label="Asynchronous"
                 />
+                <LabeledCheckbox
+                    checked={parameters.hasSampling}
+                    onChange={() => updateOptionValue('hasSampling', !parameters.hasSampling)}
+                    label="Create a sample"
+                />
+                {parameters.hasSampling && (
+                    <InputWithLabel label="Number of files">
+                        <Input type="number" min="1" onInput={onSampleInput} />
+                    </InputWithLabel>
+                )}
             </CollapsibleContent>
         </Collapsible>
     );
@@ -246,6 +266,14 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
                 <WarningField>
                     <span>
                         The value of <b>grouping</b> is invalid.
+                    </span>
+                </WarningField>
+            )}
+
+            {errors.sampleCountInvalid && (
+                <WarningField>
+                    <span>
+                        Invalid value for <b>number of files</b>. It should be greater than 1 or not specified.
                     </span>
                 </WarningField>
             )}
