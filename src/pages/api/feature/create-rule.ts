@@ -26,6 +26,8 @@ const schema = z.object({
     comments: z.string().optional(),
     ask_approval: z.boolean().optional(),
     asynchronous: z.boolean().optional(),
+    sample: z.boolean().optional(),
+    sample_file_count: z.number().int().positive().optional(),
 });
 
 async function createRule(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string, sessionUser?: SessionUser) {

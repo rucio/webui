@@ -1,7 +1,6 @@
 import { Rule, RuleMeta, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface RuleViewModel extends Rule, BaseViewModel {}
@@ -24,8 +23,8 @@ export interface CreateRuleOptions {
     asynchronous: boolean;
     grouping?: CreateRuleGrouping;
 
-    hasSampling: boolean;
-    sampleCount?: number;
+    sample: boolean;
+    sampleFileCount?: number;
 
     comments?: string;
 }
@@ -50,7 +49,7 @@ export const getEmptyCreateRuleParameters = (): CreateRuleParameters => {
         daysLifetime: undefined,
         dids: [],
         grouping: undefined,
-        hasSampling: false,
+        sample: false,
         notify: false,
         rses: [],
     };

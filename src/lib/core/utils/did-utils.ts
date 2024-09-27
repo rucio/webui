@@ -32,6 +32,10 @@ export const generateDerivedDIDName = (newScope: string, selectedDID: DID): DID 
     } as DID;
 };
 
+export const generateSampleDIDName = (newScope: string, name: string) => {
+    return `${newScope}.${name}_der${Date.now() / 1000}`;
+};
+
 /**
  * Generates a DID name by appending the current date and time
  * to a given scope in the format: `scope.r2d2_request.YYYY-MM-DD_HH-MM-SS`.

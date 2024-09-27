@@ -10,7 +10,7 @@ import type RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-o
 import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import type DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
 import { AccountInfoDTO } from '@/lib/core/dto/account-dto';
-import { generateNewScope, generateRequestDIDName } from '@/lib/core/utils/did-utils';
+import { generateNewScope, generateRequestDIDName, generateSampleDIDName } from '@/lib/core/utils/did-utils';
 import { DIDExtendedDTO, SetDIDStatusDTO } from '@/lib/core/dto/did-dto';
 import { DID, DIDShort, DIDType } from '@/lib/core/entity/rucio';
 import { buildIntermediateCreateRuleError, buildIntermediateSetStatusError } from '@/lib/core/utils/create-rule-utils';
@@ -49,7 +49,7 @@ export default class CreateRuleUseCase
         return classifiedDIDs;
     }
 
-    private async createRequestDID(
+    private async createRequestCollection(
         requestModel: AuthenticatedRequestModel<CreateRuleRequest>,
         params: { newScope: string; classifiedDIDs: DID[] },
     ): Promise<SetDIDStatusDTO> {
@@ -76,7 +76,7 @@ export default class CreateRuleUseCase
         }
 
         // Add and populate the request dataset/container
-        const initializeDID = async (dids: DIDShort[], type: DIDType.DATASET | DIDType.CONTAINER): Promise<SetDIDStatusDTO> => {
+        const initializeCollection = async (dids: DIDShort[], type: DIDType.DATASET | DIDType.CONTAINER): Promise<SetDIDStatusDTO> => {
             const newName = generateRequestDIDName(newScope);
             const addDTO = await this.didGateway.addDID(requestModel.rucioAuthToken, newScope, newName, type);
             if (addDTO.status === 'error') return buildIntermediateSetStatusError(addDTO, 'Request Add');
@@ -87,7 +87,7 @@ export default class CreateRuleUseCase
 
         // Pack chosen files in a dataset
         if (files.length > 0) {
-            const requestDatasetDTO = await initializeDID(files, DIDType.DATASET);
+            const requestDatasetDTO = await initializeCollection(files, DIDType.DATASET);
             // Check if no other datasets are chosen
             if (requestDatasetDTO.status === 'error' || datasets.length === 0) {
                 return requestDatasetDTO;
@@ -102,7 +102,7 @@ export default class CreateRuleUseCase
 
         // Pack chosen datasets in a container
         if (datasets.length > 0) {
-            return await initializeDID(datasets, DIDType.CONTAINER);
+            return await initializeCollection(datasets, DIDType.CONTAINER);
         }
 
         return {
@@ -116,7 +116,31 @@ export default class CreateRuleUseCase
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<CreateRuleRequest>): Promise<CreateRuleDTO> {
-        // TODO: create samples
+        // TODO: decompose
+
+        if (requestModel.sample && requestModel.sample_file_count) {
+            const accountInfoDTO: AccountInfoDTO = await this.accountGateway.getAccountInfo(requestModel.account, requestModel.rucioAuthToken);
+            if (accountInfoDTO.status === 'error') return buildIntermediateCreateRuleError(accountInfoDTO, 'Account Info');
+            const newScope = generateNewScope(requestModel.account, accountInfoDTO.accountType);
+
+            const sampled: DIDShort[] = [];
+            for (const did of requestModel.dids) {
+                const newName = generateSampleDIDName(newScope, did.name);
+                const sampleDTO = await this.didGateway.createDIDSample(
+                    requestModel.rucioAuthToken,
+                    did.scope,
+                    did.name,
+                    newScope,
+                    newName,
+                    requestModel.sample_file_count,
+                );
+                if (sampleDTO.status === 'error' || !sampleDTO.created) {
+                    return buildIntermediateCreateRuleError(sampleDTO, 'Create Sample');
+                }
+                sampled.push({ scope: newScope, name: newName });
+            }
+            requestModel.dids = sampled;
+        }
 
         const classifiedDIDs = await this.classifyDIDs(requestModel);
 
@@ -125,14 +149,14 @@ export default class CreateRuleUseCase
             if (accountInfoDTO.status === 'error') return buildIntermediateCreateRuleError(accountInfoDTO, 'Account Info');
             const newScope = generateNewScope(requestModel.account, accountInfoDTO.accountType);
 
-            const requestIdentifierDTO = await this.createRequestDID(requestModel, {
+            const requestCollectionDTO = await this.createRequestCollection(requestModel, {
                 newScope,
                 classifiedDIDs,
             });
-            if (requestIdentifierDTO.status === 'error' || requestIdentifierDTO.open) {
-                return buildIntermediateCreateRuleError(requestIdentifierDTO, requestIdentifierDTO.errorType ?? 'Request Status');
+            if (requestCollectionDTO.status === 'error' || requestCollectionDTO.open) {
+                return buildIntermediateCreateRuleError(requestCollectionDTO, requestCollectionDTO.errorType ?? 'Request Status');
             }
-            requestModel.dids = [{ scope: requestIdentifierDTO.scope, name: requestIdentifierDTO.name }];
+            requestModel.dids = [{ scope: requestCollectionDTO.scope, name: requestCollectionDTO.name }];
 
             // If datasets were chosen, they got packed in a container
             // Containers are usually huge, so the request should be asynchronous regardless
@@ -145,8 +169,8 @@ export default class CreateRuleUseCase
             requestModel.asynchronous = true;
         }
 
-        const { rucioAuthToken, ...params } = requestModel;
-        const dto: CreateRuleDTO = await this.ruleGateway.createRule(rucioAuthToken, params);
+        const { rucioAuthToken, sample, sample_file_count, ...gatewayParams } = requestModel;
+        const dto: CreateRuleDTO = await this.ruleGateway.createRule(rucioAuthToken, gatewayParams);
         return dto;
     }
 
