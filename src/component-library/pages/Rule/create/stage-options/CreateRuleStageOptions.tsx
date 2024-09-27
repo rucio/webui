@@ -146,7 +146,7 @@ const AdvancedInput = ({
         } else {
             value = NaN;
         }
-        updateOptionValue('sampleCount', value);
+        updateOptionValue('sampleFileCount', value);
     };
 
     return (
@@ -180,11 +180,11 @@ const AdvancedInput = ({
                     label="Asynchronous"
                 />
                 <LabeledCheckbox
-                    checked={parameters.hasSampling}
-                    onChange={() => updateOptionValue('hasSampling', !parameters.hasSampling)}
+                    checked={parameters.sample}
+                    onChange={() => updateOptionValue('sample', !parameters.sample)}
                     label="Create a sample"
                 />
-                {parameters.hasSampling && (
+                {parameters.sample && (
                     <InputWithLabel label="Number of files">
                         <Input type="number" min="1" onInput={onSampleInput} />
                     </InputWithLabel>

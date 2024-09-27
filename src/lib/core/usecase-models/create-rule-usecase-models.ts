@@ -4,7 +4,10 @@ import { RuleCreationParameters } from '@/lib/core/entity/rucio';
 /**
  * @interface CreateRuleRequest represents the RequestModel for create_rule usecase
  */
-export interface CreateRuleRequest extends RuleCreationParameters {}
+export interface CreateRuleRequest extends RuleCreationParameters {
+    sample: boolean;
+    sample_file_count?: number;
+}
 
 /**
  * @interface CreateRuleResponse represents the ResponseModel for create_rule usecase

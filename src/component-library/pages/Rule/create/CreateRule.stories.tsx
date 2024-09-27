@@ -128,12 +128,12 @@ FromSummary.args = {
             daysLifetime: undefined,
             dids: Array.from({ length: 3 }, fixtureListDIDViewModel),
             grouping: undefined,
-            hasSampling: false,
+            sample: false,
             needsApproval: false,
             notify: false,
             rseExpression: '',
             rses: [fixtureRSEAccountUsageLimitViewModel()],
-            sampleCount: 0,
+            sampleFileCount: 0,
         };
         return parameters;
     },

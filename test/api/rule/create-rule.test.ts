@@ -99,6 +99,28 @@ describe('Feature: CreateRule', () => {
         },
     });
 
+    const genericDIDInfoEndpoint: MockEndpoint = {
+        url: `${MockRucioServerFactory.RUCIO_HOST}/dids/scope/name/status`,
+        includes: '/status',
+        method: 'GET',
+        response: {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                scope: 'test',
+                name: 'name',
+                type: DIDType.DATASET.toUpperCase(),
+                account: 'root',
+                bytes: 10485760,
+                length: 1,
+                md5: '273586f5e521dda4be1ba0a9bd31b35a',
+                adler32: '447957af',
+            }),
+        },
+    };
+
     const getAddAttachDIDEndpoint = (scope: string): MockEndpoint => ({
         url: `${MockRucioServerFactory.RUCIO_HOST}/dids/${scope}/name`,
         includes: `/dids/${scope}`,
@@ -131,6 +153,19 @@ describe('Feature: CreateRule', () => {
             return req.url.includes('r2d2_request');
         },
     });
+
+    const createSampleDIDEndpoint: MockEndpoint = {
+        url: `${MockRucioServerFactory.RUCIO_HOST}/dids/sample`,
+        includes: `/dids/sample`,
+        method: 'POST',
+        response: {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: 'Created',
+        },
+    };
 
     afterEach(() => {
         fetchMock.dontMock();
@@ -448,5 +483,117 @@ describe('Feature: CreateRule', () => {
         const viewModel: CreateRuleViewModel = res._getJSONData();
         expect(viewModel.status).toEqual('error');
         expect(viewModel.message).toContain('Container');
+    });
+
+    it('Should be able to create samples', async () => {
+        const dids = [
+            { scope: 'scope1', name: 'name1' },
+            { scope: 'scope2', name: 'name2' },
+        ];
+
+        const validatedCreateRuleEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rules/`,
+            method: 'POST',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ruleIds),
+            },
+            requestValidator: async req => {
+                const parameters = await req.json();
+                if (parameters.dids.length !== 2) {
+                    return false;
+                }
+                for (const did of parameters.dids) {
+                    if (did.scope !== approvalUserScope || !did.name.includes('der')) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+        };
+
+        MockRucioServerFactory.createMockRucioServer(true, [
+            validatedCreateRuleEndpoint,
+            getAccountInfoEndpoint(AccountType.USER),
+            getDIDInfoEndpoint('scope1', 'name1', DIDType.DATASET),
+            getDIDInfoEndpoint('scope2', 'name2', DIDType.DATASET),
+            genericDIDInfoEndpoint,
+            createSampleDIDEndpoint,
+        ]);
+
+        const res = MockHttpStreamableResponseFactory.getMockResponse();
+
+        const createRuleController = appContainer.get<BaseController<CreateRuleControllerParameters, CreateRuleRequest>>(CONTROLLERS.CREATE_RULE);
+        const createRuleControllerParams: CreateRuleControllerParameters = {
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            response: res as unknown as NextApiResponse,
+            ...commonControllerParameters,
+            dids,
+            ask_approval: false,
+            grouping: 'ALL',
+            sample: true,
+            sample_file_count: 5,
+        };
+
+        await createRuleController.execute(createRuleControllerParams);
+
+        const viewModel: CreateRuleViewModel = res._getJSONData();
+        expect(viewModel.status).toEqual('success');
+    });
+
+    it('Should be able to ask for approval with sampled DIDs', async () => {
+        const dids = [
+            { scope: 'scope1', name: 'name1' },
+            { scope: 'scope2', name: 'name2' },
+        ];
+
+        const validatedCreateRuleEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rules/`,
+            method: 'POST',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ruleIds),
+            },
+            requestValidator: async req => {
+                const parameters = await req.json();
+                return parameters.dids.length === 1 && parameters.dids[0].scope === approvalUserScope;
+            },
+        };
+
+        MockRucioServerFactory.createMockRucioServer(true, [
+            validatedCreateRuleEndpoint,
+            getAccountInfoEndpoint(AccountType.USER),
+            getDIDInfoEndpoint('scope1', 'name1', DIDType.DATASET),
+            getDIDInfoEndpoint('scope2', 'name2', DIDType.DATASET),
+            genericDIDInfoEndpoint,
+            createSampleDIDEndpoint,
+            getAddAttachDIDEndpoint(approvalUserScope),
+            getSetStatusDIDEndpoint(approvalUserScope, approvalDIDName),
+        ]);
+
+        const res = MockHttpStreamableResponseFactory.getMockResponse();
+
+        const createRuleController = appContainer.get<BaseController<CreateRuleControllerParameters, CreateRuleRequest>>(CONTROLLERS.CREATE_RULE);
+        const createRuleControllerParams: CreateRuleControllerParameters = {
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            response: res as unknown as NextApiResponse,
+            ...commonControllerParameters,
+            dids,
+            ask_approval: true,
+            grouping: 'ALL',
+            sample: true,
+            sample_file_count: 5,
+        };
+
+        await createRuleController.execute(createRuleControllerParams);
+
+        const viewModel: CreateRuleViewModel = res._getJSONData();
+        expect(viewModel.status).toEqual('success');
     });
 });

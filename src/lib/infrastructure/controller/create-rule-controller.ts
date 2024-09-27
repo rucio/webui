@@ -22,6 +22,8 @@ export type CreateRuleControllerParameters = TAuthenticatedControllerParameters 
     comments?: string;
     ask_approval?: boolean;
     asynchronous?: boolean;
+    sample?: boolean;
+    sample_file_count?: number;
 };
 
 @injectable()
@@ -43,6 +45,8 @@ class CreateRuleController extends BaseController<CreateRuleControllerParameters
             comments: parameters.comments,
             asynchronous: parameters.asynchronous,
             ask_approval: parameters.ask_approval,
+            sample: parameters.sample ?? false,
+            sample_file_count: parameters.sample_file_count,
         };
     }
 }
