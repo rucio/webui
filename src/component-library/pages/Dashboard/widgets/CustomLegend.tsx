@@ -15,7 +15,7 @@ const CustomLegend: React.FC<CustomLegendProps> = ({ legendOptions }) => {
     const commonCircleClasses = 'bg-opacity-70 h-6 w-6';
 
     return (
-        <div className="flex justify-center space-x-10 text-sm text-neutral-900 dark:text-neutral-100">
+        <div className="flex space-x-10 text-sm text-neutral-900 dark:text-neutral-100 py-3">
             {legendOptions.map((option, index) => (
                 <div key={index} className="flex space-x-2 items-center">
                     <CircleWithText text="" className={cn(commonCircleClasses, option.color)} />
