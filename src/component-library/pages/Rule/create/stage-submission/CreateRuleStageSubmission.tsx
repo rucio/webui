@@ -27,6 +27,8 @@ export const CreateRuleStageSubmission = ({ parameters, removeSaved }: CreateRul
             comments: parameters.comments,
             ask_approval: parameters.askApproval,
             asynchronous: parameters.asynchronous,
+            sample: parameters.sample,
+            sample_file_count: parameters.sampleFileCount,
         });
         const url = '/api/feature/create-rule';
 
