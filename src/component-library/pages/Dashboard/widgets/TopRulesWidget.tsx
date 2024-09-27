@@ -141,7 +141,7 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
                     stroke={fillColor}
                 />
                 <YAxis dataKey="id" type="category" tick={<LinkTick fill={fillColor} />} width={315} stroke={fillColor} />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: borderColor }} />
                 {getStyledBar('locksOkPercentage')}
                 {getStyledBar('locksReplicatingPercentage')}
                 {getStyledBar('locksStuckPercentage')}
