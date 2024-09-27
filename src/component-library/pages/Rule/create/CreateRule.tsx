@@ -93,6 +93,9 @@ export const CreateRule = (props: CreateRuleProps) => {
             grouping !== CreateRuleGrouping.ALL &&
             grouping !== CreateRuleGrouping.NONE;
 
+        newOptionErrors.sampleCountInvalid =
+            parameters.hasSampling && (!parameters.sampleCount || isNaN(parameters.sampleCount) || parameters.sampleCount < 1);
+
         setOptionsErrors(newOptionErrors);
     };
 
