@@ -139,7 +139,7 @@ const AdvancedInput = ({
     parameters: CreateRuleParameters;
     updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
 }) => {
-    const onSampleInput = (event: FormEvent<HTMLInputElement>) => {
+    const onFileCountInput = (event: FormEvent<HTMLInputElement>) => {
         let value;
         if (event.currentTarget.validity.valid) {
             value = event.currentTarget.value === '' ? undefined : parseInt(event.currentTarget.value, 10);
@@ -147,6 +147,12 @@ const AdvancedInput = ({
             value = NaN;
         }
         updateOptionValue('sampleFileCount', value);
+    };
+
+    const getDefaultFileCount = () => {
+        if (parameters.sampleFileCount === undefined) return '';
+        if (isNaN(parameters.sampleFileCount)) return -1;
+        return parameters.sampleFileCount;
     };
 
     return (
@@ -186,7 +192,7 @@ const AdvancedInput = ({
                 />
                 {parameters.sample && (
                     <InputWithLabel label="Number of files">
-                        <Input type="number" min="1" onInput={onSampleInput} />
+                        <Input type="number" min="1" onInput={onFileCountInput} defaultValue={getDefaultFileCount()}/>
                     </InputWithLabel>
                 )}
             </CollapsibleContent>
