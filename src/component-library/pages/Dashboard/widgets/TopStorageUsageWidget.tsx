@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { Field } from '@/component-library/atoms/misc/Field';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import CustomLegend, { LegendOption } from '@/component-library/pages/Dashboard/widgets/CustomLegend';
+import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
 
 const CustomTooltip = ({ active, payload, totalBytes }: any) => {
     if (active && payload && payload.length) {
@@ -35,6 +36,10 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
         'rgba(34,197,94,0.8)', // Tailwind base-error-500
     ];
 
+    const isDarkMode = useDarkMode();
+    // Tailwind neutral-100 or neutral-900
+    const borderColor = isDarkMode ? 'rgba(241,245,249,0.15)' : 'rgba(15,23,42,0.15)';
+
     const { rse, used_bytes, bytes_limit } = usage;
     const remainingBytes = bytes_limit - used_bytes;
 
@@ -54,7 +59,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
             </Link>
             <ResponsiveContainer height={275}>
                 <PieChart>
-                    <Pie data={pieData} dataKey="value" nameKey="name" strokeWidth={0}>
+                    <Pie data={pieData} dataKey="value" nameKey="name" stroke={borderColor}>
                         {pieData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="outline-none" />
                         ))}
