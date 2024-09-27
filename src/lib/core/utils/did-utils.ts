@@ -33,7 +33,7 @@ export const generateDerivedDIDName = (newScope: string, selectedDID: DID): DID 
 };
 
 export const generateSampleDIDName = (newScope: string, name: string) => {
-    return `${newScope}.${name}_der${Date.now() / 1000}`;
+    return `${newScope}.${name}_der${Math.floor(Date.now() / 1000)}`;
 };
 
 /**
