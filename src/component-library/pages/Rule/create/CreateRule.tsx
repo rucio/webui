@@ -44,16 +44,17 @@ const NextButton = ({
     stepsLength: number;
     isStepIncomplete: boolean;
 }) => {
+    const isSubmit = activeIndex === stepsLength - 2;
     const disabled = activeIndex === stepsLength - 1 || isStepIncomplete;
 
     return (
-        <Button // TODO: pass account info
-            variant="neutral"
+        <Button
+            variant={isSubmit ? 'success' : 'neutral'}
             className="w-full sm:w-48 ml-auto justify-between"
             disabled={disabled}
             onClick={() => setActiveIndex(prev => prev + 1)}
         >
-            <span>Next</span>
+            <span>{isSubmit ? 'Submit' : 'Next'}</span>
             <HiArrowRight />
         </Button>
     );
