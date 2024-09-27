@@ -1,11 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
-import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { ICellRendererParams, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
+import { ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
-import { Button } from '@/component-library/atoms/form/button';
-import { HiMinus } from 'react-icons/hi';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
@@ -59,6 +55,19 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             field: 'bytes',
             valueFormatter: (params: ValueFormatterParams) => {
                 return formatFileSize(params.value);
+            },
+            minWidth: 200,
+            maxWidth: 200,
+            sortable: false,
+        },
+        {
+            headerName: 'Requested Size',
+            valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
+                if (params.data?.bytes) {
+                    return formatFileSize(params.data?.bytes * props.copies);
+                } else {
+                    return formatFileSize(NaN);
+                }
             },
             minWidth: 200,
             maxWidth: 200,

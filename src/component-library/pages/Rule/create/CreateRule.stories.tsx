@@ -3,11 +3,16 @@ import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/T
 import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
 import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
-import { fixtureDIDLongViewModel } from '@/test/fixtures/table-fixtures';
+import {
+    fixtureDIDLongViewModel,
+    fixtureListDIDViewModel,
+    fixtureRSEAccountUsageLimitViewModel,
+    fixtureRSEViewModel,
+} from '@/test/fixtures/table-fixtures';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getMockSingleEndpoint } from '@/test/mocks/handlers/single-handlers';
-import { CreateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { CreateRuleParameters, CreateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 
 export default {
     title: 'Components/Pages/Rule/Create',
@@ -106,6 +111,33 @@ export const FromOptions = Template.bind({});
 FromOptions.args = {
     getSavedParameters: () => undefined,
     getSavedIndex: () => 2,
+    setSavedIndex: () => {},
+    setSavedParameters: () => {},
+    removeSavedParameters: () => {},
+    removeSavedIndex: () => {},
+};
+
+export const FromSummary = Template.bind({});
+FromSummary.args = {
+    getSavedParameters: () => {
+        const parameters: CreateRuleParameters = {
+            askApproval: false,
+            asynchronous: false,
+            comments: '',
+            copies: 3,
+            daysLifetime: undefined,
+            dids: Array.from({ length: 3 }, fixtureListDIDViewModel),
+            grouping: undefined,
+            hasSampling: false,
+            needsApproval: false,
+            notify: false,
+            rseExpression: '',
+            rses: [fixtureRSEAccountUsageLimitViewModel()],
+            sampleCount: 0,
+        };
+        return parameters;
+    },
+    getSavedIndex: () => 3,
     setSavedIndex: () => {},
     setSavedParameters: () => {},
     removeSavedParameters: () => {},
