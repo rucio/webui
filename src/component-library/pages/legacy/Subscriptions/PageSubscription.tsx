@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { Tabs } from '../../../atoms/legacy/Tabs/Tabs';
 import { SubPage } from '../../../atoms/legacy/helpers/SubPage/SubPage';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Titleth, Contenttd, Generaltable } from '../../../atoms/legacy/helpers/Metatable/Metatable';
 import { DateTag } from '@/component-library/features/legacy/Tags/DateTag';
 import { BoolTag } from '@/component-library/features/legacy/Tags/BoolTag';
@@ -13,6 +13,7 @@ import { SubscriptionFilter, SubscriptionReplicationRules } from '@/lib/core/ent
 import { Heading } from '@/component-library/pages/legacy/Helpers/Heading';
 import { Body } from '@/component-library/pages/legacy/Helpers/Body';
 import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
+import { InfoField } from '@/component-library/features/fields/InfoField';
 
 export interface PageSubscriptionPageProps {
     subscriptionViewModel: SubscriptionViewModel;
@@ -25,6 +26,9 @@ export const PageSubscription = (props: PageSubscriptionPageProps) => {
     const meta = props.subscriptionViewModel;
     return (
         <div className={twMerge('flex flex-col space-y-2 w-full')}>
+            <InfoField>
+                <span>This page is currently in development. We are working on improvements, so stay tuned!</span>
+            </InfoField>
             <Heading
                 className="text-text-1000 dark:text-text-0"
                 title="View Subscription"

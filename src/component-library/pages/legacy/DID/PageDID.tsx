@@ -29,6 +29,7 @@ import {
 } from '@/lib/infrastructure/data/view-model/did';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { DIDMetaView } from '@/component-library/pages/legacy/DID/DIDMetaView';
+import { InfoField } from '@/component-library/features/fields/InfoField';
 
 export interface PageDIDPageProps {
     didMeta: DIDMetaViewModel;
@@ -92,6 +93,9 @@ export const PageDID = (props: PageDIDPageProps) => {
     };
     return (
         <div className={twMerge('flex flex-col space-y-2 w-full')}>
+            <InfoField>
+                <span>This page is currently in development and has not been optimized yet. We are working on improvements, so stay tuned!</span>
+            </InfoField>
             <Heading
                 title="View DID"
                 subtitle={`For DID ${props.didMeta.scope}:${props.didMeta.name}`}

@@ -26,6 +26,7 @@ import { Body } from '@/component-library/pages/legacy/Helpers/Body';
 import { RuleMetaViewModel, RulePageLockEntryViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { Button } from '@/component-library/atoms/legacy/Button/Button';
 import { HiRocketLaunch } from 'react-icons/hi2';
+import { InfoField } from '@/component-library/features/fields/InfoField';
 
 export interface PageRulePageProps {
     ruleMeta: RuleMetaViewModel;
@@ -131,6 +132,11 @@ export const PageRule = (props: PageRulePageProps) => {
 
     return (
         <div className={twMerge('flex flex-col space-y-2 w-full', 'dark:text-text-0 text-text-1000')}>
+            <InfoField>
+                <span>
+                    This page is currently using mock data for demonstration purposes. We are actively working on implementing real data soon!
+                </span>
+            </InfoField>
             <Heading title="View Rule" subtitle={`For rule ${props.ruleMeta.scope}:${props.ruleMeta.name}`}>
                 <div className={twMerge('w-full p-2 rounded', 'bg-neutral-200 dark:bg-neutral-900', props.ruleBoostShow ? '' : 'hidden')}>
                     <Button label="Boost rule" theme="orange" icon={<HiRocketLaunch />} onClick={() => props.ruleBoostFunc()} />
