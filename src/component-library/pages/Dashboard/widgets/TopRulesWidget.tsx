@@ -16,7 +16,7 @@ const openRule = (id: string) => {
 };
 
 const LinkTick = (props: any) => {
-    const id = props.payload.value;
+    const id = props.payload.value.substring(0, 12);
     const fill = props.fill;
 
     return (
@@ -140,7 +140,7 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
                     }}
                     stroke={fillColor}
                 />
-                <YAxis dataKey="id" type="category" tick={<LinkTick fill={fillColor} />} width={315} stroke={fillColor} />
+                <YAxis dataKey="id" type="category" tick={<LinkTick fill={fillColor} />} width={120} stroke={fillColor} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: borderColor }} />
                 {getStyledBar('locksOkPercentage')}
                 {getStyledBar('locksReplicatingPercentage')}
