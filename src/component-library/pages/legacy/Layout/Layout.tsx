@@ -172,10 +172,12 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
                     </span>
 
                     <span className="flex flex-row space-x-2">
-                        <a className="bg-neutral-100 w-12 h-12 rounded" href={'//' + props.LVM.rucioProjectLink}>
+                        <a className="w-12 h-12" href={'//' + props.LVM.rucioProjectLink}>
                             <Image src="/logocropped.svg" alt="Rucio Logo" width={48} height={48} />
                         </a>
-                        <a className="bg-brand-500 w-12 h-12" href={'//' + props.LVM.experimentProjectLink} />
+                        <a className="w-12 h-12" href={'//' + props.LVM.experimentProjectLink}>
+                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={48} height={48} />
+                        </a>
                     </span>
                     <span className="hidden md:visible md:flex space-x-16 items-center pl-2 pr-2">
                         <Searchbar />
