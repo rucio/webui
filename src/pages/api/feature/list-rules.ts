@@ -20,13 +20,15 @@ async function listRules(req: NextApiRequest, res: NextApiResponse, rucioAuthTok
 
     const account = sessionUser.rucioAccount;
 
-    const { scope } = req.query as { scope?: string };
+    // TODO: check if created_after is an actual date
+    const { scope, created_after } = req.query as { scope?: string; created_after?: string };
 
     const controllerParameters: ListRulesControllerParameters = {
         response: res,
         rucioAuthToken: rucioAuthToken,
         account: account,
         scope: scope,
+        created_after: created_after,
     };
 
     const controller = appContainer.get<BaseController<ListRulesControllerParameters, ListRulesRequest>>(CONTROLLERS.LIST_RULES);

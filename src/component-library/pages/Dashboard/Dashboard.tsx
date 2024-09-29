@@ -1,16 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
-import { getSiteHeader } from '@/app/(rucio)/queries';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
-import { Heading } from '@/component-library/atoms/misc/Heading';
-import { WarningField } from '@/component-library/features/fields/WarningField';
-import { AccountRoleBadge } from '@/component-library/features/badges/account/AccountRoleBadge';
-import { TopRulesWidget } from '@/component-library/pages/Dashboard/widgets/TopRulesWidget';
-import { useEffect, useRef, useState } from 'react';
-import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
-import useStreamReader, { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
-import { RSEAccountUsageViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { TopStorageUsageWidget } from '@/component-library/pages/Dashboard/widgets/TopStorageUsageWidget';
+import {useQuery} from '@tanstack/react-query';
+import {SiteHeaderViewModel} from '@/lib/infrastructure/data/view-model/site-header';
+import {getSiteHeader} from '@/app/(rucio)/queries';
+import {LoadingSpinner} from '@/component-library/atoms/loading/LoadingSpinner';
+import {Heading} from '@/component-library/atoms/misc/Heading';
+import {WarningField} from '@/component-library/features/fields/WarningField';
+import {AccountRoleBadge} from '@/component-library/features/badges/account/AccountRoleBadge';
+import {TopRulesWidget} from '@/component-library/pages/Dashboard/widgets/TopRulesWidget';
+import {useEffect, useRef, useState} from 'react';
+import {RuleViewModel} from '@/lib/infrastructure/data/view-model/rule';
+import useStreamReader, {StreamingStatus} from '@/lib/infrastructure/hooks/useStreamReader';
+import {RSEAccountUsageViewModel} from '@/lib/infrastructure/data/view-model/rse';
+import {TopStorageUsageWidget} from '@/component-library/pages/Dashboard/widgets/TopStorageUsageWidget';
 
 const AccountHeading = () => {
     const querySiteHeader = async () => {
@@ -34,7 +34,7 @@ const AccountHeading = () => {
         retry: false,
     });
 
-    if (isHeaderFetching) return <LoadingSpinner />;
+    if (isHeaderFetching) return <LoadingSpinner/>;
 
     if (headerError || !header?.activeAccount) {
         return (
@@ -46,8 +46,8 @@ const AccountHeading = () => {
 
     return (
         <div className="flex space-x-2 items-center">
-            <Heading text={`Hello, ${header.activeAccount.rucioAccount}!`} />
-            <AccountRoleBadge className="text-xl" value={header.activeAccount.role} />
+            <Heading text={`Hello, ${header.activeAccount.rucioAccount}!`}/>
+            <AccountRoleBadge className="text-xl" value={header.activeAccount.role}/>
         </div>
     );
 };
@@ -55,7 +55,7 @@ const AccountHeading = () => {
 const UsageView = () => {
     const usageBuffer = useRef<RSEAccountUsageViewModel[] | undefined>([]);
     const [usages, setUsages] = useState<RSEAccountUsageViewModel[]>();
-    const { start, stop, error, status } = useStreamReader<RSEAccountUsageViewModel>();
+    const {start, stop, error, status} = useStreamReader<RSEAccountUsageViewModel>();
 
     useEffect(() => {
         // TODO: handle error view models
@@ -80,18 +80,29 @@ const UsageView = () => {
 
     const isLoading = (!usages && !error) || status === StreamingStatus.RUNNING;
 
-    return <TopStorageUsageWidget usages={usages} isLoading={isLoading} errorMessage={error?.message} />;
+    return <TopStorageUsageWidget usages={usages} isLoading={isLoading} errorMessage={error?.message}/>;
 };
 
 const RulesView = () => {
     const rulesBuffer = useRef<RuleViewModel[] | undefined>([]);
     const [rules, setRules] = useState<RuleViewModel[]>();
-    const { start, stop, error, status } = useStreamReader<RuleViewModel>();
+    const {start, stop, error, status} = useStreamReader<RuleViewModel>();
+
+    const getCreatedAfterDate = () => {
+        // Only the rules that were created less than 15 days ago should get loaded
+        const now = new Date();
+        const fifteenDaysAgo = new Date(now.setDate(now.getDate() - 15));
+        return fifteenDaysAgo.toISOString();
+    };
 
     useEffect(() => {
         // TODO: handle error view models
+        const params = new URLSearchParams({
+            scope: '*',
+            created_after: getCreatedAfterDate(),
+        });
         start({
-            url: '/api/feature/list-rules?scope=*',
+            url: '/api/feature/list-rules?' + params.toString(),
             onData: data => {
                 if (!rulesBuffer.current) {
                     rulesBuffer.current = data;
@@ -111,17 +122,17 @@ const RulesView = () => {
 
     const isLoading = (!rules && !error) || status === StreamingStatus.RUNNING;
 
-    return <TopRulesWidget rules={rules} isLoading={isLoading} errorMessage={error?.message} />;
+    return <TopRulesWidget rules={rules} isLoading={isLoading} errorMessage={error?.message}/>;
 };
 
 export const Dashboard = () => {
     return (
         <div className="flex flex-col space-y-3 w-full">
             <div className="h-14">
-                <AccountHeading />
+                <AccountHeading/>
             </div>
-            <RulesView />
-            <UsageView />
+            <RulesView/>
+            <UsageView/>
         </div>
     );
 };
