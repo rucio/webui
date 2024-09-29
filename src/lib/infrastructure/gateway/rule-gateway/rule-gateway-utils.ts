@@ -1,5 +1,5 @@
 import { RuleDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
-import { LockState, RuleState } from '@/lib/core/entity/rucio';
+import { DateISO, LockState, RuleState } from '@/lib/core/entity/rucio';
 
 export type TRucioRule = {
     error: null | string;
@@ -139,4 +139,21 @@ export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
 export type ListRulesFilter = {
     account?: string;
     scope?: string;
+    created_after?: Date;
+};
+
+export const formatFilterDate = (date: Date) => {
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const dayOfWeek = daysOfWeek[date.getUTCDay()];
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = months[date.getUTCMonth()];
+    const year = date.getUTCFullYear();
+
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+    return `${dayOfWeek}, ${day} ${month} ${year} ${hours}:${minutes}:${seconds} UTC`;
 };

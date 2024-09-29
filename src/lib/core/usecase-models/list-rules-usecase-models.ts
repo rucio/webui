@@ -7,6 +7,7 @@ import { Rule } from '@/lib/core/entity/rucio';
 export interface ListRulesRequest {
     account?: string;
     scope?: string;
+    created_after?: Date;
 }
 
 /**

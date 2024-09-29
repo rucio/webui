@@ -10,6 +10,7 @@ import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factor
 export type ListRulesControllerParameters = TAuthenticatedControllerParameters & {
     scope?: string;
     account?: string;
+    created_after?: string;
 };
 
 @injectable()
@@ -22,6 +23,7 @@ class ListRulesController extends BaseController<ListRulesControllerParameters, 
             rucioAuthToken: parameters.rucioAuthToken,
             account: parameters.account,
             scope: parameters.scope,
+            created_after: parameters.created_after ? new Date(parameters.created_after) : undefined,
         };
     }
 }
