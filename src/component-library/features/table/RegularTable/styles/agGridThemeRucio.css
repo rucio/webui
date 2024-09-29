@@ -4,8 +4,6 @@
  * See installation docs at https://www.ag-grid.com/javascript-data-grid/applying-theme-builder-styling-grid/
  */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM%20Plex%20Sans:wght@400;500&display=swap');
-
 .ag-root-wrapper {
 	border-bottom-left-radius: 0!important;
 	border-bottom-right-radius: 0!important;
@@ -29,7 +27,7 @@
 	--ag-pinned-column-border: var(--ag-inherited-pinned-column-border, solid 1px var(--ag-border-color));
 	--ag-pinned-row-border: var(--ag-inherited-pinned-row-border, solid 1px var(--ag-border-color));
 	--ag-side-panel-border: var(--ag-inherited-side-panel-border, solid 1px var(--ag-border-color));
-	--ag-font-family: var(--ag-inherited-font-family, 'monospace');
+	--ag-font-family: monospace;
 	--ag-chrome-background-color: var(--ag-inherited-chrome-background-color, color-mix(in srgb, var(--ag-background-color), var(--ag-foreground-color) 7%));
 	--ag-header-background-color: var(--ag-inherited-header-background-color, #334155);
 	--ag-header-font-family: var(--ag-inherited-header-font-family, var(--ag-font-family));
