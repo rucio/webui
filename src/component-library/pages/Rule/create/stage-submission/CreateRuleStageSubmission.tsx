@@ -103,12 +103,25 @@ export const CreateRuleStageSubmission = ({ parameters, removeSaved }: CreateRul
     }, [data]);
 
     const getDataComponent = () => {
+        if (!data) return;
+
         const button = (
             <Link href="/rule/list" className="cursor-pointer hover:text-brand-500">
                 <b>rules list</b>
             </Link>
         );
-        return <span className="text-neutral-900 dark:text-neutral-100">Successfully requested the rule. Proceed to the {button} to view it.</span>;
+        // TODO: make these IDs a link to the rule detailed view
+        return (
+            <div className="text-neutral-900 dark:text-neutral-100">
+                <span>Successfully requested the rule(s) with IDs:</span>
+                <ul>
+                    {data.rule_ids.map(id => (
+                        <li key={id}>{id}</li>
+                    ))}
+                </ul>
+                <span>Proceed to the {button} to view it.</span>
+            </div>
+        );
     };
 
     return (
