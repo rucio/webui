@@ -37,53 +37,44 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
 
     const NavBar: React.FC = () => {
         return (
-            <nav className="bg-gray-800 p-0 m-0 w-max">
+            <nav className="text-neutral-900 dark:text-neutral-100 p-0 m-0 w-max">
                 <div className="container mx-0 w-max flex ">
                     <ul className="flex space-x-5 md:flex-row flex-col">
                         <li className="group relative self-center">
-                            <HeaderLinks
-                                href="/dashboard"
-                                className="w-max bg-neutral-800 text-text-100  px-2 py-2 hover:text-brand-500 text-left align-middle"
-                            >
+                            <HeaderLinks href="/dashboard" className="w-max px-2 py-2 hover:text-brand-500 text-left align-middle">
                                 Dashboard
                             </HeaderLinks>
                         </li>
                         <li className="group relative self-center">
-                            <HeaderLinks href="/did/list" className="w-max text-text-100 bg-neutral-800 px-2 py-2 hover:text-brand-500 text-left">
+                            <HeaderLinks href="/did/list" className="w-max px-2 py-2 hover:text-brand-500 text-left">
                                 DIDs
                             </HeaderLinks>
                         </li>
                         <li className="group relative self-center">
-                            <HeaderLinks href="/rse/list" className="w-max text-text-100 bg-neutral-800 px-2 py-2 hover:text-brand-500 text-center ">
+                            <HeaderLinks href="/rse/list" className="w-max px-2 py-2 hover:text-brand-500 text-center ">
                                 RSEs
                             </HeaderLinks>
                         </li>
                         <li className="group relative">
-                            <div className="group-hover:block text-text-100 bg-neutral-800 focus:outline-none px-2 py-2">
+                            <div className="group-hover:block focus:outline-none px-2 py-2">
                                 Rules
-                                <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-700 mt-1 rounded shadow-lg z-10 p-1 ">
-                                    <HeaderLinks
-                                        href="/rule/create"
-                                        className="w-max pt-2 pl-1 pr-1 text-text-100 bg-neutral-700 block hover:text-brand-500  text-center"
-                                    >
+                                <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-100 dark:bg-neutral-800 mt-1 rounded shadow-lg z-10 p-1 ">
+                                    <HeaderLinks href="/rule/create" className="w-max pt-2 pl-1 pr-1 block hover:text-brand-500 text-center">
                                         Create Rule
                                     </HeaderLinks>
-                                    <HeaderLinks
-                                        href="/rule/list"
-                                        className="pt-2 pb-2 pl-1 pr-1   text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
-                                    >
+                                    <HeaderLinks href="/rule/list" className="pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500 text-center">
                                         List Rules
                                     </HeaderLinks>
                                 </div>
                             </div>
                         </li>
                         <li className="group relative">
-                            <div className="group-hover:block text-text-100 bg-neutral-800 focus:outline-none px-2 py-2">
+                            <div className="group-hover:block focus:outline-none px-2 py-2">
                                 ...
-                                <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-700 mt-1 rounded shadow-lg z-10 p-1">
+                                <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-100 dark:bg-neutral-800 mt-1 rounded shadow-lg z-10 p-1">
                                     <HeaderLinks
                                         href="/subscription/list"
-                                        className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                                        className="w-max pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500 text-center"
                                     >
                                         Subscription
                                     </HeaderLinks>
@@ -97,48 +88,33 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
     };
     const SideNavBar: React.FC = () => {
         return (
-            <nav className="bg-gray-800 p-0 m-0 w-max">
-                <div className="container mx-0 w-max flex ">
+            <nav className="text-neutral-900 dark:text-neutral-100 p-0 m-0 w-max">
+                <div className="container mx-0 w-max flex">
                     <ul className="flex space-x-5 md:flex-row flex-col">
                         <li className="group relative">
-                            <div className="group-hover:block text-text-100 bg-neutral-800 focus:outline-none px-2 py-2">
+                            <div className="group-hover:block focus:outline-none px-2 py-2">
                                 <HiMenu className="text-4xl" />
-                                <div className="absolute hidden group-hover:block group-focus-within:block bg-neutral-700 mt-1 rounded shadow-lg z-10 p-1">
-                                    <HeaderLinks
-                                        href="/dashboard"
-                                        className="w-max pt-2 pb-2  pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
-                                    >
+                                <div className="absolute hidden group-hover:block group-focus-within:block mt-1 rounded shadow-lg z-10 p-1 bg-neutral-100 dark:bg-neutral-800">
+                                    <HeaderLinks href="/dashboard" className="w-max pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500 text-center">
                                         Dashboard
                                     </HeaderLinks>
 
-                                    <HeaderLinks
-                                        href="/did/list"
-                                        className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
-                                    >
+                                    <HeaderLinks href="/did/list" className="w-max pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500 text-center">
                                         DIDs
                                     </HeaderLinks>
 
-                                    <HeaderLinks
-                                        href="/rse/list"
-                                        className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
-                                    >
+                                    <HeaderLinks href="/rse/list" className="w-max pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500 text-center">
                                         RSEs
                                     </HeaderLinks>
-                                    <HeaderLinks
-                                        href="/rule/create"
-                                        className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500  text-center"
-                                    >
+                                    <HeaderLinks href="/rule/create" className="w-max pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500  text-center">
                                         Create Rule
                                     </HeaderLinks>
-                                    <HeaderLinks
-                                        href="/rule/list"
-                                        className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
-                                    >
+                                    <HeaderLinks href="/rule/list" className="w-max pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500 text-center">
                                         List Rules
                                     </HeaderLinks>
                                     <HeaderLinks
                                         href="/subscription/list"
-                                        className="w-max pt-2 pb-2 pl-1 pr-1  text-text-100 bg-neutral-700 block hover:text-brand-500 text-center"
+                                        className="w-max pt-2 pb-2 pl-1 pr-1 block hover:text-brand-500 text-center"
                                     >
                                         Subscription
                                     </HeaderLinks>
@@ -165,18 +141,25 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
     // images to be returned by static nextjs
     return (
         <div className={twMerge('dark:bg-neutral-900 bg-neutral-0', 'h-full min-h-screen', 'flex flex-col')}>
-            <header className={twMerge('w-full flex flex-col bg-neutral-800 space-y-2 p-2', 'md:h-16', 'z-[100]')}>
+            <header
+                className={twMerge(
+                    'w-full flex flex-col bg-neutral-0 dark:bg-neutral-900 space-y-2 p-2',
+                    'md:h-16',
+                    'z-[100]',
+                    'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                )}
+            >
                 <nav className="w-full h-full flex justify-between items-center">
                     <span className="flex md:hidden">
                         <SideNavBar></SideNavBar>
                     </span>
 
-                    <span className="flex flex-row space-x-2">
+                    <span className="flex flex-row space-x-1">
                         <a className="w-12 h-12" href={'//' + props.LVM.rucioProjectLink}>
-                            <Image src="/logocropped.svg" alt="Rucio Logo" width={48} height={48} />
+                            <Image src="/logocropped.svg" alt="Rucio Logo" width={43} height={43} />
                         </a>
                         <a className="w-12 h-12" href={'//' + props.LVM.experimentProjectLink}>
-                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={48} height={48} />
+                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53} />
                         </a>
                     </span>
                     <span className="hidden md:visible md:flex space-x-16 items-center pl-2 pr-2">
@@ -186,11 +169,11 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
 
                     <span className="flex space-x-1 items-end relative pl-2 pr-2">
                         <button
-                            className="text-text-100 hover:text-brand-500 flex items-center"
+                            className="text-neutral-900 dark:text-neutral-100 hover:text-brand-500 flex items-center"
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
                             ref={accountMenuButtonRef}
                         >
-                            <HiUserCircle className="text-4xl" />
+                            <HiUserCircle className="text-3xl" />
                             <HiChevronDown className="hidden md:inline" />
                         </button>
                         <AccountDropdown

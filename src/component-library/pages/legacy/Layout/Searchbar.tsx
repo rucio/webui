@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/navigation';
+import { Input } from '@/component-library/atoms/form/input';
 
 type SearchLocation = {
     name: string;
@@ -39,7 +40,9 @@ const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; 
                 'w-full p-1 rounded-sm hover:cursor-pointer',
                 'hover:bg-neutral-200 text-text-800',
                 'dark:text-text-100',
-                props.isHighlighted ? 'dark:bg-neutral-500 hover:dark:bg-neutral-500' : 'dark:bg-neutral-800 hover:dark:bg-neutral-600',
+                props.isHighlighted
+                    ? 'bg-neutral-300 hover:bg-neutral-300 dark:bg-neutral-500 hover:dark:bg-neutral-500'
+                    : 'dark:bg-neutral-800 hover:dark:bg-neutral-600',
             )}
             onMouseDown={props.onMouseDown}
         >
@@ -153,8 +156,7 @@ export const Searchbar = () => {
 
     return (
         <span className="relative">
-            <input
-                className={twMerge('p-2 rounded-lg w-48 lg:w-96 bg-neutral-600 text-text-100', 'focus:bg-neutral-100 focus:text-text-900')}
+            <Input
                 placeholder="Search"
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
