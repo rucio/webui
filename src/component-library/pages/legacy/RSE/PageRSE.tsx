@@ -11,6 +11,8 @@ import { PageRSEAttributes } from './PageRSEAttributes';
 import { H2 } from '../../../atoms/legacy/text/headings/H2/H2';
 import { Body } from '@/component-library/pages/legacy/Helpers/Body';
 import { Heading } from '@/component-library/pages/legacy/Helpers/Heading';
+import { InfoField } from '@/component-library/features/fields/InfoField';
+import React from 'react';
 
 type PageRSEProps = {
     rse: RSEViewModel;
@@ -23,6 +25,9 @@ type PageRSEProps = {
 export const PageRSE = (props: PageRSEProps) => {
     return (
         <div className={twMerge('flex flex-col space-y-2 w-full')}>
+            <InfoField>
+                <span>This page is currently in development. We are working on improvements, so stay tuned!</span>
+            </InfoField>
             <Heading title="View RSE" subtitle={`For RSE ${props.rse.name}`}>
                 <div
                     className={twMerge(

@@ -1,9 +1,9 @@
-import {RuleDTO} from '@/lib/core/dto/rule-dto';
-import {BaseStreamableDTO} from '@/lib/sdk/dto';
-import {BaseStreamableEndpoint} from '@/lib/sdk/gateway-endpoints';
-import {HTTPRequest} from '@/lib/sdk/http';
-import {Response} from 'node-fetch';
-import {convertToRuleDTO, ListRulesFilter, TRucioRule} from '../rule-gateway-utils';
+import { RuleDTO } from '@/lib/core/dto/rule-dto';
+import { BaseStreamableDTO } from '@/lib/sdk/dto';
+import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { HTTPRequest } from '@/lib/sdk/http';
+import { Response } from 'node-fetch';
+import { convertToRuleDTO, ListRulesFilter, TRucioRule } from '../rule-gateway-utils';
 
 const DEFAULT_PARAMETER = '*';
 
@@ -29,7 +29,7 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
             params: {
                 account: this.filter?.account ?? DEFAULT_PARAMETER,
                 scope: this.filter?.scope ?? DEFAULT_PARAMETER,
-            }
+            },
         };
         this.request = request;
         this.initialized = true;

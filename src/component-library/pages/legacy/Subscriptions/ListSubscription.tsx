@@ -7,13 +7,14 @@ import { TableFilterString } from '@/component-library/features/legacy/StreamedT
 import { TableSortUpDown } from '@/component-library/features/legacy/StreamedTables/TableSortUpDown';
 import { RuleStateTag } from '@/component-library/features/legacy/Tags/RuleStateTag';
 import { RuleState } from '@/lib/core/entity/rucio';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 import { Body } from '@/component-library/pages/legacy/Helpers/Body';
 import { Heading } from '@/component-library/pages/legacy/Helpers/Heading';
 import { SubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 import { TableInternalLink } from '@/component-library/features/legacy/StreamedTables/TableInternalLink';
 import useReponsiveHook from '@/component-library/hooks/legacy/ResponsiveHook';
+import { InfoField } from '@/component-library/features/fields/InfoField';
 
 export interface ListSubscriptionProps {
     accountname: string;
@@ -200,6 +201,9 @@ export const ListSubscription = (props: ListSubscriptionProps) => {
 
     return (
         <div className={twMerge('flex flex-col space-y-2 w-full')}>
+            <InfoField>
+                <span>This page is currently in development. We are working on improvements, so stay tuned!</span>
+            </InfoField>
             <Heading className="text-text-1000 dark:text-text-0" title="List Subscriptions" subtitle={`For account ${props.accountname}`} />
             <Body>
                 <StreamedTable<SubscriptionRuleStatesViewModel>
