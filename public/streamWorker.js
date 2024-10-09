@@ -1,8 +1,10 @@
 self.onmessage = async function (event) {
     const {url, fetchOptions, updateDelay = 50, maxUpdateLength = 100} = event.data;
     const buffer = [];
+    let foundEntries = false;
 
     const postData = () => {
+        foundEntries = true;
         // Remove the first {maxUpdateLength} or all elements from the buffer
         const dataToSend = buffer.length > maxUpdateLength ? buffer.splice(0, maxUpdateLength) : buffer.splice(0);
         self.postMessage({type: 'data', data: dataToSend});
@@ -17,7 +19,11 @@ self.onmessage = async function (event) {
     const finalize = () => {
         handleUpdate();
         if (buffer.length === 0) {
-            self.postMessage({type: 'finish'});
+            if (foundEntries) {
+                self.postMessage({type: 'finish'});
+            } else {
+                handleError('not_found', 'No entries found.');
+            }
         }
     };
 
