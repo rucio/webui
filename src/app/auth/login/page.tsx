@@ -7,6 +7,10 @@ import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Logi
 import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
 
 export default function Login() {
+    useEffect(() => {
+        document.title = 'Login - Rucio';
+    }, []);
+
     const [redirectURL, setRedirectURL] = useState<string>('/dashboard' as string);
     const [viewModel, setViewModel] = useState<LoginViewModel>();
     const [authViewModel, setAuthViewModel] = useState<AuthViewModel>();

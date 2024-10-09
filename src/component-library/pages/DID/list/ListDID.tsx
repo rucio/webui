@@ -1,3 +1,5 @@
+'use client';
+
 import { DIDMetaViewModel, DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import React, { useEffect, useState } from 'react';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
