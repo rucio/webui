@@ -134,7 +134,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                     />
                 </div>
             </div>
-            <SearchButton isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
+            <SearchButton className="sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
         </div>
     );
 };
