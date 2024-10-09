@@ -124,8 +124,6 @@ export const RegularTable = (props: RegularTableProps) => {
 
     const onGridReady = (event: GridReadyEvent) => {
         setIsTableLoaded(true);
-        event.api.sizeColumnsToFit(); // Ensures columns stretch to fit grid width
-
         if (props.onGridReady) {
             props.onGridReady(event);
         }
@@ -134,10 +132,6 @@ export const RegularTable = (props: RegularTableProps) => {
     useEffect(() => {
         onPaginationChanged();
     }, [isTableLoaded]);
-
-    const handleResize = (event: AgGridEvent) => {
-        event.api.sizeColumnsToFit();
-    };
 
     const isDarkMode = useDarkMode();
 
@@ -166,7 +160,7 @@ export const RegularTable = (props: RegularTableProps) => {
                     onPaginationChanged={onPaginationChanged}
                     suppressMovableColumns={true}
                     rowMultiSelectWithClick={true}
-                    onGridSizeChanged={handleResize}
+                    defaultColDef={{ flex: 1 }}
                     //asyncTransactionWaitMillis={500}
                 />
             </div>
