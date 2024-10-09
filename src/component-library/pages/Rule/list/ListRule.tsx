@@ -1,3 +1,5 @@
+'use client';
+
 import { ChangeEvent, useState } from 'react';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
