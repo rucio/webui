@@ -20,7 +20,6 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
         {
             headerName: 'Identifier',
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
-            minWidth: 250,
             flex: 1,
             sortable: false,
         },
