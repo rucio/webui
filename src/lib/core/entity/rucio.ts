@@ -284,6 +284,19 @@ export type RSEProtocol = {
     created_at?: DateISO; // TODO: rucio does not provide this
 };
 
+export type RSEDetails = {
+    id: string;
+    name: string;
+    rse_type: RSEType;
+    volatile: boolean;
+    deterministic: boolean;
+    staging_area: boolean;
+    availability_delete: boolean;
+    availability_read: boolean;
+    availability_write: boolean;
+    protocols: RSEProtocol[];
+};
+
 export type RSEAttribute = {
     key: string;
     value: string | DateISO | number | boolean | null;

@@ -5,12 +5,12 @@ import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { GetRSEError, GetRSERequest, GetRSEResponse } from '@/lib/core/usecase-models/get-rse-usecase-models';
 import { GetRSEInputPort, type GetRSEOutputPort } from '@/lib/core/port/primary/get-rse-ports';
 
-import { RSEDTO } from '@/lib/core/dto/rse-dto';
+import { RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
 import type RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
 
 @injectable()
 export default class GetRSEUseCase
-    extends BaseSingleEndpointUseCase<AuthenticatedRequestModel<GetRSERequest>, GetRSEResponse, GetRSEError, RSEDTO>
+    extends BaseSingleEndpointUseCase<AuthenticatedRequestModel<GetRSERequest>, GetRSEResponse, GetRSEError, RSEDetailsDTO>
     implements GetRSEInputPort
 {
     constructor(protected readonly presenter: GetRSEOutputPort, private readonly gateway: RSEGatewayOutputPort) {
@@ -21,12 +21,12 @@ export default class GetRSEUseCase
         return undefined;
     }
 
-    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<GetRSERequest>): Promise<RSEDTO> {
+    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<GetRSERequest>): Promise<RSEDetailsDTO> {
         const { rucioAuthToken, rseName } = requestModel;
-        const dto: RSEDTO = await this.gateway.getRSE(rucioAuthToken, rseName);
+        const dto: RSEDetailsDTO = await this.gateway.getRSE(rucioAuthToken, rseName);
         return dto;
     }
-    handleGatewayError(error: RSEDTO): GetRSEError {
+    handleGatewayError(error: RSEDetailsDTO): GetRSEError {
         return {
             status: 'error',
             message: error.errorMessage ? error.errorMessage : 'Gateway Error',
@@ -35,7 +35,7 @@ export default class GetRSEUseCase
         } as GetRSEError;
     }
 
-    processDTO(dto: RSEDTO): { data: GetRSEResponse | GetRSEError; status: 'success' | 'error' } {
+    processDTO(dto: RSEDetailsDTO): { data: GetRSEResponse | GetRSEError; status: 'success' | 'error' } {
         const responseModel: GetRSEResponse = {
             ...dto,
             status: 'success',

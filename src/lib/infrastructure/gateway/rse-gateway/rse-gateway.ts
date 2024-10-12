@@ -1,4 +1,4 @@
-import { ListRSEsDTO, RSEAttributeDTO, RSEDTO, RSEProtocolDTO, RSEUsageDTO } from '@/lib/core/dto/rse-dto';
+import { ListRSEsDTO, RSEAttributeDTO, RSEDetailsDTO, RSEProtocolDTO, RSEUsageDTO } from '@/lib/core/dto/rse-dto';
 import RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
 import { injectable } from 'inversify';
 import ListRSEsEndpoint from './endpoints/list-rses-endpoint';
@@ -9,7 +9,7 @@ import GetRSEUsageEndpoint from '@/lib/infrastructure/gateway/rse-gateway/endpoi
 
 @injectable()
 export default class RSEGateway implements RSEGatewayOutputPort {
-    async getRSE(rucioAuthToken: string, rseName: string): Promise<RSEDTO> {
+    async getRSE(rucioAuthToken: string, rseName: string): Promise<RSEDetailsDTO> {
         const endpoint = new GetRSEEndpoint(rucioAuthToken, rseName);
         const dto = await endpoint.fetch();
         return dto;
