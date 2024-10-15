@@ -1,8 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { P } from '../../../atoms/legacy/text/content/P/P';
-import { twMerge } from 'tailwind-merge';
-import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
-import { StreamedTable } from '@/component-library/features/legacy/StreamedTables/StreamedTable.stories';
 import { TableSortUpDown } from '@/component-library/features/legacy/StreamedTables/TableSortUpDown';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
 import { RSEProtocolViewModel } from '@/lib/infrastructure/data/view-model/rse';

@@ -284,6 +284,29 @@ export type RSEProtocol = {
     created_at?: DateISO; // TODO: rucio does not provide this
 };
 
+export type RSEDetailsProtocol = {
+    domains: {
+        lan: {
+            read: number;
+            write: number;
+            delete: number;
+        };
+        wan: {
+            read: number;
+            write: number;
+            delete: number;
+            third_party_copy_read: number;
+            third_party_copy_write: number;
+        };
+    };
+    scheme: string;
+    hostname: string;
+    port: number;
+    prefix: string;
+    impl: string;
+    extended_attributes?: Record<string, string>;
+};
+
 export type RSEDetails = {
     id: string;
     name: string;
@@ -294,7 +317,7 @@ export type RSEDetails = {
     availability_delete: boolean;
     availability_read: boolean;
     availability_write: boolean;
-    protocols: RSEProtocol[];
+    protocols: RSEDetailsProtocol[];
 };
 
 export type RSEAttribute = {
