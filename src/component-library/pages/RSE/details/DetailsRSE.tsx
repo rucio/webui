@@ -140,14 +140,22 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
     const hasError = metaError || attributesError;
     if (hasError) {
         return (
-            <WarningField>
-                <span>Could not load the RSE.</span>
-            </WarningField>
+            <div className="flex grow items-center justify-center">
+                <WarningField>
+                    <span>Could not load the RSE {props.name}.</span>
+                </WarningField>
+            </div>
         );
     }
 
     const isLoading = isMetaFetching || isAttributesFetching || attributes === undefined || meta === undefined;
-    if (isLoading) return <LoadingSpinner />;
+    if (isLoading) {
+        return (
+            <div className="flex grow items-center justify-center">
+                <LoadingSpinner />
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col space-y-3 w-full grow">
