@@ -1340,6 +1340,10 @@ html {
   overflow-y: auto;
 }
 
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
 .overflow-y-visible {
   overflow-y: visible;
 }
@@ -3821,6 +3825,10 @@ html {
 }
 
 @media (min-width: 1024px) {
+  .lg\:hidden {
+    display: none;
+  }
+
   .lg\:w-32 {
     width: 8rem;
   }
@@ -3833,8 +3841,20 @@ html {
     width: 50rem;
   }
 
+  .lg\:grow {
+    flex-grow: 1;
+  }
+
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lg\:flex-row {
+    flex-direction: row;
+  }
+
+  .lg\:justify-between {
+    justify-content: space-between;
   }
 
   .lg\:gap-x-2 {
@@ -3877,7 +3897,15 @@ html {
 }
 
 @media (min-width: 1536px) {
+  .\32xl\:hidden {
+    display: none;
+  }
+
   .\32xl\:w-44 {
     width: 11rem;
+  }
+
+  .\32xl\:flex-row {
+    flex-direction: row;
   }
 }
