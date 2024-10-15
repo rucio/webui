@@ -19,7 +19,7 @@ import { InfoField } from '@/component-library/features/fields/InfoField';
 
 const DetailsRSEKeyValues = ({ meta }: { meta: RSEDetailsViewModel }) => {
     return (
-        <KeyValueWrapper className="flex sm:flex sm:flex-row flex-col">
+        <KeyValueWrapper className="flex sm:flex sm:flex-row flex-col p-3">
             <div className="grow">
                 <KeyValueRow name="Type">
                     <RSETypeBadge value={meta.rse_type} />
