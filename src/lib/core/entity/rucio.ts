@@ -133,6 +133,7 @@ export type RSEAccountUsage = {
     bytes_limit: number;
 };
 
+// TODO: complete with all the fields
 // copied from deployed rucio UI
 export type RuleMeta = {
     account: string;
@@ -140,7 +141,7 @@ export type RuleMeta = {
     copies: number;
     created_at: DateISO;
     did_type: DIDType;
-    expires_at: DateISO;
+    expires_at: DateISO | null;
     grouping: DIDType;
     id: string;
     ignore_account_limit: boolean;

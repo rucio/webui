@@ -1,10 +1,10 @@
-import { RuleDTO } from '@/lib/core/dto/rule-dto';
+import { RuleMetaDTO } from '@/lib/core/dto/rule-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { convertToRuleDTO, getEmptyRuleDTO, TRucioRule } from '../rule-gateway-utils';
+import { convertToRuleMetaDTO, getEmptyRuleMetaDTO, TRucioRule } from '../rule-gateway-utils';
 import { Response } from 'node-fetch';
 
-export default class GetRuleEndpoint extends BaseEndpoint<RuleDTO> {
+export default class GetRuleEndpoint extends BaseEndpoint<RuleMetaDTO> {
     constructor(private readonly rucioAuthToken: string, private readonly ruleId: string) {
         super();
     }
@@ -31,10 +31,10 @@ export default class GetRuleEndpoint extends BaseEndpoint<RuleDTO> {
      * @param response The reponse containing error data
      * @returns
      */
-    async reportErrors(statusCode: number, response: Response): Promise<RuleDTO | undefined> {
+    async reportErrors(statusCode: number, response: Response): Promise<RuleMetaDTO | undefined> {
         const data = await response.json();
-        const errorDTO: RuleDTO = {
-            ...getEmptyRuleDTO(),
+        const errorDTO: RuleMetaDTO = {
+            ...getEmptyRuleMetaDTO(),
             status: 'error',
             errorMessage: data,
             errorCode: statusCode,
@@ -49,8 +49,8 @@ export default class GetRuleEndpoint extends BaseEndpoint<RuleDTO> {
      * @param response The individual RSE object streamed from Rucio
      * @returns The RSEDTO object
      */
-    createDTO(data: TRucioRule): RuleDTO {
-        const dto: RuleDTO = convertToRuleDTO(data);
+    createDTO(data: TRucioRule): RuleMetaDTO {
+        const dto: RuleMetaDTO = convertToRuleMetaDTO(data);
         return dto;
     }
 }

@@ -1,5 +1,5 @@
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
-import { CreateRuleDTO, ListRulesDTO, RuleDTO } from '../../dto/rule-dto';
+import { CreateRuleDTO, ListRulesDTO, RuleDTO, RuleMetaDTO } from '../../dto/rule-dto';
 import { ListRulesFilter } from '@/lib/infrastructure/gateway/rule-gateway/rule-gateway-utils';
 import { RuleCreationParameters } from '@/lib/core/entity/rucio';
 
@@ -9,7 +9,7 @@ export default interface RuleGatewayOutputPort {
      * @param rucioAuthToken A valid Rucio Auth Token.
      * @param ruleId The rule to get.
      */
-    getRule(rucioAuthToken: string, ruleId: string): Promise<RuleDTO>;
+    getRule(rucioAuthToken: string, ruleId: string): Promise<RuleMetaDTO>;
 
     /**
      * Lists all rules for a given account.
