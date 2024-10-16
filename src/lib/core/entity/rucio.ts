@@ -142,7 +142,7 @@ export type RuleMeta = {
     created_at: DateISO;
     did_type: DIDType;
     expires_at: DateISO | null;
-    grouping: DIDType;
+    grouping: RuleGrouping;
     id: string;
     ignore_account_limit: boolean;
     ignore_availability: boolean;
@@ -302,6 +302,12 @@ export enum LockState {
     OK = 'O',
     STUCK = 'S',
     UNKNOWN = 'U',
+}
+
+export enum RuleGrouping {
+    ALL = 'A',
+    DATASET = 'D',
+    NONE = 'N',
 }
 
 // rucio.db.sqla.constants::RuleNotification

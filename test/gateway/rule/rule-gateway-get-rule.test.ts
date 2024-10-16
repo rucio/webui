@@ -1,5 +1,5 @@
 import { RuleMetaDTO } from '@/lib/core/dto/rule-dto';
-import { DIDType, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
+import { DIDType, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
 import RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output-port';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
@@ -21,7 +21,7 @@ describe('Rule Gateway', () => {
         updated_at: 'Mon, 27 Nov 2023 17:57:44 UTC',
         scope: 'test',
         expires_at: null,
-        grouping: DIDType.DATASET,
+        grouping: RuleGrouping.DATASET,
         name: 'container',
         notification: RuleNotification.No,
         did_type: DIDType.CONTAINER,

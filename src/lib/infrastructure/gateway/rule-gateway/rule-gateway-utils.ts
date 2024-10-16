@@ -1,5 +1,5 @@
 import { RuleDTO, RuleMetaDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
-import { DIDType, LockState, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
+import { DIDType, LockState, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
 
 export type TRucioRule = {
     error: null | string;
@@ -117,15 +117,26 @@ function getDIDType(type: string): DIDType {
 function getRuleNotification(notification: string): RuleNotification {
     const cleanNotification = notification.trim().toUpperCase();
     switch (cleanNotification) {
-        // TODO: check if that's the return format of the rucio server
-        case 'Y':
+        case 'YES':
             return RuleNotification.Yes;
-        case 'C':
+        case 'CLOSE':
             return RuleNotification.Close;
-        case 'P':
+        case 'PROGRESS':
             return RuleNotification.Progress;
         default:
             return RuleNotification.No;
+    }
+}
+
+function getRuleGrouping(grouping: string): RuleGrouping {
+    const cleanGrouping = grouping.trim().toUpperCase();
+    switch (cleanGrouping) {
+        case 'ALL':
+            return RuleGrouping.ALL;
+        case 'DATASET':
+            return RuleGrouping.DATASET;
+        default:
+            return RuleGrouping.NONE;
     }
 }
 
@@ -138,8 +149,7 @@ export function convertToRuleMetaDTO(rule: TRucioRule): RuleMetaDTO {
         created_at: rule.created_at,
         did_type: getDIDType(rule.did_type),
         expires_at: rule.expires_at,
-        // TODO: should be of a separate type
-        grouping: getDIDType(rule.grouping),
+        grouping: getRuleGrouping(rule.grouping),
         id: rule.id,
         ignore_account_limit: rule.ignore_account_limit,
         ignore_availability: rule.ignore_availability,
@@ -195,7 +205,7 @@ export function getEmptyRuleMetaDTO(): RuleMetaDTO {
         created_at: '',
         did_type: DIDType.UNKNOWN,
         expires_at: '',
-        grouping: DIDType.UNKNOWN,
+        grouping: RuleGrouping.NONE,
         id: '',
         ignore_account_limit: false,
         ignore_availability: false,
