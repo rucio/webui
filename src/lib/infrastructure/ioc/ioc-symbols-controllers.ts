@@ -36,6 +36,7 @@ const CONTROLLERS = {
     ADD_DID: Symbol.for('AddDIDController'),
     ATTACH_DIDS: Symbol.for('AttachDIDsController'),
     SET_DID_STATUS: Symbol.for('SetDIDStatusController'),
+    GET_RULE: Symbol.for('GetRuleController'),
 };
 
 export default CONTROLLERS;

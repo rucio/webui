@@ -35,6 +35,7 @@ const INPUT_PORT = {
     ADD_DID: Symbol.for('AddDIDInputPort'),
     ATTACH_DIDS: Symbol.for('AttachDIDsInputPort'),
     SET_DID_STATUS: Symbol.for('SetDIDStatusInputPort'),
+    GET_RULE: Symbol.for('GetRuleInputPort'),
 };
 
 export default INPUT_PORT;

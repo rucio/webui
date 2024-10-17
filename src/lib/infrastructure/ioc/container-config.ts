@@ -69,6 +69,7 @@ import CreateRuleFeature from '@/lib/infrastructure/ioc/features/create-rule-fea
 import AddDIDFeature from '@/lib/infrastructure/ioc/features/add-did-feature';
 import AttachDIDsFeature from '@/lib/infrastructure/ioc/features/attach-dids-feature';
 import SetDIDStatusFeature from '@/lib/infrastructure/ioc/features/set-did-status-feature';
+import GetRuleFeature from '@/lib/infrastructure/ioc/features/get-rule-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -102,6 +103,7 @@ loadFeaturesSync(appContainer, [
     new ListDatasetReplicasFeature(appContainer),
     new ListFileReplicasFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
+    new GetRuleFeature(appContainer),
 ]);
 
 // Features: Page RSE
