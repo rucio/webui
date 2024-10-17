@@ -39,8 +39,8 @@ export const RucioAppLayout = (props: QueryContextLayoutProps) => {
                     siteHeaderViewModel.availableAccounts?.map((user: User) => {
                         return user.rucioAccount;
                     }) ?? [],
-                rucioProjectLink: 'rucio.cern.ch',
-                experimentProjectLink: 'atlas.cern',
+                rucioProjectLink: 'https://rucio.cern.ch',
+                experimentProjectLink: process.env.PROJECT_URL,
             }}
         >
             {props.children}
