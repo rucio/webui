@@ -15,7 +15,7 @@ export interface LayoutViewModel {
     accountActive: string;
     accountsPossible: string[];
     rucioProjectLink: string;
-    experimentProjectLink: string;
+    experimentProjectLink?: string;
 }
 
 export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel }) => {
@@ -155,10 +155,10 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
                     </span>
 
                     <span className="flex flex-row space-x-1">
-                        <a className="w-12 h-12" href={'//' + props.LVM.rucioProjectLink}>
+                        <a className="w-12 h-12" href={props.LVM.rucioProjectLink}>
                             <Image src="/logocropped.svg" alt="Rucio Logo" width={43} height={43} />
                         </a>
-                        <a className="w-12 h-12" href={'//' + props.LVM.experimentProjectLink}>
+                        <a className="w-12 h-12" href={props.LVM.experimentProjectLink}>
                             <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53} />
                         </a>
                     </span>
