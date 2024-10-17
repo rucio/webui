@@ -15,7 +15,7 @@ import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValue
 
 const MetaHeader = ({ scope, name }: { scope: string; name: string }) => {
     return (
-        <KeyValueLinkHeader href={`/did/page/${scope}/${name}`}>
+        <KeyValueLinkHeader href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
             <span>
                 {scope}:{name}
             </span>

@@ -40,7 +40,7 @@ export const ListDID = (props: ListDIDProps) => {
 
     const queryMeta = async () => {
         if (selectedItem !== null) {
-            const params = new URLSearchParams({ scope: selectedItem.scope, name: selectedItem.name });
+            const params = new URLSearchParams({ scope: encodeURIComponent(selectedItem.scope), name: encodeURIComponent(selectedItem.name) });
             const url = '/api/feature/get-did-meta?' + params;
 
             const res = await fetch(url);
