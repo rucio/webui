@@ -62,6 +62,11 @@ export default interface EnvConfigGatewayOutputPort {
     projectURL(): Promise<string>;
 
     /**
+     * @returns the rule activity string
+     */
+    ruleActivity(): Promise<string>;
+
+    /**
      * @returns whether the query parameters should get URI encoded
      */
     paramsEncodingEnabled(): Promise<boolean>;
