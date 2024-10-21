@@ -60,4 +60,9 @@ export default interface EnvConfigGatewayOutputPort {
      * @returns the URL of the VO/Experiment community that maintains the Rucio WebUI instance
      */
     projectURL(): Promise<string>;
+
+    /**
+     * @returns the rule activity string
+     */
+    ruleActivity(): Promise<string>;
 }
