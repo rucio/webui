@@ -25,7 +25,10 @@ export function prepareRequestArgs(request: HTTPRequest): {
 } {
     if (request.params) {
         const url = new URL(request.url);
-        Object.keys(request.params).forEach(key => url.searchParams.append(key, request.params![key]));
+        Object.keys(request.params).forEach(key => {
+            const encodedValue = encodeURIComponent(request.params![key]);
+            url.searchParams.append(key, encodedValue);
+        });
         request.url = url.toString();
     }
     const requestArgs: RequestInit = {
