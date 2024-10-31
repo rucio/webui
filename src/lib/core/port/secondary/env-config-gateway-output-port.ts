@@ -60,4 +60,9 @@ export default interface EnvConfigGatewayOutputPort {
      * @returns the URL of the VO/Experiment community that maintains the Rucio WebUI instance
      */
     projectURL(): Promise<string>;
+
+    /**
+     * @returns whether the query parameters should get URI encoded
+     */
+    paramsEncodingEnabled(): Promise<boolean>;
 }
