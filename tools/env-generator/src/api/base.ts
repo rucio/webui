@@ -62,6 +62,7 @@ export class WebUIEnvTemplateCompiler {
       'VO_DEFAULT': 'def',
       'OIDC_ENABLED': 'false',
       'ENABLE_SSL': 'false',
+      'PARAMS_ENCODING_ENABLED': 'false',
       ...this.environmentVariables,
     }
   }

@@ -17,17 +17,21 @@ export type HTTPRequest = {
 /**
  * Prepares the request arguments for an HTTP request.
  * @param {HTTPRequest} request - The HTTP request to prepare arguments for.
+ * @param {boolean} encodeParams - Whether the query parameters should get URI encoded
  * @returns {{ url: string | URL; requestArgs: RequestInit }} - An object containing the URL and request arguments.
  */
-export function prepareRequestArgs(request: HTTPRequest): {
+export function prepareRequestArgs(
+    request: HTTPRequest,
+    encodeParams: boolean = false,
+): {
     url: string | URL;
     requestArgs: RequestInit;
 } {
     if (request.params) {
         const url = new URL(request.url);
         Object.keys(request.params).forEach(key => {
-            const encodedValue = encodeURIComponent(request.params![key]);
-            url.searchParams.append(key, encodedValue);
+            const value = request.params![key];
+            url.searchParams.append(key, encodeParams ? encodeURIComponent(value) : value);
         });
         request.url = url.toString();
     }

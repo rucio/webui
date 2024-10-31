@@ -172,6 +172,15 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         }
         return Promise.resolve(undefined);
     }
+
+    async paramsEncodingEnabled(): Promise<boolean> {
+        const value = await this.get('PARAMS_ENCODING_ENABLED');
+        if (value === 'true' || value === 'True' || value === 'TRUE') {
+            return Promise.resolve(true);
+        } else {
+            return Promise.resolve(false);
+        }
+    }
 }
 
 export default EnvConfigGateway;
