@@ -206,7 +206,8 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
             throw new Error(`Request not initialized for ${this.constructor.name}`);
         }
 
-        const preparedRequest = prepareRequestArgs(this.request);
+        const encodeParams = await this.envConfigGateway.paramsEncodingEnabled();
+        const preparedRequest = prepareRequestArgs(this.request, encodeParams);
 
         const response: Response = await fetch(preparedRequest.url, preparedRequest.requestArgs);
         if (!response.ok) {
