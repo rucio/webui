@@ -142,7 +142,7 @@ export const Login = ({
 
         setLastAuthMethod('x509');
         handleAuthViewModel(x509AuthViewModel);
-        handleX509Session(x509AuthViewModel, account || '', vo.shortName);
+        handleX509Session(x509AuthViewModel, x509AuthViewModel.rucioAccount, vo.shortName);
     };
 
     const submitUserPass = async (account: string | undefined) => {
