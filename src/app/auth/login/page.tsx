@@ -95,6 +95,7 @@ export default function Login() {
             res = await fetch(rucioX509Endpoint, {
                 method: 'GET',
                 headers: headers,
+                credentials: 'include',
             });
         } catch (error) {
             console.log(error);
