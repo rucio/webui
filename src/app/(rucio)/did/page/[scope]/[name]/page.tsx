@@ -21,7 +21,7 @@ import {
 } from '@/lib/infrastructure/data/view-model/did';
 import { didKeyValuePairsDataQuery, didMetaQueryBase } from '@/app/(rucio)/did/queries';
 import { Loading } from '@/component-library/pages/legacy/Helpers/Loading';
-import {DetailsDID} from "@/component-library/pages/DID/details/DetailsDID";
+import { DetailsDID } from '@/component-library/pages/DID/details/DetailsDID';
 
 export default function Page({ params }: { params: { scope: string; name: string } }) {
     const [didMeta, setDIDMeta] = useState<DIDMetaViewModel>({ status: 'pending' } as DIDMetaViewModel);
@@ -120,7 +120,7 @@ export default function Page({ params }: { params: { scope: string; name: string
         setRequests();
     }, []);
 
-    return <DetailsDID scope={params.scope} name={params.name}/>
+    return <DetailsDID scope={params.scope} name={params.name} />;
 
     if (didMeta.status === 'pending') {
         return <Loading title="View DID" subtitle={`For DID ${params.scope}:${params.name}`} />;
