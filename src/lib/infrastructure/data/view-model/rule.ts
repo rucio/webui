@@ -1,4 +1,4 @@
-import { DIDType, Rule, RuleGrouping, RuleMeta, RuleNotification, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
+import { DIDType, LockState, Rule, RuleGrouping, RuleMeta, RuleNotification, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
@@ -110,5 +110,19 @@ export const getEmptyGetRuleViewModel = (): GetRuleViewModel => {
         split_container: false,
         state: RuleState.UNKNOWN,
         updated_at: '',
+    };
+};
+
+export interface ListRuleReplicaLockStatesViewModel extends BaseViewModel, RulePageLockEntry {}
+
+export const getEmptyListRuleReplicaLockStatesViewModel = (): ListRuleReplicaLockStatesViewModel => {
+    return {
+        ddm_link: '',
+        fts_link: '',
+        name: '',
+        rse: '',
+        scope: '',
+        state: LockState.UNKNOWN,
+        status: 'error',
     };
 };

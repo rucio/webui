@@ -36,6 +36,7 @@ const INPUT_PORT = {
     ATTACH_DIDS: Symbol.for('AttachDIDsInputPort'),
     SET_DID_STATUS: Symbol.for('SetDIDStatusInputPort'),
     GET_RULE: Symbol.for('GetRuleInputPort'),
+    LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesInputPort'),
 };
 
 export default INPUT_PORT;

@@ -37,6 +37,7 @@ const USECASE_FACTORY = {
     ATTACH_DIDS: Symbol.for('Factory<AttachDIDsUseCase>'),
     SET_DID_STATUS: Symbol.for('Factory<SetDIDStatus>'),
     GET_RULE: Symbol.for('Factory<GetRuleUseCase>'),
+    LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('Factory<ListRuleReplicaLockStatesUseCase>'),
 };
 
 export default USECASE_FACTORY;

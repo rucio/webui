@@ -1,4 +1,4 @@
-import { CreateRuleDTO, ListRulesDTO, RuleDTO, RuleMetaDTO } from '@/lib/core/dto/rule-dto';
+import { CreateRuleDTO, ListLocksDTO, ListRulesDTO, RuleMetaDTO } from '@/lib/core/dto/rule-dto';
 import RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output-port';
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
 import { injectable } from 'inversify';
@@ -39,7 +39,7 @@ export default class RuleGateway implements RuleGatewayOutputPort {
         }
     }
 
-    async listRuleReplicaLockStates(rucioAuthToken: string, ruleId: string): Promise<BaseStreamableDTO> {
+    async listRuleReplicaLockStates(rucioAuthToken: string, ruleId: string): Promise<ListLocksDTO> {
         try {
             const endpoint = new ListRuleReplicaLockStatesEndpoint(rucioAuthToken, ruleId);
             const errorDTO: BaseStreamableDTO | undefined = await endpoint.fetch();

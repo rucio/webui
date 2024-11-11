@@ -18,6 +18,8 @@ export interface RuleReplicaLockStateDTO extends BaseDTO {
     state: LockState;
 }
 
+export interface ListLocksDTO extends BaseStreamableDTO {}
+
 export interface ListRulesDTO extends BaseStreamableDTO {}
 
 export interface CreateRuleDTO extends BaseDTO {
