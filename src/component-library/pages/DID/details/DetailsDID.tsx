@@ -12,20 +12,41 @@ import { DetailsDIDAttributes } from '@/component-library/pages/DID/details/Deta
 import { DetailsDIDFileReplicas } from '@/component-library/pages/DID/details/DetailsDIDFileReplicas';
 import { useState } from 'react';
 import { DetailsDIDMeta } from '@/component-library/pages/DID/details/DetailsDIDMeta';
+import { DIDType } from '@/lib/core/entity/rucio';
 
-export const DetailsDIDTables = ({ scope, name }: DetailsDIDProps) => {
-    const tabs: Map<string, DetailsDIDComponent> = new Map([
+type DetailsDIDTablesProps = {
+    scope: string;
+    name: string;
+    type: DIDType;
+};
+
+export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) => {
+    const allTabs: Map<string, DetailsDIDComponent> = new Map([
         ['Attributes', DetailsDIDAttributes],
         ['Replicas', DetailsDIDFileReplicas],
     ]);
-    const tabNames = Array.from(tabs.keys());
+
+    const tabsByType: Record<DIDType, string[]> = {
+        File: ['Replicas', 'Parents', 'Attributes'],
+        Dataset: ['Rules', 'Replicas', 'Content Replicas', 'Attributes'],
+        Container: ['Contents', 'Rules', 'Attributes'],
+        All: [],
+        Collection: [],
+        Derived: [],
+        Unknown: [],
+    };
+
+    const tabNames = tabsByType[type];
     const [activeIndex, setActiveIndex] = useState(0);
+
+    // TODO: display an error
+    if (tabNames.length === 0) return <></>;
 
     return (
         <>
             <TabSwitcher tabNames={tabNames} onSwitch={setActiveIndex} activeIndex={activeIndex} />
             {tabNames.map((tabName, index) => {
-                const ViewComponent = tabs.get(tabName);
+                const ViewComponent = allTabs.get(tabName);
                 const visibilityClass = index === activeIndex ? 'block' : 'hidden';
 
                 if (ViewComponent === undefined) return;
@@ -88,7 +109,7 @@ export const DetailsDID = ({ scope, name }: DetailsDIDProps) => {
                 <Heading text={meta.scope + ':' + meta.name} />
             </div>
             <DetailsDIDMeta meta={meta} />
-            <DetailsDIDTables scope={scope} name={name} />
+            <DetailsDIDTables scope={scope} name={name} type={meta.did_type} />
         </div>
     );
 };
