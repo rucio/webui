@@ -1,0 +1,57 @@
+import React, { useRef, useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
+import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
+import { buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { GridReadyEvent } from 'ag-grid-community';
+import { ReplicaState } from '@/lib/core/entity/rucio';
+import { FileReplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
+import { DetailsDIDComponent, DetailsDIDProps } from '@/component-library/pages/DID/details/DetailsDIDComponent';
+
+type DetailsDIDFileReplicasTableProps = {
+    streamingHook: UseStreamReader<FileReplicaStateViewModel>;
+    onGridReady: (event: GridReadyEvent) => void;
+};
+
+const ClickableRSE = (props: { value: string }) => {
+    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
+};
+
+export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTableProps) => {
+    const tableRef = useRef<AgGridReact<FileReplicaStateViewModel>>(null);
+
+    const [columnDefs] = useState([
+        {
+            headerName: 'RSE',
+            field: 'rse',
+            minWidth: 390,
+            maxWidth: 390,
+            sortable: false,
+            cellRenderer: ClickableRSE,
+        },
+        {
+            headerName: 'State',
+            field: 'state',
+            minWidth: 200,
+            maxWidth: 200,
+            cellStyle: badgeCellWrapperStyle,
+            cellRenderer: ReplicaStateBadge,
+            cellRendererParams: {
+                className: badgeCellClasses,
+            },
+            filter: true,
+            sortable: false,
+            // TODO: fix the string values
+            filterParams: buildDiscreteFilterParams(Object.values(ReplicaState)),
+        },
+    ]);
+
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+};
+
+export const DetailsDIDFileReplicas: DetailsDIDComponent = ({ scope, name }: DetailsDIDProps) => {
+    return <div>Hello!!!</div>;
+};

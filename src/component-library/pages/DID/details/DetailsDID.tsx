@@ -16,6 +16,11 @@ import { formatDate, formatFileSize } from '@/component-library/features/utils/t
 import { DIDType } from '@/lib/core/entity/rucio';
 import { DIDAvailabilityBadge } from '@/component-library/features/badges/DID/DIDAvailabilityBadge';
 import { CopyableField } from '@/component-library/features/fields/CopyableField';
+import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
+import { DetailsDIDComponent, DetailsDIDProps } from '@/component-library/pages/DID/details/DetailsDIDComponent';
+import { DetailsDIDAttributes } from '@/component-library/pages/DID/details/DetailsDIDAttributes';
+import { DetailsDIDFileReplicas } from '@/component-library/pages/DID/details/DetailsDIDFileReplicas';
+import { useState } from 'react';
 
 const DetailsDIDMeta = ({ meta }: { meta: DIDMetaViewModel }) => {
     const getFileInformation = () => {
@@ -98,14 +103,16 @@ const DetailsDIDMeta = ({ meta }: { meta: DIDMetaViewModel }) => {
     );
 };
 
-type DetailsDIDProps = {
-    scope: string;
-    name: string;
-};
-
 export const DetailsDID = ({ scope, name }: DetailsDIDProps) => {
     const { toast } = useToast();
     const validator = new BaseViewModelValidator(toast);
+
+    const tabs: Map<string, DetailsDIDComponent> = new Map([
+        ['Attributes', DetailsDIDAttributes],
+        ['Replicas', DetailsDIDFileReplicas],
+    ]);
+
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const queryMeta = async () => {
         const url = '/api/feature/get-did-meta?' + new URLSearchParams({ scope, name });
@@ -142,6 +149,7 @@ export const DetailsDID = ({ scope, name }: DetailsDIDProps) => {
     });
 
     const isLoading = meta === undefined || isMetaFetching;
+    const tabNames = Array.from(tabs.keys());
 
     return isLoading ? (
         <LoadingSpinner />
@@ -151,6 +159,19 @@ export const DetailsDID = ({ scope, name }: DetailsDIDProps) => {
                 <Heading text={meta.scope + ':' + meta.name} />
             </div>
             <DetailsDIDMeta meta={meta} />
+            <TabSwitcher tabNames={tabNames} onSwitch={setActiveIndex} activeIndex={activeIndex} />
+            {tabNames.map((tabName, index) => {
+                const ViewComponent = tabs.get(tabName);
+                const visibilityClass = index === activeIndex ? 'block' : 'hidden';
+
+                if (ViewComponent === undefined) return;
+
+                return (
+                    <div key={tabName} className={visibilityClass}>
+                        <ViewComponent scope={scope} name={name} />
+                    </div>
+                );
+            })}
         </div>
     );
 };

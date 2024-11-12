@@ -1,13 +1,13 @@
-import {KeyValueWrapper} from "@/component-library/features/key-value/KeyValueWrapper";
-import {cn} from "@/component-library/utils";
+import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
+import { cn } from '@/component-library/utils';
 
 type TabSwitcherProps = {
-    tabs: string[];
+    tabNames: string[];
     onSwitch: (index: number) => void;
     activeIndex: number;
-}
+};
 
-export const TabSwitcher = ({tabs, onSwitch, activeIndex}: TabSwitcherProps) => {
+export const TabSwitcher = ({ tabNames, onSwitch, activeIndex }: TabSwitcherProps) => {
     const regularTabClasses = 'cursor-pointer flex flex-1 items-center justify-center py-1 px-2 text-neutral-600 dark:text-neutral-400';
     const activeTabClasses = cn(
         'rounded',
@@ -18,12 +18,12 @@ export const TabSwitcher = ({tabs, onSwitch, activeIndex}: TabSwitcherProps) => 
 
     return (
         <KeyValueWrapper className="flex flex-row w-full gap-x-2 p-1">
-            {tabs.map((tab, index) => {
+            {tabNames.map((name, index) => {
                 const isActive = index === activeIndex;
                 const tabClasses = cn(regularTabClasses, { [activeTabClasses]: isActive });
                 return (
-                    <div onClick={() => onSwitch(index)} key={tab} className={tabClasses}>
-                        {tab}
+                    <div onClick={() => onSwitch(index)} key={name} className={tabClasses}>
+                        {name}
                     </div>
                 );
             })}

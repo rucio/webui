@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react';
-import {TabSwitcher} from "@/component-library/features/tabs/TabSwitcher";
-import {useState} from "react";
+import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
+import { useState } from 'react';
 
 export default {
     title: 'Components/Tabs',
@@ -11,13 +11,13 @@ export default {
 } as Meta<typeof TabSwitcher>;
 
 type TemplateArgs = {
-    tabs: string[]
+    tabs: string[];
 };
 
-const Template: StoryFn<TemplateArgs> = ({tabs}) => {
+const Template: StoryFn<TemplateArgs> = ({ tabs }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-    return <TabSwitcher tabs={tabs} activeIndex={activeIndex} onSwitch={setActiveIndex}/>;
-}
+    return <TabSwitcher tabNames={tabs} activeIndex={activeIndex} onSwitch={setActiveIndex} />;
+};
 
 export const DefaultSwitcher = Template.bind({});
 DefaultSwitcher.args = {
