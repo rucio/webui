@@ -1238,6 +1238,11 @@ html {
   gap: 1rem;
 }
 
+.gap-x-2 {
+  -moz-column-gap: 0.5rem;
+       column-gap: 0.5rem;
+}
+
 .gap-y-2 {
   row-gap: 0.5rem;
 }
@@ -3839,10 +3844,6 @@ html {
 
   .lg\:w-\[50rem\] {
     width: 50rem;
-  }
-
-  .lg\:grow {
-    flex-grow: 1;
   }
 
   .lg\:grid-cols-2 {
