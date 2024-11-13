@@ -17,6 +17,7 @@ import { DetailsDIDRules } from '@/component-library/pages/DID/details/views/Det
 import { cn } from '@/component-library/utils';
 import { DetailsDIDParents } from '@/component-library/pages/DID/details/views/DetailsDIDParents';
 import { DetailsDIDContents } from '@/component-library/pages/DID/details/views/DetailsDIDContents';
+import { DetailsDIDContentsReplicas } from '@/component-library/pages/DID/details/views/DetailsDIDContentsReplicas';
 
 type DetailsDIDTablesProps = {
     scope: string;
@@ -31,11 +32,12 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
         ['Rules', DetailsDIDRules],
         ['Parents', DetailsDIDParents],
         ['Contents', DetailsDIDContents],
+        ['Contents Replicas', DetailsDIDContentsReplicas],
     ]);
 
     const tabsByType: Record<DIDType, string[]> = {
         File: ['Replicas', 'Parents', 'Attributes'],
-        Dataset: ['Rules', 'Replicas', 'Content Replicas', 'Attributes'],
+        Dataset: ['Rules', 'Replicas', 'Contents Replicas', 'Attributes'],
         Container: ['Contents', 'Rules', 'Attributes'],
         All: [],
         Collection: [],

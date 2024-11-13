@@ -1,6 +1,6 @@
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { GridReadyEvent, ValueGetterParams } from 'ag-grid-community';
+import { GridReadyEvent, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
@@ -11,11 +11,11 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 
 type DetailsDIDSimpleTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
+    onSelectionChanged?: (event: SelectionChangedEvent) => void;
     onGridReady: (event: GridReadyEvent) => void;
 };
 
 const ClickableDID = (props: { value: string[] }) => {
-    console.log(props.value);
     const [scope, name] = props.value;
     return (
         <ClickableCell href={`/did/page/${scope}/${name}`}>
@@ -31,8 +31,11 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
         {
             headerName: 'Identifier',
             flex: 1,
-            valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => [params.data?.scope, params.data?.name],
-            cellRenderer: ClickableDID,
+            valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
+                if (props.onSelectionChanged) return `${params.data?.scope}:${params.data?.name}`;
+                return [params.data?.scope, params.data?.name];
+            },
+            cellRenderer: props.onSelectionChanged ? undefined : ClickableDID,
             minWidth: 250,
             sortable: false,
         },
@@ -50,5 +53,5 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} rowSelection={props.onSelectionChanged ? 'single' : undefined} tableRef={tableRef} {...props} />;
 };
