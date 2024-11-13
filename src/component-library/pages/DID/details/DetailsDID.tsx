@@ -15,6 +15,8 @@ import { DetailsDIDMeta } from '@/component-library/pages/DID/details/DetailsDID
 import { DIDType } from '@/lib/core/entity/rucio';
 import { DetailsDIDRules } from '@/component-library/pages/DID/details/DetailsDIDRules';
 import { cn } from '@/component-library/utils';
+import { DetailsDIDParents } from '@/component-library/pages/DID/details/DetailsDIDParents';
+import { DetailsDIDContents } from '@/component-library/pages/DID/details/DetailsDIDContents';
 
 type DetailsDIDTablesProps = {
     scope: string;
@@ -27,6 +29,8 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
         ['Attributes', DetailsDIDAttributes],
         ['Replicas', DetailsDIDFileReplicas],
         ['Rules', DetailsDIDRules],
+        ['Parents', DetailsDIDParents],
+        ['Contents', DetailsDIDContents],
     ]);
 
     const tabsByType: Record<DIDType, string[]> = {
