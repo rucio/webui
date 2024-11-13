@@ -18,6 +18,7 @@ import { cn } from '@/component-library/utils';
 import { DetailsDIDParents } from '@/component-library/pages/DID/details/views/DetailsDIDParents';
 import { DetailsDIDContents } from '@/component-library/pages/DID/details/views/DetailsDIDContents';
 import { DetailsDIDContentsReplicas } from '@/component-library/pages/DID/details/views/DetailsDIDContentsReplicas';
+import { WarningField } from '@/component-library/features/fields/WarningField';
 
 type DetailsDIDTablesProps = {
     scope: string;
@@ -110,11 +111,26 @@ export const DetailsDID = ({ scope, name }: DetailsDIDProps) => {
         refetchOnWindowFocus: false,
     });
 
-    const isLoading = meta === undefined || isMetaFetching;
+    if (metaError) {
+        return (
+            <WarningField>
+                <span>
+                    Could not load the DID {scope}:{name}.
+                </span>
+            </WarningField>
+        );
+    }
 
-    return isLoading ? (
-        <LoadingSpinner />
-    ) : (
+    const isLoading = isMetaFetching || meta === undefined;
+    if (isLoading) {
+        return (
+            <div className="flex grow items-center justify-center">
+                <LoadingSpinner />
+            </div>
+        );
+    }
+
+    return (
         <div className="flex flex-col space-y-3 w-full grow">
             <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
                 <Heading text={meta.scope + ':' + meta.name} />
