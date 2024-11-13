@@ -941,6 +941,10 @@ html {
   min-height: 300px;
 }
 
+.min-h-\[450px\] {
+  min-height: 450px;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }

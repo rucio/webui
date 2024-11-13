@@ -13,6 +13,8 @@ import { DetailsDIDFileReplicas } from '@/component-library/pages/DID/details/De
 import { useState } from 'react';
 import { DetailsDIDMeta } from '@/component-library/pages/DID/details/DetailsDIDMeta';
 import { DIDType } from '@/lib/core/entity/rucio';
+import { DetailsDIDRules } from '@/component-library/pages/DID/details/DetailsDIDRules';
+import { cn } from '@/component-library/utils';
 
 type DetailsDIDTablesProps = {
     scope: string;
@@ -24,6 +26,7 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
     const allTabs: Map<string, DetailsDIDComponent> = new Map([
         ['Attributes', DetailsDIDAttributes],
         ['Replicas', DetailsDIDFileReplicas],
+        ['Rules', DetailsDIDRules],
     ]);
 
     const tabsByType: Record<DIDType, string[]> = {
@@ -47,12 +50,14 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
             <TabSwitcher tabNames={tabNames} onSwitch={setActiveIndex} activeIndex={activeIndex} />
             {tabNames.map((tabName, index) => {
                 const ViewComponent = allTabs.get(tabName);
-                const visibilityClass = index === activeIndex ? 'block' : 'hidden';
+                const visibilityClass = index === activeIndex ? 'flex' : 'hidden';
 
                 if (ViewComponent === undefined) return;
 
+                const viewClasses = cn('flex-col grow min-h-[450px]', visibilityClass);
+
                 return (
-                    <div key={tabName} className={visibilityClass}>
+                    <div key={tabName} className={viewClasses}>
                         <ViewComponent scope={scope} name={name} />
                     </div>
                 );
