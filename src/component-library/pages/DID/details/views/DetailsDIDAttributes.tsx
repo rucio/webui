@@ -8,7 +8,7 @@ import { DIDKeyValuePairsDataViewModel } from '@/lib/infrastructure/data/view-mo
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
-import { DetailsDIDComponent, DetailsDIDProps } from '@/component-library/pages/DID/details/DetailsDIDComponent';
+import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
 
 type DetailsDIDAttributesTableProps = {
     viewModel: DIDKeyValuePairsDataViewModel;
@@ -38,7 +38,7 @@ export const DetailsDIDAttributesTable = (props: DetailsDIDAttributesTableProps)
     return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={props.viewModel.data} />;
 };
 
-export const DetailsDIDAttributes: DetailsDIDComponent = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDAttributes: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
     const { toast } = useToast();
     const validator = new BaseViewModelValidator(toast);
 

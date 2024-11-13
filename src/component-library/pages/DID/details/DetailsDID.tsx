@@ -7,16 +7,16 @@ import { BaseViewModelValidator } from '@/component-library/features/utils/BaseV
 import { DIDMetaViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
-import { DetailsDIDComponent, DetailsDIDProps } from '@/component-library/pages/DID/details/DetailsDIDComponent';
-import { DetailsDIDAttributes } from '@/component-library/pages/DID/details/DetailsDIDAttributes';
-import { DetailsDIDFileReplicas } from '@/component-library/pages/DID/details/DetailsDIDFileReplicas';
+import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
+import { DetailsDIDAttributes } from '@/component-library/pages/DID/details/views/DetailsDIDAttributes';
+import { DetailsDIDFileReplicas } from '@/component-library/pages/DID/details/views/DetailsDIDFileReplicas';
 import { useState } from 'react';
 import { DetailsDIDMeta } from '@/component-library/pages/DID/details/DetailsDIDMeta';
 import { DIDType } from '@/lib/core/entity/rucio';
-import { DetailsDIDRules } from '@/component-library/pages/DID/details/DetailsDIDRules';
+import { DetailsDIDRules } from '@/component-library/pages/DID/details/views/DetailsDIDRules';
 import { cn } from '@/component-library/utils';
-import { DetailsDIDParents } from '@/component-library/pages/DID/details/DetailsDIDParents';
-import { DetailsDIDContents } from '@/component-library/pages/DID/details/DetailsDIDContents';
+import { DetailsDIDParents } from '@/component-library/pages/DID/details/views/DetailsDIDParents';
+import { DetailsDIDContents } from '@/component-library/pages/DID/details/views/DetailsDIDContents';
 
 type DetailsDIDTablesProps = {
     scope: string;
@@ -25,7 +25,7 @@ type DetailsDIDTablesProps = {
 };
 
 export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) => {
-    const allTabs: Map<string, DetailsDIDComponent> = new Map([
+    const allTabs: Map<string, DetailsDIDView> = new Map([
         ['Attributes', DetailsDIDAttributes],
         ['Replicas', DetailsDIDFileReplicas],
         ['Rules', DetailsDIDRules],

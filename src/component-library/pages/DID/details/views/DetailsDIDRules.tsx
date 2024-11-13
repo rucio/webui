@@ -8,7 +8,7 @@ import { buildDiscreteFilterParams, DefaultDateFilterParams, DefaultTextFilterPa
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { DetailsDIDComponent, DetailsDIDProps } from '@/component-library/pages/DID/details/DetailsDIDComponent';
+import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
@@ -109,7 +109,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
 };
 
-export const DetailsDIDRules: DetailsDIDComponent = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDRules: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDRulesViewModel>();
 
     useEffect(() => {

@@ -9,7 +9,7 @@ import { GridReadyEvent } from 'ag-grid-community';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { FileReplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
-import { DetailsDIDComponent, DetailsDIDProps } from '@/component-library/pages/DID/details/DetailsDIDComponent';
+import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 
 type DetailsDIDFileReplicasTableProps = {
@@ -53,7 +53,7 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
 };
 
-export const DetailsDIDFileReplicas: DetailsDIDComponent = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDFileReplicas: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<FileReplicaStateViewModel>();
 
     useEffect(() => {
