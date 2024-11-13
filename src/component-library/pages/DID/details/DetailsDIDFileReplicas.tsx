@@ -1,15 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
-import { buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { buildDiscreteFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent } from 'ag-grid-community';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { FileReplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { DetailsDIDComponent, DetailsDIDProps } from '@/component-library/pages/DID/details/DetailsDIDComponent';
+import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;
@@ -27,16 +28,16 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
         {
             headerName: 'RSE',
             field: 'rse',
-            minWidth: 390,
-            maxWidth: 390,
+            flex: 1,
             sortable: false,
             cellRenderer: ClickableRSE,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'State',
             field: 'state',
-            minWidth: 200,
-            maxWidth: 200,
+            flex: 1,
             cellStyle: badgeCellWrapperStyle,
             cellRenderer: ReplicaStateBadge,
             cellRendererParams: {
@@ -53,5 +54,14 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
 };
 
 export const DetailsDIDFileReplicas: DetailsDIDComponent = ({ scope, name }: DetailsDIDProps) => {
-    return <div>Hello!!!</div>;
+    const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<FileReplicaStateViewModel>();
+
+    useEffect(() => {
+        if (gridApi) {
+            const url = '/api/feature/list-file-replicas?' + new URLSearchParams({ scope, name });
+            startStreaming(url);
+        }
+    }, [gridApi]);
+
+    return <DetailsDIDFileReplicasTable streamingHook={streamingHook} onGridReady={onGridReady} />;
 };
