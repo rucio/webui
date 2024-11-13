@@ -140,11 +140,9 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
     const hasError = metaError || attributesError;
     if (hasError) {
         return (
-            <div className="flex grow items-center justify-center">
-                <WarningField>
-                    <span>Could not load the RSE {props.name}.</span>
-                </WarningField>
-            </div>
+            <WarningField>
+                <span>Could not load the RSE {props.name}.</span>
+            </WarningField>
         );
     }
 
