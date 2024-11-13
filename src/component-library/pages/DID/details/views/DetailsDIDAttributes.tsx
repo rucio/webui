@@ -9,6 +9,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
+import { WarningField } from '@/component-library/features/fields/WarningField';
+import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 
 type DetailsDIDAttributesTableProps = {
     viewModel: DIDKeyValuePairsDataViewModel;
@@ -69,10 +71,21 @@ export const DetailsDIDAttributes: DetailsDIDView = ({ scope, name }: DetailsDID
         refetchOnWindowFocus: false,
     });
 
-    const isLoading = keyValuePairs === undefined || areKeyValuePairsFetching;
+    if (keyValuePairsError) {
+        return (
+            <WarningField>
+                <span>Could not load DID attributes.</span>
+            </WarningField>
+        );
+    }
 
+    const isLoading = keyValuePairs === undefined || areKeyValuePairsFetching;
     if (isLoading) {
-        return <p>Loading...</p>;
+        return (
+            <div className="flex grow items-center justify-center">
+                <LoadingSpinner />
+            </div>
+        );
     }
 
     return <DetailsDIDAttributesTable viewModel={keyValuePairs} />;
