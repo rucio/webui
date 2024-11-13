@@ -1,13 +1,16 @@
-import { RuleMetaDTO } from '@/lib/core/dto/rule-dto';
-import { DIDType, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
-import RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output-port';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
-import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
+import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
+import { BaseController } from '@/lib/sdk/controller';
+import { NextApiResponse } from 'next';
+import { createHttpMocks } from 'test/fixtures/http-fixtures';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
+import { DIDType, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
+import { GetRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { GetRuleRequest } from '@/lib/core/usecase-models/get-rule-usecase-models';
+import { GetRuleControllerParameters } from '@/lib/infrastructure/controller/get-rule-controller';
 
-// TODO: extend the test
-describe('Rule Gateway', () => {
-    const expectedDTO: RuleMetaDTO = {
+describe('GET Rule API Test', () => {
+    const expectedViewModel: GetRuleViewModel = {
         status: 'success',
         locks_stuck_cnt: 0,
         ignore_account_limit: false,
@@ -87,9 +90,16 @@ describe('Rule Gateway', () => {
         fetchMock.dontMock();
     });
 
-    it('Should fetch details for a rule', async () => {
-        const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const ruleMetaDTO: RuleMetaDTO = await ruleGateway.getRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, '817b3030097446a38b3b842bf528e112');
-        expect(ruleMetaDTO).toEqual(expectedDTO);
+    test('it should get details for a rule', async () => {
+        const { req, res, session } = await createHttpMocks('/api/feature/get-rule?=817b3030097446a38b3b842bf528e112', 'GET', {});
+        const getRuleController = appContainer.get<BaseController<GetRuleControllerParameters, GetRuleRequest>>(CONTROLLERS.GET_RULE);
+        const getRuleControllerParams: GetRuleControllerParameters = {
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            response: res as unknown as NextApiResponse,
+            id: '817b3030097446a38b3b842bf528e112',
+        };
+        await getRuleController.execute(getRuleControllerParams);
+        const data = await res._getJSONData();
+        expect(data).toEqual(expectedViewModel);
     });
 });

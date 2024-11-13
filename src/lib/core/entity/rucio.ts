@@ -133,6 +133,7 @@ export type RSEAccountUsage = {
     bytes_limit: number;
 };
 
+// TODO: complete with all the fields
 // copied from deployed rucio UI
 export type RuleMeta = {
     account: string;
@@ -140,8 +141,8 @@ export type RuleMeta = {
     copies: number;
     created_at: DateISO;
     did_type: DIDType;
-    expires_at: DateISO;
-    grouping: DIDType;
+    expires_at: DateISO | null;
+    grouping: RuleGrouping;
     id: string;
     ignore_account_limit: boolean;
     ignore_availability: boolean;
@@ -337,6 +338,12 @@ export enum LockState {
     OK = 'O',
     STUCK = 'S',
     UNKNOWN = 'U',
+}
+
+export enum RuleGrouping {
+    ALL = 'A',
+    DATASET = 'D',
+    NONE = 'N',
 }
 
 // rucio.db.sqla.constants::RuleNotification

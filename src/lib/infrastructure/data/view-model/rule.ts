@@ -1,4 +1,4 @@
-import { Rule, RuleMeta, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
+import { DIDType, LockState, Rule, RuleGrouping, RuleMeta, RuleNotification, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
@@ -80,5 +80,49 @@ export const getEmptyCreateRuleViewModel = (): CreateRuleViewModel => {
     return {
         status: 'error',
         rule_ids: [],
+    };
+};
+
+export interface GetRuleViewModel extends BaseViewModel, RuleMeta {}
+export const getEmptyGetRuleViewModel = (): GetRuleViewModel => {
+    return {
+        status: 'error',
+        account: '',
+        activity: '',
+        copies: 0,
+        created_at: '',
+        did_type: DIDType.UNKNOWN,
+        expires_at: null,
+        grouping: RuleGrouping.NONE,
+        id: '',
+        ignore_account_limit: false,
+        ignore_availability: false,
+        locked: false,
+        locks_ok_cnt: 0,
+        locks_replicating_cnt: 0,
+        locks_stuck_cnt: 0,
+        name: '',
+        notification: RuleNotification.No,
+        priority: 0,
+        purge_replicas: false,
+        rse_expression: '',
+        scope: '',
+        split_container: false,
+        state: RuleState.UNKNOWN,
+        updated_at: '',
+    };
+};
+
+export interface ListRuleReplicaLockStatesViewModel extends BaseViewModel, RulePageLockEntry {}
+
+export const getEmptyListRuleReplicaLockStatesViewModel = (): ListRuleReplicaLockStatesViewModel => {
+    return {
+        ddm_link: '',
+        fts_link: '',
+        name: '',
+        rse: '',
+        scope: '',
+        state: LockState.UNKNOWN,
+        status: 'error',
     };
 };

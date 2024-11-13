@@ -1,5 +1,5 @@
-import { RuleDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
-import { DateISO, LockState, RuleState } from '@/lib/core/entity/rucio';
+import { RuleDTO, RuleMetaDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
+import { DIDType, LockState, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
 
 export type TRucioRule = {
     error: null | string;
@@ -100,6 +100,75 @@ export function convertToRuleDTO(rule: TRucioRule): RuleDTO {
     };
 }
 
+function getDIDType(type: string): DIDType {
+    const cleanType = type.trim().toUpperCase();
+    switch (cleanType) {
+        case 'FILE':
+            return DIDType.FILE;
+        case 'DATASET':
+            return DIDType.DATASET;
+        case 'CONTAINER':
+            return DIDType.CONTAINER;
+        default:
+            return DIDType.UNKNOWN;
+    }
+}
+
+function getRuleNotification(notification: string): RuleNotification {
+    const cleanNotification = notification.trim().toUpperCase();
+    switch (cleanNotification) {
+        case 'YES':
+            return RuleNotification.Yes;
+        case 'CLOSE':
+            return RuleNotification.Close;
+        case 'PROGRESS':
+            return RuleNotification.Progress;
+        default:
+            return RuleNotification.No;
+    }
+}
+
+function getRuleGrouping(grouping: string): RuleGrouping {
+    const cleanGrouping = grouping.trim().toUpperCase();
+    switch (cleanGrouping) {
+        case 'ALL':
+            return RuleGrouping.ALL;
+        case 'DATASET':
+            return RuleGrouping.DATASET;
+        default:
+            return RuleGrouping.NONE;
+    }
+}
+
+export function convertToRuleMetaDTO(rule: TRucioRule): RuleMetaDTO {
+    return {
+        status: 'success',
+        account: rule.account,
+        activity: rule.activity,
+        copies: rule.copies,
+        created_at: rule.created_at,
+        did_type: getDIDType(rule.did_type),
+        expires_at: rule.expires_at,
+        grouping: getRuleGrouping(rule.grouping),
+        id: rule.id,
+        ignore_account_limit: rule.ignore_account_limit,
+        ignore_availability: rule.ignore_availability,
+        locked: rule.locked,
+        locks_ok_cnt: rule.locks_ok_cnt,
+        locks_replicating_cnt: rule.locks_replicating_cnt,
+        locks_stuck_cnt: rule.locks_stuck_cnt,
+        name: rule.name,
+        notification: getRuleNotification(rule.notification),
+        priority: rule.priority,
+        purge_replicas: rule.purge_replicas,
+        rse_expression: rule.rse_expression,
+        scope: rule.scope,
+        split_container: rule.split_container,
+        state: getRuleState(rule.state),
+        updated_at: rule.updated_at,
+    };
+}
+
 export function convertToRuleReplicaLockDTO(ruleReplicaLockState: TRucioRuleReplicaLock): RuleReplicaLockStateDTO {
     return {
         status: 'success',
@@ -109,6 +178,7 @@ export function convertToRuleReplicaLockDTO(ruleReplicaLockState: TRucioRuleRepl
         state: getReplicaLockState(ruleReplicaLockState.state),
     };
 }
+
 export function getEmptyRuleDTO(): RuleDTO {
     return {
         status: 'error',
@@ -123,6 +193,35 @@ export function getEmptyRuleDTO(): RuleDTO {
         locks_ok_cnt: 0,
         locks_replicating_cnt: 0,
         locks_stuck_cnt: 0,
+    };
+}
+
+export function getEmptyRuleMetaDTO(): RuleMetaDTO {
+    return {
+        status: 'error',
+        account: '',
+        activity: '',
+        copies: 0,
+        created_at: '',
+        did_type: DIDType.UNKNOWN,
+        expires_at: '',
+        grouping: RuleGrouping.NONE,
+        id: '',
+        ignore_account_limit: false,
+        ignore_availability: false,
+        locked: false,
+        locks_ok_cnt: 0,
+        locks_replicating_cnt: 0,
+        locks_stuck_cnt: 0,
+        name: '',
+        notification: RuleNotification.No,
+        priority: 0,
+        purge_replicas: false,
+        rse_expression: '',
+        scope: '',
+        split_container: false,
+        state: RuleState.UNKNOWN,
+        updated_at: '',
     };
 }
 
