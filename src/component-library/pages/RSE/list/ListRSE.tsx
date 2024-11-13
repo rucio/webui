@@ -1,3 +1,5 @@
+'use client';
+
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 import { ListRSETable } from '@/component-library/pages/RSE/list/ListRSETable';

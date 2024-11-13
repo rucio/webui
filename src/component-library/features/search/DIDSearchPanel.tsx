@@ -96,6 +96,18 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         props.stopStreaming();
     };
 
+    const onScopeArrowDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'ArrowRight') {
+            nameInputRef.current?.focus();
+        }
+    };
+
+    const onNameArrowDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'ArrowLeft') {
+            scopeInputRef.current?.focus();
+        }
+    };
+
     return (
         <div className="flex flex-col space-y-2 w-full md:items-start md:flex-row md:space-y-0 md:space-x-2">
             <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
@@ -121,6 +133,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             setScope(event.target.value);
                         }}
                         onEnterKey={onSearch}
+                        onKeyDown={onScopeArrowDown}
                     />
                     <span className="text-neutral-900 dark:text-neutral-100 font-bold">:</span>
                     <Input
@@ -131,10 +144,11 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             setName(event.target.value);
                         }}
                         onEnterKey={onSearch}
+                        onKeyDown={onNameArrowDown}
                     />
                 </div>
             </div>
-            <SearchButton isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
+            <SearchButton className="sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
         </div>
     );
 };

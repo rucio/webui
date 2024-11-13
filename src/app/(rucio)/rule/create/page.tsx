@@ -1,12 +1,16 @@
 'use client';
 import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
-import { parameters } from '../../../../../.storybook/preview';
 import { CreateRuleParameters } from '@/lib/infrastructure/data/view-model/rule';
+import { useEffect } from 'react';
 
 const PARAMS_KEY = 'create_rule_parameters';
 const ACTIVE_KEY = 'create_rule_active';
 
 export default function Page() {
+    useEffect(() => {
+        document.title = 'Create Rule - Rucio';
+    }, []);
+
     const getSavedParameters = () => {
         const initialParametersString = localStorage.getItem(PARAMS_KEY);
         // TODO: check with zod

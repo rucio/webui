@@ -1,3 +1,5 @@
+'use client';
+
 import { DIDMetaViewModel, DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import React, { useEffect, useState } from 'react';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
@@ -40,7 +42,7 @@ export const ListDID = (props: ListDIDProps) => {
 
     const queryMeta = async () => {
         if (selectedItem !== null) {
-            const params = new URLSearchParams({ scope: selectedItem.scope, name: selectedItem.name });
+            const params = new URLSearchParams({ scope: encodeURIComponent(selectedItem.scope), name: encodeURIComponent(selectedItem.name) });
             const url = '/api/feature/get-did-meta?' + params;
 
             const res = await fetch(url);
