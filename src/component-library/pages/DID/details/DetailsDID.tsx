@@ -49,8 +49,13 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
     const tabNames = tabsByType[type];
     const [activeIndex, setActiveIndex] = useState(0);
 
-    // TODO: display an error
-    if (tabNames.length === 0) return <></>;
+    if (tabNames.length === 0) {
+        return (
+            <WarningField>
+                <span>Unsupported type of the DID.</span>
+            </WarningField>
+        );
+    }
 
     return (
         <>
