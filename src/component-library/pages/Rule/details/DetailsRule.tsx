@@ -9,14 +9,28 @@ import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
 import { useState } from 'react';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { RuleMetaViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { cn } from '@/component-library/utils';
+import { DetailsRuleLocks } from '@/component-library/pages/Rule/details/DetailsRuleLocks';
+import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsRuleMeta';
 
-export const DetailsRuleTabs = ({ id }: { id: string }) => {
+export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
     const tabNames = ['Attributes', 'Locks'];
     const [activeIndex, setActiveIndex] = useState(0);
+
+    const getViewClasses = (index: number) => {
+        const visibilityClass = index === activeIndex ? 'flex' : 'hidden';
+        return cn('flex-col grow min-h-[450px]', visibilityClass);
+    };
 
     return (
         <>
             <TabSwitcher tabNames={tabNames} onSwitch={setActiveIndex} activeIndex={activeIndex} />
+            <div className={getViewClasses(0)}>
+                <DetailsRuleMeta meta={meta} />
+            </div>
+            <div className={getViewClasses(1)}>
+                <DetailsRuleLocks id={id} />
+            </div>
         </>
     );
 };
@@ -79,9 +93,9 @@ export const DetailsRule = ({ id }: { id: string }) => {
     return (
         <div className="flex flex-col space-y-3 w-full grow">
             <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
-                <Heading text={`Rule ${id}`} />
+                <Heading text={id} />
             </div>
-            <DetailsRuleTabs id={id} />
+            <DetailsRuleTabs id={id} meta={meta} />
         </div>
     );
 };
