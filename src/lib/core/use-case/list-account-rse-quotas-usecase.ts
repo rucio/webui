@@ -5,7 +5,7 @@ import { collectStreamedData } from '@/lib/sdk/utils';
 import { injectable } from 'inversify';
 import { Transform, Readable, PassThrough } from 'stream';
 import { AccountRSELimitDTO, AccountRSEUsageDTO } from '../dto/account-dto';
-import { ListRSEsDTO, RSEDTO } from '../dto/rse-dto';
+import { ListRSEsDTO, RSEDetailsDTO } from '../dto/rse-dto';
 import { DIDLong } from '../entity/rucio';
 import { TAccountRSEUsageAndLimits, TRSESummaryRow } from '../entity/rule-summary';
 import type { ListAccountRSEQuotasInputPort, ListAccountRSEQuotasOutputPort } from '../port/primary/list-account-rse-quotas-ports';
@@ -24,7 +24,7 @@ export default class ListAccountRSEQuotasUseCase
         AuthenticatedRequestModel<ListAccountRSEQuotasRequest>,
         ListAccountRSEQuotasResponse,
         ListAccountRSEQuotasError,
-        RSEDTO,
+        RSEDetailsDTO,
         RSEAccountUsageLimitViewModel
     >
     implements ListAccountRSEQuotasInputPort
@@ -133,7 +133,7 @@ export default class ListAccountRSEQuotasUseCase
         }
     }
 
-    processStreamedData(rse: RSEDTO): { data: ListAccountRSEQuotasResponse | ListAccountRSEQuotasError; status: 'success' | 'error' } {
+    processStreamedData(rse: RSEDetailsDTO): { data: ListAccountRSEQuotasResponse | ListAccountRSEQuotasError; status: 'success' | 'error' } {
         const quotaInfo: (TRSESummaryRow & { status: 'success' }) | BaseErrorResponseModel = getQuotaInfo(
             rse,
             this.account,

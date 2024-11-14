@@ -1,4 +1,4 @@
-import { RSEDTO, RSEProtocolDTO } from '@/lib/core/dto/rse-dto';
+import { RSEDetailsDTO, RSEProtocolDTO } from '@/lib/core/dto/rse-dto';
 import { RSEProtocol, RSEType } from '@/lib/core/entity/rucio';
 /**
  * Represents the data returned by Rucio Server for a RSE.
@@ -75,8 +75,12 @@ function getRSEType(rseType: string): RSEType {
  * @param rse The RSE of type {@link TRucioRSE} to convert to a DTO
  * @returns A {@link RSEDTO} object
  */
-export function convertToRSEDTO(rse: TRucioRSE): RSEDTO {
-    const dto: RSEDTO = {
+export function convertToRSEDTO(rse: TRucioRSE): RSEDetailsDTO {
+    const dto: RSEDetailsDTO = {
+        availability_delete: false,
+        availability_read: false,
+        availability_write: false,
+        protocols: [],
         status: 'success',
         id: rse.id,
         name: rse.rse,
