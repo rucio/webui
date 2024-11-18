@@ -1,6 +1,6 @@
 import { BaseErrorResponseModel } from '@/lib/sdk/usecase-models';
 import { AccountRSELimitDTO, AccountRSEUsageDTO } from '../dto/account-dto';
-import { RSEDTO } from '../dto/rse-dto';
+import { RSEDetailsDTO } from '../dto/rse-dto';
 import { DIDLong, DIDType, RSEAccountUsage } from '../entity/rucio';
 import { TAccountRSEUsageAndLimits, TDIDSummaryRow, TRSESummaryRow } from '../entity/rule-summary';
 import { BaseDTO } from '@/lib/sdk/dto';
@@ -83,7 +83,7 @@ export const createAccountRSEUsageAndLimitMap = (
  * If the account has no limits specified, a BaseErrorResponseModel is returned.
  */
 export const getQuotaInfo = (
-    rse: RSEDTO,
+    rse: RSEDetailsDTO,
     account: string,
     accountRSEUsageAndLimits: TAccountRSEUsageAndLimits,
     totalDIDBytesRequested: number,

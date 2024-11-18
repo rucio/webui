@@ -1,10 +1,9 @@
-import { RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
-import { BaseStreamableDTO } from '@/lib/sdk/dto';
+import { ListLocksDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
 import { convertToRuleReplicaLockDTO, TRucioRuleReplicaLock } from '../rule-gateway-utils';
-export default class ListRuleReplicaLockStatesEndpoint extends BaseStreamableEndpoint<BaseStreamableDTO, RuleReplicaLockStateDTO> {
+export default class ListRuleReplicaLockStatesEndpoint extends BaseStreamableEndpoint<ListLocksDTO, RuleReplicaLockStateDTO> {
     constructor(private readonly rucioAuthToken: string, private readonly ruleId: string) {
         super(true);
     }
@@ -31,9 +30,9 @@ export default class ListRuleReplicaLockStatesEndpoint extends BaseStreamableEnd
      * @param response The reponse containing error data
      * @returns
      */
-    async reportErrors(statusCode: number, response: Response): Promise<BaseStreamableDTO | undefined> {
+    async reportErrors(statusCode: number, response: Response): Promise<ListLocksDTO | undefined> {
         const data = await response.json();
-        const errorDTO: BaseStreamableDTO = {
+        const errorDTO: ListLocksDTO = {
             status: 'error',
             errorMessage: data,
             errorCode: statusCode,

@@ -1,10 +1,10 @@
-import { RSEDTO } from '@/lib/core/dto/rse-dto';
-import { RSEType } from '@/lib/core/entity/rucio';
+import { RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
+import { RSEDetails, RSEType } from '@/lib/core/entity/rucio';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
 
-export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
+export default class GetRSEEndpoint extends BaseEndpoint<RSEDetailsDTO> {
     constructor(private rucioAuthToken: string, private rseName: string) {
         super();
     }
@@ -32,11 +32,15 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
     /**
      * @implements
      */
-    async reportErrors(statusCode: number, response: Response): Promise<RSEDTO | undefined> {
-        const dto: RSEDTO = {
+    async reportErrors(statusCode: number, response: Response): Promise<RSEDetailsDTO | undefined> {
+        const dto: RSEDetailsDTO = {
             status: 'error',
             errorCode: statusCode,
             errorType: 'gateway_endpoint_error',
+            protocols: [],
+            availability_write: false,
+            availability_delete: false,
+            availability_read: false,
             id: '',
             name: this.rseName,
             rse_type: RSEType.UNKNOWN,
@@ -60,15 +64,8 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
     /**
      * @implements
      */
-    createDTO(data: any): RSEDTO {
-        data = data as {
-            id: string;
-            rse: string;
-            rse_type: string;
-            volatile: boolean;
-            deterministic: boolean;
-            staging_area: boolean;
-        };
+    createDTO(data: any): RSEDetailsDTO {
+        data = data as RSEDetails;
 
         switch (data.rse_type.toUpperCase()) {
             case 'DISK':
@@ -81,7 +78,7 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
                 data.rse_type = RSEType.UNKNOWN;
                 break;
         }
-        const dto: RSEDTO = {
+        const dto: RSEDetailsDTO = {
             status: 'success',
             id: data.id,
             name: data.rse,
@@ -89,6 +86,10 @@ export default class GetRSEEndpoint extends BaseEndpoint<RSEDTO> {
             volatile: data.volatile,
             deterministic: data.deterministic,
             staging_area: data.staging_area,
+            protocols: data.protocols,
+            availability_write: data.availability_write,
+            availability_read: data.availability_read,
+            availability_delete: data.availability_delete,
         };
         return dto;
     }

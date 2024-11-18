@@ -7,7 +7,7 @@ import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 
 import type RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
 import { ListRSEsDTO } from '@/lib/core/dto/rse-dto';
-import { RSEDTO } from '@/lib/core/dto/rse-dto';
+import { RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
 
 import { ListRSEsInputPort, type ListRSEsOutputPort } from '@/lib/core/port/primary/list-rses-ports';
 
@@ -20,7 +20,7 @@ export default class ListRSEsUseCase
         ListRSEsResponse,
         ListRSEsError,
         ListRSEsDTO,
-        RSEDTO,
+        RSEDetailsDTO,
         RSEViewModel
     >
     implements ListRSEsInputPort
@@ -69,7 +69,7 @@ export default class ListRSEsUseCase
         } as ListRSEsError;
     }
 
-    processStreamedData(dto: RSEDTO): { data: ListRSEsResponse | ListRSEsError; status: 'success' | 'error' } {
+    processStreamedData(dto: RSEDetailsDTO): { data: ListRSEsResponse | ListRSEsError; status: 'success' | 'error' } {
         if (dto.status === 'error') {
             const errorModel: ListRSEsError = {
                 status: 'error',

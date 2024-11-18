@@ -69,6 +69,8 @@ import CreateRuleFeature from '@/lib/infrastructure/ioc/features/create-rule-fea
 import AddDIDFeature from '@/lib/infrastructure/ioc/features/add-did-feature';
 import AttachDIDsFeature from '@/lib/infrastructure/ioc/features/attach-dids-feature';
 import SetDIDStatusFeature from '@/lib/infrastructure/ioc/features/set-did-status-feature';
+import GetRuleFeature from '@/lib/infrastructure/ioc/features/get-rule-feature';
+import ListRuleReplicaLockStatesFeature from '@/lib/infrastructure/ioc/features/list-rule-replica-lock-states-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -102,6 +104,7 @@ loadFeaturesSync(appContainer, [
     new ListDatasetReplicasFeature(appContainer),
     new ListFileReplicasFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
+    new GetRuleFeature(appContainer),
 ]);
 
 // Features: Page RSE
@@ -131,6 +134,7 @@ loadFeaturesSync(appContainer, [new ListSubscriptionRuleStatesFeature(appContain
 
 // Features: List Rules
 loadFeaturesSync(appContainer, [new ListRulesFeature(appContainer)]);
+loadFeaturesSync(appContainer, [new ListRuleReplicaLockStatesFeature(appContainer)]);
 
 // Features: Dashboard
 loadFeaturesSync(appContainer, [new ListAccountRSEUsageFeature(appContainer)]);

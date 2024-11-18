@@ -1,10 +1,10 @@
-import { ListRSEsDTO, RSEDTO } from '@/lib/core/dto/rse-dto';
+import { ListRSEsDTO, RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
 import { convertToRSEDTO, TRucioRSE } from '../rse-gateway-utils';
 
-export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO, RSEDTO> {
+export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO, RSEDetailsDTO> {
     constructor(private readonly rucioAuthToken: string, private readonly rseExpression: string) {
         super(true);
     }
@@ -53,9 +53,9 @@ export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO
      * @param response The individual RSE object streamed from Rucio
      * @returns The RSEDTO object
      */
-    createDTO(response: Buffer): RSEDTO {
+    createDTO(response: Buffer): RSEDetailsDTO {
         const data: TRucioRSE = JSON.parse(JSON.parse(response.toString()));
-        const dto: RSEDTO = convertToRSEDTO(data);
+        const dto: RSEDetailsDTO = convertToRSEDTO(data);
         return dto;
     }
 }

@@ -1,7 +1,9 @@
 import { BaseViewModel } from '@/lib/sdk/view-models';
-import { RSE, RSEAttribute, RSEAccountUsage, RSEProtocol, RSEType } from '@/lib/core/entity/rucio';
+import { RSE, RSEAttribute, RSEAccountUsage, RSEProtocol, RSEType, RSEDetails } from '@/lib/core/entity/rucio';
 
 export interface RSEViewModel extends RSE, BaseViewModel {}
+
+export interface RSEDetailsViewModel extends RSEDetails, BaseViewModel {}
 
 export interface RSEProtocolViewModel extends BaseViewModel {
     protocols: RSEProtocol[];
@@ -51,6 +53,22 @@ export function generateEmptyRSEViewModel(): RSEViewModel {
         deterministic: false,
         staging_area: false,
     } as RSEViewModel;
+}
+
+export function generateEmptyRSEDetailsViewModel(): RSEDetailsViewModel {
+    return {
+        status: 'error',
+        id: '',
+        name: '',
+        rse_type: RSEType.UNKNOWN,
+        volatile: false,
+        deterministic: false,
+        staging_area: false,
+        protocols: [],
+        availability_delete: false,
+        availability_read: false,
+        availability_write: false,
+    } as RSEDetailsViewModel;
 }
 
 export function generateEmptyRSEProtocolViewModel(): RSEProtocolViewModel {

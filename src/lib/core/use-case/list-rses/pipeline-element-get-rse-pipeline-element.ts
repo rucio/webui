@@ -1,7 +1,7 @@
 import { BaseStreamingPostProcessingPipelineElement } from '@/lib/sdk/postprocessing-pipeline-elements';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 
-import { RSEDTO, getEmptyRSEDTO } from '@/lib/core/dto/rse-dto';
+import { getEmptyRSEDetailsDTO, RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
 import RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
 import { ListRSEsError, ListRSEsRequest, ListRSEsResponse } from '@/lib/core/usecase-models/list-rses-usecase-models';
 
@@ -9,27 +9,27 @@ export default class GetRSEPipelineElement extends BaseStreamingPostProcessingPi
     ListRSEsRequest,
     ListRSEsResponse,
     ListRSEsError,
-    RSEDTO
+    RSEDetailsDTO
 > {
     constructor(private gateway: RSEGatewayOutputPort) {
         super();
     }
-    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListRSEsRequest>, responseModel: ListRSEsResponse): Promise<RSEDTO> {
+    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListRSEsRequest>, responseModel: ListRSEsResponse): Promise<RSEDetailsDTO> {
         try {
             const { rucioAuthToken } = requestModel;
             const rseName = responseModel.name;
             if (!rseName) {
-                const errorDTO: RSEDTO = getEmptyRSEDTO();
+                const errorDTO: RSEDetailsDTO = getEmptyRSEDetailsDTO();
                 errorDTO.status = 'error';
                 errorDTO.errorCode = 400;
                 errorDTO.errorName = 'Invalid Request';
                 errorDTO.errorMessage = 'RSE Name not found in response model';
                 return errorDTO;
             }
-            const dto: RSEDTO = await this.gateway.getRSE(rucioAuthToken, rseName);
+            const dto: RSEDetailsDTO = await this.gateway.getRSE(rucioAuthToken, rseName);
             return dto;
         } catch (error: any) {
-            const errorDTO: RSEDTO = getEmptyRSEDTO();
+            const errorDTO: RSEDetailsDTO = getEmptyRSEDetailsDTO();
             errorDTO.status = 'error';
             errorDTO.errorCode = 500;
             errorDTO.errorName = 'Gateway Error';
@@ -38,7 +38,7 @@ export default class GetRSEPipelineElement extends BaseStreamingPostProcessingPi
         }
     }
 
-    handleGatewayError(dto: RSEDTO): ListRSEsError {
+    handleGatewayError(dto: RSEDetailsDTO): ListRSEsError {
         const errorModel: ListRSEsError = {
             status: 'error',
             name: dto.name,
@@ -48,7 +48,7 @@ export default class GetRSEPipelineElement extends BaseStreamingPostProcessingPi
         return errorModel;
     }
 
-    transformResponseModel(responseModel: ListRSEsResponse, dto: RSEDTO): ListRSEsResponse {
+    transformResponseModel(responseModel: ListRSEsResponse, dto: RSEDetailsDTO): ListRSEsResponse {
         responseModel.id = dto.id;
         responseModel.deterministic = dto.deterministic;
         responseModel.rse_type = dto.rse_type;

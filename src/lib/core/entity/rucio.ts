@@ -133,6 +133,7 @@ export type RSEAccountUsage = {
     bytes_limit: number;
 };
 
+// TODO: complete with all the fields
 // copied from deployed rucio UI
 export type RuleMeta = {
     account: string;
@@ -140,8 +141,8 @@ export type RuleMeta = {
     copies: number;
     created_at: DateISO;
     did_type: DIDType;
-    expires_at: DateISO;
-    grouping: DIDType;
+    expires_at: DateISO | null;
+    grouping: RuleGrouping;
     id: string;
     ignore_account_limit: boolean;
     ignore_availability: boolean;
@@ -284,6 +285,42 @@ export type RSEProtocol = {
     created_at?: DateISO; // TODO: rucio does not provide this
 };
 
+export type RSEDetailsProtocol = {
+    domains: {
+        lan: {
+            read: number;
+            write: number;
+            delete: number;
+        };
+        wan: {
+            read: number;
+            write: number;
+            delete: number;
+            third_party_copy_read: number;
+            third_party_copy_write: number;
+        };
+    };
+    scheme: string;
+    hostname: string;
+    port: number;
+    prefix: string;
+    impl: string;
+    extended_attributes?: Record<string, string>;
+};
+
+export type RSEDetails = {
+    id: string;
+    name: string;
+    rse_type: RSEType;
+    volatile: boolean;
+    deterministic: boolean;
+    staging_area: boolean;
+    availability_delete: boolean;
+    availability_read: boolean;
+    availability_write: boolean;
+    protocols: RSEDetailsProtocol[];
+};
+
 export type RSEAttribute = {
     key: string;
     value: string | DateISO | number | boolean | null;
@@ -301,6 +338,12 @@ export enum LockState {
     OK = 'O',
     STUCK = 'S',
     UNKNOWN = 'U',
+}
+
+export enum RuleGrouping {
+    ALL = 'A',
+    DATASET = 'D',
+    NONE = 'N',
 }
 
 // rucio.db.sqla.constants::RuleNotification

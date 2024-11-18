@@ -6,8 +6,7 @@ import { ListAllRSEsError, ListAllRSEsRequest, ListAllRSEsResponse } from '@/lib
 import { ListAllRSEsInputPort, type ListAllRSEsOutputPort } from '@/lib/core/port/primary/list-all-rses-ports';
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 
-import { ListRSEsDTO } from '@/lib/core/dto/rse-dto';
-import { RSEDTO } from '@/lib/core/dto/rse-dto';
+import { ListRSEsDTO, RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
 import type RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
 
 @injectable()
@@ -17,7 +16,7 @@ export default class ListAllRSEsUseCase
         ListAllRSEsResponse,
         ListAllRSEsError,
         ListRSEsDTO,
-        RSEDTO,
+        RSEDetailsDTO,
         RSEViewModel
     >
     implements ListAllRSEsInputPort
@@ -51,7 +50,7 @@ export default class ListAllRSEsUseCase
         } as ListAllRSEsError;
     }
 
-    processStreamedData(dto: RSEDTO): { data: ListAllRSEsResponse | ListAllRSEsError; status: 'success' | 'error' } {
+    processStreamedData(dto: RSEDetailsDTO): { data: ListAllRSEsResponse | ListAllRSEsError; status: 'success' | 'error' } {
         if (dto.status === 'error') {
             const errorModel: ListAllRSEsError = {
                 status: 'error',
