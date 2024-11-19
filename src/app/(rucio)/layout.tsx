@@ -3,12 +3,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@/component-library/outputtailwind.css';
 import 'reflect-metadata';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { RucioAppLayout } from './rucio-app-layout';
+import { Layout } from '@/component-library/pages/Layout';
+import React from 'react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={new QueryClient()}>
-            <RucioAppLayout>{children}</RucioAppLayout>
+            <Layout>{children}</Layout>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
