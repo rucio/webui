@@ -63,6 +63,7 @@ export class WebUIEnvTemplateCompiler {
       'OIDC_ENABLED': 'false',
       'ENABLE_SSL': 'false',
       'PARAMS_ENCODING_ENABLED': 'false',
+      'RULE_ACTIVITY': 'User Subscriptions',
       ...this.environmentVariables,
     }
   }
