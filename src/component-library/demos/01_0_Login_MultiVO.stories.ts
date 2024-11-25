@@ -58,6 +58,7 @@ export const ABasicLogin: Story = {
     args: {
         loginViewModel: {
             status: 'success',
+            userpassEnabled: true,
             x509Enabled: false,
             oidcEnabled: false,
             oidcProviders: [cernOIDCProvider],
@@ -86,6 +87,7 @@ export const ABasicMultiVOLogin: Story = {
     args: {
         loginViewModel: {
             status: 'success',
+            userpassEnabled: true,
             x509Enabled: true,
             oidcEnabled: false,
             oidcProviders: [cernOIDCProvider],

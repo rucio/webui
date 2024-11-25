@@ -22,6 +22,7 @@ export default class LoginConfigPresenter
         }
         const viewModel: LoginViewModel = {
             status: 'success',
+            userpassEnabled: responseModel.userpassEnabled,
             x509Enabled: responseModel.x509Enabled,
             oidcEnabled: responseModel.oidcEnabled,
             multiVOEnabled: responseModel.multiVOEnabled,
@@ -38,7 +39,8 @@ export default class LoginConfigPresenter
     convertErrorModelToViewModel(errorModel: LoginConfigError): { viewModel: LoginViewModel; status: number } {
         const viewModel: LoginViewModel = {
             status: 'error',
-            x509Enabled: true,
+            userpassEnabled: false,
+            x509Enabled: false,
             oidcEnabled: false,
             multiVOEnabled: false,
             voList: [],

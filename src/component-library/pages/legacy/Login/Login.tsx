@@ -101,7 +101,6 @@ export const Login = ({
     oidcSubmitHandler: handleOIDCSubmit,
 }: LoginPageProps) => {
     const isLoggedIn = loginViewModel.isLoggedIn && loginViewModel.accountActive !== undefined;
-
     const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false);
 
     const [selectedVOTab, setSelectedVOTab] = useState<number>(1);
@@ -226,59 +225,62 @@ export const Login = ({
                         )}
 
                         <Button label="x509" onClick={() => submitX509(inputAccount)} />
-
-                        <Button
-                            label="Userpass"
-                            onClick={() => {
-                                setShowUserPassLoginForm(!showUserPassLoginForm);
-                            }}
-                        />
-                        <form>
-                            <fieldset
-                                className={twMerge('flex flex-col space-y-2', 'mx-2 md:mx-10', showUserPassLoginForm ? '' : 'hidden')}
-                                aria-label="Userpass Login Fields"
-                                id="userpass-form"
-                            >
-                                <div className={twMerge('flex flex-col space-y-1')}>
-                                    <LabelledInput
-                                        label="Username"
-                                        idinput="username-input"
-                                        updateFunc={(data: string) => {
-                                            setUsername(data);
-                                        }}
-                                    />
-                                    <LabelledInput
-                                        label="Password"
-                                        idinput="password-input"
-                                        updateFunc={(data: string) => {
-                                            setPassword(data);
-                                        }}
-                                        password={true}
-                                    />
+                        {loginViewModel.userpassEnabled && (
+                            <div id="userpass-login">
+                                <Button
+                                    label="Userpass"
+                                    onClick={() => {
+                                        setShowUserPassLoginForm(!showUserPassLoginForm);
+                                    }}
+                                />
+                                <form>
+                                    <fieldset
+                                        className={twMerge('flex flex-col space-y-2', 'mx-2 md:mx-10', showUserPassLoginForm ? '' : 'hidden')}
+                                        aria-label="Userpass Login Fields"
+                                        id="userpass-form"
+                                    >
+                                        <div className={twMerge('flex flex-col space-y-1')}>
+                                            <LabelledInput
+                                                label="Username"
+                                                idinput="username-input"
+                                                updateFunc={(data: string) => {
+                                                    setUsername(data);
+                                                }}
+                                            />
+                                            <LabelledInput
+                                                label="Password"
+                                                idinput="password-input"
+                                                updateFunc={(data: string) => {
+                                                    setPassword(data);
+                                                }}
+                                                password={true}
+                                            />
+                                            <LabelledInput
+                                                label="Account"
+                                                idinput="account-input"
+                                                updateFunc={(data: string) => {
+                                                    setInputAccount(data);
+                                                }}
+                                            />
+                                        </div>
+                                        <Button label="Login" type="submit" role="button" onClick={() => submitUserPass(inputAccount)} />
+                                    </fieldset>
+                                </form>
+                                <fieldset
+                                    className={twMerge('mx-2 md:mx-10', !showUserPassLoginForm ? 'block' : 'hidden')}
+                                    aria-label="Choose Account Name"
+                                    id="all-accounts"
+                                >
                                     <LabelledInput
                                         label="Account"
-                                        idinput="account-input"
+                                        idinput="account-input-nouserpass"
                                         updateFunc={(data: string) => {
                                             setInputAccount(data);
                                         }}
                                     />
-                                </div>
-                                <Button label="Login" type="submit" role="button" onClick={() => submitUserPass(inputAccount)} />
-                            </fieldset>
-                        </form>
-                        <fieldset
-                            className={twMerge('mx-2 md:mx-10', !showUserPassLoginForm ? 'block' : 'hidden')}
-                            aria-label="Choose Account Name"
-                            id="all-accounts"
-                        >
-                            <LabelledInput
-                                label="Account"
-                                idinput="account-input-nouserpass"
-                                updateFunc={(data: string) => {
-                                    setInputAccount(data);
-                                }}
-                            />
-                        </fieldset>
+                                </fieldset>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

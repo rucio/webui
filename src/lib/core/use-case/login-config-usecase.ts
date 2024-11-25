@@ -29,6 +29,7 @@ class LoginConfigUseCase
                 this.envConfigGateway.voList(),
                 this.envConfigGateway.oidcProviders(),
                 this.envConfigGateway.rucioAuthHost(),
+                this.envConfigGateway.userpassEnabled(),
             ]);
             const responseModel: LoginConfigDTO = {
                 status: 'success',
@@ -38,6 +39,7 @@ class LoginConfigUseCase
                 voList: config[3],
                 oidcProviders: config[4],
                 rucioAuthHost: config[5],
+                userpassEnabled: config[6],
             };
             return responseModel;
         } catch (error) {
@@ -53,6 +55,7 @@ class LoginConfigUseCase
                 errorName: type,
                 x509Enabled: false,
                 oidcEnabled: false,
+                userpassEnabled: false,
                 multiVOEnabled: false,
                 voList: [],
                 oidcProviders: [],
@@ -95,6 +98,7 @@ class LoginConfigUseCase
             data: {
                 status: 'success',
                 x509Enabled: dto.x509Enabled,
+                userpassEnabled: dto.userpassEnabled,
                 oidcEnabled: dto.oidcEnabled,
                 multiVOEnabled: dto.multiVOEnabled,
                 voList: dto.voList,

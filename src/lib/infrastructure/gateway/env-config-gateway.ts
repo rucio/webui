@@ -154,6 +154,14 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         return Promise.resolve(true);
     }
 
+    async userpassEnabled(): Promise<boolean> {
+        const value = await this.get('ENABLE_USERPASS_LOGIN');
+        if (value === 'true' || value === 'True' || value === 'TRUE') {
+            return Promise.resolve(true);
+        }
+        return Promise.resolve(false);
+    }
+    
     async ruleActivity(): Promise<string> {
         const value = await this.get('RULE_ACTIVITY');
         // Return a default value if the environmental variable is not specified

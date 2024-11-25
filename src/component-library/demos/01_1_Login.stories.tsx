@@ -51,6 +51,7 @@ export const Playbook_InitLogin: Story = {
     args: {
         loginViewModel: {
             status: 'success',
+            userpassEnabled: true,
             x509Enabled: true,
             oidcEnabled: true,
             oidcProviders: [cernOIDCProvider],
