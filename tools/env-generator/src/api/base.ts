@@ -64,6 +64,7 @@ export class WebUIEnvTemplateCompiler {
       'ENABLE_SSL': 'false',
       'PARAMS_ENCODING_ENABLED': 'false',
       'RULE_ACTIVITY': 'User Subscriptions',
+      'ENABLE_USERPASS_LOGIN': 'true',
       ...this.environmentVariables,
     }
   }

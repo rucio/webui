@@ -23,6 +23,7 @@ The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells 
 | RUCIO_AUTH_HOST         | RUCIO_WEBUI_RUCIO_AUTH_HOST         | URL for the Rucio authentication server                                                    | https://rucio-auth-host.ch:443 |                   |
 | PARAMS_ENCODING_ENABLED | RUCIO_WEBUI_PARAMS_ENCODING_ENABLED | If your DID schema has special characters like  '/' or '+' in the name, set this to true.  | true                           | false             |
 | HOSTNAME                | RUCIO_WEBUI_HOSTNAME                | Public HOSTNAME at which Rucio WebUI will be accessible. It may include port number.       | rucio-ui.cern.ch               |                   |
+| ENABLE_USERPASS_LOGIN   | RUCIO_WEBUI_ENABLE_USERPASS_LOGIN   | Show the Userpass Login option in the WebUI's Login Page                                   | true                           | true              |
 | ENABLE_SSL              | RUCIO_WEBUI_ENABLE_SSL              | Enable or Disable TLS Termination (true or false)                                          | true                           | false             |
 | SERVER_CA_BUNDLE        | RUCIO_WEBUI_SERVER_CA_BUNDLE        | Path to the CA bundle file that can verify Rucio Server certificate. If ENABLE_SSL is set. | /path/to/ca-bundle.pem         |                   |
 | PROJECT_URL             | RUCIO_WEBUI_PROJECT_URL             | Public URL for your project                                                                | https://atlas.cern.ch          |                   |
