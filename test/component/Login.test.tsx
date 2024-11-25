@@ -38,6 +38,7 @@ describe('Login Page Test', () => {
                 Promise.resolve(
                     JSON.stringify({
                         x509Enabled: true,
+                        userpassEnabled: true,
                         oidcEnabled: true,
                         oidcProviders: oidcProviders,
                         multiVOEnabled: true,
@@ -102,6 +103,7 @@ describe('Login Page Test', () => {
             Promise.resolve(
                 JSON.stringify({
                     x509Enabled: true,
+                    userpassEnabled: true,
                     oidcEnabled: false,
                     oidcProviders: getSampleOIDCProviders(),
                     multiVOEnabled: true,
@@ -124,6 +126,7 @@ describe('Login Page Test', () => {
             Promise.resolve(
                 JSON.stringify({
                     x509Enabled: true,
+                    userpassEnabled: true,
                     oidcEnabled: false,
                     oidcProviders: getSampleOIDCProviders(),
                     multiVOEnabled: true,
@@ -143,6 +146,7 @@ describe('Login Page Test', () => {
     it('should show error message if login fails', async () => {
         const loginViewModel: LoginViewModel = {
             x509Enabled: true,
+            userpassEnabled: true,
             oidcEnabled: false,
             oidcProviders: getSampleOIDCProviders(),
             multiVOEnabled: true,
@@ -193,6 +197,7 @@ describe('Login Page Test', () => {
     it('test if modal will show if user has multiple accounts', async () => {
         const loginViewModel: LoginViewModel = {
             x509Enabled: true,
+            userpassEnabled: true,
             oidcEnabled: false,
             oidcProviders: getSampleOIDCProviders(),
             multiVOEnabled: true,
@@ -236,6 +241,7 @@ describe('Login Page Test', () => {
     it('should show error alert if login fails, user closes alert, and login fails again', async () => {
         const loginViewModel: LoginViewModel = {
             x509Enabled: true,
+            userpassEnabled: true,
             oidcEnabled: false,
             oidcProviders: getSampleOIDCProviders(),
             multiVOEnabled: true,
@@ -303,5 +309,27 @@ describe('Login Page Test', () => {
 
         // check if Alert is not displayed
         expect(alertCollapsible.className).toContain('hidden');
+    });
+    it('should not show userpass button if userpass is disabled', async () => {
+        fetchMock.doMock();
+        fetchMock.mockIf(/login/, req =>
+            Promise.resolve(
+                JSON.stringify({
+                    x509Enabled: true,
+                    userpassEnabled: false,
+                    oidcEnabled: false,
+                    oidcProviders: getSampleOIDCProviders(),
+                    multiVOEnabled: true,
+                    voList: getSampleVOs(),
+                    isLoggedIn: false,
+                    status: 'error',
+                } as LoginViewModel),
+            ),
+        );
+        await act(async () => render(<Login />));
+
+        // Check userpass button: 1 piece and collapsed
+        const userpassButton = screen.queryByRole('button', { name: /Userpass/ });
+        expect(userpassButton).toBeNull();
     });
 });
