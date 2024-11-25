@@ -4,6 +4,7 @@ import { OIDCProvider, VO } from '../entity/auth-models';
 /**
  * Response Model for {@link LoginConfigOutputPort}
  * @property x509Enabled: true if x509 login is enabled
+ * @property userpassEnabled: true if userpass login is enabled
  * @property oidcEnabled: true if oidc login is enabled
  * @property oidcProviders: List of oidc providers
  * @property multiVOEnabled: true if multi vo login is enabled
@@ -11,6 +12,7 @@ import { OIDCProvider, VO } from '../entity/auth-models';
  */
 export interface LoginConfigResponse extends BaseResponseModel {
     x509Enabled: boolean;
+    userpassEnabled: boolean;
     oidcEnabled: boolean;
     oidcProviders: OIDCProvider[];
     multiVOEnabled: boolean;

@@ -51,6 +51,7 @@ export const LoginPage = Template.bind({});
 LoginPage.args = {
     loginViewModel: {
         status: 'success',
+        userpassEnabled: true,
         x509Enabled: true,
         oidcEnabled: true,
         oidcProviders: [cernOIDCProvider],

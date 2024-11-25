@@ -58,6 +58,7 @@ export const AMultiVOOIDCEnabledLogin: Story = {
     args: {
         loginViewModel: {
             status: 'success',
+            userpassEnabled: true,
             x509Enabled: true,
             oidcEnabled: true,
             oidcProviders: [cernOIDCProvider],
