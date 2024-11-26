@@ -11,6 +11,7 @@ import UserPassLoginInputPort from '../port/primary/userpass-login-input-port';
 import type UserPassLoginOutputPort from '../port/primary/userpass-login-output-port';
 import type AccountGatewayOutputPort from '../port/secondary/account-gateway-output-port';
 import type AuthServerGatewayOutputPort from '../port/secondary/auth-server-gateway-output-port';
+import type EnvConfigGatewayOutputPort from '../port/secondary/env-config-gateway-output-port';
 
 /**
  * UseCase for UserPassLogin workflow.
@@ -21,12 +22,23 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
         private presenter: UserPassLoginOutputPort<any>,
         private authServer: AuthServerGatewayOutputPort,
         private rucioAccountGateway: AccountGatewayOutputPort,
+        private envConfigGateway: EnvConfigGatewayOutputPort,
     ) {
         this.presenter = presenter;
         this.authServer = authServer;
         this.rucioAccountGateway = rucioAccountGateway;
+        this.envConfigGateway = envConfigGateway;
     }
     async execute(request: UserpassLoginRequest): Promise<void> {
+        const userpassLoginEnabled = await this.envConfigGateway.userpassEnabled();
+        if (!userpassLoginEnabled) {
+            const errorModel: UserpassLoginError = {
+                type: 'AUTH_SERVER_CONFIGURATION_ERROR',
+                message: 'Userpass login is not enabled',
+            };
+            await this.presenter.presentError(errorModel);
+            return;
+        }
         const dto = await this.authServer.userpassLogin(request.username, request.password, request.account, request.vo);
         let role: Role | undefined;
         let country: string | undefined;
