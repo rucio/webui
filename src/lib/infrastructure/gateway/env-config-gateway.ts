@@ -156,10 +156,10 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
 
     async userpassEnabled(): Promise<boolean> {
         const value = await this.get('ENABLE_USERPASS_LOGIN');
-        if (value === 'true' || value === 'True' || value === 'TRUE') {
-            return Promise.resolve(true);
+        if (value === 'false' || value === 'False' || value === 'FALSE') {
+            return Promise.resolve(false);
         }
-        return Promise.resolve(false);
+        return Promise.resolve(true);
     }
     
     async ruleActivity(): Promise<string> {
