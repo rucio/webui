@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Searchbar } from '@/component-library/pages/legacy/Layout/Searchbar';
 import Image from 'next/image';
+import {AccountDropdown} from "@/component-library/pages/legacy/Layout/AccountDropdown";
 
 type TMenuItem = {
     title: string;
@@ -147,6 +148,9 @@ export const Header = () => {
         },
     ];
 
+    const { resolvedTheme } = useTheme();
+    const logoPath = resolvedTheme === 'dark' ? '/logo_dark.svg' : '/logo_light.svg';
+
     return (
         <header
             className={cn(
@@ -155,11 +159,11 @@ export const Header = () => {
                 'p-2 flex flex-row justify-between items-center',
             )}
         >
-            <div className="flex space-x-1">
-                <a className="w-12 h-12">
-                    <Image src="/logocropped.svg" alt="Rucio Logo" width={43} height={43} />
+            <div className="flex items-center">
+                <a className="w-12 h-full stroke-white fill-white">
+                    <Image src={logoPath} alt="Rucio Logo" width={36} height={36} />
                 </a>
-                <a className="w-12 h-12">
+                <a className="w-12 h-full">
                     <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53} />
                 </a>
             </div>
