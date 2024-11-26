@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { Field } from '@/component-library/atoms/misc/Field';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import CustomLegend, { LegendOption } from '@/component-library/pages/Dashboard/widgets/CustomLegend';
-import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
+import { useTheme } from 'next-themes';
 
 const CustomTooltip = ({ active, payload, totalBytes }: any) => {
     if (active && payload && payload.length) {
@@ -36,7 +36,9 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
         'rgba(34,197,94,0.8)', // Tailwind base-error-500
     ];
 
-    const isDarkMode = useDarkMode();
+    const { resolvedTheme } = useTheme();
+    const isDarkMode = resolvedTheme === 'dark';
+
     // Tailwind neutral-100 or neutral-900
     const borderColor = isDarkMode ? 'rgba(241,245,249,0.15)' : 'rgba(15,23,42,0.15)';
 

@@ -6,10 +6,10 @@ import { Bar, BarChart, ResponsiveContainer, Text, Tooltip, XAxis, YAxis } from 
 import { HiExternalLink } from 'react-icons/hi';
 import { LockStateBadge } from '@/component-library/features/badges/Rule/LockStateBadge';
 import { LockState } from '@/lib/core/entity/rucio';
-import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import CustomLegend, { LegendOption } from './CustomLegend';
+import { useTheme } from 'next-themes';
 
 const openRule = (id: string) => {
     window.open(`/rule/page/${id}`, '_blank');
@@ -90,7 +90,9 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
         };
     });
 
-    const isDarkMode = useDarkMode();
+    const { resolvedTheme } = useTheme();
+    const isDarkMode = resolvedTheme === 'dark';
+
     // Tailwind neutral-100 or neutral-900
     const fillColor = isDarkMode ? '#f1f5f9' : '#0f172a';
     const borderColor = isDarkMode ? 'rgba(241,245,249,0.15)' : 'rgba(15,23,42,0.15)';

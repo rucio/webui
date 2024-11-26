@@ -4,10 +4,10 @@ import { twMerge } from 'tailwind-merge';
 import { Skeleton } from '@/component-library/atoms/loading/Skeleton';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { NoDataYetOverlay } from '@/component-library/features/table/overlays/NoDataYetOverlay';
-import { AgGridEvent, GridReadyEvent } from 'ag-grid-community';
-import useDarkMode from '@/lib/infrastructure/hooks/useDarkMode';
+import { GridReadyEvent } from 'ag-grid-community';
 import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioDark.css';
 import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioLight.css';
+import { useTheme } from 'next-themes';
 
 export interface RegularTableProps extends AgGridReactProps {
     tableRef: RefObject<AgGridReact>;
@@ -121,6 +121,9 @@ export const RegularTable = (props: RegularTableProps) => {
 
     // Whether the table component is ready to be displayed
     const [isTableLoaded, setIsTableLoaded] = useState<boolean>(false);
+    const gridWrapper = useRef<HTMLDivElement>(null);
+
+    const { resolvedTheme } = useTheme();
 
     const onGridReady = (event: GridReadyEvent) => {
         setIsTableLoaded(true);
@@ -130,39 +133,44 @@ export const RegularTable = (props: RegularTableProps) => {
     };
 
     useEffect(() => {
+        if (gridWrapper.current && resolvedTheme) {
+            const isDarkMode = resolvedTheme === 'dark';
+            gridWrapper.current.className = gridWrapper.current.className.replace(' ag-grid-theme-rucio-dark', '');
+            gridWrapper.current.className = gridWrapper.current.className.replace(' ag-grid-theme-rucio-light', '');
+            gridWrapper.current.className += isDarkMode ? ' ag-grid-theme-rucio-dark' : ' ag-grid-theme-rucio-light';
+        }
+    }, [resolvedTheme]);
+
+    useEffect(() => {
         onPaginationChanged();
     }, [isTableLoaded]);
-
-    const isDarkMode = useDarkMode();
 
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
     return (
         <>
-            <div
-                className={twMerge(
-                    isDarkMode ? 'ag-grid-theme-rucio-dark' : 'ag-grid-theme-rucio-light',
-                    'grid grow w-full',
-                    'relative',
-                    'min-h-[300px]',
-                )}
-            >
+            <div className={twMerge('grid grow w-full', 'relative', 'min-h-[300px]')} ref={gridWrapper}>
                 {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
-                <AgGridReact
-                    {...props}
-                    pagination={true}
-                    paginationAutoPageSize={true}
-                    ref={props.tableRef}
-                    loadingOverlayComponent={NoDataYetOverlay}
-                    onGridReady={onGridReady}
-                    domLayout="normal" // Ensures the grid fits within the flex container
-                    suppressPaginationPanel={true}
-                    onPaginationChanged={onPaginationChanged}
-                    suppressMovableColumns={true}
-                    rowMultiSelectWithClick={true}
-                    defaultColDef={{ flex: 1 }}
-                    //asyncTransactionWaitMillis={500}
-                />
+                {/*The substitute div is required to supress hydration warning*/}
+                {resolvedTheme ? (
+                    <AgGridReact
+                        {...props}
+                        pagination={true}
+                        paginationAutoPageSize={true}
+                        ref={props.tableRef}
+                        loadingOverlayComponent={NoDataYetOverlay}
+                        onGridReady={onGridReady}
+                        domLayout="normal" // Ensures the grid fits within the flex container
+                        suppressPaginationPanel={true}
+                        onPaginationChanged={onPaginationChanged}
+                        suppressMovableColumns={true}
+                        rowMultiSelectWithClick={true}
+                        defaultColDef={{ flex: 1 }}
+                        //asyncTransactionWaitMillis={500}
+                    />
+                ) : (
+                    <div></div>
+                )}
             </div>
             <SimplePaginationPanel
                 currentPageRef={currentPageRef}
