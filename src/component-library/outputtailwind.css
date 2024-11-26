@@ -1005,8 +1005,8 @@ html {
   width: 18rem;
 }
 
-.w-\[35rem\] {
-  width: 35rem;
+.w-\[40rem\] {
+  width: 40rem;
 }
 
 .w-fit {
@@ -1265,10 +1265,10 @@ html {
   margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
-.space-x-6 > :not([hidden]) ~ :not([hidden]) {
+.space-x-8 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
-  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+  margin-right: calc(2rem * var(--tw-space-x-reverse));
+  margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
@@ -1859,6 +1859,10 @@ html {
   background-color: rgb(133 77 14 / var(--tw-bg-opacity));
 }
 
+.bg-opacity-25 {
+  --tw-bg-opacity: 0.25;
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -2068,6 +2072,10 @@ html {
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
+}
+
+.text-\[11pt\] {
+  font-size: 11pt;
 }
 
 .text-lg {
@@ -2638,11 +2646,6 @@ html {
   background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-neutral-300:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-neutral-400:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(148 163 184 / var(--tw-bg-opacity));
@@ -2676,6 +2679,10 @@ html {
 .hover\:bg-yellow-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-opacity-40:hover {
+  --tw-bg-opacity: 0.4;
 }
 
 .hover\:bg-opacity-90:hover {
@@ -3181,11 +3188,6 @@ html {
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
-.dark .dark\:bg-neutral-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
-}
-
 .dark .dark\:bg-neutral-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(71 85 105 / var(--tw-bg-opacity));
@@ -3449,11 +3451,6 @@ html {
 
 .dark .dark\:hover\:bg-transparent:hover {
   background-color: transparent;
-}
-
-.dark .hover\:dark\:bg-neutral-500:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
 }
 
 .dark .hover\:dark\:bg-neutral-600:hover {
@@ -3825,10 +3822,6 @@ html {
 
   .lg\:w-48 {
     width: 12rem;
-  }
-
-  .lg\:w-\[50rem\] {
-    width: 50rem;
   }
 
   .lg\:flex-row {
