@@ -1883,6 +1883,14 @@ html {
   --tw-bg-opacity: 0.9;
 }
 
+.fill-white {
+  fill: #fff;
+}
+
+.stroke-white {
+  stroke: #fff;
+}
+
 .p-0 {
   padding: 0px;
 }
@@ -2072,10 +2080,6 @@ html {
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
-}
-
-.text-\[11pt\] {
-  font-size: 11pt;
 }
 
 .text-lg {
