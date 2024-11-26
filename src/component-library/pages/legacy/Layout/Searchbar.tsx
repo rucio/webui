@@ -37,12 +37,10 @@ const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; 
     return (
         <div
             className={twMerge(
-                'w-full p-1 rounded-sm hover:cursor-pointer',
-                'hover:bg-neutral-200 text-text-800',
-                'dark:text-text-100',
+                'w-full py-1 px-3 hover:cursor-pointer',
                 props.isHighlighted
-                    ? 'bg-neutral-300 hover:bg-neutral-300 dark:bg-neutral-500 hover:dark:bg-neutral-500'
-                    : 'dark:bg-neutral-800 hover:dark:bg-neutral-600',
+                    ? 'bg-brand-500 bg-opacity-25 hover:bg-opacity-40'
+                    : 'hover:bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-600',
             )}
             onMouseDown={props.onMouseDown}
         >
@@ -66,11 +64,10 @@ const SearchDropdown = forwardRef(function SearchDropdown(
     return (
         <div
             className={twMerge(
-                'w-[35rem] lg:w-[50rem] flex flex-col p-2',
-                'rounded-md border shadow-md',
+                'w-[40rem] flex flex-col',
                 isInputFocused ? 'visible' : 'invisible',
                 'absolute mt-2',
-                'text-text-900 dark:text-text-100',
+                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
                 'bg-neutral-100 dark:bg-neutral-800',
                 'z-[100]',
             )}
@@ -103,8 +100,6 @@ export const Searchbar = () => {
 
     const searchDropdownRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
-
-    const router = useRouter();
 
     const handleClickOutside = (event: any) => {
         if (!searchDropdownRef.current?.contains(event.target) && !searchInputRef.current?.contains(event.target)) {
@@ -163,6 +158,7 @@ export const Searchbar = () => {
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 ref={searchInputRef}
+                className="h-9"
             />
             <SearchDropdown
                 isInputFocused={isFocused}

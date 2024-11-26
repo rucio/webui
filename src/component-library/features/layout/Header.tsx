@@ -2,10 +2,12 @@
 
 import { cn } from '@/component-library/utils';
 import { useTheme } from 'next-themes';
-import {HiChevronDown, HiMenu, HiMoon, HiSun, HiX} from 'react-icons/hi';
-import { useEffect, useRef, useState } from 'react';
+import { HiChevronDown, HiMenu, HiMoon, HiSun, HiX } from 'react-icons/hi';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Searchbar } from '@/component-library/pages/legacy/Layout/Searchbar';
+import Image from 'next/image';
 
 type TMenuItem = {
     title: string;
@@ -34,11 +36,11 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
                 className={cn(
                     'absolute left-0 w-max',
                     'opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto',
-                    'bg-neutral-0 dark:bg-neutral-900',
+                    'bg-neutral-100 dark:bg-neutral-800',
                     'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
                 )}
             >
-                <div className="flex flex-col space-y-2 p-4">
+                <div className="flex flex-col space-y-2 px-4 py-2">
                     {children.map(child => (
                         <MenuItem key={child.path} item={child} pathname={pathname} />
                     ))}
@@ -48,7 +50,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
     };
 
     return (
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-8">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
                 const classes = `hover:text-brand-500 ${item.path === pathname && 'text-brand-500 font-semibold'}`;
@@ -59,7 +61,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
                         <div key={key} className="relative group">
                             <div className={classes}>
                                 <span>{item.title}</span>
-                                <HiChevronDown className="inline pl-1 h-5 w-5"/>
+                                <HiChevronDown className="inline pl-1 h-5 w-5" />
                             </div>
                             {item.children && getItemChildren(item.children)}
                         </div>
@@ -107,28 +109,6 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     );
 };
 
-const NavigationBar = () => {
-    const menuItems: TFullMenuItem[] = [
-        { title: 'Dashboard', path: '/dashboard' },
-        { title: 'DIDs', path: '/did/list' },
-        { title: 'RSEs', path: '/rse/list' },
-        {
-            title: 'Rules',
-            children: [
-                { title: 'List Rules', path: '/rule/list' },
-                { title: 'Create a rule', path: '/rule/create' },
-            ],
-        },
-    ];
-
-    return (
-        <>
-            <MobileNavigationBar menuItems={menuItems} />
-            <DesktopNavigationBar menuItems={menuItems} />
-        </>
-    );
-};
-
 const ThemeSwitchButton = () => {
     const { resolvedTheme, setTheme } = useTheme();
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
@@ -154,16 +134,43 @@ const ThemeSwitchButton = () => {
 };
 
 export const Header = () => {
+    const menuItems: TFullMenuItem[] = [
+        { title: 'Dashboard', path: '/dashboard' },
+        { title: 'DIDs', path: '/did/list' },
+        { title: 'RSEs', path: '/rse/list' },
+        {
+            title: 'Rules',
+            children: [
+                { title: 'List Rules', path: '/rule/list' },
+                { title: 'Create a rule', path: '/rule/create' },
+            ],
+        },
+    ];
+
     return (
         <header
             className={cn(
                 'h-14 z-[100]',
                 'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
-                'p-2 flex flex-row',
+                'p-2 flex flex-row justify-between items-center',
             )}
         >
-            <ThemeSwitchButton />
-            <NavigationBar />
+            <div className="flex space-x-1">
+                <a className="w-12 h-12">
+                    <Image src="/logocropped.svg" alt="Rucio Logo" width={43} height={43} />
+                </a>
+                <a className="w-12 h-12">
+                    <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53} />
+                </a>
+            </div>
+            <div className="flex space-x-8">
+                <Searchbar />
+                <DesktopNavigationBar menuItems={menuItems} />
+            </div>
+            <div className="flex h-full">
+                <ThemeSwitchButton />
+                <MobileNavigationBar menuItems={menuItems} />
+            </div>
         </header>
     );
 };
