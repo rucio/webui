@@ -239,7 +239,7 @@ export const Login = ({
                                         aria-label="Userpass Login Fields"
                                         id="userpass-form"
                                     >
-                                        <div className={twMerge('flex flex-col space-y-1')}>
+                                        <div className={twMerge('flex flex-col space-y-1 p-2')}>
                                             <LabelledInput
                                                 label="Username"
                                                 idinput="username-input"
@@ -267,7 +267,7 @@ export const Login = ({
                                     </fieldset>
                                 </form>
                                 <fieldset
-                                    className={twMerge('mx-2 md:mx-10', !showUserPassLoginForm ? 'block' : 'hidden')}
+                                    className={twMerge('mx-2 md:mx-10 p-4', !showUserPassLoginForm ? 'block' : 'hidden')}
                                     aria-label="Choose Account Name"
                                     id="all-accounts"
                                 >
