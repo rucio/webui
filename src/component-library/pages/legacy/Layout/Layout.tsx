@@ -180,7 +180,7 @@ export const Layout = (props: { children: React.ReactNode; LVM: LayoutViewModel 
                             isProfileOpen={isProfileOpen}
                             accountActive={props.LVM.accountActive}
                             accountsPossible={props.LVM.accountsPossible}
-                            ref={accountMenuRef}
+                            menuRef={accountMenuRef}
                         />
                     </span>
                 </nav>
