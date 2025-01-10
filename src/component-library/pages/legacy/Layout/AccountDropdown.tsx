@@ -1,8 +1,10 @@
 import { twMerge } from 'tailwind-merge';
-import { ForwardedRef, forwardRef, useState } from 'react';
-import { HiSwitchHorizontal, HiLogout, HiUserAdd } from 'react-icons/hi';
+import React, {RefObject, useEffect, useRef} from 'react';
+import {HiSwitchHorizontal, HiLogout, HiUserAdd, HiChevronDown} from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import {HiUserCircle} from "react-icons/hi2";
+import {SiteHeaderViewModel} from "@/lib/infrastructure/data/view-model/site-header";
 
 const AccountList = (props: { accountList: string[] }) => {
     return (
@@ -16,7 +18,7 @@ const AccountList = (props: { accountList: string[] }) => {
                             'flex items-center justify-between py-2 px-1 space-x-4',
                             'text-right',
                         )}
-                        key={index}
+                        key={"profile-" + account}
                         href={`/api/auth/switch?account=${account}&&callbackUrl=/dashboard`}
                     >
                         <HiSwitchHorizontal className="text-2xl text-text-900 dark:text-text-100 shrink-0" />
@@ -81,21 +83,20 @@ const SignIntoButton = () => {
     );
 };
 
-export const AccountDropdown = forwardRef(function AccountDropdown(
+export const AccountDropdown = (
     props: {
-        isProfileOpen: boolean;
+        menuRef: RefObject<HTMLDivElement>,
         accountActive: string;
         accountsPossible: string[];
     },
-    ref: ForwardedRef<HTMLDivElement>,
-) {
+) => {
     const hasAccountChoice = props.accountsPossible.length !== 1;
+
     return (
         <div
             className={twMerge(
                 'flex flex-col p-2 sm:w-fit',
                 'rounded-md border shadow-md',
-                props.isProfileOpen ? 'visible' : 'invisible',
                 'absolute top-10 right-0',
                 'divide-y',
                 'bg-neutral-100 dark:bg-neutral-800',
@@ -103,7 +104,7 @@ export const AccountDropdown = forwardRef(function AccountDropdown(
                 'w-64 sm:w-96',
             )}
             onMouseEnter={e => e.preventDefault()}
-            ref={ref}
+            ref={props.menuRef}
         >
             <div
                 className={twMerge(
@@ -130,4 +131,37 @@ export const AccountDropdown = forwardRef(function AccountDropdown(
             {hasAccountChoice && <SignOutOfAllButton />}
         </div>
     );
-});
+};
+
+export const AccountButton = ({siteHeader}: {siteHeader: SiteHeaderViewModel}) => {
+    const [isAccountOpen, setIsAccountOpen] = React.useState(false);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    const handleClickOutside = (event: any) => {
+        if (!menuRef.current?.contains(event.target) && !buttonRef.current?.contains(event.target)) {
+            setIsAccountOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+    }, [menuRef, buttonRef]);
+
+
+    return <>
+        <button
+            className="text-neutral-900 dark:text-neutral-100 hover:text-brand-500 flex items-center"
+            onClick={() => setIsAccountOpen(!isAccountOpen)}
+            ref={buttonRef}
+        >
+            <HiUserCircle className="text-3xl"/>
+        </button>
+        {isAccountOpen &&
+        <AccountDropdown
+            accountActive={siteHeader.activeAccount?.rucioAccount ?? ''}
+            accountsPossible={siteHeader.availableAccounts?.map(account => account.rucioAccount) ?? []}
+            menuRef={menuRef}
+        />}
+    </>;
+};
