@@ -48,8 +48,8 @@ const SignOutOfAllButton = () => {
     return (
         <div
             className={twMerge(
-                'text-text-800 hover:bg-base-warning-200 hover:cursor-pointer',
-                'dark:text-text-100 dark:hover:bg-base-warning-600',
+                'text-text-800 hover:bg-base-error-200 hover:cursor-pointer',
+                'dark:text-text-100 dark:hover:bg-base-error-500',
                 'flex items-center justify-between py-2 px-1 space-x-4',
                 'text-right',
             )}
@@ -95,13 +95,12 @@ export const AccountDropdown = (
     return (
         <div
             className={twMerge(
-                'flex flex-col p-2 sm:w-fit',
-                'rounded-md border shadow-md',
-                'absolute top-10 right-0',
-                'divide-y',
+                'divide-y divide-neutral-300 dark:divide-neutral-700',
+                'w-64 sm:w-fit p-2',
+                'absolute top-11 right-2',
+                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
                 'bg-neutral-100 dark:bg-neutral-800',
                 'z-[100]',
-                'w-64 sm:w-96',
             )}
             onMouseEnter={e => e.preventDefault()}
             ref={props.menuRef}
@@ -118,7 +117,7 @@ export const AccountDropdown = (
                     <span>Hello, </span>
                     <b className="text-text-800 dark:text-text-100">{props.accountActive}</b>!
                 </span>
-                <div className={twMerge('bg-neutral-200 hover:bg-base-warning-600', 'p-1', 'rounded-md')}>
+                <div className={twMerge('bg-neutral-200 hover:bg-base-error-300 dark:hover:bg-base-error-500', 'p-1', 'rounded-md')}>
                     {/* Using the <a> tag here prevents a bug with response caching */}
                     {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <a href="/api/auth/logout?callbackUrl=/dashboard">
@@ -151,11 +150,11 @@ export const AccountButton = ({siteHeader}: {siteHeader: SiteHeaderViewModel}) =
 
     return <>
         <button
-            className="text-neutral-900 dark:text-neutral-100 hover:text-brand-500 flex items-center"
+            className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
             onClick={() => setIsAccountOpen(!isAccountOpen)}
             ref={buttonRef}
         >
-            <HiUserCircle className="text-3xl"/>
+            <HiUserCircle className="text-2xl"/>
         </button>
         {isAccountOpen &&
         <AccountDropdown
