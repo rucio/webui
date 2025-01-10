@@ -178,14 +178,16 @@ export const Header = ({siteHeader, siteHeaderError, isSiteHeaderFetching}: Head
                     <a className="w-12 h-full" href={siteHeader.projectUrl}>
                         <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53}/>
                     </a>
+                    <div className="pl-3">
+                        <Searchbar/>
+                    </div>
                 </div>
-                <div className="flex space-x-8">
-                    <Searchbar/>
+                <div>
                     <DesktopNavigationBar menuItems={menuItems}/>
                 </div>
                 <div className="flex h-full">
-                    <AccountButton siteHeader={siteHeader}/>
                     <ThemeSwitchButton/>
+                    <AccountButton siteHeader={siteHeader}/>
                     <MobileNavigationBar menuItems={menuItems}/>
                 </div>
             </>;
