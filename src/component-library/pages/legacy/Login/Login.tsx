@@ -167,10 +167,9 @@ export const Login = ({
         return (
             <div
                 className={twMerge(
-                    'rounded p-4 flex flex-col justify-center space-y-2',
-                    'border dark:border-2',
-                    'border-neutral-300 dark:border-neutral-0',
-                    'bg-neutral-0 dark:bg-neutral-800',
+                    'border dark:border-2 rounded-xl p-6 flex flex-col justify-center space-y-4',
+                    'border-neutral-300 dark:border-neutral-700',
+                    'bg-neutral-50 dark:bg-neutral-900'
                 )}
                 id="root"
             >
@@ -193,7 +192,7 @@ export const Login = ({
                 </div>
 
                 <div
-                    className="flex flex-col space-y-2"
+                    className="flex flex-col space-y-4"
                     onSubmit={e => {
                         e.preventDefault();
                     }} // TODO handle proper submit!
@@ -235,11 +234,11 @@ export const Login = ({
                                 />
                                 <form>
                                     <fieldset
-                                        className={twMerge('flex flex-col space-y-2', 'mx-2 md:mx-10', showUserPassLoginForm ? '' : 'hidden')}
+                                        className={twMerge('flex flex-col space-y-4', 'mx-2 md:mx-10', showUserPassLoginForm ? '' : 'hidden')}
                                         aria-label="Userpass Login Fields"
                                         id="userpass-form"
                                     >
-                                        <div className={twMerge('flex flex-col space-y-1 p-2')}>
+                                        <div className={twMerge('flex flex-col space-y-2 p-2')}>
                                             <LabelledInput
                                                 label="Username"
                                                 idinput="username-input"
