@@ -92,7 +92,7 @@ export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement>; acc
             className={cn(
                 'divide-y divide-neutral-300 dark:divide-neutral-700',
                 'w-64 sm:w-fit p-2',
-                'absolute top-11 right-2',
+                'absolute top-[52px] right-2',
                 'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
                 'bg-neutral-100 dark:bg-neutral-800',
                 'z-[100]',

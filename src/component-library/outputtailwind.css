@@ -627,12 +627,12 @@ html {
   right: 0.5rem;
 }
 
-.top-11 {
-  top: 2.75rem;
-}
-
 .top-2 {
   top: 0.5rem;
+}
+
+.top-\[52px\] {
+  top: 52px;
 }
 
 .z-10 {
@@ -2831,10 +2831,6 @@ html {
 
 .group:focus-within .group-focus-within\:block {
   display: block;
-}
-
-.group:hover .group-hover\:pointer-events-auto {
-  pointer-events: auto;
 }
 
 .group:hover .group-hover\:block {
