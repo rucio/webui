@@ -1,10 +1,11 @@
 import { twMerge } from 'tailwind-merge';
-import React, {RefObject, useEffect, useRef} from 'react';
-import {HiSwitchHorizontal, HiLogout, HiUserAdd, HiChevronDown} from 'react-icons/hi';
+import React, { RefObject, useEffect, useRef } from 'react';
+import { HiSwitchHorizontal, HiLogout, HiUserAdd, HiChevronDown } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {HiUserCircle} from "react-icons/hi2";
-import {SiteHeaderViewModel} from "@/lib/infrastructure/data/view-model/site-header";
+import { HiUserCircle } from 'react-icons/hi2';
+import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
+import { cn } from '@/component-library/utils';
 
 const AccountList = (props: { accountList: string[] }) => {
     return (
@@ -12,19 +13,19 @@ const AccountList = (props: { accountList: string[] }) => {
             {props.accountList.map((account, index) => {
                 return (
                     <a
-                        className={twMerge(
-                            'text-text-600 hover:bg-neutral-200 hover:cursor-pointer',
-                            'dark:text-text-300 dark:hover:bg-neutral-600',
+                        className={cn(
+                            'text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer',
+                            'dark:text-neutral-300 dark:hover:bg-neutral-600',
                             'flex items-center justify-between py-2 px-1 space-x-4',
                             'text-right',
                         )}
-                        key={"profile-" + account}
+                        key={'profile-' + account}
                         href={`/api/auth/switch?account=${account}&&callbackUrl=/dashboard`}
                     >
-                        <HiSwitchHorizontal className="text-2xl text-text-900 dark:text-text-100 shrink-0" />
+                        <HiSwitchHorizontal className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
                         <span>
                             <span>Switch to </span>
-                            <b className="text-text-800 dark:text-text-100">{account}</b>
+                            <b className="text-neutral-800 dark:text-neutral-100">{account}</b>
                         </span>
                     </a>
                 );
@@ -40,16 +41,16 @@ const SignOutOfAllButton = () => {
         const request = new Request('/api/auth/logout', {
             method: 'POST',
         });
-        //TODO: handle errors
+        // TODO: handle errors
         await fetch(request);
         router.push('/auth/login');
     };
 
     return (
         <div
-            className={twMerge(
-                'text-text-800 hover:bg-base-error-200 hover:cursor-pointer',
-                'dark:text-text-100 dark:hover:bg-base-error-500',
+            className={cn(
+                'text-neutral-800 hover:bg-base-error-500 hover:bg-opacity-40 hover:cursor-pointer',
+                'dark:text-neutral-100',
                 'flex items-center justify-between py-2 px-1 space-x-4',
                 'text-right',
             )}
@@ -58,7 +59,7 @@ const SignOutOfAllButton = () => {
             <span>
                 Sign <b>out</b> of all accounts
             </span>
-            <HiLogout className="dark:text-text-100 text-2xl text-text-900 shrink-0" />
+            <HiLogout className="dark:text-neutral-100 text-2xl text-neutral-900 shrink-0" />
         </div>
     );
 };
@@ -66,9 +67,9 @@ const SignOutOfAllButton = () => {
 const SignIntoButton = () => {
     return (
         <Link
-            className={twMerge(
-                'text-text-800 hover:bg-base-success-200 hover:cursor-pointer',
-                'dark:text-text-100 dark:hover:bg-base-success-600',
+            className={cn(
+                'text-neutral-800 hover:bg-base-success-500 hover:bg-opacity-40 hover:cursor-pointer',
+                'dark:text-neutral-100',
                 'flex items-center justify-between py-2 px-1 space-x-4',
                 'text-right',
             )}
@@ -78,23 +79,17 @@ const SignIntoButton = () => {
             <span>
                 Sign <b>in to</b> another account
             </span>
-            <HiUserAdd className="dark:text-text-100 text-2xl text-text-900 shrink-0" />
+            <HiUserAdd className="dark:text-neutral-100 text-2xl text-neutral-900 shrink-0" />
         </Link>
     );
 };
 
-export const AccountDropdown = (
-    props: {
-        menuRef: RefObject<HTMLDivElement>,
-        accountActive: string;
-        accountsPossible: string[];
-    },
-) => {
+export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement>; accountActive: string; accountsPossible: string[] }) => {
     const hasAccountChoice = props.accountsPossible.length !== 1;
 
     return (
         <div
-            className={twMerge(
+            className={cn(
                 'divide-y divide-neutral-300 dark:divide-neutral-700',
                 'w-64 sm:w-fit p-2',
                 'absolute top-11 right-2',
@@ -107,21 +102,26 @@ export const AccountDropdown = (
         >
             <div
                 className={twMerge(
-                    'text-text-600 hover:cursor-pointer',
-                    'dark:text-text-300',
+                    'text-neutral-600 hover:cursor-pointer',
+                    'dark:text-neutral-300',
                     'flex justify-between items-center py-4 px-1 space-x-4',
                     'text-right',
                 )}
             >
                 <span className="text-xl">
                     <span>Hello, </span>
-                    <b className="text-text-800 dark:text-text-100">{props.accountActive}</b>!
+                    <b className="text-neutral-900 dark:text-neutral-100">{props.accountActive}</b>!
                 </span>
-                <div className={twMerge('bg-neutral-200 hover:bg-base-error-300 dark:hover:bg-base-error-500', 'p-1', 'rounded-md')}>
+                <div
+                    className={cn(
+                        'bg-neutral-200 dark:bg-neutral-700 hover:bg-base-error-500 hover:bg-opacity-40 dark:hover:bg-base-error-500 dark:hover:bg-opacity-40',
+                        'p-1 rounded-md',
+                    )}
+                >
                     {/* Using the <a> tag here prevents a bug with response caching */}
                     {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <a href="/api/auth/logout?callbackUrl=/dashboard">
-                        <HiLogout className="text-2xl text-text-900 shrink-0" />
+                        <HiLogout className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
                     </a>
                 </div>
             </div>
@@ -132,7 +132,7 @@ export const AccountDropdown = (
     );
 };
 
-export const AccountButton = ({siteHeader}: {siteHeader: SiteHeaderViewModel}) => {
+export const AccountButton = ({ siteHeader }: { siteHeader: SiteHeaderViewModel }) => {
     const [isAccountOpen, setIsAccountOpen] = React.useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -147,20 +147,22 @@ export const AccountButton = ({siteHeader}: {siteHeader: SiteHeaderViewModel}) =
         document.addEventListener('mousedown', handleClickOutside);
     }, [menuRef, buttonRef]);
 
-
-    return <>
-        <button
-            className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
-            onClick={() => setIsAccountOpen(!isAccountOpen)}
-            ref={buttonRef}
-        >
-            <HiUserCircle className="text-2xl"/>
-        </button>
-        {isAccountOpen &&
-        <AccountDropdown
-            accountActive={siteHeader.activeAccount?.rucioAccount ?? ''}
-            accountsPossible={siteHeader.availableAccounts?.map(account => account.rucioAccount) ?? []}
-            menuRef={menuRef}
-        />}
-    </>;
+    return (
+        <>
+            <button
+                className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
+                onClick={() => setIsAccountOpen(!isAccountOpen)}
+                ref={buttonRef}
+            >
+                <HiUserCircle className="text-2xl" />
+            </button>
+            {isAccountOpen && (
+                <AccountDropdown
+                    accountActive={siteHeader.activeAccount?.rucioAccount ?? ''}
+                    accountsPossible={siteHeader.availableAccounts?.map(account => account.rucioAccount) ?? []}
+                    menuRef={menuRef}
+                />
+            )}
+        </>
+    );
 };

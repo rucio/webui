@@ -202,6 +202,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                 'h-14 z-[100]',
                 'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
                 'p-2 flex flex-row justify-between items-center',
+                'text-neutral-900 dark:text-neutral-100'
             )}
         >
             {getContent()}
