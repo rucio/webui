@@ -1,17 +1,17 @@
 'use client';
 
-import {cn} from '@/component-library/utils';
-import {useTheme} from 'next-themes';
-import {HiChevronDown, HiMenu, HiMoon, HiSun, HiX} from 'react-icons/hi';
-import React, {useEffect, useRef, useState} from 'react';
+import { cn } from '@/component-library/utils';
+import { useTheme } from 'next-themes';
+import { HiChevronDown, HiMenu, HiMoon, HiSun, HiX } from 'react-icons/hi';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {Searchbar} from '@/component-library/pages/legacy/Layout/Searchbar';
+import { usePathname } from 'next/navigation';
+import { Searchbar } from '@/component-library/pages/legacy/Layout/Searchbar';
 import Image from 'next/image';
-import {AccountButton, AccountDropdown} from "@/component-library/pages/legacy/Layout/AccountDropdown";
-import {SiteHeaderViewModel} from "@/lib/infrastructure/data/view-model/site-header";
-import {LoadingSpinner} from "@/component-library/atoms/loading/LoadingSpinner";
-import {WarningField} from "@/component-library/features/fields/WarningField";
+import { AccountButton, AccountDropdown } from '@/component-library/pages/legacy/Layout/AccountDropdown';
+import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
+import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { WarningField } from '@/component-library/features/fields/WarningField';
 
 type TMenuItem = {
     title: string;
@@ -22,7 +22,7 @@ type TFullMenuItem = TMenuItem & {
     children?: TMenuItem[];
 };
 
-const MenuItem = ({item, pathname, onClick}: { item: TMenuItem; pathname: string | null; onClick?: () => void }) => {
+const MenuItem = ({ item, pathname, onClick }: { item: TMenuItem; pathname: string | null; onClick?: () => void }) => {
     const classes = `hover:text-brand-500 ${item.path === pathname && 'text-brand-500 font-semibold'}`;
     return (
         <Link href={item.path ?? '/'} className={classes} onClick={onClick}>
@@ -31,7 +31,7 @@ const MenuItem = ({item, pathname, onClick}: { item: TMenuItem; pathname: string
     );
 };
 
-const DesktopNavigationBar = ({menuItems}: { menuItems: TFullMenuItem[] }) => {
+const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     const pathname = usePathname();
 
     const getItemChildren = (children: TMenuItem[]) => {
@@ -46,7 +46,7 @@ const DesktopNavigationBar = ({menuItems}: { menuItems: TFullMenuItem[] }) => {
             >
                 <div className="flex flex-col space-y-2 px-4 py-2">
                     {children.map(child => (
-                        <MenuItem key={child.path} item={child} pathname={pathname}/>
+                        <MenuItem key={child.path} item={child} pathname={pathname} />
                     ))}
                 </div>
             </div>
@@ -59,13 +59,13 @@ const DesktopNavigationBar = ({menuItems}: { menuItems: TFullMenuItem[] }) => {
                 const key = item.title.toLowerCase();
                 const classes = `hover:text-brand-500 ${item.path === pathname && 'text-brand-500 font-semibold'}`;
                 if (item.path) {
-                    return <MenuItem key={item.path} item={item} pathname={pathname}/>;
+                    return <MenuItem key={item.path} item={item} pathname={pathname} />;
                 } else {
                     return (
                         <div key={key} className="relative group">
                             <div className={classes}>
                                 <span>{item.title}</span>
-                                <HiChevronDown className="inline pl-1 h-5 w-5"/>
+                                <HiChevronDown className="inline pl-1 h-5 w-5" />
                             </div>
                             {item.children && getItemChildren(item.children)}
                         </div>
@@ -76,7 +76,7 @@ const DesktopNavigationBar = ({menuItems}: { menuItems: TFullMenuItem[] }) => {
     );
 };
 
-const MobileNavigationBar = ({menuItems}: { menuItems: TFullMenuItem[] }) => {
+const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -86,25 +86,22 @@ const MobileNavigationBar = ({menuItems}: { menuItems: TFullMenuItem[] }) => {
                 className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
                 onClick={() => setIsMenuOpen(prevState => !prevState)}
             >
-                <HiMenu className="h-5 w-5"/>
+                <HiMenu className="h-5 w-5" />
             </button>
             {isMenuOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-                    <div
-                        className="fixed inset-0 bg-white dark:bg-neutral-900 p-6 overflow-y-auto flex flex-col space-y-6">
+                    <div className="fixed inset-0 bg-white dark:bg-neutral-900 p-6 overflow-y-auto flex flex-col space-y-6">
                         <button onClick={() => setIsMenuOpen(false)} className="self-end p-2 focus:outline-none">
-                            <HiX className="h-5 w-5"/>
+                            <HiX className="h-5 w-5" />
                         </button>
 
                         <nav className="flex flex-col items-center justify-center space-y-4">
                             {menuItems.map(item => {
                                 if (item.path) {
-                                    return <MenuItem key={item.path} item={item} pathname={pathname}
-                                                     onClick={() => setIsMenuOpen(false)}/>;
+                                    return <MenuItem key={item.path} item={item} pathname={pathname} onClick={() => setIsMenuOpen(false)} />;
                                 } else {
                                     return item.children?.map(child => (
-                                        <MenuItem key={child.path} item={child} pathname={pathname}
-                                                  onClick={() => setIsMenuOpen(false)}/>
+                                        <MenuItem key={child.path} item={child} pathname={pathname} onClick={() => setIsMenuOpen(false)} />
                                     ));
                                 }
                             })}
@@ -117,7 +114,7 @@ const MobileNavigationBar = ({menuItems}: { menuItems: TFullMenuItem[] }) => {
 };
 
 const ThemeSwitchButton = () => {
-    const {resolvedTheme, setTheme} = useTheme();
+    const { resolvedTheme, setTheme } = useTheme();
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
     const buttonRef = useRef<HTMLDivElement>(null);
@@ -134,9 +131,8 @@ const ThemeSwitchButton = () => {
     }, [resolvedTheme]);
 
     return (
-        <div className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center hidden"
-             onClick={updateTheme} ref={buttonRef}>
-            {isDarkMode ? <HiMoon className="h-6 w-6"/> : <HiSun className="h-6 w-6"/>}
+        <div className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center hidden" onClick={updateTheme} ref={buttonRef}>
+            {isDarkMode ? <HiMoon className="h-6 w-6" /> : <HiSun className="h-6 w-6" />}
         </div>
     );
 };
@@ -147,52 +143,58 @@ interface HeaderProps {
     isSiteHeaderFetching: boolean;
 }
 
-export const Header = ({siteHeader, siteHeaderError, isSiteHeaderFetching}: HeaderProps) => {
+export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: HeaderProps) => {
     const menuItems: TFullMenuItem[] = [
-        {title: 'Dashboard', path: '/dashboard'},
-        {title: 'DIDs', path: '/did/list'},
-        {title: 'RSEs', path: '/rse/list'},
+        { title: 'Dashboard', path: '/dashboard' },
+        { title: 'DIDs', path: '/did/list' },
+        { title: 'RSEs', path: '/rse/list' },
         {
             title: 'Rules',
             children: [
-                {title: 'List Rules', path: '/rule/list'},
-                {title: 'Create a rule', path: '/rule/create'},
+                { title: 'List Rules', path: '/rule/list' },
+                { title: 'Create a rule', path: '/rule/create' },
             ],
         },
     ];
 
-    const {resolvedTheme} = useTheme();
+    const { resolvedTheme } = useTheme();
     const logoPath = resolvedTheme === 'dark' ? '/logo_dark.svg' : '/logo_light.svg';
 
     const getContent = () => {
         if (isSiteHeaderFetching) {
-            return <LoadingSpinner/>;
+            return <LoadingSpinner />;
         } else if (siteHeaderError || !siteHeader) {
-            return <WarningField><span>Error retrieving site header</span></WarningField>;
+            return (
+                <WarningField>
+                    <span>Error retrieving site header</span>
+                </WarningField>
+            );
         } else {
-            return <>
-                <div className="flex items-center">
-                    <a className="w-12 h-full stroke-white fill-white" href="https://rucio.cern.ch/">
-                        <Image src={logoPath} alt="Rucio Logo" width={36} height={36}/>
-                    </a>
-                    <a className="w-12 h-full" href={siteHeader.projectUrl}>
-                        <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53}/>
-                    </a>
-                    <div className="pl-3">
-                        <Searchbar/>
+            return (
+                <>
+                    <div className="flex items-center">
+                        <a className="w-12 h-full stroke-white fill-white" href="https://rucio.cern.ch/">
+                            <Image src={logoPath} alt="Rucio Logo" width={36} height={36} />
+                        </a>
+                        <a className="w-12 h-full" href={siteHeader.projectUrl}>
+                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53} />
+                        </a>
+                        <div className="pl-3">
+                            <Searchbar />
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <DesktopNavigationBar menuItems={menuItems}/>
-                </div>
-                <div className="flex h-full">
-                    <ThemeSwitchButton/>
-                    <AccountButton siteHeader={siteHeader}/>
-                    <MobileNavigationBar menuItems={menuItems}/>
-                </div>
-            </>;
+                    <div>
+                        <DesktopNavigationBar menuItems={menuItems} />
+                    </div>
+                    <div className="flex h-full">
+                        <ThemeSwitchButton />
+                        <AccountButton siteHeader={siteHeader} />
+                        <MobileNavigationBar menuItems={menuItems} />
+                    </div>
+                </>
+            );
         }
-    }
+    };
 
     return (
         <header
