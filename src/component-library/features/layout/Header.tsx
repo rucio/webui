@@ -95,6 +95,8 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                             <HiX className="h-5 w-5" />
                         </button>
 
+                        <Searchbar />
+
                         <nav className="flex flex-col items-center justify-center space-y-4">
                             {menuItems.map(item => {
                                 if (item.path) {
@@ -180,7 +182,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
                             <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} />
                         </a>
-                        <div className="pl-1">
+                        <div className="pl-1 md:block hidden">
                             <Searchbar />
                         </div>
                     </div>

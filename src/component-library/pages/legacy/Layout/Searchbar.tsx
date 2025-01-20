@@ -1,7 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
-import { useRouter } from 'next/navigation';
 import { Input } from '@/component-library/atoms/form/input';
+import { cn } from '@/component-library/utils';
 
 type SearchLocation = {
     name: string;
@@ -36,11 +35,11 @@ const ruleLocation: SearchLocation = {
 const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; children: React.ReactNode }) => {
     return (
         <div
-            className={twMerge(
+            className={cn(
                 'w-full py-1 px-3 hover:cursor-pointer',
                 props.isHighlighted
-                    ? 'bg-brand-500 bg-opacity-25 hover:bg-opacity-40'
-                    : 'hover:bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-600',
+                    ? 'md:bg-brand-500 md:bg-opacity-25 md:hover:bg-opacity-40 md:text-neutral-900 md:dark:text-neutral-100 md:font-normal text-brand-500 font-bold'
+                    : 'md:hover:bg-neutral-200 md:dark:bg-neutral-800 md:hover:dark:bg-neutral-600 hover:text-brand-500 md:hover:text-neutral-900 md:hover:dark:text-neutral-100',
             )}
             onMouseDown={props.onMouseDown}
         >
@@ -51,7 +50,6 @@ const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; 
 
 const SearchDropdown = forwardRef(function SearchDropdown(
     props: {
-        isInputFocused: boolean;
         searchQuery: string;
         searchLocations: SearchLocation[];
         highlightedIndex: number;
@@ -59,16 +57,13 @@ const SearchDropdown = forwardRef(function SearchDropdown(
     },
     ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-    const { isInputFocused, searchQuery } = props;
-
     return (
         <div
-            className={twMerge(
-                'w-[40rem] flex flex-col',
-                isInputFocused ? 'visible' : 'invisible',
-                'absolute mt-2',
-                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
-                'bg-neutral-100 dark:bg-neutral-800',
+            className={cn(
+                'md:w-[36rem] w-full flex flex-col md:text-left text-center',
+                'md:absolute relative md:mt-2 mt-4',
+                'md:rounded-md md:border md:border-neutral-900 md:dark:border-neutral-100 md:border-opacity-10 md:dark:border-opacity-10',
+                'md:bg-neutral-100 md:dark:bg-neutral-800',
                 'z-[100]',
             )}
         >
@@ -81,7 +76,7 @@ const SearchDropdown = forwardRef(function SearchDropdown(
                             isHighlighted={props.highlightedIndex === index}
                         >
                             <span>
-                                {location.parameter} <i>{searchQuery}</i> in {location.name}
+                                {location.parameter} <i>{props.searchQuery}</i> in {location.name}
                             </span>
                         </LocationLink>
                     );
@@ -160,14 +155,15 @@ export const Searchbar = () => {
                 ref={searchInputRef}
                 className="h-9"
             />
-            <SearchDropdown
-                isInputFocused={isFocused}
-                searchQuery={searchQuery}
-                ref={searchDropdownRef}
-                searchLocations={searchLocations}
-                highlightedIndex={highlightedIndex}
-                proceedTo={proceedTo}
-            />
+            {isFocused && (
+                <SearchDropdown
+                    searchQuery={searchQuery}
+                    ref={searchDropdownRef}
+                    searchLocations={searchLocations}
+                    highlightedIndex={highlightedIndex}
+                    proceedTo={proceedTo}
+                />
+            )}
         </span>
     );
 };
