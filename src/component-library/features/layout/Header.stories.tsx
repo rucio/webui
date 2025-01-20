@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Header } from './Header';
-import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { Role, User } from '@/lib/core/entity/auth-models';
 
 const meta: Meta<typeof Header> = {

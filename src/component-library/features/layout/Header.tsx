@@ -39,7 +39,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
             <div
                 className={cn(
                     'absolute left-0 w-max',
-                    'opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto',
+                    'hidden group-hover:block',
                     'bg-neutral-100 dark:bg-neutral-800',
                     'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
                 )}
@@ -57,7 +57,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
         <div className="hidden md:flex items-center space-x-8">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
-                const classes = `hover:text-brand-500 ${item.path === pathname && 'text-brand-500 font-semibold'}`;
+                const classes = `hover:text-brand-500 peer ${item.path === pathname && 'text-brand-500 font-semibold'}`;
                 if (item.path) {
                     return <MenuItem key={item.path} item={item} pathname={pathname} />;
                 } else {
@@ -202,7 +202,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                 'h-14 z-[100]',
                 'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
                 'p-2 flex flex-row justify-between items-center',
-                'text-neutral-900 dark:text-neutral-100'
+                'text-neutral-900 dark:text-neutral-100',
             )}
         >
             {getContent()}
