@@ -159,6 +159,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
 
     const { resolvedTheme } = useTheme();
     const logoPath = resolvedTheme === 'dark' ? '/logo_dark.svg' : '/logo_light.svg';
+    const logoSize = 36;
 
     const getContent = () => {
         if (isSiteHeaderFetching) {
@@ -174,12 +175,12 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                 <>
                     <div className="flex items-center">
                         <a className="w-12 h-full stroke-white fill-white" href="https://rucio.cern.ch/">
-                            <Image src={logoPath} alt="Rucio Logo" width={36} height={36} />
+                            <Image src={logoPath} alt="Rucio Logo" width={logoSize} height={logoSize} />
                         </a>
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
-                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={53} height={53} />
+                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} />
                         </a>
-                        <div className="pl-3">
+                        <div className="pl-1">
                             <Searchbar />
                         </div>
                     </div>
