@@ -17,6 +17,8 @@ import { H2 } from '../../../atoms/legacy/text/headings/H2/H2';
 import { P } from '../../../atoms/legacy/text/content/P/P';
 import { HiArrowRight } from 'react-icons/hi';
 import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'motion/react';
 
 const BackToDashboardButton = (props: { account: string }) => {
     return (
@@ -103,7 +105,7 @@ export const Login = ({
     const isLoggedIn = loginViewModel.isLoggedIn && loginViewModel.accountActive !== undefined;
     const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false);
 
-    const [selectedVOTab, setSelectedVOTab] = useState<number>(1);
+    const [selectedVOTab, setSelectedVOTab] = useState<number>(0);
 
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -163,8 +165,19 @@ export const Login = ({
         }
     }, [loginViewModel, authViewModel]);
 
+    const logoVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+    };
+
+    const formVariants = {
+        hidden: { opacity: 0, scale: 1.5 },
+        visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+    };
+
     const getLoginForm = () => {
         return (
+            <motion.div initial="hidden" animate="visible" variants={formVariants}>
             <div
                 className={twMerge(
                     'border dark:border-2 rounded-xl p-6 flex flex-col justify-center space-y-4',
@@ -187,8 +200,10 @@ export const Login = ({
                         }}
                     />
                 </Collapsible>
-                <div className="text-center text-text-1000 dark:text-text-0">
-                    <H1 className="mt-4 mb-2">Rucio Login</H1>
+                <div className="flex flex-col items-center justify-between w-64 text-center text-text-1000 dark:text-text-0">
+                <motion.div initial="hidden" animate="visible" variants={logoVariants}>
+                    <Image src="/rucio-logo.png" alt="Rucio Logo" width={146} height={176} />
+                </motion.div>
                 </div>
 
                 <div
@@ -283,6 +298,7 @@ export const Login = ({
                     </div>
                 </div>
             </div>
+            </motion.div>
         );
     };
 
