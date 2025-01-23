@@ -75,8 +75,9 @@ const SearchDropdown = forwardRef(function SearchDropdown(
                             onMouseDown={() => props.proceedTo(location)}
                             isHighlighted={props.highlightedIndex === index}
                         >
-                            <span>
-                                {location.parameter} <i>{props.searchQuery}</i> in {location.name}
+                            <span className="flex items-center min-w-0">
+                                <span className="flex-shrink-0">{location.parameter}</span> <i className="truncate mx-1">{props.searchQuery}</i>{' '}
+                                <span className="flex-shrink-0">in {location.name}</span>
                             </span>
                         </LocationLink>
                     );
