@@ -13,6 +13,9 @@ module.exports = {
     },
     theme: {
         extend: {
+            screens: {
+                'nav': '850px',
+            },
             colors: {
                 neutral: { // Slate
                     0: '#ffffff',
