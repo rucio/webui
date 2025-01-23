@@ -2,7 +2,6 @@
 
 import React, { ReactNode } from 'react';
 import { Header } from '@/component-library/features/layout/Header';
-import { Footer } from '@/component-library/features/layout/Footer';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
 import { useQuery } from '@tanstack/react-query';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
@@ -46,7 +45,6 @@ export const Layout = ({ children }: LayoutProps) => {
             <Header siteHeader={siteHeaderViewModel} siteHeaderError={siteHeaderError} isSiteHeaderFetching={isSiteHeaderFetching} />
             <main className="flex flex-col grow px-4 py-6 sm:px-8 md:px-12 lg:px-24 xl:px-32 2xl:px-48 3xl:px-64">{children}</main>
             <Toaster />
-            <Footer />
         </div>
     );
 };
