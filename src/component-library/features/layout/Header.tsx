@@ -54,7 +54,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
     };
 
     return (
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden nav:flex items-center space-x-8">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
                 const classes = `hover:text-brand-500 peer ${item.path === pathname && 'text-brand-500 font-semibold'}`;
@@ -81,7 +81,7 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <div className="flex md:hidden">
+        <div className="flex nav:hidden">
             <button
                 className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
                 onClick={() => setIsMenuOpen(prevState => !prevState)}
@@ -95,7 +95,9 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                             <HiX className="h-5 w-5" />
                         </button>
 
-                        <Searchbar />
+                        <div className="md:hidden block">
+                            <Searchbar />
+                        </div>
 
                         <nav className="flex flex-col items-center justify-center space-y-4">
                             {menuItems.map(item => {
