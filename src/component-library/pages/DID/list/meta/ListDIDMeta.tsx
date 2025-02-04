@@ -101,7 +101,7 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
 
 const MetaStub = ({ isLoading, hasError }: { isLoading: boolean; hasError: boolean }) => {
     const getTextStub = () => {
-        return <span className="text-sm text-neutral-800 dark:text-neutral-100">{hasError ? 'An error has happened' : 'Select an identifier'}</span>;
+        return <span className="text-sm text-neutral-800 dark:text-neutral-100">{hasError ? 'An error has occurred' : 'Select an identifier'}</span>;
     };
 
     return <div className="justify-center flex grow">{isLoading ? <LoadingSpinner /> : getTextStub()}</div>;
