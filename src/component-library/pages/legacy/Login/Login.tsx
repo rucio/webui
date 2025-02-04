@@ -180,6 +180,7 @@ export const Login = ({
             <motion.div initial="hidden" animate="visible" variants={formVariants}>
             <div
                 className={twMerge(
+                    'flex flex-col items-center justify-between',
                     'border dark:border-2 rounded-xl p-6 flex flex-col justify-center space-y-4',
                     'border-neutral-300 dark:border-neutral-700',
                     'bg-neutral-50 dark:bg-neutral-900'
