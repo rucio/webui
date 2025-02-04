@@ -10,6 +10,7 @@ import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleGroupingBadge } from '@/component-library/features/badges/Rule/RuleGroupingBadge';
 import { RuleNotificationBadge } from '@/component-library/features/badges/Rule/RuleNotificationBadge';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 
 export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     const getExpiredField = () => {
@@ -27,10 +28,15 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     <RuleStateBadge value={meta.state} />
                 </KeyValueRow>
                 <KeyValueRow name="DID">
-                    <Field>
-                        {meta.scope}:{meta.name}
-                    </Field>
-                    <DIDTypeBadge value={meta.did_type} />
+                    <ClickableCell
+                        className="flex flex-row gap-2 overflow-hidden"
+                        href={`/did/page/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
+                    >
+                        <Field>
+                            {meta.scope}:{meta.name}
+                        </Field>
+                        <DIDTypeBadge value={meta.did_type} />
+                    </ClickableCell>
                 </KeyValueRow>
                 <KeyValueRow name="RSE Expression">
                     <Field>{meta.rse_expression}</Field>
