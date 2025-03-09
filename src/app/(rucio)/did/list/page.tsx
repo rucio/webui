@@ -1,6 +1,9 @@
 import { ListDID } from '@/component-library/pages/DID/list/ListDID';
 
-export default function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default async function Page(
+    props: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }
+) {
+    const searchParams = await props.searchParams;
     let firstPattern: string | undefined = undefined;
     const searchPattern = searchParams?.['pattern'];
 
@@ -12,5 +15,5 @@ export default function Page({ searchParams }: { searchParams?: { [key: string]:
 }
 
 export const metadata = {
-    title: 'DIDs List - Rucio',
+    title: 'DIDs List - Rucio'
 };

@@ -5,5 +5,5 @@ export default function Page() {
 }
 
 export const metadata = {
-    title: 'Rules List - Rucio',
+    title: 'Rules List - Rucio'
 };

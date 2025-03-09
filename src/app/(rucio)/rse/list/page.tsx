@@ -1,6 +1,9 @@
 import { ListRSE } from '@/component-library/pages/RSE/list/ListRSE';
 
-export default function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default async function Page(
+    props: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }
+) {
+    const searchParams = await props.searchParams;
     let firstExpression: string | undefined = undefined;
     const searchExpression = searchParams?.['expression'];
 
@@ -13,5 +16,5 @@ export default function Page({ searchParams }: { searchParams?: { [key: string]:
 }
 
 export const metadata = {
-    title: 'RSEs List - Rucio',
+    title: 'RSEs List - Rucio'
 };

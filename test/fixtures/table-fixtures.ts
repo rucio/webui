@@ -82,16 +82,13 @@ function randomEnum<T>(e: any): T {
 }
 
 export function createRSEName(): string {
-    return (
-        'RSE-' +
-        faker.location
-            .country()
-            .toUpperCase()
-            .replace(/\s/g, '-')
-            .replace(/[^a-zA-Z\d\s]/g, '') +
-        '-' +
-        faker.number.int({ max: 100 })
-    );
+    return ('RSE-' +
+    faker.location
+        .country()
+        .toUpperCase()
+        .replace(/\s/g, '-')
+        .replace(/[^a-zA-Z\d\s]/g, '') +
+    '-' + faker.number.int({ max: 100 }));
 }
 
 function createRSEExpression(): string {

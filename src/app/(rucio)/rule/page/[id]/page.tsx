@@ -1,9 +1,10 @@
 'use client';
 
 import { DetailsRule } from '@/component-library/pages/Rule/details/DetailsRule';
-import { useEffect } from 'react';
+import { useEffect, use } from 'react';
 
-export default function PageRule({ params }: { params: { id: string } }) {
+export default function PageRule(props: { params: Promise<{ id: string }> }) {
+    const params = use(props.params);
     useEffect(() => {
         document.title = 'Rule - Rucio';
     }, []);
