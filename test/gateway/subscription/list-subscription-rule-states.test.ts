@@ -40,7 +40,6 @@ describe('Get Subscription Rule States', () => {
         const listSubscriptionRuleStatesDTO: BaseStreamableDTO = await subscriptionGateway.listSubscriptionRuleStates(
             MockRucioServerFactory.VALID_RUCIO_TOKEN,
             'ddmadmin',
-            '*Functional Test',
         );
         expect(listSubscriptionRuleStatesDTO.status).toEqual('success');
 

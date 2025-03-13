@@ -4,18 +4,20 @@
 
 import Login from '@/app/auth/login/page';
 import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
-import { render, act, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { useSearchParams } from 'next/navigation';
 import { getSampleOIDCProviders } from 'test/fixtures/oidc-provider-config';
 import { getSampleVOs } from 'test/fixtures/multi-vo-fixtures';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
+import { act } from 'react';
 
 jest.mock('next/navigation');
 
 describe('Login Page Test', () => {
     beforeEach(() => {
-        useSearchParams.mockReturnValue({
+        Object.defineProperty(window, 'scrollTo', { value: jest.fn(), writable: true });
+        (useSearchParams as jest.Mock).mockReturnValue({
             get: jest.fn(() => null),
         });
         fetchMock.doMock();
@@ -50,7 +52,9 @@ describe('Login Page Test', () => {
                 ),
             );
 
-            await act(async () => render(<Login />));
+            await act(async () => {
+                render(<Login />);
+            });
 
             // Check OIDC buttons are present but NOT rendered
             voList[1].oidcProviders.map(provider => {
