@@ -1,4 +1,5 @@
 import { LockState } from '@/lib/core/entity/rucio';
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const LockStateTag: React.FC<JSX.IntrinsicElements['span'] & { lockState: LockState; tiny?: boolean }> = ({

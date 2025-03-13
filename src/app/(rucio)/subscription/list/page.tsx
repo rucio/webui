@@ -6,7 +6,7 @@ import { SubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { getSiteHeader } from '../../queries';
 
-export default function ListSubscription({ params }: { params: { account: string } }) {
+export default function ListSubscription() {
     const [accountName, setAccountName] = useState<string>('');
     useEffect(() => {
         getSiteHeader().then((data: SiteHeaderViewModel) => {

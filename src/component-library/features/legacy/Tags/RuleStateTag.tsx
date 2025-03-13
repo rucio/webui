@@ -1,4 +1,5 @@
 import { RuleState } from '@/lib/core/entity/rucio';
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const RuleStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: RuleState; tiny?: boolean }> = ({

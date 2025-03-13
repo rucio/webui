@@ -65,14 +65,13 @@ export const SimplePaginationPanel = (props: {
 };
 
 export const RegularTable = (props: RegularTableProps) => {
-    // Refs for controlling the pagination panel
-    const currentPageRef = useRef<HTMLSpanElement>(null);
-    const totalPagesRef = useRef<HTMLSpanElement>(null);
-    const previousPageRef = useRef<HTMLButtonElement>(null);
-    const nextPageRef = useRef<HTMLButtonElement>(null);
-    const firstPageRef = useRef<HTMLButtonElement>(null);
-    const lastPageRef = useRef<HTMLButtonElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const currentPageRef = useRef<HTMLSpanElement>(null!);
+    const totalPagesRef = useRef<HTMLSpanElement>(null!);
+    const previousPageRef = useRef<HTMLButtonElement>(null!);
+    const nextPageRef = useRef<HTMLButtonElement>(null!);
+    const firstPageRef = useRef<HTMLButtonElement>(null!);
+    const lastPageRef = useRef<HTMLButtonElement>(null!);
+    const containerRef = useRef<HTMLDivElement>(null!);
 
     const onNextPage = () => {
         const gridApi = props.tableRef.current?.api;

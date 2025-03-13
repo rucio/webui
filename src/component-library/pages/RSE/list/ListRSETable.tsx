@@ -21,7 +21,7 @@ const ClickableName = (props: { value: string }) => {
 };
 
 export const ListRSETable = (props: ListRSETableProps) => {
-    const tableRef = useRef<AgGridReact<RSEViewModel>>(null);
+    const tableRef = useRef<AgGridReact<RSEViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

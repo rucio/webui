@@ -2,7 +2,7 @@
 import { AuthViewModel, x509AuthRequestHeaders as X509AuthRequestHeaders } from '@/lib/infrastructure/data/auth/auth';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
 import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
 
@@ -15,7 +15,54 @@ export default function Login() {
     const [viewModel, setViewModel] = useState<LoginViewModel>();
     const [authViewModel, setAuthViewModel] = useState<AuthViewModel>();
     const router = useRouter();
-    const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl');
+    // const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl');
+
+    return (
+        <Suspense fallback={<p>Loading...</p>}>
+            <LoginContent
+                redirectURL={redirectURL}
+                setRedirectURL={setRedirectURL}
+                viewModel={viewModel}
+                setViewModel={setViewModel}
+                authViewModel={authViewModel}
+                setAuthViewModel={setAuthViewModel}
+                router={router}
+            />
+        </Suspense>
+    );
+}
+
+function LoginContent({
+    redirectURL,
+    setRedirectURL,
+    viewModel,
+    setViewModel,
+    authViewModel,
+    setAuthViewModel,
+    router,
+}: {
+    redirectURL: string;
+    setRedirectURL: (url: string) => void;
+    viewModel?: LoginViewModel;
+    setViewModel: (vm: LoginViewModel) => void;
+    authViewModel?: AuthViewModel;
+    setAuthViewModel: (vm: AuthViewModel) => void;
+    router: ReturnType<typeof useRouter>;
+}) {
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams?.get('callbackUrl');
+
+    useEffect(() => {
+        if (callbackUrl) {
+            setRedirectURL(decodeURIComponent(callbackUrl));
+        }
+
+        fetch('/api/auth/login', { method: 'POST' })
+            .then(res => res.json())
+            .then((loginViewModel: LoginViewModel) => {
+                setViewModel(loginViewModel);
+            });
+    }, [callbackUrl]);
 
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
         const body = {

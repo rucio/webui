@@ -14,7 +14,7 @@ type StageSummaryDataTableProps = {
 };
 
 export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProps) => {
-    const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null);
+    const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

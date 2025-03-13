@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export type BoolTagProps = JSX.IntrinsicElements['span'] & { val: boolean };

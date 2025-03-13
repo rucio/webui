@@ -22,7 +22,7 @@ type StageDataTableProps = {
 };
 
 export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID, removeDID, selectedItems, ...props }) => {
-    const tableRef = useRef<AgGridReact<SelectableDIDViewModel>>(null);
+    const tableRef = useRef<AgGridReact<SelectableDIDViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

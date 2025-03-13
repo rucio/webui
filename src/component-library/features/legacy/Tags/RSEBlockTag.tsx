@@ -1,4 +1,5 @@
 import { RSEBlockState } from '@/lib/core/entity/rucio';
+import { JSX } from 'react';
 import { HiMinusCircle } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
 

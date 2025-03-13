@@ -1,4 +1,5 @@
 import { ReplicaState } from '@/lib/core/entity/rucio';
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const ReplicaStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: ReplicaState; tiny?: boolean }> = ({

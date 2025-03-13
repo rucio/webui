@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const H2: React.FC<JSX.IntrinsicElements['h2']> = ({ ...props }) => {

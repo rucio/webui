@@ -1,4 +1,5 @@
 import { Role } from '@/lib/core/entity/account';
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const RoleTag: React.FC<JSX.IntrinsicElements['span'] & { role: Role }> = ({ role, ...props }) => {

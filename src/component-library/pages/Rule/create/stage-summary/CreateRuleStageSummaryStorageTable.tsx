@@ -16,7 +16,7 @@ const WarningCell = (props: { value: string; warn: boolean }) => {
 };
 
 export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTableProps> = ({ ...props }) => {
-    const tableRef = useRef<AgGridReact<RSEAccountUsageLimitViewModel>>(null);
+    const tableRef = useRef<AgGridReact<RSEAccountUsageLimitViewModel>>(null!);
 
     // TODO: these should be calculated on the client side
     const [columnDefs] = useState([

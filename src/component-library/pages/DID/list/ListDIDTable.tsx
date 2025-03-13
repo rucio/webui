@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { RefObject, useRef, useState } from 'react';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 
 type ListDIDTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
@@ -14,7 +13,7 @@ type ListDIDTableProps = {
 };
 
 export const ListDIDTable = (props: ListDIDTableProps) => {
-    const tableRef = useRef<AgGridReact<DIDViewModel>>(null);
+    const tableRef = useRef<AgGridReact<DIDViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

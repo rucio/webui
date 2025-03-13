@@ -1,4 +1,5 @@
 import { SubscriptionState } from '@/lib/core/entity/rucio';
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const SubscriptionStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: SubscriptionState; tiny?: boolean }> = ({

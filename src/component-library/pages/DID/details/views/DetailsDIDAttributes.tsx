@@ -17,7 +17,7 @@ type DetailsDIDAttributesTableProps = {
 };
 
 export const DetailsDIDAttributesTable = (props: DetailsDIDAttributesTableProps) => {
-    const tableRef = useRef<AgGridReact<DIDKeyValuePair>>(null);
+    const tableRef = useRef<AgGridReact<DIDKeyValuePair>>(null!);
 
     const [columnDefs] = useState([
         {

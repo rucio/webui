@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const Titleth: React.FC<JSX.IntrinsicElements['td']> = ({ ...props }) => {

@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
-import React, { useEffect, useState } from 'react';
+import React, { JSX, useEffect, useState } from 'react';
 import { FetchStatus } from '@tanstack/react-query';
 import { HiPause, HiPlay, HiRefresh } from 'react-icons/hi';
 

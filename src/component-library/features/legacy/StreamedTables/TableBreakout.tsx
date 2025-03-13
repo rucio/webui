@@ -1,5 +1,5 @@
 import { flexRender, Row } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Contenttd, Generaltable, Titleth } from '../../../atoms/legacy/helpers/Metatable/Metatable';
 

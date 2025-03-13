@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { RSEType } from '@/lib/core/entity/rucio';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, JSX } from 'react';
 
 type RSETypeTagProps = JSX.IntrinsicElements['span'] & {
     rsetype: RSEType;

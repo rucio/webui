@@ -11,7 +11,7 @@ type DetailsRSEAttributesTableProps = {
 };
 
 export const DetailsRSEAttributesTable = (props: DetailsRSEAttributesTableProps) => {
-    const tableRef = useRef<AgGridReact<RSEAttribute>>(null);
+    const tableRef = useRef<AgGridReact<RSEAttribute>>(null!);
 
     const [columnDefs] = useState([
         {

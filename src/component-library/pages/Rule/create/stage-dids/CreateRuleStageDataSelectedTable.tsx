@@ -14,7 +14,7 @@ type StageDataTableProps = {
 };
 
 export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => {
-    const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null);
+    const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

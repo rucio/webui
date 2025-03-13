@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { H1 } from '../../../atoms/legacy/text/headings/H1/H1';
 import { H2 } from '../../../atoms/legacy/text/headings/H2/H2';

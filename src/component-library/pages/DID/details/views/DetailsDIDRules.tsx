@@ -27,7 +27,7 @@ const ClickableId = (props: { value: string }) => {
 };
 
 export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
-    const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null);
+    const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

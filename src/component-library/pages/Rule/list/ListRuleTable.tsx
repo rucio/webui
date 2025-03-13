@@ -21,7 +21,7 @@ const ClickableId = (props: { value: string }) => {
 };
 
 export const ListRuleTable = (props: ListRuleTableProps) => {
-    const tableRef = useRef<AgGridReact<RuleViewModel>>(null);
+    const tableRef = useRef<AgGridReact<RuleViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

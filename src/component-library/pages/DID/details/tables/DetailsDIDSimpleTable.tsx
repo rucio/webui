@@ -25,7 +25,7 @@ const ClickableDID = (props: { value: string[] }) => {
 };
 
 export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
-    const tableRef = useRef<AgGridReact<DIDViewModel>>(null);
+    const tableRef = useRef<AgGridReact<DIDViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

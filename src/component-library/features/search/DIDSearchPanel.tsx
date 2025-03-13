@@ -70,10 +70,12 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     };
 
     const validateScope = (): boolean => {
+        const scopeInputRef = useRef<HTMLInputElement>(null!);
         return validateField(scope, 'scope', scopeInputRef);
     };
 
     const validateName = (): boolean => {
+        const nameInputRef = useRef<HTMLInputElement>(null!);
         return validateField(name, 'name', nameInputRef);
     };
 
