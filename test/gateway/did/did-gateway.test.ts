@@ -1,9 +1,43 @@
-import { ListDIDDTO, DIDExtendedDTO } from '@/lib/core/dto/did-dto';
-import { DID, DIDType } from '@/lib/core/entity/rucio';
+import { ListDIDDTO } from '@/lib/core/dto/did-dto';
+import { DIDLong, DIDType } from '@/lib/core/entity/rucio';
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import { Readable } from 'stream';
+
+const getSearchData = (req: Request): string[] => {
+    if (req.url.includes('long=True')) {
+        const data: DIDLong[] = [
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+                did_type: DIDType.DATASET,
+                bytes: 42,
+                length: 0,
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
+                did_type: DIDType.DATASET,
+                bytes: 42,
+                length: 0,
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+                did_type: DIDType.DATASET,
+                bytes: 42,
+                length: 0,
+            },
+        ];
+        return data.map(did => JSON.stringify(did));
+    }
+    return [
+        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00"',
+        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01"',
+        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02"',
+    ];
+};
 
 describe('DID Gateway Tests', () => {
     beforeEach(() => {
@@ -16,13 +50,8 @@ describe('DID Gateway Tests', () => {
                 });
             }
             if (req.url.includes('/data17_13TeV/dids/search')) {
-                const stream = Readable.from(
-                    [
-                        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00"',
-                        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01"',
-                        '"00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02"',
-                    ].join('\n'),
-                );
+                const searchData = getSearchData(req);
+                const stream = Readable.from(searchData.join('\n'));
                 return Promise.resolve({
                     status: 200,
                     headers: {
@@ -73,7 +102,7 @@ describe('DID Gateway Tests', () => {
             fail('didStream is null or undefined');
         }
 
-        const receivedData: DID[] = [];
+        const receivedData: DIDLong[] = [];
 
         const onData = (data: any) => {
             console.log('data', data);
@@ -97,16 +126,22 @@ describe('DID Gateway Tests', () => {
                 scope: 'data17_13TeV',
                 name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
                 did_type: 'Dataset',
+                bytes: 42,
+                length: 0,
             },
             {
                 scope: 'data17_13TeV',
                 name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
                 did_type: 'Dataset',
+                bytes: 42,
+                length: 0,
             },
             {
                 scope: 'data17_13TeV',
                 name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
                 did_type: 'Dataset',
+                bytes: 42,
+                length: 0,
             },
         ]);
     });

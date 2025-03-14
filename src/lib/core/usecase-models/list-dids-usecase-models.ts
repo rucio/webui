@@ -1,16 +1,12 @@
 import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
-import { DID, DIDType } from '@/lib/core/entity/rucio';
+import { DIDLong, DIDType } from '@/lib/core/entity/rucio';
 
 export interface ListDIDsRequest {
     query: string;
     type: DIDType;
 }
 
-export interface ListDIDsResponse extends DID, BaseResponseModel {
-    bytes: number;
-    length: number;
-    open: boolean;
-}
+export interface ListDIDsResponse extends DIDLong, BaseResponseModel {}
 
 export interface ListDIDsError extends BaseErrorResponseModel {
     name: string;

@@ -24,7 +24,6 @@ export default class ListDIDsPresenter
             did_type: responseModel.did_type,
             bytes: responseModel.bytes,
             length: responseModel.length,
-            open: responseModel.open,
         };
         return viewModel;
     }
@@ -37,7 +36,6 @@ export default class ListDIDsPresenter
             bytes: 0,
             length: 0,
             scope: '',
-            open: false,
             did_type: DIDType.UNKNOWN,
         };
     }
@@ -61,7 +59,6 @@ export default class ListDIDsPresenter
             did_type: DIDType.UNKNOWN,
             bytes: 0,
             length: 0,
-            open: false,
         };
         return { status, viewModel };
     }

@@ -7,10 +7,37 @@ import { NextApiResponse } from 'next';
 import { Readable } from 'stream';
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
+import { DIDLong, DIDType } from '@/lib/core/entity/rucio';
 
 describe('DID API Tests #2', () => {
     beforeEach(() => {
         fetchMock.doMock();
+        const dids: DIDLong[] = [
+            {
+                scope: 'test',
+                name: 'dataset1',
+                did_type: DIDType.DATASET,
+                bytes: 0,
+                length: 0,
+            },
+            {
+                scope: 'test',
+                name: 'dataset2',
+                did_type: DIDType.DATASET,
+                bytes: 123,
+                length: 456,
+            },
+            {
+                scope: 'test',
+                name: 'dataset3',
+                did_type: DIDType.DATASET,
+                bytes: 456,
+                length: 789,
+            },
+        ];
+
+        const data = [...dids.map(did => JSON.stringify(did)), 'invalid json'];
+
         const listDIDsEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dids/search`,
             method: 'GET',
@@ -20,88 +47,17 @@ describe('DID API Tests #2', () => {
                 headers: {
                     'Content-Type': 'application/x-json-stream',
                 },
-                body: Readable.from(['"dataset1"\n', '"dataset2"\n', '"dataset3"\n', ' ', ' '].join('\n')),
+                body: Readable.from(data.join('\n')),
             },
         };
 
-        const dataset1StatusEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/status?dynamic_depth=FILE`,
-            method: 'GET',
-            response: {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    scope: 'test',
-                    name: 'dataset1',
-                    type: 'DATASET',
-                    account: 'root',
-                    open: true,
-                    monotonic: false,
-                    expired_at: null,
-                    length: 0,
-                    bytes: 0,
-                }),
-            },
-        };
-
-        const dataset2StatusEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset2/status?dynamic_depth=FILE`,
-            method: 'GET',
-            response: {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    scope: 'test',
-                    name: 'dataset2',
-                    type: 'DATASET',
-                    account: 'root',
-                    open: true,
-                    monotonic: false,
-                    expired_at: null,
-                    bytes: 123,
-                    length: 456,
-                }),
-            },
-        };
-
-        const dataset3StatusEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset3/status?dynamic_depth=FILE`,
-            method: 'GET',
-            response: {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    scope: 'test',
-                    name: 'dataset3',
-                    type: 'DATASET',
-                    account: 'root',
-                    open: true,
-                    monotonic: false,
-                    expired_at: null,
-                    bytes: 456,
-                    length: 789,
-                }),
-            },
-        };
-
-        MockRucioServerFactory.createMockRucioServer(true, [
-            listDIDsEndpoint,
-            dataset1StatusEndpoint,
-            dataset2StatusEndpoint,
-            dataset3StatusEndpoint,
-        ]);
+        MockRucioServerFactory.createMockRucioServer(true, [listDIDsEndpoint]);
     });
     afterEach(() => {
         fetchMock.dontMock();
     });
 
-    it('Should successfully stream DIDs', async () => {
+    it('Should successfully stream DIDs when an error is present in the chunks', async () => {
         const res = MockHttpStreamableResponseFactory.getMockResponse();
         const listDIDsController = appContainer.get<BaseController<ListDIDsControllerParameters, ListDIDsRequest>>(CONTROLLERS.LIST_DIDS);
         const controllerParams: ListDIDsControllerParameters = {
@@ -139,7 +95,6 @@ describe('DID API Tests #2', () => {
                 did_type: 'Dataset',
                 bytes: 0,
                 length: 0,
-                open: true,
             },
             {
                 status: 'success',
@@ -148,7 +103,6 @@ describe('DID API Tests #2', () => {
                 did_type: 'Dataset',
                 bytes: 123,
                 length: 456,
-                open: true,
             },
             {
                 status: 'success',
@@ -157,7 +111,6 @@ describe('DID API Tests #2', () => {
                 did_type: 'Dataset',
                 bytes: 456,
                 length: 789,
-                open: true,
             },
         ]);
     });
