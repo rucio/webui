@@ -28,8 +28,6 @@ describe('Login Component Tests for x509 Login workflow', () => {
     });
     it('should send well formed request to RUCIO_AUTH_HOST/auth/x509 endpoint and handle successful response', async () => {
         fetchMock.mockIf(/.*/, req => {
-            console.log('Fetch called');
-
             if (req.url === '/api/auth/login' && req.method === 'POST') {
                 return Promise.resolve({
                     body: JSON.stringify({
@@ -71,7 +69,7 @@ describe('Login Component Tests for x509 Login workflow', () => {
         const x509Button = screen.getByRole('button', { name: /x509/ });
         expect(x509Button).toBeInTheDocument();
 
-        act(async () => {
+        await act(async () => {
             fireEvent.click(x509Button);
         });
         expect(fetchMock).toBeCalledTimes(2);
