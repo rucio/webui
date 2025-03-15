@@ -6,7 +6,7 @@ export interface ListDIDsRequest {
     type: DIDType;
 }
 
-export interface ListDIDsResponse extends DID, BaseResponseModel {
+export interface ListDIDsResponse extends Omit<DID, 'status'>, BaseResponseModel {
     bytes: number;
     length: number;
     open: boolean;

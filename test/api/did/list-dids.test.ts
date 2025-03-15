@@ -15,7 +15,6 @@ describe('DID API Tests', () => {
     afterEach(() => {
         fetchMock.dontMock();
     });
-
     it('Should successfully stream DIDs', async () => {
         const listDIDsEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dids/search`,
