@@ -51,6 +51,8 @@ describe('DID Gateway Tests Get STATUS', () => {
             expired_at: null,
             length: 4,
             bytes: 41943040.0,
+            md5: null,
+            adler32: null,
         });
     });
 });

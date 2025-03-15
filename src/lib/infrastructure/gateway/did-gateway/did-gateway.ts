@@ -23,6 +23,7 @@ import CreateDIDSampleEndpoint from './endpoints/create-did-sample-endpoint';
 import AddDIDEndpoint from './endpoints/add-did-endpoint';
 import AttachDIDsEndpoint from './endpoints/attach-dids-endpoint';
 import SetDIDStatusEndpoint from './endpoints/set-did-status-endpoints';
+import ListExtendedDIDsEndpoint from '@/lib/infrastructure/gateway/did-gateway/endpoints/list-extended-dids-endpoint';
 
 @injectable()
 export default class RucioDIDGateway implements DIDGatewayOutputPort {
@@ -180,6 +181,30 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
     async listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO> {
         try {
             const endpoint = new ListDIDsEndpoint(rucioAuthToken, scope, name, type);
+            const errorDTO: ListDIDDTO | undefined = await endpoint.fetch();
+            if (!errorDTO) {
+                const dto: ListDIDDTO = {
+                    status: 'success',
+                    stream: endpoint,
+                };
+                return dto;
+            }
+            return Promise.resolve(errorDTO);
+        } catch (error) {
+            const errorDTO: ListDIDDTO = {
+                status: 'error',
+                errorName: 'Unknown Error',
+                errorType: 'gateway_endpoint_error',
+                errorCode: 500,
+                errorMessage: error?.toString(),
+            };
+            return Promise.resolve(errorDTO);
+        }
+    }
+
+    async listExtendedDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO> {
+        try {
+            const endpoint = new ListExtendedDIDsEndpoint(rucioAuthToken, scope, name, type);
             const errorDTO: ListDIDDTO | undefined = await endpoint.fetch();
             if (!errorDTO) {
                 const dto: ListDIDDTO = {

@@ -4,8 +4,48 @@ import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-p
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import { Readable } from 'stream';
+import { TRucioExtendedDID } from '@/lib/infrastructure/gateway/did-gateway/did-gateway-utils';
+import { collectStreamedData } from '@/lib/sdk/utils';
 
 const getSearchData = (req: Request): string[] => {
+    if (req.url.includes('extended=true')) {
+        const data: TRucioExtendedDID[] = [
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+                type: 'Dataset',
+                account: 'root',
+                open: true,
+                monotonic: false,
+                expired_at: 'Fri, 14 Mar 2025 14:37:37 UTC',
+                length: 0,
+                bytes: 0,
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
+                type: 'Dataset',
+                account: 'root',
+                open: true,
+                monotonic: false,
+                expired_at: 'Fri, 14 Mar 2025 14:37:37 UTC',
+                length: 0,
+                bytes: 0,
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+                type: 'Dataset',
+                account: 'root',
+                open: true,
+                monotonic: false,
+                expired_at: 'Fri, 14 Mar 2025 14:37:37 UTC',
+                length: 0,
+                bytes: 0,
+            },
+        ];
+        return data.map(did => JSON.stringify(did));
+    }
     if (req.url.includes('long=True')) {
         const data: DIDLong[] = [
             {
@@ -102,24 +142,7 @@ describe('DID Gateway Tests', () => {
             fail('didStream is null or undefined');
         }
 
-        const receivedData: DIDLong[] = [];
-
-        const onData = (data: any) => {
-            console.log('data', data);
-            receivedData.push(data);
-        };
-        await new Promise<void>((resolve, reject) => {
-            didStream.on('data', onData);
-            didStream.on('end', () => {
-                console.log('end');
-                didStream.off('data', onData);
-                resolve();
-            });
-            didStream.on('error', err => {
-                didStream.off('data', onData);
-                reject(err);
-            });
-        });
+        const receivedData = await collectStreamedData(didStream);
 
         expect(receivedData).toEqual([
             {
@@ -133,6 +156,68 @@ describe('DID Gateway Tests', () => {
             {
                 scope: 'data17_13TeV',
                 name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+            },
+        ]);
+    });
+
+    it('should successfully fetch DIDs with extended fields', async () => {
+        const rucioDIDGateway: DIDGatewayOutputPort = appContainer.get(GATEWAYS.DID);
+        const dto: ListDIDDTO = await rucioDIDGateway.listExtendedDIDs(
+            'rucio-ddmlab-askdjljioj',
+            'data17_13TeV',
+            '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+            DIDType.DATASET,
+        );
+        expect(dto.status).toBe('success');
+        expect(dto.stream).not.toBeUndefined();
+        expect(dto.stream).not.toBeNull();
+        const didStream = dto.stream;
+
+        if (didStream === null || didStream === undefined) {
+            fail('didStream is null or undefined');
+        }
+
+        const receivedData = await collectStreamedData(didStream);
+
+        expect(receivedData).toEqual([
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_00',
+                did_type: DIDType.DATASET,
+                account: 'root',
+                open: true,
+                monotonic: false,
+                expired_at: 'Fri, 14 Mar 2025 14:37:37 UTC',
+                length: 0,
+                bytes: 0,
+                md5: null,
+                adler32: null,
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_01',
+                did_type: DIDType.DATASET,
+                account: 'root',
+                open: true,
+                monotonic: false,
+                expired_at: 'Fri, 14 Mar 2025 14:37:37 UTC',
+                length: 0,
+                bytes: 0,
+                md5: null,
+                adler32: null,
+            },
+            {
+                scope: 'data17_13TeV',
+                name: '00325748.physics_Main.merge.DAOD_EXOT15.f102_m2608_p3372_tid15339900_02',
+                did_type: DIDType.DATASET,
+                account: 'root',
+                open: true,
+                monotonic: false,
+                expired_at: 'Fri, 14 Mar 2025 14:37:37 UTC',
+                length: 0,
+                bytes: 0,
+                md5: null,
+                adler32: null,
             },
         ]);
     });
