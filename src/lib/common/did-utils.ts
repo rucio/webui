@@ -5,8 +5,11 @@
  * @returns The scope and name components of the DID string as a tuple
  * @throws An error if the DID string is invalid.
  */
-export function parseDIDString(didString: string, allowWildcardNames: boolean = true): { scope: string; name: string } {
+export function parseDIDString(didString: string, allowWildcardNames: boolean = true): { scope: string; name?: string } {
     const didParts = didString.trim().split(':');
+        if (didParts.length === 1) {
+        return { scope: didParts[0] };
+    }
     if (didParts.length !== 2) throw new Error('Invalid DID string');
     if (!allowWildcardNames && didParts[1].includes('*')) throw new Error('Invalid DID string, wildcard names not allowed');
     return {

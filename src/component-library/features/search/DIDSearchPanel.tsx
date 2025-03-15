@@ -6,7 +6,7 @@ import { Input } from '@/component-library/atoms/form/input';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
 
 const SCOPE_DELIMITER = ':';
-const emptyToastMessage = 'Please specify both scope and name before the search.';
+const emptyToastMessage = 'Please specify scope before the search.';
 const delimiterToastMessage = 'Neither scope nor name should contain ":".';
 
 interface SearchPanelProps {
@@ -73,19 +73,16 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         return validateField(scope, 'scope', scopeInputRef);
     };
 
-    const validateName = (): boolean => {
-        return validateField(name, 'name', nameInputRef);
-    };
-
     const onSearch = (event: any) => {
         event.preventDefault();
 
-        if (!validateScope() || !validateName()) return;
+        if (!validateScope()) return;
 
-        const params = new URLSearchParams({
-            query: `${scope}${SCOPE_DELIMITER}${name}`,
-            type: type,
-        });
+        const queryValue = (name?.trim() ? `${scope}${SCOPE_DELIMITER}${name.trim()}` : scope) ?? '';
+
+        const params = new URLSearchParams();
+        params.set('query', queryValue);
+        params.set('type', type);
 
         const url = '/api/feature/list-dids?' + params;
         props.startStreaming(url);

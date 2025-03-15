@@ -30,7 +30,7 @@ class ListDIDsUseCase
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): ListDIDsError | undefined {
         let scope: string;
-        let name: string;
+        let name: string | undefined;
         try {
             let didComponents = parseDIDString(requestModel.query);
             scope = didComponents.scope;
