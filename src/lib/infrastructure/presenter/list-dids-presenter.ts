@@ -2,7 +2,6 @@ import { ListDIDsError, ListDIDsResponse } from '@/lib/core/usecase-models/list-
 import { NextApiResponse } from 'next';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
-import { DIDType } from '@/lib/core/entity/rucio';
 import { ListDIDsOutputPort } from '@/lib/core/port/primary/list-dids-ports';
 
 export default class ListDIDsPresenter
@@ -21,9 +20,6 @@ export default class ListDIDsPresenter
             status: 'success',
             name: responseModel.name,
             scope: responseModel.scope,
-            did_type: responseModel.did_type,
-            bytes: responseModel.bytes,
-            length: responseModel.length,
         };
         return viewModel;
     }
@@ -33,10 +29,7 @@ export default class ListDIDsPresenter
             status: 'error',
             message: error.message,
             name: error.name,
-            bytes: 0,
-            length: 0,
             scope: '',
-            did_type: DIDType.UNKNOWN,
         };
     }
 
@@ -56,9 +49,6 @@ export default class ListDIDsPresenter
             message,
             name: '',
             scope: '',
-            did_type: DIDType.UNKNOWN,
-            bytes: 0,
-            length: 0,
         };
         return { status, viewModel };
     }

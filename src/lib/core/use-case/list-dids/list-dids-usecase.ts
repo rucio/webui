@@ -1,17 +1,17 @@
 import { injectable } from 'inversify';
 import type { ListDIDsInputPort, ListDIDsOutputPort } from '@/lib/core/port/primary/list-dids-ports';
 import type DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
-import { DIDLongDTO, ListDIDDTO } from '../../dto/did-dto';
+import { DIDShortDTO, ListDIDDTO } from '../../dto/did-dto';
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from '../../usecase-models/list-dids-usecase-models';
 import { parseDIDString } from '@/lib/common/did-utils';
 import { BaseSingleEndpointStreamingUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
-import { DIDLong } from '../../entity/rucio';
+import { DIDShort } from '../../entity/rucio';
 
 @injectable()
 class ListDIDsUseCase
-    extends BaseSingleEndpointStreamingUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDLongDTO, ListDIDsViewModel>
+    extends BaseSingleEndpointStreamingUseCase<ListDIDsRequest, ListDIDsResponse, ListDIDsError, ListDIDDTO, DIDShortDTO, ListDIDsViewModel>
     implements ListDIDsInputPort
 {
     constructor(protected presenter: ListDIDsOutputPort, private didGateway: DIDGatewayOutputPort) {
@@ -58,7 +58,7 @@ class ListDIDsUseCase
         } as ListDIDsError;
     }
 
-    processStreamedData(dto: DIDLong): { data: ListDIDsResponse | ListDIDsError; status: 'success' | 'error' } {
+    processStreamedData(dto: DIDShort): { data: ListDIDsResponse | ListDIDsError; status: 'success' | 'error' } {
         const errorModel: ListDIDsError = {
             status: 'error',
             code: 400,
@@ -76,9 +76,6 @@ class ListDIDsUseCase
             status: 'success',
             name: dto.name,
             scope: dto.scope,
-            did_type: dto.did_type,
-            length: dto.length,
-            bytes: dto.bytes,
         };
         return {
             data: responseModel,

@@ -7,36 +7,11 @@ import { NextApiResponse } from 'next';
 import { Readable } from 'stream';
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
-import { DIDLong, DIDType } from '@/lib/core/entity/rucio';
 
 describe('DID API Tests #2', () => {
     beforeEach(() => {
         fetchMock.doMock();
-        const dids: DIDLong[] = [
-            {
-                scope: 'test',
-                name: 'dataset1',
-                did_type: DIDType.DATASET,
-                bytes: 0,
-                length: 0,
-            },
-            {
-                scope: 'test',
-                name: 'dataset2',
-                did_type: DIDType.DATASET,
-                bytes: 123,
-                length: 456,
-            },
-            {
-                scope: 'test',
-                name: 'dataset3',
-                did_type: DIDType.DATASET,
-                bytes: 456,
-                length: 789,
-            },
-        ];
-
-        const data = [...dids.map(did => JSON.stringify(did)), 'invalid json'];
+        const dids: string[] = ['"dataset1"', '"dataset2"', 'error', '"dataset3"'];
 
         const listDIDsEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dids/search`,
@@ -47,7 +22,7 @@ describe('DID API Tests #2', () => {
                 headers: {
                     'Content-Type': 'application/x-json-stream',
                 },
-                body: Readable.from(data.join('\n')),
+                body: Readable.from(dids.join('\n')),
             },
         };
 
@@ -92,25 +67,16 @@ describe('DID API Tests #2', () => {
                 status: 'success',
                 name: 'dataset1',
                 scope: 'test',
-                did_type: 'Dataset',
-                bytes: 0,
-                length: 0,
             },
             {
                 status: 'success',
                 name: 'dataset2',
                 scope: 'test',
-                did_type: 'Dataset',
-                bytes: 123,
-                length: 456,
             },
             {
                 status: 'success',
                 name: 'dataset3',
                 scope: 'test',
-                did_type: 'Dataset',
-                bytes: 456,
-                length: 789,
             },
         ]);
     });

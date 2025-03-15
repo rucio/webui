@@ -18,29 +18,7 @@ describe('DID API Tests', () => {
     });
 
     it('Should successfully stream DIDs', async () => {
-        const dids: DIDLong[] = [
-            {
-                scope: 'test',
-                name: 'dataset1',
-                did_type: DIDType.DATASET,
-                bytes: 0,
-                length: 0,
-            },
-            {
-                scope: 'test',
-                name: 'dataset2',
-                did_type: DIDType.DATASET,
-                bytes: 123,
-                length: 456,
-            },
-            {
-                scope: 'test',
-                name: 'dataset3',
-                did_type: DIDType.DATASET,
-                bytes: 456,
-                length: 789,
-            },
-        ];
+        const dids: string[] = ['"dataset1"', '"dataset2"', '"dataset3"'];
 
         const listDIDsEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dids/search`,
@@ -51,7 +29,7 @@ describe('DID API Tests', () => {
                 headers: {
                     'Content-Type': 'application/x-json-stream',
                 },
-                body: Readable.from(dids.map(did => JSON.stringify(did)).join('\n')),
+                body: Readable.from(dids.join('\n')),
             },
         };
 
@@ -91,25 +69,16 @@ describe('DID API Tests', () => {
                 status: 'success',
                 name: 'dataset1',
                 scope: 'test',
-                did_type: 'Dataset',
-                bytes: 0,
-                length: 0,
             },
             {
                 status: 'success',
                 name: 'dataset2',
                 scope: 'test',
-                did_type: 'Dataset',
-                bytes: 123,
-                length: 456,
             },
             {
                 status: 'success',
                 name: 'dataset3',
                 scope: 'test',
-                did_type: 'Dataset',
-                bytes: 456,
-                length: 789,
             },
         ]);
     });
