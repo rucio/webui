@@ -8,10 +8,16 @@ import { DefaultTextFilterParams } from '@/component-library/features/utils/filt
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { badgeCellClasses } from '@/component-library/features/table/cells/badge-cell';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 
 type ListSubscriptionTableProps = {
     streamingHook: UseStreamReader<SubscriptionRuleStatesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
+    account: string;
+};
+
+const ClickableName = (props: { value: string; account: string }) => {
+    return <ClickableCell href={`/subscription/page/${props.account}/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
@@ -24,6 +30,10 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
             field: 'name',
             flex: 5,
             minWidth: 300,
+            cellRenderer: ClickableName,
+            cellRendererParams: {
+                account: props.account,
+            },
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
