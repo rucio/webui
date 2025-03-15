@@ -1,12 +1,7 @@
 import { HTTPRequest } from '@/lib/sdk/http';
-import { BaseEndpoint, BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
+import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { Response } from 'node-fetch';
-import {
-    convertToSubscriptionRuleStatesDTO,
-    getEmptySubscriptionRuleStatesDTO,
-    TRucioSubscription,
-    TRucioSubscriptionRuleStates,
-} from '../subscription-gateway-utils';
+import { convertToSubscriptionRuleStatesDTO, getEmptySubscriptionRuleStatesDTO, TRucioSubscriptionRuleStates } from '../subscription-gateway-utils';
 import { SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
 
@@ -29,8 +24,7 @@ export default class ListSubscriptionRuleStatesEndpoint extends BaseStreamableEn
     async initialize(): Promise<void> {
         await super.initialize();
         const rucioHost = await this.envConfigGateway.rucioHost();
-        // TODO: bug in rucio. subscription name does not matter
-        const endpoint = `${rucioHost}/subscriptions/${this.account}/doesntmatter/Rules/States`;
+        const endpoint = `${rucioHost}/subscriptions/${this.account}/rules/states`;
         const request: HTTPRequest = {
             method: 'GET',
             url: endpoint,
