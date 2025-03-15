@@ -23,7 +23,7 @@ const ClickableName = ({ value, account }: { value: string; account: string }) =
 const createRuleStateColumn = (headerName: string, field: keyof SubscriptionRuleStatesViewModel, value: RuleState) => ({
     headerName,
     field,
-    minWidth: 175,
+    minWidth: 125,
     headerComponent: RuleStateBadge,
     headerComponentParams: { className: badgeCellClasses, value },
 });
