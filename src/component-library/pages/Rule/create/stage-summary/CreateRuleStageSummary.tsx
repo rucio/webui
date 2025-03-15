@@ -3,7 +3,7 @@ import { InfoField } from '@/component-library/features/fields/InfoField';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 import { CreateRuleStageSummaryDataTable } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryDataTable';
 import { CreateRuleStageSummaryStorageTable } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummaryStorageTable';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { ListExtendedDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { Field } from '@/component-library/atoms/misc/Field';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
@@ -11,7 +11,7 @@ import { formatFileSize } from '@/component-library/features/utils/text-formatte
 import Checkbox from '@/component-library/atoms/form/Checkbox';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 
-const KeyValueDIDs = ({ dids }: { dids: ListDIDsViewModel[] }) => {
+const KeyValueDIDs = ({ dids }: { dids: ListExtendedDIDsViewModel[] }) => {
     const totalFiles = dids.reduce((previous, current) => previous + current.length, 0);
     const totalBytes = dids.reduce((previous, current) => previous + current.bytes, 0);
 

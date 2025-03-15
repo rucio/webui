@@ -8,6 +8,7 @@ import { Readable } from 'stream';
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
 import { DIDLong, DIDType } from '@/lib/core/entity/rucio';
+import { collectStreamedData } from '@/lib/sdk/utils';
 
 describe('DID API Tests', () => {
     beforeEach(() => {
@@ -45,26 +46,9 @@ describe('DID API Tests', () => {
         };
         await listDIDsController.execute(controllerParams);
 
-        const receivedData: any[] = [];
-        const onData = (data: any) => {
-            receivedData.push(JSON.parse(data));
-        };
+        const receivedData: string[] = await collectStreamedData(res);
 
-        const done = new Promise<void>((resolve, reject) => {
-            res.on('data', onData);
-            res.on('end', () => {
-                res.off('data', onData);
-                resolve();
-            });
-            res.on('error', err => {
-                res.off('data', onData);
-                reject(err);
-            });
-        });
-
-        await done;
-
-        expect(receivedData).toEqual([
+        expect(receivedData.map(rawData => JSON.parse(rawData))).toEqual([
             {
                 status: 'success',
                 name: 'dataset1',

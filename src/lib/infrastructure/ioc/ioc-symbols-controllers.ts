@@ -38,6 +38,7 @@ const CONTROLLERS = {
     SET_DID_STATUS: Symbol.for('SetDIDStatusController'),
     GET_RULE: Symbol.for('GetRuleController'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesController'),
+    LIST_EXTENDED_DIDS: Symbol.for('ListExtendedDIDsController'),
 };
 
 export default CONTROLLERS;

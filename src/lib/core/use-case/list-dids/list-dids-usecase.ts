@@ -19,12 +19,8 @@ class ListDIDsUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): ListDIDsError | undefined {
-        let scope: string;
-        let name: string;
         try {
-            let didComponents = parseDIDString(requestModel.query);
-            scope = didComponents.scope;
-            name = didComponents.name;
+            parseDIDString(requestModel.query);
         } catch (error: any) {
             return {
                 status: 'error',

@@ -38,6 +38,7 @@ const USECASE_FACTORY = {
     SET_DID_STATUS: Symbol.for('Factory<SetDIDStatus>'),
     GET_RULE: Symbol.for('Factory<GetRuleUseCase>'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('Factory<ListRuleReplicaLockStatesUseCase>'),
+    LIST_EXTENDED_DIDS: Symbol.for('Factory<ListExtendedDIDsUseCase>'),
 };
 
 export default USECASE_FACTORY;

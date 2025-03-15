@@ -1,7 +1,7 @@
 import { DIDType, LockState, Rule, RuleGrouping, RuleMeta, RuleNotification, RulePageLockEntry, RuleState } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { ListExtendedDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface RuleViewModel extends Rule, BaseViewModel {}
 
@@ -35,7 +35,7 @@ export interface CreateRuleStorage {
 }
 
 export interface CreateRuleParameters extends CreateRuleOptions, CreateRuleStorage {
-    dids: ListDIDsViewModel[];
+    dids: ListExtendedDIDsViewModel[];
     needsApproval: boolean;
     askApproval: boolean;
 }
