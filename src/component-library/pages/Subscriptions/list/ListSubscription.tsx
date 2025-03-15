@@ -17,7 +17,7 @@ export const ListSubscription = (props: ListSubscriptionProps) => {
     const [startedStreaming, setStartedStreaming] = useState(false);
 
     useEffect(() => {
-        if (gridApi !== null && !startedStreaming) {
+        if (!props.initialData && gridApi !== null && !startedStreaming) {
             startStreaming('/api/feature/list-subscription-rule-states');
             setStartedStreaming(true);
         }
