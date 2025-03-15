@@ -13,7 +13,7 @@ describe('Get Subscription Rule States', () => {
     beforeEach(() => {
         fetchMock.doMock();
         const getSubscriptionRuleStatesEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/ddmadmin/*Functional Test/Rules/States`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/ddmadmin/rules/states`,
             method: 'GET',
             includes: '/Rules/States',
             response: {

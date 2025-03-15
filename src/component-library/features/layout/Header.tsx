@@ -151,6 +151,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
         { title: 'DIDs', path: '/did/list' },
+        { title: 'Subscriptions', path: '/subscription/list'},
         { title: 'RSEs', path: '/rse/list' },
         {
             title: 'Rules',
