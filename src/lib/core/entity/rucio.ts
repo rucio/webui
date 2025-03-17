@@ -40,6 +40,17 @@ export type DIDShort = {
 // results of core::did::list_dids (with `long` option)
 export type DID = DIDShort & {
     did_type: DIDType;
+    bytes?: number;
+    length?: number;
+    open?: boolean;
+    account?: string;
+    monotonic?: boolean;
+    expired_at?: string;
+    status?: 'success' | 'error';
+    errorCode?: number;
+    errorMessage?: string;
+    errorName?: string;
+    errorType?: 'gateway_endpoint_error' | string;
 };
 
 export type DIDLong = DID & {

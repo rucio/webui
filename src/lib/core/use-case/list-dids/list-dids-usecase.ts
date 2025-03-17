@@ -1,30 +1,28 @@
 import { injectable } from 'inversify';
 import type { ListDIDsInputPort, ListDIDsOutputPort } from '@/lib/core/port/primary/list-dids-ports';
 import type DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
-import { DIDExtendedDTO, ListDIDDTO, ListDIDsStreamData } from '../../dto/did-dto';
+import { ListDIDDTO } from '../../dto/did-dto';
 import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from '../../usecase-models/list-dids-usecase-models';
 import { parseDIDString } from '@/lib/common/did-utils';
-import { BaseSingleEndpointPostProcessingPipelineStreamingUseCase, BaseSingleEndpointStreamingUseCase } from '@/lib/sdk/usecase';
+import { BaseSingleEndpointStreamingUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
-import GetDIDsPipelineElement from './pipeline-element-get-did';
 import { DID } from '../../entity/rucio';
 
 @injectable()
 class ListDIDsUseCase
-    extends BaseSingleEndpointPostProcessingPipelineStreamingUseCase<
+    extends BaseSingleEndpointStreamingUseCase<
         ListDIDsRequest,
         ListDIDsResponse,
         ListDIDsError,
         ListDIDDTO,
-        DIDExtendedDTO,
+        DID,
         ListDIDsViewModel
     >
     implements ListDIDsInputPort
 {
     constructor(protected presenter: ListDIDsOutputPort, private didGateway: DIDGatewayOutputPort) {
-        const getDIDPipelineElement = new GetDIDsPipelineElement(didGateway);
-        super(presenter, [getDIDPipelineElement]);
+        super(presenter);
         this.didGateway = didGateway;
     }
 
@@ -50,7 +48,7 @@ class ListDIDsUseCase
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): Promise<ListDIDDTO> {
         const { scope, name } = parseDIDString(requestModel.query);
-        const listDIDDTO: ListDIDDTO = await this.didGateway.listDIDs(requestModel.rucioAuthToken, scope, name, requestModel.type);
+        const listDIDDTO: ListDIDDTO = await this.didGateway.listDIDsFull(requestModel.rucioAuthToken, scope, name, requestModel.type);
         return listDIDDTO;
     }
 
@@ -87,9 +85,9 @@ class ListDIDsUseCase
             name: dto.name,
             scope: dto.scope,
             did_type: dto.did_type,
-            length: 0,
-            bytes: 0,
-            open: false, // This is updated in the pipeline element that follows this usecase
+            length: dto.length || 0,
+            bytes: dto.bytes || 0,
+            open: dto.open || false,
         };
         return {
             data: responseModel,

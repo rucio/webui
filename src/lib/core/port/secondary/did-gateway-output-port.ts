@@ -108,6 +108,16 @@ export default interface DIDGatewayOutputPort {
     listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO>;
 
     /**
+     * Retrieves a list of fully populated DIDs from the Rucio Server using the new endpoint.
+     * @param rucioAuthToken A valid Rucio auth token.
+     * @param scope The scope of the DID.
+     * @param name The name of the DID.
+     * @param type The {@link DIDType} of the DID.
+     * @returns A Promise that resolves to a {@link ListDIDDTO} object.
+     */
+    listDIDsFull(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO>;
+
+    /**
      * Retrieves a list of replication rules for a given DID.
      * @param rucioAuthToken A valid Rucio auth token.
      * @param scope The scope of the DID.
