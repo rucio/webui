@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
 

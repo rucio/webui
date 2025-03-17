@@ -84,7 +84,7 @@ const SignIntoButton = () => {
     );
 };
 
-export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement>; accountActive: string; accountsPossible: string[] }) => {
+export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement | null>; accountActive: string; accountsPossible: string[] }) => {
     const hasAccountChoice = props.accountsPossible.length !== 1;
 
     return (

@@ -2,6 +2,7 @@ import { Table, flexRender } from '@tanstack/react-table';
 import { TableStyling } from './types';
 import { twMerge } from 'tailwind-merge';
 import { StyleMetaColumnDef } from './types';
+import { JSX } from 'react';
 
 export function TableHeader<T>(
     props: JSX.IntrinsicElements['thead'] & {

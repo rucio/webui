@@ -52,7 +52,7 @@ export const ListInput = (props: {
                 <TextInput
                     id={props.id}
                     placeholder={props.placeholder}
-                    onEnterkey={e => {
+                    onEnterkey={(e: { currentTarget: { value: string; }; }) => {
                         let val = e.currentTarget.value;
                         if (items.indexOf(val) === -1) {
                             // if val is not in items, add it

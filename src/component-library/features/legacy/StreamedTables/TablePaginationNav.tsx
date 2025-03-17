@@ -3,6 +3,7 @@ import { Button } from '../../../atoms/legacy/Button/Button';
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight } from 'react-icons/hi';
 import { NumInput } from '../../../atoms/legacy/input/NumInput/NumInput';
 import { twMerge } from 'tailwind-merge';
+import { JSX } from 'react';
 
 export const TablePaginationNav: React.FC<
     JSX.IntrinsicElements['div'] & {

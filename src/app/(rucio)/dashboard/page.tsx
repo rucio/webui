@@ -5,5 +5,5 @@ export default function Page() {
 }
 
 export const metadata = {
-    title: 'Dashboard - Rucio',
+    title: 'Dashboard - Rucio'
 };

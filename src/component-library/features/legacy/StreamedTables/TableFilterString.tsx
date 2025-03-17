@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
 import { Column, Table } from '@tanstack/react-table';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, JSX } from 'react';
 import { HiCheck, HiSearch } from 'react-icons/hi';
 
 type TableFilterString = JSX.IntrinsicElements['form'] & {
