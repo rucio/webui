@@ -1,5 +1,5 @@
 import { DIDDTO, DIDRulesDTO } from '@/lib/core/dto/did-dto';
-import { DIDType, RuleState } from '@/lib/core/entity/rucio';
+import { DIDExtended, DIDType, RuleState } from '@/lib/core/entity/rucio';
 
 /**
  * The type representing a Rucio DID returned by Rucio REST API
@@ -8,6 +8,20 @@ export type TRucioDID = {
     scope: string;
     name: string;
     type: string;
+};
+
+export type TRucioExtendedDID = {
+    scope: string;
+    name: string;
+    type: string;
+    bytes: number;
+    length: number;
+    account: string;
+    open?: boolean;
+    monotonic?: boolean;
+    expired_at?: string;
+    md5?: string;
+    adler32?: string;
 };
 
 /**
@@ -91,4 +105,21 @@ export function convertToDIDDTO(data: TRucioDID): DIDDTO {
         did_type: type,
     };
     return dto;
+}
+
+export function convertToDIDExtended(data: TRucioExtendedDID): DIDExtended {
+    const type: DIDType = getDIDType(data.type);
+    return {
+        scope: data.scope,
+        name: data.name,
+        did_type: type,
+        bytes: data.bytes,
+        length: data.length,
+        open: data.open ?? null,
+        monotonic: data.monotonic ?? null,
+        expired_at: data.expired_at ?? null,
+        account: data.account,
+        md5: data.md5 ?? null,
+        adler32: data.adler32 ?? null,
+    };
 }

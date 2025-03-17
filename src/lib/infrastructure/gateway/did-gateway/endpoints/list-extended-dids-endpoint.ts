@@ -1,13 +1,14 @@
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { ListDIDDTO } from '@/lib/core/dto/did-dto';
-import { DIDShort, DIDType } from '@/lib/core/entity/rucio';
+import { DIDExtended, DIDLong, DIDType } from '@/lib/core/entity/rucio';
 import { Response } from 'node-fetch';
+import { convertToDIDExtended, TRucioExtendedDID } from '@/lib/infrastructure/gateway/did-gateway/did-gateway-utils';
 
 /**
  * A class that extends the `BaseStreamableEndpoint` class and provides an implementation for a streamable API endpoint that lists data identifiers (DIDs) from a Rucio server.
  */
-export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO, DIDShort> {
+export default class ListExtendedDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO, DIDExtended> {
     /**
      * Creates a new instance of the `ListDIDsEndpoint` class.
      * @param rucioAuthToken A string that represents the authentication token to be used for the API request.
@@ -33,6 +34,8 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
             },
             body: null,
             params: {
+                dynamic_depth: DIDType.FILE,
+                extended: 'true',
                 name: this.name,
                 type: this.type.toLocaleLowerCase(),
             },
@@ -68,11 +71,8 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
     }
 
     /** @implements */
-    createDTO(response: Buffer): DIDShort {
-        const name = JSON.parse(response.toString()).split('"')[1];
-        return {
-            name: name,
-            scope: this.scope,
-        };
+    createDTO(response: Buffer): DIDExtended {
+        const parsedResponse: TRucioExtendedDID = JSON.parse(JSON.parse(response.toString()));
+        return convertToDIDExtended(parsedResponse);
     }
 }

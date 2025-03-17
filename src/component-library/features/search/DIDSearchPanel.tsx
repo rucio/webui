@@ -14,6 +14,7 @@ interface SearchPanelProps {
     stopStreaming: () => void;
     initialPattern?: string;
     isRunning: boolean;
+    extended?: boolean;
 }
 
 export const DIDSearchPanel = (props: SearchPanelProps) => {
@@ -87,7 +88,8 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
             type: type,
         });
 
-        const url = '/api/feature/list-dids?' + params;
+        const featureUrl = props.extended ? '/api/feature/list-extended-dids?' : '/api/feature/list-dids?';
+        const url = featureUrl + params;
         props.startStreaming(url);
     };
 
