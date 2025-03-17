@@ -34,7 +34,7 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
             },
             body: null,
             params: {
-                name: this.name,
+                ...(this.name ? { name: this.name } : {}),
                 type: this.type.toLocaleLowerCase(),
             },
         };
