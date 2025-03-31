@@ -1,4 +1,5 @@
 import { RSEBlockState } from '@/lib/core/entity/rucio';
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { RSEBlockTag } from './RSEBlockTag';
 

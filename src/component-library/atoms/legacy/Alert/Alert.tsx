@@ -11,10 +11,12 @@ interface AlertProps {
 
 export const Alert = ({ id = undefined, message = 'Welcome to Rucio!', variant = 'primary', onClose = () => {} }: AlertProps) => {
     useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-        });
+        if (typeof window !== 'undefined' && 'scrollTo' in window) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
     }, []);
     return (
         <div

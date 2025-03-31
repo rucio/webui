@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type TextInputProps = JSX.IntrinsicElements['input'] & {

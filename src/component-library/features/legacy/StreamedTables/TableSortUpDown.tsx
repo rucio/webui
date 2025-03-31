@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
 import { Column } from '@tanstack/react-table';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { HiSortAscending, HiSortDescending, HiDotsHorizontal } from 'react-icons/hi';
 
 export function TableSortUpDown(

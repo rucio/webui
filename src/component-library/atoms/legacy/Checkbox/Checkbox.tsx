@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { P } from '../text/content/P/P';
 

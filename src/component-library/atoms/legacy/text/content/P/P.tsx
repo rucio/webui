@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const P: React.FC<JSX.IntrinsicElements['p'] & { mono?: boolean }> = ({ mono = false, ...props }) => {

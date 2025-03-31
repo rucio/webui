@@ -3,6 +3,7 @@ import { H3 } from '@/component-library/atoms/legacy/text/headings/H3/H3';
 import { twMerge } from 'tailwind-merge';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { Button } from '@/component-library/atoms/legacy/Button/Button';
+import { JSX } from 'react';
 
 const TableErrorelement: React.FC<JSX.IntrinsicElements['div'] & { message: string }> = ({ message, ...props }) => {
     const { className, ...otherprops } = props;
@@ -32,8 +33,8 @@ export const TableErrorreader: React.FC<
             </div>
             <div className={twMerge('bg-neutral-100 dark:bg-neutral-900', 'flex flex-col space-y-1 p-1 rounded-md', 'h-48 overflow-y-scroll')}>
                 {comdom.query.data.error
-                    .filter(vm => vm.status === 'error')
-                    .map((vm, i) => {
+                    .filter((vm: { status: string; }) => vm.status === 'error')
+                    .map((vm: { message: any; }, i: any) => {
                         return <TableErrorelement key={i} message={vm.message ?? 'Unknown Error'} className="dark:bg-neutral-800 bg-neutral-0" />;
                     })}
             </div>

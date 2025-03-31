@@ -1,3 +1,5 @@
+import { JSX } from 'react';
+
 export type DetailsDIDProps = {
     scope: string;
     name: string;

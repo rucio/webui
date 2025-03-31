@@ -6,7 +6,7 @@ import { TableFetchstatus } from './TableFetchstatus';
 import { TableBreakout } from './TableBreakout';
 import { TableErrorstatus } from './TableErrorstatus';
 import { TableErrorreader } from './TableErrorreader';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 
 /**
  * @param T the type of the data in the table

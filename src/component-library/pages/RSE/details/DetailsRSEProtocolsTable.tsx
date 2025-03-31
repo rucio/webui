@@ -9,7 +9,7 @@ type DetailsRSEProtocolsTableProps = {
 };
 
 export const DetailsRSEProtocolsTable = (props: DetailsRSEProtocolsTableProps) => {
-    const tableRef = useRef<AgGridReact<RSEDetailsProtocol>>(null);
+    const tableRef = useRef<AgGridReact<RSEDetailsProtocol>>(null!);
 
     const [columnDefs] = useState([
         {

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const SubPage: React.FC<

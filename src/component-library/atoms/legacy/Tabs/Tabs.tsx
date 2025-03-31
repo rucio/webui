@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const Tabs: React.FC<

@@ -1,6 +1,7 @@
 import { RuleNotification } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { HiBellAlert, HiBellSlash, HiBell } from 'react-icons/hi2'; // hi does not have the bell decorations
+import { JSX } from 'react';
 
 export const RuleNotificationTag: React.FC<JSX.IntrinsicElements['span'] & { notificationState: RuleNotification; tiny?: boolean }> = ({
     notificationState = RuleNotification.Yes,

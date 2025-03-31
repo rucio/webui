@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const SamplingTag: React.FC<JSX.IntrinsicElements['span'] & { sampling: boolean }> = ({ sampling = false, ...props }) => {
