@@ -8,22 +8,22 @@ import { formatFileSize } from '@/component-library/features/utils/text-formatte
 import { CreateRuleStageDataSelectedTable } from '@/component-library/pages/Rule/create/stage-dids/CreateRuleStageDataSelectedTable';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { ListExtendedDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { useState } from 'react';
 import ToggleHeader from '@/component-library/features/search/ToggleHeader';
 
 type CreateRuleStageDataProps = {
     visible: boolean;
     parameters: CreateRuleParameters;
-    addDID: (did: ListDIDsViewModel) => void;
-    removeDID: (did: ListDIDsViewModel) => void;
+    addDID: (did: ListExtendedDIDsViewModel) => void;
+    removeDID: (did: ListExtendedDIDsViewModel) => void;
 };
 
 export const CreateRuleStageData = (props: CreateRuleStageDataProps) => {
     const selectedItems = props.parameters.dids;
     const totalSize = selectedItems.reduce((accumulator, current) => accumulator + current.bytes, 0);
 
-    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<ListDIDsViewModel>();
+    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<ListExtendedDIDsViewModel>();
     const [isSearchOpen, setIsSearchOpen] = useState<boolean>(selectedItems.length === 0);
 
     const getInfoField = () => {
@@ -48,6 +48,7 @@ export const CreateRuleStageData = (props: CreateRuleStageDataProps) => {
                     startStreaming={startStreaming}
                     stopStreaming={stopStreaming}
                     isRunning={streamingHook.status === StreamingStatus.RUNNING}
+                    extended
                 />
                 <CreateRuleTableWrapper>
                     <CreateRuleStageDataTable

@@ -1,3 +1,5 @@
+import { DIDType } from '@/lib/core/entity/rucio';
+
 /**
  * A utility function to parse DID strings into their scope and name components.
  * @param didString The query string to parse.
@@ -13,4 +15,19 @@ export function parseDIDString(didString: string, allowWildcardNames: boolean = 
         scope: didParts[0],
         name: didParts[1],
     };
+}
+
+export function parseDIDType(type: string): DIDType {
+    switch (type.toLowerCase()) {
+        case 'file':
+            return DIDType.FILE;
+        case 'dataset':
+            return DIDType.DATASET;
+        case 'container':
+            return DIDType.CONTAINER;
+        case 'derived':
+            return DIDType.DERIVED;
+        default:
+            throw new Error('Invalid DID type');
+    }
 }

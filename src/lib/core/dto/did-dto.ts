@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { DID, DIDKeyValuePair, DIDMeta, DIDRules } from '@/lib/core/entity/rucio';
+import { DID, DIDExtended, DIDKeyValuePair, DIDMeta, DIDRules, DIDShort } from '@/lib/core/entity/rucio';
 
 /**
  * Data Transfer Object for ListDIDsEndpoint
@@ -7,23 +7,14 @@ import { DID, DIDKeyValuePair, DIDMeta, DIDRules } from '@/lib/core/entity/rucio
 export interface ListDIDDTO extends BaseStreamableDTO {}
 
 /**
- * Represents the individual data items in the stream
+ * Represents the individual data items in the stream of ListDIDsEndpoint
  */
-export type ListDIDsStreamData = string;
+export interface DIDShortDTO extends DIDShort, BaseDTO {}
 
 /**
- * Data Transfer Object for GetDIDEndpoint
+ * Represents the individual data items in the stream of ListExtendedDIDsEndpoint
  */
-export interface DIDExtendedDTO extends DID, BaseDTO {
-    status: 'success' | 'error';
-    errorMessage?: string;
-    account: string;
-    open: boolean;
-    monotonic: boolean;
-    expired_at: string;
-    bytes: number;
-    length: number;
-}
+export interface DIDExtendedDTO extends DIDExtended, BaseDTO {}
 
 /**
  * Data Transfer Object for ListDIDParentsEndpoint

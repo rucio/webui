@@ -18,7 +18,7 @@ import {
     CreateRuleStageOptions,
     getEmptyOptionsErrors,
 } from '@/component-library/pages/Rule/create/stage-options/CreateRuleStageOptions';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { ListDIDsViewModel, ListExtendedDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { CreateRuleStageSummary } from '@/component-library/pages/Rule/create/stage-summary/CreateRuleStageSummary';
 import { CreateRuleStageSubmission } from '@/component-library/pages/Rule/create/stage-submission/CreateRuleStageSubmission';
 
@@ -138,7 +138,7 @@ export const CreateRule = (props: CreateRuleProps) => {
         }));
     };
 
-    const addDID = (did: ListDIDsViewModel) => {
+    const addDID = (did: ListExtendedDIDsViewModel) => {
         setParameters(prevState => {
             const didExists = prevState.dids.some(element => element.scope === did.scope && element.name === did.name);
             if (didExists) return prevState;
@@ -147,7 +147,7 @@ export const CreateRule = (props: CreateRuleProps) => {
         });
     };
 
-    const removeDID = (did: ListDIDsViewModel) => {
+    const removeDID = (did: ListExtendedDIDsViewModel) => {
         setParameters(prevState => ({
             ...prevState,
             dids: prevState.dids.filter(element => element.scope !== did.scope || element.name !== did.name),

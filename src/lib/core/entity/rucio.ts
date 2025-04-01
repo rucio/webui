@@ -47,6 +47,16 @@ export type DIDLong = DID & {
     length: number;
 };
 
+// result of core::did::list_dids (with `extended` option)
+export type DIDExtended = DIDLong & {
+    account: string;
+    open: boolean | null;
+    monotonic: boolean | null;
+    expired_at: DateISO | null;
+    md5: string | null;
+    adler32: string | null;
+};
+
 export enum DIDAvailability {
     AVAILABLE = 'Available',
     DELETED = 'Deleted',
