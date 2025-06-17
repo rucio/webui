@@ -12,7 +12,7 @@ export default class GetSubscriptionEndpoint extends BaseEndpoint<SubscriptionDT
 
     async initialize(): Promise<void> {
         await super.initialize();
-        this.url = `${this.rucioHost}/subscriptions/${this.account}/${this.name}`;
+        this.url = `${this.rucioHost}/subscriptions/${this.account}/${encodeURIComponent(this.name)}`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,
