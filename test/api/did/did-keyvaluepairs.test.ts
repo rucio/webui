@@ -7,11 +7,11 @@ import { createHttpMocks } from 'test/fixtures/http-fixtures';
 import { NextApiResponse } from 'next';
 import MockRucioServerFactory, { MockEndpoint } from 'test/fixtures/rucio-server';
 
-describe('DID KeyValuePairs API Tests', () => {
+describe('DID KeyValuePairs API Tests: DID with encoded slashes', () => {
     beforeEach(() => {
         fetchMock.doMock();
         const didKeyValuePairsMockEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dataset1/meta`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/test%2Fdataset1/meta`,
             method: 'GET',
             includes: 'test/dataset1/meta',
             response: {
@@ -38,7 +38,7 @@ describe('DID KeyValuePairs API Tests', () => {
             CONTROLLERS.DID_KEYVALUEPAIRS,
         );
         const didKVControllerParams: DIDKeyValuePairsDataControllerParameters = {
-            name: 'test/dataset1',
+            name: 'test/dataset1', // Example of a DID with '/' in the name, this should be encoded
             scope: 'test',
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
             response: res as unknown as NextApiResponse,
