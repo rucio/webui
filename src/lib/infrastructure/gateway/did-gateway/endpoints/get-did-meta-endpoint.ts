@@ -11,7 +11,7 @@ export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
 
     async initialize(): Promise<void> {
         await super.initialize();
-        this.url = `${this.rucioHost}/dids/${this.scope}/${this.name}/meta`;
+        this.url = `${this.rucioHost}/dids/${encodeURIComponent(this.scope)}/${encodeURIComponent(this.name)}/meta`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,

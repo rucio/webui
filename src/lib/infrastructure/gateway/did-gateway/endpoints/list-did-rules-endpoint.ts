@@ -15,7 +15,9 @@ export default class ListDIDRulesEndpoint extends BaseStreamableEndpoint<ListDID
     async initialize(): Promise<void> {
         await super.initialize();
         const rucioHost = await this.envConfigGateway.rucioHost();
-        const endpoint = `${rucioHost}/dids/${this.scope}/${this.name}/rules`;
+        const encodedScope = encodeURIComponent(this.scope);
+        const encodedName = encodeURIComponent(this.name);
+        const endpoint = `${rucioHost}/dids/${encodedScope}/${encodedName}/rules`;
         const request: HTTPRequest = {
             method: 'GET',
             url: endpoint,

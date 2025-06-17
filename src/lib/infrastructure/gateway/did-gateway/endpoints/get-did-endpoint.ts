@@ -18,7 +18,7 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
      */
     async initialize(): Promise<void> {
         await super.initialize();
-        this.url = `${this.rucioHost}/dids/${this.scope}/${this.name}/status`;
+        this.url = `${this.rucioHost}/dids/${encodeURIComponent(this.scope)}/${encodeURIComponent(this.name)}/status`;
         if (this.dynamicDepth) {
             this.url += `?dynamic_depth=${this.dynamicDepth.toUpperCase()}`;
         }

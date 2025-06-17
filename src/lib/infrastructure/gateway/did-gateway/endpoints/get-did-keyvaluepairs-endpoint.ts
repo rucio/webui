@@ -11,7 +11,9 @@ export default class GetDIDKeyValuePairsEndpoint extends BaseEndpoint<DIDKeyValu
 
     async initialize(): Promise<void> {
         await super.initialize();
-        this.url = `${this.rucioHost}/dids/${this.scope}/${this.name}/meta`;
+        const encodedScope = encodeURIComponent(this.scope);
+        const encodedName = encodeURIComponent(this.name);
+        this.url = `${this.rucioHost}/dids/${encodedScope}/${encodedName}/meta`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,

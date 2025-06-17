@@ -11,7 +11,9 @@ export default class ListDatasetReplicasEndpoint extends BaseStreamableEndpoint<
     async initialize(): Promise<void> {
         await super.initialize();
         const rucioHost = await this.envConfigGateway.rucioHost();
-        const endpoint = `${rucioHost}/replicas/${this.scope}/${this.name}/datasets`;
+        const encodedScope = encodeURIComponent(this.scope);
+        const encodedName = encodeURIComponent(this.name);
+        const endpoint = `${rucioHost}/replicas/${encodedScope}/${encodedName}/datasets`;
         const request: HTTPRequest = {
             method: 'GET',
             url: endpoint,
