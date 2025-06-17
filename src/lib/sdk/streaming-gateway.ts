@@ -32,8 +32,7 @@ export default class StreamingGateway implements StreamGatewayOutputPort {
     }
 
     async getJSONChunks(request: HTTPRequest, ndjson: boolean = false): Promise<{ type: 'response' | 'stream'; content: PassThrough | Response }> {
-        const encodeParams = await this.envConfigGateway.paramsEncodingEnabled();
-        const { url, requestArgs } = prepareRequestArgs(request, encodeParams);
+        const { url, requestArgs } = prepareRequestArgs(request);
         const response = await fetch(url, requestArgs);
 
         if (!response.ok || response.body === null) {
