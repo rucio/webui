@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { DID, DIDKeyValuePair, DIDMeta, DIDRules } from '@/lib/core/entity/rucio';
+import { DID, DIDKeyValuePair, DIDMeta, DIDRules, RuleMeta } from '@/lib/core/entity/rucio';
 
 /**
  * Data Transfer Object for ListDIDsEndpoint
@@ -51,7 +51,7 @@ export interface ListDIDRulesDTO extends BaseStreamableDTO {}
 /**
  * Data Transfer Object for individual stream elements of ListDIDRulesEndpoint
  */
-export interface DIDRulesDTO extends Omit<DIDRules, 'subscription'>, BaseDTO {
+export interface DIDRulesDTO extends RuleMeta, BaseDTO {
     subscription_id?: string;
 }
 
@@ -59,13 +59,6 @@ export interface DIDRulesDTO extends Omit<DIDRules, 'subscription'>, BaseDTO {
  * Data Transfer Object for ListDIDRulesEndpoint
  */
 export interface ListDIDRulesDTO extends BaseStreamableDTO {}
-
-/**
- * Data Transfer Object for individual stream elements of ListDIDRulesEndpoint
- */
-export interface DIDRulesDTO extends Omit<DIDRules, 'subscription'>, BaseDTO {
-    subscription_id?: string;
-}
 
 /**
  * Data Transfer Object for CreateDidSampleEndpoint

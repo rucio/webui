@@ -365,18 +365,6 @@ export function fixtureDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewMode
     };
 }
 
-export function fixtureDIDRulesViewModel(): DIDRulesViewModel {
-    return {
-        ...mockBaseVM(),
-        id: faker.string.uuid(),
-        name: faker.lorem.words(3).replace(/\s/g, '.'),
-        state: randomEnum<RuleState>(RuleState),
-        account: faker.internet.userName(),
-        subscription: { name: faker.lorem.words(3).replace(/\s/g, '.'), account: faker.internet.userName() },
-        last_modified: faker.date.recent().toISOString(),
-    };
-}
-
 export function fixtureFilereplicaStateViewModel(): FileReplicaStateViewModel {
     return {
         ...mockBaseVM(),

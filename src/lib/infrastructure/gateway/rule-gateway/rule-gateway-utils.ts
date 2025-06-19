@@ -114,7 +114,7 @@ function getDIDType(type: string): DIDType {
     }
 }
 
-function getRuleNotification(notification: string): RuleNotification {
+export function getRuleNotification(notification: string): RuleNotification {
     const cleanNotification = notification.trim().toUpperCase();
     switch (cleanNotification) {
         case 'YES':
@@ -128,7 +128,7 @@ function getRuleNotification(notification: string): RuleNotification {
     }
 }
 
-function getRuleGrouping(grouping: string): RuleGrouping {
+export function getRuleGrouping(grouping: string): RuleGrouping {
     const cleanGrouping = grouping.trim().toUpperCase();
     switch (cleanGrouping) {
         case 'ALL':
