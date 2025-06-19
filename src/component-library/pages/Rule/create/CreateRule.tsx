@@ -83,7 +83,13 @@ export const CreateRule = (props: CreateRuleProps) => {
 
         newOptionErrors.copiesInvalid = isNaN(copies) || copies < 1 || copies > parameters.rses.length;
         newOptionErrors.tooManyCopies =
-            !parameters.askApproval && parameters.rses.filter(rse => rse.bytes_remaining >= totalDataSize).length < copies;
+            !parameters.askApproval &&
+            parameters.rses.filter(rse => {
+                if (rse.bytes_remaining >= totalDataSize) return true;
+                // if the bytes_limit is -1, it means there is no limit (infinite quota)
+                if (rse.bytes_limit === -1 && rse.has_quota) return true;
+                return false;
+            }).length < copies;
 
         newOptionErrors.lifetimeInvalid = daysLifetime !== undefined && (isNaN(daysLifetime) || daysLifetime < 1);
 

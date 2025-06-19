@@ -54,7 +54,12 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
     };
 
     useEffect(() => {
-        const hasSingleSufficient = selectedItems.some(element => element.bytes_remaining >= totalDataSize);
+        const hasSingleSufficient = selectedItems.some(element => {
+            if (element.bytes_remaining >= totalDataSize) return true;
+            // if the bytes_limit is -1, it means there is no limit (infinite quota)
+            if (element.bytes_limit === -1 && element.has_quota) return true;
+            return false;
+        });
         const changeNeedsApproval = selectedItems.length > 0 && !hasSingleSufficient;
         setNeedsApproval(changeNeedsApproval);
         props.updateNeedsApproval(changeNeedsApproval);
