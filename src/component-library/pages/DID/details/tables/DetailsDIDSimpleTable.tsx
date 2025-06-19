@@ -18,7 +18,7 @@ type DetailsDIDSimpleTableProps = {
 const ClickableDID = (props: { value: string[] }) => {
     const [scope, name] = props.value;
     return (
-        <ClickableCell href={`/did/page/${scope}/${name}`}>
+        <ClickableCell href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
             {scope}:{name}
         </ClickableCell>
     );
