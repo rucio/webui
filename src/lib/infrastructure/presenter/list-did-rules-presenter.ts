@@ -46,12 +46,7 @@ export default class ListDIDRulesPresenter
         }
 
         const viewModel: DIDRulesViewModel = {
-            status: 'success',
-            id: responseModel.id,
-            name: responseModel.name,
-            state: responseModel.state,
-            account: responseModel.account,
-            last_modified: responseModel.last_modified,
+            ...responseModel,
             subscription: subscription,
         };
         return viewModel;

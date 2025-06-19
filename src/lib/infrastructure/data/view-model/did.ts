@@ -10,6 +10,7 @@ import {
     FileReplicaState,
     FileReplicaStateD,
     DIDDatasetReplicas,
+    RuleMeta,
 } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 
@@ -21,7 +22,9 @@ export interface DIDMetaViewModel extends DIDMeta, BaseViewModel {}
 
 export interface DIDKeyValuePairsDataViewModel extends DIDKeyValuePairsData, BaseViewModel {}
 
-export interface DIDRulesViewModel extends DIDRules, BaseViewModel {}
+export interface DIDRulesViewModel extends RuleMeta, BaseViewModel {
+    subscription?: { account: string; name: string };
+}
 
 export interface DIDDatasetReplicasViewModel extends DIDDatasetReplicas, BaseViewModel {}
 
@@ -32,11 +35,6 @@ export interface FilereplicaStateDViewModel extends FileReplicaStateD, BaseViewM
 export function generateEmptyDIDRulesViewModel(): DIDRulesViewModel {
     return {
         status: 'error',
-        id: '',
-        name: '',
-        state: RuleState.UNKNOWN,
-        account: '',
-        last_modified: '',
     } as DIDRulesViewModel;
 }
 

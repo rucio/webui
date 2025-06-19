@@ -1,5 +1,6 @@
 import { DIDDTO, DIDRulesDTO } from '@/lib/core/dto/did-dto';
 import { DIDType, RuleState } from '@/lib/core/entity/rucio';
+import { getRuleGrouping, getRuleNotification } from '@/lib/infrastructure/gateway/rule-gateway/rule-gateway-utils';
 
 /**
  * The type representing a Rucio DID returned by Rucio REST API
@@ -35,6 +36,7 @@ export type TRucioRules = {
     grouping: string;
     updated_at: string;
     created_at: string;
+    notification: string;
 };
 
 function getRuleState(state: string): RuleState {
@@ -71,13 +73,30 @@ function getDIDType(type: string): DIDType {
 export function convertToDIDRulesDTO(data: TRucioRules): DIDRulesDTO {
     const state: RuleState = getRuleState(data.state);
     const dto: DIDRulesDTO = {
+        activity: data.activity,
+        copies: data.copies,
+        created_at: data.created_at,
+        did_type: getDIDType(data.did_type),
+        expires_at: data.expires_at,
+        grouping: getRuleGrouping(data.grouping),
+        ignore_account_limit: false,
+        ignore_availability: false,
+        locked: data.locked,
+        locks_ok_cnt: data.locks_ok_cnt,
+        locks_replicating_cnt: data.locks_replicating_cnt,
+        locks_stuck_cnt: data.locks_stuck_cnt,
+        notification: getRuleNotification(data.notification),
+        priority: 0,
+        purge_replicas: false,
+        rse_expression: data.rse_expression,
+        scope: data.scope,
+        split_container: false,
+        updated_at: data.updated_at,
         status: 'success',
         id: data.id,
         name: data.name,
         state: state,
         account: data.account,
-        last_modified: data.updated_at,
-        subscription_id: data.subscription_id ?? undefined,
     };
     return dto;
 }
