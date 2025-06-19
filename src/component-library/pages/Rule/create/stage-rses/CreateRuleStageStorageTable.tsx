@@ -35,10 +35,12 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
         },
         {
             headerName: 'Quota',
-            field: 'bytes_limit',
             cellRenderer: (params: ICellRendererParams) => {
                 const item: RSEAccountUsageLimitViewModel = params.data;
-                const value = params.value < 0 ? 'No quota' : formatFileSize(params.value);
+                if (item.bytes_limit === -1 && item.has_quota) {
+                    return 'Infinite';
+                }
+                const value = item.bytes_limit < 0 ? 'No quota' : formatFileSize(item.bytes_limit);
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
             },
             colSpan: (params: ColSpanParams) => {
