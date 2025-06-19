@@ -46,7 +46,7 @@ export default interface EnvConfigGatewayOutputPort {
      * @returns true if userpass is enabled, false otherwise.
      */
     userpassEnabled(): Promise<boolean>;
-    
+
     /**
      * @returns the URL of the Rucio Auth service
      * @throws {@link ConfigNotFound} if RUCIO_AUTH_HOST is not found

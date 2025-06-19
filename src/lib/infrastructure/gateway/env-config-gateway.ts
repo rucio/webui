@@ -161,7 +161,7 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         }
         return Promise.resolve(true);
     }
-    
+
     async ruleActivity(): Promise<string> {
         const value = await this.get('RULE_ACTIVITY');
         // Return a default value if the environmental variable is not specified

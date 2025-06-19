@@ -19,9 +19,7 @@ export type HTTPRequest = {
  * @param {HTTPRequest} request - The HTTP request to prepare arguments for.
  * @returns {{ url: string | URL; requestArgs: RequestInit }} - An object containing the URL and request arguments.
  */
-export function prepareRequestArgs(
-    request: HTTPRequest,
-): {
+export function prepareRequestArgs(request: HTTPRequest): {
     url: string | URL;
     requestArgs: RequestInit;
 } {
