@@ -178,127 +178,127 @@ export const Login = ({
     const getLoginForm = () => {
         return (
             <motion.div initial="hidden" animate="visible" variants={formVariants}>
-            <div
-                className={twMerge(
-                    'flex flex-col items-center justify-between',
-                    'border dark:border-2 rounded-xl p-6 flex flex-col justify-center space-y-4',
-                    'border-neutral-300 dark:border-neutral-700',
-                    'bg-neutral-50 dark:bg-neutral-900'
-                )}
-                id="root"
-            >
-                <MultipleAccountsModal
-                    submit={lastAuthMethod === 'x509' ? submitX509 : submitUserPass}
-                    availableAccounts={availableAccounts}
-                    onClose={() => setAvailableAccounts([])}
-                />
-                <Collapsible id="login-page-error" showIf={error !== undefined}>
-                    <Alert
-                        variant="error"
-                        message={error}
-                        onClose={() => {
-                            setError(undefined);
-                        }}
-                    />
-                </Collapsible>
-                <div className="flex flex-col items-center justify-between w-64 text-center text-text-1000 dark:text-text-0">
-                <motion.div initial="hidden" animate="visible" variants={logoVariants}>
-                    <Image src="/rucio-logo.png" alt="Rucio Logo" width={146} height={176} />
-                </motion.div>
-                </div>
-
                 <div
-                    className="flex flex-col space-y-4"
-                    onSubmit={e => {
-                        e.preventDefault();
-                    }} // TODO handle proper submit!
+                    className={twMerge(
+                        'flex flex-col items-center justify-between',
+                        'border dark:border-2 rounded-xl p-6 flex flex-col justify-center space-y-4',
+                        'border-neutral-300 dark:border-neutral-700',
+                        'bg-neutral-50 dark:bg-neutral-900',
+                    )}
+                    id="root"
                 >
-                    <Tabs
-                        tabs={loginViewModel.voList.map(vo => vo.name)}
-                        active={1}
-                        updateActive={(active: number) => {
-                            setSelectedVOTab(active);
-                        }}
-                        className={twMerge(loginViewModel.multiVOEnabled ? '' : 'hidden')}
+                    <MultipleAccountsModal
+                        submit={lastAuthMethod === 'x509' ? submitX509 : submitUserPass}
+                        availableAccounts={availableAccounts}
+                        onClose={() => setAvailableAccounts([])}
                     />
+                    <Collapsible id="login-page-error" showIf={error !== undefined}>
+                        <Alert
+                            variant="error"
+                            message={error}
+                            onClose={() => {
+                                setError(undefined);
+                            }}
+                        />
+                    </Collapsible>
+                    <div className="flex flex-col items-center justify-between w-64 text-center text-text-1000 dark:text-text-0">
+                        <motion.div initial="hidden" animate="visible" variants={logoVariants}>
+                            <Image src="/rucio-logo.png" alt="Rucio Logo" width={146} height={176} />
+                        </motion.div>
+                    </div>
 
-                    <div className="flex justify-center flex-col space-y-4" aria-label="Choose Login Method">
-                        {loginViewModel.oidcEnabled == true ? (
-                            <div
-                                className={twMerge(
-                                    'flex flex-row justify-center space-x-2',
-                                    loginViewModel.voList[selectedVOTab].oidcEnabled ? '' : 'hidden',
-                                )}
-                                aria-label="OIDC Login Buttons"
-                            >
-                                {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
-                                    return <Button theme="orange" label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />;
-                                })}
-                            </div>
-                        ) : (
-                            <></>
-                        )}
+                    <div
+                        className="flex flex-col space-y-4"
+                        onSubmit={e => {
+                            e.preventDefault();
+                        }} // TODO handle proper submit!
+                    >
+                        <Tabs
+                            tabs={loginViewModel.voList.map(vo => vo.name)}
+                            active={1}
+                            updateActive={(active: number) => {
+                                setSelectedVOTab(active);
+                            }}
+                            className={twMerge(loginViewModel.multiVOEnabled ? '' : 'hidden')}
+                        />
 
-                        <Button label="x509" onClick={() => submitX509(inputAccount)} />
-                        {loginViewModel.userpassEnabled && (
-                            <div id="userpass-login">
-                                <Button
-                                    label="Userpass"
-                                    onClick={() => {
-                                        setShowUserPassLoginForm(!showUserPassLoginForm);
-                                    }}
-                                />
-                                <form>
-                                    <fieldset
-                                        className={twMerge('flex flex-col space-y-4', 'mx-2 md:mx-10', showUserPassLoginForm ? '' : 'hidden')}
-                                        aria-label="Userpass Login Fields"
-                                        id="userpass-form"
-                                    >
-                                        <div className={twMerge('flex flex-col space-y-2 p-2')}>
-                                            <LabelledInput
-                                                label="Username"
-                                                idinput="username-input"
-                                                updateFunc={(data: string) => {
-                                                    setUsername(data);
-                                                }}
-                                            />
-                                            <LabelledInput
-                                                label="Password"
-                                                idinput="password-input"
-                                                updateFunc={(data: string) => {
-                                                    setPassword(data);
-                                                }}
-                                                password={true}
-                                            />
-                                            <LabelledInput
-                                                label="Account"
-                                                idinput="account-input"
-                                                updateFunc={(data: string) => {
-                                                    setInputAccount(data);
-                                                }}
-                                            />
-                                        </div>
-                                        <Button label="Login" type="submit" role="button" onClick={() => submitUserPass(inputAccount)} />
-                                    </fieldset>
-                                </form>
-                                <fieldset
-                                    className={twMerge('mx-2 md:mx-10 p-4', !showUserPassLoginForm ? 'block' : 'hidden')}
-                                    aria-label="Choose Account Name"
-                                    id="all-accounts"
+                        <div className="flex justify-center flex-col space-y-4" aria-label="Choose Login Method">
+                            {loginViewModel.oidcEnabled == true ? (
+                                <div
+                                    className={twMerge(
+                                        'flex flex-row justify-center space-x-2',
+                                        loginViewModel.voList[selectedVOTab].oidcEnabled ? '' : 'hidden',
+                                    )}
+                                    aria-label="OIDC Login Buttons"
                                 >
-                                    <LabelledInput
-                                        label="Account"
-                                        idinput="account-input-nouserpass"
-                                        updateFunc={(data: string) => {
-                                            setInputAccount(data);
+                                    {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
+                                        return <Button theme="orange" label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />;
+                                    })}
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+
+                            <Button label="x509" onClick={() => submitX509(inputAccount)} />
+                            {loginViewModel.userpassEnabled && (
+                                <div id="userpass-login">
+                                    <Button
+                                        label="Userpass"
+                                        onClick={() => {
+                                            setShowUserPassLoginForm(!showUserPassLoginForm);
                                         }}
                                     />
-                                </fieldset>
-                            </div>
-                        )}
+                                    <form>
+                                        <fieldset
+                                            className={twMerge('flex flex-col space-y-4', 'mx-2 md:mx-10', showUserPassLoginForm ? '' : 'hidden')}
+                                            aria-label="Userpass Login Fields"
+                                            id="userpass-form"
+                                        >
+                                            <div className={twMerge('flex flex-col space-y-2 p-2')}>
+                                                <LabelledInput
+                                                    label="Username"
+                                                    idinput="username-input"
+                                                    updateFunc={(data: string) => {
+                                                        setUsername(data);
+                                                    }}
+                                                />
+                                                <LabelledInput
+                                                    label="Password"
+                                                    idinput="password-input"
+                                                    updateFunc={(data: string) => {
+                                                        setPassword(data);
+                                                    }}
+                                                    password={true}
+                                                />
+                                                <LabelledInput
+                                                    label="Account"
+                                                    idinput="account-input"
+                                                    updateFunc={(data: string) => {
+                                                        setInputAccount(data);
+                                                    }}
+                                                />
+                                            </div>
+                                            <Button label="Login" type="submit" role="button" onClick={() => submitUserPass(inputAccount)} />
+                                        </fieldset>
+                                    </form>
+                                    <fieldset
+                                        className={twMerge('mx-2 md:mx-10 p-4', !showUserPassLoginForm ? 'block' : 'hidden')}
+                                        aria-label="Choose Account Name"
+                                        id="all-accounts"
+                                    >
+                                        <LabelledInput
+                                            label="Account"
+                                            idinput="account-input-nouserpass"
+                                            updateFunc={(data: string) => {
+                                                setInputAccount(data);
+                                            }}
+                                        />
+                                    </fieldset>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
             </motion.div>
         );
     };
