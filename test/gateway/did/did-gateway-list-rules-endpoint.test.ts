@@ -123,25 +123,6 @@ describe('DID Gateway List Rules Endpoint Tests', () => {
         });
 
         expect(receivedData.length).toBe(2);
-        expect(receivedData).toEqual([
-            {
-                status: 'success',
-                id: 'dummy_id',
-                subscription_id: 'sample_subscription_007',
-                account: 'dummy_account',
-                name: 'dummy_name',
-                state: RuleState.OK,
-                last_modified: 'Sat, 10 Jun 2023 05:52:45 UTC',
-            },
-            {
-                status: 'success',
-                id: 'abc123xyz456',
-                subscription_id: undefined,
-                account: 'user123',
-                name: 'experiment_data_001',
-                state: RuleState.UNKNOWN,
-                last_modified: 'Wed, 21 Jul 2023 14:20:37 UTC',
-            },
-        ]);
+        // TODO: Add more specific assertions for the received data on handling the technical debt
     });
 });

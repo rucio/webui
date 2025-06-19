@@ -11,6 +11,7 @@ export type TRucioDID = {
     type: string;
 };
 
+// TODO: why does this not match the actual response?
 /**
  * The type representing a Rucio Rule returned by Rucio REST API
  */
