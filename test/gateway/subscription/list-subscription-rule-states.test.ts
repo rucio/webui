@@ -10,7 +10,7 @@ describe('Get Subscription Rule States', () => {
     beforeEach(() => {
         fetchMock.doMock();
         const getSubscriptionRuleStatesEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/ddmadmin/*Functional Test/Rules/States`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/ddmadmin/rules/states`,
             method: 'GET',
             includes: '/Rules/States',
             response: {
@@ -40,7 +40,6 @@ describe('Get Subscription Rule States', () => {
         const listSubscriptionRuleStatesDTO: BaseStreamableDTO = await subscriptionGateway.listSubscriptionRuleStates(
             MockRucioServerFactory.VALID_RUCIO_TOKEN,
             'ddmadmin',
-            '*Functional Test',
         );
         expect(listSubscriptionRuleStatesDTO.status).toEqual('success');
 

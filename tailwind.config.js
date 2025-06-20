@@ -14,7 +14,7 @@ module.exports = {
     theme: {
         extend: {
             screens: {
-                'nav': '850px',
+                'nav': '975px',
             },
             colors: {
                 neutral: { // Slate
