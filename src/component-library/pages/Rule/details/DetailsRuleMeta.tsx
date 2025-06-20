@@ -15,7 +15,7 @@ import { ClickableCell } from '@/component-library/features/table/cells/Clickabl
 export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     const getExpiredField = () => {
         if (meta.expires_at) {
-            return <Field>formatDate(meta.expires_at)</Field>;
+            return <Field>{formatDate(meta.expires_at)}</Field>;
         } else {
             return <NullBadge />;
         }
