@@ -35,7 +35,7 @@ import {
     FileReplicaStateViewModel,
 } from '@/lib/infrastructure/data/view-model/did';
 import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { ListExtendedDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import useStreamReader, { StreamingSettings, StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
@@ -136,8 +136,13 @@ export function fixtureDIDLongViewModel(): DIDLongViewModel {
     };
 }
 
-export function fixtureListDIDViewModel(): ListDIDsViewModel {
+export function fixtureListDIDViewModel(): ListExtendedDIDsViewModel {
     return {
+        account: 'root',
+        adler32: null,
+        expired_at: null,
+        md5: null,
+        monotonic: null,
         ...mockBaseVM(),
         scope: createRandomScope(),
         name: faker.lorem.words(3).replace(/\s/g, '.'),

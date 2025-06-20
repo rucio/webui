@@ -52,6 +52,8 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
             expired_at: '',
             bytes: 0,
             length: 0,
+            md5: null,
+            adler32: null,
         };
 
         switch (statusCode) {
@@ -110,6 +112,8 @@ export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
             expired_at: data.expired_at,
             bytes: data.bytes,
             length: data.length,
+            md5: null,
+            adler32: null,
         };
         return dto;
     }

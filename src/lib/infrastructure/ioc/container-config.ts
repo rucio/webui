@@ -71,6 +71,7 @@ import AttachDIDsFeature from '@/lib/infrastructure/ioc/features/attach-dids-fea
 import SetDIDStatusFeature from '@/lib/infrastructure/ioc/features/set-did-status-feature';
 import GetRuleFeature from '@/lib/infrastructure/ioc/features/get-rule-feature';
 import ListRuleReplicaLockStatesFeature from '@/lib/infrastructure/ioc/features/list-rule-replica-lock-states-feature';
+import ListExtendedDIDsFeature from '@/lib/infrastructure/ioc/features/list-extended-dids-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -98,6 +99,7 @@ loadFeaturesSync(appContainer, [
     new DIDKeyValuePairsDataFeature(appContainer),
     new GetSubscriptionFeature(appContainer),
     new ListDidsFeature(appContainer),
+    new ListExtendedDIDsFeature(appContainer),
     new ListDIDContentsFeature(appContainer),
     new ListDIDParentsFeature(appContainer),
     new ListDIDRulesFeature(appContainer),

@@ -5,21 +5,21 @@ import { formatFileSize } from '@/component-library/features/utils/text-formatte
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
-import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { ListExtendedDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
 
 type StageSummaryDataTableProps = {
-    rowData: ListDIDsViewModel[];
+    rowData: ListExtendedDIDsViewModel[];
     copies: number;
 };
 
 export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProps) => {
-    const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null);
+    const tableRef = useRef<AgGridReact<ListExtendedDIDsViewModel>>(null);
 
     const [columnDefs] = useState([
         {
             headerName: 'Identifier',
-            valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
+            valueGetter: (params: ValueGetterParams<ListExtendedDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
             flex: 1,
             sortable: false,
         },
@@ -61,7 +61,7 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
         },
         {
             headerName: 'Requested Size',
-            valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
+            valueGetter: (params: ValueGetterParams<ListExtendedDIDsViewModel>) => {
                 if (params.data?.bytes) {
                     return formatFileSize(params.data?.bytes * props.copies);
                 } else {
