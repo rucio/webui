@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, JSX } from 'react';
 
 export const NumInput: React.FC<Omit<JSX.IntrinsicElements['input'], 'value'> & { value: number; onEnterkey?: (event: any) => void }> = ({
     value,

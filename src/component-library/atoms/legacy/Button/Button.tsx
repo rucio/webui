@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { Collapsible } from '../helpers/Collapsible/Collapsible';
-import { forwardRef } from 'react';
+import { forwardRef, JSX } from 'react';
 
 type ButtonProps = JSX.IntrinsicElements['button'] & {
     label?: string;

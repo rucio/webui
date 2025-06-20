@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { PageSubscription as PageSubscriptionStory } from '@/component-library/pages/legacy/Subscriptions/PageSubscription';
 import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 import { Loading } from '@/component-library/pages/legacy/Helpers/Loading';
@@ -31,7 +31,8 @@ async function updateSubscription(id: string, filter: string, replicationRules: 
     return await res.json();
 }
 
-export default function PageSubscription({ params }: { params: { account: string; name: string } }) {
+export default function PageSubscription(props: { params: Promise<{ account: string; name: string }> }) {
+    const params = use(props.params);
     const [subscriptionViewModel, setSubscriptionViewModel] = useState<SubscriptionViewModel>({ status: 'pending' } as SubscriptionViewModel);
     useEffect(() => {
         subscriptionQuery(params.account, params.name).then(setSubscriptionViewModel);

@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { Button } from '../../../atoms/legacy/Button/Button';
 import { AreaInput } from '../../../atoms/legacy/input/AreaInput/AreaInput';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, JSX } from 'react';
 import { Value } from '@sinclair/typebox/value';
 import { Type, Static } from '@sinclair/typebox';
 import { Code } from '../../../atoms/legacy/text/content/Code/Code';

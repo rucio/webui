@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import Highlight from 'react-highlight';
 import 'react-highlight/node_modules/highlight.js/styles/github.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, JSX } from 'react';
 
 export const Code: React.FC<JSX.IntrinsicElements['div']> = ({ ...props }) => {
     const { className, children, ...otherprops } = props;

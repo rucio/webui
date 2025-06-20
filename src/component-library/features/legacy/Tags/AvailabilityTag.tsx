@@ -1,5 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { DIDAvailability } from '@/lib/core/entity/rucio';
+import { JSX } from 'react';
 
 export const AvailabilityTag: React.FC<JSX.IntrinsicElements['span'] & { availability: DIDAvailability }> = ({
     availability = 'Available',

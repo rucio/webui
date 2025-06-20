@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { HiChevronDown } from 'react-icons/hi';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, JSX } from 'react';
 
 type DropdownProps<T> = JSX.IntrinsicElements['div'] & {
     keys: T[];

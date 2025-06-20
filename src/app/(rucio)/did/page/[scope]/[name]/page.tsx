@@ -1,9 +1,10 @@
 'use client';
 
 import { DetailsDID } from '@/component-library/pages/DID/details/DetailsDID';
-import { useEffect } from 'react';
+import { useEffect, use } from 'react';
 
-export default function Page({ params }: { params: { scope: string; name: string } }) {
+export default function Page(props: { params: Promise<{ scope: string; name: string }> }) {
+    const params = use(props.params);
     const decodedScope = decodeURIComponent(params.scope);
     const decodedName = decodeURIComponent(params.name);
 

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type ByteProps = JSX.IntrinsicElements['span'] & { bytesNumber: number; decimalPlaces?: number };

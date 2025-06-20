@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const Collapsible: React.FC<JSX.IntrinsicElements['div'] & { showIf: boolean }> = ({ showIf, ...props }) => {

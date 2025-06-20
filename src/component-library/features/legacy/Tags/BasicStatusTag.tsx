@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 
 export type BasicStatusTagProps = {
     text: string;

@@ -16,7 +16,7 @@ type DetailsRuleLocksTableProps = {
 };
 
 const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
-    const tableRef = useRef<AgGridReact<ListRuleReplicaLockStatesViewModel>>(null);
+    const tableRef = useRef<AgGridReact<ListRuleReplicaLockStatesViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

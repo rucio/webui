@@ -20,7 +20,7 @@ const ClickableRSE = (props: { value: string }) => {
 };
 
 export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTableProps) => {
-    const tableRef = useRef<AgGridReact<FileReplicaStateViewModel>>(null);
+    const tableRef = useRef<AgGridReact<FileReplicaStateViewModel>>(null!);
 
     const [columnDefs] = useState([
         {

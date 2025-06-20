@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 var format = require('date-format');
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { JSX, useEffect } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 import { Toaster } from './Toaster';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';

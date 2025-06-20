@@ -1,5 +1,5 @@
 import { DIDType } from '@/lib/core/entity/rucio';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { FC } from 'react';
 

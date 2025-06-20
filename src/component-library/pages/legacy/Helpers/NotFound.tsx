@@ -1,6 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { Heading } from './Heading';
 import { Body } from './Body';
+import { JSX } from 'react';
 
 export const NotFound: React.FC<JSX.IntrinsicElements['div']> = ({ ...props }) => {
     return (
