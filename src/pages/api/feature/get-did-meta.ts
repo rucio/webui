@@ -25,8 +25,8 @@ async function getDIDMeta(req: NextApiRequest, res: NextApiResponse, rucioAuthTo
     const controller = appContainer.get<BaseController<DIDMetaControllerParameters, void>>(CONTROLLERS.DID_META);
     const controllerParameters: DIDMetaControllerParameters = {
         response: res,
-        scope: decodeURIComponent(scope),
-        name: decodeURIComponent(name),
+        scope: scope,
+        name: name,
         rucioAuthToken: rucioAuthToken,
     };
 
