@@ -24,6 +24,7 @@ export interface DIDKeyValuePairsDataViewModel extends DIDKeyValuePairsData, Bas
 
 export interface DIDRulesViewModel extends RuleMeta, BaseViewModel {
     subscription?: { account: string; name: string };
+    remaining_lifetime: number;
 }
 
 export interface DIDDatasetReplicasViewModel extends DIDDatasetReplicas, BaseViewModel {}

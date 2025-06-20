@@ -45,9 +45,12 @@ export default class ListDIDRulesPresenter
             };
         }
 
+        const millisecondsRemaining = responseModel.expires_at ? new Date(responseModel.expires_at).getTime() - Date.now() : 0;
+
         const viewModel: DIDRulesViewModel = {
             ...responseModel,
             subscription: subscription,
+            remaining_lifetime: millisecondsRemaining / 1000, // Convert to seconds
         };
         return viewModel;
     }
