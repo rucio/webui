@@ -48,6 +48,11 @@ export default interface EnvConfigGatewayOutputPort {
     userpassEnabled(): Promise<boolean>;
 
     /**
+     * @returns the initial pattern for the list of DIDs if defined, undefined otherwise.
+     */
+    listDIDsInitialPattern(): Promise<string | undefined>;
+
+    /**
      * @returns the URL of the Rucio Auth service
      * @throws {@link ConfigNotFound} if RUCIO_AUTH_HOST is not found
      * @throws {@link InvalidConfig} if RUCIO_AUTH_HOST is empty
