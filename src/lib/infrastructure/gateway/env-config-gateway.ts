@@ -5,6 +5,15 @@ import { injectable } from 'inversify';
 
 @injectable()
 class EnvConfigGateway implements EnvConfigGatewayOutputPort {
+    async listDIDsInitialPattern(): Promise<string | undefined> {
+        // Get the initial pattern for listing DIDs (e.g. "scope:name", "scope:*", etc.)
+        const value = await this.get('WEBUI_LIST_DIDS_INITIAL_PATTERN');
+        if (!value || value.trim() === '') {
+            return Promise.resolve(undefined);
+        }
+        return Promise.resolve(value);
+    }
+
     async projectURL(): Promise<string> {
         const value = await this.get('PROJECT_URL', false);
         if (value === '' || value === undefined) {
@@ -166,15 +175,6 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         const value = await this.get('RULE_ACTIVITY');
         // Return a default value if the environmental variable is not specified
         return value ?? 'User Subscriptions';
-    }
-
-    async listDIDsInitialPattern(): Promise<string | undefined> {
-        // Get the initial pattern for listing DIDs (e.g. "scope:name", "scope:*", etc.)
-        const value = await this.get('WEBUI_LIST_DIDS_INITIAL_PATTERN');
-        if (!value || value.trim() === '') {
-            return undefined;
-        }
-        return value;
     }
 
     async get(key: string, required: boolean = false): Promise<string | undefined> {
