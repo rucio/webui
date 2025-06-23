@@ -6,6 +6,10 @@ export default function Page({ searchParams }: { searchParams?: { [key: string]:
 
     if (typeof searchPattern === 'string') {
         firstPattern = searchPattern;
+    }else{
+        // Load from environment variable if defined
+        // The pattern needs to be a valid DID pattern ("scope:name", "scope:*", ...)
+        firstPattern = process.env.WEBUI_LIST_DIDS_INITIAL_PATTERN;
     }
     // TODO: fetch initial data
     return <ListDID firstPattern={firstPattern ?? undefined} />;
