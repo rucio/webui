@@ -168,6 +168,15 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         return value ?? 'User Subscriptions';
     }
 
+    async listDIDsInitialPattern(): Promise<string | undefined> {
+        // Get the initial pattern for listing DIDs (e.g. "scope:name", "scope:*", etc.)
+        const value = await this.get('WEBUI_LIST_DIDS_INITIAL_PATTERN');
+        if (!value || value.trim() === '') {
+            return undefined;
+        }
+        return value;
+    }
+
     async get(key: string, required: boolean = false): Promise<string | undefined> {
         let value = process.env[key];
         if (value !== undefined) {
