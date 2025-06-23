@@ -43,7 +43,7 @@ describe('env-config-gateway', () => {
         expect(result).toBe(false);
     });
     it('should return the string as set', async () => {
-        const key = 'WEBUI_LIST_DIDS_INITIAL_PATTERN';
+        const key = 'LIST_DIDS_INITIAL_PATTERN';
         const value = 'scope:name';
         process.env[key] = value;
         const gateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
@@ -51,14 +51,14 @@ describe('env-config-gateway', () => {
         expect(result).toBe(value);
     });
     it('should return undefined when the string is empty', async () => {
-        const key = 'WEBUI_LIST_DIDS_INITIAL_PATTERN';
+        const key = 'LIST_DIDS_INITIAL_PATTERN';
         process.env[key] = '';
         const gateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
         const result = await gateway.listDIDsInitialPattern();
         expect(result).toBe(undefined);
     });
     it('should return undefined when the string is blank', async () => {
-        const key = 'WEBUI_LIST_DIDS_INITIAL_PATTERN';
+        const key = 'LIST_DIDS_INITIAL_PATTERN';
         process.env[key] = '  ';
         const gateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
         const result = await gateway.listDIDsInitialPattern();

@@ -7,7 +7,7 @@ import { injectable } from 'inversify';
 class EnvConfigGateway implements EnvConfigGatewayOutputPort {
     async listDIDsInitialPattern(): Promise<string | undefined> {
         // Get the initial pattern for listing DIDs (e.g. "scope:name", "scope:*", etc.)
-        const value = await this.get('WEBUI_LIST_DIDS_INITIAL_PATTERN');
+        const value = await this.get('LIST_DIDS_INITIAL_PATTERN');
         if (!value || value.trim() === '') {
             return Promise.resolve(undefined);
         }
