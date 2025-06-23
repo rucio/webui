@@ -1,15 +1,16 @@
 import { ListDID } from '@/component-library/pages/DID/list/ListDID';
+import appContainer from '@/lib/infrastructure/ioc/container-config';
+import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
+import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 
-export default function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
-    let firstPattern: string | undefined = undefined;
+export default async function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+    const envGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
+    let firstPattern: string | undefined = await envGateway.listDIDsInitialPattern();
+
     const searchPattern = searchParams?.['pattern'];
 
     if (typeof searchPattern === 'string') {
         firstPattern = searchPattern;
-    }else{
-        // Load from environment variable if defined
-        // The pattern needs to be a valid DID pattern ("scope:name", "scope:*", ...)
-        firstPattern = process.env.WEBUI_LIST_DIDS_INITIAL_PATTERN;
     }
     // TODO: fetch initial data
     return <ListDID firstPattern={firstPattern ?? undefined} />;
