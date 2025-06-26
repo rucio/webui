@@ -166,6 +166,9 @@ export const RegularTable = (props: RegularTableProps) => {
                         suppressMovableColumns={true}
                         rowMultiSelectWithClick={true}
                         defaultColDef={{ flex: 1 }}
+                        rowStyle={{
+                            userSelect: 'text', // Text selection without interfering with cell layout
+                        }}
                         //asyncTransactionWaitMillis={500}
                     />
                 ) : (
