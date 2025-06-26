@@ -45,10 +45,15 @@ export class NewlineDelimittedDataParser extends Transform {
      * @param chunk - The chunk to push to the next stream.
      */
     pushToNextStream(chunk: string): void {
+        /* 
+        This is a workaround for the fact that Rucio sometimes returns Infinity in JSON responses.
+        Infinity is not a valid JSON value, so we replace it with -1.
+        */
+        const infinityPatch = chunk.replace(/Infinity/g, '-1');
         try {
             // Check whether the chunk is a valid JSON string
-            JSON.parse(chunk);
-            this.push(JSON.stringify(chunk));
+            JSON.parse(infinityPatch);
+            this.push(JSON.stringify(infinityPatch));
         } catch (_) {
             // Don't push an invalid chunk
         }
