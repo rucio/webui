@@ -16,13 +16,15 @@ const openRule = (id: string) => {
 };
 
 const LinkTick = (props: any) => {
-    const id = props.payload.value.substring(0, 12);
+    const id = props.payload.value;
+    // Shorten the ID to 12 characters for display
+    const shortId = id.substring(0, 12);
     const fill = props.fill;
 
     return (
         <g onClick={() => openRule(id)} className="cursor-pointer">
             <Text {...props} fill={fill}>
-                {id}
+                {shortId}
             </Text>
         </g>
     );
