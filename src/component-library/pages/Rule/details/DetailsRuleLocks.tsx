@@ -41,7 +41,6 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             headerName: 'State',
             field: 'state',
             minWidth: 200,
-            maxWidth: 200,
             cellStyle: badgeCellWrapperStyle,
             cellRenderer: LockStateBadge,
             cellRendererParams: {
