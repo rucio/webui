@@ -15,18 +15,21 @@ import { useTheme } from 'next-themes';
 const CustomTooltip = ({ active, payload, totalBytes }: any) => {
     if (active && payload && payload.length) {
         const { name, value } = payload[0];
-        const percentage = ((value / totalBytes) * 100).toFixed(2);
+        // -1 is internal representation of unlimited quota, so percentage is not applicable
+        const percentage = totalBytes === -1 ? undefined : ((value / totalBytes) * 100).toFixed(2);
         return (
             <KeyValueWrapper className="p-3 text-neutral-900 dark:text-neutral-100">
                 <p className="text-sm text-neutral-700 dark:text-neutral-300">{name}</p>
                 <p>
-                    {formatFileSize(value)} ({percentage}%)
+                    {formatFileSize(value)} {percentage && `(${percentage}%)`}
                 </p>
             </KeyValueWrapper>
         );
     }
     return null;
 };
+
+const PIE_HEIGHT = 275;
 
 const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
     const COLORS = [
@@ -45,6 +48,9 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
     const { rse, used_bytes, bytes_limit } = usage;
     const remainingBytes = bytes_limit - used_bytes;
 
+    // -1 is internal representation for unlimited quota
+    const isInfiniteWithoutUsage = bytes_limit === -1 && used_bytes === 0;
+
     const pieData = [
         { name: 'Used', value: used_bytes },
         { name: 'Remaining', value: remainingBytes > 0 ? remainingBytes : 0 },
@@ -59,20 +65,32 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
                 <HiExternalLink className="flex-shrink-0" />
                 <span className="truncate">{rse}</span>
             </Link>
-            <ResponsiveContainer height={275}>
-                <PieChart>
-                    <Pie data={pieData} dataKey="value" nameKey="name" stroke={borderColor}>
-                        {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="outline-none" />
-                        ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip totalBytes={bytes_limit} />} />
-                </PieChart>
-            </ResponsiveContainer>
+            {isInfiniteWithoutUsage && (
+                <div
+                    className="flex justify-center items-center text-neutral-900"
+                    style={{
+                        height: PIE_HEIGHT,
+                    }}
+                >
+                    No usage
+                </div>
+            )}
+            {!isInfiniteWithoutUsage && (
+                <ResponsiveContainer height={PIE_HEIGHT}>
+                    <PieChart>
+                        <Pie data={pieData} dataKey="value" nameKey="name" stroke={borderColor}>
+                            {pieData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="outline-none" />
+                            ))}
+                        </Pie>
+                        <Tooltip content={<CustomTooltip totalBytes={bytes_limit} />} />
+                    </PieChart>
+                </ResponsiveContainer>
+            )}
             <div className="w-full flex flex-col items-center space-y-3">
                 <div className="flex items-center space-x-2">
                     <span className="text-sm text-neutral-700 dark:text-neutral-300">Quota</span>
-                    <Field>{formatFileSize(bytes_limit)}</Field>
+                    <Field>{bytes_limit === -1 ? 'Infinity' : formatFileSize(bytes_limit)}</Field>
                 </div>
             </div>
         </div>
