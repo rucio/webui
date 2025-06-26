@@ -44,7 +44,6 @@ export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTable
                 return params.data.bytes_limit < 0 ? 2 : 1;
             },
             minWidth: 200,
-            maxWidth: 200,
         },
         {
             headerName: 'Remaining',
@@ -55,7 +54,6 @@ export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTable
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
             },
             minWidth: 200,
-            maxWidth: 200,
         },
     ]);
 

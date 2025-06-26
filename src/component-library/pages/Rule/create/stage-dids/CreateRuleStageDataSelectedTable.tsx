@@ -33,7 +33,6 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
             field: 'did_type',
             cellRenderer: DIDTypeBadge,
             minWidth: 180,
-            maxWidth: 180,
             cellStyle: badgeCellWrapperStyle,
             cellRendererParams: {
                 className: badgeCellClasses,
@@ -47,7 +46,6 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
                 return formatFileSize(params.value);
             },
             minWidth: 200,
-            maxWidth: 200,
             sortable: false,
         },
     ]);

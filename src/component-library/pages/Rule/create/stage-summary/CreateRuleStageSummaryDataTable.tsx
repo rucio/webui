@@ -28,7 +28,6 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             field: 'did_type',
             cellRenderer: DIDTypeBadge,
             minWidth: 180,
-            maxWidth: 180,
             cellStyle: badgeCellWrapperStyle,
             cellRendererParams: {
                 className: badgeCellClasses,
@@ -39,14 +38,12 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             headerName: 'Copies',
             valueGetter: () => props.copies,
             minWidth: 100,
-            maxWidth: 100,
             sortable: false,
         },
         {
             headerName: 'Files',
             field: 'length',
             minWidth: 100,
-            maxWidth: 100,
             sortable: false,
         },
         {
@@ -56,7 +53,6 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
                 return formatFileSize(params.value);
             },
             minWidth: 200,
-            maxWidth: 200,
             sortable: false,
         },
         {
@@ -69,7 +65,6 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
                 }
             },
             minWidth: 200,
-            maxWidth: 200,
             sortable: false,
         },
         {
@@ -78,7 +73,6 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
             minWidth: 100,
-            maxWidth: 100,
             sortable: false,
         },
     ]);
