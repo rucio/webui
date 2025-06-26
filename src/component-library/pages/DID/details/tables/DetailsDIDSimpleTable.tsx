@@ -44,7 +44,6 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
             field: 'did_type',
             cellRenderer: DIDTypeBadge,
             minWidth: 180,
-            maxWidth: 180,
             cellStyle: badgeCellWrapperStyle,
             cellRendererParams: {
                 className: badgeCellClasses,
