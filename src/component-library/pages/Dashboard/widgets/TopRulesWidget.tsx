@@ -133,7 +133,9 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
                 layout="vertical"
                 data={data}
                 onClick={event => {
-                    openRule(event.activePayload?.[0].payload.id);
+                    const id = event.activePayload?.[0].payload.id;
+                    if (!id) return;
+                    openRule(id);
                 }}
             >
                 <XAxis
