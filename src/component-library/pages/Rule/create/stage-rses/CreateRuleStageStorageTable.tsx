@@ -48,7 +48,6 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
                 return params.data.bytes_limit < 0 ? 3 : 1;
             },
             minWidth: 200,
-            maxWidth: 200,
         },
         {
             headerName: 'Total usage',
@@ -61,7 +60,6 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
             },
             minWidth: 200,
-            maxWidth: 200,
         },
         {
             headerName: 'Remaining',
@@ -72,7 +70,6 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
             },
             minWidth: 200,
-            maxWidth: 200,
         },
     ]);
 

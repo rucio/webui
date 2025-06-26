@@ -44,7 +44,6 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
             field: 'bytes',
             valueFormatter: (params: ValueFormatterParams) => formatFileSize(params.value),
             minWidth: 200,
-            maxWidth: 200,
         },
     ]);
 
