@@ -46,7 +46,7 @@ export const DetailsDIDContentsReplicas: DetailsDIDView = ({ scope, name }: Deta
                 '/api/feature/list-file-replicas?' +
                 new URLSearchParams({
                     scope: selectedContent.scope,
-                    name: setSelectedContent.name,
+                    name: selectedContent.name,
                 });
             startReplicasStreaming(url);
         }
