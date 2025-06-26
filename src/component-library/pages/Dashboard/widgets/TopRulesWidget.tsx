@@ -68,13 +68,7 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
         // Calculate initial percentages
         let locksOkPercentage = (rule.locks_ok_cnt / totalLocks) * 100;
         let locksReplicatingPercentage = (rule.locks_replicating_cnt / totalLocks) * 100;
-        let locksStuckPercentage = (rule.locks_stuck_cnt / totalLocks) * 100;
-
-        // Adjust locks_stuck to ensure the total is exactly 100
-        const totalPercentage = locksOkPercentage + locksReplicatingPercentage + locksStuckPercentage;
-        if (totalPercentage !== 100) {
-            locksStuckPercentage = locksStuckPercentage + (100 - totalPercentage);
-        }
+        let locksStuckPercentage = 100 - locksOkPercentage - locksReplicatingPercentage;
 
         return {
             id: rule.id,
@@ -137,6 +131,7 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
                 <XAxis
                     type="number"
                     domain={[0, 100]}
+                    ticks={[0, 20, 40, 60, 80, 100]}
                     tickFormatter={value => {
                         return `${value}%`;
                     }}
