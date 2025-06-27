@@ -17,23 +17,23 @@ cp .env.template .env.base
 In cases where DID schemas use any such special characters, the Apache configuration of the Rucio Server most likely uses `AllowEncodedSlashes` or `AllowEncode` directives.
 The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells the webui to encode the URI parameters when requests are sent out to the rucio server.
 
-| Variable Name           | Full Name                           | Description                                                                                | Example                        | Default            |
-| ----------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------ | ------------------ |
-| RUCIO_HOST              | RUCIO_WEBUI_RUCIO_HOST              | URL for the Rucio Server                                                                   | https://rucio-lb-prod.cern.ch  |                    |
-| RUCIO_AUTH_HOST         | RUCIO_WEBUI_RUCIO_AUTH_HOST         | URL for the Rucio authentication server                                                    | https://rucio-auth-host.ch:443 |                    |
-| PARAMS_ENCODING_ENABLED | RUCIO_WEBUI_PARAMS_ENCODING_ENABLED | If your DID schema has special characters like  '/' or '+' in the name, set this to true.  | true                           | false              |
-| HOSTNAME                | RUCIO_WEBUI_HOSTNAME                | Public HOSTNAME at which Rucio WebUI will be accessible. It may include port number.       | rucio-ui.cern.ch               |                    |
-| ENABLE_USERPASS_LOGIN   | RUCIO_WEBUI_ENABLE_USERPASS_LOGIN   | Show the Userpass Login option in the WebUI's Login Page                                   | true                           | true               |
-| ENABLE_SSL              | RUCIO_WEBUI_ENABLE_SSL              | Enable or Disable TLS Termination (true or false)                                          | true                           | false              |
-| SERVER_CA_BUNDLE        | RUCIO_WEBUI_SERVER_CA_BUNDLE        | Path to the CA bundle file that can verify Rucio Server certificate. If ENABLE_SSL is set. | /path/to/ca-bundle.pem         |                    |
-| PROJECT_URL             | RUCIO_WEBUI_PROJECT_URL             | Public URL for your project                                                                | https://atlas.cern.ch          |                    |
-| VO_DEFAULT              | RUCIO_WEBUI_VO_DEFAULT              | Short name for the default VO used for authentication                                      | def                            | def                |
-| VO_LIST                 | RUCIO_WEBUI_VO_LIST                 | CSV string containing the list of supported VOs                                            | def, atl, cms                  | def                |
-| MULTIVO_ENABLED         | RUCIO_WEBUI_MULTIVO_ENABLED         | Whether to enable multi-VO config (true or false)                                          | true                           |                    |
-| OIDC_ENABLED            | RUCIO_WEBUI_OIDC_ENABLED            | Enable or Disable OIDC Authentication (true or false)                                      | true                           |                    |
-| OIDC_PROVIDERS          | RUCIO_WEBUI_OIDC_PROVIDERS          | CSV string containing names of OIDC Providers                                              | cern, indigo                   |                    |
-| RULE_ACTIVITY           | RUCIO_WEBUI_RULE_ACTIVITY           | The `Activity` to associate with rules created with WebUI                                  | User Subscriptions             | User Subscriptions |
-|                         |                                     |                                                                                            |                                |                    |
+| Variable Name             | Full Name                             | Description                                                                                | Example                        | Default            |
+|---------------------------|---------------------------------------|--------------------------------------------------------------------------------------------|--------------------------------|--------------------|
+| RUCIO_HOST                | RUCIO_WEBUI_RUCIO_HOST                | URL for the Rucio Server                                                                   | https://rucio-lb-prod.cern.ch  |                    |
+| RUCIO_AUTH_HOST           | RUCIO_WEBUI_RUCIO_AUTH_HOST           | URL for the Rucio authentication server                                                    | https://rucio-auth-host.ch:443 |                    |
+| PARAMS_ENCODING_ENABLED   | RUCIO_WEBUI_PARAMS_ENCODING_ENABLED   | If your DID schema has special characters like  '/' or '+' in the name, set this to true.  | true                           | false              |
+| HOSTNAME                  | RUCIO_WEBUI_HOSTNAME                  | Public HOSTNAME at which Rucio WebUI will be accessible. It may include port number.       | rucio-ui.cern.ch               |                    |
+| ENABLE_USERPASS_LOGIN     | RUCIO_WEBUI_ENABLE_USERPASS_LOGIN     | Show the Userpass Login option in the WebUI's Login Page                                   | true                           | true               |
+| LIST_DIDS_INITIAL_PATTERN | RUCIO_WEBUI_LIST_DIDS_INITIAL_PATTERN | Configures the placeholder scope and name in the DIDs list page.                           | scope:name                     |                    |
+| ENABLE_SSL                | RUCIO_WEBUI_ENABLE_SSL                | Enable or Disable TLS Termination (true or false)                                          | true                           | false              |
+| SERVER_CA_BUNDLE          | RUCIO_WEBUI_SERVER_CA_BUNDLE          | Path to the CA bundle file that can verify Rucio Server certificate. If ENABLE_SSL is set. | /path/to/ca-bundle.pem         |                    |
+| PROJECT_URL               | RUCIO_WEBUI_PROJECT_URL               | Public URL for your project                                                                | https://atlas.cern.ch          |                    |
+| VO_DEFAULT                | RUCIO_WEBUI_VO_DEFAULT                | Short name for the default VO used for authentication                                      | def                            | def                |
+| VO_LIST                   | RUCIO_WEBUI_VO_LIST                   | CSV string containing the list of supported VOs                                            | def, atl, cms                  | def                |
+| MULTIVO_ENABLED           | RUCIO_WEBUI_MULTIVO_ENABLED           | Whether to enable multi-VO config (true or false)                                          | true                           |                    |
+| OIDC_ENABLED              | RUCIO_WEBUI_OIDC_ENABLED              | Enable or Disable OIDC Authentication (true or false)                                      | true                           |                    |
+| OIDC_PROVIDERS            | RUCIO_WEBUI_OIDC_PROVIDERS            | CSV string containing names of OIDC Providers                                              | cern, indigo                   |                    |
+| RULE_ACTIVITY             | RUCIO_WEBUI_RULE_ACTIVITY             | The `Activity` to associate with rules created with WebUI                                  | User Subscriptions             | User Subscriptions |
 
 For each `VO` specified in the `VO_LIST` variable, the additional variables need to be specified. The variables should be added in the following format:
 `export RUCIO_WEBUI_VO_<VO_SHORT_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>`. An example for the default VO is shown below:
