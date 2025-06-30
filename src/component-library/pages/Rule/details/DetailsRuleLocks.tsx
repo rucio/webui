@@ -9,6 +9,7 @@ import { ListRuleReplicaLockStatesViewModel } from '@/lib/infrastructure/data/vi
 import { LockState } from '@/lib/core/entity/rucio';
 import { LockStateBadge } from '@/component-library/features/badges/Rule/LockStateBadge';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { Button } from '@/component-library/atoms/form/button';
 import { FTSLinkViewModel } from '@/lib/infrastructure/data/view-model/request';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
@@ -17,6 +18,19 @@ import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
+};
+
+const ClickableDID = (props: { value: string[] }) => {
+    const [scope, name] = props.value;
+    return (
+        <ClickableCell href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
+            {scope}:{name}
+        </ClickableCell>
+    );
+};
+
+const ClickableRSE = (props: { value: string }) => {
+    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 const FTSLinkButton = (props: any) => {
@@ -97,12 +111,13 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
         {
             headerName: 'DID',
             valueGetter: (params: ValueGetterParams<ListRuleReplicaLockStatesViewModel>) => {
-                return params.data?.scope + ':' + params.data?.name;
+                return [params.data?.scope, params.data?.name];
             },
             minWidth: 150,
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
+            cellRenderer: ClickableDID,
         },
         {
             headerName: 'RSE',
@@ -111,6 +126,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
+            cellRenderer: ClickableRSE,
         },
         {
             headerName: 'State',
