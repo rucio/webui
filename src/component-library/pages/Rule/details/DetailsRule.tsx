@@ -1,6 +1,6 @@
 'use client';
 
-import { Heading } from '@/component-library/atoms/misc/Heading';
+import { CopyableHeading, Heading } from '@/component-library/atoms/misc/Heading';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
@@ -93,7 +93,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
     return (
         <div className="flex flex-col space-y-3 w-full grow">
             <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
-                <Heading text={id} />
+                <CopyableHeading text={id} />
             </div>
             <DetailsRuleTabs id={id} meta={meta} />
         </div>

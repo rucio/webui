@@ -1,6 +1,6 @@
 'use client';
 
-import { Heading } from '@/component-library/atoms/misc/Heading';
+import { CopyableHeading, Heading } from '@/component-library/atoms/misc/Heading';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
@@ -138,7 +138,7 @@ export const DetailsDID = ({ scope, name }: DetailsDIDProps) => {
     return (
         <div className="flex flex-col space-y-3 w-full grow">
             <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
-                <Heading text={meta.scope + ':' + meta.name} />
+                <CopyableHeading text={meta.scope + ':' + meta.name} />
             </div>
             <DetailsDIDMeta meta={meta} />
             <DetailsDIDTables scope={scope} name={name} type={meta.did_type} />
