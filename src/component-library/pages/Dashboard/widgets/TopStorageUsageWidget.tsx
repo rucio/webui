@@ -67,7 +67,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
             </Link>
             {isInfiniteWithoutUsage && (
                 <div
-                    className="flex justify-center items-center text-neutral-900"
+                    className="flex justify-center items-center text-neutral-900 dark:text-neutral-100"
                     style={{
                         height: PIE_HEIGHT,
                     }}
