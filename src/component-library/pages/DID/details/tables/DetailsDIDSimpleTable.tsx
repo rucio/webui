@@ -32,10 +32,9 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
             headerName: 'Identifier',
             flex: 1,
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
-                if (props.onSelectionChanged) return `${params.data?.scope}:${params.data?.name}`;
                 return [params.data?.scope, params.data?.name];
             },
-            cellRenderer: props.onSelectionChanged ? undefined : ClickableDID,
+            cellRenderer: ClickableDID,
             minWidth: 250,
             sortable: false,
         },
