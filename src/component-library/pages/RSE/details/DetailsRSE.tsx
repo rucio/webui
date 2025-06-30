@@ -1,6 +1,6 @@
 'use client';
 
-import { Heading } from '@/component-library/atoms/misc/Heading';
+import { CopyableHeading, Heading } from '@/component-library/atoms/misc/Heading';
 import { RSEAttributeViewModel, RSEDetailsViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
@@ -157,7 +157,7 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
 
     return (
         <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text={props.name} />
+            <CopyableHeading text={props.name} />
             <DetailsRSEKeyValues meta={meta} />
             <DetailsRSEProtocols protocols={meta.protocols} />
             <DetailsRSEAttributes attributes={attributes} />

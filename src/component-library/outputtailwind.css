@@ -999,6 +999,10 @@ html {
   width: 1.75rem;
 }
 
+.w-8 {
+  width: 2rem;
+}
+
 .w-fit {
   width: -moz-fit-content;
   width: fit-content;
