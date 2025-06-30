@@ -84,7 +84,7 @@ describe('GET FTS link API Test', () => {
     });
 
     test('it should form url for the request', async () => {
-        const { req, res, session } = await createHttpMocks('/api/feature/get-fts-link?scope=test,name=file2,rse=XRD2', 'GET', {});
+        const { req, res, session } = await createHttpMocks('/api/feature/get-fts-link?scope=test&name=file2&rse=XRD2', 'GET', {});
         const getFTSLinkController = appContainer.get<BaseController<GetFTSLinkControllerParameters, GetFTSLinkRequest>>(CONTROLLERS.GET_FTS_LINK);
         const getFTSLinkControllerParameters: GetFTSLinkControllerParameters = {
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
@@ -97,7 +97,7 @@ describe('GET FTS link API Test', () => {
         const data = await res._getJSONData();
         expect(data).toEqual({
             status: 'success',
-            url: 'example.com',
+            url: 'https://fts:8449/ftsmon/#/job/71ce2e5a-536f-11f0-bb60-2a078b4f5cd0',
         } as FTSLinkViewModel);
     });
 });
