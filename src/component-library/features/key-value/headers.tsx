@@ -13,11 +13,15 @@ const headerCommonClasses = cn(
 );
 
 export const KeyValueLinkHeader = ({ href, children }: { href: string; children: ReactNode }) => {
+    const onClick = () => {
+        window.open(href, '_blank', 'noopener,noreferrer');
+    };
+
     return (
-        <Link href={href} className={cn(headerCommonClasses, 'hover:text-brand-600 dark:hover:text-brand-400')}>
+        <div onClick={onClick} className={cn(headerCommonClasses, 'hover:text-brand-600 dark:hover:text-brand-400')}>
             <HiExternalLink className="h-5 w-5" />
             {children}
-        </Link>
+        </div>
     );
 };
 
