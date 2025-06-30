@@ -30,8 +30,8 @@ export default class ListRulesUseCase
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListRulesRequest>): Promise<ListRulesDTO> {
-        const { rucioAuthToken, scope, account, created_after } = requestModel;
-        const dto: ListRulesDTO = await this.gateway.listRules(rucioAuthToken, { scope, account, created_after });
+        const { rucioAuthToken, scope, account, created_after, activity } = requestModel;
+        const dto: ListRulesDTO = await this.gateway.listRules(rucioAuthToken, { scope, account, created_after, activity });
         return dto;
     }
 

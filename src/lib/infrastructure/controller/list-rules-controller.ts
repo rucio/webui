@@ -11,6 +11,7 @@ export type ListRulesControllerParameters = TAuthenticatedControllerParameters &
     scope?: string;
     account?: string;
     created_after?: string;
+    activity?: string;
 };
 
 @injectable()
@@ -23,6 +24,7 @@ class ListRulesController extends BaseController<ListRulesControllerParameters, 
             rucioAuthToken: parameters.rucioAuthToken,
             account: parameters.account,
             scope: parameters.scope,
+            activity: parameters.activity,
             created_after: parameters.created_after ? new Date(parameters.created_after) : undefined,
         };
     }
