@@ -71,6 +71,8 @@ import AttachDIDsFeature from '@/lib/infrastructure/ioc/features/attach-dids-fea
 import SetDIDStatusFeature from '@/lib/infrastructure/ioc/features/set-did-status-feature';
 import GetRuleFeature from '@/lib/infrastructure/ioc/features/get-rule-feature';
 import ListRuleReplicaLockStatesFeature from '@/lib/infrastructure/ioc/features/list-rule-replica-lock-states-feature';
+import RequestGateway from '../gateway/request-gateway/request-gateway';
+import RequestGatewayOutputPort from '@/lib/core/port/secondary/request-gateway-output-port';
 
 /**
  * IoC Container configuration for the application.
@@ -85,6 +87,7 @@ appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway)
 appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(SubscriptionGateway);
 appContainer.bind<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA).to(ReplicaGateway);
 appContainer.bind<RuleGatewayOutputPort>(GATEWAYS.RULE).to(RuleGateway);
+appContainer.bind<RequestGatewayOutputPort>(GATEWAYS.REQUEST).to(RequestGateway);
 
 // Load Common Features
 loadFeaturesSync(appContainer, [new GetSiteHeaderFeature(appContainer)]);
