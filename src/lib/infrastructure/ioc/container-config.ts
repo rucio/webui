@@ -73,6 +73,7 @@ import GetRuleFeature from '@/lib/infrastructure/ioc/features/get-rule-feature';
 import ListRuleReplicaLockStatesFeature from '@/lib/infrastructure/ioc/features/list-rule-replica-lock-states-feature';
 import RequestGateway from '../gateway/request-gateway/request-gateway';
 import RequestGatewayOutputPort from '@/lib/core/port/secondary/request-gateway-output-port';
+import GetFTSLinkFeature from './features/get-fts-link-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -108,6 +109,7 @@ loadFeaturesSync(appContainer, [
     new ListFileReplicasFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
     new GetRuleFeature(appContainer),
+    new GetFTSLinkFeature(appContainer),
 ]);
 
 // Features: Page RSE
