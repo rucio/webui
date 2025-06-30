@@ -165,9 +165,9 @@ export const RegularTable = (props: RegularTableProps) => {
                         onPaginationChanged={onPaginationChanged}
                         suppressMovableColumns={true}
                         rowMultiSelectWithClick={true}
-                        defaultColDef={{ flex: 1 }}
-                        rowStyle={{
-                            userSelect: 'text', // Text selection without interfering with cell layout
+                        defaultColDef={{ 
+                            flex: 1,
+                            cellStyle: { userSelect: 'text' },
                         }}
                         //asyncTransactionWaitMillis={500}
                     />
