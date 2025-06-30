@@ -20,6 +20,15 @@ const ClickableId = (props: { value: string }) => {
     return <ClickableCell href={`/rule/page/${props.value}`}>{props.value}</ClickableCell>;
 };
 
+const ClickableDID = (props: { value: string[] }) => {
+    const [scope, name] = props.value;
+    return (
+        <ClickableCell href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
+            {scope}:{name}
+        </ClickableCell>
+    );
+};
+
 export const ListRuleTable = (props: ListRuleTableProps) => {
     const tableRef = useRef<AgGridReact<RuleViewModel>>(null);
 
@@ -35,12 +44,13 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         {
             headerName: 'DID',
             valueGetter: (params: ValueGetterParams<RuleViewModel>) => {
-                return params.data?.scope + ':' + params.data?.name;
+                return [params.data?.scope, params.data?.name];
             },
             minWidth: 150,
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
+            cellRenderer: ClickableDID,
         },
         // TODO: find out if stating account is needed
         // {
