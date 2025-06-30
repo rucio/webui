@@ -74,7 +74,7 @@ const FTSLinkButton = (props: any) => {
         return;
     }
 
-    const buttonClassName = 'h-8 w-full';
+    const buttonClassName = 'my-2 h-7 w-full';
 
     if (isFetching) {
         return (
