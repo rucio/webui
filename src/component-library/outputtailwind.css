@@ -3624,10 +3624,6 @@ html {
     height: 3rem;
   }
 
-  .md\:h-16 {
-    height: 4rem;
-  }
-
   .md\:h-8 {
     height: 2rem;
   }
@@ -3638,10 +3634,6 @@ html {
 
   .md\:w-24 {
     width: 6rem;
-  }
-
-  .md\:w-28 {
-    width: 7rem;
   }
 
   .md\:w-36 {
@@ -3847,10 +3839,6 @@ html {
 @media (min-width: 1024px) {
   .lg\:hidden {
     display: none;
-  }
-
-  .lg\:w-32 {
-    width: 8rem;
   }
 
   .lg\:w-48 {
