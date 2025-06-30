@@ -8,6 +8,7 @@ export interface ListRulesRequest {
     account?: string;
     scope?: string;
     created_after?: Date;
+    activity?: string;
 }
 
 /**
