@@ -24,6 +24,10 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
             account: this.filter?.account ?? DEFAULT_PARAMETER,
             scope: this.filter?.scope ?? DEFAULT_PARAMETER,
         };
+
+        if (this.filter?.activity) {
+            params.activity = this.filter.activity;
+        }
         if (this.filter?.created_after) {
             params.created_after = formatFilterDate(this.filter.created_after);
         }

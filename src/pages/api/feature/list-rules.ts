@@ -18,15 +18,26 @@ async function listRules(req: NextApiRequest, res: NextApiResponse, rucioAuthTok
         return;
     }
 
-    const account = sessionUser.rucioAccount;
+    const currentAccount = sessionUser.rucioAccount;
 
     // TODO: check if created_after is an actual date
-    const { scope, created_after } = req.query as { scope?: string; created_after?: string };
+    const {
+        scope,
+        created_after,
+        account: customAccount,
+        activity,
+    } = req.query as {
+        scope?: string;
+        created_after?: string;
+        account?: string;
+        activity?: string;
+    };
 
     const controllerParameters: ListRulesControllerParameters = {
         response: res,
         rucioAuthToken: rucioAuthToken,
-        account: account,
+        account: customAccount ?? currentAccount,
+        activity: activity,
         scope: scope,
         created_after: created_after,
     };

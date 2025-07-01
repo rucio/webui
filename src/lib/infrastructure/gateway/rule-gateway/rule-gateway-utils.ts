@@ -238,6 +238,7 @@ export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
 export type ListRulesFilter = {
     account?: string;
     scope?: string;
+    activity?: string;
     created_after?: Date;
 };
 
