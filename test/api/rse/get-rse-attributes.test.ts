@@ -14,9 +14,9 @@ describe('GET RSE Attributes API Test', () => {
     beforeEach(() => {
         fetchMock.doMock();
         const getRSEAttributesMockEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/rses/MOCK3/attr`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rses/MOCK3/attr/`,
             method: 'GET',
-            includes: '/rses/MOCK3/attr',
+            includes: '/rses/MOCK3/attr/',
             response: {
                 status: 200,
                 headers: {
