@@ -11,7 +11,7 @@ export default class GetRSEAttributesEndpoint extends BaseEndpoint<RSEAttributeD
 
     async initialize(): Promise<void> {
         await super.initialize();
-        this.url = `${this.rucioHost}/rses/${this.rseName}/attr`;
+        this.url = `${this.rucioHost}/rses/${this.rseName}/attr/`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,
