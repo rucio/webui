@@ -19,6 +19,6 @@ export type AuthViewModel = {
 export type x509AuthRequestHeaders = {
     'X-Rucio-VO': string;
     'X-Rucio-Allow-Return-Multiple-Accounts': boolean;
-    'X-Rucio-AppID': string = 'rucio-webui';
+    'X-Rucio-AppID': string;
     'X-Rucio-Account'?: string;
 };
