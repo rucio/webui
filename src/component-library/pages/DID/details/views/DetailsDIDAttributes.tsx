@@ -11,13 +11,21 @@ import { BaseViewModelValidator } from '@/component-library/features/utils/BaseV
 import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { NullBadge } from '@/component-library/features/badges/NullBadge';
 
 type DetailsDIDAttributesTableProps = {
     viewModel: DIDKeyValuePairsDataViewModel;
 };
 
+const excludeNullValuesKey = 'excludeNullValues';
+
 export const DetailsDIDAttributesTable = (props: DetailsDIDAttributesTableProps) => {
     const tableRef = useRef<AgGridReact<DIDKeyValuePair>>(null);
+    const [excludeNull, setExcludeNull] = useState(() => {
+        const saved = localStorage.getItem(excludeNullValuesKey);
+        return saved !== null ? JSON.parse(saved) : false;
+    });
 
     const [columnDefs] = useState([
         {
@@ -37,7 +45,32 @@ export const DetailsDIDAttributesTable = (props: DetailsDIDAttributesTableProps)
         },
     ]);
 
-    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={props.viewModel.data} />;
+    const handleExcludeNullChange = () => {
+        const newValue = !excludeNull;
+        setExcludeNull(newValue);
+        localStorage.setItem(excludeNullValuesKey, JSON.stringify(newValue));
+    };
+
+    return (
+        <div className="flex flex-col grow space-y-3">
+            <div className="flex space-x-3 items-center cursor-pointer w-fit" onClick={handleExcludeNullChange}>
+                <Checkbox checked={excludeNull} />
+                <span className="text-neutral-900 dark:text-neutral-100">
+                    Exclude <NullBadge />
+                </span>
+            </div>
+            <RegularTable
+                isExternalFilterPresent={() => excludeNull}
+                doesExternalFilterPass={node => {
+                    if (!excludeNull) return true;
+                    return node.data.value !== undefined && node.data.value !== null;
+                }}
+                columnDefs={columnDefs}
+                tableRef={tableRef}
+                rowData={props.viewModel.data}
+            />
+        </div>
+    );
 };
 
 export const DetailsDIDAttributes: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
