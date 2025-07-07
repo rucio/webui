@@ -18,10 +18,6 @@ type DetailsDIDRulesTableProps = {
     onGridReady: (event: GridReadyEvent) => void;
 };
 
-const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
-};
-
 const ClickableId = (props: { value: string }) => {
     return <ClickableCell href={`/rule/page/${props.value}`}>{props.value}</ClickableCell>;
 };
@@ -38,13 +34,12 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             cellRenderer: ClickableId,
         },
         {
-            headerName: 'RSE',
+            headerName: 'RSE Expression',
             field: 'rse_expression',
             minWidth: 150,
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
-            cellRenderer: ClickableRSE,
         },
         {
             headerName: 'Created At',

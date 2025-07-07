@@ -60,7 +60,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         //     filterParams: DefaultTextFilterParams,
         // },
         {
-            headerName: 'RSE',
+            headerName: 'RSE Expression',
             field: 'rse_expression',
             minWidth: 150,
             flex: 1,
