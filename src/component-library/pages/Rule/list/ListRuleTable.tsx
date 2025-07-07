@@ -34,23 +34,23 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
 
     const [columnDefs] = useState([
         {
-            headerName: 'ID',
-            field: 'id',
-            flex: 2,
-            width: 390,
-            sortable: false,
-            cellRenderer: ClickableId,
-        },
-        {
             headerName: 'DID',
             valueGetter: (params: ValueGetterParams<RuleViewModel>) => {
                 return [params.data?.scope, params.data?.name];
             },
             minWidth: 150,
-            flex: 1,
+            flex: 2,
             filter: true,
             filterParams: DefaultTextFilterParams,
             cellRenderer: ClickableDID,
+        },
+        {
+            headerName: 'ID',
+            field: 'id',
+            flex: 1,
+            width: 390,
+            sortable: false,
+            cellRenderer: ClickableId,
         },
         // TODO: find out if stating account is needed
         // {
