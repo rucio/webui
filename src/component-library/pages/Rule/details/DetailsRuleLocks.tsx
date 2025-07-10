@@ -104,6 +104,13 @@ const FTSLinkButton = (props: any) => {
     );
 };
 
+const LockStateDisplayNames: Record<LockState, string> = {
+    [LockState.REPLICATING]: 'Replicating',
+    [LockState.OK]: 'OK',
+    [LockState.STUCK]: 'Stuck',
+    [LockState.UNKNOWN]: 'Unknown',
+};
+
 const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
     const tableRef = useRef<AgGridReact<ListRuleReplicaLockStatesViewModel>>(null);
 
@@ -139,8 +146,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             },
             filter: true,
             sortable: false,
-            // TODO: fix the string values
-            filterParams: buildDiscreteFilterParams(Object.values(LockState)),
+            filterParams: buildDiscreteFilterParams(Object.values(LockStateDisplayNames), Object.values(LockState)),
         },
         {
             headerName: 'FTS Monitoring',
