@@ -3,7 +3,7 @@ import { BaseStreamableDTO } from '@/lib/sdk/dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
-import { convertToRuleDTO, formatFilterDate, ListRulesFilter, TRucioRule } from '../rule-gateway-utils';
+import { convertRuleState, convertToRuleDTO, formatFilterDate, ListRulesFilter, TRucioRule } from '../rule-gateway-utils';
 
 const DEFAULT_PARAMETER = '*';
 
@@ -35,8 +35,10 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
             params.updated_before = formatFilterDate(this.filter.updated_before);
         }
         if (this.filter?.state) {
-            // TODO: convert to one-letter representation from Rucio
-            params.state = this.filter.state.toString();
+            const ruleFilter = convertRuleState(this.filter.state);
+            if (ruleFilter) {
+                params.state = ruleFilter;
+            }
         }
         if (this.filter?.name) {
             params.name = this.filter.name;
