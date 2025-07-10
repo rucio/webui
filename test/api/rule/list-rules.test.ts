@@ -48,6 +48,49 @@ const mockRule = {
     bytes: 10485760,
 };
 
+const testRuleState = async (ruleState: RuleState, stateFilter: string) => {
+    const listRulesMockEndpoint: MockEndpoint = {
+        url: `${MockRucioServerFactory.RUCIO_HOST}/rules`,
+        method: 'GET',
+        includes: 'rules',
+        response: {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: Readable.from([JSON.stringify(mockRule), JSON.stringify(mockRule)].join('\n')),
+        },
+        requestValidator: async request => {
+            if (!request.url.includes(`state=${stateFilter}`)) {
+                return false;
+            }
+            return true;
+        },
+    };
+    MockRucioServerFactory.createMockRucioServer(true, [listRulesMockEndpoint]);
+
+    const res = MockHttpStreamableResponseFactory.getMockResponse();
+
+    const listRulesController = appContainer.get<BaseController<ListRulesControllerParameters, ListRulesRequest>>(CONTROLLERS.LIST_RULES);
+    const listRulesControllerParams: ListRulesControllerParameters = {
+        rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+        response: res as unknown as NextApiResponse,
+        filters: {
+            state: ruleState,
+        },
+    };
+
+    await listRulesController.execute(listRulesControllerParams);
+
+    expect(res.statusCode).toEqual(200);
+
+    const receivedData = await collectStreamedData<string>(res);
+    const parsedData = receivedData.map(data => JSON.parse(data)) as RuleViewModel[];
+
+    expect(parsedData.length).toEqual(2);
+    expect(parsedData[0].status).toEqual('success');
+};
+
 describe('Feature: ListRules', () => {
     beforeEach(() => {
         fetchMock.doMock();
@@ -104,14 +147,10 @@ describe('Feature: ListRules', () => {
                 body: Readable.from([JSON.stringify(mockRule), JSON.stringify(mockRule)].join('\n')),
             },
             requestValidator: async request => {
-                console.log(request.url);
                 if (!request.url.includes('account=root')) {
                     return false;
                 }
                 if (!request.url.includes('scope=test')) {
-                    return false;
-                }
-                if (!request.url.includes('state=Replicating')) {
                     return false;
                 }
                 if (!request.url.includes('activity=User+Subscriptions')) {
@@ -140,7 +179,6 @@ describe('Feature: ListRules', () => {
             filters: {
                 account: 'root',
                 scope: 'test',
-                state: RuleState.REPLICATING,
                 activity: 'User Subscriptions',
                 name: 'file1',
                 updated_after: new Date('2024-08-15T10:59:39Z'),
@@ -157,5 +195,29 @@ describe('Feature: ListRules', () => {
 
         expect(parsedData.length).toEqual(2);
         expect(parsedData[0].status).toEqual('success');
+    });
+
+    it('should transform REPLICATING RuleState to Rucio API filter', async () => {
+        await testRuleState(RuleState.REPLICATING, 'R');
+    });
+
+    it('should transform OK RuleState to Rucio API filter', async () => {
+        await testRuleState(RuleState.OK, 'O');
+    });
+
+    it('should transform STUCK RuleState to Rucio API filter', async () => {
+        await testRuleState(RuleState.STUCK, 'S');
+    });
+
+    it('should transform SUSPENDED RuleState to Rucio API filter', async () => {
+        await testRuleState(RuleState.SUSPENDED, 'U');
+    });
+
+    it('should transform WAITING_APPROVAL RuleState to Rucio API filter', async () => {
+        await testRuleState(RuleState.WAITING_APPROVAL, 'W');
+    });
+
+    it('should transform INJECT RuleState to Rucio API filter', async () => {
+        await testRuleState(RuleState.INJECT, 'I');
     });
 });

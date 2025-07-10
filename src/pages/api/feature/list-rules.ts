@@ -14,7 +14,10 @@ const RulesFiltersSchema = z.object({
     name: z.string().optional(),
     updated_after: z.string().datetime().optional(),
     updated_before: z.string().datetime().optional(),
-    state: z.nativeEnum(RuleState).optional(),
+    // Excluding unknown, as this is not a valid filter
+    state: z
+        .enum([RuleState.REPLICATING, RuleState.OK, RuleState.STUCK, RuleState.SUSPENDED, RuleState.WAITING_APPROVAL, RuleState.INJECT])
+        .optional(),
     account: z.string().optional(),
     activity: z.string().optional(),
 });

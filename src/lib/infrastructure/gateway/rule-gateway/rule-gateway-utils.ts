@@ -252,3 +252,18 @@ export const formatFilterDate = (date: Date) => {
 
     return `${dayOfWeek}, ${day} ${month} ${year} ${hours}:${minutes}:${seconds} UTC`;
 };
+
+const RuleStateToFilter: Record<RuleState, string | undefined> = {
+    [RuleState.REPLICATING]: 'R',
+    [RuleState.OK]: 'O',
+    [RuleState.STUCK]: 'S',
+    [RuleState.SUSPENDED]: 'U',
+    [RuleState.WAITING_APPROVAL]: 'W',
+    [RuleState.INJECT]: 'I',
+    [RuleState.UNKNOWN]: undefined,
+};
+
+export const convertRuleState = (state: RuleState): string | undefined => {
+    const filterValue = RuleStateToFilter[state];
+    return filterValue;
+};
