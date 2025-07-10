@@ -25,16 +25,17 @@ export const DefaultTextFilterParams: ITextFilterParams = {
     maxNumConditions: 1,
 };
 
-export const buildDiscreteFilterParams = (values: string[]): ITextFilterParams => {
+export const buildDiscreteFilterParams = (values: string[], keys?: string[]): ITextFilterParams => {
     return {
         filterOptions: [
             'empty',
-            ...values.map(value => {
+            ...values.map((value, index) => {
+                const key = keys ? keys[index] : value;
                 return {
                     numberOfInputs: 0,
-                    displayKey: value.toLowerCase(),
+                    displayKey: key.toLowerCase(),
                     displayName: value,
-                    predicate: (_: any[], cellValue: any) => cellValue === value,
+                    predicate: (_: any[], cellValue: any) => cellValue === key,
                 } as IFilterOptionDef;
             }),
         ],
