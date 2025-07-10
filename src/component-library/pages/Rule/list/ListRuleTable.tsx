@@ -29,6 +29,16 @@ const ClickableDID = (props: { value: string[] }) => {
     );
 };
 
+const RuleStateDisplayNames = {
+    [RuleState.REPLICATING]: 'Replicating',
+    [RuleState.OK]: 'OK',
+    [RuleState.STUCK]: 'Stuck',
+    [RuleState.SUSPENDED]: 'Suspended',
+    [RuleState.WAITING_APPROVAL]: 'Waiting Approval',
+    [RuleState.INJECT]: 'Inject',
+    [RuleState.UNKNOWN]: 'Unknown',
+};
+
 export const ListRuleTable = (props: ListRuleTableProps) => {
     const tableRef = useRef<AgGridReact<RuleViewModel>>(null);
 
@@ -96,8 +106,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             },
             filter: true,
             sortable: false,
-            // TODO: fix the string values
-            filterParams: buildDiscreteFilterParams(Object.values(RuleState)),
+            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
         },
         // TODO: minified header with a tooltip
         {
