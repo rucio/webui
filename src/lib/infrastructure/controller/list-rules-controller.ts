@@ -6,12 +6,10 @@ import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/co
 import { ListRulesRequest } from '@/lib/core/usecase-models/list-rules-usecase-models';
 import { ListRulesInputPort } from '@/lib/core/port/primary/list-rules-ports';
 import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory';
+import { RuleFilter } from '@/lib/core/entity/rucio';
 
 export type ListRulesControllerParameters = TAuthenticatedControllerParameters & {
-    scope?: string;
-    account?: string;
-    created_after?: string;
-    activity?: string;
+    filters?: RuleFilter;
 };
 
 @injectable()
@@ -22,10 +20,7 @@ class ListRulesController extends BaseController<ListRulesControllerParameters, 
     prepareRequestModel(parameters: ListRulesControllerParameters): AuthenticatedRequestModel<ListRulesRequest> {
         return {
             rucioAuthToken: parameters.rucioAuthToken,
-            account: parameters.account,
-            scope: parameters.scope,
-            activity: parameters.activity,
-            created_after: parameters.created_after ? new Date(parameters.created_after) : undefined,
+            filters: parameters.filters,
         };
     }
 }
