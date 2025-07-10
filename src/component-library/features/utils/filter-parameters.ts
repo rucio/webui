@@ -1,3 +1,4 @@
+import { RuleState } from '@/lib/core/entity/rucio';
 import { ITextFilterParams, IFilterOptionDef } from 'ag-grid-community';
 
 export const DefaultBooleanFilterParams: ITextFilterParams = {
@@ -25,16 +26,17 @@ export const DefaultTextFilterParams: ITextFilterParams = {
     maxNumConditions: 1,
 };
 
-export const buildDiscreteFilterParams = (values: string[]): ITextFilterParams => {
+export const buildDiscreteFilterParams = (values: string[], keys?: string[]): ITextFilterParams => {
     return {
         filterOptions: [
             'empty',
-            ...values.map(value => {
+            ...values.map((value, index) => {
+                const key = keys ? keys[index] : value;
                 return {
                     numberOfInputs: 0,
-                    displayKey: value.toLowerCase(),
+                    displayKey: key.toLowerCase(),
                     displayName: value,
-                    predicate: (_: any[], cellValue: any) => cellValue === value,
+                    predicate: (_: any[], cellValue: any) => cellValue === key,
                 } as IFilterOptionDef;
             }),
         ],
@@ -78,4 +80,14 @@ export const DefaultDateFilterParams = {
     maxNumConditions: 1,
     comparator: dateComparator,
     buttons: ['reset'],
+};
+
+export const RuleStateDisplayNames = {
+    [RuleState.REPLICATING]: 'Replicating',
+    [RuleState.OK]: 'OK',
+    [RuleState.STUCK]: 'Stuck',
+    [RuleState.SUSPENDED]: 'Suspended',
+    [RuleState.WAITING_APPROVAL]: 'Waiting Approval',
+    [RuleState.INJECT]: 'Inject',
+    [RuleState.UNKNOWN]: 'Unknown',
 };

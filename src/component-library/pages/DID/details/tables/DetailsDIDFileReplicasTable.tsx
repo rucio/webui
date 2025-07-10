@@ -19,6 +19,16 @@ const ClickableRSE = (props: { value: string }) => {
     return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
 };
 
+const ReplicaStateDisplayNames = {
+    [ReplicaState.AVAILABLE]: 'Available',
+    [ReplicaState.UNAVAILABLE]: 'Unavailable',
+    [ReplicaState.COPYING]: 'Copying',
+    [ReplicaState.BEING_DELETED]: 'Being Deleted',
+    [ReplicaState.BAD]: 'Bad',
+    [ReplicaState.TEMPORARY_UNAVAILABLE]: 'Temporary Unavailable',
+    [ReplicaState.UNKNOWN]: 'Unknown',
+};
+
 export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTableProps) => {
     const tableRef = useRef<AgGridReact<FileReplicaStateViewModel>>(null);
 
@@ -43,8 +53,7 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
             },
             filter: true,
             sortable: false,
-            // TODO: fix the string values
-            filterParams: buildDiscreteFilterParams(Object.values(ReplicaState)),
+            filterParams: buildDiscreteFilterParams(Object.values(ReplicaStateDisplayNames), Object.values(ReplicaState)),
         },
     ]);
 
