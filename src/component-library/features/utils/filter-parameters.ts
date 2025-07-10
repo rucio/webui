@@ -1,3 +1,4 @@
+import { RuleState } from '@/lib/core/entity/rucio';
 import { ITextFilterParams, IFilterOptionDef } from 'ag-grid-community';
 
 export const DefaultBooleanFilterParams: ITextFilterParams = {
@@ -79,4 +80,14 @@ export const DefaultDateFilterParams = {
     maxNumConditions: 1,
     comparator: dateComparator,
     buttons: ['reset'],
+};
+
+export const RuleStateDisplayNames = {
+    [RuleState.REPLICATING]: 'Replicating',
+    [RuleState.OK]: 'OK',
+    [RuleState.STUCK]: 'Stuck',
+    [RuleState.SUSPENDED]: 'Suspended',
+    [RuleState.WAITING_APPROVAL]: 'Waiting Approval',
+    [RuleState.INJECT]: 'Inject',
+    [RuleState.UNKNOWN]: 'Unknown',
 };

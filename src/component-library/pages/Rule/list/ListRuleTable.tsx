@@ -4,7 +4,12 @@ import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
-import { DefaultTextFilterParams, DefaultDateFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import {
+    DefaultTextFilterParams,
+    DefaultDateFilterParams,
+    buildDiscreteFilterParams,
+    RuleStateDisplayNames,
+} from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
@@ -27,16 +32,6 @@ const ClickableDID = (props: { value: string[] }) => {
             {scope}:{name}
         </ClickableCell>
     );
-};
-
-const RuleStateDisplayNames = {
-    [RuleState.REPLICATING]: 'Replicating',
-    [RuleState.OK]: 'OK',
-    [RuleState.STUCK]: 'Stuck',
-    [RuleState.SUSPENDED]: 'Suspended',
-    [RuleState.WAITING_APPROVAL]: 'Waiting Approval',
-    [RuleState.INJECT]: 'Inject',
-    [RuleState.UNKNOWN]: 'Unknown',
 };
 
 export const ListRuleTable = (props: ListRuleTableProps) => {

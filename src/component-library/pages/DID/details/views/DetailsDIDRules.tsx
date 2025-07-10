@@ -4,7 +4,12 @@ import { GridReadyEvent, ValueFormatterParams } from 'ag-grid-community';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { buildDiscreteFilterParams, DefaultDateFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import {
+    buildDiscreteFilterParams,
+    DefaultDateFilterParams,
+    DefaultTextFilterParams,
+    RuleStateDisplayNames,
+} from '@/component-library/features/utils/filter-parameters';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
@@ -70,8 +75,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             },
             filter: true,
             sortable: false,
-            // TODO: fix the string values
-            filterParams: buildDiscreteFilterParams(Object.values(RuleState)),
+            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
         },
         // TODO: minified header with a tooltip
         {
