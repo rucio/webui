@@ -28,8 +28,18 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
         if (this.filter?.activity) {
             params.activity = this.filter.activity;
         }
-        if (this.filter?.created_after) {
-            params.created_after = formatFilterDate(this.filter.created_after);
+        if (this.filter?.updated_after) {
+            params.updated_after = formatFilterDate(this.filter.updated_after);
+        }
+        if (this.filter?.updated_before) {
+            params.updated_before = formatFilterDate(this.filter.updated_before);
+        }
+        if (this.filter?.state) {
+            // TODO: convert to one-letter representation from Rucio
+            params.state = this.filter.state.toString();
+        }
+        if (this.filter?.name) {
+            params.name = this.filter.name;
         }
 
         const request: HTTPRequest = {

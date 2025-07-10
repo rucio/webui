@@ -1,5 +1,5 @@
 import { RuleDTO, RuleMetaDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
-import { DIDType, LockState, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
+import { DIDType, LockState, RuleFilter, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
 
 export type TRucioRule = {
     error: null | string;
@@ -235,12 +235,7 @@ export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
     };
 }
 
-export type ListRulesFilter = {
-    account?: string;
-    scope?: string;
-    activity?: string;
-    created_after?: Date;
-};
+export type ListRulesFilter = RuleFilter;
 
 export const formatFilterDate = (date: Date) => {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

@@ -1,14 +1,11 @@
 import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
-import { Rule } from '@/lib/core/entity/rucio';
+import { Rule, RuleFilter, RuleState } from '@/lib/core/entity/rucio';
 
 /**
  * @interface ListRulesRequest represents the RequestModel for list_rules usecase
  */
 export interface ListRulesRequest {
-    account?: string;
-    scope?: string;
-    created_after?: Date;
-    activity?: string;
+    filters?: RuleFilter;
 }
 
 /**
