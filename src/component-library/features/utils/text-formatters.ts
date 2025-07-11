@@ -26,7 +26,7 @@ export const formatFileSize = (bytes: number): string => {
     return `${sign}${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 };
 
-export const formatSeconds = (seconds: number): string => {
+export const formatSeconds = (seconds: number): string | undefined => {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -41,6 +41,6 @@ export const formatSeconds = (seconds: number): string => {
     } else if (seconds > 0) {
         return `${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`;
     } else {
-        return DEFAULT_VALUE;
+        return undefined;
     }
 };

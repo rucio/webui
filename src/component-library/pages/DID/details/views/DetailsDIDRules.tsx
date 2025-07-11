@@ -12,6 +12,7 @@ import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/d
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
+import { NullBadge } from '@/component-library/features/badges/NullBadge';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
@@ -20,6 +21,14 @@ type DetailsDIDRulesTableProps = {
 
 const ClickableId = (props: { value: string }) => {
     return <ClickableCell href={`/rule/page/${props.value}`}>{props.value}</ClickableCell>;
+};
+
+const NullableRemainingLifetime = (props: { value: number }) => {
+    const timeString = formatSeconds(props.value);
+    if (!timeString) {
+        return <NullBadge />;
+    }
+    return timeString;
 };
 
 export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
@@ -55,9 +64,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             headerName: 'Remaining',
             field: 'remaining_lifetime',
             minWidth: 125,
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatSeconds(params.value);
-            },
+            cellRenderer: NullableRemainingLifetime,
         },
         {
             headerName: 'State',
