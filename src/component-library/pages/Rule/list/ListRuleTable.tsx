@@ -15,6 +15,7 @@ import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleState } from '@/lib/core/entity/rucio';
+import { NullBadge } from '@/component-library/features/badges/NullBadge';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
@@ -32,6 +33,14 @@ const ClickableDID = (props: { value: string[] }) => {
             {scope}:{name}
         </ClickableCell>
     );
+};
+
+const NullableRemainingLifetime = (props: { value: number }) => {
+    const timeString = formatSeconds(props.value);
+    if (!timeString) {
+        return <NullBadge />;
+    }
+    return timeString;
 };
 
 export const ListRuleTable = (props: ListRuleTableProps) => {
@@ -86,9 +95,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             headerName: 'Remaining',
             field: 'remaining_lifetime',
             width: 125,
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatSeconds(params.value);
-            },
+            cellRenderer: NullableRemainingLifetime,
         },
         {
             headerName: 'State',
