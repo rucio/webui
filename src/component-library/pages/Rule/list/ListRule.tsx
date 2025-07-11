@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 import { Heading } from '@/component-library/atoms/misc/Heading';
@@ -115,6 +115,20 @@ const FilterInputs = ({ filters, onFiltersChange }: FilterInputsProps) => {
         onFiltersChange({ name: event.target.value });
     };
 
+    const formatDate = (date?: Date): string => {
+        if (!date) return '';
+        return date.toISOString().split('T')[0];
+    };
+
+    const onDateChange = (event: FormEvent<HTMLInputElement>, dateType: 'updatedAfter' | 'updatedBefore') => {
+        const date = new Date(event.currentTarget.value);
+        if (isNaN(date.getTime())) {
+            onFiltersChange({ [dateType]: undefined });
+            return;
+        }
+        onFiltersChange({ [dateType]: date });
+    };
+
     const rootClass = 'flex flex-col sm:flex-row sm:items-center w-full space-y-2 sm:space-y-0 sm:space-x-2';
 
     return (
@@ -133,7 +147,11 @@ const FilterInputs = ({ filters, onFiltersChange }: FilterInputsProps) => {
                             {Object.values(RuleState).map(state => {
                                 if (state === RuleState.UNKNOWN) return null;
                                 // TODO: transform RuleState to a more user-friendly string
-                                return <SelectItem value={state}>{state}</SelectItem>;
+                                return (
+                                    <SelectItem key={state} value={state}>
+                                        {state}
+                                    </SelectItem>
+                                );
                             })}
                         </SelectContent>
                     </Select>
@@ -150,6 +168,26 @@ const FilterInputs = ({ filters, onFiltersChange }: FilterInputsProps) => {
                 </FilterField>
                 <FilterField label="Name">
                     <Input className="w-full" value={filters.name} onChange={onNameChange} />
+                </FilterField>
+            </div>
+            <div className={rootClass}>
+                <FilterField label="Updated After">
+                    <Input
+                        type="date"
+                        value={formatDate(filters.updatedAfter)}
+                        onInput={event => {
+                            onDateChange(event, 'updatedAfter');
+                        }}
+                    />
+                </FilterField>
+                <FilterField label="Updated Before">
+                    <Input
+                        type="date"
+                        value={formatDate(filters.updatedBefore)}
+                        onInput={event => {
+                            onDateChange(event, 'updatedBefore');
+                        }}
+                    />
                 </FilterField>
             </div>
         </>
@@ -222,6 +260,14 @@ export const ListRule = (props: ListRuleProps) => {
 
         if (searchFilters.state) {
             params.append('state', searchFilters.state);
+        }
+
+        if (searchFilters.updatedBefore) {
+            params.append('updated_before', searchFilters.updatedBefore.toISOString());
+        }
+
+        if (searchFilters.updatedAfter) {
+            params.append('updated_after', searchFilters.updatedAfter.toISOString());
         }
 
         return `/api/feature/list-rules?${params.toString()}`;
