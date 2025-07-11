@@ -11,12 +11,18 @@ import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { Button } from '@/component-library/atoms/form/button';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 import { HiFilter } from 'react-icons/hi';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
+import { RuleState } from '@/lib/core/entity/rucio';
 
 // Types
 type SearchFilters = {
     scope: string;
+    name: string;
     account: string;
     activity: string;
+    state?: RuleState;
+    updatedBefore?: Date;
+    updatedAfter?: Date;
 };
 
 type FilterDropdownProps = {
@@ -24,7 +30,7 @@ type FilterDropdownProps = {
     onToggle: () => void;
 };
 
-type ScopeInputProps = {
+type AccountInputProps = {
     value: string;
     onChange: (value: string) => void;
     onSearch: (event: any) => void;
@@ -33,10 +39,8 @@ type ScopeInputProps = {
 };
 
 type FilterInputsProps = {
-    account: string;
-    activity: string;
-    onAccountChange: (value: string) => void;
-    onActivityChange: (value: string) => void;
+    filters: SearchFilters;
+    onFiltersChange: (filters: Partial<SearchFilters>) => void;
 };
 
 type SearchFormProps = {
@@ -66,63 +70,94 @@ const FilterDropdownButton = ({ isExpanded, onToggle }: FilterDropdownProps) => 
     );
 };
 
-const ScopeInput = ({ value, onChange, onSearch, onFilterToggle, isFilterExpanded }: ScopeInputProps) => {
+const AccountInput = ({ value, onChange, onSearch, onFilterToggle, isFilterExpanded }: AccountInputProps) => {
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const inputValue = event.target.value;
-        onChange(inputValue !== '' ? inputValue : DEFAULT_SCOPE);
+        onChange(inputValue);
     };
 
     return (
         <div className="flex space-x-2">
-            <Input
-                className="w-full sm:flex-grow"
-                onChange={handleInputChange}
-                onEnterKey={onSearch}
-                placeholder={DEFAULT_SCOPE}
-                value={value === DEFAULT_SCOPE ? '' : value}
-            />
+            <Input className="w-full sm:flex-grow" onChange={handleInputChange} onEnterKey={onSearch} placeholder="Current Account" value={value} />
             <FilterDropdownButton isExpanded={isFilterExpanded} onToggle={onFilterToggle} />
         </div>
     );
 };
 
-const FilterInputs = ({ account, activity, onAccountChange, onActivityChange }: FilterInputsProps) => {
-    const handleAccountChange = (event: ChangeEvent<HTMLInputElement>) => {
-        onAccountChange(event.target.value);
+function FilterField({ children, label }: { children: React.ReactNode; label: string }) {
+    return (
+        <div className="grow flex-1">
+            <div className="text-neutral-900 dark:text-neutral-100 mb-2">{label}</div>
+            {children}
+        </div>
+    );
+}
+
+const FilterInputs = ({ filters, onFiltersChange }: FilterInputsProps) => {
+    const onActivityChange = (event: ChangeEvent<HTMLInputElement>) => {
+        onFiltersChange({ activity: event.target.value });
     };
 
-    const handleActivityChange = (event: ChangeEvent<HTMLInputElement>) => {
-        onActivityChange(event.target.value);
+    const onStateChange = (value: string) => {
+        if (value === RuleState.UNKNOWN) {
+            onFiltersChange({ state: undefined });
+        } else {
+            onFiltersChange({ state: value as RuleState });
+        }
     };
+
+    const onScopeChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newScope = event.target.value || DEFAULT_SCOPE;
+        onFiltersChange({ scope: newScope });
+    };
+
+    const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+        onFiltersChange({ name: event.target.value });
+    };
+
+    const rootClass = 'flex flex-col sm:flex-row sm:items-center w-full space-y-2 sm:space-y-0 sm:space-x-2';
 
     return (
-        <div className="flex flex-col sm:flex-row w-full space-y-2 sm:space-y-0 sm:space-x-2">
-            <div className="grow">
-                <div className="text-neutral-900 dark:text-neutral-100 mb-2">Account</div>
-                <Input className="w-full" value={account} onChange={handleAccountChange} placeholder="Current Account" />
+        <>
+            <div className={rootClass}>
+                <FilterField label="Activity">
+                    <Input className="w-full" value={filters.activity} onChange={onActivityChange} placeholder="Any Activity" />
+                </FilterField>
+                <FilterField label="State">
+                    <Select onValueChange={onStateChange} defaultValue={undefined} value={filters.state}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Any" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value={RuleState.UNKNOWN}>Any</SelectItem>
+                            {Object.values(RuleState).map(state => {
+                                if (state === RuleState.UNKNOWN) return null;
+                                // TODO: transform RuleState to a more user-friendly string
+                                return <SelectItem value={state}>{state}</SelectItem>;
+                            })}
+                        </SelectContent>
+                    </Select>
+                </FilterField>
             </div>
-            <div className="grow">
-                <div className="text-neutral-900 dark:text-neutral-100 mb-2">Activity</div>
-                <Input className="w-full" value={activity} onChange={handleActivityChange} placeholder="Any Activity" />
+            <div className={rootClass}>
+                <FilterField label="Scope">
+                    <Input
+                        className="w-full"
+                        value={filters.scope === DEFAULT_SCOPE ? '' : filters.scope}
+                        onChange={onScopeChange}
+                        placeholder={DEFAULT_SCOPE}
+                    />
+                </FilterField>
+                <FilterField label="Name">
+                    <Input className="w-full" value={filters.name} onChange={onNameChange} />
+                </FilterField>
             </div>
-        </div>
+        </>
     );
 };
 
 const SearchForm = ({ filters, onFiltersChange, onSearch, onStop, isRunning }: SearchFormProps) => {
     const [isFilterExpanded, setIsFilterExpanded] = useState(false);
-
-    const handleScopeChange = (scope: string) => {
-        onFiltersChange({ scope });
-    };
-
-    const handleAccountChange = (account: string) => {
-        onFiltersChange({ account });
-    };
-
-    const handleActivityChange = (activity: string) => {
-        onFiltersChange({ activity });
-    };
 
     const handleFilterToggle = () => {
         setIsFilterExpanded(!isFilterExpanded);
@@ -130,24 +165,17 @@ const SearchForm = ({ filters, onFiltersChange, onSearch, onStop, isRunning }: S
 
     return (
         <div className="space-y-2">
-            <div className="text-neutral-900 dark:text-neutral-100">Scope</div>
+            <div className="text-neutral-900 dark:text-neutral-100">Account</div>
             <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-center sm:items-start">
                 <div className="flex flex-col w-full space-y-2">
-                    <ScopeInput
-                        value={filters.scope}
-                        onChange={handleScopeChange}
+                    <AccountInput
+                        value={filters.account}
+                        onChange={(account: string) => onFiltersChange({ account })}
                         onSearch={onSearch}
                         onFilterToggle={handleFilterToggle}
                         isFilterExpanded={isFilterExpanded}
                     />
-                    {isFilterExpanded && (
-                        <FilterInputs
-                            account={filters.account}
-                            activity={filters.activity}
-                            onAccountChange={handleAccountChange}
-                            onActivityChange={handleActivityChange}
-                        />
-                    )}
+                    {isFilterExpanded && <FilterInputs filters={filters} onFiltersChange={onFiltersChange} />}
                 </div>
                 <SearchButton isRunning={isRunning} onStop={onStop} onSearch={onSearch} />
             </div>
@@ -161,6 +189,10 @@ export const ListRule = (props: ListRuleProps) => {
         scope: DEFAULT_SCOPE,
         account: '',
         activity: '',
+        state: undefined,
+        name: '',
+        updatedBefore: undefined,
+        updatedAfter: undefined,
     });
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<RuleViewModel>(props.initialData);
@@ -176,12 +208,20 @@ export const ListRule = (props: ListRuleProps) => {
             params.append('scope', searchFilters.scope);
         }
 
+        if (searchFilters.name) {
+            params.append('name', searchFilters.name);
+        }
+
         if (searchFilters.account) {
             params.append('account', searchFilters.account);
         }
 
         if (searchFilters.activity) {
             params.append('activity', searchFilters.activity);
+        }
+
+        if (searchFilters.state) {
+            params.append('state', searchFilters.state);
         }
 
         return `/api/feature/list-rules?${params.toString()}`;
