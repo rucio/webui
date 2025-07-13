@@ -1,5 +1,4 @@
 import { ListAccountRSEUsageError, ListAccountRSEUsageResponse } from '@/lib/core/usecase-models/list-account-rse-usage-usecase-models';
-import { NextApiResponse } from 'next';
 import { RSEAccountUsageViewModel, generateEmptyRSEAccountUsageViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListAccountRSEUsageOutputPort } from '@/lib/core/port/primary/list-account-rse-usage-ports';
@@ -8,13 +7,6 @@ export default class ListAccountRSEUsagePresenter
     extends BaseStreamingPresenter<ListAccountRSEUsageResponse, ListAccountRSEUsageError, RSEAccountUsageViewModel>
     implements ListAccountRSEUsageOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListAccountRSEUsageResponse): RSEAccountUsageViewModel {
         const viewModel: RSEAccountUsageViewModel = {
             ...responseModel,

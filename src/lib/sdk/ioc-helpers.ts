@@ -1,7 +1,6 @@
 import fs from 'fs';
 import { Container, interfaces } from 'inversify';
 import { IronSession } from 'iron-session';
-import { NextApiResponse } from 'next';
 import path from 'path';
 import { BaseController, TParameters } from './controller';
 import { BasePresenter, BaseStreamingPresenter } from './presenter';
@@ -10,6 +9,7 @@ import { TUseCase } from './usecase';
 import TUseCaseFactory from './usecase-factory';
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 import { BaseViewModel } from './view-models';
+import { Signal } from './web';
 
 /**
  * An object that contains symbols for the different types of dependencies in an IoC container.
@@ -62,7 +62,7 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         private UseCase: new (presenter: BaseOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
         private useCaseContructorArgs: any[] = [],
-        private Presenter: new (response: NextApiResponse, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
+        private Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
     ) {}
@@ -103,7 +103,7 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         UseCase: new (presenter: BaseOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
         useCaseContructorArgs: any[] = [],
-        Presenter: new (response: NextApiResponse, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
+        Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
         passSessionToPresenter: boolean = false,
         symbols: IOCSymbols,
     ) {
@@ -117,8 +117,8 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         if (passSessionToPresenter) {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: NextApiResponse, session: IronSession]>(
-                    (context: interfaces.Context) => (response: NextApiResponse, session: IronSession) => {
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>, session: IronSession]>(
+                    (context: interfaces.Context) => (response: Signal<TViewModel>, session: IronSession) => {
                         const presenter = new Presenter(response, session);
                         return new UseCase(presenter, ...useCaseContructorArgs);
                     },
@@ -126,7 +126,7 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         } else {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: NextApiResponse]>((context: interfaces.Context) => (response: NextApiResponse) => {
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>]>((context: interfaces.Context) => (response: Signal<TViewModel>) => {
                     const presenter = new Presenter(response);
                     return new UseCase(presenter, ...useCaseContructorArgs);
                 });
@@ -165,7 +165,7 @@ export class BaseStreamableFeature<
         private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         private UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>, ...args: any[]) => TUseCase<TRequestModel>,
         private useCaseContructorArgs: any[] = [],
-        private Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
+        private Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
     ) {}
@@ -207,7 +207,7 @@ export class BaseStreamableFeature<
         Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>, ...args: any[]) => TUseCase<TRequestModel>,
         useCaseContructorArgs: any[] = [],
-        Presenter: new (response: NextApiResponse, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
+        Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
         passSessionToPresenter: boolean = false,
         symbols: IOCSymbols,
     ) {
@@ -221,8 +221,8 @@ export class BaseStreamableFeature<
         if (passSessionToPresenter) {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: NextApiResponse, session: IronSession]>(
-                    (context: interfaces.Context) => (response: NextApiResponse, session: IronSession) => {
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>, session: IronSession]>(
+                    (context: interfaces.Context) => (response: Signal<TViewModel>, session: IronSession) => {
                         const presenter = new Presenter(response, session);
                         return new UseCase(presenter, ...useCaseContructorArgs);
                     },
@@ -230,7 +230,7 @@ export class BaseStreamableFeature<
         } else {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: NextApiResponse]>((context: interfaces.Context) => (response: NextApiResponse) => {
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>]>((context: interfaces.Context) => (response: Signal<TViewModel>) => {
                     const presenter = new Presenter(response);
                     return new UseCase(presenter, ...useCaseContructorArgs);
                 });

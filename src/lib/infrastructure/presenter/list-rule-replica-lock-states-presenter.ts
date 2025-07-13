@@ -2,7 +2,6 @@ import {
     ListRuleReplicaLockStatesError,
     ListRuleReplicaLockStatesResponse,
 } from '@/lib/core/usecase-models/list-rule-replica-lock-states-usecase-models';
-import { NextApiResponse } from 'next';
 import { ListRuleReplicaLockStatesViewModel, getEmptyListRuleReplicaLockStatesViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListRuleReplicaLockStatesOutputPort } from '@/lib/core/port/primary/list-rule-replica-lock-states-ports';
@@ -11,13 +10,6 @@ export default class ListRuleReplicaLockStatesPresenter
     extends BaseStreamingPresenter<ListRuleReplicaLockStatesResponse, ListRuleReplicaLockStatesError, ListRuleReplicaLockStatesViewModel>
     implements ListRuleReplicaLockStatesOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListRuleReplicaLockStatesResponse): ListRuleReplicaLockStatesViewModel {
         const viewModel: ListRuleReplicaLockStatesViewModel = {
             ...responseModel,
