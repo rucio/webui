@@ -1,6 +1,6 @@
 import { IronSession } from 'iron-session';
-import { NextApiResponse } from 'next';
 import { TUseCase } from './usecase';
+import { Signal } from './web';
 
 /**
  * A factory function that creates instances of a use case.
@@ -8,6 +8,6 @@ import { TUseCase } from './usecase';
  * @param session An optional session object to use for the use case.
  * @returns An instance of the use case.
  */
-type TUseCaseFactory<TRequestModel> = (response: NextApiResponse, session?: IronSession) => TUseCase<TRequestModel>;
+type TUseCaseFactory<TRequestModel> = (response: Signal, session?: IronSession) => TUseCase<TRequestModel>;
 
 export default TUseCaseFactory;

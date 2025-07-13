@@ -126,10 +126,12 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         } else {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>]>((context: interfaces.Context) => (response: Signal<TViewModel>) => {
-                    const presenter = new Presenter(response);
-                    return new UseCase(presenter, ...useCaseContructorArgs);
-                });
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>]>(
+                    (context: interfaces.Context) => (response: Signal<TViewModel>) => {
+                        const presenter = new Presenter(response);
+                        return new UseCase(presenter, ...useCaseContructorArgs);
+                    },
+                );
         }
     }
 }
@@ -165,7 +167,11 @@ export class BaseStreamableFeature<
         private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         private UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>, ...args: any[]) => TUseCase<TRequestModel>,
         private useCaseContructorArgs: any[] = [],
-        private Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
+        private Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BaseStreamingPresenter<
+            TResponseModel,
+            TErrorModel,
+            TViewModel
+        >,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
     ) {}
@@ -230,10 +236,12 @@ export class BaseStreamableFeature<
         } else {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>]>((context: interfaces.Context) => (response: Signal<TViewModel>) => {
-                    const presenter = new Presenter(response);
-                    return new UseCase(presenter, ...useCaseContructorArgs);
-                });
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>]>(
+                    (context: interfaces.Context) => (response: Signal<TViewModel>) => {
+                        const presenter = new Presenter(response);
+                        return new UseCase(presenter, ...useCaseContructorArgs);
+                    },
+                );
         }
     }
 }
