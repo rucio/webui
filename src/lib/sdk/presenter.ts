@@ -1,11 +1,10 @@
-import { TWebResponse } from './web';
+import { Signal, TWebResponse } from './web';
 import { Transform, TransformCallback } from 'stream';
 import { BaseOutputPort, BaseStreamingOutputPort } from './primary-ports';
-import { NextApiResponse } from 'next';
 import { IronSession } from 'iron-session';
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 import { BaseViewModel } from './view-models';
-import { pipeline } from 'stream';
+
 /**
  * A base class for presenters.
  * @typeparam TResponseModel The type of the response model to present.
@@ -13,10 +12,10 @@ import { pipeline } from 'stream';
  * @typeparam TErrorModel The type of the error model to present.
  */
 export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel> implements BaseOutputPort<TResponseModel, TErrorModel> {
-    response: NextApiResponse;
+    response: Signal<TViewModel>;
     session: IronSession | undefined;
 
-    constructor(response: NextApiResponse, session?: IronSession) {
+    constructor(response: Signal<TViewModel>, session?: IronSession) {
         this.response = response;
         this.session = session;
     }
@@ -78,8 +77,8 @@ export abstract class BaseStreamingPresenter<
     extends Transform
     implements BaseStreamingOutputPort<TResponseModel, TErrorModel, TStreamViewModel>
 {
-    response: TWebResponse;
-    constructor(response: TWebResponse) {
+    response: Signal<TStreamViewModel>;
+    constructor(response: Signal<TStreamViewModel>) {
         super({ objectMode: true });
         this.response = response;
     }
@@ -100,9 +99,8 @@ export abstract class BaseStreamingPresenter<
      * @returns A promise that resolves when the error has been presented.
      */
     presentError(errorModel: TErrorModel): void {
-        const response = this.response as NextApiResponse;
         const { status, viewModel } = this.convertErrorModelToViewModel(errorModel);
-        response.status(status).json(viewModel);
+        this.response.status(status).json(viewModel);
         return;
     }
 

@@ -2,15 +2,15 @@ import { SetX509LoginSessionError, SetX509LoginSessionResponse } from '@/lib/cor
 import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
 import SetX509LoginSessionOutputPort from '@/lib/core/port/primary/set-x509-login-session-output-port';
 import { IronSession } from 'iron-session';
-import { NextApiResponse } from 'next';
 import { setActiveSessionUser, setEmptySession } from '../auth/session-utils';
 import { AuthViewModel } from '../data/auth/auth';
+import { Signal } from '@/lib/sdk/web';
 
-export default class SetX509LoginSessionPresenter implements SetX509LoginSessionOutputPort<NextApiResponse> {
-    response: NextApiResponse;
+export default class SetX509LoginSessionPresenter implements SetX509LoginSessionOutputPort<Signal> {
+    response: Signal;
     session: IronSession;
 
-    constructor(session: IronSession, res: NextApiResponse) {
+    constructor(session: IronSession, res: Signal) {
         this.response = res;
         this.session = session;
     }

@@ -1,5 +1,4 @@
 import { ListDIDsError, ListDIDsResponse } from '@/lib/core/usecase-models/list-dids-usecase-models';
-import { NextApiResponse } from 'next';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { DIDType } from '@/lib/core/entity/rucio';
@@ -9,13 +8,6 @@ export default class ListDIDsPresenter
     extends BaseStreamingPresenter<ListDIDsResponse, ListDIDsError, ListDIDsViewModel>
     implements ListDIDsOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListDIDsResponse): ListDIDsViewModel {
         const viewModel: ListDIDsViewModel = {
             status: 'success',
