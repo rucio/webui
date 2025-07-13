@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -13,7 +13,7 @@ export type GetRSEUsageControllerParameters = TAuthenticatedControllerParameters
 
 @injectable()
 class GetRSEUsageController extends BaseController<GetRSEUsageControllerParameters, AuthenticatedRequestModel<GetRSEUsageRequest>> {
-    constructor(@inject(USECASE_FACTORY.GET_RSE_USAGE) getRSEUsageUseCaseFactory: (response: NextApiResponse) => GetRSEUsageInputPort) {
+    constructor(@inject(USECASE_FACTORY.GET_RSE_USAGE) getRSEUsageUseCaseFactory: (response: Signal) => GetRSEUsageInputPort) {
         super(getRSEUsageUseCaseFactory);
     }
     prepareRequestModel(parameters: GetRSEUsageControllerParameters): AuthenticatedRequestModel<GetRSEUsageRequest> {

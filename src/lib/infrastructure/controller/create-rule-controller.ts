@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -28,7 +28,7 @@ export type CreateRuleControllerParameters = TAuthenticatedControllerParameters 
 
 @injectable()
 class CreateRuleController extends BaseController<CreateRuleControllerParameters, AuthenticatedRequestModel<CreateRuleRequest>> {
-    constructor(@inject(USECASE_FACTORY.CREATE_RULE) createRuleUseCaseFactory: (response: NextApiResponse) => CreateRuleInputPort) {
+    constructor(@inject(USECASE_FACTORY.CREATE_RULE) createRuleUseCaseFactory: (response: Signal) => CreateRuleInputPort) {
         super(createRuleUseCaseFactory);
     }
     prepareRequestModel(parameters: CreateRuleControllerParameters): AuthenticatedRequestModel<CreateRuleRequest> {

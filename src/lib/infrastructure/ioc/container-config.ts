@@ -27,7 +27,6 @@ import SetX509LoginSessionPresenter from '../presenter/set-x509-login-session-pr
 import StreamInputPort from '@/lib/core/port/primary/stream-input-port';
 import StreamUseCase from '@/lib/core/use-case/stream-usecase';
 import { RSEOld } from '@/lib/core/entity/rucio';
-import StreamingController, { IStreamingController } from '../controller/streaming-controller';
 import SwitchAccountInputPort from '@/lib/core/port/primary/switch-account-input-port';
 import SwitchAccountUseCase from '@/lib/core/use-case/switch-account-usecase';
 import SwitchAccountController, { ISwitchAccountController } from '../controller/switch-account-controller';
@@ -169,7 +168,7 @@ appContainer
     );
 
 appContainer.bind<StreamInputPort<RSEOld>>(INPUT_PORT.STREAM).to(StreamUseCase).inRequestScope();
-appContainer.bind<IStreamingController>(CONTROLLERS.STREAM).to(StreamingController);
+// appContainer.bind<IStreamingController>(CONTROLLERS.STREAM).to(StreamingController);
 // appContainer
 //     .bind<interfaces.Factory<StreamInputPort<RSEOld>>>(USECASE_FACTORY.STREAM)
 //     .toFactory<StreamUseCase, [NextApiResponse]>((context: interfaces.Context) => (response: NextApiResponse) => {

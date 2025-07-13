@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -15,7 +15,7 @@ export type GetFTSLinkControllerParameters = TAuthenticatedControllerParameters 
 
 @injectable()
 class GetFTSLinkController extends BaseController<GetFTSLinkControllerParameters, AuthenticatedRequestModel<GetFTSLinkRequest>> {
-    constructor(@inject(USECASE_FACTORY.GET_FTS_LINK) GetFTSLinkUseCaseFactory: (response: NextApiResponse) => GetFTSLinkInputPort) {
+    constructor(@inject(USECASE_FACTORY.GET_FTS_LINK) GetFTSLinkUseCaseFactory: (response: Signal) => GetFTSLinkInputPort) {
         super(GetFTSLinkUseCaseFactory);
     }
     prepareRequestModel(parameters: GetFTSLinkControllerParameters): AuthenticatedRequestModel<GetFTSLinkRequest> {

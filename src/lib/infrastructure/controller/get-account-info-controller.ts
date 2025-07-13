@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -13,7 +13,7 @@ export type GetAccountInfoControllerParameters = TAuthenticatedControllerParamet
 
 @injectable()
 class GetAccountInfoController extends BaseController<GetAccountInfoControllerParameters, AuthenticatedRequestModel<GetAccountInfoRequest>> {
-    constructor(@inject(USECASE_FACTORY.GET_ACCOUNT_INFO) getAccountInfoUseCaseFactory: (response: NextApiResponse) => GetAccountInfoInputPort) {
+    constructor(@inject(USECASE_FACTORY.GET_ACCOUNT_INFO) getAccountInfoUseCaseFactory: (response: Signal) => GetAccountInfoInputPort) {
         super(getAccountInfoUseCaseFactory);
     }
     prepareRequestModel(parameters: GetAccountInfoControllerParameters): AuthenticatedRequestModel<GetAccountInfoRequest> {
