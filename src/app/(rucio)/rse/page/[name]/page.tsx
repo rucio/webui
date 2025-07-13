@@ -4,24 +4,9 @@ import { RSEDetailsViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory';
 import TUseCaseFactory from '@/lib/sdk/usecase-factory';
-import { Signal } from '@/lib/sdk/web';
-import { Writable } from 'stream';
 import { cookies } from 'next/headers';
 import { getRucioAuthToken } from '@/lib/infrastructure/auth/session-utils';
-
-class MockSignal<T = any> extends Writable implements Signal<T> {
-    data?: T;
-    statusCode?: number;
-
-    json(data: T): void {
-        this.data = data;
-    }
-
-    status(code: number): this {
-        this.statusCode = code;
-        return this;
-    }
-}
+import { MockSignal } from '@/lib/infrastructure/utils/mock-signal';
 
 export default async function Page({ params }: { params: { name: string } }) {
     const { name } = params;
