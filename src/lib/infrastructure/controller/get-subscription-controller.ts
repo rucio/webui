@@ -2,7 +2,7 @@ import { GetSubscriptionInputPort } from '@/lib/core/port/primary/get-subscripti
 import { GetSubscriptionRequest } from '@/lib/core/usecase-models/get-subscription-usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
 import { inject, injectable } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 export type GetSubscriptionControllerParameters = TAuthenticatedControllerParameters & {
@@ -12,7 +12,7 @@ export type GetSubscriptionControllerParameters = TAuthenticatedControllerParame
 
 @injectable()
 export default class GetSubscriptionController extends BaseController<GetSubscriptionControllerParameters, GetSubscriptionRequest> {
-    constructor(@inject(USECASE_FACTORY.GET_SUBSCRIPTION) getSubscriptionUseCaseFactory: (response: NextApiResponse) => GetSubscriptionInputPort) {
+    constructor(@inject(USECASE_FACTORY.GET_SUBSCRIPTION) getSubscriptionUseCaseFactory: (response: Signal) => GetSubscriptionInputPort) {
         super(getSubscriptionUseCaseFactory);
     }
 

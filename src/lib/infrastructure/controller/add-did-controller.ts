@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -15,7 +15,7 @@ export type AddDIDControllerParameters = TAuthenticatedControllerParameters & {
 
 @injectable()
 class AddDIDController extends BaseController<AddDIDControllerParameters, AuthenticatedRequestModel<AddDIDRequest>> {
-    constructor(@inject(USECASE_FACTORY.ADD_DID) addDIDUseCaseFactory: (response: NextApiResponse) => AddDIDInputPort) {
+    constructor(@inject(USECASE_FACTORY.ADD_DID) addDIDUseCaseFactory: (response: Signal) => AddDIDInputPort) {
         super(addDIDUseCaseFactory);
     }
     prepareRequestModel(parameters: AddDIDControllerParameters): AuthenticatedRequestModel<AddDIDRequest> {

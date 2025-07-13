@@ -38,6 +38,14 @@ export default async function Page({ params }: { params: { name: string } }) {
         rseName: name,
     });
 
+    if (signal.statusCode && signal.statusCode !== 200) {
+        return <div>Error fetching RSE details</div>;
+    }
+
+    if (signal.data === undefined || signal.data.status === 'error') {
+        return <div>No RSE details found</div>;
+    }
+
     console.log('RSE Details:', signal.data);
 
     return <DetailsRSE name={params.name} />;

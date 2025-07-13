@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -18,7 +18,7 @@ class ListRuleReplicaLockStatesController extends BaseController<
 > {
     constructor(
         @inject(USECASE_FACTORY.LIST_RULE_REPLICA_LOCK_STATES)
-        listRuleReplicaLockStatesUseCaseFactory: (response: NextApiResponse) => ListRuleReplicaLockStatesInputPort,
+        listRuleReplicaLockStatesUseCaseFactory: (response: Signal) => ListRuleReplicaLockStatesInputPort,
     ) {
         super(listRuleReplicaLockStatesUseCaseFactory);
     }

@@ -4,7 +4,7 @@ import { ListAccountRSEQuotasRequest } from '@/lib/core/usecase-models/list-acco
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { inject, injectable } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 export type ListAccountRSEQuotasControllerParameters = TAuthenticatedControllerParameters & {
@@ -20,7 +20,7 @@ class ListAccountRSEQuotasController extends BaseController<
 > {
     constructor(
         @inject(USECASE_FACTORY.LIST_ACCOUNT_RSE_QUOTAS)
-        listAccountRSEQuotasUseCaseFactory: (response: NextApiResponse) => ListAccountRSEQuotasInputPort,
+        listAccountRSEQuotasUseCaseFactory: (response: Signal) => ListAccountRSEQuotasInputPort,
     ) {
         super(listAccountRSEQuotasUseCaseFactory);
     }
