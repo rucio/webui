@@ -40,8 +40,8 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
 
     const tabsByType: Record<DIDType, string[]> = {
         File: ['Replicas', 'Parents', 'Attributes'],
-        Dataset: ['Rules', 'Dataset Replicas', 'Contents Replicas', 'Attributes'],
-        Container: ['Contents', 'Rules', 'Attributes'],
+        Dataset: ['Rules', 'Replicas', 'Contents Replicas', 'Attributes', 'Parents'],
+        Container: ['Contents', 'Rules', 'Attributes', 'Parents'],
         All: [],
         Collection: [],
         Derived: [],
