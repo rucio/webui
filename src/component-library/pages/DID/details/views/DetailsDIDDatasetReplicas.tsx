@@ -12,13 +12,23 @@ import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/fea
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 
 const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
-    const percentage = (data.available_files / data.length) * 100;
+    let percentage: number = 0;
+    if (data.length > 0) {
+        percentage = (data.available_files / data.length) * 100;
+    }
+
+    const getPercentageText = () => {
+        const baseText = `${data.available_files} files out of ${data.length}`;
+        if (data.length === 0) {
+            return baseText;
+        }
+        return `${baseText} (${percentage.toFixed(2)}%)`;
+    };
+
     return (
         <div className="flex flex-col w-full h-full justify-center space-y-2">
             <ProgressBar percentage={percentage} />
-            <span className="text-ellipsis text-sm text-neutral-900 dark:text-neutral-100">
-                {data.available_files} files out of {data.length} ({percentage.toFixed(2)}%)
-            </span>
+            <span className="text-ellipsis text-sm text-neutral-900 dark:text-neutral-100">{getPercentageText()}</span>
         </div>
     );
 };
@@ -52,6 +62,10 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name }: Detai
             cellRenderer: ClickableRSE,
             filter: true,
             filterParams: DefaultTextFilterParams,
+            cellStyle: {
+                ...badgeCellWrapperStyle,
+                alignItems: 'center',
+            },
         },
         {
             headerName: 'State',
