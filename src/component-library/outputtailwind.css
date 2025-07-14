@@ -1330,6 +1330,10 @@ html {
   white-space: nowrap;
 }
 
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
+
 .whitespace-normal {
   white-space: normal;
 }
