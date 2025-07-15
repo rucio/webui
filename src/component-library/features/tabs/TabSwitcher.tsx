@@ -17,7 +17,7 @@ export const TabSwitcher = ({ tabNames, onSwitch, activeIndex }: TabSwitcherProp
     );
 
     return (
-        <KeyValueWrapper className="flex flex-row w-full gap-x-2 p-1">
+        <KeyValueWrapper className="flex flex-col gap-y-2 md:flex-row w-full md:gap-y-0 md:gap-x-2 p-1">
             {tabNames.map((name, index) => {
                 const isActive = index === activeIndex;
                 const tabClasses = cn(regularTabClasses, { [activeTabClasses]: isActive });
