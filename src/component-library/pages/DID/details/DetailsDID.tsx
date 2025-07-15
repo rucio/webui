@@ -19,6 +19,7 @@ import { DetailsDIDParents } from '@/component-library/pages/DID/details/views/D
 import { DetailsDIDContents } from '@/component-library/pages/DID/details/views/DetailsDIDContents';
 import { DetailsDIDContentsReplicas } from '@/component-library/pages/DID/details/views/DetailsDIDContentsReplicas';
 import { WarningField } from '@/component-library/features/fields/WarningField';
+import { DetailsDIDDatasetReplicas } from './views/DetailsDIDDatasetReplicas';
 
 type DetailsDIDTablesProps = {
     scope: string;
@@ -30,6 +31,7 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
     const allTabs: Map<string, DetailsDIDView> = new Map([
         ['Attributes', DetailsDIDAttributes],
         ['Replicas', DetailsDIDFileReplicas],
+        ['Dataset Replicas', DetailsDIDDatasetReplicas],
         ['Rules', DetailsDIDRules],
         ['Parents', DetailsDIDParents],
         ['Contents', DetailsDIDContents],
@@ -38,7 +40,7 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
 
     const tabsByType: Record<DIDType, string[]> = {
         File: ['Replicas', 'Parents', 'Attributes'],
-        Dataset: ['Rules', 'Replicas', 'Contents Replicas', 'Attributes'],
+        Dataset: ['Rules', 'Dataset Replicas', 'Contents Replicas', 'Attributes'],
         Container: ['Contents', 'Rules', 'Attributes'],
         All: [],
         Collection: [],
