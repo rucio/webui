@@ -57,13 +57,6 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             sortable: false,
             cellRenderer: ClickableId,
         },
-        // TODO: find out if stating account is needed
-        // {
-        //     headerName: 'Account',
-        //     field: 'account',
-        //     filter: true,
-        //     filterParams: DefaultTextFilterParams,
-        // },
         {
             headerName: 'RSE Expression',
             field: 'rse_expression',
@@ -121,6 +114,12 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             field: 'locks_stuck_cnt',
             minWidth: 90,
             sortable: false,
+        },
+        {
+            headerName: 'Account',
+            field: 'account',
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
     ]);
 

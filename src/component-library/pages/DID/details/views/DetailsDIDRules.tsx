@@ -96,6 +96,12 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             minWidth: 90,
             sortable: false,
         },
+        {
+            headerName: 'Account',
+            field: 'account',
+            filter: true,
+            filterParams: DefaultTextFilterParams,
+        },
     ]);
 
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
