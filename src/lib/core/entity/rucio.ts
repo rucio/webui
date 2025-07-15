@@ -91,6 +91,7 @@ export type DIDMeta = {
     md5: string | null;
     guid: string | null;
     bytes: number | null;
+    is_opendata: boolean;
 };
 
 export type DIDRules = {
