@@ -1,5 +1,4 @@
 import { ListAllRSEsError, ListAllRSEsResponse } from '@/lib/core/usecase-models/list-all-rses-usecase-models';
-import { NextApiResponse } from 'next';
 import { RSEViewModel, generateEmptyRSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListAllRSEsOutputPort } from '@/lib/core/port/primary/list-all-rses-ports';
@@ -8,13 +7,6 @@ export default class ListAllRSEsPresenter
     extends BaseStreamingPresenter<ListAllRSEsResponse, ListAllRSEsError, RSEViewModel>
     implements ListAllRSEsOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListAllRSEsResponse): RSEViewModel {
         const viewModel: RSEViewModel = {
             ...responseModel,

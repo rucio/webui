@@ -1,5 +1,4 @@
 import { ListDIDContentsError, ListDIDContentsResponse } from '@/lib/core/usecase-models/list-did-contents-usecase-models';
-import { NextApiResponse } from 'next';
 import { DIDViewModel, generateEmptyDIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListDIDContentsOutputPort } from '@/lib/core/port/primary/list-did-contents-ports';
@@ -8,13 +7,6 @@ export default class ListDIDContentsPresenter
     extends BaseStreamingPresenter<ListDIDContentsResponse, ListDIDContentsError, DIDViewModel>
     implements ListDIDContentsOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListDIDContentsResponse): DIDViewModel {
         const viewModel: DIDViewModel = {
             ...responseModel,

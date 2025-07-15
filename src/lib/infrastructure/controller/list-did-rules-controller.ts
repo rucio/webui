@@ -3,7 +3,7 @@ import { ListDIDRulesRequest } from '@/lib/core/usecase-models/list-did-rules-us
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { inject, injectable } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 export type ListDIDRulesControllerParameters = TAuthenticatedControllerParameters & {
@@ -14,7 +14,7 @@ export type ListDIDRulesControllerParameters = TAuthenticatedControllerParameter
 
 @injectable()
 class ListDIDRulesController extends BaseController<ListDIDRulesControllerParameters, AuthenticatedRequestModel<ListDIDRulesRequest>> {
-    constructor(@inject(USECASE_FACTORY.LIST_DID_RULES) listDIDRulesUseCaseFactory: (response: NextApiResponse) => ListDIDRulesInputPort) {
+    constructor(@inject(USECASE_FACTORY.LIST_DID_RULES) listDIDRulesUseCaseFactory: (response: Signal) => ListDIDRulesInputPort) {
         super(listDIDRulesUseCaseFactory);
     }
 

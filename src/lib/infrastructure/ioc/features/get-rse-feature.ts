@@ -2,7 +2,7 @@ import RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-p
 import { GetRSEError, GetRSERequest, GetRSEResponse } from '@/lib/core/usecase-models/get-rse-usecase-models';
 import { GetRSEControllerParameters } from '@/lib/infrastructure/controller/get-rse-controller';
 import GetRSEController from '@/lib/infrastructure/controller/get-rse-controller';
-import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { RSEDetailsViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
@@ -14,7 +14,7 @@ import GetRSEUseCase from '@/lib/core/use-case/get-rse-usecase';
 
 import GetRSEPresenter from '@/lib/infrastructure/presenter/get-rse-presenter';
 
-export default class GetRSEFeature extends BaseFeature<GetRSEControllerParameters, GetRSERequest, GetRSEResponse, GetRSEError, RSEViewModel> {
+export default class GetRSEFeature extends BaseFeature<GetRSEControllerParameters, GetRSERequest, GetRSEResponse, GetRSEError, RSEDetailsViewModel> {
     constructor(appContainer: Container) {
         const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE);
 

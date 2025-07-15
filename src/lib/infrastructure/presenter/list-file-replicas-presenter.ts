@@ -1,5 +1,4 @@
 import { ListFileReplicasError, ListFileReplicasResponse } from '@/lib/core/usecase-models/list-file-replicas-usecase-models';
-import { NextApiResponse } from 'next';
 import { FileReplicaStateViewModel, generateEmptyFilereplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListFileReplicasOutputPort } from '@/lib/core/port/primary/list-file-replicas-ports';
@@ -8,13 +7,6 @@ export default class ListFileReplicasPresenter
     extends BaseStreamingPresenter<ListFileReplicasResponse, ListFileReplicasError, FileReplicaStateViewModel>
     implements ListFileReplicasOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListFileReplicasResponse): FileReplicaStateViewModel {
         const viewModel: FileReplicaStateViewModel = {
             ...responseModel,
