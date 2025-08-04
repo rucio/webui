@@ -94,6 +94,22 @@ export type DIDMeta = {
     bytes: number | null;
 };
 
+// Metadata filter operators
+export type MetaOperator = '=' | '!=' | '>' | '<' | '>=' | '<=';
+
+// Extended metadata filter with operator support
+export interface MetaFilter extends DIDKeyValuePair {
+    operator: MetaOperator;
+}
+
+// Type for DID search with metadata filtering
+export interface DIDSearchParams {
+    scope: string;
+    name: string;
+    type: DIDType;
+    filters?: MetaFilter[];
+}
+
 export type DIDRules = {
     id: string;
     name: string;
