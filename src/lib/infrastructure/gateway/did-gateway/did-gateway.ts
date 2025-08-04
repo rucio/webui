@@ -9,7 +9,7 @@ import {
     AttachDIDDTO,
     SetDIDStatusDTO,
 } from '@/lib/core/dto/did-dto';
-import { DID, DIDAvailability, DIDType } from '@/lib/core/entity/rucio';
+import { DID, DIDAvailability, DIDType, MetaFilter } from '@/lib/core/entity/rucio';
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
 import { injectable } from 'inversify';
 import GetDIDEndpoint from './endpoints/get-did-endpoint';
@@ -177,9 +177,9 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
         }
     }
 
-    async listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO> {
+    async listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType, filters: MetaFilter[] = []): Promise<ListDIDDTO> {
         try {
-            const endpoint = new ListDIDsEndpoint(rucioAuthToken, scope, name, type);
+            const endpoint = new ListDIDsEndpoint(rucioAuthToken, scope, name, type, filters);
             const errorDTO: ListDIDDTO | undefined = await endpoint.fetch();
             if (!errorDTO) {
                 const dto: ListDIDDTO = {
