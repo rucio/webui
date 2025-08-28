@@ -171,6 +171,16 @@ export type RulePageLockEntry = {
     fts_link: string;
 };
 
+export type RuleFilter = {
+    account?: string;
+    scope?: string;
+    name?: string;
+    updated_after?: Date;
+    updated_before?: Date;
+    state?: RuleState;
+    activity?: string;
+};
+
 export type Rule = {
     id: string;
     scope: string;

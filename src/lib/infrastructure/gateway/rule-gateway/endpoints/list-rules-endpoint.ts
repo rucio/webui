@@ -3,7 +3,7 @@ import { BaseStreamableDTO } from '@/lib/sdk/dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { Response } from 'node-fetch';
-import { convertToRuleDTO, formatFilterDate, ListRulesFilter, TRucioRule } from '../rule-gateway-utils';
+import { convertRuleState, convertToRuleDTO, formatFilterDate, ListRulesFilter, TRucioRule } from '../rule-gateway-utils';
 
 const DEFAULT_PARAMETER = '*';
 
@@ -24,8 +24,24 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
             account: this.filter?.account ?? DEFAULT_PARAMETER,
             scope: this.filter?.scope ?? DEFAULT_PARAMETER,
         };
-        if (this.filter?.created_after) {
-            params.created_after = formatFilterDate(this.filter.created_after);
+
+        if (this.filter?.activity) {
+            params.activity = this.filter.activity;
+        }
+        if (this.filter?.updated_after) {
+            params.updated_after = formatFilterDate(this.filter.updated_after);
+        }
+        if (this.filter?.updated_before) {
+            params.updated_before = formatFilterDate(this.filter.updated_before);
+        }
+        if (this.filter?.state) {
+            const ruleFilter = convertRuleState(this.filter.state);
+            if (ruleFilter) {
+                params.state = ruleFilter;
+            }
+        }
+        if (this.filter?.name) {
+            params.name = this.filter.name;
         }
 
         const request: HTTPRequest = {
