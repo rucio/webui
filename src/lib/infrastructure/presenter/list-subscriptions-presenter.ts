@@ -1,6 +1,5 @@
 import { ListSubscriptionsError, ListSubscriptionsResponse } from '@/lib/core/usecase-models/list-subscriptions-usecase-models';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
-import { NextApiResponse } from 'next';
 import { getEmptySubscriptionViewModel, SubscriptionViewModel } from '../data/view-model/subscriptions';
 
 export default class ListSubscriptionsPresenter extends BaseStreamingPresenter<
@@ -8,13 +7,6 @@ export default class ListSubscriptionsPresenter extends BaseStreamingPresenter<
     ListSubscriptionsError,
     SubscriptionViewModel
 > {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListSubscriptionsResponse): SubscriptionViewModel {
         const viewModel: SubscriptionViewModel = {
             ...responseModel,

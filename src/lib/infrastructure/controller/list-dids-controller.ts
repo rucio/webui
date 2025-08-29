@@ -3,7 +3,7 @@ import { ListDIDsRequest } from '@/lib/core/usecase-models/list-dids-usecase-mod
 import { DIDType } from '@/lib/core/entity/rucio';
 import { ListDIDsInputPort } from '@/lib/core/port/primary/list-dids-ports';
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 
@@ -13,7 +13,7 @@ export type ListDIDsControllerParameters = TAuthenticatedControllerParameters & 
 };
 @injectable()
 class ListDIDsController extends BaseController<ListDIDsControllerParameters, AuthenticatedRequestModel<ListDIDsRequest>> {
-    constructor(@inject(USECASE_FACTORY.LIST_DIDS) listDIDsUseCaseFactory: (response: NextApiResponse) => ListDIDsInputPort) {
+    constructor(@inject(USECASE_FACTORY.LIST_DIDS) listDIDsUseCaseFactory: (response: Signal) => ListDIDsInputPort) {
         super(listDIDsUseCaseFactory);
     }
     prepareRequestModel(parameters: ListDIDsControllerParameters): AuthenticatedRequestModel<ListDIDsRequest> {

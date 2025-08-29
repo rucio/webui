@@ -27,8 +27,6 @@ import SetX509LoginSessionPresenter from '../presenter/set-x509-login-session-pr
 import StreamInputPort from '@/lib/core/port/primary/stream-input-port';
 import StreamUseCase from '@/lib/core/use-case/stream-usecase';
 import { RSEOld } from '@/lib/core/entity/rucio';
-import StreamingController, { IStreamingController } from '../controller/streaming-controller';
-import StreamPresenter from '../presenter/stream-presenter';
 import SwitchAccountInputPort from '@/lib/core/port/primary/switch-account-input-port';
 import SwitchAccountUseCase from '@/lib/core/use-case/switch-account-usecase';
 import SwitchAccountController, { ISwitchAccountController } from '../controller/switch-account-controller';
@@ -170,13 +168,13 @@ appContainer
     );
 
 appContainer.bind<StreamInputPort<RSEOld>>(INPUT_PORT.STREAM).to(StreamUseCase).inRequestScope();
-appContainer.bind<IStreamingController>(CONTROLLERS.STREAM).to(StreamingController);
-appContainer
-    .bind<interfaces.Factory<StreamInputPort<RSEOld>>>(USECASE_FACTORY.STREAM)
-    .toFactory<StreamUseCase, [NextApiResponse]>((context: interfaces.Context) => (response: NextApiResponse) => {
-        const streamingGateway: StreamGatewayOutputPort = appContainer.get(GATEWAYS.STREAM);
-        return new StreamUseCase(new StreamPresenter(response), streamingGateway);
-    });
+// appContainer.bind<IStreamingController>(CONTROLLERS.STREAM).to(StreamingController);
+// appContainer
+//     .bind<interfaces.Factory<StreamInputPort<RSEOld>>>(USECASE_FACTORY.STREAM)
+//     .toFactory<StreamUseCase, [NextApiResponse]>((context: interfaces.Context) => (response: NextApiResponse) => {
+//         const streamingGateway: StreamGatewayOutputPort = appContainer.get(GATEWAYS.STREAM);
+//         return new StreamUseCase(new StreamPresenter(response), streamingGateway);
+//     });
 
 // appContainer.bind<GetSiteHeaderInputPort>(INPUT_PORT.GET_SITE_HEADER).to(GetSiteHeaderUseCase).inRequestScope();
 // appContainer.bind<GetSiteHeaderControllerParameters>(CONTROLLERS.GET_SITE_HEADER).to(GetSiteHeaderController);

@@ -1,5 +1,4 @@
 import { CreateRuleError, CreateRuleResponse } from '@/lib/core/usecase-models/create-rule-usecase-models';
-import { NextApiResponse } from 'next';
 import { CreateRuleViewModel, getEmptyCreateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { BasePresenter } from '@/lib/sdk/presenter';
 import { CreateRuleOutputPort } from '@/lib/core/port/primary/create-rule-ports';
@@ -8,13 +7,6 @@ export default class CreateRulePresenter
     extends BasePresenter<CreateRuleResponse, CreateRuleError, CreateRuleViewModel>
     implements CreateRuleOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     convertResponseModelToViewModel(responseModel: CreateRuleResponse): { viewModel: CreateRuleViewModel; status: number } {
         return {
             status: 200,

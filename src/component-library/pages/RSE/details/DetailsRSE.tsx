@@ -73,6 +73,7 @@ const DetailsRSEProtocols = ({ protocols }: { protocols: RSEDetailsProtocol[] })
 
 type DetailsRSEProps = {
     name: string;
+    initialMeta?: RSEDetailsViewModel;
 };
 
 export const DetailsRSE = (props: DetailsRSEProps) => {
@@ -108,9 +109,9 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
         isFetching: isMetaFetching,
     } = useQuery<RSEDetailsViewModel>({
         queryKey: metaQueryKey,
+        initialData: props.initialMeta,
         queryFn: queryMeta,
-        retry: false,
-        refetchOnWindowFocus: false,
+        enabled: !props.initialMeta,
     });
 
     const queryAttributes = async () => {
@@ -146,7 +147,7 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
         );
     }
 
-    const isLoading = isMetaFetching || isAttributesFetching || attributes === undefined || meta === undefined;
+    const isLoading = isMetaFetching || meta === undefined;
     if (isLoading) {
         return (
             <div className="flex grow items-center justify-center">
@@ -160,7 +161,7 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
             <CopyableHeading text={props.name} />
             <DetailsRSEKeyValues meta={meta} />
             <DetailsRSEProtocols protocols={meta.protocols} />
-            <DetailsRSEAttributes attributes={attributes} />
+            {!isAttributesFetching && attributes !== undefined && <DetailsRSEAttributes attributes={attributes} />}
         </div>
     );
 };

@@ -1,19 +1,12 @@
 import { ListDIDRulesOutputPort } from '@/lib/core/port/primary/list-did-rules-ports';
 import { ListDIDRulesError, ListDIDRulesResponse } from '@/lib/core/usecase-models/list-did-rules-usecase-models';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
-import { NextApiResponse } from 'next';
 import { DIDRulesViewModel, generateEmptyDIDRulesViewModel as getEmptyDIDRulesViewModel } from '../data/view-model/did';
 
 export default class ListDIDRulesPresenter
     extends BaseStreamingPresenter<ListDIDRulesResponse, ListDIDRulesError, DIDRulesViewModel>
     implements ListDIDRulesOutputPort
 {
-    response: NextApiResponse<any>;
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     convertErrorModelToViewModel(errorModel: ListDIDRulesError): { status: number; viewModel: DIDRulesViewModel } {
         const viewModel: DIDRulesViewModel = getEmptyDIDRulesViewModel();
 

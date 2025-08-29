@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -19,7 +19,7 @@ class ListDatasetReplicasController extends BaseController<
     AuthenticatedRequestModel<ListDatasetReplicasRequest>
 > {
     constructor(
-        @inject(USECASE_FACTORY.LIST_DATASET_REPLICAS) listDatasetReplicasUseCaseFactory: (response: NextApiResponse) => ListDatasetReplicasInputPort,
+        @inject(USECASE_FACTORY.LIST_DATASET_REPLICAS) listDatasetReplicasUseCaseFactory: (response: Signal) => ListDatasetReplicasInputPort,
     ) {
         super(listDatasetReplicasUseCaseFactory);
     }

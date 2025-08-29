@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -18,7 +18,7 @@ class ListAccountRSEUsageController extends BaseController<
 > {
     constructor(
         @inject(USECASE_FACTORY.LIST_ACCOUNT_RSE_USAGE)
-        listAccountRSEUsageUseCaseFactory: (response: NextApiResponse) => ListAccountRSEUsageInputPort,
+        listAccountRSEUsageUseCaseFactory: (response: Signal) => ListAccountRSEUsageInputPort,
     ) {
         super(listAccountRSEUsageUseCaseFactory);
     }
