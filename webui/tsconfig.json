@@ -27,6 +27,7 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
+      "@/component-library/*": ["./src/lib/infrastructure/component-library/*"],
       "@/*": ["./src/*"]
     }
   },
