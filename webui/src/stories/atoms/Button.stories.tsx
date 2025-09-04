@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 
-import { Button } from './Button';
+import { Button } from '@/component-library/atoms/legacy/Button/Button';
 
 export default {
     title: 'Components/Button',

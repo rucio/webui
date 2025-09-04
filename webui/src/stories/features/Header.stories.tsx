@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Header } from './Header';
+import { Header } from '@/component-library/features/layout/Header';
 import { Role, User } from '@/lib/core/entity/auth-models';
 
 const meta: Meta<typeof Header> = {

@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useState } from 'react';
 import { HiChevronUp, HiChevronDown } from 'react-icons/hi';
 import { Collapsible } from '../helpers/Collapsible/Collapsible';
 

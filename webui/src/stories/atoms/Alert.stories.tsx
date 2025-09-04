@@ -1,6 +1,6 @@
 import type { StoryFn, Meta } from '@storybook/react';
 
-import { Alert as A } from './Alert';
+import { Alert as A } from '@/component-library/atoms/legacy/Alert/Alert';
 
 export default {
     title: 'Components/Misc',

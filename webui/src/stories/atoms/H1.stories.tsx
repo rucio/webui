@@ -1,6 +1,6 @@
 import type { StoryFn, Meta } from '@storybook/react';
 
-import { H1 as H1Component } from './H1';
+import { H1 as H1Component } from '@/component-library/atoms/legacy/text/headings/H1/H1';
 
 export default {
     title: 'Components/Text/Headings',
