@@ -16,6 +16,8 @@ interface SearchPanelProps {
     isRunning: boolean;
 }
 
+type SearchType = DIDType | 'all';
+
 export const DIDSearchPanel = (props: SearchPanelProps) => {
     // Try retrieving initial search parameters
     let initialScope: string | undefined, initialName: string | undefined;
@@ -42,7 +44,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
 
     const [scope, setScope] = useState<string | null>(initialScope ?? null);
     const [name, setName] = useState<string | null>(initialName ?? null);
-    const [type, setType] = useState<DIDType>(DIDType.DATASET);
+    const [type, setType] = useState<SearchType>('all');
 
     const scopeInputRef = useRef<HTMLInputElement>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
@@ -84,8 +86,10 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
 
         const params = new URLSearchParams({
             query: `${scope}${SCOPE_DELIMITER}${name}`,
-            type: type,
         });
+        if (type !== 'all') {
+            params.append('type', type);
+        }
 
         const url = '/api/feature/list-dids?' + params;
         props.startStreaming(url);
@@ -111,12 +115,13 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     return (
         <div className="flex flex-col space-y-2 w-full md:items-start md:flex-row md:space-y-0 md:space-x-2">
             <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
-                <Select onValueChange={value => setType(value as DIDType)} defaultValue={type}>
+                <Select onValueChange={value => setType(value as SearchType)} defaultValue={type}>
                     <SelectTrigger className="w-full sm:w-48">
                         <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem value="all">All</SelectItem>
                             <SelectItem value={DIDType.CONTAINER}>Container</SelectItem>
                             <SelectItem value={DIDType.DATASET}>Dataset</SelectItem>
                             <SelectItem value={DIDType.FILE}>File</SelectItem>
