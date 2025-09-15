@@ -1,5 +1,4 @@
 import { ListRulesError, ListRulesResponse } from '@/lib/core/usecase-models/list-rules-usecase-models';
-import { NextApiResponse } from 'next';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListRulesOutputPort } from '@/lib/core/port/primary/list-rules-ports';
 import { generateEmptyRuleViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
@@ -8,13 +7,6 @@ export default class ListRulesPresenter
     extends BaseStreamingPresenter<ListRulesResponse, ListRulesError, RuleViewModel>
     implements ListRulesOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListRulesResponse): RuleViewModel {
         const viewModel: RuleViewModel = {
             ...responseModel,

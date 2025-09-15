@@ -3,7 +3,7 @@ import { ListSubscriptionsRequest } from '@/lib/core/usecase-models/list-subscri
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { inject, injectable } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 export type ListSubscriptionsControllerParameters = TAuthenticatedControllerParameters & {
@@ -12,9 +12,7 @@ export type ListSubscriptionsControllerParameters = TAuthenticatedControllerPara
 
 @injectable()
 class ListSubscriptionsController extends BaseController<ListSubscriptionsControllerParameters, AuthenticatedRequestModel<ListSubscriptionsRequest>> {
-    constructor(
-        @inject(USECASE_FACTORY.LIST_SUBSCRIPTIONS) listSubscriptionsUseCaseFactory: (response: NextApiResponse) => ListSubscriptionsInputPort,
-    ) {
+    constructor(@inject(USECASE_FACTORY.LIST_SUBSCRIPTIONS) listSubscriptionsUseCaseFactory: (response: Signal) => ListSubscriptionsInputPort) {
         super(listSubscriptionsUseCaseFactory);
     }
     prepareRequestModel(parameters: ListSubscriptionsControllerParameters): AuthenticatedRequestModel<ListSubscriptionsRequest> {

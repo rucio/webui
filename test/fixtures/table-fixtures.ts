@@ -360,6 +360,7 @@ export function fixtureDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewMode
         availability: faker.datatype.boolean(),
         available_files: faker.number.int({ min: 0, max: 1e6 }),
         available_bytes: faker.number.int({ min: 0, max: 1e12 }),
+        length: faker.number.int({ min: 0, max: 1e6 }),
         creation_date: faker.date.past().toISOString(),
         last_accessed: faker.date.recent().toISOString(),
     };

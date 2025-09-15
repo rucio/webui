@@ -1,7 +1,5 @@
 import { LoginConfigError, LoginConfigResponse } from '@/lib/core/usecase-models/login-config-usecase-models';
 import { LoginConfigOutputPort } from '@/lib/core/port/primary/login-config-ports';
-import { IronSession } from 'iron-session';
-import { NextApiResponse } from 'next';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { BasePresenter } from '@/lib/sdk/presenter';
 
@@ -9,11 +7,6 @@ export default class LoginConfigPresenter
     extends BasePresenter<LoginConfigResponse, LoginConfigError, LoginViewModel>
     implements LoginConfigOutputPort
 {
-    constructor(response: NextApiResponse, session?: IronSession) {
-        super(response, session);
-        if (!this.session) throw new Error('Session not initialized');
-    }
-
     convertResponseModelToViewModel(responseModel: LoginConfigResponse): { viewModel: LoginViewModel; status: number } {
         const user = this.session?.user;
         let loggedIn = false;

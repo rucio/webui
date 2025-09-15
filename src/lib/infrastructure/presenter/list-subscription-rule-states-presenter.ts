@@ -2,7 +2,6 @@ import {
     ListSubscriptionRuleStatesError,
     ListSubscriptionRuleStatesResponse,
 } from '@/lib/core/usecase-models/list-subscription-rule-states-usecase-models';
-import { NextApiResponse } from 'next';
 import { SubscriptionRuleStatesViewModel, generateEmptySubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListSubscriptionRuleStatesOutputPort } from '@/lib/core/port/primary/list-subscription-rule-states-ports';
@@ -11,13 +10,6 @@ export default class ListSubscriptionRuleStatesPresenter
     extends BaseStreamingPresenter<ListSubscriptionRuleStatesResponse, ListSubscriptionRuleStatesError, SubscriptionRuleStatesViewModel>
     implements ListSubscriptionRuleStatesOutputPort
 {
-    response: NextApiResponse<any>;
-
-    constructor(response: NextApiResponse) {
-        super(response);
-        this.response = response;
-    }
-
     streamResponseModelToViewModel(responseModel: ListSubscriptionRuleStatesResponse): SubscriptionRuleStatesViewModel {
         const viewModel: SubscriptionRuleStatesViewModel = {
             ...responseModel,

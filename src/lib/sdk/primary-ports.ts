@@ -2,7 +2,7 @@ import { PassThrough, Transform } from 'stream';
 import { BaseDTO } from './dto';
 import { AuthenticatedRequestModel, BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 import { BaseStreamingPostProcessingPipelineElement } from './postprocessing-pipeline-elements';
-import { TWebResponse } from './web';
+import { Signal, TWebResponse } from './web';
 import { BaseViewModel } from './view-models';
 
 /**
@@ -58,7 +58,7 @@ export interface BaseMultiCallStreamableInputPort<
  * @typeparam TErrorModel The type of the error model for the output port.
  */
 export interface BaseOutputPort<TResponseModel, TErrorModel> {
-    response: TWebResponse;
+    response: Signal;
     presentSuccess(responseModel: TResponseModel): Promise<void>;
     presentError(errorModel: TErrorModel): Promise<void>;
 }
@@ -74,7 +74,7 @@ export interface BaseStreamingOutputPort<
     TErrorModel extends BaseErrorResponseModel,
     TStreamViewModel extends BaseViewModel,
 > extends Transform {
-    response: TWebResponse;
+    response: Signal;
 
     setupStream(stream: PassThrough): void;
 

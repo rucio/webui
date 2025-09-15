@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { NextApiResponse } from 'next';
+import { Signal } from '@/lib/sdk/web';
 
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { BaseController, TAuthenticatedControllerParameters } from '@/lib/sdk/controller';
@@ -15,9 +15,7 @@ export type ListFileReplicasControllerParameters = TAuthenticatedControllerParam
 
 @injectable()
 class ListFileReplicasController extends BaseController<ListFileReplicasControllerParameters, AuthenticatedRequestModel<ListFileReplicasRequest>> {
-    constructor(
-        @inject(USECASE_FACTORY.LIST_FILE_REPLICAS) listFileReplicasUseCaseFactory: (response: NextApiResponse) => ListFileReplicasInputPort,
-    ) {
+    constructor(@inject(USECASE_FACTORY.LIST_FILE_REPLICAS) listFileReplicasUseCaseFactory: (response: Signal) => ListFileReplicasInputPort) {
         super(listFileReplicasUseCaseFactory);
     }
     prepareRequestModel(parameters: ListFileReplicasControllerParameters): AuthenticatedRequestModel<ListFileReplicasRequest> {

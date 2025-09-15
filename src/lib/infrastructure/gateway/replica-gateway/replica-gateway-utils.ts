@@ -89,6 +89,7 @@ export function convertToDatasetReplicaDTO(replica: TRucioDatasetReplica): Datas
     const dto: DatasetReplicasDTO = {
         status: 'success',
         rse: replica.rse,
+        length: replica.length,
         availability: replica.state === 'AVAILABLE',
         available_files: replica.available_length,
         available_bytes: replica.available_bytes, // TODO: question: What is difference between available_bytes and bytes?

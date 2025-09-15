@@ -1,5 +1,5 @@
 import { RuleDTO, RuleMetaDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
-import { DIDType, LockState, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
+import { DIDType, LockState, RuleFilter, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
 
 export type TRucioRule = {
     error: null | string;
@@ -235,11 +235,7 @@ export function getEmptyRuleReplicaLockDTO(): RuleReplicaLockStateDTO {
     };
 }
 
-export type ListRulesFilter = {
-    account?: string;
-    scope?: string;
-    created_after?: Date;
-};
+export type ListRulesFilter = RuleFilter;
 
 export const formatFilterDate = (date: Date) => {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -255,4 +251,19 @@ export const formatFilterDate = (date: Date) => {
     const seconds = String(date.getUTCSeconds()).padStart(2, '0');
 
     return `${dayOfWeek}, ${day} ${month} ${year} ${hours}:${minutes}:${seconds} UTC`;
+};
+
+const RuleStateToFilter: Record<RuleState, string | undefined> = {
+    [RuleState.REPLICATING]: 'R',
+    [RuleState.OK]: 'O',
+    [RuleState.STUCK]: 'S',
+    [RuleState.SUSPENDED]: 'U',
+    [RuleState.WAITING_APPROVAL]: 'W',
+    [RuleState.INJECT]: 'I',
+    [RuleState.UNKNOWN]: undefined,
+};
+
+export const convertRuleState = (state: RuleState): string | undefined => {
+    const filterValue = RuleStateToFilter[state];
+    return filterValue;
 };

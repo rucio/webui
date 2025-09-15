@@ -57,6 +57,7 @@ export enum DIDAvailability {
 export type DIDDatasetReplicas = {
     rse: string;
     rseblocked: RSEBlockState;
+    length: number;
     availability: boolean;
     available_files: number;
     available_bytes: number;
@@ -184,6 +185,16 @@ export type RulePageLockEntry = {
     state: LockState;
     ddm_link: string;
     fts_link: string;
+};
+
+export type RuleFilter = {
+    account?: string;
+    scope?: string;
+    name?: string;
+    updated_after?: Date;
+    updated_before?: Date;
+    state?: RuleState;
+    activity?: string;
 };
 
 export type Rule = {
