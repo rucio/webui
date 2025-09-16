@@ -50,7 +50,7 @@ class ListDIDsUseCase
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): Promise<ListDIDDTO> {
         const { scope, name } = parseDIDString(requestModel.query);
-        const listDIDDTO: ListDIDDTO = await this.didGateway.listDIDs(requestModel.rucioAuthToken, scope, name, requestModel.type);
+        const listDIDDTO: ListDIDDTO = await this.didGateway.listDIDs(requestModel.rucioAuthToken, scope, name, requestModel.type, requestModel.filters);
         return listDIDDTO;
     }
 

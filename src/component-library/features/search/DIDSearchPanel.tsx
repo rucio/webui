@@ -9,6 +9,8 @@ const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
 const delimiterToastMessage = 'Neither scope nor name should contain ":".';
 
+type Operator = '=' | '!=' | '>' | '<' | '>=' | '<=';
+
 interface SearchPanelProps {
     startStreaming: (url: string) => void;
     stopStreaming: () => void;
@@ -43,9 +45,12 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const [scope, setScope] = useState<string | null>(initialScope ?? null);
     const [name, setName] = useState<string | null>(initialName ?? null);
     const [type, setType] = useState<DIDType>(DIDType.DATASET);
+    const [metaFilters, setMetaFilters] = useState([{ key: '', operator: '=' as Operator, value: '' }]);
 
     const scopeInputRef = useRef<HTMLInputElement>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
+    const metaKeyRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const metaValueRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     const { toast } = useToast();
 
@@ -77,17 +82,66 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         return validateField(name, 'name', nameInputRef);
     };
 
+    const validateMetaFilters = (): boolean => {
+        for (let i = 0; i < metaFilters.length; i++) {
+            const { key, value } = metaFilters[i];
+            if (!key && !value) continue; // skip empty filters
+            if (!key) {
+                toast({
+                    variant: 'warning',
+                    title: 'Empty meta key',
+                    description: 'Please specify a meta key or remove this filter.',
+                });
+                metaKeyRefs.current[i]?.focus();
+                return false;
+            }
+            if (!value) {
+                toast({
+                    variant: 'warning',
+                    title: 'Empty meta value',
+                    description: 'Please specify a meta value or remove this filter.',
+                });
+                metaValueRefs.current[i]?.focus();
+                return false;
+            }
+            // if (key.includes(SCOPE_DELIMITER)) {
+            //     toast({
+            //         variant: 'warning',
+            //         title: '":" in meta key',
+            //         description: `Meta keys cannot contain "${SCOPE_DELIMITER}".`,
+            //     });
+            //     metaKeyRefs.current[i]?.focus();
+            //     return false;
+            // }
+            // if (value.includes(SCOPE_DELIMITER)) {
+            //     toast({
+            //         variant: 'warning',
+            //         title: '":" in meta value',
+            //         description: `Meta values cannot contain "${SCOPE_DELIMITER}".`,
+            //     });
+            //     metaValueRefs.current[i]?.focus();
+            //     return false;
+            // }
+        }
+        return true;
+    };
+
     const onSearch = (event: any) => {
         event.preventDefault();
 
-        if (!validateScope() || !validateName()) return;
+        if (!validateScope() || !validateName() || !validateMetaFilters()) return;
 
         const params = new URLSearchParams({
             query: `${scope}${SCOPE_DELIMITER}${name}`,
             type: type,
         });
 
-        const url = '/api/feature/list-dids?' + params;
+        // Include meta filters only if key and value are present
+        metaFilters.filter(f => f.key && f.value).forEach(f => {
+            params.append('meta', `${f.key}${f.operator}${f.value}`);
+        });
+
+        const url = '/api/feature/list-dids?' + params.toString();
         props.startStreaming(url);
     };
 
@@ -108,47 +162,113 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         }
     };
 
+    const addMetaFilter = () => setMetaFilters([...metaFilters, { key: '', operator: '=', value: '' }]);
+    const updateMetaFilter = (idx: number, field: 'key' | 'operator' | 'value', val: string | Operator) => {
+        setMetaFilters(metaFilters.map((f, i) => i === idx ? { ...f, [field]: val } : f));
+    };
+    const removeMetaFilter = (idx: number) => {
+        setMetaFilters(metaFilters.filter((_, i) => i !== idx));
+        metaKeyRefs.current.splice(idx, 1);
+        metaValueRefs.current.splice(idx, 1);
+    };
+
     return (
-        <div className="flex flex-col space-y-2 w-full md:items-start md:flex-row md:space-y-0 md:space-x-2">
-            <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
-                <Select onValueChange={value => setType(value as DIDType)} defaultValue={type}>
-                    <SelectTrigger className="w-full sm:w-48">
-                        <SelectValue placeholder="Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem value={DIDType.CONTAINER}>Container</SelectItem>
-                            <SelectItem value={DIDType.DATASET}>Dataset</SelectItem>
-                            <SelectItem value={DIDType.FILE}>File</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-                <div className="w-full flex flex-row space-x-2 items-center">
-                    <Input
-                        ref={scopeInputRef}
-                        placeholder="scope"
-                        className="max-w-[250px]"
-                        defaultValue={initialScope}
-                        onInput={(event: ChangeEvent<HTMLInputElement>) => {
-                            setScope(event.target.value);
-                        }}
-                        onEnterKey={onSearch}
-                        onKeyDown={onScopeArrowDown}
-                    />
-                    <span className="text-neutral-900 dark:text-neutral-100 font-bold">:</span>
-                    <Input
-                        ref={nameInputRef}
-                        placeholder="name"
-                        defaultValue={initialName}
-                        onInput={(event: ChangeEvent<HTMLInputElement>) => {
-                            setName(event.target.value);
-                        }}
-                        onEnterKey={onSearch}
-                        onKeyDown={onNameArrowDown}
-                    />
+        <div className="flex flex-col space-y-2 w-full">
+            {/* Main search row */}
+            <div className="flex flex-col md:items-start md:flex-row md:space-y-0 md:space-x-2">
+                <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
+                    <Select onValueChange={value => setType(value as DIDType)} defaultValue={type}>
+                        <SelectTrigger className="w-full sm:w-48">
+                            <SelectValue placeholder="Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value={DIDType.CONTAINER}>Container</SelectItem>
+                                <SelectItem value={DIDType.DATASET}>Dataset</SelectItem>
+                                <SelectItem value={DIDType.FILE}>File</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                    <div className="w-full flex flex-row space-x-2 items-center">
+                        <Input
+                            ref={scopeInputRef}
+                            placeholder="scope"
+                            className="max-w-[250px]"
+                            defaultValue={initialScope}
+                            onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                                setScope(event.target.value);
+                            }}
+                            onEnterKey={onSearch}
+                            onKeyDown={onScopeArrowDown}
+                        />
+                        <span className="text-neutral-900 dark:text-neutral-100 font-bold">:</span>
+                        <Input
+                            ref={nameInputRef}
+                            placeholder="name"
+                            defaultValue={initialName}
+                            onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                                setName(event.target.value);
+                            }}
+                            onEnterKey={onSearch}
+                            onKeyDown={onNameArrowDown}
+                        />
+                    </div>
                 </div>
+                <SearchButton className="sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
             </div>
-            <SearchButton className="sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
+
+            {/* Metadata filters row */}
+            <div className="flex flex-wrap items-center gap-2">
+                {metaFilters.map((f, i) => (
+                    <div key={i} className="flex items-center space-x-2">
+                        <Input
+                            placeholder="Key"
+                            value={f.key}
+                            onChange={e => updateMetaFilter(i, 'key', e.target.value)}
+                            className="w-34"
+                            ref={el => (metaKeyRefs.current[i] = el)}
+                        />
+                        <Select
+                            value={f.operator}
+                            onValueChange={(value: Operator) => updateMetaFilter(i, 'operator', value)}
+                        >
+                            <SelectTrigger className="w-20">
+                                <SelectValue placeholder="=" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="=">=</SelectItem>
+                                    <SelectItem value="!=">!=</SelectItem>
+                                    <SelectItem value=">">{ ">" }</SelectItem>
+                                    <SelectItem value="<">{ "<" }</SelectItem>
+                                    <SelectItem value=">=">≥</SelectItem>
+                                    <SelectItem value="<=">≤</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <Input
+                            placeholder="Value"
+                            value={f.value}
+                            onChange={e => updateMetaFilter(i, 'value', e.target.value)}
+                            className="w-34"
+                            ref={el => (metaValueRefs.current[i] = el)}
+                        />
+                        <button
+                            onClick={() => removeMetaFilter(i)}
+                            disabled={metaFilters.length === 1}
+                            className="px-2 text-white-500 hover:text-white-700 disabled:opacity-30"
+                        >
+                            -
+                        </button>
+                    </div>
+                ))}
+                <button
+                    onClick={addMetaFilter}
+                    className="text-sm text-blue-500 hover:text-blue-700"
+                >
+                    + Add Filter
+                </button>
+            </div>
         </div>
     );
 };

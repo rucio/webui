@@ -9,7 +9,7 @@ import {
     AttachDIDDTO as AttachDIDsDTO,
     SetDIDStatusDTO,
 } from '../../dto/did-dto';
-import { DIDShort, DIDType } from '../../entity/rucio';
+import { DIDShort, DIDType, MetaFilter } from '../../entity/rucio';
 
 /**
  * Output port for the DID Gateway, responsible for defining the methods that the Gateway will use to interact with the Rucio Server.
@@ -105,7 +105,7 @@ export default interface DIDGatewayOutputPort {
      * @param type The {@link DIDType} of the DID.
      * @returns A Promise that resolves to a {@link ListDIDDTO} object.
      */
-    listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType): Promise<ListDIDDTO>;
+    listDIDs(rucioAuthToken: string, scope: string, name: string, type: DIDType, filters?: MetaFilter[]): Promise<ListDIDDTO>;
 
     /**
      * Retrieves a list of replication rules for a given DID.
