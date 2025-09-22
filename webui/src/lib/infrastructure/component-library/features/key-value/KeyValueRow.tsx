@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { cn } from '@/component-library/utils';
 
 export const KeyValueRow = (props: { name: string; children: ReactNode }) => {

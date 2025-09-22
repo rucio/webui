@@ -1,4 +1,4 @@
-import { Login } from '@/component-library/pages/legacy/Login/Login';
+import { Login } from '@/lib/infrastructure/client/pages/legacy/Login/Login';
 import { Meta, StoryObj } from '@storybook/react';
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 

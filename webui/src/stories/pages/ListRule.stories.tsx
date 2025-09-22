@@ -1,6 +1,6 @@
 import type { StoryFn, Meta } from '@storybook/react';
 import { fixtureRuleViewModel } from '@/test/fixtures/table-fixtures';
-import { ListRule } from '@/component-library/pages/Rule/list/ListRule';
+import { ListRule } from '@/lib/infrastructure/client/pages/Rule/list/ListRule';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
 import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';

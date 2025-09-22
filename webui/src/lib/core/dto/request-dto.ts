@@ -1,4 +1,4 @@
-import { BaseDTO } from '@/lib/sdk/dto';
+import type { BaseDTO } from '@/lib/sdk/dto';
 
 export interface RequestDTO extends BaseDTO {
     data?: {

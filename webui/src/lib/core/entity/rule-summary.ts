@@ -1,4 +1,4 @@
-import { DIDLong, RSEAccountUsage } from './rucio';
+import type { DIDLong, RSEAccountUsage } from './rucio';
 
 /**
  * @interface TDIDSummaryRow represents the DID Summary Row for DID Summary Table used to Create New Rules.

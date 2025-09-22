@@ -1,4 +1,4 @@
-import { Login } from '@/component-library/pages/legacy/Login/Login';
+import { Login } from '@/lib/infrastructure/client/pages/legacy/Login/Login';
 import { within, userEvent } from '@storybook/testing-library';
 import { Meta, StoryObj } from '@storybook/react';
 import { sleep } from '../utils';

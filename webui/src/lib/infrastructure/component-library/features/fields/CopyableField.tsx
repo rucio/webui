@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/component-library/utils';
 import { Field } from '@/component-library/atoms/misc/Field';
-import { useToast } from '@/lib/infrastructure/hooks/useToast';
+import { useToast } from '@/lib/infrastructure/client/hooks/useToast';
 import { copiedToast, errorCopyingToast } from '@/component-library/features/utils/list-toasts';
 import { HiOutlineClipboardCopy } from 'react-icons/hi';
 

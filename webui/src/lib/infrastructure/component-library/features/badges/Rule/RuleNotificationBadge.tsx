@@ -1,4 +1,4 @@
-import { RuleNotification } from '@/lib/core/entity/rucio';
+import type { RuleNotification } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
 import { cn } from '@/component-library/utils';

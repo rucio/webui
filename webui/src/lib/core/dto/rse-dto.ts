@@ -1,6 +1,6 @@
-import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { RSE, RSEAttribute, RSEDetails, RSEProtocol, RSEType } from '@/lib/core/entity/rucio';
-import { undefined } from 'zod';
+import type { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
+import type { RSEAttribute, RSEDetails, RSEProtocol } from '@/lib/core/entity/rucio';
+import { RSEType } from '@/lib/core/entity/rucio';
 
 /**
  * The Data Transfer Object for the ListRSEsEndpoint which contains the stream

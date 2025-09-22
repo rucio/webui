@@ -97,27 +97,27 @@ export { TablePaginationNav } from './features/legacy/StreamedTables/TablePagina
 export { TableSortUpDown } from './features/legacy/StreamedTables/TableSortUpDown';
 
 // Page Components
-export { ListDID } from './pages/DID/list/ListDID';
-export { ListDIDMeta } from './pages/DID/list/meta/ListDIDMeta';
-export { ListRSE } from './pages/RSE/list/ListRSE';
-export { CreateRule } from './pages/Rule/create/CreateRule';
-export { ListRule } from './pages/Rule/list/ListRule';
-export { ListSubscription } from './pages/Subscriptions/list/ListSubscription';
+export { ListDID } from '../client/pages/DID/list/ListDID';
+export { ListDIDMeta } from '../client/pages/DID/list/meta/ListDIDMeta';
+export { ListRSE } from '../client/pages/RSE/list/ListRSE';
+export { CreateRule } from '../client/pages/Rule/create/CreateRule';
+export { ListRule } from '../client/pages/Rule/list/ListRule';
+export { ListSubscription } from '../client/pages/Subscriptions/list/ListSubscription';
 
 // Dashboard Widgets
-export { TopRulesWidget } from './pages/Dashboard/widgets/TopRulesWidget';
-export { TopStorageUsageWidget } from './pages/Dashboard/widgets/TopStorageUsageWidget';
+export { TopRulesWidget } from '../client/pages/Dashboard/widgets/TopRulesWidget';
+export { TopStorageUsageWidget } from '../client/pages/Dashboard/widgets/TopStorageUsageWidget';
 
 // Legacy Page Components
-export { Login } from './pages/legacy/Login/Login';
-export { LabelledInput } from './pages/legacy/Login/LabelledInput';
-export { CredentialInput } from './pages/legacy/Login/CredentialInput';
-export { Body } from './pages/legacy/Helpers/Body';
-export { Heading as PageHeading } from './pages/legacy/Helpers/Heading';
-export { Loading } from './pages/legacy/Helpers/Loading';
-export { NotFound } from './pages/legacy/Helpers/NotFound';
-export { PageSubscription } from './pages/legacy/Subscriptions/PageSubscription';
-export { PageSubscriptionJSONEditor } from './pages/legacy/Subscriptions/PageSubscriptionJSONEditor';
+export { Login } from '../client/pages/legacy/Login/Login';
+export { LabelledInput } from '../client/pages/legacy/Login/LabelledInput';
+export { CredentialInput } from '../client/pages/legacy/Login/CredentialInput';
+export { Body } from '../client/pages/legacy/Helpers/Body';
+export { Heading as PageHeading } from '../client/pages/legacy/Helpers/Heading';
+export { Loading } from '../client/pages/legacy/Helpers/Loading';
+export { NotFound } from '../client/pages/legacy/Helpers/NotFound';
+export { PageSubscription } from '../client/pages/legacy/Subscriptions/PageSubscription';
+export { PageSubscriptionJSONEditor } from '../client/pages/legacy/Subscriptions/PageSubscriptionJSONEditor';
 
 // Utils
 export * from './utils';

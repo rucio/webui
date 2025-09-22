@@ -1,5 +1,5 @@
-import { DIDDatasetReplicas, FileReplicaState } from '../entity/rucio';
-import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
+import type { DIDDatasetReplicas, FileReplicaState } from '../entity/rucio';
+import type { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
 
 /**
  * Represents a data transfer object for listing replicas.

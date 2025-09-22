@@ -8,8 +8,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Searchbar } from '@/component-library/features/layout/Searchbar';
 import Image from 'next/image';
-import { AccountButton, AccountDropdown } from '@/component-library/features/layout/AccountDropdown';
-import { SiteHeaderViewModel } from '@/lib/core/view-model/site-header';
+import { AccountButton } from '@/component-library/features/layout/AccountDropdown';
+import { type SiteHeaderViewModel } from '@/lib/core/view-model/site-header';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 

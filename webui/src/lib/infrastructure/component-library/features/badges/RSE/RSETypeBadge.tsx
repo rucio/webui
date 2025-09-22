@@ -1,5 +1,5 @@
 import React from 'react';
-import { RSEType } from '@/lib/core/entity/rucio';
+import type { RSEType } from '@/lib/core/entity/rucio';
 import { Badge } from '@/component-library/atoms/misc/Badge';
 import { twMerge } from 'tailwind-merge';
 

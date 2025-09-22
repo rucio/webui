@@ -1,10 +1,10 @@
 import { twMerge } from 'tailwind-merge';
-import React, { RefObject, useEffect, useRef } from 'react';
-import { HiSwitchHorizontal, HiLogout, HiUserAdd, HiChevronDown } from 'react-icons/hi';
+import React, { type RefObject, useEffect, useRef } from 'react';
+import { HiSwitchHorizontal, HiLogout, HiUserAdd } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { HiUserCircle } from 'react-icons/hi2';
-import { SiteHeaderViewModel } from '@/lib/core/view-model/site-header';
+import { type SiteHeaderViewModel } from '@/lib/core/view-model/site-header';
 import { cn } from '@/component-library/utils';
 
 const AccountList = (props: { accountList: string[] }) => {
@@ -137,15 +137,18 @@ export const AccountButton = ({ siteHeader }: { siteHeader: SiteHeaderViewModel 
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
-    const handleClickOutside = (event: any) => {
-        if (!menuRef.current?.contains(event.target) && !buttonRef.current?.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+        if (!menuRef.current?.contains(event.target as Node) && !buttonRef.current?.contains(event.target as Node)) {
             setIsAccountOpen(false);
         }
     };
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
-    }, [menuRef, buttonRef]);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <>

@@ -1,4 +1,4 @@
-import { Toast } from '@/lib/infrastructure/hooks/useToast';
+import type { Toast } from '@/lib/infrastructure/client/hooks/useToast';
 
 export const noApiToast: Toast = {
     title: 'Warning',

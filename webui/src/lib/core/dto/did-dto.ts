@@ -1,5 +1,5 @@
-import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { DID, DIDKeyValuePair, DIDMeta, DIDRules, RuleMeta } from '@/lib/core/entity/rucio';
+import type { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
+import type { DID, DIDKeyValuePair, DIDMeta, RuleMeta } from '@/lib/core/entity/rucio';
 
 /**
  * Data Transfer Object for ListDIDsEndpoint

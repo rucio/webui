@@ -1,5 +1,5 @@
-import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { LockState, Rule, RuleMeta } from '../entity/rucio';
+import type { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
+import type { LockState, Rule, RuleMeta } from '../entity/rucio';
 
 /**
  * The Data Transfer Object for the ListRulesEndpoint which contains the stream

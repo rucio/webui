@@ -1,8 +1,7 @@
-import { RuleState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
 import { cn } from '@/component-library/utils';
-import { Role } from '@/lib/core/entity/account';
+import type { Role } from '@/lib/core/entity/account';
 
 const stateColorClasses: Record<Role, string> = {
     Admin: 'bg-base-success-500',

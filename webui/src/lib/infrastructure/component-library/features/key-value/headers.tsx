@@ -1,7 +1,6 @@
 import { cn } from '@/component-library/utils';
-import Link from 'next/link';
 import { HiExternalLink } from 'react-icons/hi';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 const headerCommonClasses = cn(
     'h-[52px] px-4 py-2 space-x-2',

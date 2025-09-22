@@ -1,5 +1,5 @@
 import React from 'react';
-import { DIDType } from '@/lib/core/entity/rucio';
+import type { DIDType } from '@/lib/core/entity/rucio';
 import { Badge } from '@/component-library/atoms/misc/Badge';
 import { twMerge } from 'tailwind-merge';
 

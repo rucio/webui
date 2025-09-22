@@ -1,6 +1,6 @@
 import type { StoryFn, Meta } from '@storybook/react';
 import { fixtureRSEAccountUsageViewModel } from '@/test/fixtures/table-fixtures';
-import { TopStorageUsageWidget } from '@/component-library/pages/Dashboard/widgets/TopStorageUsageWidget';
+import { TopStorageUsageWidget } from '@/lib/infrastructure/client/pages/Dashboard/widgets/TopStorageUsageWidget';
 
 export default {
     title: 'Components/Pages/Dashboard/Widgets',

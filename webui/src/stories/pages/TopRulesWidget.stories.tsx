@@ -1,6 +1,6 @@
 import type { StoryFn, Meta } from '@storybook/react';
 import { fixtureRuleViewModel } from '@/test/fixtures/table-fixtures';
-import { TopRulesWidget } from '@/component-library/pages/Dashboard/widgets/TopRulesWidget';
+import { TopRulesWidget } from '@/lib/infrastructure/client/pages/Dashboard/widgets/TopRulesWidget';
 
 export default {
     title: 'Components/Pages/Dashboard/Widgets',

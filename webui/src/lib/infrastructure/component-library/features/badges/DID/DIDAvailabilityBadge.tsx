@@ -1,5 +1,5 @@
 import React from 'react';
-import { DIDAvailability } from '@/lib/core/entity/rucio';
+import type { DIDAvailability } from '@/lib/core/entity/rucio';
 import { Badge } from '@/component-library/atoms/misc/Badge';
 import { twMerge } from 'tailwind-merge';
 

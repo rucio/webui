@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
 import { fixtureSubscriptionRuleStatesViewModel } from '@/test/fixtures/table-fixtures';
-import { ListSubscription } from '@/component-library/pages/Subscriptions/list/ListSubscription';
+import { ListSubscription } from '@/lib/infrastructure/client/pages/Subscriptions/list/ListSubscription';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
 import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
 import { getMockSingleEndpoint } from '@/test/mocks/handlers/single-handlers';

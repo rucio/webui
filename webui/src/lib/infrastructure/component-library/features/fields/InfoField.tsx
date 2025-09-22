@@ -1,7 +1,7 @@
 import { Field } from '@/component-library/atoms/misc/Field';
 import { cn } from '@/component-library/utils';
 import { HiInformationCircle } from 'react-icons/hi';
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 export const InfoField = ({ children, className, ...props }: { children: ReactNode; className?: string }) => {
     return (

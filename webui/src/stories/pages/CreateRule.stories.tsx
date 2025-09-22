@@ -1,6 +1,6 @@
 import type { StoryFn, Meta } from '@storybook/react';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
-import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
+import { CreateRule } from '@/lib/infrastructure/client/pages/Rule/create/CreateRule';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
 import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
 import {

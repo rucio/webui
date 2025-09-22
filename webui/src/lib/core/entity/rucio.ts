@@ -1,4 +1,4 @@
-import { BaseViewModel } from '@/lib/sdk/view-models';
+import type { BaseViewModel } from '@/lib/sdk/view-models';
 
 export type DateISO = string;
 
@@ -334,7 +334,7 @@ export type RSEDetails = {
 
 export type RSEAttribute = {
     key: string;
-    value: string | DateISO | number | boolean | null;
+    value: string | number | boolean | null;
 };
 
 /*

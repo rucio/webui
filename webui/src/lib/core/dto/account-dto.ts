@@ -1,5 +1,5 @@
-import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { AccountInfo, RSEAccountUsage } from '../entity/rucio';
+import type { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
+import type { AccountInfo, RSEAccountUsage } from '../entity/rucio';
 
 type TAccountAttribute = {
     key: string;

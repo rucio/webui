@@ -2,7 +2,7 @@ import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 import { Meta, StoryObj } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 import userEvent from '@testing-library/user-event';
-import { Login } from '@/component-library/pages/legacy/Login/Login';
+import { Login } from '@/lib/infrastructure/client/pages/legacy/Login/Login';
 import { sleep } from '../utils';
 
 export default {

@@ -1,3 +1,4 @@
+// TODO: MIGRATION: Use Zod instead of TypeBox
 import { Type } from '@sinclair/typebox';
 
 const singleOrArray = () => Type.Union([Type.String(), Type.Array(Type.String())]);
