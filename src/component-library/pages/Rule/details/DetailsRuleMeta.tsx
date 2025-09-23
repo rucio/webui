@@ -11,6 +11,7 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { RuleGroupingBadge } from '@/component-library/features/badges/Rule/RuleGroupingBadge';
 import { RuleNotificationBadge } from '@/component-library/features/badges/Rule/RuleNotificationBadge';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { CopyableLinkCell } from '@/component-library/features/table/cells/CopyableCell';
 
 export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     const getExpiredField = () => {
@@ -28,15 +29,17 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     <RuleStateBadge value={meta.state} />
                 </KeyValueRow>
                 <KeyValueRow name="DID">
-                    <ClickableCell
-                        className="flex flex-row gap-2 overflow-hidden"
-                        href={`/did/page/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
-                    >
-                        <Field>
-                            {meta.scope}:{meta.name}
-                        </Field>
+                    <div className="flex flex-row gap-2 overflow-hidden items-center">
+                        <CopyableLinkCell
+                            text={`${meta.scope}:${meta.name}`}
+                            href={`/did/page/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
+                        >
+                            <Field>
+                                {meta.scope}:{meta.name}
+                            </Field>
+                        </CopyableLinkCell>
                         <DIDTypeBadge value={meta.did_type} />
-                    </ClickableCell>
+                    </div>
                 </KeyValueRow>
                 <KeyValueRow name="RSE Expression">
                     <Field>{meta.rse_expression}</Field>
