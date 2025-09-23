@@ -10,10 +10,12 @@ import { LockState } from '@/lib/core/entity/rucio';
 import { LockStateBadge } from '@/component-library/features/badges/Rule/LockStateBadge';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { CopyableLinkCell } from '@/component-library/features/table/cells/CopyableCell';
 import { Button } from '@/component-library/atoms/form/button';
 import { FTSLinkViewModel } from '@/lib/infrastructure/data/view-model/request';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { HiExternalLink } from 'react-icons/hi';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
@@ -22,10 +24,14 @@ type DetailsRuleLocksTableProps = {
 
 const ClickableDID = (props: { value: string[] }) => {
     const [scope, name] = props.value;
+    const didString = `${scope}:${name}`;
     return (
-        <ClickableCell href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
-            {scope}:{name}
-        </ClickableCell>
+        <CopyableLinkCell
+            text={didString}
+            href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}
+        >
+            {didString}
+        </CopyableLinkCell>
     );
 };
 
