@@ -1,10 +1,10 @@
 import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
-import { DID, DIDType, MetaFilter } from '@/lib/core/entity/rucio';
+import { DID, DIDType, DIDFilter } from '@/lib/core/entity/rucio';
 
 export interface ListDIDsRequest {
     query: string;
     type: DIDType;
-    filters: MetaFilter[];
+    filters: DIDFilter[];
 }
 
 export interface ListDIDsResponse extends DID, BaseResponseModel {

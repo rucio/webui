@@ -4,14 +4,14 @@ import { BaseController } from '@/lib/sdk/controller';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ListDIDsControllerParameters } from '@/lib/infrastructure/controller/list-dids-controller';
 import { withAuthenticatedSessionRoute } from '@/lib/infrastructure/auth/session-utils';
-import { MetaFilter, MetaOperator } from '@/lib/core/entity/rucio';
+import { DIDFilter, DIDFilterOperator } from '@/lib/core/entity/rucio';
 
 async function listDIDs(req: NextApiRequest, res: NextApiResponse, rucioAuthToken: string) {
     if (req.method !== 'GET') {
         res.status(405).json({ error: 'Method Not Allowed' });
         return;
     }
-    const { query, type, meta } = req.query;
+    const { query, type, filters } = req.query;
     
     if (!query || typeof query !== 'string') {
         res.status(400).json({ error: 'Missing query parameter' });
@@ -22,8 +22,8 @@ async function listDIDs(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
         return;
     }
 
-    // Parse meta filters
-    const filters = parseMetaFilters(meta);
+    // Parse DID filters
+    const didfilters = parseDIDFilters(filters);
 
     const controller = appContainer.get<BaseController<ListDIDsControllerParameters, void>>(CONTROLLERS.LIST_DIDS);
     const controllerParameters: ListDIDsControllerParameters = {
@@ -31,20 +31,20 @@ async function listDIDs(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
             query: query as string,
             type: type as string,
             rucioAuthToken,
-            filters
+            filters: didfilters
         };
 
         await controller.execute(controllerParameters);
     }
 
-function parseMetaFilters(meta: string | string[] | undefined): MetaFilter[] {
-    if (!meta) return [];
+function parseDIDFilters(filters: string | string[] | undefined): DIDFilter[] {
+    if (!filters) return [];
     
-    const metaArray = Array.isArray(meta) ? meta : [meta];
+    const filtersArray = Array.isArray(filters) ? filters : [filters];
     
-    return metaArray.map(m => {
+    return filtersArray.map(m => {
         // Match the first valid operator
-        const operatorMatch = m.match(/(!=|>=|<=|>|<|=)/)?.[0] as MetaOperator || '=';
+        const operatorMatch = m.match(/(!=|>=|<=|>|<|=)/)?.[0] as DIDFilterOperator || '=';
         const operatorIndex = m.indexOf(operatorMatch);
         
         return {
