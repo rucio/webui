@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { DIDType } from '@/lib/core/entity/rucio';
+import { DIDType, DIDFilterOperator } from '@/lib/core/entity/rucio';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
 import { Input } from '@/component-library/atoms/form/input';
@@ -8,8 +8,6 @@ import { SearchButton } from '@/component-library/features/search/SearchButton';
 const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
 const delimiterToastMessage = 'Neither scope nor name should contain ":".';
-
-type Operator = '=' | '!=' | '>' | '<' | '>=' | '<=';
 
 interface SearchPanelProps {
     startStreaming: (url: string) => void;
@@ -45,12 +43,12 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const [scope, setScope] = useState<string | null>(initialScope ?? null);
     const [name, setName] = useState<string | null>(initialName ?? null);
     const [type, setType] = useState<DIDType>(DIDType.DATASET);
-    const [metaFilters, setMetaFilters] = useState([{ key: '', operator: '=' as Operator, value: '' }]);
+    const [DIDFilters, setDIDFilters] = useState([{ key: '', operator: '=' as DIDFilterOperator, value: '' }]);
 
     const scopeInputRef = useRef<HTMLInputElement>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
-    const metaKeyRefs = useRef<(HTMLInputElement | null)[]>([]);
-    const metaValueRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const DIDKeyRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const DIDValueRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     const { toast } = useToast();
 
@@ -82,46 +80,28 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         return validateField(name, 'name', nameInputRef);
     };
 
-    const validateMetaFilters = (): boolean => {
-        for (let i = 0; i < metaFilters.length; i++) {
-            const { key, value } = metaFilters[i];
+    const validateDIDFilters = (): boolean => {
+        for (let i = 0; i < DIDFilters.length; i++) {
+            const { key, value } = DIDFilters[i];
             if (!key && !value) continue; // skip empty filters
             if (!key) {
                 toast({
                     variant: 'warning',
-                    title: 'Empty meta key',
-                    description: 'Please specify a meta key or remove this filter.',
+                    title: 'Empty filter key',
+                    description: 'Please specify a key or remove this filter.',
                 });
-                metaKeyRefs.current[i]?.focus();
+                DIDKeyRefs.current[i]?.focus();
                 return false;
             }
             if (!value) {
                 toast({
                     variant: 'warning',
-                    title: 'Empty meta value',
-                    description: 'Please specify a meta value or remove this filter.',
+                    title: 'Empty filter value',
+                    description: 'Please specify a value or remove this filter.',
                 });
-                metaValueRefs.current[i]?.focus();
+                DIDValueRefs.current[i]?.focus();
                 return false;
             }
-            // if (key.includes(SCOPE_DELIMITER)) {
-            //     toast({
-            //         variant: 'warning',
-            //         title: '":" in meta key',
-            //         description: `Meta keys cannot contain "${SCOPE_DELIMITER}".`,
-            //     });
-            //     metaKeyRefs.current[i]?.focus();
-            //     return false;
-            // }
-            // if (value.includes(SCOPE_DELIMITER)) {
-            //     toast({
-            //         variant: 'warning',
-            //         title: '":" in meta value',
-            //         description: `Meta values cannot contain "${SCOPE_DELIMITER}".`,
-            //     });
-            //     metaValueRefs.current[i]?.focus();
-            //     return false;
-            // }
         }
         return true;
     };
@@ -129,16 +109,16 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const onSearch = (event: any) => {
         event.preventDefault();
 
-        if (!validateScope() || !validateName() || !validateMetaFilters()) return;
+        if (!validateScope() || !validateName() || !validateDIDFilters()) return;
 
         const params = new URLSearchParams({
             query: `${scope}${SCOPE_DELIMITER}${name}`,
             type: type,
         });
 
-        // Include meta filters only if key and value are present
-        metaFilters.filter(f => f.key && f.value).forEach(f => {
-            params.append('meta', `${f.key}${f.operator}${f.value}`);
+        // Include DID filters only if key and value are present
+        DIDFilters.filter(f => f.key && f.value).forEach(f => {
+            params.append('filters', `${f.key}${f.operator}${f.value}`);
         });
 
         const url = '/api/feature/list-dids?' + params.toString();
@@ -162,14 +142,14 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         }
     };
 
-    const addMetaFilter = () => setMetaFilters([...metaFilters, { key: '', operator: '=', value: '' }]);
-    const updateMetaFilter = (idx: number, field: 'key' | 'operator' | 'value', val: string | Operator) => {
-        setMetaFilters(metaFilters.map((f, i) => i === idx ? { ...f, [field]: val } : f));
+    const addDIDFilter = () => setDIDFilters([...DIDFilters, { key: '', operator: '=', value: '' }]);
+    const updateDIDFilter = (idx: number, field: 'key' | 'operator' | 'value', val: string | DIDFilterOperator) => {
+        setDIDFilters(DIDFilters.map((f, i) => i === idx ? { ...f, [field]: val } : f));
     };
-    const removeMetaFilter = (idx: number) => {
-        setMetaFilters(metaFilters.filter((_, i) => i !== idx));
-        metaKeyRefs.current.splice(idx, 1);
-        metaValueRefs.current.splice(idx, 1);
+    const removeDIDFilter = (idx: number) => {
+        setDIDFilters(DIDFilters.filter((_, i) => i !== idx));
+        DIDKeyRefs.current.splice(idx, 1);
+        DIDValueRefs.current.splice(idx, 1);
     };
 
     return (
@@ -217,20 +197,20 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                 <SearchButton className="sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
             </div>
 
-            {/* Metadata filters row */}
+            {/* DID filters row */}
             <div className="flex flex-wrap items-center gap-2">
-                {metaFilters.map((f, i) => (
+                {DIDFilters.map((f, i) => (
                     <div key={i} className="flex items-center space-x-2">
                         <Input
                             placeholder="Key"
                             value={f.key}
-                            onChange={e => updateMetaFilter(i, 'key', e.target.value)}
+                            onChange={e => updateDIDFilter(i, 'key', e.target.value)}
                             className="w-34"
-                            ref={el => (metaKeyRefs.current[i] = el)}
+                            ref={el => (DIDKeyRefs.current[i] = el)}
                         />
                         <Select
                             value={f.operator}
-                            onValueChange={(value: Operator) => updateMetaFilter(i, 'operator', value)}
+                            onValueChange={(value: DIDFilterOperator) => updateDIDFilter(i, 'operator', value)}
                         >
                             <SelectTrigger className="w-20">
                                 <SelectValue placeholder="=" />
@@ -249,13 +229,13 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                         <Input
                             placeholder="Value"
                             value={f.value}
-                            onChange={e => updateMetaFilter(i, 'value', e.target.value)}
+                            onChange={e => updateDIDFilter(i, 'value', e.target.value)}
                             className="w-34"
-                            ref={el => (metaValueRefs.current[i] = el)}
+                            ref={el => (DIDValueRefs.current[i] = el)}
                         />
                         <button
-                            onClick={() => removeMetaFilter(i)}
-                            disabled={metaFilters.length === 1}
+                            onClick={() => removeDIDFilter(i)}
+                            disabled={DIDFilters.length === 1}
                             className="px-2 text-white-500 hover:text-white-700 disabled:opacity-30"
                         >
                             -
@@ -263,7 +243,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                     </div>
                 ))}
                 <button
-                    onClick={addMetaFilter}
+                    onClick={addDIDFilter}
                     className="text-sm text-blue-500 hover:text-blue-700"
                 >
                     + Add Filter

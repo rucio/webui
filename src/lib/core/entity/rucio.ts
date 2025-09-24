@@ -94,20 +94,20 @@ export type DIDMeta = {
     bytes: number | null;
 };
 
-// Metadata filter operators
-export type MetaOperator = '=' | '!=' | '>' | '<' | '>=' | '<=';
+// DID filter operators
+export type DIDFilterOperator = '=' | '!=' | '>' | '<' | '>=' | '<=';
 
-// Extended metadata filter with operator support
-export interface MetaFilter extends DIDKeyValuePair {
-    operator: MetaOperator;
+// Extended DID filter with operator support
+export interface DIDFilter extends DIDKeyValuePair {
+    operator: DIDFilterOperator;
 }
 
-// Type for DID search with metadata filtering
+// Type for DID search with filtering
 export interface DIDSearchParams {
     scope: string;
     name: string;
     type: DIDType;
-    filters?: MetaFilter[];
+    filters?: DIDFilter[];
 }
 
 export type DIDRules = {
