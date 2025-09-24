@@ -10,6 +10,7 @@ import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import CustomLegend, { LegendOption } from './CustomLegend';
 import { useTheme } from 'next-themes';
+import { calculateRuleActivityScore } from '@/lib/core/utils/rule-sorting-utils';
 
 const openRule = (id: string) => {
     window.open(`/rule/page/${id}`, '_blank');
@@ -164,13 +165,23 @@ interface TopRulesWidgetProps {
 }
 
 export const TopRulesWidget = ({ rules, isLoading, errorMessage }: TopRulesWidgetProps) => {
-    // Take top 10 latest rules
+    // Take top 10 rules, prioritizing rules with active issues (stuck or replicating)
     const displayedRules = rules
         ?.filter(rule => rule.locks_stuck_cnt + rule.locks_replicating_cnt + rule.locks_ok_cnt > 0)
         .sort((a, b) => {
+            // Use the shared activity scoring for consistent behavior
+            const scoreA = calculateRuleActivityScore(a);
+            const scoreB = calculateRuleActivityScore(b);
+
+            // If activity scores are different, prioritize higher scores
+            if (scoreA !== scoreB) {
+                return scoreB - scoreA;
+            }
+
+            // If activity scores are equal, sort by creation date (latest first)
             const dateA = new Date(a.created_at);
             const dateB = new Date(b.created_at);
-            return dateA.getTime() - dateB.getTime(); // Sort in ascending order
+            return dateB.getTime() - dateA.getTime();
         })
         .slice(0, 10);
 

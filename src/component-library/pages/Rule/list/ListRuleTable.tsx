@@ -16,6 +16,7 @@ import { formatDate, formatSeconds } from '@/component-library/features/utils/te
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
+import { ruleActivityComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
@@ -45,6 +46,7 @@ const NullableRemainingLifetime = (props: { value: number }) => {
 
 export const ListRuleTable = (props: ListRuleTableProps) => {
     const tableRef = useRef<AgGridReact<RuleViewModel>>(null);
+
 
     const [columnDefs] = useState([
         {
@@ -120,7 +122,8 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             headerName: 'Stuck',
             field: 'locks_stuck_cnt',
             minWidth: 90,
-            sortable: false,
+            sortable: true,
+            comparator: ruleActivityComparator,
         },
         {
             headerName: 'Account',
@@ -130,5 +133,18 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    const onGridReady = (event: GridReadyEvent) => {
+        props.onGridReady(event);
+        // Apply default sort to prioritize stuck rules
+        event.api.applyColumnState({
+            state: [
+                {
+                    colId: 'locks_stuck_cnt',
+                    sort: 'desc',
+                },
+            ],
+        });
+    };
+
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };

@@ -18,6 +18,7 @@ import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
+import { ruleActivityComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
@@ -38,6 +39,7 @@ const NullableRemainingLifetime = (props: { value: number }) => {
 
 export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null);
+
 
     const [columnDefs] = useState([
         {
@@ -101,7 +103,8 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             headerName: 'Stuck',
             field: 'locks_stuck_cnt',
             minWidth: 90,
-            sortable: false,
+            sortable: true,
+            comparator: ruleActivityComparator,
         },
         {
             headerName: 'Account',
@@ -111,7 +114,20 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    const onGridReady = (event: GridReadyEvent) => {
+        props.onGridReady(event);
+        // Apply default sort to prioritize stuck rules
+        event.api.applyColumnState({
+            state: [
+                {
+                    colId: 'locks_stuck_cnt',
+                    sort: 'desc',
+                },
+            ],
+        });
+    };
+
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };
 
 export const DetailsDIDRules: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
