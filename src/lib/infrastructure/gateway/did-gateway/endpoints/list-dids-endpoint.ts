@@ -32,7 +32,7 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
             `name=${encodeURIComponent(this.name)}`,
             `type=${encodeURIComponent(this.type.toLowerCase())}`,
             ...this.filters.map(f => 
-                `${encodeURIComponent(f.key)}${f.operator}${encodeURIComponent(f.value)}`
+                `${encodeURIComponent(f.key)}${f.operator}${encodeURIComponent(String(f.value ?? ''))}`
             )
             ].join('&');
         
