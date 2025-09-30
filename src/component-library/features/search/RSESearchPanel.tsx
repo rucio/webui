@@ -12,6 +12,7 @@ interface SearchPanelProps {
     initialExpression?: string;
     isRunning: boolean;
     gridApi?: GridApi;
+    autoSearch?: boolean;
 }
 
 export const RSESearchPanel = (props: SearchPanelProps) => {
@@ -23,10 +24,10 @@ export const RSESearchPanel = (props: SearchPanelProps) => {
     };
 
     useEffect(() => {
-        if (props.gridApi) {
+        if (props.gridApi && props.autoSearch) {
             props.onSearch(expression ?? DEFAULT_EXPRESSION);
         }
-    }, [props.gridApi]);
+    }, [props.gridApi]); // Only depend on gridApi - autoSearch won't change after mount
 
     const onSearch = (event: any) => {
         event.preventDefault();

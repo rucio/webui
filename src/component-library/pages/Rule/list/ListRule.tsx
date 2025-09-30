@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 import { Heading } from '@/component-library/atoms/misc/Heading';
@@ -53,6 +53,8 @@ type SearchFormProps = {
 
 type ListRuleProps = {
     initialData?: RuleViewModel[];
+    autoSearch?: boolean;
+    initialFilters?: Partial<SearchFilters>;
 };
 
 // Constants
@@ -224,16 +226,28 @@ const SearchForm = ({ filters, onFiltersChange, onSearch, onStop, isRunning }: S
 // Main Component
 export const ListRule = (props: ListRuleProps) => {
     const [filters, setFilters] = useState<SearchFilters>({
-        scope: DEFAULT_SCOPE,
-        account: '',
-        activity: '',
-        state: undefined,
-        name: '',
+        scope: props.initialFilters?.scope ?? DEFAULT_SCOPE,
+        account: props.initialFilters?.account ?? '',
+        activity: props.initialFilters?.activity ?? '',
+        state: props.initialFilters?.state ?? undefined,
+        name: props.initialFilters?.name ?? '',
         updatedBefore: undefined,
         updatedAfter: undefined,
     });
 
-    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<RuleViewModel>(props.initialData);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<RuleViewModel>(props.initialData);
+
+    // Track if auto-search has already been performed
+    const hasAutoSearched = useRef(false);
+
+    // Auto-trigger search if autoSearch is true and gridApi is available (only once)
+    useEffect(() => {
+        if (!hasAutoSearched.current && props.autoSearch && gridApi) {
+            hasAutoSearched.current = true;
+            const searchUrl = buildSearchUrl(filters);
+            startStreaming(searchUrl);
+        }
+    }, [gridApi]); // Only depend on gridApi
 
     const handleFiltersChange = (newFilters: Partial<SearchFilters>) => {
         setFilters(prev => ({ ...prev, ...newFilters }));

@@ -14,6 +14,8 @@ interface SearchPanelProps {
     stopStreaming: () => void;
     initialPattern?: string;
     isRunning: boolean;
+    autoSearch?: boolean;
+    initialType?: DIDType;
 }
 
 export const DIDSearchPanel = (props: SearchPanelProps) => {
@@ -42,7 +44,8 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
 
     const [scope, setScope] = useState<string | null>(initialScope ?? null);
     const [name, setName] = useState<string | null>(initialName ?? null);
-    const [type, setType] = useState<DIDType>(DIDType.DATASET);
+
+    const [type, setType] = useState<DIDType>(props.initialType ?? DIDType.DATASET);
     const [DIDFilters, setDIDFilters] = useState([{ key: '', operator: '=' as DIDFilterOperator, value: '' }]);
 
     const scopeInputRef = useRef<HTMLInputElement>(null);
@@ -51,6 +54,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const DIDValueRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     const { toast } = useToast();
+
 
     const showToastAndFocus = (title: string, description: string, inputRef: React.RefObject<HTMLInputElement>) => {
         toast({
