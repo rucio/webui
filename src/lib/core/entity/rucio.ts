@@ -94,6 +94,22 @@ export type DIDMeta = {
     bytes: number | null;
 };
 
+// DID filter operators
+export type DIDFilterOperator = '=' | '!=' | '>' | '<' | '>=' | '<=';
+
+// Extended DID filter with operator support
+export interface DIDFilter extends DIDKeyValuePair {
+    operator: DIDFilterOperator;
+}
+
+// Type for DID search with filtering
+export interface DIDSearchParams {
+    scope: string;
+    name: string;
+    type: DIDType;
+    filters?: DIDFilter[];
+}
+
 export type DIDRules = {
     id: string;
     name: string;

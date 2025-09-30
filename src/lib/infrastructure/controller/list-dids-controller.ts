@@ -6,10 +6,12 @@ import { injectable, inject } from 'inversify';
 import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { DIDFilter } from '@/lib/core/entity/rucio';
 
 export type ListDIDsControllerParameters = TAuthenticatedControllerParameters & {
     query: string;
     type: string;
+    filters: DIDFilter[];
 };
 @injectable()
 class ListDIDsController extends BaseController<ListDIDsControllerParameters, AuthenticatedRequestModel<ListDIDsRequest>> {
@@ -40,6 +42,7 @@ class ListDIDsController extends BaseController<ListDIDsControllerParameters, Au
             query: parameters.query,
             type: did_type,
             rucioAuthToken: parameters.rucioAuthToken,
+            filters: parameters.filters
         };
     }
 }
