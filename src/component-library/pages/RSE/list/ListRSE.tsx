@@ -10,10 +10,11 @@ import { RSESearchPanel } from '@/component-library/features/search/RSESearchPan
 type ListRSEProps = {
     initialExpression?: string;
     initialData?: RSEViewModel[];
+    autoSearch?: boolean;
 };
 
 export const ListRSE = (props: ListRSEProps) => {
-    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<RSEViewModel>(props.initialData);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<RSEViewModel>(props.initialData);
 
     const onSearch = (expression: string) => {
         startStreaming(`/api/feature/list-rses?rseExpression=${expression}`);
@@ -27,6 +28,8 @@ export const ListRSE = (props: ListRSEProps) => {
                 stopStreaming={stopStreaming}
                 isRunning={streamingHook.status === StreamingStatus.RUNNING}
                 initialExpression={props.initialExpression}
+                autoSearch={props.autoSearch}
+                gridApi={gridApi || undefined}
             />
             <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />
         </div>

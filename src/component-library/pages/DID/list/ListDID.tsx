@@ -1,7 +1,8 @@
 'use client';
 
 import { DIDMetaViewModel, DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
-import React, { useEffect, useState } from 'react';
+import { DIDType } from '@/lib/core/entity/rucio';
+import React, { useEffect, useRef, useState } from 'react';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 import { SelectionChangedEvent } from 'ag-grid-community';
 import { Heading } from '@/component-library/atoms/misc/Heading';
@@ -16,6 +17,8 @@ import { DIDSearchPanel } from '@/component-library/features/search/DIDSearchPan
 export interface ListDIDProps {
     firstPattern?: string;
     initialData?: DIDViewModel[];
+    autoSearch?: boolean;
+    initialType?: DIDType;
 }
 
 export const ListDID = (props: ListDIDProps) => {
@@ -24,7 +27,28 @@ export const ListDID = (props: ListDIDProps) => {
     const validator = new BaseViewModelValidator(toast);
 
     // List handling
-    const { onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDViewModel>(props.initialData);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDViewModel>(props.initialData);
+
+    // Track if auto-search has already been performed
+    const hasAutoSearched = useRef(false);
+
+    // Auto-search logic - trigger search when autoSearch=true and grid is ready (only once)
+    useEffect(() => {
+        if (!hasAutoSearched.current && props.autoSearch && gridApi && props.firstPattern) {
+            hasAutoSearched.current = true;
+            const SCOPE_DELIMITER = ':';
+            const patternParts = props.firstPattern.split(SCOPE_DELIMITER);
+            if (patternParts.length === 2) {
+                const [scope, name] = patternParts;
+                const params = new URLSearchParams({
+                    query: props.firstPattern,
+                    type: props.initialType ?? DIDType.DATASET,
+                });
+                const url = '/api/feature/list-dids?' + params;
+                startStreaming(url);
+            }
+        }
+    }, [gridApi]); // Only depend on gridApi
 
     // Meta handling
 
@@ -97,6 +121,8 @@ export const ListDID = (props: ListDIDProps) => {
                 startStreaming={startStreaming}
                 stopStreaming={stopStreaming}
                 initialPattern={props.firstPattern}
+                autoSearch={props.autoSearch}
+                initialType={props.initialType}
             />
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3 grow">
                 <div className="flex flex-col md:flex-1">

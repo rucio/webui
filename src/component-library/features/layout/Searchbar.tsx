@@ -12,7 +12,7 @@ const didLocation: SearchLocation = {
     name: 'DIDs',
     parameter: 'Pattern',
     getHref: (query: string) => {
-        return query.length === 0 ? '/did/list' : `/did/list?pattern=${query}`;
+        return query.length === 0 ? '/did/list' : `/did/list?pattern=${query}&autoSearch=true`;
     },
 };
 
@@ -20,7 +20,7 @@ const rseLocation: SearchLocation = {
     name: 'RSEs',
     parameter: 'Expression',
     getHref: (query: string) => {
-        return query.length === 0 ? '/rse/list' : `/rse/list?expression=${query}`;
+        return query.length === 0 ? '/rse/list' : `/rse/list?expression=${query}&autoSearch=true`;
     },
 };
 
@@ -31,6 +31,17 @@ const ruleLocation: SearchLocation = {
         return query.length === 0 ? '/rule/list' : `/rule/page/${query}`;
     },
 };
+
+// Create dynamic DID locations with specific types
+const createDIDLocation = (type: string, typeName: string): SearchLocation => ({
+    name: 'DIDs',
+    parameter: `Search ${typeName}`,
+    getHref: (query: string) => {
+        return query.length === 0
+            ? '/did/list'
+            : `/did/list?pattern=${query}&type=${type}&autoSearch=true`;
+    },
+});
 
 const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; children: React.ReactNode }) => {
     return (
@@ -112,8 +123,12 @@ export const Searchbar = () => {
         if (query.length === 0) {
             setSearchLocations([didLocation, rseLocation, ruleLocation]);
         } else if (query.includes(':')) {
-            // Certainly a DID pattern
-            setSearchLocations([didLocation]);
+            // Certainly a DID pattern - show all three types
+            setSearchLocations([
+                createDIDLocation('dataset', 'Dataset'),
+                createDIDLocation('file', 'File'),
+                createDIDLocation('container', 'Container')
+            ]);
         } else {
             if (/[=|&\\]/.test(query)) {
                 // Certainly an RSE expression
