@@ -186,6 +186,14 @@ else
     print_info ".claude folder not found in root, skipping"
 fi
 
+# Copy CLAUDE.md from root
+if [ -f "$REPO_ROOT/CLAUDE.md" ]; then
+    cp "$REPO_ROOT/CLAUDE.md" "$WORKTREE_PATH/CLAUDE.md"
+    print_success "Copied CLAUDE.md"
+else
+    print_info "CLAUDE.md not found in root, skipping"
+fi
+
 # Copy all .venv folders
 copy_venv_folders
 
