@@ -129,8 +129,6 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
             </div>
-
-            <Divider />
         </KeyValueWrapper>
     );
 };
