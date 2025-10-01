@@ -210,7 +210,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             value={f.key}
                             onChange={e => updateDIDFilter(i, 'key', e.target.value)}
                             className="w-34"
-                            ref={el => (DIDKeyRefs.current[i] = el)}
+                            ref={el => { DIDKeyRefs.current[i] = el; }}
                         />
                         <Select
                             value={f.operator}
@@ -235,7 +235,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             value={f.value}
                             onChange={e => updateDIDFilter(i, 'value', e.target.value)}
                             className="w-34"
-                            ref={el => (DIDValueRefs.current[i] = el)}
+                            ref={el => { DIDValueRefs.current[i] = el; }}
                         />
                         <button
                             onClick={() => removeDIDFilter(i)}
