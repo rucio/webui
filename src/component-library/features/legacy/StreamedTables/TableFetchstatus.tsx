@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { FetchStatus } from '@tanstack/react-query';
 import { HiPause, HiPlay, HiRefresh } from 'react-icons/hi';
 
-const StateButton: React.FC<JSX.IntrinsicElements['button'] & { icon: JSX.Element; state: FetchStatus }> = ({ icon, state, ...props }) => {
+const StateButton: React.FC<React.ComponentPropsWithoutRef<'button'> & { icon: React.ReactElement; state: FetchStatus }> = ({ icon, state, ...props }) => {
     const { className, onClick, ...otherprops } = props;
     const onClickHandler = async (e: any) => {
         e.preventDefault();
@@ -33,7 +33,7 @@ const StateButton: React.FC<JSX.IntrinsicElements['button'] & { icon: JSX.Elemen
 };
 
 export const TableFetchstatus: React.FC<
-    JSX.IntrinsicElements['form'] & {
+    React.ComponentPropsWithoutRef<'form'> & {
         comdom: UseComDOM<any>;
     }
 > = ({ comdom, ...props }) => {

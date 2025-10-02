@@ -1,3 +1,4 @@
+import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 import { Column } from '@tanstack/react-table';
 import { TableFilterDiscrete as T } from './TableFilterDiscrete';
@@ -7,7 +8,7 @@ export default {
     component: T,
 } as Meta<typeof T>;
 
-const Template: StoryFn<typeof T<string>> = args => <T<string> {...args} />; // yes this is how you use JSX.Element generics
+const Template: StoryFn<typeof T<string>> = args => <T<string> {...args} />; // yes this is how you use React.ReactElement generics
 
 export const TableFilterDiscrete = Template.bind({});
 TableFilterDiscrete.args = {

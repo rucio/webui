@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export const P: React.FC<JSX.IntrinsicElements['p'] & { mono?: boolean }> = ({ mono = false, ...props }) => {
+export const P: React.FC<React.ComponentPropsWithoutRef<'p'> & { mono?: boolean }> = ({ mono = false, ...props }) => {
     const { className, ...otherprops } = props;
 
     return (

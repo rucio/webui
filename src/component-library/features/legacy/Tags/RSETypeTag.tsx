@@ -1,8 +1,8 @@
 import { twMerge } from 'tailwind-merge';
 import { RSEType } from '@/lib/core/entity/rucio';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-type RSETypeTagProps = JSX.IntrinsicElements['span'] & {
+type RSETypeTagProps = React.ComponentPropsWithoutRef<'span'> & {
     rsetype: RSEType;
     forcesmall?: boolean;
     neversmall?: boolean; // obviously dont use these two together

@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { Button } from '../../../atoms/legacy/Button/Button';
 import { AreaInput } from '../../../atoms/legacy/input/AreaInput/AreaInput';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Value } from '@sinclair/typebox/value';
 import { Type, Static } from '@sinclair/typebox';
 import { Code } from '../../../atoms/legacy/text/content/Code/Code';
@@ -10,7 +10,7 @@ import { HiQuestionMarkCircle } from 'react-icons/hi';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
 
 export const PageSubscriptionJSONEditor: React.FC<
-    JSX.IntrinsicElements['div'] & {
+    React.ComponentPropsWithoutRef<'div'> & {
         defaultString: string;
         submit: (json: string) => void;
         schema: any;

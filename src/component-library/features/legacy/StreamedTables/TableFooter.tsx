@@ -6,7 +6,7 @@ import { TableFetchstatus } from './TableFetchstatus';
 import { TableBreakout } from './TableBreakout';
 import { TableErrorstatus } from './TableErrorstatus';
 import { TableErrorreader } from './TableErrorreader';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 /**
  * @param T the type of the data in the table
@@ -15,7 +15,7 @@ import { useState } from 'react';
  * @param breakout if breakout is defined, the breakout will be shown
  * @param stacked if true, the pagination and fetchstatus will be stacked vertically
  */
-type TableFooterProps<T> = JSX.IntrinsicElements['tfoot'] & {
+type TableFooterProps<T> = React.ComponentPropsWithoutRef<'tfoot'> & {
     table: Table<T>;
     comdom: UseComDOM<any>; // TODO: fix this any, use BaseViewModel
     breakout?: {

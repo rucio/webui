@@ -1,16 +1,16 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
 import { Column, Table } from '@tanstack/react-table';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HiCheck, HiSearch } from 'react-icons/hi';
 
-type TableFilterString = JSX.IntrinsicElements['form'] & {
+type TableFilterString = React.ComponentPropsWithoutRef<'form'> & {
     column: Column<any, string>;
     name: string;
     placeholder?: string;
 };
 
-const Filter = (props: JSX.IntrinsicElements['input'] & { column: Column<any, string> }) => {
+const Filter = (props: React.ComponentPropsWithoutRef<'input'> & { column: Column<any, string> }) => {
     const { column, className, ...otherprops } = props;
     return (
         <input
@@ -26,7 +26,7 @@ const Filter = (props: JSX.IntrinsicElements['input'] & { column: Column<any, st
     );
 };
 
-export function TableFilterString(props: TableFilterString): JSX.Element {
+export function TableFilterString(props: TableFilterString): React.ReactElement {
     const { column, name, placeholder, ...otherprops } = props;
     const { className, ...otherdivprops } = otherprops;
 

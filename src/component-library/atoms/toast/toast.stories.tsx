@@ -19,7 +19,7 @@ export default {
 type ToastProps = {
     title: string;
     description: string;
-    action?: JSX.Element;
+    action?: React.ReactElement;
     variant?: 'error' | 'warning' | 'info';
 };
 

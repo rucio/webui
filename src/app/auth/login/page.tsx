@@ -2,11 +2,11 @@
 import { AuthViewModel, x509AuthRequestHeaders as X509AuthRequestHeaders } from '@/lib/infrastructure/data/auth/auth';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
 import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
 
-export default function Login() {
+function LoginContent() {
     useEffect(() => {
         document.title = 'Login - Rucio';
     }, []);
@@ -253,4 +253,12 @@ export default function Login() {
             </div>
         );
     }
+}
+
+export default function Login() {
+    return (
+        <Suspense fallback={<p>Loading...</p>}>
+            <LoginContent />
+        </Suspense>
+    );
 }

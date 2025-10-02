@@ -1,7 +1,8 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { HiExternalLink } from 'react-icons/hi';
 
-export const TableExternalLink: React.FC<JSX.IntrinsicElements['a'] & { label: string }> = ({ label, ...props }) => {
+export const TableExternalLink: React.FC<React.ComponentPropsWithoutRef<'a'> & { label: string }> = ({ label, ...props }) => {
     const { className, children, ...otherprops } = props;
     return (
         <a

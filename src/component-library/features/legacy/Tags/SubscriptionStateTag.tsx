@@ -1,7 +1,8 @@
+import React from 'react';
 import { SubscriptionState } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 
-export const SubscriptionStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: SubscriptionState; tiny?: boolean }> = ({
+export const SubscriptionStateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { state: SubscriptionState; tiny?: boolean }> = ({
     state = SubscriptionState.ACTIVE,
     tiny = false,
     ...props

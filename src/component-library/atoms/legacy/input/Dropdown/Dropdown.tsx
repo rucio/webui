@@ -1,16 +1,16 @@
 import { twMerge } from 'tailwind-merge';
 import { HiChevronDown } from 'react-icons/hi';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-type DropdownProps<T> = JSX.IntrinsicElements['div'] & {
+type DropdownProps<T> = React.ComponentPropsWithoutRef<'div'> & {
     keys: T[];
-    renderFunc: (key: T | undefined) => JSX.Element;
+    renderFunc: (key: T | undefined) => React.ReactElement;
     handleChange: (key: T | undefined) => void; // communicate back to parent
     value?: T | undefined; // the current value, set by the parent
     disableUndefined?: boolean; // if the selection may not be left undefined
 };
 
-export function Dropdown<T>(props: DropdownProps<T>): JSX.Element {
+export function Dropdown<T>(props: DropdownProps<T>): React.ReactElement {
     const [isActive, setActive] = useState<boolean>(false);
     const [selection, setSelection] = useState<T | undefined>(props.value ?? undefined);
     const divref = useRef<HTMLDivElement>(null);

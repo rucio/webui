@@ -96,7 +96,7 @@ export const ListDID = (props: ListDIDProps) => {
     useEffect(() => {
         const refetch = async () => {
             // Make sure the result is always fresh
-            await queryClient.cancelQueries(metaQueryKey);
+            await queryClient.cancelQueries({ queryKey: metaQueryKey });
             refetchMeta();
         };
 

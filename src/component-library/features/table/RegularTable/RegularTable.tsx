@@ -10,7 +10,7 @@ import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioL
 import { useTheme } from 'next-themes';
 
 export interface RegularTableProps extends AgGridReactProps {
-    tableRef: RefObject<AgGridReact>;
+    tableRef: RefObject<AgGridReact | null>;
 }
 
 // This implementation of the pagination panel uses refs to prevent excessive state updates
@@ -18,13 +18,13 @@ export interface RegularTableProps extends AgGridReactProps {
  * A component for flexible and responsive pagination of the table
  */
 export const SimplePaginationPanel = (props: {
-    currentPageRef: RefObject<HTMLSpanElement>;
-    totalPagesRef: RefObject<HTMLSpanElement>;
-    previousPageRef: RefObject<HTMLButtonElement>;
-    nextPageRef: RefObject<HTMLButtonElement>;
-    lastPageRef: RefObject<HTMLButtonElement>;
-    firstPageRef: RefObject<HTMLButtonElement>;
-    containerRef: RefObject<HTMLDivElement>;
+    currentPageRef: RefObject<HTMLSpanElement | null>;
+    totalPagesRef: RefObject<HTMLSpanElement | null>;
+    previousPageRef: RefObject<HTMLButtonElement | null>;
+    nextPageRef: RefObject<HTMLButtonElement | null>;
+    lastPageRef: RefObject<HTMLButtonElement | null>;
+    firstPageRef: RefObject<HTMLButtonElement | null>;
+    containerRef: RefObject<HTMLDivElement | null>;
 }) => {
     const enabledTextClasses = 'text-neutral-800 dark:text-neutral-100';
     const disabledTextClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-500';

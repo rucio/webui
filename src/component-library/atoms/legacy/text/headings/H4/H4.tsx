@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type H4Props = JSX.IntrinsicElements['h4'];
+type H4Props = React.ComponentPropsWithoutRef<'h4'>;
 
 export const H4 = ({ ...props }) => {
     const { className, ...otherprops } = props;

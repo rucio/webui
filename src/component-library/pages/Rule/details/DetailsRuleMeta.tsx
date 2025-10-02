@@ -1,3 +1,4 @@
+import React from 'react';
 import { Divider } from '@/component-library/atoms/misc/Divider';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { Field } from '@/component-library/atoms/misc/Field';
@@ -19,7 +20,7 @@ import { CopyableLinkCell } from '@/component-library/features/table/cells/Copya
  * Renders a full-width divider that is only visible on screens smaller than the 'lg' breakpoint.
  * Useful for visually separating sections in mobile and tablet layouts.
  *
- * @returns {JSX.Element} The divider element.
+ * @returns {React.ReactElement} The divider element.
  */
 const RuleSectionDivider = () => (
     <div className="w-full lg:hidden my-4">

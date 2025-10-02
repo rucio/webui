@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type BodyProps = JSX.IntrinsicElements['div'];
+type BodyProps = React.ComponentPropsWithoutRef<'div'>;
 
 export const Body: React.FC<BodyProps> = ({ ...props }) => {
     const { children, className, ...otherprops } = props;

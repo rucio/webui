@@ -1,9 +1,10 @@
 import { ListRSE } from '@/component-library/pages/RSE/list/ListRSE';
 
-export default function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default async function Page({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
     let firstExpression: string | undefined = undefined;
-    const searchExpression = searchParams?.['expression'];
-    const autoSearch = searchParams?.['autoSearch'] === 'true';
+    const resolvedSearchParams = await searchParams;
+    const searchExpression = resolvedSearchParams?.['expression'];
+    const autoSearch = resolvedSearchParams?.['autoSearch'] === 'true';
 
     if (typeof searchExpression === 'string') {
         firstExpression = searchExpression;

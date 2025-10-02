@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export const NullTag: React.FC<JSX.IntrinsicElements['span']> = ({ ...props }) => {
+export const NullTag: React.FC<React.ComponentPropsWithoutRef<'span'>> = ({ ...props }) => {
     const { className, ...otherprops } = props;
     return (
         <span

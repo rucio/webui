@@ -1,16 +1,17 @@
+import React from 'react';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 import { H3 } from '@/component-library/atoms/legacy/text/headings/H3/H3';
 import { twMerge } from 'tailwind-merge';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 import { Button } from '@/component-library/atoms/legacy/Button/Button';
 
-const TableErrorelement: React.FC<JSX.IntrinsicElements['div'] & { message: string }> = ({ message, ...props }) => {
+const TableErrorelement: React.FC<React.ComponentPropsWithoutRef<'div'> & { message: string }> = ({ message, ...props }) => {
     const { className, ...otherprops } = props;
     return <div className={twMerge('border rounded-md p-1', 'bg-neutral-0', className ?? '')}>{message}</div>;
 };
 
 export const TableErrorreader: React.FC<
-    JSX.IntrinsicElements['div'] & {
+    React.ComponentPropsWithoutRef<'div'> & {
         comdom: UseComDOM<any>;
         showDetailedErrors: boolean;
         setShowDetailedErrors: (show: boolean) => void;

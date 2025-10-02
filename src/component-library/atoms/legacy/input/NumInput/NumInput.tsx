@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export const NumInput: React.FC<Omit<JSX.IntrinsicElements['input'], 'value'> & { value: number; onEnterkey?: (event: any) => void }> = ({
+export const NumInput: React.FC<Omit<React.ComponentPropsWithoutRef<'input'>, 'value'> & { value: number; onEnterkey?: (event: any) => void }> = ({
     value,
     ...props
 }) => {

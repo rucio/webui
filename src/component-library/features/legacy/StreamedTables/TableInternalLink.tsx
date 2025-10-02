@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type TableInternalLinkProps = JSX.IntrinsicElements['a'];
+type TableInternalLinkProps = React.ComponentPropsWithoutRef<'a'>;
 
 export const TableInternalLink: React.FC<TableInternalLinkProps> = ({ ...props }) => {
     const { className, children, ...otherprops } = props;

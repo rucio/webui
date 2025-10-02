@@ -56,7 +56,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const { toast } = useToast();
 
 
-    const showToastAndFocus = (title: string, description: string, inputRef: React.RefObject<HTMLInputElement>) => {
+    const showToastAndFocus = (title: string, description: string, inputRef: React.RefObject<HTMLInputElement | null>) => {
         toast({
             variant: 'warning',
             title,
@@ -65,7 +65,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         inputRef.current?.focus();
     };
 
-    const validateField = (value: string | null, fieldName: string, inputRef: React.RefObject<HTMLInputElement>): boolean => {
+    const validateField = (value: string | null, fieldName: string, inputRef: React.RefObject<HTMLInputElement | null>): boolean => {
         if (!value) {
             showToastAndFocus(`Empty ${fieldName}`, emptyToastMessage, inputRef);
             return false;
@@ -210,7 +210,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             value={f.key}
                             onChange={e => updateDIDFilter(i, 'key', e.target.value)}
                             className="w-34"
-                            ref={el => (DIDKeyRefs.current[i] = el)}
+                            ref={el => { DIDKeyRefs.current[i] = el; }}
                         />
                         <Select
                             value={f.operator}
@@ -235,7 +235,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             value={f.value}
                             onChange={e => updateDIDFilter(i, 'value', e.target.value)}
                             className="w-34"
-                            ref={el => (DIDValueRefs.current[i] = el)}
+                            ref={el => { DIDValueRefs.current[i] = el; }}
                         />
                         <button
                             onClick={() => removeDIDFilter(i)}
