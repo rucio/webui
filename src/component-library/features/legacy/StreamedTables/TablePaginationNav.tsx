@@ -1,3 +1,4 @@
+import React from 'react';
 import { Table } from '@tanstack/react-table';
 import { Button } from '../../../atoms/legacy/Button/Button';
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight } from 'react-icons/hi';
@@ -5,7 +6,7 @@ import { NumInput } from '../../../atoms/legacy/input/NumInput/NumInput';
 import { twMerge } from 'tailwind-merge';
 
 export const TablePaginationNav: React.FC<
-    JSX.IntrinsicElements['div'] & {
+    React.ComponentPropsWithoutRef<'div'> & {
         table: Table<any>;
     }
 > = ({ table, ...props }) => {

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export type BasicStatusTagProps = {
     text: string;
     status: 'success' | 'error' | 'warning' | 'info';
 };
 export const BasicStatusTag: React.FC<
-    JSX.IntrinsicElements['span'] & {
+    React.ComponentPropsWithoutRef<'span'> & {
         text: string;
         status: 'success' | 'error' | 'warning' | 'info';
     }

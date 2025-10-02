@@ -1,11 +1,12 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { H1 } from '../../../atoms/legacy/text/headings/H1/H1';
 import { H2 } from '../../../atoms/legacy/text/headings/H2/H2';
 
-type HeadingProps = JSX.IntrinsicElements['div'] & {
+type HeadingProps = React.ComponentPropsWithoutRef<'div'> & {
     title: string;
     subtitle?: string;
-    tag?: JSX.Element;
+    tag?: React.ReactElement;
 };
 
 export const Heading: React.FC<HeadingProps> = ({ title, subtitle, tag, ...props }) => {

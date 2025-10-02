@@ -56,7 +56,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const { toast } = useToast();
 
 
-    const showToastAndFocus = (title: string, description: string, inputRef: React.RefObject<HTMLInputElement>) => {
+    const showToastAndFocus = (title: string, description: string, inputRef: React.RefObject<HTMLInputElement | null>) => {
         toast({
             variant: 'warning',
             title,
@@ -65,7 +65,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         inputRef.current?.focus();
     };
 
-    const validateField = (value: string | null, fieldName: string, inputRef: React.RefObject<HTMLInputElement>): boolean => {
+    const validateField = (value: string | null, fieldName: string, inputRef: React.RefObject<HTMLInputElement | null>): boolean => {
         if (!value) {
             showToastAndFocus(`Empty ${fieldName}`, emptyToastMessage, inputRef);
             return false;

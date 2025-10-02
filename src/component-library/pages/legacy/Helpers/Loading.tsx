@@ -4,7 +4,7 @@ import { Heading } from './Heading';
 import { Body } from './Body';
 import { H3 } from '@/component-library/atoms/legacy/text/headings/H3/H3';
 
-export const Loading: React.FC<JSX.IntrinsicElements['div'] & { title: string; subtitle?: string }> = ({ title, subtitle, ...props }) => {
+export const Loading: React.FC<React.ComponentPropsWithoutRef<'div'> & { title: string; subtitle?: string }> = ({ title, subtitle, ...props }) => {
     const { children, className, ...otherprops } = props;
     return (
         <div className={twMerge('flex flex-col space-y-2 w-full', className ?? '')} {...otherprops}>

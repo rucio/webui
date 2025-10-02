@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { twMerge } from 'tailwind-merge';
 
-type DateInputProps = JSX.IntrinsicElements['div'] & {
+type DateInputProps = React.ComponentPropsWithoutRef<'div'> & {
     onchange: (date: Date) => void; // communicate back to parent
     initialdate?: Date; // the current value, set by the parent
     disabled?: boolean;

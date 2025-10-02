@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export const Titleth: React.FC<JSX.IntrinsicElements['td']> = ({ ...props }) => {
+export const Titleth: React.FC<React.ComponentPropsWithoutRef<'td'>> = ({ ...props }) => {
     const { className, scope, ...otherprops } = props;
     return (
         <th
@@ -12,7 +13,7 @@ export const Titleth: React.FC<JSX.IntrinsicElements['td']> = ({ ...props }) => 
         </th>
     );
 };
-export const Contenttd: React.FC<JSX.IntrinsicElements['td']> = ({ ...props }) => {
+export const Contenttd: React.FC<React.ComponentPropsWithoutRef<'td'>> = ({ ...props }) => {
     const { className, ...otherprops } = props;
     return (
         <td className={twMerge('break-all dark:text-text-100 text-text-1000 pr-1', className ?? '')} {...otherprops}>
@@ -21,7 +22,7 @@ export const Contenttd: React.FC<JSX.IntrinsicElements['td']> = ({ ...props }) =
     );
 };
 
-export const Generaltable: React.FC<JSX.IntrinsicElements['table']> = ({ ...props }) => {
+export const Generaltable: React.FC<React.ComponentPropsWithoutRef<'table'>> = ({ ...props }) => {
     const { className, ...otherprops } = props;
     return (
         <table

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 export const AreaInput: React.FC<
-    JSX.IntrinsicElements['textarea'] & {
+    React.ComponentPropsWithoutRef<'textarea'> & {
         content: string;
         onEnterkey?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
     }

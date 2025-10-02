@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type ByteProps = JSX.IntrinsicElements['span'] & { bytesNumber: number; decimalPlaces?: number };
+type ByteProps = React.ComponentPropsWithoutRef<'span'> & { bytesNumber: number; decimalPlaces?: number };
 
 export const FileSize: React.FC<ByteProps> = ({ bytesNumber, decimalPlaces, ...props }) => {
     const { className, ...otherprops } = props;

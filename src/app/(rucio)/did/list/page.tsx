@@ -4,15 +4,16 @@ import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import { DIDType } from '@/lib/core/entity/rucio';
 
-export default async function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default async function Page({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const envGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
     let firstPattern: string | undefined = await envGateway.listDIDsInitialPattern();
 
-    const searchPattern = searchParams?.['pattern'];
-    const autoSearch = searchParams?.['autoSearch'] === 'true';
+    const resolvedSearchParams = await searchParams;
+    const searchPattern = resolvedSearchParams?.['pattern'];
+    const autoSearch = resolvedSearchParams?.['autoSearch'] === 'true';
 
     // Handle type query parameter
-    const searchType = searchParams?.['type'];
+    const searchType = resolvedSearchParams?.['type'];
     let initialType: DIDType | undefined;
     if (typeof searchType === 'string') {
         // Map string values to DIDType enum

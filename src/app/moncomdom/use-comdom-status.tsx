@@ -12,7 +12,7 @@ export default function UseComDOMStatusCard({ status: useComDOMStatus }: UseComD
             case UseComDOMStatus.STOPPED:
                 return 'stopped';
             case UseComDOMStatus.RUNNING:
-                return 'loading';
+                return 'pending';
             case UseComDOMStatus.DONE:
                 return 'success';
             case UseComDOMStatus.ERROR:

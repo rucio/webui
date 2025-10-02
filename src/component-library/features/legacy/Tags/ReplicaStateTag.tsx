@@ -1,7 +1,8 @@
+import React from 'react';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 
-export const ReplicaStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: ReplicaState; tiny?: boolean }> = ({
+export const ReplicaStateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { state: ReplicaState; tiny?: boolean }> = ({
     state = 'Available',
     tiny = false,
     ...props
