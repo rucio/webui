@@ -8,8 +8,8 @@ import { cookies } from 'next/headers';
 import { getRucioAuthToken } from '@/lib/infrastructure/auth/session-utils';
 import { MockSignal } from '@/lib/infrastructure/utils/mock-signal';
 
-export default async function Page({ params }: { params: { name: string } }) {
-    const { name } = params;
+export default async function Page({ params }: { params: Promise<{ name: string }> }) {
+    const { name } = await params;
     const usecaseFactory = appContainer.get<TUseCaseFactory<GetRSERequest>>(USECASE_FACTORY.GET_RSE);
 
     const signal = new MockSignal<RSEDetailsViewModel>();
@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: { name: string } }) {
         rseName: name,
     });
 
-    return <DetailsRSE name={params.name} initialMeta={signal.data} />;
+    return <DetailsRSE name={name} initialMeta={signal.data} />;
 }
 
 export const metadata = {

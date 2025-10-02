@@ -1,7 +1,8 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const ProgressBar: React.FC<
-    JSX.IntrinsicElements['div'] & {
+    React.ComponentPropsWithoutRef<'div'> & {
         percentage: number;
         colour?: string;
     }

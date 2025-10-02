@@ -1,9 +1,9 @@
 import { DIDType } from '@/lib/core/entity/rucio';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { FC } from 'react';
 
-type DIDTypeTagProps = JSX.IntrinsicElements['span'] & {
+type DIDTypeTagProps = React.ComponentPropsWithoutRef<'span'> & {
     didtype: DIDType;
     forcesmall?: boolean;
     neversmall?: boolean;

@@ -1,7 +1,8 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 var format = require('date-format');
 
-export const DateTag: React.FC<JSX.IntrinsicElements['span'] & { date: Date; dateFormat?: string }> = ({ date, dateFormat, ...props }) => {
+export const DateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { date: Date; dateFormat?: string }> = ({ date, dateFormat, ...props }) => {
     const { className, ...otherprops } = props;
     const df = dateFormat ?? 'yyyy-MM-dd';
     return (

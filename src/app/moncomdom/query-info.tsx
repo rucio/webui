@@ -15,7 +15,7 @@ export default function QueryInfo({ title, status, realStatus }: QueryInfoProps)
                 return 'bg-gray-800';
             case 'idle':
                 return 'bg-gray-800';
-            case 'loading':
+            case 'pending':
                 return 'bg-blue-800';
             case 'preparing_batch':
                 return 'bg-yellow-600';

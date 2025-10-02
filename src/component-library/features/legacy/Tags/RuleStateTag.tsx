@@ -1,7 +1,8 @@
+import React from 'react';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 
-export const RuleStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: RuleState; tiny?: boolean }> = ({
+export const RuleStateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { state: RuleState; tiny?: boolean }> = ({
     state = 'OK',
     tiny = false,
     ...props

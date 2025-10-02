@@ -1,8 +1,9 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { TextInput } from '../../../atoms/legacy/input/TextInput/TextInput';
 import { P } from '../../../atoms/legacy/text/content/P/P';
 
-type LabelledInputProps = JSX.IntrinsicElements['span'] & {
+type LabelledInputProps = React.ComponentPropsWithoutRef<'span'> & {
     label: string;
     idinput: string;
     updateFunc: (data: string) => void;

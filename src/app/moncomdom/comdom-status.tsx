@@ -13,7 +13,7 @@ export function ComDOMStatusCard({ comDOMStatus }: ComDOMStatusCardProps) {
             case ComDOMStatus.STOPPED:
                 return 'not_started';
             case ComDOMStatus.RUNNING:
-                return 'loading';
+                return 'pending';
             case ComDOMStatus.PREPARING_BATCH:
                 return 'preparing_batch';
             case ComDOMStatus.ERROR:
@@ -37,7 +37,7 @@ export type ComDOMLifeCycleProps = {
 
 export function ComDOMLifeCycle({ workerStatus, queryStatus }: ComDOMLifeCycleProps) {
     const workerLifeCycle = ['NOT_CREATED', 'STOPPED', 'RUNNING', 'PREPARING_BATCH', 'ERROR', 'DONE', 'UNKNOWN'];
-    const queryLifeCycle = ['idle', 'loading', 'error', 'success'];
+    const queryLifeCycle = ['idle', 'pending', 'error', 'success'];
 
     return (
         <div>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { ViewModelTableData } from '@/lib/infrastructure/hooks/useComDOM';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 
@@ -19,7 +20,7 @@ export type TableSelecting<T> = {
     };
 };
 
-type NoDataTableProps<T> = JSX.IntrinsicElements['table'] & {
+type NoDataTableProps<T> = React.ComponentPropsWithoutRef<'table'> & {
     tablecolumns: any[]; // todo type this
     tablestyling?: TableStyling;
     tableselecting?: TableSelecting<T>;

@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type TextInputProps = JSX.IntrinsicElements['input'] & {
+type TextInputProps = React.ComponentPropsWithoutRef<'input'> & {
     onEnterkey?: (event: any) => void;
 };
 

@@ -1,9 +1,9 @@
 import { twMerge } from 'tailwind-merge';
 import Highlight from 'react-highlight';
 import 'react-highlight/node_modules/highlight.js/styles/github.css';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export const Code: React.FC<JSX.IntrinsicElements['div']> = ({ ...props }) => {
+export const Code: React.FC<React.ComponentPropsWithoutRef<'div'>> = ({ ...props }) => {
     const { className, children, ...otherprops } = props;
 
     const [dark, setDark] = useState<boolean>(false);

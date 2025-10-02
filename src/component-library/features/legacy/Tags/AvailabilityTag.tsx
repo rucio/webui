@@ -1,7 +1,8 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { DIDAvailability } from '@/lib/core/entity/rucio';
 
-export const AvailabilityTag: React.FC<JSX.IntrinsicElements['span'] & { availability: DIDAvailability }> = ({
+export const AvailabilityTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { availability: DIDAvailability }> = ({
     availability = 'Available',
     ...props
 }) => {

@@ -1,9 +1,9 @@
 import { twMerge } from 'tailwind-merge';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { HiChevronUp, HiChevronDown } from 'react-icons/hi';
 import { Collapsible } from '../helpers/Collapsible/Collapsible';
 
-export const Accordion: React.FC<JSX.IntrinsicElements['div'] & { name: string }> = ({ name, ...props }) => {
+export const Accordion: React.FC<React.ComponentPropsWithoutRef<'div'> & { name: string }> = ({ name, ...props }) => {
     /*
         Accordion: a collapsible section with a header that can be clicked to expand/collapse the section.
 

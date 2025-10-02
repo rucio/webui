@@ -1,17 +1,17 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Column } from '@tanstack/react-table';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { BoolTag } from '@/component-library/features/legacy/Tags/BoolTag';
 
-type TableFilterBoolean = JSX.IntrinsicElements['div'] & {
+type TableFilterBoolean = React.ComponentPropsWithoutRef<'div'> & {
     name: string;
     column: Column<any, boolean>; // to be a tanstack column
     stack?: boolean; // whether to use column instead of row
 };
 
-export function TableFilterBoolean<T>(props: TableFilterBoolean): JSX.Element {
+export function TableFilterBoolean<T>(props: TableFilterBoolean): React.ReactElement {
     // split up props
     const { name, column, stack, ...otherprops } = props;
     const { className, ...otherdivprops } = otherprops;

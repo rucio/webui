@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const Tabs: React.FC<
-    JSX.IntrinsicElements['div'] & {
+    React.ComponentPropsWithoutRef<'div'> & {
         tabs: string[];
         _ariaControls?: string[];
         active: number;

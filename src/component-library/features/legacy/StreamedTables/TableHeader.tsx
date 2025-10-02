@@ -1,10 +1,11 @@
+import React from 'react';
 import { Table, flexRender } from '@tanstack/react-table';
 import { TableStyling } from './types';
 import { twMerge } from 'tailwind-merge';
 import { StyleMetaColumnDef } from './types';
 
 export function TableHeader<T>(
-    props: JSX.IntrinsicElements['thead'] & {
+    props: React.ComponentPropsWithoutRef<'thead'> & {
         table: Table<T>;
         tablestyling?: TableStyling;
     },

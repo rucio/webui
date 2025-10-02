@@ -1,6 +1,7 @@
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export const SamplingTag: React.FC<JSX.IntrinsicElements['span'] & { sampling: boolean }> = ({ sampling = false, ...props }) => {
+export const SamplingTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { sampling: boolean }> = ({ sampling = false, ...props }) => {
     return (
         <span
             className={twMerge(

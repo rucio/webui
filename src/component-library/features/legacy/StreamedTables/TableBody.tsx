@@ -1,9 +1,10 @@
+import React from 'react';
 import { Table, flexRender, TableState } from '@tanstack/react-table';
 import { twMerge } from 'tailwind-merge';
 import { TableStyling } from './types';
 
 export function TableBody<T>(
-    props: JSX.IntrinsicElements['tbody'] & {
+    props: React.ComponentPropsWithoutRef<'tbody'> & {
         table: Table<T>;
         tablestyling?: TableStyling;
     },
