@@ -181,7 +181,6 @@ export const RegularTable = (props: RegularTableProps) => {
                         onPaginationChanged={onPaginationChanged}
                         suppressMovableColumns={true}
                         rowMultiSelectWithClick={true}
-                        suppressBrowserResizeObserver={true}
                         defaultColDef={{
                             flex: 1,
                             cellStyle: { userSelect: 'text' },
