@@ -93,7 +93,7 @@ export interface IComDOMWrapper<TData> {
 export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     private worker: Worker | null = null;
     private verbose: boolean;
-    private wrappedComDOM: Remote<ComDOM<TData>> | null = null;
+    private wrappedComDOM: any | null = null;
     private comDOM: Remote<ComDOM<TData>> | undefined;
 
     constructor(verbose: boolean = false) {
@@ -109,11 +109,11 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     async init() {
         if (this.worker === null || this.wrappedComDOM === null) {
             this.worker = new Worker('/comdom.js');
-            this.wrappedComDOM = wrap<ComDOM<TData>>(this.worker);
+            this.wrappedComDOM = wrap(this.worker);
         }
         this.log('Initializing ComDOM');
         try {
-            this.comDOM = await new this.wrappedComDOM(this.verbose);
+            this.comDOM = await new this.wrappedComDOM(this.verbose) as Remote<ComDOM<TData>>;
         } catch (error) {
             this.log('Error initializing ComDOM', error);
 
