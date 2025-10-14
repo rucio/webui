@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
-import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, ICellRendererParams, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
@@ -49,7 +48,8 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
 
     const updateSelection = () => {
         tableRef.current?.api?.forEachNode(node => {
-            const did: DIDLongViewModel = node.data;
+            if (!node.data) return;
+            const did: SelectableDIDViewModel = node.data;
             const selected = selectedItems.some(element => element.scope === did.scope && element.name === did.name);
             node.setData({ ...did, selected });
         });
