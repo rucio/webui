@@ -57,10 +57,11 @@ export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
         return errorDTO;
     }
 
-    createDTO(data: string): AttachDIDDTO {
+    createDTO(data: object): AttachDIDDTO {
+        const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
         const dto: AttachDIDDTO = {
             status: 'success',
-            created: data.toLowerCase() === 'created' ? true : false,
+            created: dataStr.toLowerCase() === 'created' ? true : false,
         };
         return dto;
     }

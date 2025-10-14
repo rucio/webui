@@ -185,10 +185,10 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
 
     /**
      * Creates a data transfer object (DTO) from the API response.
-     * @param data The response.json() object returned by the API.
+     * @param data The response.json() object returned by the API, or a string if parsedBodyAsText is true.
      * @returns The DTO that represents the API response.
      */
-    abstract createDTO(data: object): TDTO;
+    abstract createDTO(data: object | string): TDTO;
 
     /**
      * Sends an HTTP request to the API and returns the response as a data transfer object (DTO).
