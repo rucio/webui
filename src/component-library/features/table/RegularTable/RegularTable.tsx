@@ -181,6 +181,7 @@ export const RegularTable = (props: RegularTableProps) => {
                         onPaginationChanged={onPaginationChanged}
                         suppressMovableColumns={true}
                         rowMultiSelectWithClick={true}
+                        theme="legacy" // Use legacy theming to maintain custom CSS themes
                         defaultColDef={{
                             flex: 1,
                             cellStyle: { userSelect: 'text' },

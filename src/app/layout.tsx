@@ -2,6 +2,7 @@
 import '../component-library/outputtailwind.css';
 import 'reflect-metadata';
 import { ThemeProvider } from 'next-themes';
+import { AgGridSetup } from '@/lib/ag-grid-setup';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="icon" href="/logo192.png" sizes="any" />
             </head>
             <body>
+                <AgGridSetup />
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                     {children}
                 </ThemeProvider>
