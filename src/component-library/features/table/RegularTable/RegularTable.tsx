@@ -182,9 +182,14 @@ export const RegularTable = (props: RegularTableProps) => {
                         suppressMovableColumns={true}
                         rowMultiSelectWithClick={true}
                         theme="legacy" // Use legacy theming to maintain custom CSS themes
+                        // AG-Grid Community Features (Enterprise features like sideBar require license)
                         defaultColDef={{
                             flex: 1,
                             cellStyle: { userSelect: 'text' },
+                            filter: true, // Enable filtering on all columns
+                            floatingFilter: true, // Show quick filter inputs below headers
+                            sortable: true, // Enable column sorting
+                            resizable: true, // Enable column resizing by dragging borders
                         }}
                         //asyncTransactionWaitMillis={500}
                     />
