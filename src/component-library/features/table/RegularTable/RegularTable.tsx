@@ -65,6 +65,8 @@ export const SimplePaginationPanel = (props: {
 };
 
 export const RegularTable = (props: RegularTableProps) => {
+    const [isMounted, setIsMounted] = useState(false);
+    const [isContainerReady, setIsContainerReady] = useState(false);
     // Refs for controlling the pagination panel
     const currentPageRef = useRef<HTMLSpanElement>(null);
     const totalPagesRef = useRef<HTMLSpanElement>(null);
@@ -142,6 +144,20 @@ export const RegularTable = (props: RegularTableProps) => {
     }, [resolvedTheme]);
 
     useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (isMounted && gridWrapper.current) {
+            // Wait for next tick to ensure DOM is fully ready
+            const timer = setTimeout(() => {
+                setIsContainerReady(true);
+            }, 0);
+            return () => clearTimeout(timer);
+        }
+    }, [isMounted]);
+
+    useEffect(() => {
         onPaginationChanged();
     }, [isTableLoaded]);
 
@@ -152,7 +168,7 @@ export const RegularTable = (props: RegularTableProps) => {
             <div className={twMerge('grid grow w-full', 'relative', 'min-h-[300px]')} ref={gridWrapper}>
                 {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
                 {/*The substitute div is required to supress hydration warning*/}
-                {resolvedTheme ? (
+                {isContainerReady && resolvedTheme ? (
                     <AgGridReact
                         {...props}
                         pagination={true}
@@ -165,6 +181,7 @@ export const RegularTable = (props: RegularTableProps) => {
                         onPaginationChanged={onPaginationChanged}
                         suppressMovableColumns={true}
                         rowMultiSelectWithClick={true}
+                        suppressBrowserResizeObserver={true}
                         defaultColDef={{
                             flex: 1,
                             cellStyle: { userSelect: 'text' },
