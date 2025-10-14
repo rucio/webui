@@ -8,7 +8,7 @@
     "dev:https": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
     "test": "jest --testPathPattern test/component test/api test/gateway test/sdk --projects test/api/jest.api.config.js test/component/jest.component.config.js test/gateway/jest.gateway.config.js test/sdk/jest.sdk.config.js test/hook/jest.hook.config.js",
     "prettier:check": "prettier --check 'src/**/*.{ts,tsx}' 'test/**/*.{ts,tsx}'",
     "prettier:write": "prettier --write 'src/**/*.{ts,tsx}' 'test/**/*.{ts,tsx}'",
