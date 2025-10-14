@@ -24,7 +24,6 @@
   "dependencies": {
     "@builder.io/partytown": "^0.7.6",
     "@next/font": "13.1.6",
-    "@next/swc-darwin-arm64": "^15.5.4",
     "@preact/signals": "^1.2.2",
     "@primer/css": "^20.8.2",
     "@radix-ui/react-collapsible": "^1.1.0",
