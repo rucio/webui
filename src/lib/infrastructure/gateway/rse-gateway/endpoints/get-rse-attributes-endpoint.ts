@@ -38,7 +38,7 @@ export default class GetRSEAttributesEndpoint extends BaseEndpoint<RSEAttributeD
         return error as RSEAttributeDTO;
     }
 
-    createDTO(data: Object): RSEAttributeDTO {
+    createDTO(data: object): RSEAttributeDTO {
         const attributes: RSEAttribute[] = [];
         for (const [key, value] of Object.entries(data)) {
             const attribute: RSEAttribute = {

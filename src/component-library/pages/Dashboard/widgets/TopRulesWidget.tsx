@@ -69,9 +69,9 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
         const totalLocks = rule.locks_stuck_cnt + rule.locks_replicating_cnt + rule.locks_ok_cnt;
 
         // Calculate initial percentages
-        let locksOkPercentage = (rule.locks_ok_cnt / totalLocks) * 100;
-        let locksReplicatingPercentage = (rule.locks_replicating_cnt / totalLocks) * 100;
-        let locksStuckPercentage = 100 - locksOkPercentage - locksReplicatingPercentage;
+        const locksOkPercentage = (rule.locks_ok_cnt / totalLocks) * 100;
+        const locksReplicatingPercentage = (rule.locks_replicating_cnt / totalLocks) * 100;
+        const locksStuckPercentage = 100 - locksOkPercentage - locksReplicatingPercentage;
 
         return {
             id: rule.id,

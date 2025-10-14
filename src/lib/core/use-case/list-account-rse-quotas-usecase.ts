@@ -86,7 +86,7 @@ export default class ListAccountRSEQuotasUseCase
 
         const accountUsageDTOs: AccountRSEUsageDTO[] = await collectStreamedData<AccountRSEUsageDTO>(listAccountUsageDTO.stream);
 
-        let accountRSEUsageAndLimitsMap = createAccountRSEUsageAndLimitMap(accountLimitsDTO, accountUsageDTOs);
+        const accountRSEUsageAndLimitsMap = createAccountRSEUsageAndLimitMap(accountLimitsDTO, accountUsageDTOs);
         this.accountRSEUsageAndLimits = accountRSEUsageAndLimitsMap;
 
         request.requestedDIDs.forEach((did: DIDLong) => {

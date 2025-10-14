@@ -72,7 +72,7 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
                     throw new ConfigNotFound(key);
                 }
             }
-            let scopesConfig = await this.get(`OIDC_PROVIDER_${providerName}_SCOPES`);
+            const scopesConfig = await this.get(`OIDC_PROVIDER_${providerName}_SCOPES`);
             const scopes = scopesConfig?.split(',').map(scope => scope.trim());
             const provider: OIDCProvider = {
                 name: providerName,
@@ -126,11 +126,11 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
             const logoUrl = await this.get(`VO_${voName}_LOGO_URL`);
             const voOIDCEnabledStr = await this.get(`VO_${voName}_OIDC_ENABLED`);
             let voOIDCEnabled = false;
-            let voOIDCProviders: OIDCProvider[] = [];
+            const voOIDCProviders: OIDCProvider[] = [];
             // if oidc_enabled is true, oidc_providers must be defined
             if (voOIDCEnabledStr === 'true' || voOIDCEnabledStr === 'True' || voOIDCEnabledStr === 'TRUE') {
                 voOIDCEnabled = true;
-                let voOIDCProviderNames = await this.get(`VO_${voName}_OIDC_PROVIDERS`);
+                const voOIDCProviderNames = await this.get(`VO_${voName}_OIDC_PROVIDERS`);
                 if (voOIDCProviderNames === undefined) {
                     throw new InvalidConfig(`VO_${voName}_OIDC_PROVIDERS is not defined, but VO_${voName}_OIDC_ENABLED is true`);
                 }

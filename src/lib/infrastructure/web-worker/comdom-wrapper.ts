@@ -39,13 +39,19 @@ export type BatchResponse<TData> = {
  * @description Represents the ComDOM web worker
  */
 export interface ComDOM<TData> {
-    new (verbose: boolean): ComDOM<TData>;
     run: (request: HTTPRequest) => Promise<any>;
     getNextBatch: () => Promise<BatchResponse<TData> | null>;
     isDone: () => Promise<boolean>;
     isBatchAvailable: () => Promise<boolean>;
     getStatus: () => Promise<ComDOMStatus>;
     status: () => Promise<string>;
+}
+
+/**
+ * @description Constructor type for ComDOM
+ */
+export interface ComDOMConstructor {
+    new <TData>(verbose: boolean): ComDOM<TData>;
 }
 
 /**

@@ -33,7 +33,7 @@ export default class ListDatasetReplicasEndpoint extends BaseStreamableEndpoint<
             return Promise.resolve(undefined);
         }
 
-        let errorDetails = await extractErrorMessage(response);
+        const errorDetails = await extractErrorMessage(response);
 
         const errorDTO: ListReplicasDTO = {
             status: 'error',

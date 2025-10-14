@@ -51,7 +51,7 @@ export default class GetSubscriptionByIdEndpoint extends BaseEndpoint<Subscripti
         return Promise.resolve(dto);
     }
 
-    createDTO(data: Object): SubscriptionDTO {
+    createDTO(data: object): SubscriptionDTO {
         const subscription = data as TRucioSubscription;
         const dto = convertToSubscriptionDTO(subscription, subscription.account);
         return dto;

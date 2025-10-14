@@ -40,7 +40,7 @@ export default class GetRSEProtocolsEndpoint extends BaseEndpoint<RSEProtocolDTO
         return error;
     }
 
-    createDTO(data: Object): RSEProtocolDTO {
+    createDTO(data: object): RSEProtocolDTO {
         const protocols: TRucioRSEProtocol[] = data as TRucioRSEProtocol[];
         const rseProtocols: RSEProtocol[] = [];
         const rseName = this.rseName;

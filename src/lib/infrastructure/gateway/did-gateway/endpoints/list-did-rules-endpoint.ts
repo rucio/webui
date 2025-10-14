@@ -37,7 +37,7 @@ export default class ListDIDRulesEndpoint extends BaseStreamableEndpoint<ListDID
             return Promise.resolve(undefined);
         }
 
-        let errorDetails = await extractErrorMessage(response);
+        const errorDetails = await extractErrorMessage(response);
 
         const errorDTO: ListDIDRulesDTO = {
             status: 'error',

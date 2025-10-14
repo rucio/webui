@@ -32,7 +32,7 @@ class ListDIDsUseCase
         let scope: string;
         let name: string;
         try {
-            let didComponents = parseDIDString(requestModel.query);
+            const didComponents = parseDIDString(requestModel.query);
             scope = didComponents.scope;
             name = didComponents.name;
         } catch (error: any) {
@@ -56,7 +56,7 @@ class ListDIDsUseCase
 
     handleGatewayError(error: ListDIDDTO): ListDIDsError {
         let errorType = 'Unknown Error';
-        let message = error.errorMessage;
+        const message = error.errorMessage;
         if (message === 'Invalid Auth Token') {
             errorType = 'Invalid Request';
         } else if (message !== 'Unknown Error') {
