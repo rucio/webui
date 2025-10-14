@@ -45,7 +45,7 @@ export const createAccountRSEUsageAndLimitMap = (
     accountUsageDTOs: AccountRSEUsageDTO[],
 ): TAccountRSEUsageAndLimits => {
     const accountRSEUsageAndLimits: TAccountRSEUsageAndLimits = {};
-    for (let rseName in accountLimitsDTO.limits) {
+    for (const rseName in accountLimitsDTO.limits) {
         const limit = accountLimitsDTO.limits[rseName];
         accountRSEUsageAndLimits[rseName] = {
             limit: limit,

@@ -30,7 +30,7 @@ export const getSessionUser = async (cookies: ReadonlyRequestCookies): Promise<S
  * @returns rucioAuthToken for the current {@link SessionUser} or an empty string
  */
 export const getRucioAuthToken = async (cookies: RequestCookies | ReadonlyRequestCookies): Promise<string> => {
-    let readOnlyCookies = cookies as unknown as ReadonlyRequestCookies;
+    const readOnlyCookies = cookies as unknown as ReadonlyRequestCookies;
     const rucioUser = await getSessionUser(readOnlyCookies);
     if (!rucioUser) return new Promise<string>(resolve => resolve(''));
     const rucioAuthToken = rucioUser.rucioAuthToken;

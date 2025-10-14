@@ -16,8 +16,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     const { className, label, icon, type, disabled, theme, fullwidth, onClick, ...otherprops } = props;
 
     const handleOnClick = props.disabled ? undefined : props.onClick;
-    var classes: string[] = ['font-bold rounded py-1 px-3 cursor-pointer'];
-    if (!!props.label) {
+    const classes: string[] = ['font-bold rounded py-1 px-3 cursor-pointer'];
+    if (props.label) {
         return (
             <button
                 type={type}

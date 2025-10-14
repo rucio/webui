@@ -38,7 +38,7 @@ export const handler = async (argv: Arguments<Options>) => {
 
   // extract all env variables starting with RUCIO_WEBUI_    
   const prefix = 'RUCIO_WEBUI_'
-  let filteredEnv = Object.keys(process.env)
+  const filteredEnv = Object.keys(process.env)
     .filter(key => key.startsWith(prefix))
     .reduce((obj: Record<string, string>, key) => {
       const varName = key.replace(prefix, '').toUpperCase();

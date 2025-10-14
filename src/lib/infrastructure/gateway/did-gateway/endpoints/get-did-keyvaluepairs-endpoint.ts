@@ -35,7 +35,7 @@ export default class GetDIDKeyValuePairsEndpoint extends BaseEndpoint<DIDKeyValu
         return Promise.resolve({ status: 'error', data: [] } as DIDKeyValuePairsDTO); // TODO: add error message
     }
 
-    createDTO(response: Object): DIDKeyValuePairsDTO {
+    createDTO(response: object): DIDKeyValuePairsDTO {
         const dto: DIDKeyValuePairsDTO = {
             status: 'success',
             data: Object.entries(response).map(([key, value]) => {

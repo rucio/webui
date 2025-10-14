@@ -101,7 +101,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (textStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: string[] = [];
+        const chunks: string[] = [];
         const outputStream = new PassThrough();
         textStream.pipe(outputStream);
 
@@ -137,7 +137,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (jsonStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: any[] = [];
+        const chunks: any[] = [];
         const outputStream = new PassThrough();
         jsonStream.pipe(outputStream);
 
@@ -177,7 +177,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (jsonStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: Object[] = [];
+        const chunks: object[] = [];
         const outputStream = new PassThrough();
         jsonStream.pipe(outputStream);
 
@@ -225,7 +225,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (jsonStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: Object[] = [];
+        const chunks: object[] = [];
         const outputStream = new PassThrough();
         jsonStream.pipe(outputStream);
 

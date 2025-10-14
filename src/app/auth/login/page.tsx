@@ -81,7 +81,7 @@ function LoginContent() {
         const rucioAuthHost = loginViewModel.rucioAuthHost;
         const rucioX509Endpoint = `${rucioAuthHost}/auth/x509/webui`;
 
-        let requestHeaders: X509AuthRequestHeaders = {
+        const requestHeaders: X509AuthRequestHeaders = {
             'X-Rucio-Allow-Return-Multiple-Accounts': true,
             'X-Rucio-VO': vo.shortName,
             'X-Rucio-AppID': 'rucio-webui',
@@ -129,7 +129,7 @@ function LoginContent() {
             const rucioAuthToken: string | null = res.headers.get('X-Rucio-Auth-Token');
             const rucioAuthTokenExpires: string | null = res.headers.get('X-Rucio-Auth-Token-Expires');
             const rucioAccount: string | null = res.headers.get('X-Rucio-Auth-Account');
-            let auth: AuthViewModel = {
+            const auth: AuthViewModel = {
                 status: 'error',
                 message: '',
                 rucioAccount: '',

@@ -39,7 +39,7 @@ const didSearch = (query: DIDSearchQuery) => {
 
 const didValidation = (query: TypedDIDValidationQuery) => {
     // if the DID contains the string "error", it will be added to the error list
-    var localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] };
+    const localErrorDIDs: TypedDIDValidationResponse = { ErrorList: [] };
     query.DIDList.map((DID: string, index: number) => {
         if (DID.includes('error')) {
             localErrorDIDs.ErrorList.push({ DID: DID, ErrorCodes: [421], Message: 'This DID is invalid' });

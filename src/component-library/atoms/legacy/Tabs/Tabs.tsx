@@ -28,7 +28,7 @@ export const Tabs: React.FC<
         document.getElementById(`tab-${activestate.toString()}`)?.focus();
     }, [activestate]); // focus on tab when internal state changes
     const changeFunc = (id: number) => {
-        var newId = id;
+        let newId = id;
         if (id < 0) {
             newId = tabs.length - 1;
         }

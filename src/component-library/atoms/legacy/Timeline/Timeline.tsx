@@ -3,7 +3,7 @@ import { H3 } from '../text/headings/H3/H3';
 import { twMerge } from 'tailwind-merge';
 
 export const Timeline = (props: { steps: Array<string>; active: number; onJump: (goal: number) => void }) => {
-    var classes = twMerge('flex items-center gap-2 rounded-md', 'p-2', 'bg-neutral-0', 'dark:bg-neutral-800');
+    const classes = twMerge('flex items-center gap-2 rounded-md', 'p-2', 'bg-neutral-0', 'dark:bg-neutral-800');
 
     return (
         <div className="rounded-md p-2  bg-neutral-0 dark:bg-neutral-800">

@@ -19,7 +19,7 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
 
         let activeUser: User | undefined;
 
-        let allUsers: User[] = [];
+        const allUsers: User[] = [];
 
         try {
             projectURL = await this.envConfigGateway.projectURL();

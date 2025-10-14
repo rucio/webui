@@ -11,7 +11,7 @@ async function listRSEs(req: NextApiRequest, res: NextApiResponse, rucioAuthToke
         return;
     }
 
-    let { rseExpression } = req.query as { rseExpression: string };
+    const { rseExpression } = req.query as { rseExpression: string };
 
     if (!rseExpression) {
         res.status(400).json({ error: 'Missing rseExpression' });

@@ -143,7 +143,7 @@ export class WebUIEnvTemplateCompiler {
 
     // check if all required variables are set
     requiredVariables.forEach((key) => {
-      let keyName = `${key.toUpperCase()}`
+      const keyName = `${key.toUpperCase()}`
       console.log(`checking if ${keyName} is set`)
       console.log(env[keyName])
       if (!env[key.toUpperCase()]) {

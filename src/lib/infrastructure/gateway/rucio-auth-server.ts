@@ -81,7 +81,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
         }
 
         if (response.status === 200) {
-            let dto: UserPassLoginAuthServerDTO = {
+            const dto: UserPassLoginAuthServerDTO = {
                 statusCode: response.status,
                 message: '',
                 account: '',
@@ -108,7 +108,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
             if (multipleAccounts === null) {
                 throw new Error('Unable to extract available accounts from the response');
             }
-            let dto: UserPassLoginAuthServerDTO = {
+            const dto: UserPassLoginAuthServerDTO = {
                 statusCode: response.status,
                 message: multipleAccounts,
                 account: '',
