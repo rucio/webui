@@ -128,7 +128,10 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
                 layout="vertical"
                 data={data}
                 onClick={event => {
-                    const id = event.activePayload?.[0].payload.id;
+                    // In recharts 3.x, use activeIndex to get data from the data array
+                    const index = event.activeIndex;
+                    if (index === undefined || index === null) return;
+                    const id = data[index as number]?.id;
                     if (!id) return;
                     openRule(id);
                 }}

@@ -89,7 +89,8 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
         if (props.streamingHook.status === StreamingStatus.STOPPED) {
             const updateSelection = () => {
                 tableRef.current?.api?.forEachNode(node => {
-                    const model: RSEAccountUsageLimitViewModel = node.data;
+                    const model = node.data;
+                    if (!model) return;
                     const selected = props.selectedItems.some(element => element.rse === model.rse);
                     node.setSelected(selected);
                 });
