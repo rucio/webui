@@ -4,6 +4,10 @@ import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
 import { Input } from '@/component-library/atoms/form/input';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
+import { Button } from '@/component-library/atoms/form/button';
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
+import { HiFilter } from 'react-icons/hi';
+
 
 const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
@@ -17,6 +21,46 @@ interface SearchPanelProps {
     autoSearch?: boolean;
     initialType?: DIDType;
 }
+
+// Helper to convert dates
+const dateToRFC1123 = (dateStr: string, timeStr: string): string | undefined => {
+    if (!dateStr) return undefined;
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const [hours, minutes, seconds] = (timeStr || '00:00:00').split(':').map(Number);
+    if (!year || !month || !day) return undefined;
+
+    const d = new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ` +
+           `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+};
+
+// Map length operator to proper filter key
+const mapLengthOperatorToKey = (op: DIDFilterOperator): string => {
+    const map: Partial<Record<DIDFilterOperator, string>> = {
+        '=': 'length',
+        '>': 'length.gt',
+        '>=': 'length.gte',
+        '<': 'length.lt',
+        '<=': 'length.lte',
+    };
+
+    const key = map[op];
+    if (!key) {
+        throw new Error(`Unsupported operator for length: ${op}`);
+    }
+    return key;
+};
+
+
+// Small reusable wrapper for label + input
+const DIDFilterField = ({ label, children }: { label: string; children: React.ReactNode }) => (
+    <div className="flex flex-col grow">
+        <div className="text-neutral-900 dark:text-neutral-100 mb-1">{label}</div>
+        {children}
+    </div>
+);
 
 export const DIDSearchPanel = (props: SearchPanelProps) => {
     // Try retrieving initial search parameters
@@ -46,12 +90,18 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const [name, setName] = useState<string | null>(initialName ?? null);
 
     const [type, setType] = useState<DIDType>(props.initialType ?? DIDType.DATASET);
-    const [DIDFilters, setDIDFilters] = useState([{ key: '', operator: '=' as DIDFilterOperator, value: '' }]);
+    const [limit, setLimit] = useState<string>('');
+    const [createdMode, setCreatedMode] = useState<'before' | 'after'>('after');
+    const [createdDate, setCreatedDate] = useState<string>('');
+    const [createdTime, setCreatedTime] = useState<string>('');
+    const [lengthOperator, setLengthOperator] = useState<DIDFilterOperator>('=');
+    const [lengthValue, setLengthValue] = useState<string>('');
+
+    const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+    const toggleFilters = () => setIsFilterExpanded(prev => !prev);
 
     const scopeInputRef = useRef<HTMLInputElement>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
-    const DIDKeyRefs = useRef<(HTMLInputElement | null)[]>([]);
-    const DIDValueRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     const { toast } = useToast();
 
@@ -84,46 +134,92 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         return validateField(name, 'name', nameInputRef);
     };
 
-    const validateDIDFilters = (): boolean => {
-        for (let i = 0; i < DIDFilters.length; i++) {
-            const { key, value } = DIDFilters[i];
-            if (!key && !value) continue; // skip empty filters
-            if (!key) {
-                toast({
-                    variant: 'warning',
-                    title: 'Empty filter key',
-                    description: 'Please specify a key or remove this filter.',
-                });
-                DIDKeyRefs.current[i]?.focus();
-                return false;
-            }
-            if (!value) {
-                toast({
-                    variant: 'warning',
-                    title: 'Empty filter value',
-                    description: 'Please specify a value or remove this filter.',
-                });
-                DIDValueRefs.current[i]?.focus();
-                return false;
+    const DIDFilterKeys = {
+            limit,
+            created: {mode: createdMode, date: createdDate, time: createdTime},
+            length: { operator: lengthOperator, value: lengthValue }
+    };
+    
+    const validateDIDFilters = (
+        type: DIDType,
+        filters: typeof DIDFilterKeys,
+        toast: ReturnType<typeof useToast>['toast']
+        ): boolean => {
+        const isRFC1123 = (date: string): boolean => !isNaN(Date.parse(date));
+
+        // Validate limit
+        if (filters.limit) {
+            const num = Number(filters.limit);
+            if (!Number.isInteger(num) || num < 0) {
+            toast({
+                variant: 'warning',
+                title: 'Invalid limit',
+                description: 'Limit must be a positive integer.',
+            });
+            return false;
             }
         }
+        
+        // Validate created
+        if (filters.created.date && isNaN(Date.parse(filters.created.date))) {
+            toast({
+                variant: 'warning',
+                title: 'Invalid created date',
+                description: 'Please enter a valid date and time.',
+            });
+            return false;
+        }
+
+        // Validate length (only for dataset/container)
+        if (type === DIDType.CONTAINER || type === DIDType.DATASET) {
+            const len = filters.length;
+            if (len?.value) {
+            const num = Number(len.value);
+            if (!Number.isInteger(num)) {
+                toast({
+                variant: 'warning',
+                title: 'Invalid length',
+                description: 'Length must be an integer value.',
+                });
+                return false;
+            }
+            }
+        }
+
         return true;
     };
 
     const onSearch = (event: any) => {
         event.preventDefault();
 
-        if (!validateScope() || !validateName() || !validateDIDFilters()) return;
+        if (!validateScope() || !validateName() || !validateDIDFilters(type, DIDFilterKeys, toast)) return;
 
         const params = new URLSearchParams({
             query: `${scope}${SCOPE_DELIMITER}${name}`,
             type: type,
         });
 
-        // Include DID filters only if key and value are present
-        DIDFilters.filter(f => f.key && f.value).forEach(f => {
-            params.append('filters', `${f.key}${f.operator}${f.value}`);
-        });
+        if (limit) {
+            params.append('filters', `limit=${limit}`);
+        }
+
+        if (createdDate) {
+            const createdRFC = dateToRFC1123(createdDate, createdTime);
+            if (createdRFC) {
+                const key = createdMode === 'before' ? 'created_before' : 'created_after';
+                params.append('filters', `${key}=${createdRFC}`);
+            }
+        }
+
+        if ((type === DIDType.CONTAINER || type === DIDType.DATASET) && lengthValue) {
+            const key = mapLengthOperatorToKey(lengthOperator);
+
+            // Convert string to number before passing
+            const numLength = Number(lengthValue);
+            if (!Number.isNaN(numLength)) {
+                params.append('filters', `${key}=${numLength}`);
+            }
+        }
 
         const url = '/api/feature/list-dids?' + params.toString();
         props.startStreaming(url);
@@ -144,16 +240,6 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         if (event.key === 'ArrowLeft') {
             scopeInputRef.current?.focus();
         }
-    };
-
-    const addDIDFilter = () => setDIDFilters([...DIDFilters, { key: '', operator: '=', value: '' }]);
-    const updateDIDFilter = (idx: number, field: 'key' | 'operator' | 'value', val: string | DIDFilterOperator) => {
-        setDIDFilters(DIDFilters.map((f, i) => i === idx ? { ...f, [field]: val } : f));
-    };
-    const removeDIDFilter = (idx: number) => {
-        setDIDFilters(DIDFilters.filter((_, i) => i !== idx));
-        DIDKeyRefs.current.splice(idx, 1);
-        DIDValueRefs.current.splice(idx, 1);
     };
 
     return (
@@ -196,63 +282,101 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             onEnterKey={onSearch}
                             onKeyDown={onNameArrowDown}
                         />
+                        <Button
+                            className="px-3"
+                            variant="neutral"
+                            onClick={toggleFilters}
+                            aria-expanded={isFilterExpanded}
+                            aria-label="Toggle filters"
+                        >
+                            <HiFilter />
+                            {isFilterExpanded ? <HiChevronUp className="ml-1" /> : <HiChevronDown className="ml-1" />}
+                        </Button>
                     </div>
                 </div>
                 <SearchButton className="sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
             </div>
 
-            {/* DID filters row */}
-            <div className="flex flex-wrap items-center gap-2">
-                {DIDFilters.map((f, i) => (
-                    <div key={i} className="flex items-center space-x-2">
-                        <Input
-                            placeholder="Key"
-                            value={f.key}
-                            onChange={e => updateDIDFilter(i, 'key', e.target.value)}
-                            className="w-34"
-                            ref={el => { DIDKeyRefs.current[i] = el; }}
-                        />
-                        <Select
-                            value={f.operator}
-                            onValueChange={(value: DIDFilterOperator) => updateDIDFilter(i, 'operator', value)}
-                        >
-                            <SelectTrigger className="w-20">
-                                <SelectValue placeholder="=" />
+            {/* DID filters */}
+            {isFilterExpanded && (
+                <div className="flex flex-col space-y-2 mt-2">
+                    <DIDFilterField label="Created">
+                        <div className="flex flex-row items-center space-x-2 w-full">
+                            <Select
+                            value={createdMode}
+                            onValueChange={(v) => setCreatedMode(v as 'before' | 'after')}
+                            >
+                            <SelectTrigger className="w-32 flex-shrink-0">
+                                <SelectValue placeholder="Mode" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem value="=">=</SelectItem>
-                                    <SelectItem value="!=">!=</SelectItem>
-                                    <SelectItem value=">">{ ">" }</SelectItem>
-                                    <SelectItem value="<">{ "<" }</SelectItem>
-                                    <SelectItem value=">=">≥</SelectItem>
-                                    <SelectItem value="<=">≤</SelectItem>
+                                <SelectItem value="after">After</SelectItem>
+                                <SelectItem value="before">Before</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
-                        </Select>
-                        <Input
-                            placeholder="Value"
-                            value={f.value}
-                            onChange={e => updateDIDFilter(i, 'value', e.target.value)}
-                            className="w-34"
-                            ref={el => { DIDValueRefs.current[i] = el; }}
-                        />
-                        <button
-                            onClick={() => removeDIDFilter(i)}
-                            disabled={DIDFilters.length === 1}
-                            className="px-2 text-white-500 hover:text-white-700 disabled:opacity-30"
-                        >
-                            -
-                        </button>
+                            </Select>
+                            <div className="flex flex-row flex-1 gap-2">
+                            <Input
+                                type="date"
+                                value={createdDate}
+                                onChange={(e) => setCreatedDate(e.target.value)}
+                                className="flex-grow-[2]"
+                            />
+                            <Input
+                                type="time"
+                                step="1"
+                                value={createdTime}
+                                onChange={(e) => setCreatedTime(e.target.value)}
+                                className="flex-grow-[1]"
+                            />
+                            </div>
+                        </div>
+                    </DIDFilterField>
+                    <div className="flex flex-row items-center space-x-2">
+                        <DIDFilterField label="Limit">
+                            <div className="flex items-center space-x-2">
+                                {/*<span className="text-neutral-900 dark:text-neutral-100 font-medium">Limit</span>*/}
+                                <Input
+                                    type="number"
+                                    value={limit}
+                                    onChange={e => setLimit(e.target.value)}
+                                    placeholder="Maximum number of DID returned"
+                                    className="w-full"
+                                />
+                            </div>
+                        </DIDFilterField>
+                        {(type === DIDType.CONTAINER || type === DIDType.DATASET) && (
+                            <DIDFilterField label="Length">
+                            <div className="flex items-center space-x-2">
+                                {/*<span className="text-neutral-900 dark:text-neutral-100 font-medium">Length</span>*/}
+                                <Select value={lengthOperator} onValueChange={v => setLengthOperator(v as DIDFilterOperator)}>
+                                    <SelectTrigger className="w-20">
+                                        <SelectValue placeholder="=" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem value="=">=</SelectItem>
+                                            <SelectItem value=">">{'>'}</SelectItem>
+                                            <SelectItem value="<">{'<'}</SelectItem>
+                                            <SelectItem value=">=">≥</SelectItem>
+                                            <SelectItem value="<=">≤</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                                <Input
+                                    type="number"
+                                    value={lengthValue}
+                                    onChange={e => setLengthValue(e.target.value)}
+                                    placeholder="Number of attached DIDs"
+                                    className="w-full"
+                                />
+                            </div>
+                        </DIDFilterField>
+                        )}
                     </div>
-                ))}
-                <button
-                    onClick={addDIDFilter}
-                    className="text-sm text-blue-500 hover:text-blue-700"
-                >
-                    + Add Filter
-                </button>
-            </div>
+                </div>
+            )}
         </div>
     );
 };
