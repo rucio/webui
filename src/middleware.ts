@@ -1,64 +1,73 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getIronSession } from 'iron-session/edge';
-import { sessionOptions } from './lib/infrastructure/auth/session';
-import { IronSession } from 'iron-session';
-import { validateRucioToken } from './lib/infrastructure/auth/auth-utils';
-
-const getSession = async (req: NextRequest, res: NextResponse): Promise<IronSession> => {
-    const session = await getIronSession(req, res, sessionOptions);
-    return session;
-};
+import { getToken } from 'next-auth/jwt';
+import type { SessionUser } from './lib/core/entity/auth-models';
 
 export const config = {
     matcher: [
         /*
          * Match all request paths except for the ones starting with:
-         * - api (API routes)
+         * - api/auth (NextAuth routes)
          * - _next/static (static files)
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
+         * - auth/* (auth pages)
          */
         '/((?!api/auth|_next/static|_next/image|.*\\.png$|.*\\.jpg$|favicon.ico|auth/.*).*)',
     ],
 };
 
 async function reLogin(request: NextRequest, publicHost: string) {
-    const logoutPage = new URL(`/api/auth/logout?callbackUrl=${request.nextUrl.pathname}`, `${publicHost}`);
-    return NextResponse.redirect(logoutPage);
+    const signoutPage = new URL(`/api/auth/signout?callbackUrl=${request.nextUrl.pathname}`, `${publicHost}`);
+    return NextResponse.redirect(signoutPage);
 }
 
 async function initiateLogin(request: NextRequest, publicHost: string) {
-    const loginPage = new URL(`/api/auth/login?callbackUrl=${request.nextUrl.pathname}`, `${publicHost}`);
+    const loginPage = new URL(`/auth/login?callbackUrl=${request.nextUrl.pathname}`, `${publicHost}`);
     return NextResponse.redirect(loginPage);
 }
 
-export async function middleware(request: NextRequest) {
-    const response = NextResponse.next();
-    const publicHost = process.env.NEXT_PUBLIC_WEBUI_HOST || `${request.nextUrl.protocol}//${request.nextUrl.host}`;
-    try {
-        const session = await getSession(request, response);
+/**
+ * Validate that a Rucio token is not expired
+ */
+function isTokenExpired(user: SessionUser): boolean {
+    const expirationTime = new Date(user.rucioAuthTokenExpires).getTime();
+    const currentTime = new Date().getTime();
+    return currentTime >= expirationTime;
+}
 
-        // check session
-        if (!session || !session.user) {
+export async function middleware(request: NextRequest) {
+    const publicHost = process.env.NEXT_PUBLIC_WEBUI_HOST || `${request.nextUrl.protocol}//${request.nextUrl.host}`;
+
+    try {
+        // Get the JWT token from the request
+        // This works in Edge Runtime without heavy dependencies
+        const token = await getToken({
+            req: request,
+            secret: process.env.NEXTAUTH_SECRET,
+        });
+
+        // Check if token exists
+        if (!token || !token.user) {
             return await initiateLogin(request, publicHost);
         }
 
-        // check if user is logged in and token exists
-        if (!session.user.isLoggedIn || !session.user.rucioAuthToken) {
-            return await reLogin(request, publicHost);
-        }
-        // check if rucio token is valid
-        try {
-            validateRucioToken(session.user);
-        } catch (error) {
+        const user = token.user as SessionUser;
+
+        // Check if user is logged in and has a Rucio auth token
+        if (!user.isLoggedIn || !user.rucioAuthToken) {
             return await reLogin(request, publicHost);
         }
 
-        // All checks have passed, redirect to the original request if it exists
-        return response;
+        // Check if rucio token is valid
+        if (isTokenExpired(user)) {
+            return await reLogin(request, publicHost);
+        }
+
+        // All checks have passed, allow the request
+        return NextResponse.next();
     } catch (error) {
-        console.log(error);
-        return new Response('Internal Server Error. Could not authenticate or rediect to login page', { status: 500 });
+        console.error('Middleware error:', error);
+        return new Response('Internal Server Error. Could not authenticate or redirect to login page', { status: 500 });
     }
 }
