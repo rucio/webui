@@ -5,6 +5,7 @@ import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/naviga
 import { Suspense, useEffect, useState } from 'react';
 import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
 import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
+import { signIn } from 'next-auth/react';
 
 function LoginContent() {
     useEffect(() => {
@@ -18,30 +19,83 @@ function LoginContent() {
     const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl');
 
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
-        const body = {
-            username: username,
-            password: password,
-            account: account,
-            vo: vo.shortName,
-        };
         try {
-            const res = await fetch('/api/auth/userpass', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
+            const result = await signIn('userpass', {
+                username: username,
+                password: password,
+                account: account || '',
+                vo: vo.shortName,
+                redirect: false,
             });
-            if (res.status === 200 || res.status === 401 || res.status === 206) {
-                const auth: AuthViewModel = await res.json();
-                setAuthViewModel(auth);
-                if (auth.status === 'success') {
-                    const redirect: string = redirectURL;
-                    router.push(redirect);
+
+            if (result?.ok) {
+                // Login successful, redirect to dashboard
+                router.push(redirectURL);
+            } else if (result?.error) {
+                // Check if it's a credentials error that might indicate multiple accounts
+                // NextAuth wraps errors from the authorize function as CredentialsSignin
+                if (result.error === 'CredentialsSignin') {
+                    // Try to parse if there's additional info about multiple accounts
+                    // For now, show a more specific error message
+                    setAuthViewModel({
+                        status: 'error',
+                        message: 'Login failed. Please check your credentials or select an account if multiple accounts are available.',
+                        rucioAccount: '',
+                        rucioAuthType: '',
+                        rucioIdentity: '',
+                        rucioAuthToken: '',
+                        rucioAuthTokenExpires: '',
+                        role: Role.USER,
+                    });
+                } else {
+                    // Other login errors
+                    setAuthViewModel({
+                        status: 'error',
+                        message: result.error,
+                        rucioAccount: '',
+                        rucioAuthType: '',
+                        rucioIdentity: '',
+                        rucioAuthToken: '',
+                        rucioAuthTokenExpires: '',
+                        role: Role.USER,
+                    });
                 }
             }
-        } catch (error) {
-            console.error('An unexpected error happened occurred:', error);
+        } catch (error: any) {
+            console.error('An unexpected error occurred:', error);
+
+            // Check if it's a MultipleAccountsError
+            // NextAuth may pass error details in the error object
+            if (error?.type === 'CredentialsSignin' || error?.name === 'MultipleAccountsError') {
+                // Extract available accounts if present
+                const availableAccounts = error?.availableAccounts;
+                if (availableAccounts) {
+                    // Show the multiple accounts status with the account list
+                    setAuthViewModel({
+                        status: 'multiple_accounts',
+                        message: availableAccounts,
+                        rucioAccount: '',
+                        rucioAuthType: '',
+                        rucioIdentity: '',
+                        rucioAuthToken: '',
+                        rucioAuthTokenExpires: '',
+                        role: Role.USER,
+                    });
+                    return;
+                }
+            }
+
+            // Generic error fallback
+            setAuthViewModel({
+                status: 'error',
+                message: 'An unexpected error occurred during login',
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
         }
     };
 
@@ -198,26 +252,44 @@ function LoginContent() {
             setAuthViewModel(auth);
             return;
         }
-        const res = await fetch('/api/auth/x509', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                rucioAccount: rucioAccount,
-                rucioAuthToken: auth.rucioAuthToken,
-                rucioTokenExpiry: auth.rucioAuthTokenExpires,
-                shortVOName: shortVOName,
-            }),
-        });
 
-        if (res.status === 200) {
-            // redirect to callback url
-            router.push(redirectURL);
-            return Promise.resolve();
-        } else {
-            const responseViewModel: AuthViewModel = await res.json();
-            setAuthViewModel(responseViewModel);
+        try {
+            const result = await signIn('x509', {
+                rucioAuthToken: auth.rucioAuthToken,
+                rucioAccount: rucioAccount,
+                shortVOName: shortVOName,
+                rucioTokenExpiry: auth.rucioAuthTokenExpires,
+                redirect: false,
+            });
+
+            if (result?.ok) {
+                // Login successful, redirect to callback url
+                router.push(redirectURL);
+            } else if (result?.error) {
+                // Login failed, show error
+                setAuthViewModel({
+                    status: 'error',
+                    message: result.error,
+                    rucioAccount: '',
+                    rucioAuthType: '',
+                    rucioIdentity: '',
+                    rucioAuthToken: '',
+                    rucioAuthTokenExpires: '',
+                    role: Role.USER,
+                });
+            }
+        } catch (error) {
+            console.error('An unexpected error occurred during x509 session setup:', error);
+            setAuthViewModel({
+                status: 'error',
+                message: 'An unexpected error occurred during login',
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
         }
     };
 

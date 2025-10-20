@@ -1,3 +1,5 @@
+'use client';
+
 import { twMerge } from 'tailwind-merge';
 import React, { RefObject, useEffect, useRef } from 'react';
 import { HiSwitchHorizontal, HiLogout, HiUserAdd, HiChevronDown } from 'react-icons/hi';
@@ -6,13 +8,28 @@ import { useRouter } from 'next/navigation';
 import { HiUserCircle } from 'react-icons/hi2';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { cn } from '@/component-library/utils';
+import { useSession, signOut } from 'next-auth/react';
 
 const AccountList = (props: { accountList: string[] }) => {
+    const { update } = useSession();
+    const router = useRouter();
+
+    const handleSwitchAccount = async (account: string) => {
+        try {
+            // Use NextAuth's session.update() to switch accounts
+            await update({ account });
+            // Optionally refresh the page to update all components
+            router.refresh();
+        } catch (error) {
+            console.error('Failed to switch account:', error);
+        }
+    };
+
     return (
         <div className="flex flex-col">
-            {props.accountList.map((account, index) => {
+            {props.accountList.map((account) => {
                 return (
-                    <a
+                    <button
                         className={cn(
                             'text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer',
                             'dark:text-neutral-300 dark:hover:bg-neutral-600',
@@ -20,14 +37,14 @@ const AccountList = (props: { accountList: string[] }) => {
                             'text-right',
                         )}
                         key={'profile-' + account}
-                        href={`/api/auth/switch?account=${account}&&callbackUrl=/dashboard`}
+                        onClick={() => handleSwitchAccount(account)}
                     >
                         <HiSwitchHorizontal className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
                         <span>
                             <span>Switch to </span>
                             <b className="text-neutral-800 dark:text-neutral-100">{account}</b>
                         </span>
-                    </a>
+                    </button>
                 );
             })}
         </div>
@@ -35,15 +52,13 @@ const AccountList = (props: { accountList: string[] }) => {
 };
 
 const SignOutOfAllButton = () => {
-    const router = useRouter();
-
-    const signOut = async () => {
-        const request = new Request('/api/auth/logout', {
-            method: 'POST',
-        });
-        // TODO: handle errors
-        await fetch(request);
-        router.push('/auth/login');
+    const handleSignOut = async () => {
+        try {
+            // Use NextAuth's signOut to clear all sessions
+            await signOut({ callbackUrl: '/auth/login' });
+        } catch (error) {
+            console.error('Failed to sign out:', error);
+        }
     };
 
     return (
@@ -54,7 +69,7 @@ const SignOutOfAllButton = () => {
                 'flex items-center justify-between py-2 px-1 space-x-4',
                 'text-right',
             )}
-            onClick={() => signOut()}
+            onClick={handleSignOut}
         >
             <span>
                 Sign <b>out</b> of all accounts
@@ -86,6 +101,26 @@ const SignIntoButton = () => {
 
 export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement | null>; accountActive: string; accountsPossible: string[] }) => {
     const hasAccountChoice = props.accountsPossible.length !== 1;
+    const { update } = useSession();
+    const router = useRouter();
+
+    const handleSingleSignOut = async () => {
+        try {
+            // If this is the only account, sign out completely
+            if (props.accountsPossible.length === 1) {
+                await signOut({ callbackUrl: '/auth/login' });
+                return;
+            }
+
+            // Remove the current account from the session
+            await update({ removeAccount: props.accountActive });
+
+            // Refresh the page to update all components with the new active account
+            router.refresh();
+        } catch (error) {
+            console.error('Failed to sign out:', error);
+        }
+    };
 
     return (
         <div
@@ -112,18 +147,16 @@ export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement | nul
                     <span>Hello, </span>
                     <b className="text-neutral-900 dark:text-neutral-100">{props.accountActive}</b>!
                 </span>
-                <div
+                <button
                     className={cn(
                         'bg-neutral-200 dark:bg-neutral-700 hover:bg-base-error-500 hover:bg-opacity-40 dark:hover:bg-base-error-500 dark:hover:bg-opacity-40',
                         'p-1 rounded-md',
                     )}
+                    onClick={handleSingleSignOut}
+                    title="Sign out of this account"
                 >
-                    {/* Using the <a> tag here prevents a bug with response caching */}
-                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                    <a href="/api/auth/logout?callbackUrl=/dashboard">
-                        <HiLogout className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
-                    </a>
-                </div>
+                    <HiLogout className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
+                </button>
             </div>
             {hasAccountChoice && <AccountList accountList={props.accountsPossible.filter(account => account !== props.accountActive)} />}
             <SignIntoButton />
