@@ -3,6 +3,7 @@ import '../component-library/outputtailwind.css';
 import 'reflect-metadata';
 import { ThemeProvider } from 'next-themes';
 import { AgGridSetup } from '@/lib/ag-grid-setup';
+import { SessionProvider } from '@/lib/infrastructure/auth/session-provider';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -16,9 +17,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body>
                 <AgGridSetup />
-                <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                    {children}
-                </ThemeProvider>
+                <SessionProvider>
+                    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                        {children}
+                    </ThemeProvider>
+                </SessionProvider>
             </body>
         </html>
     );
