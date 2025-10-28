@@ -30,13 +30,7 @@ export abstract class BaseController<TParams extends TParameters, TRequestModel>
         if (parameters instanceof Object && 'rucioAuthToken' in parameters) {
             authenticatedRequest = true;
         }
-        let useCase: TUseCase<TRequestModel>;
-        if (parameters.session) {
-            useCase = this.useCaseFactory(parameters.response, parameters.session) as TUseCase<TRequestModel>;
-        } else {
-            useCase = this.useCaseFactory(parameters.response) as TUseCase<TRequestModel>;
-        }
-
+        const useCase = this.useCaseFactory(parameters.response) as TUseCase<TRequestModel>;
         const requestModel: TRequestModel = this.prepareRequestModel(parameters);
         if (authenticatedRequest) {
             await useCase.execute(requestModel as AuthenticatedRequestModel<TRequestModel>);
