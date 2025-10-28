@@ -51,15 +51,22 @@ class ControllerResponseAdapter {
 /**
  * Streaming response adapter that implements Writable stream and Signal interface
  * Used for streaming endpoints that use presenters with .pipe()
+ *
+ * This adapter bridges Node.js Writable streams to Web Streams API ReadableStream in real-time.
  */
 class StreamingResponseAdapter extends Writable implements Signal {
     private _statusCode: number = 200;
-    private _chunks: string[] = [];
     private _headers: Record<string, string> = {
         'Content-Type': 'text/event-stream;charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
     };
+
+    // Real-time streaming bridge
+    private _controller: ReadableStreamDefaultController<Uint8Array> | null = null;
+    private _encoder = new TextEncoder();
+    private _finished = false;
+    private _chunkCount = 0;
 
     constructor() {
         super({ objectMode: true });
@@ -72,7 +79,10 @@ class StreamingResponseAdapter extends Writable implements Signal {
 
     json(data: any): void {
         // For non-streaming presenters that call json()
-        this._chunks.push(JSON.stringify(data));
+        const jsonStr = JSON.stringify(data);
+        if (this._controller) {
+            this._controller.enqueue(this._encoder.encode(jsonStr));
+        }
     }
 
     setHeader(name: string, value: string): this {
@@ -81,18 +91,42 @@ class StreamingResponseAdapter extends Writable implements Signal {
     }
 
     _write(chunk: any, encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
-        // Capture NDJSON chunks from streaming presenter
+        // Capture NDJSON chunks from streaming presenter and immediately enqueue to ReadableStream
+        let chunkStr: string;
         if (typeof chunk === 'string') {
-            this._chunks.push(chunk);
+            chunkStr = chunk;
         } else if (Buffer.isBuffer(chunk)) {
-            this._chunks.push(chunk.toString());
+            chunkStr = chunk.toString();
         } else {
-            this._chunks.push(JSON.stringify(chunk) + '\n');
+            chunkStr = JSON.stringify(chunk) + '\n';
         }
+
+        this._chunkCount++;
+
+        // Immediately enqueue to ReadableStream if controller is available
+        if (this._controller) {
+            try {
+                this._controller.enqueue(this._encoder.encode(chunkStr));
+            } catch (error) {
+                console.error('[StreamingResponseAdapter] Error enqueueing chunk:', error);
+            }
+        }
+
         callback();
     }
 
     _final(callback: (error?: Error | null) => void): void {
+        this._finished = true;
+
+        // Close the ReadableStream
+        if (this._controller) {
+            try {
+                this._controller.close();
+            } catch (error) {
+                console.error('[StreamingResponseAdapter] Error closing controller:', error);
+            }
+        }
+
         callback();
     }
 
@@ -100,31 +134,28 @@ class StreamingResponseAdapter extends Writable implements Signal {
         return this._statusCode;
     }
 
-    getChunks(): string[] {
-        return this._chunks;
-    }
-
     getHeaders(): Record<string, string> {
         return this._headers;
     }
 
     /**
-     * Create a ReadableStream from the captured chunks
+     * Create a ReadableStream that will receive chunks in real-time as they're written
      */
     createReadableStream(): ReadableStream<Uint8Array> {
-        const encoder = new TextEncoder();
-        const chunks = this._chunks;
-        let index = 0;
+        return new ReadableStream<Uint8Array>({
+            start: (controller) => {
+                // Store the controller so _write() can enqueue chunks directly
+                this._controller = controller;
 
-        return new ReadableStream({
-            pull(controller) {
-                if (index < chunks.length) {
-                    controller.enqueue(encoder.encode(chunks[index]));
-                    index++;
-                } else {
+                // If stream already finished before we created ReadableStream, close it
+                if (this._finished) {
                     controller.close();
                 }
             },
+
+            cancel: () => {
+                this._controller = null;
+            }
         });
     }
 }
