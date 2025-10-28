@@ -40,19 +40,8 @@ export async function GET(request: NextRequest) {
         const controller = appContainer.get<BaseController<ListDIDsControllerParameters, void>>(
             CONTROLLERS.LIST_DIDS
         );
-
-        const controllerParamters: ListDIDsControllerParameters = {
-            query: query,
-            type: type,
-            filters: didfilters,
-            rucioAuthToken: '' // Will be set in executeAuthenticatedController
-        }
-
-        controller.execute(controllerParamters);
-        console.log('DID Filters:', didfilters);
         return executeAuthenticatedController(controller, { query, type, filters: didfilters }, true);
     } catch (error) {
-        console.error('Error in list-dids:', error);
         return NextResponse.json(
             { error: 'Internal server error' },
             { status: 500 }
