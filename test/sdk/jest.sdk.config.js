@@ -23,6 +23,7 @@ const customJestConfig = {
     '@/(.*)$': '<rootDir>/src/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
+  testMatch: ['<rootDir>/test/sdk/**/*.test.ts', '<rootDir>/test/sdk/**/*.test.tsx'],
 
 }
 
