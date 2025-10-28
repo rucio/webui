@@ -1,12 +1,12 @@
 import { injectable } from 'inversify';
-import { IronSession } from 'iron-session';
 import { NextApiResponse } from 'next';
+import { Session } from 'next-auth';
 import { BaseInputPort } from './primary-ports';
 import { TUseCase } from './usecase';
 import type TUseCaseFactory from './usecase-factory';
 import { AuthenticatedRequestModel } from './usecase-models';
 
-export type TSimpleControllerParameters = { response: NextApiResponse; session?: IronSession };
+export type TSimpleControllerParameters = { response: NextApiResponse, session?: Session };
 export type TAuthenticatedControllerParameters = TSimpleControllerParameters & { rucioAuthToken: string };
 export type TParameters = TSimpleControllerParameters | TAuthenticatedControllerParameters;
 

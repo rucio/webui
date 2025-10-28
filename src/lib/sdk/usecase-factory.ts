@@ -1,4 +1,3 @@
-import { IronSession } from 'iron-session';
 import { TUseCase } from './usecase';
 import { Signal } from './web';
 
@@ -8,6 +7,6 @@ import { Signal } from './web';
  * @param session An optional session object to use for the use case.
  * @returns An instance of the use case.
  */
-type TUseCaseFactory<TRequestModel> = (response: Signal, session?: IronSession) => TUseCase<TRequestModel>;
+type TUseCaseFactory<TRequestModel> = (response: Signal) => TUseCase<TRequestModel>;
 
 export default TUseCaseFactory;
