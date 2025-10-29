@@ -232,7 +232,15 @@ export const Login = ({
                                     aria-label="OIDC Login Buttons"
                                 >
                                     {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
-                                        return <Button theme="orange" label={provider.name} key={index.toString()} icon={<MdAccountCircle />} />;
+                                        return (
+                                            <Button
+                                                theme="orange"
+                                                label={provider.name}
+                                                key={index.toString()}
+                                                icon={<MdAccountCircle />}
+                                                onClick={() => handleOIDCSubmit(provider, loginViewModel.voList[selectedVOTab], inputAccount)}
+                                            />
+                                        );
                                     })}
                                 </div>
                             ) : (

@@ -3,6 +3,8 @@ import Credentials from 'next-auth/providers/credentials';
 import { SessionUser } from '@/types/next-auth';
 import { authorizeUserPass, MultipleAccountsError } from './nextauth-userpass-adapter';
 import { authorizeX509 } from './nextauth-x509-adapter';
+import { AuthType, Role } from '@/lib/core/entity/auth-models';
+import { getIssuerFromEnv } from './oidc-providers';
 
 /**
  * Helper function to find user index in allUsers array
@@ -91,9 +93,85 @@ export const authConfig: NextAuthConfig = {
          * JWT callback: Manages the JWT token with multi-account support
          * This is called whenever a JWT is created or updated
          */
-        async jwt({ token, user, trigger, session }) {
+        async jwt({ token, user, account, profile, trigger, session }) {
+            // ==========================================
+            // Handle OIDC Authentication (Dynamic Providers)
+            // ==========================================
+            if (account?.type === 'oauth' && account.access_token) {
+                const providerName = account.provider;
+
+                console.log(`[OIDC] Processing OAuth sign-in for provider: ${providerName}`);
+
+                // The OIDC access_token IS the rucioAuthToken
+                // No conversion needed - Rucio will validate it directly
+                const rucioAuthToken = account.access_token;
+                const rucioAuthTokenExpires = new Date(account.expires_at! * 1000).toISOString();
+
+                // Create Rucio identity string (format: "SUB=xxx, ISS=xxx")
+                // This matches the format expected in Rucio's identity_account_association table
+                // The sub and iss claims come from the OIDC profile, not the mapped user object
+                const sub = profile?.sub || user?.id;
+                const iss = profile?.iss || getIssuerFromEnv(providerName);
+                const rucioIdentity = `SUB=${sub}, ISS=${iss}`;
+
+                console.log(`[OIDC] Created Rucio identity: ${rucioIdentity}`);
+
+                // Get Rucio account from profile
+                // Note: The actual account may need to be queried from Rucio's whoami endpoint
+                // or retrieved from the identity mapping in Rucio database
+                // The user object here is the result of the profile() function we defined in oidc-providers.ts
+                const rucioAccount = (profile?.preferred_username || user?.name || 'unknown') as string;
+
+                console.log(`[OIDC] Rucio account: ${rucioAccount}`);
+
+                // TODO: Optionally query Rucio to validate token and get account
+                // This would make an API call to Rucio's /accounts/whoami endpoint
+                // const rucioAccount = await getRucioAccountFromToken(rucioAuthToken);
+
+                const oidcUser: SessionUser = {
+                    id: `${rucioAccount}@${providerName}`,
+                    email: user?.email || profile?.email || '',
+                    emailVerified: null,
+                    rucioIdentity: rucioIdentity,
+                    rucioAccount: rucioAccount,
+                    rucioAuthType: AuthType.OIDC,
+                    rucioAuthToken: rucioAuthToken, // ✅ OIDC token IS the Rucio token
+                    rucioAuthTokenExpires: rucioAuthTokenExpires,
+                    rucioOIDCProvider: providerName,
+                    rucioVO: 'atl', // TODO: Get from callback URL state parameter or default VO
+                    role: Role.USER, // TODO: Query Rucio for user role from account attributes
+                    isLoggedIn: true,
+                };
+
+                // Initialize allUsers array if needed
+                if (!token.allUsers) {
+                    token.allUsers = [];
+                }
+
+                // Check if user already exists in allUsers
+                const existingIndex = getSessionUserIndex(token.allUsers, oidcUser);
+
+                if (existingIndex === -1) {
+                    // New user: add to allUsers
+                    console.log(`[OIDC] Adding new OIDC user to session: ${oidcUser.rucioAccount}`);
+                    token.allUsers.push(oidcUser);
+                } else {
+                    // Existing user: update their info
+                    console.log(`[OIDC] Updating existing OIDC user in session: ${oidcUser.rucioAccount}`);
+                    token.allUsers[existingIndex] = oidcUser;
+                }
+
+                // Set as active user
+                token.user = oidcUser;
+
+                console.log(`[OIDC] OIDC authentication complete for ${providerName}`);
+            }
+
+            // ==========================================
+            // Handle UserPass/x509 Authentication (Existing)
+            // ==========================================
             // On sign in: add or update the user in allUsers array
-            if (user) {
+            if (user && !account?.type) {
                 // Initialize allUsers if it doesn't exist
                 if (!token.allUsers) {
                     token.allUsers = [];
