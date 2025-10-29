@@ -105,12 +105,16 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         const vos: VO[] = [];
 
         if (!multiVOEnabled) {
+            // When Multi-VO is disabled, create a default VO that respects global OIDC settings
+            const globalOIDCEnabled = await this.oidcEnabled();
+            const allOIDCProviders = globalOIDCEnabled ? await this.oidcProviders() : [];
+
             vos.push({
                 name: 'default',
                 shortName: 'def',
                 logoUrl: '',
-                oidcEnabled: false,
-                oidcProviders: [],
+                oidcEnabled: globalOIDCEnabled,
+                oidcProviders: allOIDCProviders,
             });
             return Promise.resolve(vos);
         }
