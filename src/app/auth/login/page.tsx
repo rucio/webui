@@ -4,7 +4,7 @@ import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
-import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
+import { AuthType, OIDCProvider, Role, VO } from '@/lib/core/entity/auth-models';
 import { signIn } from 'next-auth/react';
 
 function LoginContent() {
@@ -293,6 +293,65 @@ function LoginContent() {
         }
     };
 
+    /**
+     * Handle OIDC provider authentication (Dynamic - works with any provider)
+     */
+    const handleOIDCSubmit = async (provider: OIDCProvider, vo: VO, account?: string) => {
+        try {
+            console.log(`[Login] Starting OIDC authentication with provider: ${provider.name}`);
+
+            // Build callback URL with VO and account parameters
+            // These will be available in the callback to set the correct VO and account
+            const params = new URLSearchParams({
+                vo: vo.shortName,
+            });
+            if (account) {
+                params.set('account', account);
+            }
+            const callbackUrlWithParams = `${redirectURL}?${params.toString()}`;
+
+            console.log(`[Login] Callback URL: ${callbackUrlWithParams}`);
+
+            // Use NextAuth signIn with the provider ID (lowercase name)
+            // This will redirect the user to the OIDC provider's authorization endpoint
+            const result = await signIn(provider.name.toLowerCase(), {
+                redirect: false, // Don't automatically redirect, handle it ourselves
+                callbackUrl: callbackUrlWithParams,
+            });
+
+            if (result?.ok) {
+                // Login successful, redirect to dashboard
+                console.log(`[Login] OIDC authentication successful, redirecting to: ${redirectURL}`);
+                router.push(redirectURL);
+            } else if (result?.error) {
+                // Login failed
+                console.error(`[Login] OIDC authentication failed:`, result.error);
+                setAuthViewModel({
+                    status: 'error',
+                    message: `OIDC login failed with ${provider.name}: ${result.error}`,
+                    rucioAccount: '',
+                    rucioAuthType: AuthType.OIDC,
+                    rucioIdentity: '',
+                    rucioAuthToken: '',
+                    rucioAuthTokenExpires: '',
+                    role: Role.USER,
+                });
+            }
+        } catch (error: any) {
+            console.error(`[Login] OIDC login error with ${provider.name}:`, error);
+            setAuthViewModel({
+                status: 'error',
+                message: `An unexpected error occurred during OIDC login: ${error.message || 'Unknown error'}`,
+                rucioAccount: '',
+                rucioAuthType: AuthType.OIDC,
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
+        }
+    };
+
     useEffect(() => {
         if (callbackUrl) {
             const redirectURL = decodeURIComponent(callbackUrl);
@@ -318,7 +377,7 @@ function LoginContent() {
                     loginViewModel={viewModel}
                     authViewModel={authViewModel}
                     userPassSubmitHandler={handleUserpassSubmit}
-                    oidcSubmitHandler={() => {}}
+                    oidcSubmitHandler={handleOIDCSubmit}
                     x509SubmitHandler={handleX509Submit}
                     x509SessionHandler={handleX509Session}
                 />
