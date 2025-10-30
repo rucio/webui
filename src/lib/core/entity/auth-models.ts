@@ -65,6 +65,7 @@ export type OIDCProvider = {
     tokenUrl: string;
     userInfoUrl?: string;
     scopes?: string[];
+    issuer?: string;
 };
 
 /**
