@@ -60,11 +60,7 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         const providerNames = providerList.split(',').map(provider => provider.trim());
         for (const providerName of providerNames) {
             const requiredProviderConfig = ['AUTHORIZATION_URL', 'TOKEN_URL', 'CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URL'];
-            const optionalProviderConfig = ['ICON_URL', 'REFRESH_TOKEN_URL', 'USERINFO_URL', 'SCOPES', 'LOGOUT_URL'];
-            for (const config of optionalProviderConfig) {
-                const key = `OIDC_PROVIDER_${providerName}_${config}`;
-                const value = await this.get(key);
-            }
+            // Optional configs: ICON_URL, REFRESH_TOKEN_URL, USERINFO_URL, SCOPES, LOGOUT_URL, ISSUER
             for (const config of requiredProviderConfig) {
                 const key = `OIDC_PROVIDER_${providerName}_${config}`;
                 const value = await this.get(key);
@@ -86,6 +82,7 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
                 userInfoUrl: (await this.get(`OIDC_PROVIDER_${providerName}_USERINFO_URL`)) as string,
                 redirectUrl: (await this.get(`OIDC_PROVIDER_${providerName}_REDIRECT_URL`)) as string,
                 scopes: scopes as [string],
+                issuer: (await this.get(`OIDC_PROVIDER_${providerName}_ISSUER`)) as string,
             };
             providers.push(provider);
         }
