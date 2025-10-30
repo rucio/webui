@@ -5,7 +5,7 @@ import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/naviga
 import { Suspense, useEffect, useState } from 'react';
 import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
 import { AuthType, OIDCProvider, Role, VO } from '@/lib/core/entity/auth-models';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 function LoginContent() {
     useEffect(() => {
@@ -17,6 +17,24 @@ function LoginContent() {
     const [authViewModel, setAuthViewModel] = useState<AuthViewModel>();
     const router = useRouter();
     const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl');
+    const { data: session } = useSession();
+
+    // Check for OIDC errors after redirect from OIDC provider
+    useEffect(() => {
+        if (session && (session as any).oidcError) {
+            console.error('[Login] OIDC error detected:', (session as any).oidcError);
+            setAuthViewModel({
+                status: 'error',
+                message: (session as any).oidcError,
+                rucioAccount: '',
+                rucioAuthType: AuthType.OIDC,
+                rucioIdentity: (session as any).oidcIdentity || '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
+        }
+    }, [session]);
 
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
         try {

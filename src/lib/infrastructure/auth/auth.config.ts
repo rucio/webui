@@ -5,6 +5,10 @@ import { authorizeUserPass, MultipleAccountsError } from './nextauth-userpass-ad
 import { authorizeX509 } from './nextauth-x509-adapter';
 import { AuthType, Role } from '@/lib/core/entity/auth-models';
 import { getIssuerFromEnv } from './oidc-providers';
+import { getRucioAccountsForIdentity, selectAccountFromMultiple, IdentityNotMappedError, InvalidTokenError, RucioAPIError } from './rucio-oidc-helper';
+import appContainer from '@/lib/infrastructure/ioc/container-config';
+import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
+import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 
 /**
  * Helper function to find user index in allUsers array
@@ -122,6 +126,15 @@ export const authConfig: NextAuthConfig = {
                     console.error('[OIDC] Failed to decode JWT token:', e);
                 }
 
+                // Log the full token for manual testing (on separate line for easy extraction)
+                console.log('=== OIDC TOKEN FOR MANUAL TESTING ===');
+                const tokenPreview = `${rucioAuthToken.substring(0, 50)}...${rucioAuthToken.substring(rucioAuthToken.length - 20)}`;
+                console.log(`[OIDC] Access Token (truncated): ${tokenPreview}`);
+                console.log(`[OIDC] Full token length: ${rucioAuthToken.length} characters`);
+                console.log(`[OIDC] Extract full token from the line below (search for [OIDC_TOKEN]):`);
+                console.log(`[OIDC_TOKEN] ${rucioAuthToken}`);
+                console.log('=====================================');
+
                 // Create Rucio identity string (format: "SUB=xxx, ISS=xxx")
                 // This matches the format expected in Rucio's identity_account_association table
                 // The sub and iss claims come from the OIDC profile, not the mapped user object
@@ -131,17 +144,65 @@ export const authConfig: NextAuthConfig = {
 
                 console.log(`[OIDC] Created Rucio identity: ${rucioIdentity}`);
 
-                // Get Rucio account from profile
-                // Note: The actual account may need to be queried from Rucio's whoami endpoint
-                // or retrieved from the identity mapping in Rucio database
-                // The user object here is the result of the profile() function we defined in oidc-providers.ts
-                const rucioAccount = (profile?.preferred_username || user?.name || 'unknown') as string;
+                // Query Rucio to get the actual account mapped to this OIDC identity
+                // This uses Rucio's identity API: GET /identities/{identity}/OIDC/accounts
+                let rucioAccount: string;
+                let accountLookupError: string | undefined;
 
-                console.log(`[OIDC] Rucio account: ${rucioAccount}`);
+                try {
+                    // Get Rucio host from environment config
+                    const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
+                    const rucioHost = await envConfigGateway.rucioHost();
 
-                // TODO: Optionally query Rucio to validate token and get account
-                // This would make an API call to Rucio's /accounts/whoami endpoint
-                // const rucioAccount = await getRucioAccountFromToken(rucioAuthToken);
+                    console.log(`[OIDC] Looking up Rucio account for identity via API...`);
+
+                    // Call Rucio identity API (with caching)
+                    const accounts = await getRucioAccountsForIdentity(
+                        rucioIdentity,
+                        rucioHost,
+                        rucioAuthToken
+                    );
+
+                    // Handle multiple accounts (use first one for now)
+                    rucioAccount = selectAccountFromMultiple(accounts);
+                    console.log(`[OIDC] Successfully mapped to Rucio account: ${rucioAccount}`);
+
+                } catch (error) {
+                    if (error instanceof IdentityNotMappedError) {
+                        // Identity is not registered in Rucio
+                        console.error(`[OIDC] Identity not mapped: ${rucioIdentity}`);
+                        accountLookupError = `Your OIDC identity from ${providerName} is not registered in Rucio. Please contact your administrator to map identity: ${rucioIdentity}`;
+                        rucioAccount = 'unknown'; // Placeholder - session will be invalid
+                    } else if (error instanceof InvalidTokenError) {
+                        // Token is invalid
+                        console.error(`[OIDC] Invalid token:`, error);
+                        accountLookupError = `Invalid OIDC token from ${providerName}. Please try logging in again.`;
+                        rucioAccount = 'unknown';
+                    } else if (error instanceof RucioAPIError) {
+                        // Rucio API error
+                        console.error(`[OIDC] Rucio API error:`, error);
+                        accountLookupError = `Could not verify your identity with Rucio. Please try again later.`;
+                        rucioAccount = 'unknown';
+                    } else {
+                        // Unknown error - fallback to preferred_username with warning
+                        console.error(`[OIDC] Unexpected error during account lookup:`, error);
+                        rucioAccount = (profile?.preferred_username || user?.name || 'unknown') as string;
+                        console.warn(`[OIDC] Falling back to preferred_username: ${rucioAccount}`);
+                        accountLookupError = `Warning: Could not verify account mapping. Using username from OIDC provider.`;
+                    }
+                }
+
+                // If there was an error looking up the account, store it in the token
+                // This will be passed to the session callback and shown to the user
+                if (accountLookupError) {
+                    console.error(`[OIDC] Storing error in token: ${accountLookupError}`);
+                    token.oidcError = accountLookupError;
+                    token.oidcIdentity = rucioIdentity; // Store identity for error message
+                    token.oidcProvider = providerName;
+                    // Do not create a valid session
+                    console.log(`[OIDC] OIDC authentication failed for ${providerName}: ${accountLookupError}`);
+                    return token;
+                }
 
                 const oidcUser: SessionUser = {
                     id: `${rucioAccount}@${providerName}`,
@@ -242,6 +303,14 @@ export const authConfig: NextAuthConfig = {
                 session.user = token.user;
             }
             session.allUsers = token.allUsers || [];
+
+            // Pass OIDC errors to the session so the frontend can display them
+            if (token.oidcError) {
+                session.oidcError = token.oidcError as string;
+                session.oidcIdentity = token.oidcIdentity as string;
+                session.oidcProvider = token.oidcProvider as string;
+            }
+
             return session;
         },
 
@@ -287,3 +356,13 @@ export const authConfig: NextAuthConfig = {
 
     debug: process.env.NODE_ENV === 'development',
 };
+
+
+// export TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJWYUQzRDBQUm5QVzB5MXpBLTBieVIxZkhsSFVqalNFZzAxNngyY3JjaHljIn0.eyJleHAiOjE3NjE4MzQxNDksImlhdCI6MTc2MTgzMjk0OSwianRpIjoiYjM0ZGI3NjctYTg0ZS00YWVhLWE0MzQtZjQ2ODNjYTc2ZDQ5IiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmNlcm4uY2gvYXV0aC9yZWFsbXMvY2VybiIsImF1ZCI6ImF0bGFzLXJ1Y2lvLXdlYnVpIiwic3ViIjoibWF5YW5rIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXRsYXMtcnVjaW8td2VidWkiLCJzaWQiOiIwMWNkNTc4OS1jNzUzLTRiYWYtYjFkMy04ZTE2MGI5MjllMjIiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly9hdGxhcy1ydWNpby13ZWJ1aS5jZXJuLmNoIiwiaHR0cDovL2xvY2FsaG9zdDozMDAwIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiMmZhLW1pZ3JhdGVkIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYXRsYXMtcnVjaW8td2VidWkiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCIsImNlcm5fcGVyc29uX2lkIjoiODAxNjU5IiwibmFtZSI6Ik1heWFuayBTaGFybWEiLCJjZXJuX21haWxfdXBuIjoibWF5YW5rQGNlcm4uY2giLCJjZXJuX2lkZW50aXR5X2lkIjoiMWEwZTI0YjItNWFhYy00ZDJkLTg2MWUtMjBkOGY4NDY1ZmZlIiwicHJlZmVycmVkX3VzZXJuYW5rIjoibWF5YW5rIiwiZ2l2ZW5fbmFtZSI6Ik1heWFuayIsImNlcm5fcm9sZXMiOlsiZGVmYXVsdC1yb2xlIl0sImNlcm5fcHJlZmVycmVkX2xhbmd1YWdlIjoiRU4iLCJmYW1pbHlfbmFtZSI6IlNoYXJtYSIsImVtYWlsIjoibWF5YW5rLnNoYXJtYUBjZXJuLmNoIiwiY2Vybl91cG4iOiJtYXlhbmsifQ.Xkoi10W-UfUJI-0jgrCbuYYBaW34w6PdX7ETMqvK8fHOMLxA8QnU2yxbTKvBa1OnzwclQBLwiYpoHQzF_vkzcgTs8cQwaz15-LOnwRJ-NywP_MBchwQu2zNfaAVDYbj8xb_s_smVHukzNTApIwPypQwIerezWH72vs6dpRRmicgZYqcUd_-EXAoL2zuX3c9oym7ueksdIquiOJEaUfeDr4FI1Nv-uL9dosZy-SGTNo8In65X-W3zqwL-k9VBPKCvgk4yPn6SlLKbojgItm65Q6RYqQT3gjy4pLCL8W2oGIPKWp3YY8l8g1lURI5TQ393j6vU14SImcfeilR65DHdCg"
+
+// export IDENTITY_ENCODED="SUB%3Dmayank%2C%20ISS%3Dhttps%3A%2F%2Fauth.cern.ch%2Fauth%2Frealms%2Fcern"
+
+// curl -v \
+//     -H "X-Rucio-Auth-Token: $TOKEN" \
+//     -H "Content-Type: application/json" \
+//     "https://mayank-ops.cern.ch/identities/${IDENTITY_ENCODED}/OIDC/accounts"
