@@ -51,6 +51,7 @@ export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider): OAuthCo
         type: 'oauth',
         clientId: oidcProvider.clientId,
         clientSecret: oidcProvider.clientSecret,
+        issuer: oidcProvider.issuer, // OIDC issuer for token validation
         authorization: {
             url: oidcProvider.authorizationUrl,
             params: {

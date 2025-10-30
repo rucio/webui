@@ -107,6 +107,21 @@ export const authConfig: NextAuthConfig = {
                 const rucioAuthToken = account.access_token;
                 const rucioAuthTokenExpires = new Date(account.expires_at! * 1000).toISOString();
 
+                // Decode and log JWT token claims (for debugging)
+                try {
+                    const tokenParts = rucioAuthToken.split('.');
+                    if (tokenParts.length === 3) {
+                        // Decode the payload (second part of JWT)
+                        const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+                        console.log('[OIDC] JWT Token Claims:', JSON.stringify(payload, null, 2));
+                        console.log(`[OIDC] Audience (aud) claim: ${JSON.stringify(payload.aud)}`);
+                        console.log(`[OIDC] Issuer (iss) claim: ${payload.iss}`);
+                        console.log(`[OIDC] Subject (sub) claim: ${payload.sub}`);
+                    }
+                } catch (e) {
+                    console.error('[OIDC] Failed to decode JWT token:', e);
+                }
+
                 // Create Rucio identity string (format: "SUB=xxx, ISS=xxx")
                 // This matches the format expected in Rucio's identity_account_association table
                 // The sub and iss claims come from the OIDC profile, not the mapped user object

@@ -295,13 +295,16 @@ function LoginContent() {
 
     /**
      * Handle OIDC provider authentication (Dynamic - works with any provider)
+     *
+     * For OAuth/OIDC providers, NextAuth must handle the redirect to perform the OAuth flow.
+     * Unlike Credentials providers (userpass, x509), we cannot use redirect: false here.
      */
     const handleOIDCSubmit = async (provider: OIDCProvider, vo: VO, account?: string) => {
         try {
             console.log(`[Login] Starting OIDC authentication with provider: ${provider.name}`);
 
             // Build callback URL with VO and account parameters
-            // These will be available in the callback to set the correct VO and account
+            // After successful OIDC authentication, user will be redirected here
             const params = new URLSearchParams({
                 vo: vo.shortName,
             });
@@ -311,32 +314,13 @@ function LoginContent() {
             const callbackUrlWithParams = `${redirectURL}?${params.toString()}`;
 
             console.log(`[Login] Callback URL: ${callbackUrlWithParams}`);
+            console.log(`[Login] Redirecting to ${provider.name} SSO for authentication...`);
 
-            // Use NextAuth signIn with the provider ID (lowercase name)
-            // This will redirect the user to the OIDC provider's authorization endpoint
-            const result = await signIn(provider.name.toLowerCase(), {
-                redirect: false, // Don't automatically redirect, handle it ourselves
+            await signIn(provider.name.toLowerCase(), {
                 callbackUrl: callbackUrlWithParams,
+                // Note: redirect defaults to true for OAuth providers
+                // The browser will redirect before this function returns
             });
-
-            if (result?.ok) {
-                // Login successful, redirect to dashboard
-                console.log(`[Login] OIDC authentication successful, redirecting to: ${redirectURL}`);
-                router.push(redirectURL);
-            } else if (result?.error) {
-                // Login failed
-                console.error(`[Login] OIDC authentication failed:`, result.error);
-                setAuthViewModel({
-                    status: 'error',
-                    message: `OIDC login failed with ${provider.name}: ${result.error}`,
-                    rucioAccount: '',
-                    rucioAuthType: AuthType.OIDC,
-                    rucioIdentity: '',
-                    rucioAuthToken: '',
-                    rucioAuthTokenExpires: '',
-                    role: Role.USER,
-                });
-            }
         } catch (error: any) {
             console.error(`[Login] OIDC login error with ${provider.name}:`, error);
             setAuthViewModel({
