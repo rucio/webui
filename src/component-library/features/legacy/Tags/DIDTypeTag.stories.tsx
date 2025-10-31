@@ -1,5 +1,5 @@
 import { DIDType } from '@/lib/core/entity/rucio';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 
 import { DIDTypeTag as L } from './DIDTypeTag';
 

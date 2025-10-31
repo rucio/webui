@@ -1,5 +1,5 @@
 import { DIDType } from '@/lib/core/entity/rucio';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { DIDTypeTag } from '@/component-library/features/legacy/Tags/DIDTypeTag';
 import { Heading as H } from './Heading';
 

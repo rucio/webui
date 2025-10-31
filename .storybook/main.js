@@ -6,12 +6,7 @@ module.exports = {
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
   ],
 
-  addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "storybook-dark-mode"
-  ],
+  addons: ["@storybook/addon-links", "@storybook/addon-docs"],
 
   framework: {
     name: "@storybook/nextjs",
@@ -22,9 +17,5 @@ module.exports = {
     fallback: {
       util: require.resolve("util")
     }
-  },
-
-  docs: {
-    autodocs: true
   }
 };

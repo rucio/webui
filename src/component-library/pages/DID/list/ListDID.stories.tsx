@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 import { ListDID } from './ListDID';
 import { fixtureDIDMetaViewModel, fixtureDIDViewModel, fixtureErrorViewModel } from '@/test/fixtures/table-fixtures';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';

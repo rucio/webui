@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { Column } from '@tanstack/react-table';
 import { TableFilterBoolean as T } from './TableFilterBoolean';
 

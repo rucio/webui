@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { fixtureRuleViewModel } from '@/test/fixtures/table-fixtures';
 import { ListRule } from '@/component-library/pages/Rule/list/ListRule';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';

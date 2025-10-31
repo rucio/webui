@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 import { Toaster } from './Toaster';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 

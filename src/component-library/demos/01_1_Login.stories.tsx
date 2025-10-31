@@ -1,6 +1,6 @@
 import { Login } from '@/component-library/pages/legacy/Login/Login';
 import { within, userEvent } from '@storybook/testing-library';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { sleep } from '../utils';
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 

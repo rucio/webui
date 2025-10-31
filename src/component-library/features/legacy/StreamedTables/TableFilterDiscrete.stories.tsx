@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { Column } from '@tanstack/react-table';
 import { TableFilterDiscrete as T } from './TableFilterDiscrete';
 
