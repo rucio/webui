@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { CopyableCell, CopyableLinkCell } from './CopyableCell';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
 

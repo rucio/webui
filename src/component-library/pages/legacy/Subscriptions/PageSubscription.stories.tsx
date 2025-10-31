@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { fixtureSubscriptionViewModel } from '@/test/fixtures/table-fixtures';
 import { PageSubscription as P } from './PageSubscription';
 

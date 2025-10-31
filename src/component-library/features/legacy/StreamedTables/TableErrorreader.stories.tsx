@@ -1,5 +1,5 @@
 import { BaseViewModel } from '@/lib/sdk/view-models';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { mockBaseVM, mockUseComDOM } from '@/test/fixtures/table-fixtures';
 import { TableErrorreader as T } from './TableErrorreader';
 

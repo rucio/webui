@@ -1,5 +1,5 @@
 import { LockState } from '@/lib/core/entity/rucio';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { LockStateTag as L } from './LockStateTag';
 
 export default {

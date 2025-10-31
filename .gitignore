@@ -37,6 +37,10 @@ next-env.d.ts
 
 certificates
 
-# AI
+# AI Tests
 .claude
 CLAUDE.md
+.dadai
+.mcp.json
+.playwright-mcp
+.dadai
