@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { TableState, Table } from '@tanstack/react-table';
 import { TablePaginationNav as PD } from './TablePaginationNav';
 

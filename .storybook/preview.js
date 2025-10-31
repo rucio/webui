@@ -28,9 +28,7 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
-  },
-  darkMode: {
-    stylePreview: true
   }
 }
 import '../src/component-library/outputtailwind.css'
+export const tags = ["autodocs"];

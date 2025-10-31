@@ -1,5 +1,5 @@
 import { DIDLongViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { createColumnHelper, Column } from '@tanstack/react-table';
 import { fixtureDIDLongViewModel, mockUseComDOM } from '@/test/fixtures/table-fixtures';
 import { StreamedTable as S } from './StreamedTable';

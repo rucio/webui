@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { fixtureDIDKeyValuePair } from '@/test/fixtures/table-fixtures';
 import { NormalTable as N } from './NormalTable';

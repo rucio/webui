@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { SubscriptionStateTag as S } from './SubscriptionStateTag';
 
 export default {

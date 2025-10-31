@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { BasicStatusTag as B } from './BasicStatusTag';
 
 export default {

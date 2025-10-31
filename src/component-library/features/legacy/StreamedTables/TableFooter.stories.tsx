@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { Column, Row, Table, TableState } from '@tanstack/react-table';
 import { FetchStatus } from '@tanstack/react-query';
 import { TableFooter as T } from './TableFooter';

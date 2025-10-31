@@ -1,5 +1,5 @@
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Login } from '@/component-library/pages/legacy/Login/Login';
 
 export default {

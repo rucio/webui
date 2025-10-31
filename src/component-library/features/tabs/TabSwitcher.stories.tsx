@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
 import { useState } from 'react';
 

@@ -1,5 +1,5 @@
 import { DIDAvailability } from '@/lib/core/entity/rucio';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 
 import { AvailabilityTag as A } from './AvailabilityTag';
 
