@@ -201,7 +201,7 @@ export const Login = ({
                             }}
                         />
                     </Collapsible>
-                    <div className="flex flex-col items-center justify-between w-64 text-center text-text-1000 dark:text-text-0">
+                    <div className="flex flex-col items-center justify-between w-64 text-center text-neutral-1000 dark:text-neutral-0">
                         <motion.div initial="hidden" animate="visible" variants={logoVariants}>
                             <Image src="/rucio-logo.png" alt="Rucio Logo" width={146} height={176} />
                         </motion.div>

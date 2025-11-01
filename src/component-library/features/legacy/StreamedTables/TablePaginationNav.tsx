@@ -41,7 +41,7 @@ export const TablePaginationNav: React.FC<
                     max={table.getPageCount()}
                     aria-label="Current Page Number"
                 />
-                <span className="w-full dark:text-text-0 text-text-1000" aria-label="Total Page Count">
+                <span className="w-full dark:text-neutral-0 text-neutral-1000" aria-label="Total Page Count">
                     of {table.getPageCount()}
                 </span>
             </span>

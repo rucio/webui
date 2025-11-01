@@ -6,7 +6,7 @@ export const SamplingTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { sa
         <span
             className={twMerge(
                 'bg-brand-300 dark:bg-brand-600',
-                'text-text-1000 dark:text-text-0 font-bold',
+                'text-neutral-1000 dark:text-neutral-0 font-bold',
                 'w-6 md:w-24 rounded text-center select-none',
                 'flex justify-center items-center',
                 !sampling ? 'hidden' : 'flex',

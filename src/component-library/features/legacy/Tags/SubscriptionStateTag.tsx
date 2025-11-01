@@ -45,7 +45,7 @@ export const SubscriptionStateTag: React.FC<React.ComponentPropsWithoutRef<'span
                     : state === SubscriptionState.UPDATED
                     ? 'bg-base-success-300 border-base-success-700 dark:bg-base-success-700 dark:border-base-success-200'
                     : 'bg-base-error-300 border-base-error-700 dark:bg-base-error-700 dark:border-base-error-200', // broken
-                'text-text-1000 dark:text-text-0',
+                'text-neutral-1000 dark:text-neutral-0',
                 !tiny ? 'w-24 rounded border text-center' : 'w-6 h-6 rounded-full border text-center select-none shrink-0',
                 'flex justify-center items-center',
                 className ?? '',

@@ -6,7 +6,7 @@ export const DateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { date: 
     const { className, ...otherprops } = props;
     const df = dateFormat ?? 'yyyy-MM-dd';
     return (
-        <span className={twMerge('text-text-1000 dark:text-text-0', className ?? '')} {...otherprops}>
+        <span className={twMerge('text-neutral-1000 dark:text-neutral-0', className ?? '')} {...otherprops}>
             {format(df, date)}
         </span>
     );

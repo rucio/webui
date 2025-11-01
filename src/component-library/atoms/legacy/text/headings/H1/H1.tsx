@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 export const H1: React.FC<React.ComponentPropsWithoutRef<'h1'>> = ({ ...props }) => {
     const { children, className, ...otherprops } = props;
     return (
-        <h1 className={twMerge('text-4xl font-extrabold leading-none dark:text-text-0 text-text-1000', className ?? '')} {...otherprops}>
+        <h1 className={twMerge('text-4xl font-extrabold leading-none dark:text-neutral-0 text-neutral-1000', className ?? '')} {...otherprops}>
             {children}
         </h1>
     );

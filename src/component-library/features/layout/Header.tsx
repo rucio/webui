@@ -89,8 +89,8 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                 <HiMenu className="h-5 w-5" />
             </button>
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-                    <div className="fixed inset-0 bg-white dark:bg-neutral-900 p-6 overflow-y-auto flex flex-col space-y-6">
+                <div className="fixed inset-0 bg-neutral-1000 bg-opacity-50 z-50">
+                    <div className="fixed inset-0 bg-neutral-0 dark:bg-neutral-900 p-6 overflow-y-auto flex flex-col space-y-6">
                         <button onClick={() => setIsMenuOpen(false)} className="self-end p-2 focus:outline-none">
                             <HiX className="h-5 w-5" />
                         </button>
@@ -180,10 +180,10 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                 <>
                     <div className="flex items-center">
                         <a className="w-12 h-full stroke-white fill-white" href="https://rucio.cern.ch/">
-                            <Image src={logoPath} alt="Rucio Logo" width={logoSize} height={logoSize} />
+                            <Image src={logoPath} alt="Rucio Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} />
                         </a>
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
-                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} />
+                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} />
                         </a>
                         <div className="pl-1 md:block hidden">
                             <Searchbar />
