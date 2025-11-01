@@ -1,6 +1,5 @@
 import { HTTPRequest } from '@/lib/sdk/http';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
-import { Response } from 'node-fetch';
 import { convertToSubscriptionRuleStatesDTO, getEmptySubscriptionRuleStatesDTO, TRucioSubscriptionRuleStates } from '../subscription-gateway-utils';
 import { SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
 import { BaseStreamableDTO } from '@/lib/sdk/dto';

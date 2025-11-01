@@ -1,7 +1,6 @@
 import { ListRSEsDTO, RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToRSEDTO, TRucioRSE } from '../rse-gateway-utils';
 
 export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO, RSEDetailsDTO> {

@@ -9,6 +9,13 @@ import { injectable } from 'inversify';
 @injectable()
 class RucioAuthServer implements AuthServerGatewayOutputPort {
     async userpassLogin(username: string, password: string, account: string, vo: string): Promise<UserPassLoginAuthServerDTO> {
+        console.log('[LOGIN FLOW 10b] RucioAuthServer userpassLogin started', {
+            username,
+            account: account || '(none)',
+            vo,
+            authHost: process.env.RUCIO_AUTH_HOST
+        });
+
         const authHost = process.env.RUCIO_AUTH_HOST;
         const userpassEndpoint = '/auth/userpass';
         const url = authHost + userpassEndpoint;
@@ -38,6 +45,13 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                     },
                 });
             }
+
+            console.log('[LOGIN FLOW 10c] HTTP response received from auth server', {
+                status: response?.status,
+                hasAuthToken: !!response?.headers.get('X-Rucio-Auth-Token'),
+                hasAccount: !!response?.headers.get('X-Rucio-Auth-Account'),
+                hasMultipleAccounts: !!response?.headers.get('X-Rucio-Auth-Accounts')
+            });
         } catch (error: Error | any) {
             if (authHost === undefined || authHost === null || authHost === '') {
                 dto = {
@@ -81,6 +95,10 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
         }
 
         if (response.status === 200) {
+            console.log('[LOGIN FLOW 10d] Processing 200 response', {
+                status: response.status
+            });
+
             const dto: UserPassLoginAuthServerDTO = {
                 statusCode: response.status,
                 message: '',
@@ -104,6 +122,10 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
 
             return Promise.resolve(dto);
         } else if (response.status === 206) {
+            console.log('[LOGIN FLOW 10e] Processing 206 response (multiple accounts)', {
+                status: response.status
+            });
+
             const multipleAccounts = response.headers.get('X-Rucio-Auth-Accounts');
             if (multipleAccounts === null) {
                 throw new Error('Unable to extract available accounts from the response');

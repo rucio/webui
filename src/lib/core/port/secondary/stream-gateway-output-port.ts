@@ -1,5 +1,4 @@
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { PassThrough } from 'node:stream';
 
 export default interface StreamGatewayOutputPort {

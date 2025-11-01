@@ -25,6 +25,10 @@ declare module 'next-auth' {
         user: SessionUser;
         allUsers: SessionUser[];
         expires: string;
+        // OIDC error handling
+        oidcError?: string;
+        oidcIdentity?: string;
+        oidcProvider?: string;
     }
 
     /**
@@ -43,5 +47,9 @@ declare module '@auth/core/jwt' {
     interface JWT {
         user?: SessionUser;
         allUsers?: SessionUser[];
+        // OIDC error handling
+        oidcError?: string;
+        oidcIdentity?: string;
+        oidcProvider?: string;
     }
 }

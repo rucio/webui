@@ -2,7 +2,6 @@ import { RSEProtocolDTO } from '@/lib/core/dto/rse-dto';
 import { RSEProtocol } from '@/lib/core/entity/rucio';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToRSEDTO, covertToRSEProtocol, TRucioRSEProtocol } from '../rse-gateway-utils';
 
 export default class GetRSEProtocolsEndpoint extends BaseEndpoint<RSEProtocolDTO> {

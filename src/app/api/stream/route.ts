@@ -10,7 +10,6 @@ import {
     STREAMING_HEADERS,
 } from '@/lib/infrastructure/adapters/streaming-adapter';
 import { PassThrough } from 'node:stream';
-import { Response as NodeFetchResponse } from 'node-fetch';
 
 /**
  * GET /api/stream
@@ -35,7 +34,7 @@ export async function GET(request: NextRequest) {
 
         // If error response, return immediately
         if (type === 'response') {
-            const response: NodeFetchResponse = content as NodeFetchResponse;
+            const response = content as Response;
             return new Response(response.statusText, { status: response.status });
         }
 
