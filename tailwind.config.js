@@ -149,11 +149,11 @@ module.exports = {
                 },
             },
             fontFamily: {
-                sans: ["monospace"],
-                mono: ["monospace"],
-                serif: ["monospace"],
-                forcesans: ["sans-serif"],
-                forceserif: ["serif"],
+                sans: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                mono: ['var(--font-jetbrains-mono)', 'JetBrains Mono', 'IBM Plex Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+                serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+                forcesans: ['sans-serif'],
+                forceserif: ['serif'],
             },
             keyframes: {
                 floatout: {
