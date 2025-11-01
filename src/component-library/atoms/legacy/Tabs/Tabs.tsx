@@ -88,7 +88,7 @@ export const Tabs: React.FC<
                         className={twMerge(
                             'flex-1 p-4 hover:cursor-pointer',
                             'border-b-4 border-neutral-300 dark:border-neutral-100',
-                            'text-text-600 dark:text-text-100 hover:bg-neutral-100 dark:hover:bg-transparent',
+                            'text-neutral-600 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-transparent',
                         )}
                         key={index.toString()}
                         role="tab"

@@ -18,7 +18,7 @@ export const NumInput: React.FC<Omit<React.ComponentPropsWithoutRef<'input'>, 'v
         <input
             type="number"
             value={numvalue > 0 ? numvalue : ''}
-            className="w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 text-text-1000 dark:text-text-0 bg-neutral-0 dark:bg-neutral-800 dark:border-2"
+            className="w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 text-neutral-1000 dark:text-neutral-0 bg-neutral-0 dark:bg-neutral-800 dark:border-2"
             onKeyDown={onEnterkey}
             {...props}
         >

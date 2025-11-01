@@ -1,3 +1,9 @@
+/**
+ * Tailwind Configuration
+ * Aligned with Rucio WebUI Design System v1.0.0
+ * @see .dadai/docs/DESIGN_SYSTEM.md
+ */
+
 module.exports = {
     darkMode: 'class',
     content: {
@@ -17,7 +23,7 @@ module.exports = {
                 'nav': '975px',
             },
             colors: {
-                neutral: { // Slate
+                neutral: { // Slate - Primary UI colors
                     0: '#ffffff',
                     100: '#f1f5f9',
                     200: '#e2e8f0',
@@ -30,21 +36,7 @@ module.exports = {
                     900: '#0f172a',
                     1000: '#000000',
                 },
-                text: {// Slate
-                    0: '#ffffff',
-                    100: '#f1f5f9',
-                    200: '#e2e8f0',
-                    300: '#cbd5e1',
-                    400: '#94a3b8',
-                    500: "#64748b",
-                    600: '#475569',
-                    700: '#334155',
-                    800: '#1e293b',
-                    900: '#0f172a',
-                    1000: '#000000',
-
-                },
-                brand: {
+                brand: { // Purple - Primary brand color
                     100: '#ede9fe',
                     200: '#ddd6fe',
                     300: '#c4b5fd',
@@ -56,7 +48,7 @@ module.exports = {
                     900: '#4c1d95',
                 },
                 base: {
-                    success: { // green
+                    success: { // Green
                         100: '#dcfce7',
                         200: '#bbf7d0',
                         300: '#86efac',
@@ -67,7 +59,7 @@ module.exports = {
                         800: '#166534',
                         900: '#14532d',
                     },
-                    error: {// Red
+                    error: { // Red
                         100: '#fee2e2',
                         200: '#fecaca',
                         300: '#fca5a5',
@@ -78,7 +70,7 @@ module.exports = {
                         800: '#991b1b',
                         900: '#7f1d1d',
                     },
-                    warning: {//Amber
+                    warning: { // Amber
                         100: '#fef3c7',
                         200: '#fde68a',
                         300: '#fcd34d',
@@ -89,7 +81,7 @@ module.exports = {
                         800: '#92400e',
                         900: '#78350f',
                     },
-                    info: {// blue
+                    info: { // Blue
                         100: '#e0f2fe',
                         200: '#bae6fd',
                         300: '#7dd3fc',
@@ -152,27 +144,109 @@ module.exports = {
                 sans: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
                 mono: ['var(--font-jetbrains-mono)', 'JetBrains Mono', 'IBM Plex Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
                 serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
-                forcesans: ['sans-serif'],
-                forceserif: ['serif'],
+            },
+            fontSize: {
+                xs: ['0.75rem', { lineHeight: '1rem' }],      // 12px / 16px
+                sm: ['0.875rem', { lineHeight: '1.25rem' }],  // 14px / 20px
+                base: ['1rem', { lineHeight: '1.5rem' }],     // 16px / 24px (default)
+                lg: ['1.125rem', { lineHeight: '1.75rem' }],  // 18px / 28px
+                xl: ['1.25rem', { lineHeight: '1.75rem' }],   // 20px / 28px
+                '2xl': ['1.5rem', { lineHeight: '2rem' }],    // 24px / 32px
+                '3xl': ['1.875rem', { lineHeight: '2.25rem' }], // 30px / 36px
+                '4xl': ['2.25rem', { lineHeight: '2.5rem' }], // 36px / 40px
+                '5xl': ['3rem', { lineHeight: '1' }],         // 48px (display)
+                '6xl': ['3.75rem', { lineHeight: '1' }],      // 60px
+                '7xl': ['4.5rem', { lineHeight: '1' }],       // 72px
+            },
+            fontWeight: {
+                thin: '100',
+                extralight: '200',
+                light: '300',
+                regular: '400',
+                medium: '500',
+                semibold: '600',
+                bold: '700',
+                extrabold: '800',
+                black: '900',
+            },
+            letterSpacing: {
+                tighter: '-0.05em',
+                tight: '-0.025em',
+                normal: '0em',
+                wide: '0.025em',
+                wider: '0.05em',
+                widest: '0.1em',
+            },
+            borderRadius: {
+                none: '0',
+                sm: '0.125rem',      // 2px
+                DEFAULT: '0.25rem',  // 4px
+                md: '0.375rem',      // 6px
+                lg: '0.5rem',        // 8px
+                xl: '0.75rem',       // 12px
+                '2xl': '1rem',       // 16px
+                '3xl': '1.5rem',     // 24px
+                full: '9999px',      // Pill/circular
+            },
+            borderWidth: {
+                DEFAULT: '1px',
+                0: '0',
+                2: '2px',
+                4: '4px',
+                8: '8px',
+            },
+            zIndex: {
+                auto: 'auto',
+                0: '0',
+                10: '10',    // Sticky elements
+                20: '20',    // Dropdowns, popovers
+                30: '30',    // Fixed navigation
+                40: '40',    // Modals, dialogs
+                50: '50',    // Toasts, notifications
+                100: '100',  // Tooltips (highest)
+            },
+            backdropBlur: {
+                none: '0',
+                sm: '4px',
+                DEFAULT: '8px',
+                md: '12px',
+                lg: '16px',
+                xl: '24px',
+            },
+            transitionDuration: {
+                75: '75ms',
+                100: '100ms',
+                150: '150ms',   // Default
+                200: '200ms',
+                300: '300ms',
+                500: '500ms',
+                700: '700ms',
+            },
+            transitionTimingFunction: {
+                DEFAULT: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                linear: 'linear',
+                in: 'cubic-bezier(0.4, 0, 1, 1)',
+                out: 'cubic-bezier(0, 0, 0.2, 1)',
+                'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
             },
             keyframes: {
                 floatout: {
-                    "0%": {opacity: "1", left: "0px",},
-                    "80%": {opacity: "1", left: "0px",},
-                    "100%": {opacity: "0", left: "100px",}
+                    "0%": { opacity: "1", left: "0px" },
+                    "80%": { opacity: "1", left: "0px" },
+                    "100%": { opacity: "0", left: "100px" }
                 },
                 fadeout: {
-                    "0%": {opacity: "1"},
-                    "80%": {opacity: "1"},
-                    "100%": {opacity: "0"}
+                    "0%": { opacity: "1" },
+                    "80%": { opacity: "1" },
+                    "100%": { opacity: "0" }
                 },
                 "accordion-down": {
-                    from: {height: "0"},
-                    to: {height: "var(--radix-accordion-content-height)"},
+                    from: { height: "0" },
+                    to: { height: "var(--radix-accordion-content-height)" },
                 },
                 "accordion-up": {
-                    from: {height: "var(--radix-accordion-content-height)"},
-                    to: {height: "0"},
+                    from: { height: "var(--radix-accordion-content-height)" },
+                    to: { height: "0" },
                 },
             },
             animation: {

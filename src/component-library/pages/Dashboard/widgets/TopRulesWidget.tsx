@@ -11,6 +11,7 @@ import { WarningField } from '@/component-library/features/fields/WarningField';
 import CustomLegend, { LegendOption } from './CustomLegend';
 import { useTheme } from 'next-themes';
 import { calculateRuleActivityScore } from '@/lib/core/utils/rule-sorting-utils';
+import { chartColors, getBorderColor, getColorFromToken } from '@/lib/utils/chart-colors';
 
 const openRule = (id: string) => {
     window.open(`/rule/page/${id}`, '_blank');
@@ -90,21 +91,21 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
     const { resolvedTheme } = useTheme();
     const isDarkMode = resolvedTheme === 'dark';
 
-    // Tailwind neutral-100 or neutral-900
+    // Use design system colors via chart utility
     const fillColor = isDarkMode ? '#f1f5f9' : '#0f172a';
-    const borderColor = isDarkMode ? 'rgba(241,245,249,0.15)' : 'rgba(15,23,42,0.15)';
+    const borderColor = getBorderColor(isDarkMode);
 
     const barColors: Record<string, any> = {
         locksOkPercentage: {
-            fill: 'rgba(34,197,94,0.8)', // Tailwind base-success-500
+            fill: chartColors.success, // Design system base-success-500
             stroke: borderColor,
         },
         locksReplicatingPercentage: {
-            fill: 'rgba(251,191,36,0.8)', // Tailwind base-warning-400
+            fill: getColorFromToken('base.warning', 400, 0.8), // Design system base-warning-400
             stroke: borderColor,
         },
         locksStuckPercentage: {
-            fill: 'rgba(239,68,68,0.8)', // Tailwind base-error-500
+            fill: chartColors.error, // Design system base-error-500
             stroke: borderColor,
         },
     };

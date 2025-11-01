@@ -19,9 +19,9 @@ export const RuleNotificationTag: React.FC<React.ComponentPropsWithoutRef<'span'
         <span
             className={twMerge(
                 notificationState === RuleNotification.No
-                    ? 'bg-neutral-300 text-text-800 dark:bg-neutral-600 dark:text-text-200'
+                    ? 'bg-neutral-300 text-neutral-800 dark:bg-neutral-600 dark:text-neutral-200'
                     : notificationState === RuleNotification.Close
-                    ? 'bg-neutral-300 text-text-800 dark:bg-neutral-600 dark:text-teext-200'
+                    ? 'bg-neutral-300 text-neutral-800 dark:bg-neutral-600 dark:text-teext-200'
                     : notificationState === RuleNotification.Yes
                     ? 'bg-base-success-300 text-base-success-800 dark:bg-base-success-700 dark:text-base-success-200'
                     : notificationState === RuleNotification.Progress

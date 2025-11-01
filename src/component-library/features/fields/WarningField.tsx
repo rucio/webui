@@ -7,7 +7,7 @@ export const WarningField = ({ children, className, ...props }: { children: Reac
     return (
         <Field
             className={cn(
-                'bg-base-error-500 dark:bg-base-error-500 bg-opacity-60 dark:bg-opacity-60',
+                'bg-base-warning-500 dark:bg-base-warning-500 bg-opacity-60 dark:bg-opacity-60',
                 'items-center py-2 space-x-2',
                 'whitespace-normal',
                 className,

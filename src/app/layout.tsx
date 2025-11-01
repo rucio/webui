@@ -1,5 +1,4 @@
-// import './globals.css'
-import '../component-library/outputtailwind.css';
+import './globals.css';
 import 'reflect-metadata';
 import { ThemeProvider } from 'next-themes';
 import { AgGridSetup } from '@/lib/ag-grid-setup';

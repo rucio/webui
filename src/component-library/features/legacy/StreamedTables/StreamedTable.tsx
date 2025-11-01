@@ -22,7 +22,7 @@ export function StreamedTable<T>(props: StreamedTableProps<T>) {
         <table
             className={twMerge(
                 props.tablecomdom.query.fetchStatus === 'fetching' ? 'hover:cursor-wait' : '',
-                'bg-neutral-0 dark:bg-neutral-700 dark:text-text-0 text-text-1000',
+                'bg-neutral-0 dark:bg-neutral-700 dark:text-neutral-0 text-neutral-1000',
                 'w-full',
                 'relative',
                 'table-fixed',
