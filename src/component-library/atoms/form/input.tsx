@@ -14,6 +14,12 @@ const inputVariants = cva(
         'focus:outline-none',
         'transition-colors',
         'disabled:cursor-not-allowed disabled:opacity-50',
+        // Fix date/time picker icon alignment
+        '[&::-webkit-calendar-picker-indicator]:cursor-pointer',
+        '[&::-webkit-calendar-picker-indicator]:opacity-70',
+        '[&::-webkit-calendar-picker-indicator]:hover:opacity-100',
+        '[&::-webkit-calendar-picker-indicator]:m-0',
+        '[&::-webkit-calendar-picker-indicator]:p-0',
     ),
     {
         variants: {

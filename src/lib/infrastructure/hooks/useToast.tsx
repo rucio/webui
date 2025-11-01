@@ -6,7 +6,20 @@ import * as React from 'react';
 import type { ToastActionElement, ToastProps } from '@/component-library/atoms/toast/toast';
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 1000; // Time to remove toast from DOM after dismiss (for exit animation)
+
+/**
+ * Auto-dismiss durations based on Design System recommendations:
+ * - Info/Success: 5 seconds (quick confirmation)
+ * - Warning: 7 seconds (needs more attention)
+ * - Error: Infinity (requires manual close for critical issues)
+ */
+const TOAST_AUTO_DISMISS_DURATION = {
+    info: 5000,
+    success: 5000,
+    warning: 7000,
+    error: Infinity,
+} as const;
 
 type ToasterToast = ToastProps & {
     id: string;

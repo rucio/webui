@@ -25,7 +25,7 @@ const fieldVariants = cva(
             },
             truncate: {
                 true: 'whitespace-nowrap overflow-hidden text-ellipsis',
-                false: '',
+                false: 'overflow-x-auto whitespace-nowrap',
             },
         },
         defaultVariants: {

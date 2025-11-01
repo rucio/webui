@@ -164,8 +164,8 @@ export const RegularTable = (props: RegularTableProps) => {
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
     return (
-        <>
-            <div className={twMerge('grid grow w-full', 'relative', 'min-h-[300px]')} ref={gridWrapper}>
+        <div className="flex flex-col h-full w-full">
+            <div className={twMerge('grid grow w-full', 'relative')} ref={gridWrapper}>
                 {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
                 {/*The substitute div is required to supress hydration warning*/}
                 {isContainerReady && resolvedTheme ? (
@@ -206,6 +206,6 @@ export const RegularTable = (props: RegularTableProps) => {
                 firstPageRef={firstPageRef}
                 lastPageRef={lastPageRef}
             />
-        </>
+        </div>
     );
 };
