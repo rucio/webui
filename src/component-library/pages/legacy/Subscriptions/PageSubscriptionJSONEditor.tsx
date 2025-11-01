@@ -1,5 +1,5 @@
 import { twMerge } from 'tailwind-merge';
-import { Button } from '../../../atoms/legacy/Button/Button';
+import { Button } from '../../../atoms/form/button';
 import { AreaInput } from '../../../atoms/legacy/input/AreaInput/AreaInput';
 import React, { useState, useEffect } from 'react';
 import { HiQuestionMarkCircle } from 'react-icons/hi';
@@ -56,25 +56,26 @@ export const PageSubscriptionJSONEditor: React.FC<
                 </div>
                 <div className="flex flex-row space-x-2">
                     <Button
-                        icon={<HiQuestionMarkCircle />}
-                        className="w-fit text-2xl"
+                        size="icon"
                         aria-label="Show schema"
                         onClick={e => {
                             setHelpWanted(!helpWanted);
                         }}
-                    />
+                    >
+                        <HiQuestionMarkCircle className="h-5 w-5" />
+                    </Button>
                     <Button
-                        label="Reset"
-                        type="reset"
+                        variant="error"
                         className="w-28"
                         onClick={e => {
                             setJson(defaultString);
                             setJsonError('');
                         }}
-                    />
+                    >
+                        Reset
+                    </Button>
                     <Button
-                        label="Check"
-                        type="button"
+                        variant="neutral"
                         className="w-28"
                         onClick={e => {
                             try {
@@ -90,16 +91,20 @@ export const PageSubscriptionJSONEditor: React.FC<
                                 setJsonError('Syntax Error');
                             }
                         }}
-                    />
+                    >
+                        Check
+                    </Button>
                     <Button
-                        label="Commit"
+                        variant="success"
                         type="submit"
                         disabled={jsonError !== null}
                         className="w-28"
                         onClick={e => {
                             submit(json);
                         }}
-                    />
+                    >
+                        Commit
+                    </Button>
                 </div>
             </div>
             {schemaDescription && (

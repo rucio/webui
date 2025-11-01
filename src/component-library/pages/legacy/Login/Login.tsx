@@ -2,7 +2,7 @@
 
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
-import { Button } from '../../../atoms/legacy/Button/Button';
+import { Button } from '../../../atoms/form/button';
 import { Tabs } from '../../../atoms/legacy/Tabs/Tabs';
 import { H1 } from '../../../atoms/legacy/text/headings/H1/H1';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
@@ -28,10 +28,12 @@ const BackToDashboardButton = (props: { account: string }) => {
     return (
         <Link href="/dashboard">
             <Button
-                className={twMerge('bg-base-success-600 hover:bg-base-success-700', 'mb-1')}
-                icon={<HiArrowRight />}
-                label={`Back to dashboard as ${props.account}`}
-            ></Button>
+                variant="success"
+                className="mb-1 w-full"
+            >
+                <HiArrowRight className="mr-2 h-4 w-4" />
+                Back to dashboard as {props.account}
+            </Button>
         </Link>
     );
 };
@@ -88,12 +90,15 @@ const MultipleAccountsModal = ({ submit, availableAccounts, onClose }: MultipleA
             />
             <Button
                 type="submit"
-                label="Select"
+                variant="success"
+                className="w-full"
                 disabled={chosenAccount === undefined}
                 onClick={async () => {
                     await submit(chosenAccount);
                 }}
-            />
+            >
+                Select
+            </Button>
         </Modal>
     );
 };
@@ -283,12 +288,14 @@ export const Login = ({
                             {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
                                 return (
                                     <Button
-                                        theme="orange"
-                                        label={provider.name}
+                                        variant="neutral"
                                         key={index.toString()}
-                                        icon={<MdAccountCircle />}
                                         onClick={() => handleOIDCSubmit(provider, loginViewModel.voList[selectedVOTab], inputAccount)}
-                                    />
+                                        className="w-full"
+                                    >
+                                        <MdAccountCircle className="mr-2 h-4 w-4" />
+                                        {provider.name}
+                                    </Button>
                                 );
                             })}
                         </div>
@@ -297,18 +304,22 @@ export const Login = ({
                     )}
 
                     {/* x509 Button */}
-                    <Button label="x509" onClick={() => submitX509(inputAccount)} />
+                    <Button onClick={() => submitX509(inputAccount)} className="w-full">
+                        x509
+                    </Button>
 
                     {/* Userpass Button - now switches view */}
                     {loginViewModel.userpassEnabled && (
                         <Button
-                            label="Userpass"
                             onClick={() => {
                                 setError(undefined);
                                 setFieldErrors({});
                                 setCurrentView('userpass-form');
                             }}
-                        />
+                            className="w-full"
+                        >
+                            Userpass
+                        </Button>
                     )}
 
                     {/* Account input for non-userpass methods */}
@@ -476,12 +487,15 @@ export const Login = ({
                         </div>
 
                         <Button
-                            label={isSubmitting ? "Signing in..." : "Login"}
                             type="submit"
+                            variant="success"
                             role="button"
                             onClick={() => submitUserPass(inputAccount)}
                             disabled={isSubmitting}
-                        />
+                            className="w-full"
+                        >
+                            {isSubmitting ? "Signing in..." : "Login"}
+                        </Button>
                     </fieldset>
                 </motion.form>
             </motion.div>

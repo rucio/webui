@@ -59,7 +59,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             filter: true,
             filterParams: DefaultTextFilterParams,
             cellRenderer: ClickableDID,
-            pinned: 'left',
+            pinned: 'left' as const,
         },
         {
             headerName: 'ID',
@@ -69,7 +69,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             flex: 1,
             sortable: false,
             cellRenderer: ClickableId,
-            pinned: 'left',
+            pinned: 'left' as const,
         },
         {
             headerName: 'RSE Expression',
