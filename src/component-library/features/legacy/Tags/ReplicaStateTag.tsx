@@ -39,7 +39,7 @@ export const ReplicaStateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & 
                     : state === 'Bad'
                     ? 'bg-extra-rose-200 border-extra-rose-700 dark:bg-extra-rose-700 dark:border-extra-rose-200'
                     : 'bg-base-info-200 border-base-info-700 dark:bg-base-info-700 dark:border-base-info-200',
-                'text-text-1000 dark:text-text-0 italic font-sans',
+                'text-neutral-1000 dark:text-neutral-0 italic font-sans',
                 !tiny ? 'w-28 md:w-56 rounded border text-center' : 'w-6 h-6 rounded-full border text-center select-none',
                 'flex justify-center items-center',
                 className ?? '',

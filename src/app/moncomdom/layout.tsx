@@ -1,6 +1,5 @@
 'use client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import '@/component-library/outputtailwind.css';
 import 'reflect-metadata';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 

@@ -31,7 +31,7 @@ export const BasicStatusTag: React.FC<
     return (
         <span
             key={status}
-            className={`${color} text-text-1000 dark:text-text-0 font-bold w-6 md:w-24 rounded text-center select-none flex justify-center items-center`}
+            className={`${color} text-neutral-1000 dark:text-neutral-0 font-bold w-6 md:w-24 rounded text-center select-none flex justify-center items-center`}
         >
             {text}
         </span>

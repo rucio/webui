@@ -11,6 +11,7 @@ import { Field } from '@/component-library/atoms/misc/Field';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import CustomLegend, { LegendOption } from '@/component-library/pages/Dashboard/widgets/CustomLegend';
 import { useTheme } from 'next-themes';
+import { chartColors, getBorderColor } from '@/lib/utils/chart-colors';
 
 const CustomTooltip = ({ active, payload, totalBytes }: any) => {
     if (active && payload && payload.length) {
@@ -32,18 +33,16 @@ const CustomTooltip = ({ active, payload, totalBytes }: any) => {
 const PIE_HEIGHT = 275;
 
 const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
-    const COLORS = [
-        // Used
-        'rgba(239,68,68,0.8)', // Tailwind base-success-500
-        // Remaining
-        'rgba(34,197,94,0.8)', // Tailwind base-error-500
-    ];
-
     const { resolvedTheme } = useTheme();
     const isDarkMode = resolvedTheme === 'dark';
 
-    // Tailwind neutral-100 or neutral-900
-    const borderColor = isDarkMode ? 'rgba(241,245,249,0.15)' : 'rgba(15,23,42,0.15)';
+    // Use design system colors via chart utility
+    const COLORS = [
+        chartColors.warning, // Used - Warning color indicates consumption
+        chartColors.success, // Remaining - Success color indicates availability
+    ];
+
+    const borderColor = getBorderColor(isDarkMode);
 
     const { rse, used_bytes, bytes_limit } = usage;
     const remainingBytes = bytes_limit - used_bytes;
@@ -98,7 +97,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
 };
 
 const legendOptions: LegendOption[] = [
-    { label: 'Used', color: 'bg-base-error-500' },
+    { label: 'Used', color: 'bg-base-warning-500' },
     { label: 'Remaining', color: 'bg-base-success-500' },
 ];
 

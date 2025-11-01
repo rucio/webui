@@ -28,7 +28,7 @@ NormalTable.args = {
         columnHelper.accessor('key', {
             id: 'key',
             cell: info => {
-                return <span className={twMerge('dark:text-text-0 text-text-1000')}>{info.getValue()}</span>;
+                return <span className={twMerge('dark:text-neutral-0 text-neutral-1000')}>{info.getValue()}</span>;
             },
             header: info => {
                 return <TableFilterString column={info.column} name="Key" />;
@@ -50,11 +50,11 @@ NormalTable.args = {
                 if (Object.values(DIDType).includes(val as DIDType)) {
                     return <DIDTypeTag didtype={val as DIDType} />;
                 } else {
-                    return <span className="dark:text-text-0 text-text-1000">{val as string}</span>;
+                    return <span className="dark:text-neutral-0 text-neutral-1000">{val as string}</span>;
                 }
             },
             header: info => {
-                return <H3 className="text-left dark:text-text-0 text-text-1000">Value</H3>;
+                return <H3 className="text-left dark:text-neutral-0 text-neutral-1000">Value</H3>;
             },
         }),
     ],

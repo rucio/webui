@@ -8,7 +8,7 @@ export const Timeline = (props: { steps: Array<string>; active: number; onJump: 
     return (
         <div className="rounded-md p-2  bg-neutral-0 dark:bg-neutral-800">
             <div className="relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-neutral-100 dark:after:bg-neutral-600">
-                <ol className="relative z-10 flex justify-between text-sm font-medium text-text-700 dark:text-text-100">
+                <ol className="relative z-10 flex justify-between text-sm font-medium text-neutral-700 dark:text-neutral-100">
                     {props.steps.map((element: any, index: number) => {
                         // the black bgs are not actually the same colour, dont understand why
                         return (

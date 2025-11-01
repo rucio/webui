@@ -104,7 +104,7 @@ export const PageSubscriptionJSONEditor: React.FC<
             </div>
             {schemaDescription && (
                 <Collapsible showIf={helpWanted}>
-                    <h4 className="text-text-800 dark:text-text-100 font-bold">Help</h4>
+                    <h4 className="text-neutral-800 dark:text-neutral-100 font-bold">Help</h4>
                     <div className="mt-2 p-4 bg-base-neutral-100 dark:bg-base-neutral-800 rounded">
                         {schemaDescription}
                     </div>

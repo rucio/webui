@@ -20,7 +20,7 @@ export const ListInput = (props: {
         return (
             <div id={props.id} className="w-full flex flex-row bg-neutral-0 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-900">
                 <div className="grow text-align-center">
-                    <p className="m-2 font-mono dark:text-text-0 text-text-1000">{item}</p>
+                    <p className="m-2 font-mono dark:text-neutral-0 text-neutral-1000">{item}</p>
                 </div>
                 <div className="w-12 p-1">
                     <button

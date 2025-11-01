@@ -38,7 +38,7 @@ export function TableSortUpDown(
             {...otherdivprops}
         >
             {element ?? <H3 className={props.nocollapse ? 'inline hover:text-brand-500' : 'hidden md:inline hover:text-brand-500'}>{name}</H3>}
-            <span className="text-text-500 dark:text-text-200 hover:text-brand-500 text-2xl h6">
+            <span className="text-neutral-500 dark:text-neutral-200 hover:text-brand-500 text-2xl h6">
                 {
                     {
                         asc: <HiSortAscending />,

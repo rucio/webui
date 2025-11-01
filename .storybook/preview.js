@@ -30,5 +30,5 @@ export const parameters = {
     },
   }
 }
-import '../src/component-library/outputtailwind.css'
+import '../src/app/globals.css'
 export const tags = ["autodocs"];

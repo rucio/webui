@@ -19,7 +19,7 @@ export const TableErrorreader: React.FC<
 > = ({ comdom, showDetailedErrors, setShowDetailedErrors, ...props }) => {
     const { className, ...otherprops } = props;
     return (
-        <div className={twMerge('border rounded-md p-1', 'bg-neutral-0 dark:bg-neutral-800', className ?? 'text-text-1000 dark:text-text-0')}>
+        <div className={twMerge('border rounded-md p-1', 'bg-neutral-0 dark:bg-neutral-800', className ?? 'text-neutral-1000 dark:text-neutral-0')}>
             <div className={twMerge('flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 sm:justify-between')}>
                 <H3 className="mt-2 mb-1">Errors</H3>
                 <Button

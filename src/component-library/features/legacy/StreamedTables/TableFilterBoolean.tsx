@@ -48,7 +48,7 @@ export function TableFilterBoolean<T>(props: TableFilterBoolean): React.ReactEle
             {...otherdivprops}
         >
             <H3 className="hidden md:inline">{name}</H3>
-            {filter === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <BoolTag val={filter} />}
+            {filter === undefined ? <HiDotsHorizontal className="text-2xl text-neutral-500 dark:text-neutral-200" /> : <BoolTag val={filter} />}
         </div>
     );
 }
