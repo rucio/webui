@@ -9,7 +9,8 @@ module.exports = {
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-docs",
-    "@storybook/addon-a11y"
+    "@storybook/addon-a11y",
+    "@storybook/addon-themes"
   ],
 
   framework: {

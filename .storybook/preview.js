@@ -1,34 +1,52 @@
-import {ThemeProvider, useTheme} from "next-themes";
+import React from 'react';
+import { withThemeByClassName } from '@storybook/addon-themes';
+import '../src/app/globals.css';
 
-export const ThemedStory = ({ children }) => {
-  const { theme, setTheme } = useTheme();
-  return <div>
-    <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="mb-2"
-    >Toggle Theme</button>
-    {children}
-  </div>;
-}
+/**
+ * Storybook Preview Configuration
+ * Configures global decorators, parameters, and theme switching
+ */
+
+// Decorator to ensure proper background color based on theme
+const withBackground = (Story, context) => {
+  const theme = context.globals.theme || 'light';
+  return (
+      <Story />
+  );
+};
 
 export const decorators = [
-  (Story) => {
-    return (
-      <ThemeProvider attribute="class" defaultTheme="light">
-        <ThemedStory><Story/></ThemedStory>
-      </ThemeProvider>
-    );
-  },
+  withThemeByClassName({
+    themes: {
+      light: 'light',
+      dark: 'dark',
+    },
+    defaultTheme: 'light',
+  }),
+  withBackground,
 ];
 
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
+  actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/,
     },
-  }
-}
-import '../src/app/globals.css'
-export const tags = ["autodocs"];
+  },
+  backgrounds: {
+    default: 'light',
+    values: [
+      {
+        name: 'light',
+        value: '#FFFFFF',
+      },
+      {
+        name: 'dark',
+        value: '#0F172A',
+      },
+    ],
+  },
+};
+
+export const tags = ['autodocs'];
