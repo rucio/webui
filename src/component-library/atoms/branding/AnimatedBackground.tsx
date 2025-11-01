@@ -67,31 +67,31 @@ export function AnimatedBackground() {
   const paths = [
     {
       d: 'M 50 100 Q 300 50, 600 150 T 1200 200',
-      strokeWidth: 0.8,
+      strokeWidth: 0.4,
       duration: 3,
       delay: 0,
     },
     {
       d: 'M 1400 150 Q 1100 300, 800 250 T 200 500',
-      strokeWidth: 0.8,
+      strokeWidth: 0.4,
       duration: 3.5,
       delay: 0.5,
     },
     {
       d: 'M 100 700 Q 500 600, 900 700 T 1500 650',
-      strokeWidth: 0.8,
+      strokeWidth: 0.4,
       duration: 4,
       delay: 1,
     },
     {
       d: 'M 1500 800 Q 1000 750, 600 850 T 100 900',
-      strokeWidth: 0.8,
+      strokeWidth: 0.4,
       duration: 3.8,
       delay: 1.5,
     },
     {
       d: 'M 750 50 Q 600 250, 850 400 T 750 700',
-      strokeWidth: 0.6,
+      strokeWidth: 0.3,
       duration: 4.2,
       delay: 0.8,
     },
@@ -100,12 +100,12 @@ export function AnimatedBackground() {
   if (shouldReduceMotion) {
     // Static gradient background when reduced motion is preferred
     return (
-      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-neutral-50 via-brand-50/30 to-neutral-100 dark:from-neutral-950 dark:via-brand-950/20 dark:to-neutral-900" />
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-neutral-50 via-brand-50/30 to-neutral-100 dark:from-neutral-950 dark:via-brand-950/20 dark:to-neutral-950" />
     );
   }
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-50 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950">
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-50 dark:from-black dark:via-neutral-950 dark:to-neutral-900">
       {/* Animated Grid Pattern */}
       <motion.div
         className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
@@ -143,7 +143,7 @@ export function AnimatedBackground() {
             fill="none"
             stroke="currentColor"
             strokeWidth={path.strokeWidth}
-            className="text-brand-500/20 dark:text-brand-400/20"
+            className="text-brand-500/5 dark:text-brand-400/20"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{
@@ -250,10 +250,10 @@ export function AnimatedBackground() {
           x2="85%"
           y2="15%"
           stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-brand-500/8 dark:text-brand-400/8"
+          strokeWidth="0.25"
+          className="text-brand-500/3 dark:text-brand-400/8"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.4 }}
+          animate={{ pathLength: 1, opacity: 0.2 }}
           transition={{
             pathLength: { duration: 2, delay: 1.5, ease: 'easeInOut' },
             opacity: { duration: 1, delay: 1.5 },
@@ -266,10 +266,10 @@ export function AnimatedBackground() {
           x2="80%"
           y2="80%"
           stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-brand-500/8 dark:text-brand-400/8"
+          strokeWidth="0.25"
+          className="text-brand-500/3 dark:text-brand-400/8"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.4 }}
+          animate={{ pathLength: 1, opacity: 0.2 }}
           transition={{
             pathLength: { duration: 2, delay: 2, ease: 'easeInOut' },
             opacity: { duration: 1, delay: 2 },
@@ -282,10 +282,10 @@ export function AnimatedBackground() {
           x2="10%"
           y2="75%"
           stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-brand-500/8 dark:text-brand-400/8"
+          strokeWidth="0.25"
+          className="text-brand-500/3 dark:text-brand-400/8"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.4 }}
+          animate={{ pathLength: 1, opacity: 0.2 }}
           transition={{
             pathLength: { duration: 2, delay: 2.5, ease: 'easeInOut' },
             opacity: { duration: 1, delay: 2.5 },
@@ -298,10 +298,10 @@ export function AnimatedBackground() {
           x2="5%"
           y2="10%"
           stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-brand-500/8 dark:text-brand-400/8"
+          strokeWidth="0.25"
+          className="text-brand-500/3 dark:text-brand-400/8"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.4 }}
+          animate={{ pathLength: 1, opacity: 0.2 }}
           transition={{
             pathLength: { duration: 2, delay: 3, ease: 'easeInOut' },
             opacity: { duration: 1, delay: 3 },
@@ -314,10 +314,10 @@ export function AnimatedBackground() {
           x2="10%"
           y2="75%"
           stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-brand-500/8 dark:text-brand-400/8"
+          strokeWidth="0.25"
+          className="text-brand-500/3 dark:text-brand-400/8"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.4 }}
+          animate={{ pathLength: 1, opacity: 0.2 }}
           transition={{
             pathLength: { duration: 2.5, delay: 3.5, ease: 'easeInOut' },
             opacity: { duration: 1, delay: 3.5 },
