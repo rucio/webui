@@ -83,12 +83,22 @@ export const CreateRuleStageSubmission = ({ parameters, removeSaved }: CreateRul
     }, [error]);
 
     const getErrorComponent = () => {
+        const handleKeyDown = (e: React.KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                location.reload();
+            }
+        };
+
         const button = (
             <span
                 className="cursor-pointer hover:text-brand-500"
                 onClick={() => {
                     location.reload();
                 }}
+                onKeyDown={handleKeyDown}
+                role="button"
+                tabIndex={0}
             >
                 <b>review the previous steps</b>
             </span>

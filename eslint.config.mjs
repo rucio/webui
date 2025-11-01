@@ -75,4 +75,13 @@ export default [
       'no-case-declarations': 'warn', // Warn on case declarations
     },
   },
+  // Override for Storybook files - allow hooks in render functions and unescaped entities
+  {
+    files: ['**/*.stories.tsx', '**/*.stories.ts'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+      'react/no-unescaped-entities': 'off',
+    },
+  },
 ];

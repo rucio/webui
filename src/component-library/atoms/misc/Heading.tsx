@@ -46,8 +46,21 @@ export const CopyableHeading = ({ text, size, className, ...props }: HeadingProp
             });
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCopy();
+        }
+    };
+
     return (
-        <div className="flex items-center space-x-2 cursor-pointer" onClick={handleCopy}>
+        <div
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={handleCopy}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+        >
             <HiOutlineClipboardCopy className="h-8 w-8 inline" />
             <Heading text={text} size={size} className={className} {...props} />
         </div>

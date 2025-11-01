@@ -13,7 +13,7 @@ export function TableHeader<T>(
     const { className, ...otherprops } = props;
     const table = props.table;
     return (
-        <thead role="rowgroup" aria-label="Table Header" className={twMerge(className ?? '')} {...otherprops}>
+        <thead aria-label="Table Header" className={twMerge(className ?? '')} {...otherprops}>
             <tr
                 className={twMerge('h-16 md:h-12', 'bg-neutral-0 dark:bg-neutral-700', 'relative', props.tablestyling?.tableHeadRowStyle ?? '')}
                 role="row"

@@ -411,7 +411,7 @@ export const Login = ({
                                     placeholder="Enter your username"
                                     onEnterKey={() => submitUserPass(inputAccount)}
                                     className="w-full"
-                                    autoFocus
+                                    
                                 />
                                 {/* Reserved space for error message - prevents layout shift */}
                                 <div className="min-h-[20px]">

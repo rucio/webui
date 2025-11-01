@@ -1,16 +1,23 @@
 import React from 'react';
 import { DIDAvailability } from '@/lib/core/entity/rucio';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { twMerge } from 'tailwind-merge';
 
-const typeColorClasses: Record<DIDAvailability, string> = {
-    Unknown: 'bg-neutral-0 dark:bg-neutral-900',
-    Available: 'bg-base-success-500',
-    Deleted: 'bg-base-error-500',
-    Lost: 'bg-base-warning-400',
+/**
+ * Maps DID availability states to semantic badge variants from the design system.
+ *
+ * Semantic color assignments:
+ * - Available: Success (green) - DID is accessible
+ * - Lost: Warning (amber) - DID temporarily unavailable
+ * - Deleted: Error (red) - DID permanently removed
+ * - Unknown: Neutral (gray) - Undefined state
+ */
+const typeVariants: Record<DIDAvailability, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
+    Unknown: 'neutral',
+    Available: 'success',
+    Deleted: 'error',
+    Lost: 'warning',
 };
 
 export const DIDAvailabilityBadge = (props: { value: DIDAvailability; className?: string }) => {
-    const classes = twMerge(typeColorClasses[props.value], props.className);
-    return <Badge value={props.value} className={classes} />;
+    return <Badge value={props.value} variant={typeVariants[props.value]} className={props.className} />;
 };
