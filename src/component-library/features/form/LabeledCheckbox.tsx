@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/component-library/utils';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 
 interface LabeledCheckboxProps {
     checked: boolean;

@@ -68,7 +68,7 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
 
         // Reject with detailed error information instead of resolving with null
         // This allows the error details to propagate to the frontend
-        this.rejectPromise(new LoginError(error.type, error.message, error.statusCode?.toString()));
+        this.rejectPromise(new LoginError(error.type, error.message));
     }
 
     async presentIncomplete(incomplete: UserpassLoginIncomplete): Promise<void> {

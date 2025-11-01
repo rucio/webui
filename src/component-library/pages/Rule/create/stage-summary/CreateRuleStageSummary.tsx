@@ -8,7 +8,7 @@ import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow'
 import { Field } from '@/component-library/atoms/misc/Field';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 
 const KeyValueDIDs = ({ dids }: { dids: ListDIDsViewModel[] }) => {

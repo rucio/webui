@@ -11,7 +11,7 @@ import { CreateRuleStageStorageTable } from '@/component-library/pages/Rule/crea
 import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
 import { RSESearchPanel } from '@/component-library/features/search/RSESearchPanel';

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
+import React from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { HiFolder, HiDatabase, HiDocument } from 'react-icons/hi';
 

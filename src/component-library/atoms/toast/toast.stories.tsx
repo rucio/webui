@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Toaster } from './Toaster';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { Button } from '../form/button';
+import { ToastActionElement } from './toast';
 
 const meta: Meta<typeof Toaster> = {
     title: 'Atoms/Toast/Toast',
@@ -33,7 +34,7 @@ const ToastTrigger = ({
     title: string;
     description?: string;
     variant?: 'info' | 'success' | 'warning' | 'error';
-    action?: React.ReactElement;
+    action?: ToastActionElement;
 }) => {
     const { toast } = useToast();
 
