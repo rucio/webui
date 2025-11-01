@@ -8,7 +8,7 @@ import { DIDType } from '@/lib/core/entity/rucio';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { CopyableField } from '@/component-library/features/fields/CopyableField';
 import { DIDAvailabilityBadge } from '@/component-library/features/badges/DID/DIDAvailabilityBadge';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingElement } from '@/component-library/atoms/loading/LoadingElement';
 import { KeyValueLinkHeader } from '@/component-library/features/key-value/headers';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
@@ -104,7 +104,7 @@ const MetaStub = ({ isLoading, hasError }: { isLoading: boolean; hasError: boole
         return <span className="text-sm text-neutral-800 dark:text-neutral-100">{hasError ? 'An error has occurred' : 'Select an identifier'}</span>;
     };
 
-    return <div className="justify-center flex grow">{isLoading ? <LoadingSpinner /> : getTextStub()}</div>;
+    return <div className="flex grow">{isLoading ? <LoadingElement context="section" size="md" /> : <div className="justify-center flex grow">{getTextStub()}</div>}</div>;
 };
 
 export interface ListDIDMetaProps {

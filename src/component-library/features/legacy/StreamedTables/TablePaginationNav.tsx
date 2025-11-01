@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from '@tanstack/react-table';
-import { Button } from '../../../atoms/legacy/Button/Button';
+import { Button } from '../../../atoms/form/button';
 import { HiChevronDoubleLeft, HiChevronLeft, HiChevronRight, HiChevronDoubleRight } from 'react-icons/hi';
 import { NumInput } from '../../../atoms/legacy/input/NumInput/NumInput';
 import { twMerge } from 'tailwind-merge';
@@ -19,17 +19,21 @@ export const TablePaginationNav: React.FC<
                         table.setPageIndex(0);
                     }}
                     disabled={!table.getCanPreviousPage()}
-                    icon={<HiChevronDoubleLeft />}
+                    size="icon"
                     aria-label="First Page"
-                />
+                >
+                    <HiChevronDoubleLeft className="h-4 w-4" />
+                </Button>
                 <Button
                     onClick={() => {
                         table.previousPage();
                     }}
                     disabled={!table.getCanPreviousPage()}
-                    icon={<HiChevronLeft />}
+                    size="icon"
                     aria-label="Previous Page"
-                />
+                >
+                    <HiChevronLeft className="h-4 w-4" />
+                </Button>
             </span>
             <span className="w-1/3 inline-flex space-x-1 md:space-x-2 items-end">
                 <NumInput
@@ -51,17 +55,21 @@ export const TablePaginationNav: React.FC<
                         table.nextPage();
                     }}
                     disabled={!table.getCanNextPage()}
-                    icon={<HiChevronRight />}
+                    size="icon"
                     aria-label="Next Page"
-                />
+                >
+                    <HiChevronRight className="h-4 w-4" />
+                </Button>
                 <Button
                     onClick={() => {
                         table.setPageIndex(table.getPageCount() - 1);
                     }}
                     disabled={!table.getCanNextPage()}
-                    icon={<HiChevronDoubleRight />}
+                    size="icon"
                     aria-label="Last Page"
-                />
+                >
+                    <HiChevronDoubleRight className="h-4 w-4" />
+                </Button>
             </span>
         </nav>
     );

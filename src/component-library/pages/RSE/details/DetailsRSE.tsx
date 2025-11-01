@@ -5,7 +5,7 @@ import { RSEAttributeViewModel, RSEDetailsViewModel } from '@/lib/infrastructure
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
@@ -181,15 +181,7 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
 
     const isLoading = isMetaFetching || meta === undefined;
     if (isLoading) {
-        return (
-            <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-                    <div className="flex grow items-center justify-center">
-                        <LoadingSpinner />
-                    </div>
-                </div>
-            </main>
-        );
+        return <LoadingPage message="Loading RSE details..." />;
     }
 
     return (

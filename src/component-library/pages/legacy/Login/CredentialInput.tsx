@@ -1,4 +1,4 @@
-import { Button } from '../../../atoms/legacy/Button/Button';
+import { Button } from '../../../atoms/form/button';
 
 export const CredentialInput = (props: { submitHandler: (args: unknown) => void; children: any }) => {
     /*
@@ -8,7 +8,9 @@ export const CredentialInput = (props: { submitHandler: (args: unknown) => void;
         <div className="mb-2 mr-10 ml-10">
             {props.children}
             <div className="mt-2">
-                <Button label="Login" type="submit" onClick={props.submitHandler} />
+                <Button type="submit" variant="success" className="w-full" onClick={props.submitHandler}>
+                    Login
+                </Button>
             </div>
         </div>
     );

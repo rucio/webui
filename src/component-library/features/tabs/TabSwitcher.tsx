@@ -91,7 +91,9 @@ export const TabSwitcher = ({
                 const isActive = index === activeIndex;
                 return (
                     <div
-                        ref={(el) => (tabRefs.current[index] = el)}
+                        ref={(el) => {
+                            tabRefs.current[index] = el;
+                        }}
                         onClick={() => onSwitch(index)}
                         onKeyDown={(e) => handleKeyDown(e, index)}
                         key={name}

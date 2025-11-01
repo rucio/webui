@@ -61,20 +61,6 @@ export const DateInput: React.FC<DateInputProps> = ({
                 showYearDropdown
                 dropdownMode="select"
                 popperPlacement="bottom-start"
-                popperModifiers={[
-                    {
-                        name: 'preventOverflow',
-                        options: {
-                            boundary: 'viewport',
-                        },
-                    },
-                    {
-                        name: 'flip',
-                        options: {
-                            fallbackPlacements: ['top-start', 'bottom-end', 'top-end'],
-                        },
-                    },
-                ]}
             />
         </div>
     );
