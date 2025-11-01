@@ -16,58 +16,86 @@ import { DetailsRSEAttributesTable } from '@/component-library/pages/RSE/details
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { RSEDetailsProtocol } from '@/lib/core/entity/rucio';
 import { InfoField } from '@/component-library/features/fields/InfoField';
+import { Divider } from '@/component-library/atoms/misc/Divider';
+
+/**
+ * A responsive divider component for RSE sections.
+ *
+ * Renders a full-width divider that is only visible on screens smaller than the 'lg' breakpoint.
+ * Useful for visually separating sections in mobile and tablet layouts.
+ *
+ * @returns {React.ReactElement} The divider element.
+ */
+const RSESectionDivider = () => (
+    <div className="w-full lg:hidden my-4">
+        <Divider />
+    </div>
+);
 
 const DetailsRSEKeyValues = ({ meta }: { meta: RSEDetailsViewModel }) => {
     return (
-        <KeyValueWrapper className="flex sm:flex sm:flex-row flex-col p-3">
-            <div className="grow">
-                <KeyValueRow name="Type">
-                    <RSETypeBadge value={meta.rse_type} />
-                </KeyValueRow>
-                <KeyValueRow name="Availability">
-                    {meta.availability_read && <RSEAvailabilityBadge operation="Read" />}
-                    {meta.availability_write && <RSEAvailabilityBadge operation="Write" />}
-                    {meta.availability_delete && <RSEAvailabilityBadge operation="Delete" />}
-                </KeyValueRow>
-                <KeyValueRow name="Volatile">
-                    <Checkbox checked={meta.volatile} />
-                </KeyValueRow>
-            </div>
-            <div className="grow">
-                <KeyValueRow name="Deterministic">
-                    <Checkbox checked={meta.deterministic} />
-                </KeyValueRow>
-                <KeyValueRow name="Staging Area">
-                    <Checkbox checked={meta.staging_area} />
-                </KeyValueRow>
+        <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
+            <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+                <div className="flex flex-col flex-1">
+                    <KeyValueRow name="Type">
+                        <RSETypeBadge value={meta.rse_type} />
+                    </KeyValueRow>
+                    <KeyValueRow name="Availability">
+                        <div className="flex flex-wrap gap-2">
+                            {meta.availability_read && <RSEAvailabilityBadge operation="Read" />}
+                            {meta.availability_write && <RSEAvailabilityBadge operation="Write" />}
+                            {meta.availability_delete && <RSEAvailabilityBadge operation="Delete" />}
+                        </div>
+                    </KeyValueRow>
+                    <KeyValueRow name="Volatile">
+                        <Checkbox checked={meta.volatile} />
+                    </KeyValueRow>
+                </div>
+                <RSESectionDivider />
+                <div className="flex flex-col flex-1">
+                    <KeyValueRow name="Deterministic">
+                        <Checkbox checked={meta.deterministic} />
+                    </KeyValueRow>
+                    <KeyValueRow name="Staging Area">
+                        <Checkbox checked={meta.staging_area} />
+                    </KeyValueRow>
+                </div>
             </div>
         </KeyValueWrapper>
     );
 };
 
 const DetailsRSEAttributes = ({ attributes }: { attributes: RSEAttributeViewModel }) => {
-    return attributes.attributes.length !== 0 ? (
+    return (
         <>
             <Heading text="Attributes" size="md" />
-            <DetailsRSEAttributesTable viewModel={attributes} />
+            {attributes.attributes.length !== 0 ? (
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+                    <DetailsRSEAttributesTable viewModel={attributes} />
+                </div>
+            ) : (
+                <InfoField>
+                    <span>No attributes found.</span>
+                </InfoField>
+            )}
         </>
-    ) : (
-        <InfoField>
-            <span>No attributes found.</span>
-        </InfoField>
     );
 };
 
 const DetailsRSEProtocols = ({ protocols }: { protocols: RSEDetailsProtocol[] }) => {
-    return protocols.length !== 0 ? (
+    return (
         <>
             <Heading text="Protocols" size="md" />
-            <DetailsRSEProtocolsTable rowData={protocols} />
+            {protocols.length !== 0 ? (
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-35rem)]">
+                    <DetailsRSEProtocolsTable rowData={protocols} />
+                </div>
+            ) : (
+                <InfoField>
+                    <span>No protocols found.</span>
+                </InfoField>
+            )}
         </>
-    ) : (
-        <InfoField>
-            <span>No protocols found.</span>
-        </InfoField>
     );
 };
 
@@ -141,27 +169,41 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
     const hasError = metaError || attributesError;
     if (hasError) {
         return (
-            <WarningField>
-                <span>Could not load the RSE {props.name}.</span>
-            </WarningField>
+            <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+                    <WarningField>
+                        <span>Could not load the RSE {props.name}.</span>
+                    </WarningField>
+                </div>
+            </main>
         );
     }
 
     const isLoading = isMetaFetching || meta === undefined;
     if (isLoading) {
         return (
-            <div className="flex grow items-center justify-center">
-                <LoadingSpinner />
-            </div>
+            <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+                    <div className="flex grow items-center justify-center">
+                        <LoadingSpinner />
+                    </div>
+                </div>
+            </main>
         );
     }
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <CopyableHeading text={props.name} />
-            <DetailsRSEKeyValues meta={meta} />
-            <DetailsRSEProtocols protocols={meta.protocols} />
-            {!isAttributesFetching && attributes !== undefined && <DetailsRSEAttributes attributes={attributes} />}
-        </div>
+        <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+                <div className="flex flex-col space-y-6 w-full">
+                    <header className="mb-2">
+                        <CopyableHeading text={props.name} />
+                    </header>
+                    <DetailsRSEKeyValues meta={meta} />
+                    <DetailsRSEProtocols protocols={meta.protocols} />
+                    {!isAttributesFetching && attributes !== undefined && <DetailsRSEAttributes attributes={attributes} />}
+                </div>
+            </div>
+        </main>
     );
 };
