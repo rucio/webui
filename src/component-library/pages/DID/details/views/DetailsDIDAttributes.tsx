@@ -11,7 +11,7 @@ import { BaseViewModelValidator } from '@/component-library/features/utils/BaseV
 import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 
 type DetailsDIDAttributesTableProps = {

@@ -5,7 +5,7 @@ import { Field } from '@/component-library/atoms/misc/Field';
 import { formatDate } from '@/component-library/features/utils/text-formatters';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { RuleMetaViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';

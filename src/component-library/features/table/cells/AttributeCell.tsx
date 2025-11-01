@@ -1,5 +1,5 @@
 import { DateISO } from '@/lib/core/entity/rucio';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import React from 'react';
 import { formatDate } from '@/component-library/features/utils/text-formatters';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';

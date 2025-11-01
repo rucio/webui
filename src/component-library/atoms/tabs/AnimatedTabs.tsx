@@ -63,7 +63,9 @@ export function AnimatedTabs({ tabs, activeIndex, onTabChange, className, ariaLa
           return (
             <button
               key={tab}
-              ref={(el) => (tabRefs.current[index] = el)}
+              ref={(el) => {
+                tabRefs.current[index] = el;
+              }}
               role="tab"
               aria-selected={isActive}
               aria-controls={`tabpanel-${index}`}
