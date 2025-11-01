@@ -16,24 +16,50 @@
  * ```
  */
 
+// Import all tokens for local use in designTokens object
+import { colors, semanticColors, colorUsage } from './colors';
+import { fontFamilies, fontWeights, fontSizes, letterSpacing, lineHeights, typographyPresets, maxLineLength, typographyUtils } from './typography';
+import { spacing, containerWidths, semanticSpacing, gridGutters, borderRadius, borderWidth, spacingUtils } from './spacing';
+import { shadows, darkShadows, zIndex, semanticElevation, backdropEffects, elevationUtils } from './elevation';
+import {
+    duration,
+    easing,
+    keyframes,
+    animations,
+    transitions,
+    semanticMotion,
+    motionUtils,
+    reducedMotion,
+} from './motion';
+import {
+    breakpoints,
+    breakpointRanges,
+    containerMaxWidths,
+    semanticBreakpoints,
+    mediaQueries,
+    gridColumns,
+    breakpointUtils,
+    responsivePatterns,
+} from './breakpoints';
+
 // Colors
 export * from './colors';
-export { colors, semanticColors, colorUsage } from './colors';
+export { colors, semanticColors, colorUsage };
 export type { ColorToken, SemanticColorToken } from './colors';
 
 // Typography
 export * from './typography';
-export { fontFamilies, fontWeights, fontSizes, letterSpacing, lineHeights, typographyPresets, maxLineLength, typographyUtils } from './typography';
+export { fontFamilies, fontWeights, fontSizes, letterSpacing, lineHeights, typographyPresets, maxLineLength, typographyUtils };
 export type { FontFamily, FontWeight, FontSize, TypographyPreset } from './typography';
 
 // Spacing
 export * from './spacing';
-export { spacing, containerWidths, semanticSpacing, gridGutters, borderRadius, borderWidth, spacingUtils } from './spacing';
+export { spacing, containerWidths, semanticSpacing, gridGutters, borderRadius, borderWidth, spacingUtils };
 export type { Spacing, SemanticSpacing, BorderRadius } from './spacing';
 
 // Elevation
 export * from './elevation';
-export { shadows, darkShadows, zIndex, semanticElevation, backdropEffects, elevationUtils } from './elevation';
+export { shadows, darkShadows, zIndex, semanticElevation, backdropEffects, elevationUtils };
 export type { Shadow, ZIndex, SemanticElevation, BackdropEffect } from './elevation';
 
 // Motion
@@ -47,7 +73,7 @@ export {
     semanticMotion,
     motionUtils,
     reducedMotion,
-} from './motion';
+};
 export type { Duration, Easing, Keyframes, Transitions, SemanticMotion } from './motion';
 
 // Breakpoints
@@ -61,7 +87,7 @@ export {
     gridColumns,
     breakpointUtils,
     responsivePatterns,
-} from './breakpoints';
+};
 export type { Breakpoint, MediaQuery, SemanticBreakpoint } from './breakpoints';
 
 /**

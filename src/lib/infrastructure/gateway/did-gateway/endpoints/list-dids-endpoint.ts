@@ -3,7 +3,6 @@ import { BaseHttpErrorTypes } from '@/lib/sdk/http';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { ListDIDDTO } from '@/lib/core/dto/did-dto';
 import { DID, DIDType, DIDFilter } from '@/lib/core/entity/rucio';
-import { Response } from 'node-fetch';
 
 /**
  * A class that extends the `BaseStreamableEndpoint` class and provides an implementation for a streamable API endpoint that lists data identifiers (DIDs) from a Rucio server.

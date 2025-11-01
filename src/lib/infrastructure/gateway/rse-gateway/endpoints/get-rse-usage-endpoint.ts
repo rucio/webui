@@ -1,6 +1,5 @@
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { RSEUsageDTO } from '@/lib/core/dto/rse-dto';
 
 export default class GetRSEUsageEndpoint extends BaseEndpoint<RSEUsageDTO> {

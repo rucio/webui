@@ -1,4 +1,4 @@
-import { Role } from '@/lib/core/entity/account';
+import { Role } from '@/lib/core/entity/auth-models';
 import { StoryFn, Meta } from '@storybook/nextjs';
 import { RoleTag as R } from './RoleTag';
 

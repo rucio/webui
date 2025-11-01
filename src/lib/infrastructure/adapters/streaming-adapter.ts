@@ -47,6 +47,38 @@ export function nodeStreamToWebStream(nodeStream: Readable): ReadableStream<Uint
 }
 
 /**
+ * Convert a Web ReadableStream to a Node.js Readable stream
+ * Useful for adapting fetch responses to existing Node.js stream infrastructure
+ *
+ * @param webStream - Web ReadableStream (e.g., from fetch response.body)
+ * @returns Node.js PassThrough stream
+ */
+export function webStreamToNodeStream(webStream: ReadableStream<Uint8Array>): PassThrough {
+    const passThrough = new PassThrough();
+    const reader = webStream.getReader();
+
+    const pump = async () => {
+        try {
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    passThrough.end();
+                    break;
+                }
+                if (!passThrough.write(value)) {
+                    await new Promise(resolve => passThrough.once('drain', resolve));
+                }
+            }
+        } catch (error) {
+            passThrough.destroy(error as Error);
+        }
+    };
+
+    pump();
+    return passThrough;
+}
+
+/**
  * Convert an array of objects to NDJSON ReadableStream
  * Useful for streaming arrays as newline-delimited JSON
  *

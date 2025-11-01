@@ -1,7 +1,6 @@
 import { SetDIDStatusDTO } from '@/lib/core/dto/did-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class SetDIDStatusEndpoint extends BaseEndpoint<SetDIDStatusDTO> {
     constructor(private rucioAuthToken: string, private scope: string, private name: string, private open: boolean) {

@@ -1,7 +1,6 @@
 import { CreateDIDSampleDTO } from '@/lib/core/dto/did-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class CreateDidSampleEndpoint extends BaseEndpoint<CreateDIDSampleDTO> {
     constructor(

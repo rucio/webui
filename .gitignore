@@ -8,6 +8,13 @@
 # testing
 /coverage
 
+# Playwright E2E testing
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/test/e2e/.auth/
+*.webm
+
 # next.js
 /.next/
 /out/
@@ -37,7 +44,7 @@ next-env.d.ts
 
 certificates
 
-# AI Tests
+# contexts
 .claude
 CLAUDE.md
 .dadai

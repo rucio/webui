@@ -1,5 +1,5 @@
 import React from 'react';
-import { Role } from '@/lib/core/entity/account';
+import { Role } from '@/lib/core/entity/auth-models';
 import { twMerge } from 'tailwind-merge';
 
 export const RoleTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { role: Role }> = ({ role, ...props }) => {

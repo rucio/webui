@@ -158,11 +158,11 @@ export const elevationUtils = {
     /**
      * Combine shadow and z-index
      * @param shadow - Shadow token
-     * @param zIndex - Z-index token
+     * @param zIndexLevel - Z-index token
      * @returns CSS class string
      */
-    getElevationClasses: (shadow: keyof typeof shadows, zIndex: keyof typeof zIndex): string => {
-        return `shadow-${shadow} z-${zIndex}`;
+    getElevationClasses: (shadow: keyof typeof shadows, zIndexLevel: keyof typeof zIndex): string => {
+        return `shadow-${shadow} z-${zIndexLevel}`;
     },
 
     /**

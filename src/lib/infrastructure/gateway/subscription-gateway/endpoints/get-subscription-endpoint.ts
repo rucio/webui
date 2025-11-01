@@ -2,7 +2,6 @@ import { HTTPRequest } from '@/lib/sdk/http';
 import { SubscriptionDTO } from '@/lib/core/dto/subscription-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { BaseHttpErrorTypes } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToSubscriptionDTO, getEmptySubscriptionDTO as getEmptySubscriptionDTO, TRucioSubscription } from '../subscription-gateway-utils';
 
 export default class GetSubscriptionEndpoint extends BaseEndpoint<SubscriptionDTO> {

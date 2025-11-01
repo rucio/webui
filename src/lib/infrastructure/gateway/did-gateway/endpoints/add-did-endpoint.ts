@@ -2,7 +2,6 @@ import { AddDIDDTO } from '@/lib/core/dto/did-dto';
 import { DIDType } from '@/lib/core/entity/rucio';
 import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
     constructor(

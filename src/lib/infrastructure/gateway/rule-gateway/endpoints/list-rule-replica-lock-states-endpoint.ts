@@ -1,7 +1,6 @@
 import { ListLocksDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToRuleReplicaLockDTO, TRucioRuleReplicaLock } from '../rule-gateway-utils';
 export default class ListRuleReplicaLockStatesEndpoint extends BaseStreamableEndpoint<ListLocksDTO, RuleReplicaLockStateDTO> {
     constructor(private readonly rucioAuthToken: string, private readonly ruleId: string) {

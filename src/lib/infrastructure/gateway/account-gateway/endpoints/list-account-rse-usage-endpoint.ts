@@ -1,7 +1,6 @@
 import { AccountRSEUsageDTO, ListAccountRSEUsageDTO } from '@/lib/core/dto/account-dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToAccountRSEUsageDTO } from '../account-gateway-utils';
 
 /**
