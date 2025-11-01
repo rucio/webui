@@ -7,6 +7,12 @@
     @apply bg-neutral-0 dark:bg-neutral-800;
     @apply shadow-lg;
     @apply font-sans;
+    z-index: 9999 !important;
+}
+
+/* Popper Container - ensure it's above everything */
+.react-datepicker-popper {
+    z-index: 9999 !important;
 }
 
 /* Calendar Header */
