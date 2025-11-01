@@ -44,6 +44,13 @@ const createDIDLocation = (type: string, typeName: string): SearchLocation => ({
 });
 
 const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; children: React.ReactNode }) => {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            props.onMouseDown();
+        }
+    };
+
     return (
         <div
             className={cn(
@@ -53,6 +60,9 @@ const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; 
                     : 'md:hover:bg-neutral-200 md:dark:bg-neutral-800 md:hover:dark:bg-neutral-600 hover:text-brand-500 md:hover:text-neutral-900 md:hover:dark:text-neutral-100',
             )}
             onMouseDown={props.onMouseDown}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
         >
             {props.children}
         </div>

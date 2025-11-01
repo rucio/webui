@@ -33,6 +33,13 @@ export function TableFilterBoolean<T>(props: TableFilterBoolean): React.ReactEle
     useEffect(() => {
         column.setFilterValue(filter);
     }, [filter, column]);
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setFilter(next(filter ?? undefined));
+        }
+    };
+
     return (
         <div
             className={twMerge(
@@ -45,6 +52,9 @@ export function TableFilterBoolean<T>(props: TableFilterBoolean): React.ReactEle
             onClick={e => {
                 setFilter(next(filter ?? undefined));
             }}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
             {...otherdivprops}
         >
             <H3 className="hidden md:inline">{name}</H3>

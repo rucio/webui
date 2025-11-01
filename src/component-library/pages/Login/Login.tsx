@@ -403,7 +403,6 @@ export const Login = ({
                                     placeholder="Enter your username"
                                     onEnterKey={() => submitUserPass(inputAccount)}
                                     className="w-full"
-                                    autoFocus
                                 />
                                 <div className="min-h-[20px]">
                                     {fieldErrors.username && (
@@ -530,7 +529,7 @@ export const Login = ({
                             )}
                         </div>
 
-                        <div className="flex flex-col items-center justify-between w-full text-center mb-6">
+                        <div className="flex flex-col items-center justify-between w-full text-center p-4">
                             <motion.div initial="hidden" animate="visible" variants={logoVariants}>
                                 <RucioLogo
                                     className="text-neutral-900 dark:text-neutral-100"

@@ -55,8 +55,21 @@ export const CopyableCell = ({ text, children, className, showIcon = true }: Cop
             });
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCopy(e as unknown as React.MouseEvent);
+        }
+    };
+
     return (
-        <div className={cn('flex items-center gap-1 cursor-pointer', className)} onClick={handleCopy}>
+        <div
+            className={cn('flex items-center gap-1 cursor-pointer', className)}
+            onClick={handleCopy}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+        >
             {showIcon && (
                 <HiOutlineClipboardCopy className="flex-shrink-0 h-4 w-4 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200" />
             )}
@@ -111,16 +124,41 @@ export const CopyableLinkCell = ({ text, href, children, className, showIcon = t
         }
     };
 
+    const handleCopyKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            e.stopPropagation();
+            const syntheticEvent = e as unknown as React.MouseEvent;
+            handleCopy(syntheticEvent);
+        }
+    };
+
+    const handleLinkKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.open(href, '_blank', 'noopener,noreferrer');
+        }
+    };
+
     return (
         <div className={cn('flex items-center gap-1', className)}>
             {showIcon && (
                 <HiOutlineClipboardCopy
                     className="flex-shrink-0 h-4 w-4 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer"
                     onClick={handleCopy}
+                    onKeyDown={handleCopyKeyDown}
+                    role="button"
+                    tabIndex={0}
                     title="Copy to clipboard"
                 />
             )}
-            <div className="cursor-pointer hover:underline" onClick={handleLink}>
+            <div
+                className="cursor-pointer hover:underline"
+                onClick={handleLink}
+                onKeyDown={handleLinkKeyDown}
+                role="button"
+                tabIndex={0}
+            >
                 {children || <span>{text}</span>}
             </div>
         </div>

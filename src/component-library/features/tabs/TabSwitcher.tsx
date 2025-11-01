@@ -50,6 +50,13 @@ export interface TabSwitcherProps extends VariantProps<typeof tabContainerVarian
 }
 
 export const TabSwitcher = ({ tabNames, onSwitch, activeIndex, orientation, fullWidth, className }: TabSwitcherProps) => {
+    const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onSwitch(index);
+        }
+    };
+
     return (
         <KeyValueWrapper className={cn(tabContainerVariants({ orientation, fullWidth }), className)}>
             {tabNames.map((name, index) => {
@@ -57,6 +64,7 @@ export const TabSwitcher = ({ tabNames, onSwitch, activeIndex, orientation, full
                 return (
                     <div
                         onClick={() => onSwitch(index)}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
                         key={name}
                         className={cn(tabItemVariants({ active: isActive, fullWidth }))}
                         role="tab"

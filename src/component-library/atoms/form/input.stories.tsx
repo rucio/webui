@@ -255,28 +255,28 @@ export const AllInputTypes: Story = {
     render: () => (
         <div className="space-y-4">
             <div>
-                <label className="block text-sm font-medium mb-2">Text</label>
-                <Input type="text" placeholder="Text input" />
+                <label htmlFor="input-text" className="block text-sm font-medium mb-2">Text</label>
+                <Input id="input-text" type="text" placeholder="Text input" />
             </div>
             <div>
-                <label className="block text-sm font-medium mb-2">Email</label>
-                <Input type="email" placeholder="Email input" />
+                <label htmlFor="input-email" className="block text-sm font-medium mb-2">Email</label>
+                <Input id="input-email" type="email" placeholder="Email input" />
             </div>
             <div>
-                <label className="block text-sm font-medium mb-2">Password</label>
-                <Input type="password" placeholder="Password input" />
+                <label htmlFor="input-password" className="block text-sm font-medium mb-2">Password</label>
+                <Input id="input-password" type="password" placeholder="Password input" />
             </div>
             <div>
-                <label className="block text-sm font-medium mb-2">Number</label>
-                <Input type="number" placeholder="Number input" />
+                <label htmlFor="input-number" className="block text-sm font-medium mb-2">Number</label>
+                <Input id="input-number" type="number" placeholder="Number input" />
             </div>
             <div>
-                <label className="block text-sm font-medium mb-2">Date</label>
-                <Input type="date" />
+                <label htmlFor="input-date" className="block text-sm font-medium mb-2">Date</label>
+                <Input id="input-date" type="date" />
             </div>
             <div>
-                <label className="block text-sm font-medium mb-2">Search</label>
-                <Input type="search" placeholder="Search input" />
+                <label htmlFor="input-search" className="block text-sm font-medium mb-2">Search</label>
+                <Input id="input-search" type="search" placeholder="Search input" />
             </div>
         </div>
     ),

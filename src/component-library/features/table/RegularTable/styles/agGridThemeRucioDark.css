@@ -8,6 +8,6 @@
 	--ag-text-color: var(--ag-inherited-text-color, var(--ag-foreground-color));
 	/* Equals to tailwind's neutral.700 */
 	--ag-header-background-color: var(--ag-inherited-header-background-color, #334155);
-	--ag-header-text-color: var(--ag-inherited-header-text-color, --ag-foreground-color);
+	--ag-header-text-color: var(--ag-inherited-header-text-color, var(--ag-foreground-color));
 	--ag-color-scheme: var(--ag-inherited-color-scheme, dark);
 }

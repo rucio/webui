@@ -61,6 +61,13 @@ const SignOutOfAllButton = () => {
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleSignOut();
+        }
+    };
+
     return (
         <div
             className={cn(
@@ -70,6 +77,9 @@ const SignOutOfAllButton = () => {
                 'text-right',
             )}
             onClick={handleSignOut}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
         >
             <span>
                 Sign <b>out</b> of all accounts

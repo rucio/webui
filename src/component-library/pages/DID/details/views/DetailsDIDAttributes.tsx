@@ -51,9 +51,23 @@ export const DetailsDIDAttributesTable = (props: DetailsDIDAttributesTableProps)
         localStorage.setItem(excludeNullValuesKey, JSON.stringify(newValue));
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleExcludeNullChange();
+        }
+    };
+
     return (
         <div className="flex flex-col grow space-y-3">
-            <div className="flex space-x-3 items-center cursor-pointer w-fit" onClick={handleExcludeNullChange}>
+            <div
+                className="flex space-x-3 items-center cursor-pointer w-fit"
+                onClick={handleExcludeNullChange}
+                onKeyDown={handleKeyDown}
+                role="checkbox"
+                aria-checked={excludeNull}
+                tabIndex={0}
+            >
                 <Checkbox checked={excludeNull} />
                 <span className="text-neutral-900 dark:text-neutral-100">
                     Exclude <NullBadge />

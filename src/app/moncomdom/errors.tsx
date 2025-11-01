@@ -14,7 +14,7 @@ export type ErrorProps = {
 export const Error = ({ error, resolve }: ErrorProps) => {
     const backgroundColor = 'bg-red-50';
     return (
-        <li key={error.id} className={`flex p-4 mb-4 text-sm text-red-800 rounded-lg ${backgroundColor}`} role="alert">
+        <li key={error.id} className={`flex p-4 mb-4 text-sm text-red-800 rounded-lg ${backgroundColor}`}>
             {error.id}
             {error.message}
             {error.cause}

@@ -11,8 +11,21 @@ const CircleWithText = ({ text, className, onClick }: { text: string; onClick?: 
         onClick ? 'cursor-pointer' : '',
     );
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onClick();
+        }
+    };
+
     return (
-        <div className={classes} onClick={onClick}>
+        <div
+            className={classes}
+            onClick={onClick}
+            onKeyDown={handleKeyDown}
+            role={onClick ? 'button' : undefined}
+            tabIndex={onClick ? 0 : undefined}
+        >
             <span className="text-lg">{text}</span>
         </div>
     );

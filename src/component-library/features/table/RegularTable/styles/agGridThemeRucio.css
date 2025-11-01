@@ -27,11 +27,11 @@
 	--ag-pinned-column-border: var(--ag-inherited-pinned-column-border, solid 1px var(--ag-border-color));
 	--ag-pinned-row-border: var(--ag-inherited-pinned-row-border, solid 1px var(--ag-border-color));
 	--ag-side-panel-border: var(--ag-inherited-side-panel-border, solid 1px var(--ag-border-color));
-	--ag-font-family: monospace;
+	--ag-font-family: var(--font-inter), 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 	--ag-chrome-background-color: var(--ag-inherited-chrome-background-color, color-mix(in srgb, var(--ag-background-color), var(--ag-foreground-color) 7%));
 	--ag-header-background-color: var(--ag-inherited-header-background-color, #334155);
 	--ag-header-font-family: var(--ag-inherited-header-font-family, var(--ag-font-family));
-	--ag-header-font-weight: var(--ag-inherited-header-font-weight, 500);
+	--ag-header-font-weight: var(--ag-inherited-header-font-weight, 600);
 	--ag-header-font-size: var(--ag-inherited-header-font-size, 15px);
 	--ag-header-text-color: var(--ag-inherited-header-text-color, #FFFFFF);
 	--ag-header-cell-hover-background-color: var(--ag-inherited-header-cell-hover-background-color, transparent);
