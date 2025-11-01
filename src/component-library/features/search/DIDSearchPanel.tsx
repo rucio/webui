@@ -7,6 +7,8 @@ import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { Button } from '@/component-library/atoms/form/button';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 import { HiFilter } from 'react-icons/hi';
+import { DateInput } from '@/component-library/atoms/legacy/input/DateInput/DateInput';
+import { TimeInput } from '@/component-library/atoms/legacy/input/TimeInput/TimeInput';
 
 
 const SCOPE_DELIMITER = ':';
@@ -23,13 +25,18 @@ interface SearchPanelProps {
 }
 
 // Helper to convert dates
-const dateToRFC1123 = (dateStr: string, timeStr: string): string | undefined => {
-    if (!dateStr) return undefined;
-    const [year, month, day] = dateStr.split('-').map(Number);
+const dateToRFC1123 = (date: Date | undefined, timeStr: string): string | undefined => {
+    if (!date) return undefined;
     const [hours, minutes, seconds] = (timeStr || '00:00:00').split(':').map(Number);
-    if (!year || !month || !day) return undefined;
 
-    const d = new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
+    const d = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        hours,
+        minutes,
+        seconds
+    ));
 
     const pad = (n: number) => n.toString().padStart(2, '0');
     return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ` +
@@ -92,7 +99,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const [type, setType] = useState<DIDType>(props.initialType ?? DIDType.DATASET);
     const [limit, setLimit] = useState<string>('');
     const [createdMode, setCreatedMode] = useState<'before' | 'after'>('after');
-    const [createdDate, setCreatedDate] = useState<string>('');
+    const [createdDate, setCreatedDate] = useState<Date | undefined>(undefined);
     const [createdTime, setCreatedTime] = useState<string>('');
     const [lengthOperator, setLengthOperator] = useState<DIDFilterOperator>('=');
     const [lengthValue, setLengthValue] = useState<string>('');
@@ -160,15 +167,8 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
             }
         }
         
-        // Validate created
-        if (filters.created.date && isNaN(Date.parse(filters.created.date))) {
-            toast({
-                variant: 'warning',
-                title: 'Invalid created date',
-                description: 'Please enter a valid date and time.',
-            });
-            return false;
-        }
+        // Validate created - Date object is always valid if present
+        // No validation needed for Date objects from DatePicker
 
         // Validate length (only for dataset/container)
         if (type === DIDType.CONTAINER || type === DIDType.DATASET) {
@@ -317,19 +317,21 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             </SelectContent>
                             </Select>
                             <div className="flex flex-row flex-1 gap-2">
-                            <Input
-                                type="date"
-                                value={createdDate}
-                                onChange={(e) => setCreatedDate(e.target.value)}
-                                className="flex-grow-[2]"
-                            />
-                            <Input
-                                type="time"
-                                step="1"
-                                value={createdTime}
-                                onChange={(e) => setCreatedTime(e.target.value)}
-                                className="flex-grow"
-                            />
+                            <div className="flex-grow-[2]">
+                                <DateInput
+                                    onchange={(date: Date) => setCreatedDate(date)}
+                                    initialdate={createdDate}
+                                    placeholder="Select date"
+                                />
+                            </div>
+                            <div className="flex-grow">
+                                <TimeInput
+                                    onchange={(time: string) => setCreatedTime(time)}
+                                    initialtime={createdTime}
+                                    placeholder="Select time"
+                                    showSeconds={true}
+                                />
+                            </div>
                             </div>
                         </div>
                     </DIDFilterField>
