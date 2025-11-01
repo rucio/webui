@@ -1,7 +1,8 @@
 import type { NextAuthConfig, User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { SessionUser } from '@/types/next-auth';
-import { authorizeUserPass, MultipleAccountsError } from './nextauth-userpass-adapter';
+import { authorizeUserPass } from './nextauth-userpass-adapter';
+import { MultipleAccountsError } from '@/lib/core/entity/auth-errors';
 import { authorizeX509 } from './nextauth-x509-adapter';
 import { AuthType, Role } from '@/lib/core/entity/auth-models';
 import { getIssuerFromEnv } from './oidc-providers';

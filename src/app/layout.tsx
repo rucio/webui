@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes';
 import { AgGridSetup } from '@/lib/ag-grid-setup';
 import { SessionProvider } from '@/lib/infrastructure/auth/session-provider';
 import { inter, jetbrainsMono } from './fonts';
+import { AnimatedBackground } from '@/component-library/atoms/branding/AnimatedBackground';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="icon" href="/logo192.png" sizes="any" />
             </head>
             <body>
+                <AnimatedBackground />
                 <AgGridSetup />
                 <SessionProvider>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

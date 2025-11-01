@@ -2,7 +2,12 @@ import '@testing-library/jest-dom/extend-expect';
 import 'reflect-metadata';
 import fetchMock from 'jest-fetch-mock';
 import '@inrupt/jest-jsdom-polyfills';
+import { toHaveNoViolations } from 'jest-axe';
+
 fetchMock.enableMocks();
+
+// Extend Jest matchers with jest-axe custom matchers
+expect.extend(toHaveNoViolations);
 
 import { loadEnvConfig } from '@next/env';
 
