@@ -35,6 +35,7 @@ export default [
   ...compat.extends('plugin:react/recommended'),
   ...compat.extends('plugin:react-hooks/recommended'),
   ...compat.extends('plugin:@next/next/recommended'),
+  ...compat.extends('plugin:jsx-a11y/recommended'),
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
     languageOptions: {

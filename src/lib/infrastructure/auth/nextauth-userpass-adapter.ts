@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { AuthType, Role } from '@/lib/core/entity/auth-models';
+import { LoginError, MultipleAccountsError } from '@/lib/core/entity/auth-errors';
 import { SessionUser } from '@/types/next-auth';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
@@ -14,19 +15,6 @@ import {
     UserpassLoginIncomplete,
 } from '@/lib/core/usecase-models/userpass-login-usecase-models';
 import UserPassLoginOutputPort from '@/lib/core/port/primary/userpass-login-output-port';
-
-/**
- * Custom error type for multiple accounts scenario
- * This will be thrown so NextAuth can return it to the frontend
- */
-export class MultipleAccountsError extends Error {
-    availableAccounts: string;
-    constructor(accounts: string) {
-        super('Multiple accounts available');
-        this.name = 'MultipleAccountsError';
-        this.availableAccounts = accounts;
-    }
-}
 
 /**
  * Custom presenter for NextAuth that doesn't need IronSession
@@ -77,7 +65,10 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
             message: error.message
         });
         console.error('UserPass login error:', error);
-        this.resolvePromise(null);
+
+        // Reject with detailed error information instead of resolving with null
+        // This allows the error details to propagate to the frontend
+        this.rejectPromise(new LoginError(error.type, error.message, error.statusCode?.toString()));
     }
 
     async presentIncomplete(incomplete: UserpassLoginIncomplete): Promise<void> {
@@ -137,10 +128,12 @@ export async function authorizeUserPass(
                 await useCase.execute(requestModel);
             } catch (error) {
                 console.error('Error in authorizeUserPass:', error);
-                if (error instanceof MultipleAccountsError) {
+                // Pass through custom errors that contain useful information
+                if (error instanceof MultipleAccountsError || error instanceof LoginError) {
                     reject(error);
                 } else {
-                    resolve(null);
+                    // For unexpected errors, create a generic LoginError
+                    reject(new LoginError('UNKNOWN_ERROR', 'An unexpected error occurred. Please try again.'));
                 }
             }
         })();
