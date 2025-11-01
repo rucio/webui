@@ -4,7 +4,7 @@ import { CopyableHeading, Heading } from '@/component-library/atoms/misc/Heading
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
 import { useState } from 'react';
 import { WarningField } from '@/component-library/features/fields/WarningField';
@@ -85,11 +85,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
 
     const isLoading = isMetaFetching || meta === undefined;
     if (isLoading) {
-        return (
-            <div className="flex grow items-center justify-center">
-                <LoadingSpinner />
-            </div>
-        );
+        return <LoadingPage message="Loading rule details..." />;
     }
 
     return (

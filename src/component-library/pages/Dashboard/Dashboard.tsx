@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { getSiteHeader } from '@/app/(rucio)/queries';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingElement } from '@/component-library/atoms/loading/LoadingElement';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { AccountRoleBadge } from '@/component-library/features/badges/account/AccountRoleBadge';
@@ -36,7 +36,7 @@ const AccountHeading = () => {
         retry: false,
     });
 
-    if (isHeaderFetching) return <LoadingSpinner />;
+    if (isHeaderFetching) return <LoadingElement context="card" size="md" />;
 
     if (headerError || !header?.activeAccount) {
         return (

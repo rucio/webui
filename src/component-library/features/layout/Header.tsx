@@ -10,7 +10,7 @@ import { Searchbar } from '@/component-library/features/layout/Searchbar';
 import Image from 'next/image';
 import { AccountButton, AccountDropdown } from '@/component-library/features/layout/AccountDropdown';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingElement } from '@/component-library/atoms/loading/LoadingElement';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { motion } from 'framer-motion';
 
@@ -239,7 +239,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
 
     const getContent = () => {
         if (isSiteHeaderFetching) {
-            return <LoadingSpinner />;
+            return <LoadingElement context="inline" size="sm" />;
         } else if (siteHeaderError || !siteHeader) {
             return (
                 <WarningField>

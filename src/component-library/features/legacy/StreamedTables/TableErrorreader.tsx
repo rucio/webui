@@ -3,7 +3,7 @@ import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
 import { H3 } from '@/component-library/atoms/legacy/text/headings/H3/H3';
 import { twMerge } from 'tailwind-merge';
 import { BaseViewModel } from '@/lib/sdk/view-models';
-import { Button } from '@/component-library/atoms/legacy/Button/Button';
+import { Button } from '@/component-library/atoms/form/button';
 
 const TableErrorelement: React.FC<React.ComponentPropsWithoutRef<'div'> & { message: string }> = ({ message, ...props }) => {
     const { className, ...otherprops } = props;
@@ -23,13 +23,14 @@ export const TableErrorreader: React.FC<
             <div className={twMerge('flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 sm:justify-between')}>
                 <H3 className="mt-2 mb-1">Errors</H3>
                 <Button
-                    label="Close"
-                    type="reset"
+                    variant="neutral"
                     onClick={e => {
                         setShowDetailedErrors(!showDetailedErrors);
                     }}
                     className="w-24"
-                />
+                >
+                    Close
+                </Button>
             </div>
             <div className={twMerge('bg-neutral-100 dark:bg-neutral-900', 'flex flex-col space-y-1 p-1 rounded-md', 'h-48 overflow-y-scroll')}>
                 {comdom.query.data.error
