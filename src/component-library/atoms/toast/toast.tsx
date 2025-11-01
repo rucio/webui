@@ -5,7 +5,7 @@ import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/component-library/utils';
-import { HiInformationCircle, HiExclamationCircle, HiX, HiXCircle } from 'react-icons/hi';
+import { HiInformationCircle, HiExclamationCircle, HiX, HiXCircle, HiCheckCircle } from 'react-icons/hi';
 
 const ToastProvider = ToastPrimitives.Provider;
 
@@ -25,9 +25,10 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const variantsDefinition = {
+    info: 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100',
+    success: 'bg-base-success-500 text-neutral-100',
     warning: 'bg-base-warning-300 text-neutral-900',
     error: 'bg-base-error-500 text-neutral-100',
-    info: 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100',
 };
 
 const toastVariants = cva(
@@ -111,8 +112,9 @@ type ToastActionElement = React.ReactElement<typeof ToastAction>;
 const ToastIcon = ({ variant }: { variant: ToastVariant }) => {
     const icons = {
         info: <HiInformationCircle />,
-        error: <HiXCircle />,
+        success: <HiCheckCircle />,
         warning: <HiExclamationCircle />,
+        error: <HiXCircle />,
     };
     return <div className="pr-2 text-xl inline-block">{icons[variant]}</div>;
 };
