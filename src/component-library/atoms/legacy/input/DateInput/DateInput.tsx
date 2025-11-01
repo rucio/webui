@@ -24,12 +24,14 @@ export const DateInput: React.FC<DateInputProps> = ({
         setChosendate(initialdate);
     }, [initialdate]);
     return (
-        <div className="w-full">
+        <div className="w-full relative">
             <DatePicker
                 selected={chosendate}
-                onChange={(date: Date) => {
-                    onChange(date);
-                    setChosendate(date);
+                onChange={(date: Date | null) => {
+                    if (date) {
+                        onChange(date);
+                        setChosendate(date);
+                    }
                 }}
                 className={cn(
                     // Base styles
@@ -55,6 +57,24 @@ export const DateInput: React.FC<DateInputProps> = ({
                 placeholderText={placeholder}
                 disabled={disabled}
                 id={id}
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                popperPlacement="bottom-start"
+                popperModifiers={[
+                    {
+                        name: 'preventOverflow',
+                        options: {
+                            boundary: 'viewport',
+                        },
+                    },
+                    {
+                        name: 'flip',
+                        options: {
+                            fallbackPlacements: ['top-start', 'bottom-end', 'top-end'],
+                        },
+                    },
+                ]}
             />
         </div>
     );
