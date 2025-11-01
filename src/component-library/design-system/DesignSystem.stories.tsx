@@ -6,8 +6,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { colors, semanticColors } from '@/design-tokens/colors';
-import { fontSizes, fontWeights, typographyPresets } from '@/design-tokens/typography';
+import { colors } from '@/design-tokens/colors';
+import { fontSizes, fontWeights } from '@/design-tokens/typography';
 import { spacing, semanticSpacing } from '@/design-tokens/spacing';
 import { shadows } from '@/design-tokens/elevation';
 
@@ -285,7 +285,7 @@ export const Typography: Story = {
                         <div>
                             <p className="text-sm font-mono text-neutral-600 dark:text-neutral-400 mb-2">Code</p>
                             <code className="font-mono text-sm bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded">
-                                const greeting = "Hello, world!";
+                                const greeting = &apos;Hello, world!&apos;;
                             </code>
                         </div>
                     </div>

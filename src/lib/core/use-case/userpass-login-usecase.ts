@@ -30,7 +30,16 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
         this.envConfigGateway = envConfigGateway;
     }
     async execute(request: UserpassLoginRequest): Promise<void> {
+        console.log('[LOGIN FLOW 10] UserPassLoginUseCase execute started', {
+            username: request.username,
+            account: request.account || '(none)',
+            vo: request.vo,
+            redirectTo: request.redirectTo
+        });
+
         const userpassLoginEnabled = await this.envConfigGateway.userpassEnabled();
+        console.log('[LOGIN FLOW 10a] Userpass enabled:', userpassLoginEnabled);
+
         if (!userpassLoginEnabled) {
             const errorModel: UserpassLoginError = {
                 type: 'AUTH_SERVER_CONFIGURATION_ERROR',
@@ -40,6 +49,13 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             return;
         }
         const dto = await this.authServer.userpassLogin(request.username, request.password, request.account, request.vo);
+        console.log('[LOGIN FLOW 11] Auth server response received', {
+            statusCode: dto.statusCode,
+            account: dto.account,
+            hasToken: !!dto.authToken,
+            message: dto.message
+        });
+
         let role: Role | undefined;
         let country: string | undefined;
         let countryRole: Role | undefined;
@@ -65,6 +81,13 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             role = undefined;
         }
         if (dto.statusCode == 200) {
+            console.log('[LOGIN FLOW 12] Success response - creating session', {
+                rucioAccount: dto.account,
+                role,
+                country,
+                countryRole
+            });
+
             const responseModel: UserpassLoginResponse = {
                 rucioIdentity: request.username,
                 rucioAccount: dto.account,
@@ -79,6 +102,10 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             return;
         }
         if (dto.statusCode === 206) {
+            console.log('[LOGIN FLOW 13a] Multiple accounts detected', {
+                availableAccounts: dto.message
+            });
+
             const incompleteModel: UserpassLoginIncomplete = {
                 availableAccounts: dto.message,
             };
@@ -103,6 +130,12 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                 error_type = 'UNKNOWN_ERROR';
                 break;
         }
+        console.log('[LOGIN FLOW 13b] Error response', {
+            type: error_type,
+            message: dto.message,
+            statusCode: dto.statusCode
+        });
+
         const errorModel: UserpassLoginError = {
             type: error_type,
             message: dto.message,

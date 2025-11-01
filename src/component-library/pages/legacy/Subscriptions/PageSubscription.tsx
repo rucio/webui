@@ -9,7 +9,6 @@ import { SubscriptionStateTag } from '@/component-library/features/legacy/Tags/S
 import { Accordion } from '../../../atoms/legacy/Accordion/Accordion';
 import { Code } from '../../../atoms/legacy/text/content/Code/Code';
 import { PageSubscriptionJSONEditor } from './PageSubscriptionJSONEditor';
-import { SubscriptionFilter, SubscriptionReplicationRules } from '@/lib/core/entity/subscription';
 import { Heading } from '@/component-library/pages/legacy/Helpers/Heading';
 import { Body } from '@/component-library/pages/legacy/Helpers/Body';
 import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
@@ -118,13 +117,12 @@ export const PageSubscription = (props: PageSubscriptionPageProps) => {
                 <SubPage show={subpageIndex === 1} id="subpage-edit-subscription" aria-labelledby="tab-1" role="tabpanel">
                     <div className="flex flex-col space-y-2">
                         <Accordion name="Filter" className="p-1">
-                            <PageSubscriptionJSONEditor defaultString={meta.filter} submit={props.editFilter} schema={SubscriptionFilter} />
+                            <PageSubscriptionJSONEditor defaultString={meta.filter} submit={props.editFilter} />
                         </Accordion>
                         <Accordion name="Replication Rules" className="p-1">
                             <PageSubscriptionJSONEditor
                                 defaultString={meta.replication_rules}
                                 submit={props.editReplicationRules}
-                                schema={SubscriptionReplicationRules}
                             />
                         </Accordion>
                     </div>

@@ -26,6 +26,8 @@ export default [
       'test/**/*', // Test files (can be linted separately)
       'tools/**/*', // Build tools
       '.storybook/**/*', // Storybook config
+      '.claude/**/*',
+      'pages-api-backup/**/*', // Backup API files
     ],
   },
   js.configs.recommended,

@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
 import { inject, injectable } from 'inversify';
-import fetch, { Response } from 'node-fetch';
 import { PassThrough, Transform } from 'node:stream';
 import { HTTPRequest, prepareRequestArgs } from '@/lib/sdk/http';
 import { BytesToStringifiedJSONTransform, NewlineDelimittedDataParser } from '@/lib/sdk/stream-transformers';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
+import { webStreamToNodeStream } from '@/lib/infrastructure/adapters/streaming-adapter';
 
 @injectable()
 export default class StreamingGateway implements StreamGatewayOutputPort {
@@ -26,8 +26,9 @@ export default class StreamingGateway implements StreamGatewayOutputPort {
             return response;
         }
         const responseBody = response.body;
+        const nodeStream = webStreamToNodeStream(responseBody);
         const textStream = new PassThrough();
-        responseBody.pipe(this.convertChunkBytesToString).pipe(textStream);
+        nodeStream.pipe(this.convertChunkBytesToString).pipe(textStream);
         return Promise.resolve(textStream);
     }
 
@@ -43,11 +44,12 @@ export default class StreamingGateway implements StreamGatewayOutputPort {
         }
 
         const responseBody = response.body;
+        const nodeStream = webStreamToNodeStream(responseBody);
         const jsonStream = new PassThrough();
         if (ndjson) {
-            responseBody.pipe(new NewlineDelimittedDataParser()).pipe(jsonStream);
+            nodeStream.pipe(new NewlineDelimittedDataParser()).pipe(jsonStream);
         } else {
-            responseBody.pipe(new BytesToStringifiedJSONTransform({ objectMode: true })).pipe(jsonStream);
+            nodeStream.pipe(new BytesToStringifiedJSONTransform({ objectMode: true })).pipe(jsonStream);
         }
         return Promise.resolve({
             type: 'stream',

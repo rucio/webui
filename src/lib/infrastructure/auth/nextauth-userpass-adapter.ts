@@ -44,6 +44,14 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
     }
 
     async presentSuccess(response: UserpassLoginResponse): Promise<void> {
+        console.log('[LOGIN FLOW 14] Presenter presentSuccess called', {
+            rucioAccount: response.rucioAccount,
+            rucioIdentity: response.rucioIdentity,
+            vo: response.vo,
+            role: response.role,
+            tokenExpires: response.rucioAuthTokenExpires
+        });
+
         const sessionUser: SessionUser = {
             id: `${response.rucioAccount}@${response.vo}`, // Create unique ID from account and VO
             email: '', // Not used in Rucio authentication
@@ -64,11 +72,18 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
     }
 
     async presentError(error: UserpassLoginError): Promise<void> {
+        console.error('[LOGIN FLOW 15] Presenter presentError called', {
+            type: error.type,
+            message: error.message
+        });
         console.error('UserPass login error:', error);
         this.resolvePromise(null);
     }
 
     async presentIncomplete(incomplete: UserpassLoginIncomplete): Promise<void> {
+        console.log('[LOGIN FLOW 16] Presenter presentIncomplete called (multiple accounts)', {
+            availableAccounts: incomplete.availableAccounts
+        });
         // Handle multiple accounts scenario
         // Reject with a special error that contains the available accounts
         // The frontend can catch this and show the account selection modal
@@ -88,6 +103,12 @@ export async function authorizeUserPass(
     account: string,
     vo: string,
 ): Promise<SessionUser | null> {
+    console.log('[LOGIN FLOW 8] authorizeUserPass started', {
+        username,
+        account: account || '(none)',
+        vo
+    });
+
     return new Promise((resolve, reject) => {
         (async () => {
             try {
@@ -101,6 +122,8 @@ export async function authorizeUserPass(
 
                 // Create the use case directly with our presenter
                 const useCase = new UserPassLoginUseCase(presenter, rucioAuthServer, rucioAccountGateway, envConfigGateway);
+
+                console.log('[LOGIN FLOW 9] Executing UserPassLoginUseCase');
 
                 // Execute the use case (await it since it's async)
                 const requestModel: UserpassLoginRequest = {

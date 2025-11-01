@@ -2,8 +2,6 @@ import { StoryFn, Meta } from '@storybook/nextjs';
 import { fixtureSubscriptionViewModel } from '@/test/fixtures/table-fixtures';
 import { PageSubscriptionJSONEditor as P } from './PageSubscriptionJSONEditor';
 
-import { Type } from '@sinclair/typebox';
-
 export default {
     title: 'Components/Pages/Subscriptions',
     component: P,
@@ -11,17 +9,11 @@ export default {
 
 const Template: StoryFn<typeof P> = args => <P {...args} />;
 
-const FilterSchema = Type.Object({
-    scope: Type.Array(Type.String()),
-    project: Type.Array(Type.String()),
-    split_rule: Type.Optional(Type.Boolean()),
-});
-
 export const PageSubscriptionJSONEditor = Template.bind({});
 PageSubscriptionJSONEditor.args = {
     defaultString: fixtureSubscriptionViewModel().filter,
     submit: (json: string) => {
         console.log(json);
     },
-    schema: FilterSchema,
+    schemaDescription: 'Expected fields: scope (array of strings), project (array of strings), split_rule (optional boolean)',
 };

@@ -72,7 +72,7 @@ export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider): OAuthCo
             // Extract user info from OIDC profile response
             // This data will be available in the JWT callback as 'user' and 'profile'
             // The profile parameter in JWT callback will have the full OIDC claims
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
             return {
                 id: profile.sub, // Subject - unique user identifier
                 email: profile.email || '',

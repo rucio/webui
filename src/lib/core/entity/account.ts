@@ -1,6 +1,2 @@
 // account, identity and role related enums
-
-export enum Role {
-    ADMIN = 'Admin',
-    USER = 'User',
-}
+// Note: Role enum has been moved to auth-models.ts to avoid duplication

@@ -1,12 +1,10 @@
 import { Transform, TransformCallback } from 'stream';
 import { HTTPRequest, prepareRequestArgs } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import type StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import { BaseDTO, BaseStreamableDTO } from './dto';
-import fetch from 'node-fetch';
 import { BaseHttpErrorTypes } from './http';
 import { PassThrough } from 'node:stream';
 

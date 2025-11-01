@@ -37,6 +37,14 @@ function LoginContent() {
     }, [session]);
 
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
+        console.log('[LOGIN FLOW 1] handleUserpassSubmit called', {
+            username,
+            vo: vo.shortName,
+            account: account || '(none)',
+            redirectURL,
+            timestamp: new Date().toISOString()
+        });
+
         try {
             const result = await signIn('userpass', {
                 username: username,
@@ -46,10 +54,22 @@ function LoginContent() {
                 redirect: false,
             });
 
+            console.log('[LOGIN FLOW 2] signIn result received', {
+                ok: result?.ok,
+                error: result?.error,
+                status: result?.status,
+                url: result?.url
+            });
+
             if (result?.ok) {
+                console.log('[LOGIN FLOW 3] Login successful, redirecting to:', redirectURL);
                 // Login successful, redirect to dashboard
                 router.push(redirectURL);
             } else if (result?.error) {
+                console.log('[LOGIN FLOW 4] Login failed with error', {
+                    error: result.error,
+                    errorType: result.error === 'CredentialsSignin' ? 'CredentialsSignin' : 'Other'
+                });
                 // Check if it's a credentials error that might indicate multiple accounts
                 // NextAuth wraps errors from the authorize function as CredentialsSignin
                 if (result.error === 'CredentialsSignin') {

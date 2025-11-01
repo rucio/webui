@@ -40,11 +40,19 @@ export const authConfig: NextAuthConfig = {
                 vo: { label: 'VO', type: 'text' },
             },
             async authorize(credentials): Promise<User | null> {
+                console.log('[LOGIN FLOW 5] NextAuth authorize called', {
+                    username: credentials?.username,
+                    vo: credentials?.vo,
+                    account: credentials?.account || '(none)',
+                    hasPassword: !!credentials?.password
+                });
+
                 if (!credentials?.username || !credentials?.password || !credentials?.vo) {
                     return null;
                 }
 
                 try {
+                    console.log('[LOGIN FLOW 6] Calling authorizeUserPass adapter');
                     return await authorizeUserPass(
                         credentials.username as string,
                         credentials.password as string,
@@ -52,6 +60,11 @@ export const authConfig: NextAuthConfig = {
                         credentials.vo as string,
                     );
                 } catch (error) {
+                    console.log('[LOGIN FLOW 7] authorizeUserPass threw error', {
+                        errorName: error instanceof Error ? error.name : 'Unknown',
+                        isMultipleAccounts: error instanceof MultipleAccountsError,
+                        message: error instanceof Error ? error.message : String(error)
+                    });
                     // If it's a MultipleAccountsError, we need to handle it specially
                     if (error instanceof MultipleAccountsError) {
                         // NextAuth doesn't have a built-in way to return custom errors
@@ -98,6 +111,13 @@ export const authConfig: NextAuthConfig = {
          * This is called whenever a JWT is created or updated
          */
         async jwt({ token, user, account, profile, trigger, session }) {
+            console.log('[LOGIN FLOW 17] JWT callback triggered', {
+                hasUser: !!user,
+                accountType: account?.type,
+                trigger,
+                currentUserAccount: token.user?.rucioAccount
+            });
+
             // ==========================================
             // Handle OIDC Authentication (Dynamic Providers)
             // ==========================================
@@ -247,7 +267,15 @@ export const authConfig: NextAuthConfig = {
             // Handle UserPass/x509 Authentication (Existing)
             // ==========================================
             // On sign in: add or update the user in allUsers array
-            if (user && !account?.type) {
+            // Note: Credentials provider sets account.type to 'credentials'
+            if (user && (!account?.type || account?.type === 'credentials')) {
+                console.log('[LOGIN FLOW 18] Adding/updating user in JWT token', {
+                    rucioAccount: (user as SessionUser).rucioAccount,
+                    rucioAuthType: (user as SessionUser).rucioAuthType,
+                    isLoggedIn: (user as SessionUser).isLoggedIn,
+                    existingUsersCount: token.allUsers?.length || 0
+                });
+
                 // Initialize allUsers if it doesn't exist
                 if (!token.allUsers) {
                     token.allUsers = [];
@@ -299,6 +327,12 @@ export const authConfig: NextAuthConfig = {
          * This is called whenever getSession() or useSession() is used
          */
         async session({ session, token }) {
+            console.log('[LOGIN FLOW 19] Session callback triggered', {
+                hasTokenUser: !!token.user,
+                allUsersCount: token.allUsers?.length || 0,
+                activeAccount: token.user?.rucioAccount
+            });
+
             if (token.user) {
                 session.user = token.user;
             }
