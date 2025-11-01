@@ -23,7 +23,7 @@ export function NormalTable<T>(props: NormalTableProps<T>) {
         >
             <TableHeader table={table} tablestyling={props.tablestyling} />
             <TableBody table={table} tablestyling={props.tablestyling} />
-            <tfoot className={twMerge('h-8')} role="rowgroup" aria-label="NormalTable Footer">
+            <tfoot className={twMerge('h-8')} aria-label="NormalTable Footer">
                 <tr aria-label="Pagination Controls">
                     <td colSpan={table.getVisibleLeafColumns().length}>
                         <div className="flex flex-col items-center">

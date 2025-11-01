@@ -1,8 +1,10 @@
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { cn } from '@/component-library/utils';
 
+/**
+ * RSE Availability Badge - displays RSE operation status.
+ * Uses neutral variant as operations are informational, not status-based.
+ */
 export const RSEAvailabilityBadge = (props: { operation: string; className?: string }) => {
-    const classes = cn('bg-neutral-200 dark:bg-neutral-800', props.className);
-    return <Badge value={props.operation} className={classes} />;
+    return <Badge value={props.operation} variant="neutral" className={props.className} />;
 };

@@ -179,8 +179,23 @@ const ThemeSwitchButton = () => {
         }
     }, [resolvedTheme]);
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            updateTheme();
+        }
+    };
+
     return (
-        <div className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center hidden" onClick={updateTheme} ref={buttonRef}>
+        <div
+            className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center hidden"
+            onClick={updateTheme}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-label="Toggle theme"
+            ref={buttonRef}
+        >
             {isDarkMode ? <HiMoon className="h-6 w-6" /> : <HiSun className="h-6 w-6" />}
         </div>
     );

@@ -62,6 +62,14 @@ export function Dropdown<T>(props: DropdownProps<T>): React.ReactElement {
                 )}
             >
                 {keys.map((key, index) => {
+                    const handleKeyDown = (e: React.KeyboardEvent) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setActive(!isActive);
+                            setSelection(key);
+                        }
+                    };
+
                     return (
                         <div
                             key={index}
@@ -76,6 +84,10 @@ export function Dropdown<T>(props: DropdownProps<T>): React.ReactElement {
                                 setActive(!isActive);
                                 setSelection(key);
                             }}
+                            onKeyDown={handleKeyDown}
+                            role="option"
+                            aria-selected={selection === key}
+                            tabIndex={0}
                         >
                             {props.renderFunc(key)}
                         </div>

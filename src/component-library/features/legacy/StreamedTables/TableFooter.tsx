@@ -30,7 +30,7 @@ export function TableFooter<T>(props: TableFooterProps<T>) {
     const [showDetailedErrors, setShowDetailedErrors] = useState<boolean>(false);
 
     return (
-        <tfoot className={twMerge('h-8', className ?? '')} role="rowgroup" aria-label="Table Footer" {...otherprops}>
+        <tfoot className={twMerge('h-8', className ?? '')} aria-label="Table Footer" {...otherprops}>
             <tr aria-label="Extra Information">
                 <td
                     className={twMerge(props.breakout?.breakoutVisibility ? 'table-cell' : 'hidden')}

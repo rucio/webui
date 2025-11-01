@@ -12,7 +12,7 @@ export function TableBody<T>(
     const { className, ...otherprops } = props;
     const table = props.table;
     return (
-        <tbody role="rowgroup" aria-label="Table Body" className={twMerge(className ?? '')} {...otherprops}>
+        <tbody aria-label="Table Body" className={twMerge(className ?? '')} {...otherprops}>
             {table.getRowModel().rows.map(row => {
                 const selected = row.getIsSelected();
                 return (
