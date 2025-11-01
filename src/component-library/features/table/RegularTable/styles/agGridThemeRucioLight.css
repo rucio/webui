@@ -11,4 +11,8 @@
 	/* Equals to tailwind's neutral.700 */
 	--ag-header-text-color: var(--ag-inherited-header-text-color, #334155);
 	--ag-color-scheme: var(--ag-inherited-color-scheme, light);
+
+	/* Enhanced row borders - tailwind's neutral.200 for better visibility */
+	--ag-border-color: #e2e8f0;
+	--ag-row-border: solid 1px var(--ag-border-color);
 }

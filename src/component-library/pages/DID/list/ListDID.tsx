@@ -114,21 +114,30 @@ export const ListDID = (props: ListDIDProps) => {
     }, [metaError]);
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="DIDs" />
-            <DIDSearchPanel
-                isRunning={streamingHook.status === StreamingStatus.RUNNING}
-                startStreaming={startStreaming}
-                stopStreaming={stopStreaming}
-                initialPattern={props.firstPattern}
-                autoSearch={props.autoSearch}
-                initialType={props.initialType}
-            />
-            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3 grow">
-                <div className="flex flex-col md:flex-1">
+        <div className="flex flex-col space-y-6 w-full">
+            {/* Search Panel */}
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+                <DIDSearchPanel
+                    isRunning={streamingHook.status === StreamingStatus.RUNNING}
+                    startStreaming={startStreaming}
+                    stopStreaming={stopStreaming}
+                    initialPattern={props.firstPattern}
+                    autoSearch={props.autoSearch}
+                    initialType={props.initialType}
+                />
+            </div>
+
+            {/* Results Section */}
+            <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-20rem)]">
+                {/* Table */}
+                <div className="flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-full">
                     <ListDIDTable streamingHook={streamingHook} onSelectionChanged={onSelectionChanged} onGridReady={onGridReady} />
                 </div>
-                <ListDIDMeta meta={meta} isLoading={isMetaFetching} hasError={metaError !== null} />
+
+                {/* Metadata Panel */}
+                <div className="w-full lg:w-96 shrink-0 h-full">
+                    <ListDIDMeta meta={meta} isLoading={isMetaFetching} hasError={metaError !== null} />
+                </div>
             </div>
         </div>
     );

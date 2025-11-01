@@ -3,8 +3,8 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
-import { Heading } from '@/component-library/atoms/misc/Heading';
 import { Input } from '@/component-library/atoms/form/input';
+import { DateInput } from '@/component-library/atoms/legacy/input/DateInput/DateInput';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { ListRuleTable } from '@/component-library/pages/Rule/list/ListRuleTable';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
@@ -89,7 +89,7 @@ const AccountInput = ({ value, onChange, onSearch, onFilterToggle, isFilterExpan
 function FilterField({ children, label }: { children: React.ReactNode; label: string }) {
     return (
         <div className="grow flex-1">
-            <div className="text-neutral-900 dark:text-neutral-100 mb-2">{label}</div>
+            <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">{label}</label>
             {children}
         </div>
     );
@@ -117,24 +117,18 @@ const FilterInputs = ({ filters, onFiltersChange }: FilterInputsProps) => {
         onFiltersChange({ name: event.target.value });
     };
 
-    const formatDate = (date?: Date): string => {
-        if (!date) return '';
-        return date.toISOString().split('T')[0];
+    const onUpdatedAfterChange = (date: Date) => {
+        onFiltersChange({ updatedAfter: date });
     };
 
-    const onDateChange = (event: FormEvent<HTMLInputElement>, dateType: 'updatedAfter' | 'updatedBefore') => {
-        const date = new Date(event.currentTarget.value);
-        if (isNaN(date.getTime())) {
-            onFiltersChange({ [dateType]: undefined });
-            return;
-        }
-        onFiltersChange({ [dateType]: date });
+    const onUpdatedBeforeChange = (date: Date) => {
+        onFiltersChange({ updatedBefore: date });
     };
 
-    const rootClass = 'flex flex-col sm:flex-row sm:items-center w-full space-y-2 sm:space-y-0 sm:space-x-2';
+    const rootClass = 'flex flex-col sm:flex-row w-full gap-4';
 
     return (
-        <>
+        <div className="rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6 space-y-6">
             <div className={rootClass}>
                 <FilterField label="Activity">
                     <Input className="w-full" value={filters.activity} onChange={onActivityChange} placeholder="Any Activity" />
@@ -174,25 +168,21 @@ const FilterInputs = ({ filters, onFiltersChange }: FilterInputsProps) => {
             </div>
             <div className={rootClass}>
                 <FilterField label="Updated After">
-                    <Input
-                        type="date"
-                        value={formatDate(filters.updatedAfter)}
-                        onInput={event => {
-                            onDateChange(event, 'updatedAfter');
-                        }}
+                    <DateInput
+                        onchange={onUpdatedAfterChange}
+                        initialdate={filters.updatedAfter}
+                        placeholder="Select date"
                     />
                 </FilterField>
                 <FilterField label="Updated Before">
-                    <Input
-                        type="date"
-                        value={formatDate(filters.updatedBefore)}
-                        onInput={event => {
-                            onDateChange(event, 'updatedBefore');
-                        }}
+                    <DateInput
+                        onchange={onUpdatedBeforeChange}
+                        initialdate={filters.updatedBefore}
+                        placeholder="Select date"
                     />
                 </FilterField>
             </div>
-        </>
+        </div>
     );
 };
 
@@ -204,20 +194,23 @@ const SearchForm = ({ filters, onFiltersChange, onSearch, onStop, isRunning }: S
     };
 
     return (
-        <div className="space-y-2">
-            <div className="text-neutral-900 dark:text-neutral-100">Account</div>
-            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-center sm:items-start">
-                <div className="flex flex-col w-full space-y-2">
-                    <AccountInput
-                        value={filters.account}
-                        onChange={(account: string) => onFiltersChange({ account })}
-                        onSearch={onSearch}
-                        onFilterToggle={handleFilterToggle}
-                        isFilterExpanded={isFilterExpanded}
-                    />
-                    {isFilterExpanded && <FilterInputs filters={filters} onFiltersChange={onFiltersChange} />}
+        <div className="flex flex-col space-y-6 w-full">
+            {/* Search Panel */}
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+                <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">Account</label>
+                <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-2 items-start">
+                    <div className="flex flex-col w-full space-y-4">
+                        <AccountInput
+                            value={filters.account}
+                            onChange={(account: string) => onFiltersChange({ account })}
+                            onSearch={onSearch}
+                            onFilterToggle={handleFilterToggle}
+                            isFilterExpanded={isFilterExpanded}
+                        />
+                        {isFilterExpanded && <FilterInputs filters={filters} onFiltersChange={onFiltersChange} />}
+                    </div>
+                    <SearchButton className="sm:w-48" isRunning={isRunning} onStop={onStop} onSearch={onSearch} />
                 </div>
-                <SearchButton isRunning={isRunning} onStop={onStop} onSearch={onSearch} />
             </div>
         </div>
     );
@@ -299,8 +292,7 @@ export const ListRule = (props: ListRuleProps) => {
     };
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="Rules" />
+        <div className="flex flex-col space-y-6 w-full">
             <SearchForm
                 filters={filters}
                 onFiltersChange={handleFiltersChange}
@@ -308,7 +300,11 @@ export const ListRule = (props: ListRuleProps) => {
                 onStop={onStop}
                 isRunning={streamingHook.status === StreamingStatus.RUNNING}
             />
-            <ListRuleTable streamingHook={streamingHook} onGridReady={onGridReady} />
+
+            {/* Results Section */}
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-24rem)]">
+                <ListRuleTable streamingHook={streamingHook} onGridReady={onGridReady} />
+            </div>
         </div>
     );
 };
