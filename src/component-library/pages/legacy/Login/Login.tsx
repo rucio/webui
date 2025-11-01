@@ -1,15 +1,15 @@
+'use client';
+
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
 import { Button } from '../../../atoms/legacy/Button/Button';
 import { Tabs } from '../../../atoms/legacy/Tabs/Tabs';
 import { H1 } from '../../../atoms/legacy/text/headings/H1/H1';
-import { Collapsible } from '../../../atoms/legacy/helpers/Collapsible/Collapsible';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 import { MdAccountCircle } from 'react-icons/md';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 import { Alert } from '../../../atoms/legacy/Alert/Alert';
-import { LabelledInput } from './LabelledInput';
 import { DefaultVO } from '@/lib/core/entity/auth-models';
 import Modal from 'react-modal';
 import { Dropdown } from '../../../atoms/legacy/input/Dropdown/Dropdown';
@@ -17,8 +17,12 @@ import { H2 } from '../../../atoms/legacy/text/headings/H2/H2';
 import { P } from '../../../atoms/legacy/text/content/P/P';
 import { HiArrowRight } from 'react-icons/hi';
 import Link from 'next/link';
-import Image from 'next/image';
-import { motion } from 'motion/react';
+import { motion, MotionConfig, AnimatePresence } from 'motion/react';
+import { RucioLogo } from '../../../atoms/branding/RucioLogo';
+import { AnimatedTabs } from '../../../atoms/tabs/AnimatedTabs';
+import { Input } from '../../../atoms/form/input';
+import { cn } from '@/component-library/utils';
+import { HiArrowLeft } from 'react-icons/hi';
 
 const BackToDashboardButton = (props: { account: string }) => {
     return (
@@ -94,6 +98,8 @@ const MultipleAccountsModal = ({ submit, availableAccounts, onClose }: MultipleA
     );
 };
 
+type LoginView = 'method-selection' | 'userpass-form';
+
 export const Login = ({
     loginViewModel,
     authViewModel,
@@ -103,7 +109,7 @@ export const Login = ({
     oidcSubmitHandler: handleOIDCSubmit,
 }: LoginPageProps) => {
     const isLoggedIn = loginViewModel.isLoggedIn && loginViewModel.accountActive !== undefined;
-    const [showUserPassLoginForm, setShowUserPassLoginForm] = useState<boolean>(false);
+    const [currentView, setCurrentView] = useState<LoginView>('method-selection');
 
     const [selectedVOTab, setSelectedVOTab] = useState<number>(0);
 
@@ -112,6 +118,12 @@ export const Login = ({
     const [inputAccount, setInputAccount] = useState<string | undefined>(undefined);
 
     const [error, setError] = useState<string | undefined>(undefined);
+    const [fieldErrors, setFieldErrors] = useState<{
+        username?: string;
+        password?: string;
+        account?: string;
+    }>({});
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const [availableAccounts, setAvailableAccounts] = useState<string[]>([]);
     const [lastAuthMethod, setLastAuthMethod] = useState<'userpass' | 'x509' | undefined>(undefined);
@@ -146,14 +158,43 @@ export const Login = ({
         handleX509Session(x509AuthViewModel, x509AuthViewModel.rucioAccount, vo.shortName);
     };
 
+    const validateUserPassForm = (): boolean => {
+        const errors: { username?: string; password?: string } = {};
+
+        if (!username.trim()) {
+            errors.username = 'Username is required';
+        }
+
+        if (!password.trim()) {
+            errors.password = 'Password is required';
+        }
+
+        setFieldErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
     const submitUserPass = async (account: string | undefined) => {
+        // Clear previous errors
+        setError(undefined);
+        setFieldErrors({});
+
+        // Validate form
+        if (!validateUserPassForm()) {
+            return;
+        }
+
         if (account && loginViewModel.accountsAvailable?.includes(account)) {
             setError(`Already authenticated as ${account}`);
             return;
         }
 
-        handleUserPassSubmit(username, password, loginViewModel.voList[selectedVOTab], account);
-        setLastAuthMethod('userpass');
+        setIsSubmitting(true);
+        try {
+            handleUserPassSubmit(username, password, loginViewModel.voList[selectedVOTab], account);
+            setLastAuthMethod('userpass');
+        } finally {
+            setIsSubmitting(false);
+        }
         return Promise.resolve();
     };
 
@@ -165,25 +206,313 @@ export const Login = ({
         }
     }, [loginViewModel, authViewModel]);
 
+    // Respect user's motion preferences
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const logoVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+        hidden: prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.8 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' },
+        },
     };
 
     const formVariants = {
-        hidden: { opacity: 0, scale: 1.5 },
-        visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+        hidden: prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 1.5 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' },
+        },
+    };
+
+    // View transition variants - slide and fade
+    const viewTransitionVariants = {
+        enter: (direction: number) => ({
+            x: prefersReducedMotion ? 0 : direction > 0 ? 300 : -300,
+            opacity: prefersReducedMotion ? 1 : 0,
+        }),
+        center: {
+            x: 0,
+            opacity: 1,
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeInOut' },
+        },
+        exit: (direction: number) => ({
+            x: prefersReducedMotion ? 0 : direction < 0 ? 300 : -300,
+            opacity: prefersReducedMotion ? 1 : 0,
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeInOut' },
+        }),
+    };
+
+    // Render method selection view
+    const renderMethodSelection = () => {
+        return (
+            <motion.div
+                key="method-selection"
+                custom={-1}
+                variants={viewTransitionVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="w-full"
+            >
+                {/* VO Tabs with animated indicator */}
+                {loginViewModel.multiVOEnabled && (
+                    <div className="mb-4">
+                        <AnimatedTabs
+                            tabs={loginViewModel.voList.map(vo => vo.name)}
+                            activeIndex={selectedVOTab}
+                            onTabChange={(index: number) => setSelectedVOTab(index)}
+                            ariaLabel="Select Virtual Organisation"
+                        />
+                    </div>
+                )}
+
+                {/* Login Method Buttons */}
+                <div className="flex justify-center flex-col space-y-4 mt-4" aria-label="Choose Login Method">
+                    {/* OIDC Buttons */}
+                    {loginViewModel.oidcEnabled == true ? (
+                        <div
+                            className={twMerge(
+                                'flex flex-row justify-center space-x-2',
+                                loginViewModel.voList[selectedVOTab].oidcEnabled ? '' : 'hidden',
+                            )}
+                            aria-label="OIDC Login Buttons"
+                        >
+                            {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
+                                return (
+                                    <Button
+                                        theme="orange"
+                                        label={provider.name}
+                                        key={index.toString()}
+                                        icon={<MdAccountCircle />}
+                                        onClick={() => handleOIDCSubmit(provider, loginViewModel.voList[selectedVOTab], inputAccount)}
+                                    />
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+
+                    {/* x509 Button */}
+                    <Button label="x509" onClick={() => submitX509(inputAccount)} />
+
+                    {/* Userpass Button - now switches view */}
+                    {loginViewModel.userpassEnabled && (
+                        <Button
+                            label="Userpass"
+                            onClick={() => {
+                                setError(undefined);
+                                setFieldErrors({});
+                                setCurrentView('userpass-form');
+                            }}
+                        />
+                    )}
+
+                    {/* Account input for non-userpass methods */}
+                    {!loginViewModel.userpassEnabled && (
+                        <div className="space-y-2 px-2">
+                            <label
+                                htmlFor="account-input-nouserpass"
+                                className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
+                            >
+                                Account <span className="text-neutral-500">(optional)</span>
+                            </label>
+                            <Input
+                                id="account-input-nouserpass"
+                                type="text"
+                                value={inputAccount || ''}
+                                onChange={(e) => setInputAccount(e.target.value || undefined)}
+                                placeholder="Enter account name"
+                                className="w-full"
+                            />
+                        </div>
+                    )}
+                </div>
+            </motion.div>
+        );
+    };
+
+    // Render userpass form view
+    const renderUserPassForm = () => {
+        return (
+            <motion.div
+                key="userpass-form"
+                custom={1}
+                variants={viewTransitionVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="w-full"
+            >
+                {/* Back Button */}
+                <div className="mb-4">
+                    <button
+                        onClick={() => {
+                            setError(undefined);
+                            setFieldErrors({});
+                            setCurrentView('method-selection');
+                        }}
+                        className={cn(
+                            'flex items-center gap-2',
+                            'text-sm text-neutral-700 dark:text-neutral-300',
+                            'hover:text-neutral-900 dark:hover:text-neutral-100',
+                            'transition-colors',
+                            'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                            'rounded px-2 py-1'
+                        )}
+                        aria-label="Back to login methods"
+                    >
+                        <HiArrowLeft className="w-4 h-4" />
+                        <span>Back</span>
+                    </button>
+                </div>
+
+                {/* Userpass Form with shake animation on error */}
+                <motion.form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        submitUserPass(inputAccount);
+                    }}
+                    animate={
+                        fieldErrors.username || fieldErrors.password
+                            ? prefersReducedMotion
+                                ? {}
+                                : { x: [0, -10, 10, -10, 10, 0] }
+                            : {}
+                    }
+                    transition={{ duration: 0.4 }}
+                >
+                    <fieldset
+                        className="flex flex-col space-y-4"
+                        aria-label="Userpass Login Fields"
+                        id="userpass-form"
+                    >
+                        <div className="flex flex-col space-y-4">
+                            {/* Username field with inline error */}
+                            <div className="space-y-2">
+                                <label
+                                    htmlFor="username-input"
+                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
+                                >
+                                    Username
+                                </label>
+                                <Input
+                                    id="username-input"
+                                    type="text"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    error={Boolean(fieldErrors.username)}
+                                    aria-describedby={fieldErrors.username ? 'username-error' : undefined}
+                                    aria-invalid={Boolean(fieldErrors.username)}
+                                    disabled={isSubmitting}
+                                    placeholder="Enter your username"
+                                    onEnterKey={() => submitUserPass(inputAccount)}
+                                    className="w-full"
+                                    autoFocus
+                                />
+                                {/* Reserved space for error message - prevents layout shift */}
+                                <div className="min-h-[20px]">
+                                    {fieldErrors.username && (
+                                        <p id="username-error" className="text-sm text-base-error-600 dark:text-base-error-500">
+                                            {fieldErrors.username}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Password field with inline error */}
+                            <div className="space-y-2">
+                                <label
+                                    htmlFor="password-input"
+                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
+                                >
+                                    Password
+                                </label>
+                                <Input
+                                    id="password-input"
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    error={Boolean(fieldErrors.password)}
+                                    aria-describedby={fieldErrors.password ? 'password-error' : undefined}
+                                    aria-invalid={Boolean(fieldErrors.password)}
+                                    disabled={isSubmitting}
+                                    placeholder="Enter your password"
+                                    onEnterKey={() => submitUserPass(inputAccount)}
+                                    className="w-full"
+                                />
+                                {/* Reserved space for error message */}
+                                <div className="min-h-[20px]">
+                                    {fieldErrors.password && (
+                                        <p id="password-error" className="text-sm text-base-error-600 dark:text-base-error-500">
+                                            {fieldErrors.password}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Account field (optional) */}
+                            <div className="space-y-2">
+                                <label
+                                    htmlFor="account-input"
+                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
+                                >
+                                    Account <span className="text-neutral-500">(optional)</span>
+                                </label>
+                                <Input
+                                    id="account-input"
+                                    type="text"
+                                    value={inputAccount || ''}
+                                    onChange={(e) => setInputAccount(e.target.value || undefined)}
+                                    disabled={isSubmitting}
+                                    placeholder="Enter account name"
+                                    onEnterKey={() => submitUserPass(inputAccount)}
+                                    className="w-full"
+                                />
+                            </div>
+                        </div>
+
+                        <Button
+                            label={isSubmitting ? "Signing in..." : "Login"}
+                            type="submit"
+                            role="button"
+                            onClick={() => submitUserPass(inputAccount)}
+                            disabled={isSubmitting}
+                        />
+                    </fieldset>
+                </motion.form>
+            </motion.div>
+        );
     };
 
     const getLoginForm = () => {
         return (
-            <motion.div initial="hidden" animate="visible" variants={formVariants}>
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={formVariants}
+                className="flex items-center justify-center min-h-screen py-8"
+            >
+                <div>
+                    {/* Back to Dashboard Button - now part of animated content */}
+                    {isLoggedIn && (
+                        <div className="mb-4">
+                            <BackToDashboardButton account={loginViewModel.accountActive!} />
+                        </div>
+                    )}
+
                 <div
                     className={twMerge(
                         'flex flex-col items-center justify-between',
-                        'border dark:border-2 rounded-xl p-6 flex flex-col justify-center space-y-4',
+                        'border dark:border-2 rounded-xl p-4 md:p-6 flex flex-col justify-center space-y-4',
                         'border-neutral-300 dark:border-neutral-700',
-                        'bg-neutral-50 dark:bg-neutral-900',
+                        'bg-neutral-50/90 dark:bg-neutral-900/90',
+                        'backdrop-blur-xl',
+                        'w-[90vw] md:w-[480px] mx-auto',
+                        'shadow-xl',
                     )}
                     id="root"
                 >
@@ -192,131 +521,49 @@ export const Login = ({
                         availableAccounts={availableAccounts}
                         onClose={() => setAvailableAccounts([])}
                     />
-                    <Collapsible id="login-page-error" showIf={error !== undefined}>
-                        <Alert
-                            variant="error"
-                            message={error}
-                            onClose={() => {
-                                setError(undefined);
-                            }}
-                        />
-                    </Collapsible>
-                    <div className="flex flex-col items-center justify-between w-64 text-center text-neutral-1000 dark:text-neutral-0">
+                    {/* Form-level error message with reserved space - no card flexing */}
+                    <div className="min-h-[52px] w-full" role="alert" aria-live="polite" aria-atomic="true">
+                        {error && (
+                            <motion.div
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
+                                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeInOut' }}
+                            >
+                                <Alert
+                                    variant="error"
+                                    message={error}
+                                    onClose={() => {
+                                        setError(undefined);
+                                    }}
+                                />
+                            </motion.div>
+                        )}
+                    </div>
+
+                    {/* Theme-aware logo - responsive sizing */}
+                    <div className="flex flex-col items-center justify-between w-full text-center">
                         <motion.div initial="hidden" animate="visible" variants={logoVariants}>
-                            <Image src="/rucio-logo.png" alt="Rucio Logo" width={146} height={176} />
+                            <RucioLogo
+                                className="text-neutral-900 dark:text-neutral-100"
+                                width={120}
+                                height={120}
+                                aria-label="Rucio Logo"
+                            />
                         </motion.div>
                     </div>
 
-                    <div
-                        className="flex flex-col space-y-4"
-                        onSubmit={e => {
-                            e.preventDefault();
-                        }} // TODO handle proper submit!
-                    >
-                        <Tabs
-                            tabs={loginViewModel.voList.map(vo => vo.name)}
-                            active={1}
-                            updateActive={(active: number) => {
-                                setSelectedVOTab(active);
-                            }}
-                            className={twMerge(loginViewModel.multiVOEnabled ? '' : 'hidden')}
-                        />
-
-                        <div className="flex justify-center flex-col space-y-4" aria-label="Choose Login Method">
-                            {loginViewModel.oidcEnabled == true ? (
-                                <div
-                                    className={twMerge(
-                                        'flex flex-row justify-center space-x-2',
-                                        loginViewModel.voList[selectedVOTab].oidcEnabled ? '' : 'hidden',
-                                    )}
-                                    aria-label="OIDC Login Buttons"
-                                >
-                                    {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
-                                        return (
-                                            <Button
-                                                theme="orange"
-                                                label={provider.name}
-                                                key={index.toString()}
-                                                icon={<MdAccountCircle />}
-                                                onClick={() => handleOIDCSubmit(provider, loginViewModel.voList[selectedVOTab], inputAccount)}
-                                            />
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <></>
-                            )}
-
-                            <Button label="x509" onClick={() => submitX509(inputAccount)} />
-                            {loginViewModel.userpassEnabled && (
-                                <div id="userpass-login">
-                                    <Button
-                                        label="Userpass"
-                                        onClick={() => {
-                                            setShowUserPassLoginForm(!showUserPassLoginForm);
-                                        }}
-                                    />
-                                    <form>
-                                        <fieldset
-                                            className={twMerge('flex flex-col space-y-4', 'mx-2 md:mx-10', showUserPassLoginForm ? '' : 'hidden')}
-                                            aria-label="Userpass Login Fields"
-                                            id="userpass-form"
-                                        >
-                                            <div className={twMerge('flex flex-col space-y-2 p-2')}>
-                                                <LabelledInput
-                                                    label="Username"
-                                                    idinput="username-input"
-                                                    updateFunc={(data: string) => {
-                                                        setUsername(data);
-                                                    }}
-                                                />
-                                                <LabelledInput
-                                                    label="Password"
-                                                    idinput="password-input"
-                                                    updateFunc={(data: string) => {
-                                                        setPassword(data);
-                                                    }}
-                                                    password={true}
-                                                />
-                                                <LabelledInput
-                                                    label="Account"
-                                                    idinput="account-input"
-                                                    updateFunc={(data: string) => {
-                                                        setInputAccount(data);
-                                                    }}
-                                                />
-                                            </div>
-                                            <Button label="Login" type="submit" role="button" onClick={() => submitUserPass(inputAccount)} />
-                                        </fieldset>
-                                    </form>
-                                    <fieldset
-                                        className={twMerge('mx-2 md:mx-10 p-4', !showUserPassLoginForm ? 'block' : 'hidden')}
-                                        aria-label="Choose Account Name"
-                                        id="all-accounts"
-                                    >
-                                        <LabelledInput
-                                            label="Account"
-                                            idinput="account-input-nouserpass"
-                                            updateFunc={(data: string) => {
-                                                setInputAccount(data);
-                                            }}
-                                        />
-                                    </fieldset>
-                                </div>
-                            )}
-                        </div>
+                    {/* Animated view transitions */}
+                    <div className="w-full overflow-hidden">
+                        <AnimatePresence mode="wait" custom={currentView === 'userpass-form' ? 1 : -1}>
+                            {currentView === 'method-selection' ? renderMethodSelection() : renderUserPassForm()}
+                        </AnimatePresence>
                     </div>
+                </div>
                 </div>
             </motion.div>
         );
     };
 
-    return isLoggedIn ? (
-        <div>
-            <BackToDashboardButton account={loginViewModel.accountActive!} />
-            {getLoginForm()}
-        </div>
-    ) : (
-        getLoginForm()
-    );
+    return getLoginForm();
 };

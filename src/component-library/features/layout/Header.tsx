@@ -54,7 +54,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
     };
 
     return (
-        <div className="hidden nav:flex items-center space-x-8">
+        <nav className="hidden nav:flex items-center space-x-8" aria-label="Main navigation">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
                 const classes = `hover:text-brand-500 peer ${item.path === pathname && 'text-brand-500 font-semibold'}`;
@@ -65,14 +65,14 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
                         <div key={key} className="relative group">
                             <div className={classes}>
                                 <span>{item.title}</span>
-                                <HiChevronDown className="inline pl-1 h-5 w-5" />
+                                <HiChevronDown className="inline pl-1 h-5 w-5" aria-hidden="true" />
                             </div>
                             {item.children && getItemChildren(item.children)}
                         </div>
                     );
                 }
             })}
-        </div>
+        </nav>
     );
 };
 
@@ -85,13 +85,20 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
             <button
                 className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
                 onClick={() => setIsMenuOpen(prevState => !prevState)}
+                aria-label="Toggle mobile menu"
+                aria-expanded={isMenuOpen}
+                aria-controls="mobile-menu"
             >
                 <HiMenu className="h-5 w-5" />
             </button>
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-neutral-1000 bg-opacity-50 z-50">
-                    <div className="fixed inset-0 bg-neutral-0 dark:bg-neutral-900 p-6 overflow-y-auto flex flex-col space-y-6">
-                        <button onClick={() => setIsMenuOpen(false)} className="self-end p-2 focus:outline-none">
+                <div className="fixed inset-0 bg-neutral-1000 bg-opacity-50 z-50" role="dialog" aria-modal="true">
+                    <div id="mobile-menu" className="fixed inset-0 bg-neutral-0 dark:bg-neutral-900 p-6 overflow-y-auto flex flex-col space-y-6">
+                        <button
+                            onClick={() => setIsMenuOpen(false)}
+                            className="self-end p-2 focus:outline-none"
+                            aria-label="Close mobile menu"
+                        >
                             <HiX className="h-5 w-5" />
                         </button>
 
@@ -99,7 +106,7 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                             <Searchbar />
                         </div>
 
-                        <nav className="flex flex-col items-center justify-center space-y-4">
+                        <nav className="flex flex-col items-center justify-center space-y-4" aria-label="Mobile navigation">
                             {menuItems.map(item => {
                                 if (item.path) {
                                     return <MenuItem key={item.path} item={item} pathname={pathname} onClick={() => setIsMenuOpen(false)} />;
@@ -203,15 +210,26 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
     };
 
     return (
-        <header
-            className={cn(
-                'h-14 z-[100]',
-                'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
-                'p-2 flex flex-row justify-between items-center',
-                'text-neutral-900 dark:text-neutral-100',
-            )}
-        >
-            {getContent()}
-        </header>
+        <>
+            {/* Skip to main content link for accessibility */}
+            <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded focus:shadow-lg"
+            >
+                Skip to main content
+            </a>
+
+            <header
+                role="banner"
+                className={cn(
+                    'h-14 z-[100]',
+                    'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                    'p-2 flex flex-row justify-between items-center',
+                    'text-neutral-900 dark:text-neutral-100',
+                )}
+            >
+                {getContent()}
+            </header>
+        </>
     );
 };
