@@ -12,6 +12,7 @@ import { AccountButton, AccountDropdown } from '@/component-library/features/lay
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { WarningField } from '@/component-library/features/fields/WarningField';
+import { motion } from 'framer-motion';
 
 type TMenuItem = {
     title: string;
@@ -23,9 +24,10 @@ type TFullMenuItem = TMenuItem & {
 };
 
 const MenuItem = ({ item, pathname, onClick }: { item: TMenuItem; pathname: string | null; onClick?: () => void }) => {
-    const classes = `hover:text-brand-500 ${item.path === pathname && 'text-brand-500 font-semibold'}`;
+    const isActive = item.path === pathname;
+    const classes = `hover:text-brand-500 transition-colors duration-150 ${isActive && 'text-brand-500 font-semibold'}`;
     return (
-        <Link href={item.path ?? '/'} className={classes} onClick={onClick}>
+        <Link href={item.path ?? '/'} className={cn(classes, 'relative')} onClick={onClick}>
             {item.title}
         </Link>
     );
@@ -53,21 +55,57 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
         );
     };
 
+    // Check if any child of a menu item is active (for Rules dropdown)
+    const isChildActive = (item: TFullMenuItem) => {
+        if (!item.children) return false;
+        return item.children.some(child => child.path === pathname);
+    };
+
     return (
-        <nav className="hidden nav:flex items-center space-x-8" aria-label="Main navigation">
+        <nav className="hidden nav:flex items-center space-x-8 relative" aria-label="Main navigation">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
-                const classes = `hover:text-brand-500 peer ${item.path === pathname && 'text-brand-500 font-semibold'}`;
+                const isActive = item.path === pathname || isChildActive(item);
+                const classes = `hover:text-brand-500 transition-colors duration-150 ${isActive && 'text-brand-500 font-semibold'}`;
+
                 if (item.path) {
-                    return <MenuItem key={item.path} item={item} pathname={pathname} />;
+                    return (
+                        <div key={item.path} className="relative">
+                            <MenuItem item={item} pathname={pathname} />
+                            {isActive && (
+                                <motion.div
+                                    layoutId="desktop-nav-underline"
+                                    className="absolute -bottom-2 left-0 right-0 h-0.5 bg-brand-500"
+                                    initial={false}
+                                    transition={{
+                                        type: 'spring',
+                                        stiffness: 380,
+                                        damping: 30,
+                                    }}
+                                />
+                            )}
+                        </div>
+                    );
                 } else {
                     return (
                         <div key={key} className="relative group">
-                            <div className={classes}>
+                            <div className={cn(classes, 'cursor-pointer')}>
                                 <span>{item.title}</span>
                                 <HiChevronDown className="inline pl-1 h-5 w-5" aria-hidden="true" />
                             </div>
                             {item.children && getItemChildren(item.children)}
+                            {isActive && (
+                                <motion.div
+                                    layoutId="desktop-nav-underline"
+                                    className="absolute -bottom-2 left-0 right-0 h-0.5 bg-brand-500"
+                                    initial={false}
+                                    transition={{
+                                        type: 'spring',
+                                        stiffness: 380,
+                                        damping: 30,
+                                    }}
+                                />
+                            )}
                         </div>
                     );
                 }
@@ -173,6 +211,12 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
     const logoPath = resolvedTheme === 'dark' ? '/logo_dark.svg' : '/logo_light.svg';
     const logoSize = 36;
 
+    // Gradient overlay for depth effect - subtle fade from top to bottom
+    const gradientOverlay =
+        resolvedTheme === 'dark'
+            ? 'linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 100%)'
+            : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%)';
+
     const getContent = () => {
         if (isSiteHeaderFetching) {
             return <LoadingSpinner />;
@@ -222,13 +266,22 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
             <header
                 role="banner"
                 className={cn(
-                    'h-14 z-[100]',
-                    'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                    'sticky top-0 h-14 z-10 relative',
+                    'bg-neutral-0/95 dark:bg-neutral-900/95 backdrop-blur-lg',
+                    'border-b border-neutral-200 dark:border-neutral-800',
                     'p-2 flex flex-row justify-between items-center',
                     'text-neutral-900 dark:text-neutral-100',
+                    'shadow-md dark:shadow-xl',
                 )}
             >
-                {getContent()}
+                {/* Gradient overlay for depth - fades from top to bottom */}
+                <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                        background: gradientOverlay,
+                    }}
+                />
+                <div className="relative z-10 flex flex-row justify-between items-center w-full">{getContent()}</div>
             </header>
         </>
     );
