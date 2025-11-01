@@ -3,7 +3,7 @@ import { cn } from '@/component-library/utils';
 import { Field } from '@/component-library/atoms/misc/Field';
 import { formatDate, formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { Divider } from '@/component-library/atoms/misc/Divider';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { DIDType } from '@/lib/core/entity/rucio';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { CopyableField } from '@/component-library/features/fields/CopyableField';

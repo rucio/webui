@@ -22,7 +22,7 @@ export interface LoadingPageProps {
      * Size of the loading spinner
      * @default "xl"
      */
-    spinnerSize?: 'sm' | 'default' | 'md' | 'lg' | 'xl';
+    spinnerSize?: 'sm' | 'md' | 'lg' | 'xl';
     /**
      * Whether to show animated orbit effects
      * @default true

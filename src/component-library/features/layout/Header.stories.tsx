@@ -79,7 +79,7 @@ export const Loading: Story = {
 export const Error: Story = {
     args: {
         siteHeader: undefined,
-        siteHeaderError: new Error('Failed to fetch header data'),
+        siteHeaderError: new globalThis.Error('Failed to fetch header data'),
         isSiteHeaderFetching: false,
     },
 };

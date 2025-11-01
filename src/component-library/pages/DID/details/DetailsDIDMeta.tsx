@@ -7,7 +7,7 @@ import { CopyableField } from '@/component-library/features/fields/CopyableField
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { DIDAvailabilityBadge } from '@/component-library/features/badges/DID/DIDAvailabilityBadge';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { DIDType } from '@/lib/core/entity/rucio';
 
 export const DetailsDIDMeta = ({ meta }: { meta: DIDMetaViewModel }) => {

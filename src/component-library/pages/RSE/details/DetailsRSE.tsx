@@ -9,7 +9,7 @@ import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { RSEAvailabilityBadge } from '@/component-library/features/badges/RSE/RSEAvailabilityBadge';
 import { DetailsRSEProtocolsTable } from '@/component-library/pages/RSE/details/DetailsRSEProtocolsTable';
 import { DetailsRSEAttributesTable } from '@/component-library/pages/RSE/details/DetailsRSEAttributesTable';

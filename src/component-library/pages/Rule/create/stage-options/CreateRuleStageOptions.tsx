@@ -5,7 +5,7 @@ import { Input, Textarea } from '@/component-library/atoms/form/input';
 import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
 import { WarningField } from '@/component-library/features/fields/WarningField';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component-library/atoms/misc/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component-library/atoms/misc/Collapsible';
 import { HiChevronUpDown } from 'react-icons/hi2';
 
 interface FieldWithLabelProps {
