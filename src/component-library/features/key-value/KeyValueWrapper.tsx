@@ -6,7 +6,8 @@ export const KeyValueWrapper = ({ children, className }: { children: ReactNode; 
         <div
             className={cn(
                 'bg-neutral-0 dark:bg-neutral-800',
-                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                'rounded-lg border border-neutral-200 dark:border-neutral-700',
+                'shadow-sm',
                 className,
             )}
         >

@@ -54,48 +54,36 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             valueGetter: (params: ValueGetterParams<RuleViewModel>) => {
                 return [params.data?.scope, params.data?.name];
             },
-            minWidth: 150,
+            minWidth: 400,
             flex: 2,
             filter: true,
             filterParams: DefaultTextFilterParams,
             cellRenderer: ClickableDID,
+            pinned: 'left',
         },
         {
             headerName: 'ID',
             field: 'id',
+            width: 50,
+            minWidth: 250,
             flex: 1,
-            width: 390,
             sortable: false,
             cellRenderer: ClickableId,
+            pinned: 'left',
         },
         {
             headerName: 'RSE Expression',
             field: 'rse_expression',
-            minWidth: 150,
+            minWidth: 160,
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
         {
-            headerName: 'Created At',
-            field: 'created_at',
-            width: 150,
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatDate(params.value);
-            },
-            filter: 'agDateColumnFilter',
-            filterParams: DefaultDateFilterParams,
-        },
-        {
-            headerName: 'Remaining',
-            field: 'remaining_lifetime',
-            width: 125,
-            cellRenderer: NullableRemainingLifetime,
-        },
-        {
             headerName: 'State',
             field: 'state',
-            minWidth: 200,
+            width: 150,
+            minWidth: 150,
             cellStyle: badgeCellWrapperStyle,
             cellRenderer: RuleStateBadge,
             cellRendererParams: {
@@ -109,27 +97,50 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         {
             headerName: 'OK',
             field: 'locks_ok_cnt',
-            minWidth: 75,
+            width: 80,
+            minWidth: 80,
             sortable: false,
         },
         {
             headerName: 'Replicating',
             field: 'locks_replicating_cnt',
-            minWidth: 135,
+            width: 125,
+            minWidth: 125,
             sortable: false,
         },
         {
             headerName: 'Stuck',
             field: 'locks_stuck_cnt',
-            minWidth: 90,
+            width: 95,
+            minWidth: 95,
             sortable: true,
             comparator: ruleActivityComparator,
         },
         {
             headerName: 'Account',
             field: 'account',
+            minWidth: 120,
+            flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
+        },
+        {
+            headerName: 'Created At',
+            field: 'created_at',
+            width: 140,
+            minWidth: 140,
+            valueFormatter: (params: ValueFormatterParams) => {
+                return formatDate(params.value);
+            },
+            filter: 'agDateColumnFilter',
+            filterParams: DefaultDateFilterParams,
+        },
+        {
+            headerName: 'Remaining',
+            field: 'remaining_lifetime',
+            width: 140,
+            minWidth: 140,
+            cellRenderer: NullableRemainingLifetime,
         },
     ]);
 

@@ -19,7 +19,7 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
 
     const getViewClasses = (index: number) => {
         const visibilityClass = index === activeIndex ? 'flex' : 'hidden';
-        return cn('flex-col grow min-h-[450px]', visibilityClass);
+        return cn('flex-col grow', visibilityClass);
     };
 
     return (
@@ -29,7 +29,9 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
                 <DetailsRuleMeta meta={meta} />
             </div>
             <div className={getViewClasses(1)}>
-                <DetailsRuleLocks id={id} />
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+                    <DetailsRuleLocks id={id} />
+                </div>
             </div>
         </>
     );
@@ -91,10 +93,12 @@ export const DetailsRule = ({ id }: { id: string }) => {
     }
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
-                <CopyableHeading text={id} />
-            </div>
+        <div className="flex flex-col space-y-6 w-full">
+            <header className="mb-2">
+                <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
+                    <CopyableHeading text={id} />
+                </div>
+            </header>
             <DetailsRuleTabs id={id} meta={meta} />
         </div>
     );

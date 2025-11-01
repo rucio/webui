@@ -53,7 +53,7 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
     };
 
     return (
-        <div className="min-w-full w-fit md:max-h-[0px]">
+        <div className="min-w-full w-fit h-full">
             <MetaHeader scope={meta.scope} name={meta.name} />
             <div className="flex flex-col px-4 py-2 w-full">
                 <KeyValueRow name="Type">
@@ -117,7 +117,7 @@ export const ListDIDMeta = ({ meta, isLoading, hasError }: ListDIDMetaProps) => 
     const showMeta = meta && !isLoading && !hasError;
 
     return (
-        <KeyValueWrapper className={cn(showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]', 'md:flex-1 overflow-auto')}>
+        <KeyValueWrapper className={cn(showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]', 'h-full overflow-auto')}>
             {showMeta ? <MetaContents meta={meta} /> : <MetaStub isLoading={isLoading} hasError={hasError} />}
         </KeyValueWrapper>
     );

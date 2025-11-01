@@ -1,0 +1,157 @@
+/* DateInput - Design System Compliant Styles */
+/* Overrides for react-datepicker to match Rucio WebUI Design System */
+
+/* Calendar Container */
+.react-datepicker {
+    @apply rounded-lg border border-neutral-200 dark:border-neutral-700;
+    @apply bg-neutral-0 dark:bg-neutral-800;
+    @apply shadow-lg;
+    @apply font-sans;
+}
+
+/* Calendar Header */
+.react-datepicker__header {
+    @apply bg-neutral-100 dark:bg-neutral-800;
+    @apply border-b border-neutral-200 dark:border-neutral-700;
+    @apply rounded-t-lg;
+    @apply pt-4 pb-2;
+}
+
+.react-datepicker__current-month {
+    @apply text-base font-semibold;
+    @apply text-neutral-900 dark:text-neutral-100;
+    @apply mb-2;
+}
+
+/* Day Names */
+.react-datepicker__day-names {
+    @apply mt-2;
+}
+
+.react-datepicker__day-name {
+    @apply text-sm font-medium;
+    @apply text-neutral-700 dark:text-neutral-300;
+    @apply w-10 leading-10;
+    @apply m-0;
+}
+
+/* Navigation Arrows */
+.react-datepicker__navigation {
+    @apply top-4;
+}
+
+.react-datepicker__navigation-icon::before {
+    @apply border-neutral-700 dark:border-neutral-300;
+}
+
+.react-datepicker__navigation:hover {
+    @apply bg-neutral-200 dark:bg-neutral-700;
+    @apply rounded-md;
+}
+
+/* Days */
+.react-datepicker__month {
+    @apply m-2;
+}
+
+.react-datepicker__day {
+    @apply text-sm;
+    @apply text-neutral-900 dark:text-neutral-100;
+    @apply w-10 leading-10;
+    @apply m-0;
+    @apply rounded-md;
+    @apply transition-colors;
+}
+
+.react-datepicker__day:hover {
+    @apply bg-neutral-200 dark:bg-neutral-700;
+    @apply text-neutral-900 dark:text-neutral-100;
+}
+
+.react-datepicker__day--selected {
+    @apply bg-brand-600 dark:bg-brand-600;
+    @apply text-neutral-0;
+    @apply font-semibold;
+}
+
+.react-datepicker__day--selected:hover {
+    @apply bg-brand-700 dark:bg-brand-700;
+}
+
+.react-datepicker__day--keyboard-selected {
+    @apply bg-brand-200 dark:bg-brand-900;
+    @apply text-neutral-900 dark:text-neutral-100;
+}
+
+.react-datepicker__day--today {
+    @apply font-bold;
+    @apply bg-neutral-200 dark:bg-neutral-700;
+}
+
+.react-datepicker__day--disabled {
+    @apply text-neutral-400 dark:text-neutral-600;
+    @apply cursor-not-allowed;
+}
+
+.react-datepicker__day--disabled:hover {
+    @apply bg-transparent;
+}
+
+.react-datepicker__day--outside-month {
+    @apply text-neutral-400 dark:text-neutral-600;
+}
+
+/* Triangle Arrow */
+.react-datepicker__triangle {
+    @apply hidden;
+}
+
+/* Time Container */
+.react-datepicker__time-container {
+    @apply border-l border-neutral-200 dark:border-neutral-700;
+}
+
+.react-datepicker__time {
+    @apply bg-neutral-0 dark:bg-neutral-800;
+}
+
+.react-datepicker__time-box {
+    @apply w-full;
+}
+
+.react-datepicker__time-list-item {
+    @apply text-sm;
+    @apply text-neutral-900 dark:text-neutral-100;
+    @apply transition-colors;
+}
+
+.react-datepicker__time-list-item:hover {
+    @apply bg-neutral-200 dark:bg-neutral-700;
+}
+
+.react-datepicker__time-list-item--selected {
+    @apply bg-brand-600 dark:bg-brand-600;
+    @apply text-neutral-0;
+    @apply font-semibold;
+}
+
+.react-datepicker__time-list-item--selected:hover {
+    @apply bg-brand-700 dark:bg-brand-700;
+}
+
+/* Month and Year Dropdowns */
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+    @apply border border-neutral-200 dark:border-neutral-700;
+    @apply bg-neutral-100 dark:bg-neutral-800;
+    @apply text-neutral-900 dark:text-neutral-100;
+    @apply rounded-md;
+    @apply px-2 py-1;
+    @apply text-sm;
+}
+
+/* Focus States - WCAG AAA Compliant */
+.react-datepicker__day:focus,
+.react-datepicker__time-list-item:focus {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2;
+}

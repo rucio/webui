@@ -3,9 +3,9 @@ import { cn } from '@/component-library/utils';
 
 export const KeyValueRow = (props: { name: string; children: ReactNode }) => {
     return (
-        <div className="flex w-full items-center h-12 overflow-auto">
-            <span className={cn('text-neutral-700 dark:text-neutral-300', 'min-w-[10rem] pr-3', 'font-medium text-right text-sm')}>{props.name}</span>
-            <span className="flex items-center space-x-2">{props.children}</span>
+        <div className="flex w-full items-center min-h-[3rem] py-2 overflow-auto">
+            <label className={cn('text-neutral-600 dark:text-neutral-400', 'min-w-[12rem] pr-6', 'font-medium text-sm')}>{props.name}</label>
+            <div className="flex items-center gap-2 text-neutral-900 dark:text-neutral-100">{props.children}</div>
         </div>
     );
 };

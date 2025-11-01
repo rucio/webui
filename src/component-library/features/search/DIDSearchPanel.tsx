@@ -57,7 +57,7 @@ const mapLengthOperatorToKey = (op: DIDFilterOperator): string => {
 // Small reusable wrapper for label + input
 const DIDFilterField = ({ label, children }: { label: string; children: React.ReactNode }) => (
     <div className="flex flex-col grow">
-        <div className="text-neutral-900 dark:text-neutral-100 mb-1">{label}</div>
+        <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">{label}</label>
         {children}
     </div>
 );
@@ -243,7 +243,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     };
 
     return (
-        <div className="flex flex-col space-y-2 w-full">
+        <div className="flex flex-col space-y-4 w-full">
             {/* Main search row */}
             <div className="flex flex-col md:items-start md:flex-row md:space-y-0 md:space-x-2">
                 <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
@@ -299,14 +299,14 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
 
             {/* DID filters */}
             {isFilterExpanded && (
-                <div className="flex flex-col space-y-2 mt-2">
+                <div className="rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6 space-y-6">
                     <DIDFilterField label="Created">
-                        <div className="flex flex-row items-center space-x-2 w-full">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
                             <Select
                             value={createdMode}
                             onValueChange={(v) => setCreatedMode(v as 'before' | 'after')}
                             >
-                            <SelectTrigger className="w-32 flex-shrink-0">
+                            <SelectTrigger className="w-full sm:w-32 flex-shrink-0">
                                 <SelectValue placeholder="Mode" />
                             </SelectTrigger>
                             <SelectContent>
@@ -328,30 +328,26 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                                 step="1"
                                 value={createdTime}
                                 onChange={(e) => setCreatedTime(e.target.value)}
-                                className="flex-grow-[1]"
+                                className="flex-grow"
                             />
                             </div>
                         </div>
                     </DIDFilterField>
-                    <div className="flex flex-row items-center space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-4">
                         <DIDFilterField label="Limit">
-                            <div className="flex items-center space-x-2">
-                                {/*<span className="text-neutral-900 dark:text-neutral-100 font-medium">Limit</span>*/}
-                                <Input
-                                    type="number"
-                                    value={limit}
-                                    onChange={e => setLimit(e.target.value)}
-                                    placeholder="Maximum number of DID returned"
-                                    className="w-full"
-                                />
-                            </div>
+                            <Input
+                                type="number"
+                                value={limit}
+                                onChange={e => setLimit(e.target.value)}
+                                placeholder="Maximum number of DID returned"
+                                className="w-full"
+                            />
                         </DIDFilterField>
                         {(type === DIDType.CONTAINER || type === DIDType.DATASET) && (
                             <DIDFilterField label="Length">
-                            <div className="flex items-center space-x-2">
-                                {/*<span className="text-neutral-900 dark:text-neutral-100 font-medium">Length</span>*/}
+                            <div className="flex items-center gap-2">
                                 <Select value={lengthOperator} onValueChange={v => setLengthOperator(v as DIDFilterOperator)}>
-                                    <SelectTrigger className="w-20">
+                                    <SelectTrigger className="w-20 flex-shrink-0">
                                         <SelectValue placeholder="=" />
                                     </SelectTrigger>
                                     <SelectContent>

@@ -164,20 +164,15 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
 
 const ThemeSwitchButton = () => {
     const { resolvedTheme, setTheme } = useTheme();
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-
-    const buttonRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
 
     const updateTheme = () => {
         setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
     };
 
     useEffect(() => {
-        if (resolvedTheme && buttonRef.current) {
-            buttonRef.current.className = buttonRef.current.className.replace(' hidden', ' flex');
-            setIsDarkMode(resolvedTheme === 'dark');
-        }
-    }, [resolvedTheme]);
+        setMounted(true);
+    }, []);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -186,17 +181,21 @@ const ThemeSwitchButton = () => {
         }
     };
 
+    // Don't render until mounted to avoid hydration mismatch
+    if (!mounted) {
+        return <div className="w-10 h-6" />; // Placeholder with same dimensions
+    }
+
     return (
         <div
-            className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center hidden"
+            className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center flex"
             onClick={updateTheme}
             onKeyDown={handleKeyDown}
             role="button"
             tabIndex={0}
             aria-label="Toggle theme"
-            ref={buttonRef}
         >
-            {isDarkMode ? <HiMoon className="h-6 w-6" /> : <HiSun className="h-6 w-6" />}
+            {resolvedTheme === 'dark' ? <HiMoon className="h-6 w-6" /> : <HiSun className="h-6 w-6" />}
         </div>
     );
 };
@@ -223,12 +222,18 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
     ];
 
     const { resolvedTheme } = useTheme();
-    const logoPath = resolvedTheme === 'dark' ? '/logo_dark.svg' : '/logo_light.svg';
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const logoPath = mounted && resolvedTheme === 'dark' ? '/logo_dark.svg' : '/logo_light.svg';
     const logoSize = 36;
 
     // Gradient overlay for depth effect - subtle fade from top to bottom
     const gradientOverlay =
-        resolvedTheme === 'dark'
+        mounted && resolvedTheme === 'dark'
             ? 'linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 100%)'
             : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%)';
 
@@ -246,7 +251,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                 <>
                     <div className="flex items-center">
                         <a className="w-12 h-full stroke-white fill-white" href="https://rucio.cern.ch/">
-                            <Image src={logoPath} alt="Rucio Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} />
+                            <Image src={logoPath} alt="Rucio Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} suppressHydrationWarning />
                         </a>
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
                             <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} />
@@ -295,6 +300,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                     style={{
                         background: gradientOverlay,
                     }}
+                    suppressHydrationWarning
                 />
                 <div className="relative z-10 flex flex-row justify-between items-center w-full">{getContent()}</div>
             </header>
