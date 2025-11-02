@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
                     error: 'Invalid query parameters',
                     details: validationResult.error.errors,
                 },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -57,9 +57,7 @@ export async function GET(request: NextRequest) {
             filters.account = currentAccount;
         }
 
-        const controller = appContainer.get<BaseController<ListRulesControllerParameters, ListRulesRequest>>(
-            CONTROLLERS.LIST_RULES
-        );
+        const controller = appContainer.get<BaseController<ListRulesControllerParameters, ListRulesRequest>>(CONTROLLERS.LIST_RULES);
 
         return executeAuthenticatedController(
             controller,
@@ -70,13 +68,10 @@ export async function GET(request: NextRequest) {
                     updated_before: filters.updated_before ? new Date(filters.updated_before) : undefined,
                 },
             },
-            true // streaming endpoint
+            true, // streaming endpoint
         );
     } catch (error) {
         console.error('Error in list-rules:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

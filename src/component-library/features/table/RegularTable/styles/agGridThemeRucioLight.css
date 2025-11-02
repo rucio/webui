@@ -16,3 +16,19 @@
 	--ag-border-color: #e2e8f0;
 	--ag-row-border: solid 1px var(--ag-border-color);
 }
+
+/* Column Group Header Styling for better visual distinction */
+.ag-grid-theme-rucio-light .ag-header-group-cell {
+	border-right: 3px solid #94a3b8; /* tailwind neutral.400 - darker for visibility */
+	background: linear-gradient(to bottom, #cbd5e1 0%, #e2e8f0 100%); /* gradient from neutral.300 to neutral.200 */
+	font-weight: 700;
+	border-bottom: 2px solid #cbd5e1; /* tailwind neutral.300 */
+}
+
+.ag-grid-theme-rucio-light .ag-header-group-cell-label {
+	font-weight: 700;
+	color: #0f172a; /* tailwind neutral.900 */
+	text-transform: uppercase;
+	font-size: 0.75rem;
+	letter-spacing: 0.05em;
+}

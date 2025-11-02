@@ -47,9 +47,7 @@ export const Colors: Story = {
 
                 {/* Neutral Colors */}
                 <div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                        Neutral (Slate) - UI Colors
-                    </h2>
+                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Neutral (Slate) - UI Colors</h2>
                     <div className="grid grid-cols-11 gap-2">
                         {Object.entries(colors.neutral).map(([key, value]) => (
                             <div key={key} className="space-y-2">
@@ -68,9 +66,7 @@ export const Colors: Story = {
 
                 {/* Brand Colors */}
                 <div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                        Brand (Purple) - Primary Actions
-                    </h2>
+                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Brand (Purple) - Primary Actions</h2>
                     <div className="grid grid-cols-9 gap-2">
                         {Object.entries(colors.brand).map(([key, value]) => (
                             <div key={key} className="space-y-2">
@@ -93,9 +89,7 @@ export const Colors: Story = {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Success */}
                         <div>
-                            <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-3">
-                                Success (Green)
-                            </h3>
+                            <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-3">Success (Green)</h3>
                             <div className="grid grid-cols-9 gap-2">
                                 {Object.entries(colors.base.success).map(([key, value]) => (
                                     <div key={key} className="space-y-1">
@@ -103,9 +97,7 @@ export const Colors: Story = {
                                             className="h-12 rounded border border-neutral-200 dark:border-neutral-700"
                                             style={{ backgroundColor: value }}
                                         />
-                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
-                                            {key}
-                                        </div>
+                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">{key}</div>
                                     </div>
                                 ))}
                             </div>
@@ -121,9 +113,7 @@ export const Colors: Story = {
                                             className="h-12 rounded border border-neutral-200 dark:border-neutral-700"
                                             style={{ backgroundColor: value }}
                                         />
-                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
-                                            {key}
-                                        </div>
+                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">{key}</div>
                                     </div>
                                 ))}
                             </div>
@@ -131,9 +121,7 @@ export const Colors: Story = {
 
                         {/* Warning */}
                         <div>
-                            <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-3">
-                                Warning (Amber)
-                            </h3>
+                            <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-3">Warning (Amber)</h3>
                             <div className="grid grid-cols-9 gap-2">
                                 {Object.entries(colors.base.warning).map(([key, value]) => (
                                     <div key={key} className="space-y-1">
@@ -141,9 +129,7 @@ export const Colors: Story = {
                                             className="h-12 rounded border border-neutral-200 dark:border-neutral-700"
                                             style={{ backgroundColor: value }}
                                         />
-                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
-                                            {key}
-                                        </div>
+                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">{key}</div>
                                     </div>
                                 ))}
                             </div>
@@ -159,9 +145,7 @@ export const Colors: Story = {
                                             className="h-12 rounded border border-neutral-200 dark:border-neutral-700"
                                             style={{ backgroundColor: value }}
                                         />
-                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
-                                            {key}
-                                        </div>
+                                        <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400">{key}</div>
                                     </div>
                                 ))}
                             </div>
@@ -185,9 +169,7 @@ export const Typography: Story = {
             <div className="max-w-7xl mx-auto space-y-12">
                 <div>
                     <h1 className="text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Typography</h1>
-                    <p className="text-lg text-neutral-600 dark:text-neutral-400">
-                        Modern, legible type system optimized for screen reading
-                    </p>
+                    <p className="text-lg text-neutral-600 dark:text-neutral-400">Modern, legible type system optimized for screen reading</p>
                 </div>
 
                 {/* Font Families */}
@@ -235,10 +217,7 @@ export const Typography: Story = {
                         {Object.entries(fontWeights).map(([key, value]) => (
                             <div key={key} className="flex items-center gap-4">
                                 <div className="w-32 text-sm font-mono text-neutral-600 dark:text-neutral-400">{key}</div>
-                                <div
-                                    className="flex-1 text-2xl text-neutral-900 dark:text-neutral-100"
-                                    style={{ fontWeight: value }}
-                                >
+                                <div className="flex-1 text-2xl text-neutral-900 dark:text-neutral-100" style={{ fontWeight: value }}>
                                     The quick brown fox jumps over the lazy dog
                                 </div>
                                 <div className="text-sm font-mono text-neutral-500">{value}</div>
@@ -249,15 +228,11 @@ export const Typography: Story = {
 
                 {/* Typography Presets */}
                 <div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                        Typography Presets
-                    </h2>
+                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Typography Presets</h2>
                     <div className="space-y-6">
                         <div>
                             <p className="text-sm font-mono text-neutral-600 dark:text-neutral-400 mb-2">Display</p>
-                            <div className="text-5xl font-extrabold text-neutral-900 dark:text-neutral-100">
-                                Display Text
-                            </div>
+                            <div className="text-5xl font-extrabold text-neutral-900 dark:text-neutral-100">Display Text</div>
                         </div>
                         <div>
                             <p className="text-sm font-mono text-neutral-600 dark:text-neutral-400 mb-2">H1</p>
@@ -274,8 +249,8 @@ export const Typography: Story = {
                         <div>
                             <p className="text-sm font-mono text-neutral-600 dark:text-neutral-400 mb-2">Body</p>
                             <p className="text-base text-neutral-700 dark:text-neutral-300">
-                                This is body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua.
+                                This is body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore
+                                et dolore magna aliqua.
                             </p>
                         </div>
                         <div>
@@ -317,13 +292,8 @@ export const Spacing: Story = {
                             .filter(([key]) => !isNaN(Number(key)) && Number(key) <= 20)
                             .map(([key, value]) => (
                                 <div key={key} className="flex items-center gap-4">
-                                    <div className="w-20 text-sm font-mono text-neutral-600 dark:text-neutral-400">
-                                        {key}
-                                    </div>
-                                    <div
-                                        className="bg-brand-500 h-8 rounded"
-                                        style={{ width: value }}
-                                    />
+                                    <div className="w-20 text-sm font-mono text-neutral-600 dark:text-neutral-400">{key}</div>
+                                    <div className="bg-brand-500 h-8 rounded" style={{ width: value }} />
                                     <div className="text-sm font-mono text-neutral-500">{value}</div>
                                 </div>
                             ))}
@@ -332,21 +302,15 @@ export const Spacing: Story = {
 
                 {/* Semantic Spacing */}
                 <div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                        Semantic Spacing
-                    </h2>
+                    <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Semantic Spacing</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {Object.entries(semanticSpacing).map(([category, values]) => (
                             <div key={category} className="p-4 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-3 capitalize">
-                                    {category}
-                                </h3>
+                                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-3 capitalize">{category}</h3>
                                 <div className="space-y-2">
                                     {Object.entries(values).map(([name, value]) => (
                                         <div key={name} className="flex items-center gap-3">
-                                            <div className="w-24 text-sm font-mono text-neutral-600 dark:text-neutral-400">
-                                                {name}
-                                            </div>
+                                            <div className="w-24 text-sm font-mono text-neutral-600 dark:text-neutral-400">{name}</div>
                                             <div className="bg-brand-500 h-6 rounded" style={{ width: value }} />
                                             <div className="text-xs font-mono text-neutral-500">{value}</div>
                                         </div>
@@ -372,9 +336,7 @@ export const Elevation: Story = {
             <div className="max-w-7xl mx-auto space-y-12">
                 <div>
                     <h1 className="text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Elevation System</h1>
-                    <p className="text-lg text-neutral-600 dark:text-neutral-400">
-                        Subtle shadows for visual depth and hierarchy
-                    </p>
+                    <p className="text-lg text-neutral-600 dark:text-neutral-400">Subtle shadows for visual depth and hierarchy</p>
                 </div>
 
                 {/* Shadows */}
@@ -389,9 +351,7 @@ export const Elevation: Story = {
                                         className="h-32 bg-neutral-0 dark:bg-neutral-800 rounded-lg flex items-center justify-center"
                                         style={{ boxShadow: value }}
                                     >
-                                        <span className="text-neutral-900 dark:text-neutral-100 font-medium">
-                                            shadow-{key}
-                                        </span>
+                                        <span className="text-neutral-900 dark:text-neutral-100 font-medium">shadow-{key}</span>
                                     </div>
                                     <p className="text-xs font-mono text-neutral-600 dark:text-neutral-400">{value}</p>
                                 </div>
@@ -407,9 +367,7 @@ export const Elevation: Story = {
                             className="h-24 bg-neutral-0 dark:bg-neutral-900 rounded-lg flex items-center justify-center"
                             style={{ boxShadow: shadows.brand }}
                         >
-                            <span className="text-neutral-900 dark:text-neutral-100 font-medium">
-                                Focus Ring (Brand Shadow)
-                            </span>
+                            <span className="text-neutral-900 dark:text-neutral-100 font-medium">Focus Ring (Brand Shadow)</span>
                         </div>
                     </div>
                 </div>
@@ -429,56 +387,44 @@ export const Principles: Story = {
             <div className="max-w-4xl mx-auto space-y-12">
                 <div>
                     <h1 className="text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Design Principles</h1>
-                    <p className="text-lg text-neutral-600 dark:text-neutral-400">
-                        Inspired by Vercel Geist and Apple HIG
-                    </p>
+                    <p className="text-lg text-neutral-600 dark:text-neutral-400">Inspired by Vercel Geist and Apple HIG</p>
                 </div>
 
                 <div className="space-y-8">
                     <div className="p-6 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-                            1. Clarity (Apple HIG)
-                        </h2>
+                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">1. Clarity (Apple HIG)</h2>
                         <p className="text-base text-neutral-700 dark:text-neutral-300">
-                            Everything in the interface should be immediately understandable. Use precise language, clear
-                            visual hierarchy, and purposeful design.
+                            Everything in the interface should be immediately understandable. Use precise language, clear visual hierarchy, and
+                            purposeful design.
                         </p>
                     </div>
 
                     <div className="p-6 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-                            2. Simplicity (Vercel Geist)
-                        </h2>
+                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">2. Simplicity (Vercel Geist)</h2>
                         <p className="text-base text-neutral-700 dark:text-neutral-300">
-                            Embrace minimalism and restraint. Remove unnecessary decoration and focus on content and
-                            functionality.
+                            Embrace minimalism and restraint. Remove unnecessary decoration and focus on content and functionality.
                         </p>
                     </div>
 
                     <div className="p-6 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-                            3. Depth (Apple Liquid Glass)
-                        </h2>
+                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">3. Depth (Apple Liquid Glass)</h2>
                         <p className="text-base text-neutral-700 dark:text-neutral-300">
                             Use subtle layers, translucency, and shadows to create visual hierarchy and guide attention.
                         </p>
                     </div>
 
                     <div className="p-6 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-                            4. Accessibility First
-                        </h2>
+                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">4. Accessibility First</h2>
                         <p className="text-base text-neutral-700 dark:text-neutral-300">
-                            Every component must be accessible by default. WCAG AAA compliance with 7:1 contrast ratios,
-                            keyboard navigation, and screen reader support.
+                            Every component must be accessible by default. WCAG AAA compliance with 7:1 contrast ratios, keyboard navigation, and
+                            screen reader support.
                         </p>
                     </div>
 
                     <div className="p-6 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
                         <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">5. Performance</h2>
                         <p className="text-base text-neutral-700 dark:text-neutral-300">
-                            Optimized components with efficient rendering, code splitting, and proper memoization for fast,
-                            responsive interfaces.
+                            Optimized components with efficient rendering, code splitting, and proper memoization for fast, responsive interfaces.
                         </p>
                     </div>
                 </div>

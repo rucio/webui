@@ -4,7 +4,7 @@ import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/d
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { AgGridReact } from 'ag-grid-react';
-import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { buildDiscreteFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import ProgressBar from '@/component-library/atoms/misc/ProgressBar';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
@@ -39,7 +39,12 @@ const StateCell = ({ data, className }: { data: DIDDatasetReplicasViewModel; cla
 };
 
 const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rse/list?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
+};
+
+const ReplicaStateDisplayNames = {
+    [ReplicaState.AVAILABLE]: 'Available',
+    [ReplicaState.UNAVAILABLE]: 'Unavailable',
 };
 
 export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
@@ -58,7 +63,7 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name }: Detai
             headerName: 'RSE',
             field: 'rse',
             flex: 3,
-            sortable: false,
+            pinned: 'left' as const,
             cellRenderer: ClickableRSE,
             filter: true,
             filterParams: DefaultTextFilterParams,
@@ -79,10 +84,13 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name }: Detai
                 className: badgeCellClasses,
             },
             cellRenderer: StateCell,
+            filter: true,
+            filterParams: buildDiscreteFilterParams(Object.values(ReplicaStateDisplayNames), Object.values(ReplicaState).filter(state => state === ReplicaState.AVAILABLE || state === ReplicaState.UNAVAILABLE)),
         },
         {
             headerName: 'Replication Progress',
             flex: 3,
+            sortable: false,
             cellRenderer: ProgressBarCell,
             cellStyle: {
                 ...badgeCellWrapperStyle,

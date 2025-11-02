@@ -20,10 +20,7 @@ export async function GET(request: NextRequest) {
         }
 
         if (!sessionUser.rucioAccount) {
-            return NextResponse.json(
-                { error: 'Unauthorized: Rucio Account is not set' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'Unauthorized: Rucio Account is not set' }, { status: 401 });
         }
 
         const params = parseQueryParams(request);
@@ -31,30 +28,21 @@ export async function GET(request: NextRequest) {
         const name = params.name as string;
 
         if (!account) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: account' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: account' }, { status: 400 });
         }
 
         if (!name) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: name' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: name' }, { status: 400 });
         }
 
         const controller: GetSubscriptionController = appContainer.get(CONTROLLERS.GET_SUBSCRIPTION);
 
         return executeAuthenticatedController(controller, {
             name,
-            sessionAccount: sessionUser.rucioAccount
+            sessionAccount: sessionUser.rucioAccount,
         });
     } catch (error) {
         console.error('Error in get-subscription:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

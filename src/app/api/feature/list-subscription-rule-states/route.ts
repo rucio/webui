@@ -22,22 +22,16 @@ export async function GET(request: NextRequest) {
 
         const account = sessionUser.rucioAccount;
         if (!account) {
-            return NextResponse.json(
-                { error: 'Could not determine account name. Are you logged in?' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Could not determine account name. Are you logged in?' }, { status: 400 });
         }
 
         const controller = appContainer.get<BaseController<ListSubscriptionRuleStatesControllerParameters, void>>(
-            CONTROLLERS.LIST_SUBSCRIPTION_RULE_STATES
+            CONTROLLERS.LIST_SUBSCRIPTION_RULE_STATES,
         );
 
         return executeAuthenticatedController(controller, { account }, true);
     } catch (error) {
         console.error('Error in list-subscription-rule-states:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

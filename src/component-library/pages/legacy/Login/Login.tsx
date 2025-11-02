@@ -27,10 +27,7 @@ import { HiArrowLeft } from 'react-icons/hi';
 const BackToDashboardButton = (props: { account: string }) => {
     return (
         <Link href="/dashboard">
-            <Button
-                variant="success"
-                className="mb-1 w-full"
-            >
+            <Button variant="success" className="mb-1 w-full">
                 <HiArrowRight className="mr-2 h-4 w-4" />
                 Back to dashboard as {props.account}
             </Button>
@@ -325,17 +322,14 @@ export const Login = ({
                     {/* Account input for non-userpass methods */}
                     {!loginViewModel.userpassEnabled && (
                         <div className="space-y-2 px-2">
-                            <label
-                                htmlFor="account-input-nouserpass"
-                                className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                            >
+                            <label htmlFor="account-input-nouserpass" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                 Account <span className="text-neutral-500">(optional)</span>
                             </label>
                             <Input
                                 id="account-input-nouserpass"
                                 type="text"
                                 value={inputAccount || ''}
-                                onChange={(e) => setInputAccount(e.target.value || undefined)}
+                                onChange={e => setInputAccount(e.target.value || undefined)}
                                 placeholder="Enter account name"
                                 className="w-full"
                             />
@@ -372,7 +366,7 @@ export const Login = ({
                             'hover:text-neutral-900 dark:hover:text-neutral-100',
                             'transition-colors',
                             'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-                            'rounded px-2 py-1'
+                            'rounded px-2 py-1',
                         )}
                         aria-label="Back to login methods"
                     >
@@ -383,38 +377,25 @@ export const Login = ({
 
                 {/* Userpass Form with shake animation on error */}
                 <motion.form
-                    onSubmit={(e) => {
+                    onSubmit={e => {
                         e.preventDefault();
                         submitUserPass(inputAccount);
                     }}
-                    animate={
-                        fieldErrors.username || fieldErrors.password
-                            ? prefersReducedMotion
-                                ? {}
-                                : { x: [0, -10, 10, -10, 10, 0] }
-                            : {}
-                    }
+                    animate={fieldErrors.username || fieldErrors.password ? (prefersReducedMotion ? {} : { x: [0, -10, 10, -10, 10, 0] }) : {}}
                     transition={{ duration: 0.4 }}
                 >
-                    <fieldset
-                        className="flex flex-col space-y-4"
-                        aria-label="Userpass Login Fields"
-                        id="userpass-form"
-                    >
+                    <fieldset className="flex flex-col space-y-4" aria-label="Userpass Login Fields" id="userpass-form">
                         <div className="flex flex-col space-y-4">
                             {/* Username field with inline error */}
                             <div className="space-y-2">
-                                <label
-                                    htmlFor="username-input"
-                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                                >
+                                <label htmlFor="username-input" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                     Username
                                 </label>
                                 <Input
                                     id="username-input"
                                     type="text"
                                     value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    onChange={e => setUsername(e.target.value)}
                                     error={Boolean(fieldErrors.username)}
                                     aria-describedby={fieldErrors.username ? 'username-error' : undefined}
                                     aria-invalid={Boolean(fieldErrors.username)}
@@ -422,7 +403,6 @@ export const Login = ({
                                     placeholder="Enter your username"
                                     onEnterKey={() => submitUserPass(inputAccount)}
                                     className="w-full"
-                                    
                                 />
                                 {/* Reserved space for error message - prevents layout shift */}
                                 <div className="min-h-[20px]">
@@ -436,17 +416,14 @@ export const Login = ({
 
                             {/* Password field with inline error */}
                             <div className="space-y-2">
-                                <label
-                                    htmlFor="password-input"
-                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                                >
+                                <label htmlFor="password-input" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                     Password
                                 </label>
                                 <Input
                                     id="password-input"
                                     type="password"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={e => setPassword(e.target.value)}
                                     error={Boolean(fieldErrors.password)}
                                     aria-describedby={fieldErrors.password ? 'password-error' : undefined}
                                     aria-invalid={Boolean(fieldErrors.password)}
@@ -467,17 +444,14 @@ export const Login = ({
 
                             {/* Account field (optional) */}
                             <div className="space-y-2">
-                                <label
-                                    htmlFor="account-input"
-                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                                >
+                                <label htmlFor="account-input" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                     Account <span className="text-neutral-500">(optional)</span>
                                 </label>
                                 <Input
                                     id="account-input"
                                     type="text"
                                     value={inputAccount || ''}
-                                    onChange={(e) => setInputAccount(e.target.value || undefined)}
+                                    onChange={e => setInputAccount(e.target.value || undefined)}
                                     disabled={isSubmitting}
                                     placeholder="Enter account name"
                                     onEnterKey={() => submitUserPass(inputAccount)}
@@ -494,7 +468,7 @@ export const Login = ({
                             disabled={isSubmitting}
                             className="w-full"
                         >
-                            {isSubmitting ? "Signing in..." : "Login"}
+                            {isSubmitting ? 'Signing in...' : 'Login'}
                         </Button>
                     </fieldset>
                 </motion.form>
@@ -504,12 +478,7 @@ export const Login = ({
 
     const getLoginForm = () => {
         return (
-            <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={formVariants}
-                className="flex items-center justify-center min-h-screen py-8"
-            >
+            <motion.div initial="hidden" animate="visible" variants={formVariants} className="flex items-center justify-center min-h-screen py-8">
                 <div>
                     {/* Back to Dashboard Button - now part of animated content */}
                     {isLoggedIn && (
@@ -518,62 +487,57 @@ export const Login = ({
                         </div>
                     )}
 
-                <div
-                    className={twMerge(
-                        'flex flex-col items-center justify-between',
-                        'border dark:border-2 rounded-xl p-4 md:p-6 flex flex-col justify-center space-y-4',
-                        'border-neutral-300 dark:border-neutral-700',
-                        'bg-neutral-50/90 dark:bg-neutral-900/90',
-                        'backdrop-blur-xl',
-                        'w-[90vw] md:w-[480px] mx-auto',
-                        'shadow-xl',
-                    )}
-                    id="root"
-                >
-                    <MultipleAccountsModal
-                        submit={lastAuthMethod === 'x509' ? submitX509 : submitUserPass}
-                        availableAccounts={availableAccounts}
-                        onClose={() => setAvailableAccounts([])}
-                    />
-                    {/* Form-level error message with reserved space - no card flexing */}
-                    <div className="min-h-[52px] w-full" role="alert" aria-live="polite" aria-atomic="true">
-                        {error && (
-                            <motion.div
-                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
-                                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeInOut' }}
-                            >
-                                <Alert
-                                    variant="error"
-                                    message={error}
-                                    onClose={() => {
-                                        setError(undefined);
-                                    }}
-                                />
-                            </motion.div>
+                    <div
+                        className={twMerge(
+                            'flex flex-col items-center justify-between',
+                            'border dark:border-2 rounded-xl p-4 md:p-6 flex flex-col justify-center space-y-4',
+                            'border-neutral-300 dark:border-neutral-700',
+                            'bg-neutral-50/90 dark:bg-neutral-900/90',
+                            'backdrop-blur-xl',
+                            'w-[90vw] md:w-[480px] mx-auto',
+                            'shadow-xl',
                         )}
-                    </div>
+                        id="root"
+                    >
+                        <MultipleAccountsModal
+                            submit={lastAuthMethod === 'x509' ? submitX509 : submitUserPass}
+                            availableAccounts={availableAccounts}
+                            onClose={() => setAvailableAccounts([])}
+                        />
+                        {/* Form-level error message with reserved space - no card flexing */}
+                        <div className="min-h-[52px] w-full" role="alert" aria-live="polite" aria-atomic="true">
+                            {error && (
+                                <motion.div
+                                    initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
+                                    transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeInOut' }}
+                                >
+                                    <Alert
+                                        variant="error"
+                                        message={error}
+                                        onClose={() => {
+                                            setError(undefined);
+                                        }}
+                                    />
+                                </motion.div>
+                            )}
+                        </div>
 
-                    {/* Theme-aware logo - responsive sizing */}
-                    <div className="flex flex-col items-center justify-between w-full text-center">
-                        <motion.div initial="hidden" animate="visible" variants={logoVariants}>
-                            <RucioLogo
-                                className="text-neutral-900 dark:text-neutral-100"
-                                width={120}
-                                height={120}
-                                aria-label="Rucio Logo"
-                            />
-                        </motion.div>
-                    </div>
+                        {/* Theme-aware logo - responsive sizing */}
+                        <div className="flex flex-col items-center justify-between w-full text-center">
+                            <motion.div initial="hidden" animate="visible" variants={logoVariants}>
+                                <RucioLogo className="text-neutral-900 dark:text-neutral-100" width={120} height={120} aria-label="Rucio Logo" />
+                            </motion.div>
+                        </div>
 
-                    {/* Animated view transitions */}
-                    <div className="w-full overflow-hidden">
-                        <AnimatePresence mode="wait" custom={currentView === 'userpass-form' ? 1 : -1}>
-                            {currentView === 'method-selection' ? renderMethodSelection() : renderUserPassForm()}
-                        </AnimatePresence>
+                        {/* Animated view transitions */}
+                        <div className="w-full overflow-hidden">
+                            <AnimatePresence mode="wait" custom={currentView === 'userpass-form' ? 1 : -1}>
+                                {currentView === 'method-selection' ? renderMethodSelection() : renderUserPassForm()}
+                            </AnimatePresence>
+                        </div>
                     </div>
-                </div>
                 </div>
             </motion.div>
         );

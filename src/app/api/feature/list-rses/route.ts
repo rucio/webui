@@ -17,16 +17,11 @@ export async function GET(request: NextRequest) {
         // Controller expects rseExpression to be a string, default to empty string
         const rseExpression = (params.rseExpression as string) || '';
 
-        const controller = appContainer.get<BaseController<ListRSEsControllerParameters, void>>(
-            CONTROLLERS.LIST_RSES
-        );
+        const controller = appContainer.get<BaseController<ListRSEsControllerParameters, void>>(CONTROLLERS.LIST_RSES);
 
         return executeAuthenticatedController(controller, { rseExpression }, true);
     } catch (error) {
         console.error('Error in list-rses:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

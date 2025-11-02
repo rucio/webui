@@ -18,29 +18,18 @@ export async function GET(request: NextRequest) {
         const name = params.name as string;
 
         if (!scope) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: scope' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: scope' }, { status: 400 });
         }
 
         if (!name) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: name' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: name' }, { status: 400 });
         }
 
-        const controller = appContainer.get<BaseController<ListDIDContentsControllerParameters, void>>(
-            CONTROLLERS.LIST_DID_CONTENTS
-        );
+        const controller = appContainer.get<BaseController<ListDIDContentsControllerParameters, void>>(CONTROLLERS.LIST_DID_CONTENTS);
 
         return executeAuthenticatedController(controller, { scope, name }, true);
     } catch (error) {
         console.error('Error in list-did-contents:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

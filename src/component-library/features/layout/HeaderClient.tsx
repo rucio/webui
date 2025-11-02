@@ -62,7 +62,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
     };
 
     return (
-        <nav className="hidden nav:flex items-center space-x-8 relative" aria-label="Main navigation">
+        <nav className="hidden md:flex items-center space-x-8 relative" aria-label="Main navigation">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
                 const isActive = item.path === pathname || isChildActive(item);
@@ -119,7 +119,7 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <div className="flex nav:hidden">
+        <div className="flex md:hidden">
             <button
                 className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
                 onClick={() => setIsMenuOpen(prevState => !prevState)}
@@ -130,21 +130,28 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                 <HiMenu className="h-5 w-5" />
             </button>
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-neutral-1000 bg-opacity-50 z-50" role="dialog" aria-modal="true">
-                    <div id="mobile-menu" className="fixed inset-0 bg-neutral-0 dark:bg-neutral-900 p-6 overflow-y-auto flex flex-col space-y-6">
+                <div className="fixed inset-x-0 top-0 h-screen w-screen z-50" role="dialog" aria-modal="true">
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-neutral-1000 bg-opacity-50" onClick={() => setIsMenuOpen(false)} aria-hidden="true" />
+
+                    {/* Menu Panel - slides in from right */}
+                    <div
+                        id="mobile-menu"
+                        className="absolute top-0 right-0 h-full w-[85%] max-w-sm bg-neutral-0 dark:bg-neutral-900 shadow-xl p-6 overflow-y-auto flex flex-col space-y-6"
+                    >
                         <button
                             onClick={() => setIsMenuOpen(false)}
-                            className="self-end p-2 focus:outline-none"
+                            className="self-end p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-500"
                             aria-label="Close mobile menu"
                         >
-                            <HiX className="h-5 w-5" />
+                            <HiX className="h-6 w-6 text-neutral-900 dark:text-neutral-100" />
                         </button>
 
                         <div className="md:hidden block">
                             <Searchbar />
                         </div>
 
-                        <nav className="flex flex-col items-center justify-center space-y-4" aria-label="Mobile navigation">
+                        <nav className="flex flex-col items-start space-y-4 text-lg" aria-label="Mobile navigation">
                             {menuItems.map(item => {
                                 if (item.path) {
                                     return <MenuItem key={item.path} item={item} pathname={pathname} onClick={() => setIsMenuOpen(false)} />;
@@ -200,13 +207,13 @@ const ThemeSwitchButton = () => {
     );
 };
 
-interface HeaderProps {
+interface HeaderClientProps {
     siteHeader?: SiteHeaderViewModel;
     siteHeaderError: unknown;
     isSiteHeaderFetching: boolean;
 }
 
-export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: HeaderProps) => {
+export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: HeaderClientProps) => {
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
         { title: 'DIDs', path: '/did/list' },
@@ -251,7 +258,14 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
                 <>
                     <div className="flex items-center">
                         <a className="w-12 h-full stroke-white fill-white" href="https://rucio.cern.ch/">
-                            <Image src={logoPath} alt="Rucio Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} suppressHydrationWarning />
+                            <Image
+                                src={logoPath}
+                                alt="Rucio Logo"
+                                width={logoSize}
+                                height={logoSize}
+                                style={{ height: 'auto' }}
+                                suppressHydrationWarning
+                            />
                         </a>
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
                             <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} />

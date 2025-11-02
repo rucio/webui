@@ -20,18 +20,18 @@ import path from 'path';
  */
 
 type AuthFixtures = {
-  authenticatedPage: any;
+    authenticatedPage: any;
 };
 
 export const test = base.extend<AuthFixtures>({
-  // Use the authenticated storage state for this fixture
-  storageState: path.join(__dirname, '..', '.auth', 'user.json'),
+    // Use the authenticated storage state for this fixture
+    storageState: path.join(__dirname, '..', '.auth', 'user.json'),
 
-  // Authenticated page fixture
-  authenticatedPage: async ({ page }, use) => {
-    // The page will automatically use the authenticated storage state
-    await use(page);
-  },
+    // Authenticated page fixture
+    authenticatedPage: async ({ page }, use) => {
+        // The page will automatically use the authenticated storage state
+        await use(page);
+    },
 });
 
 export { expect } from '@playwright/test';

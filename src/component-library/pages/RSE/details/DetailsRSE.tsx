@@ -21,54 +21,68 @@ import { Divider } from '@/component-library/atoms/misc/Divider';
 /**
  * A responsive divider component for RSE sections.
  *
- * Renders a full-width divider that is only visible on screens smaller than the 'lg' breakpoint.
- * Useful for visually separating sections in mobile and tablet layouts.
+ * Renders a horizontal divider on mobile/tablet and a vertical divider on lg+ screens.
+ * Useful for visually separating sections across all screen sizes.
  *
  * @returns {React.ReactElement} The divider element.
  */
 const RSESectionDivider = () => (
-    <div className="w-full lg:hidden my-4">
-        <Divider />
-    </div>
+    <>
+        {/* Horizontal divider for mobile/tablet */}
+        <div className="w-full lg:hidden my-4">
+            <Divider />
+        </div>
+        {/* Vertical divider for lg and above */}
+        <div className="hidden lg:block h-auto mx-4">
+            <Divider orientation="vertical" />
+        </div>
+    </>
 );
 
 const DetailsRSEKeyValues = ({ meta }: { meta: RSEDetailsViewModel }) => {
     return (
-        <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
-            <div className="w-full flex flex-col lg:flex-row lg:gap-8">
-                <div className="flex flex-col flex-1">
-                    <KeyValueRow name="Type">
-                        <RSETypeBadge value={meta.rse_type} />
-                    </KeyValueRow>
-                    <KeyValueRow name="Availability">
-                        <div className="flex flex-wrap gap-2">
-                            {meta.availability_read && <RSEAvailabilityBadge operation="Read" />}
-                            {meta.availability_write && <RSEAvailabilityBadge operation="Write" />}
-                            {meta.availability_delete && <RSEAvailabilityBadge operation="Delete" />}
-                        </div>
-                    </KeyValueRow>
-                    <KeyValueRow name="Volatile">
-                        <Checkbox checked={meta.volatile} />
-                    </KeyValueRow>
+        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
+            <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
+                <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+                    <div className="flex flex-col flex-1">
+                        <KeyValueRow name="Type">
+                            <RSETypeBadge value={meta.rse_type} />
+                        </KeyValueRow>
+                        <KeyValueRow name="Availability">
+                            <div className="flex flex-wrap gap-2">
+                                {meta.availability_read && <RSEAvailabilityBadge operation="Read" />}
+                                {meta.availability_write && <RSEAvailabilityBadge operation="Write" />}
+                                {meta.availability_delete && <RSEAvailabilityBadge operation="Delete" />}
+                            </div>
+                        </KeyValueRow>
+                        <KeyValueRow name="Volatile">
+                            <Checkbox checked={meta.volatile} />
+                        </KeyValueRow>
+                    </div>
+                    <RSESectionDivider />
+                    <div className="flex flex-col flex-1">
+                        <KeyValueRow name="Deterministic">
+                            <Checkbox checked={meta.deterministic} />
+                        </KeyValueRow>
+                        <KeyValueRow name="Staging Area">
+                            <Checkbox checked={meta.staging_area} />
+                        </KeyValueRow>
+                    </div>
                 </div>
-                <RSESectionDivider />
-                <div className="flex flex-col flex-1">
-                    <KeyValueRow name="Deterministic">
-                        <Checkbox checked={meta.deterministic} />
-                    </KeyValueRow>
-                    <KeyValueRow name="Staging Area">
-                        <Checkbox checked={meta.staging_area} />
-                    </KeyValueRow>
-                </div>
-            </div>
-        </KeyValueWrapper>
+            </KeyValueWrapper>
+        </div>
     );
 };
 
 const DetailsRSEAttributes = ({ attributes }: { attributes: RSEAttributeViewModel }) => {
     return (
-        <>
-            <Heading text="Attributes" size="md" />
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <Heading text="Attributes" size="md" />
+                {attributes.attributes.length > 0 && (
+                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">{attributes.attributes.length}</span>
+                )}
+            </div>
             {attributes.attributes.length !== 0 ? (
                 <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
                     <DetailsRSEAttributesTable viewModel={attributes} />
@@ -78,16 +92,19 @@ const DetailsRSEAttributes = ({ attributes }: { attributes: RSEAttributeViewMode
                     <span>No attributes found.</span>
                 </InfoField>
             )}
-        </>
+        </div>
     );
 };
 
 const DetailsRSEProtocols = ({ protocols }: { protocols: RSEDetailsProtocol[] }) => {
     return (
-        <>
-            <Heading text="Protocols" size="md" />
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <Heading text="Protocols" size="md" />
+                {protocols.length > 0 && <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">{protocols.length}</span>}
+            </div>
             {protocols.length !== 0 ? (
-                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-35rem)]">
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-80">
                     <DetailsRSEProtocolsTable rowData={protocols} />
                 </div>
             ) : (
@@ -95,7 +112,7 @@ const DetailsRSEProtocols = ({ protocols }: { protocols: RSEDetailsProtocol[] })
                     <span>No protocols found.</span>
                 </InfoField>
             )}
-        </>
+        </div>
     );
 };
 
@@ -130,7 +147,7 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
         return null;
     };
 
-    const metaQueryKey = ['meta'];
+    const metaQueryKey = ['meta', props.name];
     const {
         data: meta,
         error: metaError,
@@ -140,6 +157,8 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
         initialData: props.initialMeta,
         queryFn: queryMeta,
         enabled: !props.initialMeta,
+        retry: false,
+        refetchOnWindowFocus: false,
     });
 
     const queryAttributes = async () => {

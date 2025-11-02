@@ -91,7 +91,7 @@ export const Interactive: Story = {
 
         return (
             <div className="flex items-center gap-2">
-                <Checkbox id="interactive" checked={checked} onCheckedChange={(value) => setChecked(value === true)} />
+                <Checkbox id="interactive" checked={checked} onCheckedChange={value => setChecked(value === true)} />
                 <label htmlFor="interactive" className="text-sm font-medium cursor-pointer">
                     {checked ? 'Checked!' : 'Click me'}
                 </label>
@@ -138,19 +138,19 @@ export const IndeterminateInteractive: Story = {
                 </div>
                 <div className="ml-6 space-y-2">
                     <div className="flex items-center gap-2">
-                        <Checkbox id="child1" checked={child1Checked} onCheckedChange={(value) => setChild1Checked(value === true)} />
+                        <Checkbox id="child1" checked={child1Checked} onCheckedChange={value => setChild1Checked(value === true)} />
                         <label htmlFor="child1" className="text-sm cursor-pointer">
                             Option 1
                         </label>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Checkbox id="child2" checked={child2Checked} onCheckedChange={(value) => setChild2Checked(value === true)} />
+                        <Checkbox id="child2" checked={child2Checked} onCheckedChange={value => setChild2Checked(value === true)} />
                         <label htmlFor="child2" className="text-sm cursor-pointer">
                             Option 2
                         </label>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Checkbox id="child3" checked={child3Checked} onCheckedChange={(value) => setChild3Checked(value === true)} />
+                        <Checkbox id="child3" checked={child3Checked} onCheckedChange={value => setChild3Checked(value === true)} />
                         <label htmlFor="child3" className="text-sm cursor-pointer">
                             Option 3
                         </label>

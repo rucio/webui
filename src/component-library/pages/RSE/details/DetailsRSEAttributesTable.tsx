@@ -18,6 +18,7 @@ export const DetailsRSEAttributesTable = (props: DetailsRSEAttributesTableProps)
             headerName: 'Key',
             field: 'key',
             flex: 1,
+            pinned: 'left' as const,
             sortable: true,
             filter: true,
             filterParams: DefaultTextFilterParams,
@@ -27,7 +28,8 @@ export const DetailsRSEAttributesTable = (props: DetailsRSEAttributesTableProps)
             field: 'value',
             cellRenderer: AttributeCell,
             flex: 1,
-            sortable: false,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
     ]);
 

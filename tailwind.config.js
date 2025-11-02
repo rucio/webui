@@ -19,9 +19,6 @@ module.exports = {
     },
     theme: {
         extend: {
-            screens: {
-                'nav': '975px',
-            },
             colors: {
                 neutral: { // Slate - Primary UI colors
                     0: '#ffffff',

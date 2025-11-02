@@ -31,7 +31,7 @@ const meta: Meta<typeof Divider> = {
         },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[600px]">
                 <Story />
             </div>
@@ -233,8 +233,7 @@ export const ContentSections: Story = {
             <div>
                 <h2 className="text-xl font-bold mb-2">Section 1</h2>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
             </div>
             <Divider />

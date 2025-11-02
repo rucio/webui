@@ -68,7 +68,7 @@ export const SectionContext: Story = {
         size: 'md',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg">
                 <Story />
             </div>
@@ -83,7 +83,7 @@ export const CardContext: Story = {
         text: 'Loading data...',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-64 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
                 <Story />
             </div>
@@ -97,7 +97,7 @@ export const InlineContext: Story = {
         size: 'sm',
         text: 'Processing...',
     },
-    render: (args) => (
+    render: args => (
         <div className="p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg">
             <p className="text-sm mb-2">Your request is being processed:</p>
             <LoadingElement {...args} />
@@ -139,7 +139,7 @@ export const MediumSize: Story = {
         text: 'Loading data...',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="h-64 border border-neutral-200 dark:border-neutral-700 rounded-lg">
                 <Story />
             </div>
@@ -176,7 +176,7 @@ export const DefaultVariant: Story = {
         text: 'Default loading',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="h-48 border border-neutral-200 dark:border-neutral-700 rounded-lg">
                 <Story />
             </div>
@@ -191,7 +191,7 @@ export const SuccessVariant: Story = {
         text: 'Processing successfully...',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="h-48 border border-neutral-200 dark:border-neutral-700 rounded-lg">
                 <Story />
             </div>
@@ -206,7 +206,7 @@ export const ErrorVariant: Story = {
         text: 'Retrying...',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="h-48 border border-neutral-200 dark:border-neutral-700 rounded-lg">
                 <Story />
             </div>
@@ -221,7 +221,7 @@ export const WarningVariant: Story = {
         text: 'Processing with warnings...',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="h-48 border border-neutral-200 dark:border-neutral-700 rounded-lg">
                 <Story />
             </div>
@@ -241,7 +241,7 @@ export const RSEDetailsLoading: Story = {
         layout: 'fullscreen',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
                     <Story />
@@ -259,7 +259,7 @@ export const DashboardWidgetLoading: Story = {
         text: 'Loading widget data...',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-96 h-64 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
                 <Story />
             </div>
@@ -274,7 +274,7 @@ export const HeaderLoading: Story = {
         size: 'sm',
     },
     decorators: [
-        (Story) => (
+        Story => (
             <header className="h-14 bg-neutral-0 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 flex items-center px-6">
                 <Story />
             </header>
@@ -294,7 +294,7 @@ export const DarkMode: Story = {
         backgrounds: { default: 'dark' },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="dark h-64 bg-neutral-900 rounded-lg border border-neutral-700">
                 <Story />
             </div>
@@ -311,9 +311,7 @@ export const ComparisonWithOldPattern: Story = {
                 <h3 className="text-sm font-semibold text-base-error-600">❌ Old Pattern (Avoid)</h3>
                 <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg h-48 p-4">
                     <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-2">Not centered, inconsistent:</p>
-                    <div className="text-xs font-mono bg-neutral-100 dark:bg-neutral-800 p-2 rounded">
-                        {'<LoadingSpinner />'}
-                    </div>
+                    <div className="text-xs font-mono bg-neutral-100 dark:bg-neutral-800 p-2 rounded">{'<LoadingSpinner />'}</div>
                 </div>
             </div>
             <div className="space-y-4">

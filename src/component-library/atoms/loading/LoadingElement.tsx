@@ -23,9 +23,7 @@ const loadingElementVariants = cva('flex items-center justify-center', {
     },
 });
 
-export interface LoadingElementProps
-    extends React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof loadingElementVariants> {
+export interface LoadingElementProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof loadingElementVariants> {
     /**
      * Size of the spinner
      */
@@ -76,7 +74,12 @@ export const LoadingElement = ({
     const hasText = Boolean(text || description);
 
     return (
-        <div className={cn(loadingElementVariants({ context, withText: hasText || withText }), className)} role="status" aria-live="polite" {...props}>
+        <div
+            className={cn(loadingElementVariants({ context, withText: hasText || withText }), className)}
+            role="status"
+            aria-live="polite"
+            {...props}
+        >
             <LoadingSpinner size={size} variant={variant} />
             {hasText && (
                 <div className="text-center space-y-1">

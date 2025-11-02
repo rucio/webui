@@ -6,7 +6,7 @@ import { TUseCase } from './usecase';
 import type TUseCaseFactory from './usecase-factory';
 import { AuthenticatedRequestModel } from './usecase-models';
 
-export type TSimpleControllerParameters = { response: NextApiResponse, session?: Session };
+export type TSimpleControllerParameters = { response: NextApiResponse; session?: Session };
 export type TAuthenticatedControllerParameters = TSimpleControllerParameters & { rucioAuthToken: string };
 export type TParameters = TSimpleControllerParameters | TAuthenticatedControllerParameters;
 

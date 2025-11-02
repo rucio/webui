@@ -53,15 +53,13 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Variant
  * </Section>
  * ```
  */
-export const Section = React.forwardRef<HTMLElement, SectionProps>(
-    ({ className, variant, spacing, padding, children, ...props }, ref) => {
-        return (
-            <section ref={ref} className={cn(sectionVariants({ variant, spacing, padding }), className)} {...props}>
-                {children}
-            </section>
-        );
-    },
-);
+export const Section = React.forwardRef<HTMLElement, SectionProps>(({ className, variant, spacing, padding, children, ...props }, ref) => {
+    return (
+        <section ref={ref} className={cn(sectionVariants({ variant, spacing, padding }), className)} {...props}>
+            {children}
+        </section>
+    );
+});
 Section.displayName = 'Section';
 
 export { sectionVariants };

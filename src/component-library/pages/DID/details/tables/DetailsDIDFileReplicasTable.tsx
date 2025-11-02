@@ -16,7 +16,7 @@ type DetailsDIDFileReplicasTableProps = {
 };
 
 const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rse/list?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const ReplicaStateDisplayNames = {
@@ -36,8 +36,7 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
         {
             headerName: 'RSE',
             field: 'rse',
-            flex: 1,
-            sortable: false,
+            width: 300,
             cellRenderer: ClickableRSE,
             filter: true,
             filterParams: DefaultTextFilterParams,
@@ -52,7 +51,6 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
                 className: badgeCellClasses,
             },
             filter: true,
-            sortable: false,
             filterParams: buildDiscreteFilterParams(Object.values(ReplicaStateDisplayNames), Object.values(ReplicaState)),
         },
     ]);

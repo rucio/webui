@@ -59,7 +59,7 @@ class StreamingResponseAdapter extends Writable implements Signal {
     private _headers: Record<string, string> = {
         'Content-Type': 'text/event-stream;charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
     };
 
     // Real-time streaming bridge
@@ -143,7 +143,7 @@ class StreamingResponseAdapter extends Writable implements Signal {
      */
     createReadableStream(): ReadableStream<Uint8Array> {
         return new ReadableStream<Uint8Array>({
-            start: (controller) => {
+            start: controller => {
                 // Store the controller so _write() can enqueue chunks directly
                 this._controller = controller;
 
@@ -155,7 +155,7 @@ class StreamingResponseAdapter extends Writable implements Signal {
 
             cancel: () => {
                 this._controller = null;
-            }
+            },
         });
     }
 }
@@ -172,7 +172,7 @@ class StreamingResponseAdapter extends Writable implements Signal {
 export async function executeController<TParams extends TSimpleControllerParameters>(
     controller: BaseController<TParams, any>,
     parameters: Omit<TParams, 'response' | 'session'>,
-    streaming: boolean = false
+    streaming: boolean = false,
 ): Promise<NextResponse | Response> {
     try {
         const session = await getSession();
@@ -218,7 +218,7 @@ export async function executeController<TParams extends TSimpleControllerParamet
                 message: 'Controller did not return data',
                 code: 500,
             },
-            { status: 500 }
+            { status: 500 },
         );
     } catch (error) {
         console.error('Error executing controller:', error);
@@ -229,7 +229,7 @@ export async function executeController<TParams extends TSimpleControllerParamet
                 message: error instanceof Error ? error.message : 'Internal server error',
                 code: 500,
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -252,7 +252,7 @@ export async function executeController<TParams extends TSimpleControllerParamet
 export async function executeAuthenticatedController<TParams extends TAuthenticatedControllerParameters>(
     controller: BaseController<TParams, any>,
     parameters: Omit<TParams, 'response' | 'session' | 'rucioAuthToken'>,
-    streaming: boolean = false
+    streaming: boolean = false,
 ): Promise<NextResponse | Response> {
     return withAuthenticatedSession(async (user: SessionUser, token: string) => {
         try {
@@ -300,7 +300,7 @@ export async function executeAuthenticatedController<TParams extends TAuthentica
                     message: 'Controller did not return data',
                     code: 500,
                 },
-                { status: 500 }
+                { status: 500 },
             );
         } catch (error) {
             console.error('Error executing authenticated controller:', error);
@@ -311,7 +311,7 @@ export async function executeAuthenticatedController<TParams extends TAuthentica
                     message: error instanceof Error ? error.message : 'Internal server error',
                     code: 500,
                 },
-                { status: 500 }
+                { status: 500 },
             );
         }
     }) as Promise<NextResponse | Response>;

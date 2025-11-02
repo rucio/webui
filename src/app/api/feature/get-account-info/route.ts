@@ -20,16 +20,11 @@ export async function GET() {
         }
 
         const account = sessionUser.rucioAccount;
-        const controller = appContainer.get<BaseController<GetAccountInfoControllerParameters, void>>(
-            CONTROLLERS.GET_ACCOUNT_INFO
-        );
+        const controller = appContainer.get<BaseController<GetAccountInfoControllerParameters, void>>(CONTROLLERS.GET_ACCOUNT_INFO);
 
         return executeAuthenticatedController(controller, { account });
     } catch (error) {
         console.error('Error in get-account-info:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

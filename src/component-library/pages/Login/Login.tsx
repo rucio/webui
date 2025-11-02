@@ -82,7 +82,7 @@ const MultipleAccountsModal = ({ submit, availableAccounts, onClose }: MultipleA
                     <SelectValue placeholder="Select an account" />
                 </SelectTrigger>
                 <SelectContent>
-                    {availableAccounts.map((account) => (
+                    {availableAccounts.map(account => (
                         <SelectItem key={account} value={account}>
                             {account}
                         </SelectItem>
@@ -272,10 +272,7 @@ export const Login = ({
                 <div className="flex justify-center flex-col space-y-3 mt-4" aria-label="Choose Login Method">
                     {loginViewModel.oidcEnabled && (
                         <div
-                            className={cn(
-                                'flex flex-row justify-center gap-2',
-                                loginViewModel.voList[selectedVOTab].oidcEnabled ? '' : 'hidden',
-                            )}
+                            className={cn('flex flex-row justify-center gap-2', loginViewModel.voList[selectedVOTab].oidcEnabled ? '' : 'hidden')}
                             aria-label="OIDC Login Buttons"
                         >
                             {loginViewModel.voList[selectedVOTab].oidcProviders.map((provider: OIDCProvider, index: number) => {
@@ -309,17 +306,14 @@ export const Login = ({
 
                     {!loginViewModel.userpassEnabled && (
                         <div className="space-y-2 px-2">
-                            <label
-                                htmlFor="account-input-nouserpass"
-                                className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                            >
+                            <label htmlFor="account-input-nouserpass" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                 Account <span className="text-neutral-500 dark:text-neutral-500">(optional)</span>
                             </label>
                             <Input
                                 id="account-input-nouserpass"
                                 type="text"
                                 value={inputAccount || ''}
-                                onChange={(e) => setInputAccount(e.target.value || undefined)}
+                                onChange={e => setInputAccount(e.target.value || undefined)}
                                 placeholder="Enter account name"
                                 className="w-full"
                             />
@@ -355,7 +349,7 @@ export const Login = ({
                             'hover:text-neutral-900 dark:hover:text-neutral-100',
                             'transition-colors duration-150',
                             'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-                            'rounded px-2 py-1'
+                            'rounded px-2 py-1',
                         )}
                         aria-label="Back to login methods"
                     >
@@ -365,37 +359,24 @@ export const Login = ({
                 </div>
 
                 <motion.form
-                    onSubmit={(e) => {
+                    onSubmit={e => {
                         e.preventDefault();
                         submitUserPass(inputAccount);
                     }}
-                    animate={
-                        fieldErrors.username || fieldErrors.password
-                            ? prefersReducedMotion
-                                ? {}
-                                : { x: [0, -10, 10, -10, 10, 0] }
-                            : {}
-                    }
+                    animate={fieldErrors.username || fieldErrors.password ? (prefersReducedMotion ? {} : { x: [0, -10, 10, -10, 10, 0] }) : {}}
                     transition={{ duration: 0.4 }}
                 >
-                    <fieldset
-                        className="flex flex-col space-y-4"
-                        aria-label="Userpass Login Fields"
-                        id="userpass-form"
-                    >
+                    <fieldset className="flex flex-col space-y-4" aria-label="Userpass Login Fields" id="userpass-form">
                         <div className="flex flex-col space-y-4">
                             <div className="space-y-2">
-                                <label
-                                    htmlFor="username-input"
-                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                                >
+                                <label htmlFor="username-input" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                     Username
                                 </label>
                                 <Input
                                     id="username-input"
                                     type="text"
                                     value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    onChange={e => setUsername(e.target.value)}
                                     error={Boolean(fieldErrors.username)}
                                     aria-describedby={fieldErrors.username ? 'username-error' : undefined}
                                     aria-invalid={Boolean(fieldErrors.username)}
@@ -414,17 +395,14 @@ export const Login = ({
                             </div>
 
                             <div className="space-y-2">
-                                <label
-                                    htmlFor="password-input"
-                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                                >
+                                <label htmlFor="password-input" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                     Password
                                 </label>
                                 <Input
                                     id="password-input"
                                     type="password"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={e => setPassword(e.target.value)}
                                     error={Boolean(fieldErrors.password)}
                                     aria-describedby={fieldErrors.password ? 'password-error' : undefined}
                                     aria-invalid={Boolean(fieldErrors.password)}
@@ -443,17 +421,14 @@ export const Login = ({
                             </div>
 
                             <div className="space-y-2">
-                                <label
-                                    htmlFor="account-input"
-                                    className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-                                >
+                                <label htmlFor="account-input" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                     Account <span className="text-neutral-500 dark:text-neutral-500">(optional)</span>
                                 </label>
                                 <Input
                                     id="account-input"
                                     type="text"
                                     value={inputAccount || ''}
-                                    onChange={(e) => setInputAccount(e.target.value || undefined)}
+                                    onChange={e => setInputAccount(e.target.value || undefined)}
                                     disabled={isSubmitting}
                                     placeholder="Enter account name"
                                     onEnterKey={() => submitUserPass(inputAccount)}
@@ -469,7 +444,7 @@ export const Login = ({
                             loading={isSubmitting}
                             className="w-full"
                         >
-                            {isSubmitting ? "Signing in..." : "Login"}
+                            {isSubmitting ? 'Signing in...' : 'Login'}
                         </Button>
                     </fieldset>
                 </motion.form>
@@ -479,12 +454,7 @@ export const Login = ({
 
     const getLoginForm = () => {
         return (
-            <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={formVariants}
-                className="flex items-center justify-center min-h-screen py-8"
-            >
+            <motion.div initial="hidden" animate="visible" variants={formVariants} className="flex items-center justify-center min-h-screen py-8">
                 <div>
                     {isLoggedIn && (
                         <div className="mb-4">
@@ -531,12 +501,7 @@ export const Login = ({
 
                         <div className="flex flex-col items-center justify-between w-full text-center p-4">
                             <motion.div initial="hidden" animate="visible" variants={logoVariants}>
-                                <RucioLogo
-                                    className="text-neutral-900 dark:text-neutral-100"
-                                    width={120}
-                                    height={120}
-                                    aria-label="Rucio Logo"
-                                />
+                                <RucioLogo className="text-neutral-900 dark:text-neutral-100" width={120} height={120} aria-label="Rucio Logo" />
                             </motion.div>
                         </div>
 

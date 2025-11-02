@@ -30,6 +30,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
             field: 'name',
             flex: 5,
             minWidth: 300,
+            pinned: 'left' as const,
             cellRenderer: ClickableName,
             cellRendererParams: {
                 account: props.account,
@@ -46,6 +47,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
                 className: badgeCellClasses,
                 value: RuleState.OK,
             },
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Replicating',
@@ -56,6 +58,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
                 className: badgeCellClasses,
                 value: RuleState.REPLICATING,
             },
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Stuck',
@@ -66,6 +69,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
                 className: badgeCellClasses,
                 value: RuleState.STUCK,
             },
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Suspended',
@@ -76,6 +80,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
                 className: badgeCellClasses,
                 value: RuleState.SUSPENDED,
             },
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Waiting Approval',
@@ -86,6 +91,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
                 className: badgeCellClasses,
                 value: RuleState.WAITING_APPROVAL,
             },
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Inject',
@@ -96,6 +102,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
                 className: badgeCellClasses,
                 value: RuleState.INJECT,
             },
+            filter: 'agNumberColumnFilter',
         },
     ]);
 

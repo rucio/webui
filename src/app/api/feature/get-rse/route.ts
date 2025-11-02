@@ -17,22 +17,14 @@ export async function GET(request: NextRequest) {
         const rseName = params.rseName as string;
 
         if (!rseName) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: rseName' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: rseName' }, { status: 400 });
         }
 
-        const controller = appContainer.get<BaseController<GetRSEControllerParameters, void>>(
-            CONTROLLERS.GET_RSE
-        );
+        const controller = appContainer.get<BaseController<GetRSEControllerParameters, void>>(CONTROLLERS.GET_RSE);
 
         return executeAuthenticatedController(controller, { rseName });
     } catch (error) {
         console.error('Error in get-rse:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

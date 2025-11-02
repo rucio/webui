@@ -13,14 +13,7 @@ export const SelectableCell = (props: { onSelect: () => void; selected: boolean;
     };
 
     return (
-        <div
-            className={containerStyles}
-            onClick={props.onSelect}
-            onKeyDown={handleKeyDown}
-            role="button"
-            tabIndex={0}
-            aria-pressed={props.selected}
-        >
+        <div className={containerStyles} onClick={props.onSelect} onKeyDown={handleKeyDown} role="button" tabIndex={0} aria-pressed={props.selected}>
             {props.selected ? (
                 <HiCheck className={`flex-shrink-0 text-base-success-600 ${iconSize}`} />
             ) : (
@@ -40,13 +33,7 @@ export const RemovableCell = (props: { onClick: () => void; value: string }) => 
     };
 
     return (
-        <div
-            className={containerStyles}
-            onClick={props.onClick}
-            onKeyDown={handleKeyDown}
-            role="button"
-            tabIndex={0}
-        >
+        <div className={containerStyles} onClick={props.onClick} onKeyDown={handleKeyDown} role="button" tabIndex={0}>
             <HiMinus className={`flex-shrink-0 text-base-error-500 ${iconSize}`} />
             <span>{props.value}</span>
         </div>

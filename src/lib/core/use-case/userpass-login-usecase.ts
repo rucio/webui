@@ -34,7 +34,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             username: request.username,
             account: request.account || '(none)',
             vo: request.vo,
-            redirectTo: request.redirectTo
+            redirectTo: request.redirectTo,
         });
 
         const userpassLoginEnabled = await this.envConfigGateway.userpassEnabled();
@@ -53,7 +53,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             statusCode: dto.statusCode,
             account: dto.account,
             hasToken: !!dto.authToken,
-            message: dto.message
+            message: dto.message,
         });
 
         let role: Role | undefined;
@@ -85,7 +85,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                 rucioAccount: dto.account,
                 role,
                 country,
-                countryRole
+                countryRole,
             });
 
             const responseModel: UserpassLoginResponse = {
@@ -103,7 +103,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
         }
         if (dto.statusCode === 206) {
             console.log('[LOGIN FLOW 13a] Multiple accounts detected', {
-                availableAccounts: dto.message
+                availableAccounts: dto.message,
             });
 
             const incompleteModel: UserpassLoginIncomplete = {
@@ -133,7 +133,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
         console.log('[LOGIN FLOW 13b] Error response', {
             type: error_type,
             message: dto.message,
-            statusCode: dto.statusCode
+            statusCode: dto.statusCode,
         });
 
         const errorModel: UserpassLoginError = {
