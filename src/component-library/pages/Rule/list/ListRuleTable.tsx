@@ -36,6 +36,10 @@ const ClickableDID = (props: { value: string[] }) => {
     );
 };
 
+const ClickableRSEExpression = (props: { value: string }) => {
+    return <ClickableCell href={`/rse/list?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
+};
+
 const NullableRemainingLifetime = (props: { value: number }) => {
     const timeString = formatSeconds(props.value);
     if (!timeString) {
@@ -47,14 +51,13 @@ const NullableRemainingLifetime = (props: { value: number }) => {
 export const ListRuleTable = (props: ListRuleTableProps) => {
     const tableRef = useRef<AgGridReact<RuleViewModel>>(null);
 
-
     const [columnDefs] = useState([
         {
             headerName: 'DID',
             valueGetter: (params: ValueGetterParams<RuleViewModel>) => {
                 return [params.data?.scope, params.data?.name];
             },
-            minWidth: 400,
+            minWidth: 350,
             flex: 2,
             filter: true,
             filterParams: DefaultTextFilterParams,
@@ -65,17 +68,19 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             headerName: 'ID',
             field: 'id',
             width: 50,
-            minWidth: 250,
+            minWidth: 100,
             flex: 1,
-            sortable: false,
             cellRenderer: ClickableId,
             pinned: 'left' as const,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'RSE Expression',
             field: 'rse_expression',
             minWidth: 160,
             flex: 1,
+            cellRenderer: ClickableRSEExpression,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
@@ -90,7 +95,6 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
                 className: badgeCellClasses,
             },
             filter: true,
-            sortable: false,
             filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
         },
         // TODO: minified header with a tooltip
@@ -99,14 +103,14 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             field: 'locks_ok_cnt',
             width: 80,
             minWidth: 80,
-            sortable: false,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Replicating',
             field: 'locks_replicating_cnt',
             width: 125,
             minWidth: 125,
-            sortable: false,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Stuck',
@@ -115,6 +119,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             minWidth: 95,
             sortable: true,
             comparator: ruleActivityComparator,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Account',

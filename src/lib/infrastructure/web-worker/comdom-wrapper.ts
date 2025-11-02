@@ -113,7 +113,7 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
         }
         this.log('Initializing ComDOM');
         try {
-            this.comDOM = await new this.wrappedComDOM(this.verbose) as Remote<ComDOM<TData>>;
+            this.comDOM = (await new this.wrappedComDOM(this.verbose)) as Remote<ComDOM<TData>>;
         } catch (error) {
             this.log('Error initializing ComDOM', error);
 

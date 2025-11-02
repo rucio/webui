@@ -19,13 +19,7 @@ const CircleWithText = ({ text, className, onClick }: { text: string; onClick?: 
     };
 
     return (
-        <div
-            className={classes}
-            onClick={onClick}
-            onKeyDown={handleKeyDown}
-            role={onClick ? 'button' : undefined}
-            tabIndex={onClick ? 0 : undefined}
-        >
+        <div className={classes} onClick={onClick} onKeyDown={handleKeyDown} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
             <span className="text-lg">{text}</span>
         </div>
     );

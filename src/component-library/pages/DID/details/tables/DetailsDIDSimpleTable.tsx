@@ -8,6 +8,8 @@ import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
+import { DIDType } from '@/lib/core/entity/rucio';
+import { buildDiscreteFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 
 type DetailsDIDSimpleTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
@@ -24,6 +26,14 @@ const ClickableDID = (props: { value: string[] }) => {
     );
 };
 
+const DIDTypeDisplayNames = {
+    [DIDType.FILE]: 'File',
+    [DIDType.DATASET]: 'Dataset',
+    [DIDType.CONTAINER]: 'Container',
+    [DIDType.COLLECTION]: 'Collection',
+    [DIDType.ALL]: 'All',
+};
+
 export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
     const tableRef = useRef<AgGridReact<DIDViewModel>>(null);
 
@@ -35,8 +45,9 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
                 return [params.data?.scope, params.data?.name];
             },
             cellRenderer: ClickableDID,
-            minWidth: 250,
-            sortable: false,
+            minWidth: 450,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'Type',
@@ -47,7 +58,8 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            sortable: false,
+            filter: true,
+            filterParams: buildDiscreteFilterParams(Object.values(DIDTypeDisplayNames), Object.values(DIDType)),
         },
     ]);
 

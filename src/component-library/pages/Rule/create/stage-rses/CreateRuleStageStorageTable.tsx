@@ -1,15 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StreamingStatus, UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
-import { ColSpanParams, GridReadyEvent, ICellRendererParams, SelectionChangedEvent, ValueFormatterParams } from 'ag-grid-community';
+import { ColSpanParams, GridReadyEvent, ICellRendererParams, ValueFormatterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { RSEAccountUsageLimitViewModel, RSEAccountUsageViewModel } from '@/lib/infrastructure/data/view-model/rse';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { SelectableCell } from '@/component-library/features/table/cells/selection-cells';
+
+interface SelectableRSEViewModel extends RSEAccountUsageLimitViewModel {
+    selected?: boolean;
+}
 
 type StageStorageTableProps = {
     streamingHook: UseStreamReader<RSEAccountUsageViewModel>;
-    onSelectionChanged: (event: SelectionChangedEvent) => void;
+    addRSE: (item: SelectableRSEViewModel) => void;
+    removeRSE: (item: SelectableRSEViewModel) => void;
     onGridReady: (event: GridReadyEvent) => void;
     totalDataSize: number;
     selectedItems: RSEAccountUsageLimitViewModel[];
@@ -20,21 +27,34 @@ const WarningCell = (props: { value: string; warn: boolean }) => {
     return <span className={textColor}>{props.value}</span>;
 };
 
-export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ ...props }) => {
-    const tableRef = useRef<AgGridReact<RSEAccountUsageLimitViewModel>>(null);
+const ClickableRSE = (props: { value: string }) => {
+    return <ClickableCell href={`/rse/list?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
+};
 
-    // TODO: these should be calculated on the client side
+export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ addRSE, removeRSE, selectedItems, ...props }) => {
+    const tableRef = useRef<AgGridReact<SelectableRSEViewModel>>(null);
+
     const [columnDefs] = useState([
         {
             headerName: 'Name',
             field: 'rse',
             minWidth: 250,
             flex: 1,
+            pinned: 'left' as const,
+            cellRenderer: (params: ICellRendererParams<SelectableRSEViewModel>) => {
+                const rse = params.data!;
+                // Use RSE name for comparison since rse_id is undefined from the API
+                const isSelectedInArray = selectedItems.some(item => item.rse === rse.rse);
+                rse.selected = rse.selected ?? isSelectedInArray;
+                const onSelect = () => (rse.selected ? removeRSE(rse) : addRSE(rse));
+                return <SelectableCell selected={rse.selected} onSelect={onSelect} {...params} />;
+            },
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'Quota',
+            field: 'bytes_limit',
             cellRenderer: (params: ICellRendererParams) => {
                 const item: RSEAccountUsageLimitViewModel = params.data;
                 if (item.bytes_limit === -1 && item.has_quota) {
@@ -48,6 +68,7 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
                 return params.data.bytes_limit < 0 ? 3 : 1;
             },
             minWidth: 200,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Total usage',
@@ -60,6 +81,7 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
             },
             minWidth: 200,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Remaining',
@@ -70,8 +92,23 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
             },
             minWidth: 200,
+            filter: 'agNumberColumnFilter',
         },
     ]);
+
+    const updateSelection = useCallback(() => {
+        tableRef.current?.api?.forEachNode(node => {
+            if (!node.data) return;
+            const rse: SelectableRSEViewModel = node.data;
+            // Use RSE name for comparison since rse_id is undefined from the API
+            const selected = selectedItems.some(element => element.rse === rse.rse);
+            node.setData({ ...rse, selected });
+        });
+    }, [selectedItems]);
+
+    useEffect(() => {
+        updateSelection();
+    }, [updateSelection]);
 
     const onGridReady = (event: GridReadyEvent) => {
         props.onGridReady(event);
@@ -85,20 +122,5 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
         });
     };
 
-    useEffect(() => {
-        if (props.streamingHook.status === StreamingStatus.STOPPED) {
-            const updateSelection = () => {
-                tableRef.current?.api?.forEachNode(node => {
-                    const model = node.data;
-                    if (!model) return;
-                    const selected = props.selectedItems.some(element => element.rse === model.rse);
-                    node.setSelected(selected);
-                });
-            };
-
-            setTimeout(updateSelection, 100);
-        }
-    }, [props.streamingHook.status]);
-
-    return <StreamedTable columnDefs={columnDefs} rowSelection="multiple" tableRef={tableRef} {...props} onGridReady={onGridReady} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} onAsyncTransactionsFlushed={() => updateSelection()} />;
 };

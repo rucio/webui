@@ -29,7 +29,7 @@ const meta: Meta<typeof Input> = {
         },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[400px]">
                 <Story />
             </div>
@@ -255,27 +255,39 @@ export const AllInputTypes: Story = {
     render: () => (
         <div className="space-y-4">
             <div>
-                <label htmlFor="input-text" className="block text-sm font-medium mb-2">Text</label>
+                <label htmlFor="input-text" className="block text-sm font-medium mb-2">
+                    Text
+                </label>
                 <Input id="input-text" type="text" placeholder="Text input" />
             </div>
             <div>
-                <label htmlFor="input-email" className="block text-sm font-medium mb-2">Email</label>
+                <label htmlFor="input-email" className="block text-sm font-medium mb-2">
+                    Email
+                </label>
                 <Input id="input-email" type="email" placeholder="Email input" />
             </div>
             <div>
-                <label htmlFor="input-password" className="block text-sm font-medium mb-2">Password</label>
+                <label htmlFor="input-password" className="block text-sm font-medium mb-2">
+                    Password
+                </label>
                 <Input id="input-password" type="password" placeholder="Password input" />
             </div>
             <div>
-                <label htmlFor="input-number" className="block text-sm font-medium mb-2">Number</label>
+                <label htmlFor="input-number" className="block text-sm font-medium mb-2">
+                    Number
+                </label>
                 <Input id="input-number" type="number" placeholder="Number input" />
             </div>
             <div>
-                <label htmlFor="input-date" className="block text-sm font-medium mb-2">Date</label>
+                <label htmlFor="input-date" className="block text-sm font-medium mb-2">
+                    Date
+                </label>
                 <Input id="input-date" type="date" />
             </div>
             <div>
-                <label htmlFor="input-search" className="block text-sm font-medium mb-2">Search</label>
+                <label htmlFor="input-search" className="block text-sm font-medium mb-2">
+                    Search
+                </label>
                 <Input id="input-search" type="search" placeholder="Search input" />
             </div>
         </div>

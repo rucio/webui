@@ -7,10 +7,20 @@ import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBad
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { RemovableCell } from '@/component-library/features/table/cells/selection-cells';
+import { buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DIDType } from '@/lib/core/entity/rucio';
 
 type StageDataTableProps = {
     rowData: ListDIDsViewModel[];
     removeDID: (item: ListDIDsViewModel) => void;
+};
+
+const DIDTypeDisplayNames = {
+    [DIDType.FILE]: 'File',
+    [DIDType.DATASET]: 'Dataset',
+    [DIDType.CONTAINER]: 'Container',
+    [DIDType.COLLECTION]: 'Collection',
+    [DIDType.ALL]: 'All',
 };
 
 export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => {
@@ -25,8 +35,7 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
                 const did = params.data!;
                 return <RemovableCell onClick={() => props.removeDID(did)} {...params} />;
             },
-            minWidth: 250,
-            sortable: false,
+            minWidth: 400,
         },
         {
             headerName: 'Type',
@@ -37,7 +46,8 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            sortable: false,
+            filter: true,
+            filterParams: buildDiscreteFilterParams(Object.values(DIDTypeDisplayNames), Object.values(DIDType)),
         },
         {
             headerName: 'Size',
@@ -46,7 +56,7 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
                 return formatFileSize(params.value);
             },
             minWidth: 200,
-            sortable: false,
+            filter: 'agNumberColumnFilter',
         },
     ]);
 

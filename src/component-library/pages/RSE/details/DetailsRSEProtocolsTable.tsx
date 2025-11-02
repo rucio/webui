@@ -3,6 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
 import { RSEDetailsProtocol } from '@/lib/core/entity/rucio';
 import { ValueGetterParams } from 'ag-grid-community';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 
 type DetailsRSEProtocolsTableProps = {
     rowData: RSEDetailsProtocol[];
@@ -13,94 +14,136 @@ export const DetailsRSEProtocolsTable = (props: DetailsRSEProtocolsTableProps) =
 
     const [columnDefs] = useState([
         {
-            headerName: 'Scheme',
-            field: 'scheme',
-            minWidth: 100,
-            sortable: false,
+            headerName: 'Protocol',
+            children: [
+                {
+                    headerName: 'Scheme',
+                    field: 'scheme',
+                    width: 120,
+                    flex: 0,
+                    pinned: 'left',
+                    filter: true,
+                    filterParams: DefaultTextFilterParams,
+                },
+                {
+                    headerName: 'Hostname',
+                    field: 'hostname',
+                    width: 250,
+                    flex: 0,
+                    filter: true,
+                    filterParams: DefaultTextFilterParams,
+                },
+                {
+                    headerName: 'Port',
+                    field: 'port',
+                    width: 100,
+                    flex: 0,
+                    filter: 'agNumberColumnFilter',
+                },
+                {
+                    headerName: 'Prefix',
+                    field: 'prefix',
+                    width: 200,
+                    flex: 0,
+                    filter: true,
+                    filterParams: DefaultTextFilterParams,
+                },
+            ],
         },
         {
-            headerName: 'Hostname',
-            field: 'hostname',
-            minWidth: 200,
-            flex: 1,
-            sortable: false,
+            headerName: 'LAN Priorities',
+            children: [
+                {
+                    headerName: 'Read',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.lan.read;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+                {
+                    headerName: 'Write',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.lan.write;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+                {
+                    headerName: 'Delete',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.lan.delete;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+            ],
         },
         {
-            headerName: 'Port',
-            field: 'port',
-            minWidth: 80,
-            sortable: false,
+            headerName: 'WAN Priorities',
+            children: [
+                {
+                    headerName: 'Read',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.wan.read;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+                {
+                    headerName: 'Write',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.wan.write;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+                {
+                    headerName: 'Delete',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.wan.delete;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+            ],
         },
         {
-            headerName: 'Prefix',
-            field: 'prefix',
-            minWidth: 250,
-            flex: 1,
-            sortable: false,
-        },
-        {
-            headerName: 'LAN/R',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.lan.read;
-            },
-            minWidth: 80,
-            sortable: true,
-        },
-        {
-            headerName: 'LAN/W',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.lan.write;
-            },
-            minWidth: 80,
-            sortable: true,
-        },
-        {
-            headerName: 'LAN/D',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.lan.delete;
-            },
-            minWidth: 80,
-            sortable: true,
-        },
-        {
-            headerName: 'WAN/R',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.wan.read;
-            },
-            minWidth: 80,
-            sortable: true,
-        },
-        {
-            headerName: 'WAN/W',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.wan.write;
-            },
-            minWidth: 80,
-            sortable: true,
-        },
-        {
-            headerName: 'WAN/D',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.wan.delete;
-            },
-            minWidth: 80,
-            sortable: true,
-        },
-        {
-            headerName: 'TPC/R',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.wan.third_party_copy_read;
-            },
-            minWidth: 80,
-            sortable: true,
-        },
-        {
-            headerName: 'TPC/W',
-            valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
-                return params.data?.domains.wan.third_party_copy_write;
-            },
-            minWidth: 80,
-            sortable: true,
+            headerName: 'Third Party Copy',
+            children: [
+                {
+                    headerName: 'Read',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.wan.third_party_copy_read;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+                {
+                    headerName: 'Write',
+                    valueGetter: (params: ValueGetterParams<RSEDetailsProtocol>) => {
+                        return params.data?.domains.wan.third_party_copy_write;
+                    },
+                    width: 90,
+                    flex: 0,
+                    sortable: true,
+                    filter: 'agNumberColumnFilter',
+                },
+            ],
         },
     ]);
 

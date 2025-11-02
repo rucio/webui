@@ -6,7 +6,13 @@ import { MultipleAccountsError } from '@/lib/core/entity/auth-errors';
 import { authorizeX509 } from './nextauth-x509-adapter';
 import { AuthType, Role } from '@/lib/core/entity/auth-models';
 import { getIssuerFromEnv } from './oidc-providers';
-import { getRucioAccountsForIdentity, selectAccountFromMultiple, IdentityNotMappedError, InvalidTokenError, RucioAPIError } from './rucio-oidc-helper';
+import {
+    getRucioAccountsForIdentity,
+    selectAccountFromMultiple,
+    IdentityNotMappedError,
+    InvalidTokenError,
+    RucioAPIError,
+} from './rucio-oidc-helper';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
@@ -17,10 +23,7 @@ import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-confi
 function getSessionUserIndex(allUsers: SessionUser[] | undefined, user: SessionUser): number {
     if (!allUsers) return -1;
     return allUsers.findIndex(
-        u =>
-            u.rucioIdentity === user.rucioIdentity &&
-            u.rucioAccount === user.rucioAccount &&
-            u.rucioAuthType === user.rucioAuthType,
+        u => u.rucioIdentity === user.rucioIdentity && u.rucioAccount === user.rucioAccount && u.rucioAuthType === user.rucioAuthType,
     );
 }
 
@@ -45,7 +48,7 @@ export const authConfig: NextAuthConfig = {
                     username: credentials?.username,
                     vo: credentials?.vo,
                     account: credentials?.account || '(none)',
-                    hasPassword: !!credentials?.password
+                    hasPassword: !!credentials?.password,
                 });
 
                 if (!credentials?.username || !credentials?.password || !credentials?.vo) {
@@ -64,7 +67,7 @@ export const authConfig: NextAuthConfig = {
                     console.log('[LOGIN FLOW 7] authorizeUserPass threw error', {
                         errorName: error instanceof Error ? error.name : 'Unknown',
                         isMultipleAccounts: error instanceof MultipleAccountsError,
-                        message: error instanceof Error ? error.message : String(error)
+                        message: error instanceof Error ? error.message : String(error),
                     });
                     // If it's a MultipleAccountsError, we need to handle it specially
                     if (error instanceof MultipleAccountsError) {
@@ -116,7 +119,7 @@ export const authConfig: NextAuthConfig = {
                 hasUser: !!user,
                 accountType: account?.type,
                 trigger,
-                currentUserAccount: token.user?.rucioAccount
+                currentUserAccount: token.user?.rucioAccount,
             });
 
             // ==========================================
@@ -178,16 +181,11 @@ export const authConfig: NextAuthConfig = {
                     console.log(`[OIDC] Looking up Rucio account for identity via API...`);
 
                     // Call Rucio identity API (with caching)
-                    const accounts = await getRucioAccountsForIdentity(
-                        rucioIdentity,
-                        rucioHost,
-                        rucioAuthToken
-                    );
+                    const accounts = await getRucioAccountsForIdentity(rucioIdentity, rucioHost, rucioAuthToken);
 
                     // Handle multiple accounts (use first one for now)
                     rucioAccount = selectAccountFromMultiple(accounts);
                     console.log(`[OIDC] Successfully mapped to Rucio account: ${rucioAccount}`);
-
                 } catch (error) {
                     if (error instanceof IdentityNotMappedError) {
                         // Identity is not registered in Rucio
@@ -274,7 +272,7 @@ export const authConfig: NextAuthConfig = {
                     rucioAccount: (user as SessionUser).rucioAccount,
                     rucioAuthType: (user as SessionUser).rucioAuthType,
                     isLoggedIn: (user as SessionUser).isLoggedIn,
-                    existingUsersCount: token.allUsers?.length || 0
+                    existingUsersCount: token.allUsers?.length || 0,
                 });
 
                 // Initialize allUsers if it doesn't exist
@@ -331,7 +329,7 @@ export const authConfig: NextAuthConfig = {
             console.log('[LOGIN FLOW 19] Session callback triggered', {
                 hasTokenUser: !!token.user,
                 allUsersCount: token.allUsers?.length || 0,
-                activeAccount: token.user?.rucioAccount
+                activeAccount: token.user?.rucioAccount,
             });
 
             if (token.user) {
@@ -391,7 +389,6 @@ export const authConfig: NextAuthConfig = {
 
     debug: process.env.NODE_ENV === 'development',
 };
-
 
 // export TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJWYUQzRDBQUm5QVzB5MXpBLTBieVIxZkhsSFVqalNFZzAxNngyY3JjaHljIn0.eyJleHAiOjE3NjE4MzQxNDksImlhdCI6MTc2MTgzMjk0OSwianRpIjoiYjM0ZGI3NjctYTg0ZS00YWVhLWE0MzQtZjQ2ODNjYTc2ZDQ5IiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmNlcm4uY2gvYXV0aC9yZWFsbXMvY2VybiIsImF1ZCI6ImF0bGFzLXJ1Y2lvLXdlYnVpIiwic3ViIjoibWF5YW5rIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXRsYXMtcnVjaW8td2VidWkiLCJzaWQiOiIwMWNkNTc4OS1jNzUzLTRiYWYtYjFkMy04ZTE2MGI5MjllMjIiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly9hdGxhcy1ydWNpby13ZWJ1aS5jZXJuLmNoIiwiaHR0cDovL2xvY2FsaG9zdDozMDAwIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiMmZhLW1pZ3JhdGVkIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYXRsYXMtcnVjaW8td2VidWkiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCIsImNlcm5fcGVyc29uX2lkIjoiODAxNjU5IiwibmFtZSI6Ik1heWFuayBTaGFybWEiLCJjZXJuX21haWxfdXBuIjoibWF5YW5rQGNlcm4uY2giLCJjZXJuX2lkZW50aXR5X2lkIjoiMWEwZTI0YjItNWFhYy00ZDJkLTg2MWUtMjBkOGY4NDY1ZmZlIiwicHJlZmVycmVkX3VzZXJuYW5rIjoibWF5YW5rIiwiZ2l2ZW5fbmFtZSI6Ik1heWFuayIsImNlcm5fcm9sZXMiOlsiZGVmYXVsdC1yb2xlIl0sImNlcm5fcHJlZmVycmVkX2xhbmd1YWdlIjoiRU4iLCJmYW1pbHlfbmFtZSI6IlNoYXJtYSIsImVtYWlsIjoibWF5YW5rLnNoYXJtYUBjZXJuLmNoIiwiY2Vybl91cG4iOiJtYXlhbmsifQ.Xkoi10W-UfUJI-0jgrCbuYYBaW34w6PdX7ETMqvK8fHOMLxA8QnU2yxbTKvBa1OnzwclQBLwiYpoHQzF_vkzcgTs8cQwaz15-LOnwRJ-NywP_MBchwQu2zNfaAVDYbj8xb_s_smVHukzNTApIwPypQwIerezWH72vs6dpRRmicgZYqcUd_-EXAoL2zuX3c9oym7ueksdIquiOJEaUfeDr4FI1Nv-uL9dosZy-SGTNo8In65X-W3zqwL-k9VBPKCvgk4yPn6SlLKbojgItm65Q6RYqQT3gjy4pLCL8W2oGIPKWp3YY8l8g1lURI5TQ393j6vU14SImcfeilR65DHdCg"
 

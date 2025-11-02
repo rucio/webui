@@ -21,28 +21,22 @@ export async function GET(request: NextRequest) {
         }
 
         if (!sessionUser.rucioAccount) {
-            return NextResponse.json(
-                { error: 'Unauthorized: Rucio Account is not set' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'Unauthorized: Rucio Account is not set' }, { status: 401 });
         }
 
         const controller = appContainer.get<BaseController<ListAccountRSEUsageControllerParameters, ListAccountRSEUsageRequest>>(
-            CONTROLLERS.LIST_ACCOUNT_RSE_USAGE
+            CONTROLLERS.LIST_ACCOUNT_RSE_USAGE,
         );
 
         return executeAuthenticatedController(
             controller,
             {
-                account: sessionUser.rucioAccount
+                account: sessionUser.rucioAccount,
             },
-            true // streaming endpoint
+            true, // streaming endpoint
         );
     } catch (error) {
         console.error('Error in list-account-rse-usage:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

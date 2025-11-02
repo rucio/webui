@@ -7,10 +7,20 @@ import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBad
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
+import { buildDiscreteFilterParams, DefaultTextFilterParams, DefaultBooleanFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DIDType } from '@/lib/core/entity/rucio';
 
 type StageSummaryDataTableProps = {
     rowData: ListDIDsViewModel[];
     copies: number;
+};
+
+const DIDTypeDisplayNames = {
+    [DIDType.FILE]: 'File',
+    [DIDType.DATASET]: 'Dataset',
+    [DIDType.CONTAINER]: 'Container',
+    [DIDType.COLLECTION]: 'Collection',
+    [DIDType.ALL]: 'All',
 };
 
 export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProps) => {
@@ -21,7 +31,10 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             headerName: 'Identifier',
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => `${params.data?.scope}:${params.data?.name}`,
             flex: 1,
-            sortable: false,
+            minWidth: 400,
+            pinned: 'left' as const,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'Type',
@@ -32,19 +45,20 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            sortable: false,
+            filter: true,
+            filterParams: buildDiscreteFilterParams(Object.values(DIDTypeDisplayNames), Object.values(DIDType)),
         },
         {
             headerName: 'Copies',
             valueGetter: () => props.copies,
             minWidth: 100,
-            sortable: false,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Files',
             field: 'length',
             minWidth: 100,
-            sortable: false,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Size',
@@ -53,19 +67,22 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
                 return formatFileSize(params.value);
             },
             minWidth: 200,
-            sortable: false,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Requested Size',
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
                 if (params.data?.bytes) {
-                    return formatFileSize(params.data?.bytes * props.copies);
+                    return params.data?.bytes * props.copies;
                 } else {
-                    return formatFileSize(NaN);
+                    return NaN;
                 }
             },
+            valueFormatter: (params: ValueFormatterParams) => {
+                return formatFileSize(params.value);
+            },
             minWidth: 200,
-            sortable: false,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Is Open',
@@ -73,7 +90,8 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
             minWidth: 100,
-            sortable: false,
+            filter: true,
+            filterParams: DefaultBooleanFilterParams,
         },
     ]);
 

@@ -20,7 +20,14 @@ const customJestConfig = {
   // The paths have to be matching with the paths option within the compilerOptions in the tsconfig.json
   // For example:
   moduleNameMapper: {
+    '^@/lib/infrastructure/auth/auth$': '<rootDir>/test/__mocks__/auth.ts',
     '@/(.*)$': '<rootDir>/src/$1',
+    '^next-auth/providers/credentials$': '<rootDir>/test/gateway/__mocks__/next-auth-providers-credentials.js',
+    '^next-auth$': '<rootDir>/test/gateway/__mocks__/next-auth.js',
+    '^next-auth/(.*)$': '<rootDir>/test/gateway/__mocks__/next-auth.js',
+    '^@auth/core/providers/credentials$': '<rootDir>/test/gateway/__mocks__/next-auth-providers-credentials.js',
+    '^@auth/core$': '<rootDir>/test/gateway/__mocks__/auth-core.js',
+    '^@auth/core/(.*)$': '<rootDir>/test/gateway/__mocks__/auth-core.js',
   },
   testEnvironment: 'jest-environment-jsdom',
   testMatch: ['<rootDir>/test/api/**/*.test.ts', '<rootDir>/test/api/**/*.test.tsx'],

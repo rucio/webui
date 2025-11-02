@@ -34,7 +34,7 @@ const meta: Meta<typeof ProgressBar> = {
         },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[400px]">
                 <Story />
             </div>
@@ -215,7 +215,7 @@ export const Animated: Story = {
 
         useEffect(() => {
             const interval = setInterval(() => {
-                setProgress((prev) => {
+                setProgress(prev => {
                     if (prev >= 100) return 0;
                     return prev + 1;
                 });
@@ -227,9 +227,7 @@ export const Animated: Story = {
         return (
             <div className="space-y-4 w-full">
                 <ProgressBar percentage={progress} showLabel />
-                <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
-                    Auto-incrementing progress ({progress}%)
-                </p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">Auto-incrementing progress ({progress}%)</p>
             </div>
         );
     },
@@ -242,7 +240,7 @@ export const FileUpload: Story = {
 
         useEffect(() => {
             const interval = setInterval(() => {
-                setProgress((prev) => {
+                setProgress(prev => {
                     if (prev >= 100) return 100;
                     return prev + 2;
                 });
@@ -257,9 +255,7 @@ export const FileUpload: Story = {
                     <h3 className="text-sm font-medium mb-2">Uploading file.pdf</h3>
                     <ProgressBar percentage={progress} variant="default" showLabel />
                 </div>
-                {progress === 100 && (
-                    <p className="text-sm text-base-success-600 dark:text-base-success-500">Upload complete!</p>
-                )}
+                {progress === 100 && <p className="text-sm text-base-success-600 dark:text-base-success-500">Upload complete!</p>}
             </div>
         );
     },
@@ -291,10 +287,7 @@ export const MultiStep: Story = {
             <div className="space-y-4 w-full">
                 <div className="flex justify-between text-sm">
                     {steps.map((step, index) => (
-                        <span
-                            key={step}
-                            className={index <= currentStep ? 'text-brand-600 font-medium' : 'text-neutral-400'}
-                        >
+                        <span key={step} className={index <= currentStep ? 'text-brand-600 font-medium' : 'text-neutral-400'}>
                             {step}
                         </span>
                     ))}

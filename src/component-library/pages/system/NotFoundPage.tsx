@@ -99,12 +99,7 @@ export const NotFoundPage = React.forwardRef<HTMLDivElement, NotFoundPageProps>(
                         aria-label="Page not found"
                     >
                         {/* Rucio Logo */}
-                        <RucioLogo
-                            width={logoSize}
-                            height={logoSize}
-                            className="text-brand-500 dark:text-brand-400"
-                            aria-label="Rucio Logo"
-                        />
+                        <RucioLogo width={logoSize} height={logoSize} className="text-brand-500 dark:text-brand-400" aria-label="Rucio Logo" />
 
                         {/* 404 Heading */}
                         <div className="space-y-4">

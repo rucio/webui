@@ -203,12 +203,7 @@ export const LoadingPage = React.forwardRef<HTMLDivElement, LoadingPageProps>(
                                 ease: 'easeInOut',
                             }}
                         >
-                            <RucioLogo
-                                width={logoSize}
-                                height={logoSize}
-                                className="text-brand-500 dark:text-brand-400"
-                                aria-label="Rucio Logo"
-                            />
+                            <RucioLogo width={logoSize} height={logoSize} className="text-brand-500 dark:text-brand-400" aria-label="Rucio Logo" />
                         </motion.div>
                     </motion.div>
 

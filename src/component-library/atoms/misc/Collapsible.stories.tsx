@@ -10,7 +10,7 @@ const meta: Meta<typeof Collapsible> = {
     },
     tags: ['autodocs'],
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[600px]">
                 <Story />
             </div>
@@ -236,8 +236,8 @@ export const FAQ: Story = {
                     <CollapsibleTrigger variant="outline">What is Rucio?</CollapsibleTrigger>
                     <CollapsibleContent variant="outline">
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                            Rucio is a software framework that provides scientific collaborations with the functionality to organize,
-                            manage, and access their data at scale.
+                            Rucio is a software framework that provides scientific collaborations with the functionality to organize, manage, and
+                            access their data at scale.
                         </p>
                     </CollapsibleContent>
                 </Collapsible>
@@ -246,8 +246,8 @@ export const FAQ: Story = {
                     <CollapsibleTrigger variant="outline">How do I get started?</CollapsibleTrigger>
                     <CollapsibleContent variant="outline">
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                            You can get started by following our installation guide and exploring the documentation. We recommend starting
-                            with the quickstart tutorial.
+                            You can get started by following our installation guide and exploring the documentation. We recommend starting with the
+                            quickstart tutorial.
                         </p>
                     </CollapsibleContent>
                 </Collapsible>
@@ -462,7 +462,7 @@ export const Interactive: Story = {
         const [openItems, setOpenItems] = useState<number[]>([]);
 
         const toggleItem = (index: number) => {
-            setOpenItems((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]));
+            setOpenItems(prev => (prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]));
         };
 
         const items = ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4'];

@@ -104,7 +104,11 @@ const MetaStub = ({ isLoading, hasError }: { isLoading: boolean; hasError: boole
         return <span className="text-sm text-neutral-800 dark:text-neutral-100">{hasError ? 'An error has occurred' : 'Select an identifier'}</span>;
     };
 
-    return <div className="flex grow">{isLoading ? <LoadingElement context="section" size="md" /> : <div className="justify-center flex grow">{getTextStub()}</div>}</div>;
+    return (
+        <div className="flex grow">
+            {isLoading ? <LoadingElement context="section" size="md" /> : <div className="justify-center flex grow">{getTextStub()}</div>}
+        </div>
+    );
 };
 
 export interface ListDIDMetaProps {

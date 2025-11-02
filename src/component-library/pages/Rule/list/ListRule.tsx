@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { RuleState } from '@/lib/core/entity/rucio';
 
 // Types
-type SearchFilters = {
+export type SearchFilters = {
     scope: string;
     name: string;
     account: string;
@@ -36,6 +36,7 @@ type AccountInputProps = {
     onSearch: (event: any) => void;
     onFilterToggle: () => void;
     isFilterExpanded: boolean;
+    id?: string;
 };
 
 type FilterInputsProps = {
@@ -55,6 +56,7 @@ type ListRuleProps = {
     initialData?: RuleViewModel[];
     autoSearch?: boolean;
     initialFilters?: Partial<SearchFilters>;
+    onSearchStart?: (filters: SearchFilters) => void;
 };
 
 // Constants
@@ -72,7 +74,7 @@ const FilterDropdownButton = ({ isExpanded, onToggle }: FilterDropdownProps) => 
     );
 };
 
-const AccountInput = ({ value, onChange, onSearch, onFilterToggle, isFilterExpanded }: AccountInputProps) => {
+const AccountInput = ({ value, onChange, onSearch, onFilterToggle, isFilterExpanded, id }: AccountInputProps) => {
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const inputValue = event.target.value;
         onChange(inputValue);
@@ -80,7 +82,7 @@ const AccountInput = ({ value, onChange, onSearch, onFilterToggle, isFilterExpan
 
     return (
         <div className="flex space-x-2">
-            <Input className="w-full sm:flex-grow" onChange={handleInputChange} onEnterKey={onSearch} placeholder="Current Account" value={value} />
+            <Input id={id} className="w-full sm:flex-grow" onChange={handleInputChange} onEnterKey={onSearch} placeholder="Current Account" value={value} />
             <FilterDropdownButton isExpanded={isFilterExpanded} onToggle={onFilterToggle} />
         </div>
     );
@@ -168,18 +170,10 @@ const FilterInputs = ({ filters, onFiltersChange }: FilterInputsProps) => {
             </div>
             <div className={rootClass}>
                 <FilterField label="Updated After">
-                    <DateInput
-                        onchange={onUpdatedAfterChange}
-                        initialdate={filters.updatedAfter}
-                        placeholder="Select date"
-                    />
+                    <DateInput onchange={onUpdatedAfterChange} initialdate={filters.updatedAfter} placeholder="Select date" />
                 </FilterField>
                 <FilterField label="Updated Before">
-                    <DateInput
-                        onchange={onUpdatedBeforeChange}
-                        initialdate={filters.updatedBefore}
-                        placeholder="Select date"
-                    />
+                    <DateInput onchange={onUpdatedBeforeChange} initialdate={filters.updatedBefore} placeholder="Select date" />
                 </FilterField>
             </div>
         </div>
@@ -197,10 +191,11 @@ const SearchForm = ({ filters, onFiltersChange, onSearch, onStop, isRunning }: S
         <div className="flex flex-col space-y-6 w-full">
             {/* Search Panel */}
             <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
-                <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">Account</label>
+                <label htmlFor="account-input" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">Account</label>
                 <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-2 items-start">
                     <div className="flex flex-col w-full space-y-4">
                         <AccountInput
+                            id="account-input"
                             value={filters.account}
                             onChange={(account: string) => onFiltersChange({ account })}
                             onSearch={onSearch}
@@ -282,6 +277,12 @@ export const ListRule = (props: ListRuleProps) => {
 
     const onSearch = (event: any) => {
         event.preventDefault();
+
+        // Call onSearchStart callback if provided
+        if (props.onSearchStart) {
+            props.onSearchStart(filters);
+        }
+
         const searchUrl = buildSearchUrl(filters);
         startStreaming(searchUrl);
     };

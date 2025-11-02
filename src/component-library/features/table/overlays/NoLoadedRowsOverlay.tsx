@@ -11,7 +11,7 @@ export const NoLoadedRowsOverlay = (props: { error?: StreamingError; status: Str
         } else if (props.error.type !== StreamingErrorType.BAD_METHOD_CALL) {
             return (
                 <div className="text-neutral-700 dark:text-neutral-100">
-                    An <b>error</b> has happened
+                    An <b>error</b> has occurred
                 </div>
             );
         }

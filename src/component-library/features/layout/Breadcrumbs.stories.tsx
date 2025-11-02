@@ -33,20 +33,13 @@ type Story = StoryObj<typeof Breadcrumbs>;
 // Basic examples
 export const TwoLevels: Story = {
     args: {
-        items: [
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Current Page' },
-        ],
+        items: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Current Page' }],
     },
 };
 
 export const ThreeLevels: Story = {
     args: {
-        items: [
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Datasets', href: '/datasets' },
-            { label: 'Dataset Details' },
-        ],
+        items: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Datasets', href: '/datasets' }, { label: 'Dataset Details' }],
     },
 };
 
@@ -77,11 +70,7 @@ export const FiveLevels: Story = {
 export const WithHomeIcon: Story = {
     args: {
         showHomeIcon: true,
-        items: [
-            { label: 'Datasets', href: '/datasets' },
-            { label: 'Physics', href: '/datasets/physics' },
-            { label: 'ATLAS Data' },
-        ],
+        items: [{ label: 'Datasets', href: '/datasets' }, { label: 'Physics', href: '/datasets/physics' }, { label: 'ATLAS Data' }],
     },
 };
 
@@ -102,33 +91,21 @@ export const WithHomeIconAndManyLevels: Story = {
 export const Small: Story = {
     args: {
         size: 'sm',
-        items: [
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Datasets', href: '/datasets' },
-            { label: 'Details' },
-        ],
+        items: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Datasets', href: '/datasets' }, { label: 'Details' }],
     },
 };
 
 export const Medium: Story = {
     args: {
         size: 'md',
-        items: [
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Datasets', href: '/datasets' },
-            { label: 'Details' },
-        ],
+        items: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Datasets', href: '/datasets' }, { label: 'Details' }],
     },
 };
 
 export const Large: Story = {
     args: {
         size: 'lg',
-        items: [
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Datasets', href: '/datasets' },
-            { label: 'Details' },
-        ],
+        items: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Datasets', href: '/datasets' }, { label: 'Details' }],
     },
 };
 
@@ -195,11 +172,7 @@ export const RSENavigation: Story = {
         <div className="p-6 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
             <Breadcrumbs
                 showHomeIcon
-                items={[
-                    { label: 'RSEs', href: '/rse/list' },
-                    { label: 'CERN-PROD', href: '/rse/CERN-PROD' },
-                    { label: 'Configuration' },
-                ]}
+                items={[{ label: 'RSEs', href: '/rse/list' }, { label: 'CERN-PROD', href: '/rse/CERN-PROD' }, { label: 'Configuration' }]}
             />
         </div>
     ),
@@ -208,13 +181,7 @@ export const RSENavigation: Story = {
 export const RuleCreation: Story = {
     render: () => (
         <div className="p-6 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
-            <Breadcrumbs
-                items={[
-                    { label: 'Rules', href: '/rule/list' },
-                    { label: 'Create Rule', href: '/rule/create' },
-                    { label: 'Select DIDs' },
-                ]}
-            />
+            <Breadcrumbs items={[{ label: 'Rules', href: '/rule/list' }, { label: 'Create Rule', href: '/rule/create' }, { label: 'Select DIDs' }]} />
         </div>
     ),
 };
@@ -267,10 +234,7 @@ export const Interactive: Story = {
                 </div>
 
                 <div className="flex gap-4">
-                    <button
-                        onClick={addLevel}
-                        className="px-4 py-2 bg-brand-600 text-white rounded hover:bg-brand-700"
-                    >
+                    <button onClick={addLevel} className="px-4 py-2 bg-brand-600 text-white rounded hover:bg-brand-700">
                         Add Level
                     </button>
                     <button
@@ -282,9 +246,7 @@ export const Interactive: Story = {
                     </button>
                 </div>
 
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Current path: {currentPath.join(' / ')}
-                </div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400">Current path: {currentPath.join(' / ')}</div>
             </div>
         );
     },
@@ -300,24 +262,14 @@ export const DarkMode: Story = {
             <div className="space-y-6">
                 <div>
                     <p className="text-sm text-neutral-400 mb-2">Default</p>
-                    <Breadcrumbs
-                        items={[
-                            { label: 'Home', href: '/' },
-                            { label: 'Projects', href: '/projects' },
-                            { label: 'Alpha' },
-                        ]}
-                    />
+                    <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects' }, { label: 'Alpha' }]} />
                 </div>
 
                 <div>
                     <p className="text-sm text-neutral-400 mb-2">With Home Icon</p>
                     <Breadcrumbs
                         showHomeIcon
-                        items={[
-                            { label: 'Datasets', href: '/datasets' },
-                            { label: 'Physics', href: '/datasets/physics' },
-                            { label: 'ATLAS Data' },
-                        ]}
+                        items={[{ label: 'Datasets', href: '/datasets' }, { label: 'Physics', href: '/datasets/physics' }, { label: 'ATLAS Data' }]}
                     />
                 </div>
 
@@ -340,9 +292,7 @@ export const DarkMode: Story = {
 export const LongLabels: Story = {
     render: () => (
         <div className="max-w-sm p-6 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
-                Resize viewport to see how long labels handle mobile widths
-            </p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">Resize viewport to see how long labels handle mobile widths</p>
             <Breadcrumbs
                 items={[
                     { label: 'Very Long Dashboard Name', href: '/dashboard' },
@@ -361,14 +311,7 @@ export const AllSizes: Story = {
             {(['sm', 'md', 'lg'] as const).map(size => (
                 <div key={size} className="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
                     <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-2 uppercase">{size}</p>
-                    <Breadcrumbs
-                        size={size}
-                        items={[
-                            { label: 'Home', href: '/' },
-                            { label: 'Projects', href: '/projects' },
-                            { label: 'Alpha' },
-                        ]}
-                    />
+                    <Breadcrumbs size={size} items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects' }, { label: 'Alpha' }]} />
                 </div>
             ))}
         </div>
@@ -379,22 +322,14 @@ export const AllSizes: Story = {
 export const CustomSeparator: Story = {
     args: {
         separator: <span className="text-neutral-400 mx-1">/</span>,
-        items: [
-            { label: 'Home', href: '/' },
-            { label: 'Projects', href: '/projects' },
-            { label: 'Alpha' },
-        ],
+        items: [{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects' }, { label: 'Alpha' }],
     },
 };
 
 export const ArrowSeparator: Story = {
     args: {
         separator: <span className="text-neutral-400 mx-1">→</span>,
-        items: [
-            { label: 'Home', href: '/' },
-            { label: 'Projects', href: '/projects' },
-            { label: 'Alpha' },
-        ],
+        items: [{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects' }, { label: 'Alpha' }],
     },
 };
 
@@ -404,11 +339,7 @@ export const WithARIA: Story = {
         <div className="space-y-4">
             <div className="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
                 <Breadcrumbs
-                    items={[
-                        { label: 'Home', href: '/' },
-                        { label: 'Projects', href: '/projects' },
-                        { label: 'Alpha' },
-                    ]}
+                    items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects' }, { label: 'Alpha' }]}
                     aria-label="Main navigation breadcrumb"
                 />
             </div>

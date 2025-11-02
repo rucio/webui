@@ -9,7 +9,8 @@ const meta = {
         layout: 'centered',
         docs: {
             description: {
-                component: 'A time input component that follows the Rucio WebUI design system. Supports both 12-hour and 24-hour formats with optional seconds.',
+                component:
+                    'A time input component that follows the Rucio WebUI design system. Supports both 12-hour and 24-hour formats with optional seconds.',
             },
         },
     },
@@ -68,11 +69,7 @@ export const Interactive: Story = {
 
         return (
             <div className="w-80 space-y-4">
-                <TimeInput
-                    onchange={(newTime) => setTime(newTime)}
-                    initialtime={time}
-                    showSeconds={true}
-                />
+                <TimeInput onchange={newTime => setTime(newTime)} initialtime={time} showSeconds={true} />
                 <div className="text-sm text-neutral-700 dark:text-neutral-300">
                     Selected time: <strong>{time || 'None'}</strong>
                 </div>
@@ -91,7 +88,7 @@ export const DarkMode: Story = {
         backgrounds: { default: 'dark' },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="dark">
                 <Story />
             </div>
@@ -110,24 +107,12 @@ export const InForm: Story = {
         return (
             <div className="w-96 p-6 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 space-y-4">
                 <div>
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">
-                        Start Time
-                    </label>
-                    <TimeInput
-                        onchange={setStartTime}
-                        initialtime={startTime}
-                        showSeconds={false}
-                    />
+                    <label htmlFor="start-time" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Start Time</label>
+                    <TimeInput id="start-time" onchange={setStartTime} initialtime={startTime} showSeconds={false} />
                 </div>
                 <div>
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">
-                        End Time
-                    </label>
-                    <TimeInput
-                        onchange={setEndTime}
-                        initialtime={endTime}
-                        showSeconds={false}
-                    />
+                    <label htmlFor="end-time" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">End Time</label>
+                    <TimeInput id="end-time" onchange={setEndTime} initialtime={endTime} showSeconds={false} />
                 </div>
                 <div className="text-sm text-neutral-700 dark:text-neutral-300 pt-2 border-t border-neutral-200 dark:border-neutral-700">
                     Working hours: <strong>{startTime}</strong> to <strong>{endTime}</strong>

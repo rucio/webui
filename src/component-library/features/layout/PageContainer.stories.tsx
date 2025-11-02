@@ -213,13 +213,12 @@ export const ArticlePage: Story = {
 
                 <h2 className="text-2xl font-semibold mt-8 mb-4">Section Heading</h2>
                 <p className="mb-4">
-                    The narrower container width (768px) ensures comfortable line length for reading, following best practices for
-                    typography and readability.
+                    The narrower container width (768px) ensures comfortable line length for reading, following best practices for typography and
+                    readability.
                 </p>
 
                 <p className="mb-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
             </article>
         </PageContainer>
@@ -233,9 +232,7 @@ export const NestedContainers: Story = {
 
             <PageContainer maxWidth="lg" className="bg-neutral-100 dark:bg-neutral-900 mb-6">
                 <h2 className="text-xl font-semibold mb-2">Inner Container (lg)</h2>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    You can nest PageContainers for complex layouts.
-                </p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">You can nest PageContainers for complex layouts.</p>
             </PageContainer>
 
             <PageContainer maxWidth="md" className="bg-neutral-100 dark:bg-neutral-900">
@@ -303,11 +300,9 @@ export const ResponsivePadding: Story = {
         <PageContainer>
             <div className="bg-neutral-100 dark:bg-neutral-800 p-6 rounded-lg">
                 <h2 className="text-xl font-semibold mb-4">Responsive Padding</h2>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
-                    Resize your browser to see how padding adjusts:
-                </p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">Resize your browser to see how padding adjusts:</p>
                 <ul className="text-sm space-y-2 text-neutral-600 dark:text-neutral-400">
-                    <li>• Mobile ({"<"}768px): 16px horizontal, 24px vertical</li>
+                    <li>• Mobile ({'<'}768px): 16px horizontal, 24px vertical</li>
                     <li>• Tablet/Desktop (≥768px): 24px horizontal, 32px vertical</li>
                 </ul>
             </div>

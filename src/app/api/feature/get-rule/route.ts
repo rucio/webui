@@ -17,22 +17,14 @@ export async function GET(request: NextRequest) {
         const id = params.id as string;
 
         if (!id) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: id' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: id' }, { status: 400 });
         }
 
-        const controller = appContainer.get<BaseController<GetRuleControllerParameters, void>>(
-            CONTROLLERS.GET_RULE
-        );
+        const controller = appContainer.get<BaseController<GetRuleControllerParameters, void>>(CONTROLLERS.GET_RULE);
 
         return executeAuthenticatedController(controller, { id });
     } catch (error) {
         console.error('Error in get-rule:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

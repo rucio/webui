@@ -21,7 +21,7 @@ const meta: Meta<typeof TabSwitcher> = {
         },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[600px]">
                 <Story />
             </div>
@@ -65,12 +65,7 @@ export const Horizontal: Story = {
     render: () => {
         const [activeIndex, setActiveIndex] = useState(0);
         return (
-            <TabSwitcher
-                tabNames={['Home', 'Profile', 'Settings']}
-                activeIndex={activeIndex}
-                onSwitch={setActiveIndex}
-                orientation="horizontal"
-            />
+            <TabSwitcher tabNames={['Home', 'Profile', 'Settings']} activeIndex={activeIndex} onSwitch={setActiveIndex} orientation="horizontal" />
         );
     },
 };
@@ -93,18 +88,14 @@ export const Vertical: Story = {
 export const FullWidth: Story = {
     render: () => {
         const [activeIndex, setActiveIndex] = useState(0);
-        return (
-            <TabSwitcher tabNames={['First', 'Second', 'Third']} activeIndex={activeIndex} onSwitch={setActiveIndex} fullWidth={true} />
-        );
+        return <TabSwitcher tabNames={['First', 'Second', 'Third']} activeIndex={activeIndex} onSwitch={setActiveIndex} fullWidth={true} />;
     },
 };
 
 export const FitContent: Story = {
     render: () => {
         const [activeIndex, setActiveIndex] = useState(0);
-        return (
-            <TabSwitcher tabNames={['Home', 'About', 'Contact']} activeIndex={activeIndex} onSwitch={setActiveIndex} fullWidth={false} />
-        );
+        return <TabSwitcher tabNames={['Home', 'About', 'Contact']} activeIndex={activeIndex} onSwitch={setActiveIndex} fullWidth={false} />;
     },
 };
 
@@ -293,11 +284,7 @@ export const DarkMode: Story = {
             <div className="dark p-8 rounded-lg bg-neutral-900 space-y-8 w-full">
                 <div className="space-y-4">
                     <p className="text-sm text-neutral-400">Horizontal Tabs</p>
-                    <TabSwitcher
-                        tabNames={['Dashboard', 'Analytics', 'Settings']}
-                        activeIndex={activeIndex1}
-                        onSwitch={setActiveIndex1}
-                    />
+                    <TabSwitcher tabNames={['Dashboard', 'Analytics', 'Settings']} activeIndex={activeIndex1} onSwitch={setActiveIndex1} />
                 </div>
                 <div className="space-y-4">
                     <p className="text-sm text-neutral-400">Vertical Tabs</p>

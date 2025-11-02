@@ -381,10 +381,10 @@ export const AllCombinations: Story = {
             <div>
                 <h3 className="text-lg font-medium mb-4">Size × Variant</h3>
                 <div className="space-y-2">
-                    {['sm', 'md', 'lg'].map((size) => (
+                    {['sm', 'md', 'lg'].map(size => (
                         <div key={size} className="flex flex-wrap gap-2">
                             <span className="w-16 text-sm text-neutral-600 dark:text-neutral-400">{size}:</span>
-                            {['default', 'success', 'error', 'warning', 'info', 'neutral'].map((variant) => (
+                            {['default', 'success', 'error', 'warning', 'info', 'neutral'].map(variant => (
                                 <Badge key={variant} value={variant} size={size as 'sm' | 'md' | 'lg'} variant={variant as any} />
                             ))}
                         </div>
@@ -394,16 +394,11 @@ export const AllCombinations: Story = {
             <div>
                 <h3 className="text-lg font-medium mb-4">Shape × Variant</h3>
                 <div className="space-y-2">
-                    {['rounded', 'pill', 'square'].map((shape) => (
+                    {['rounded', 'pill', 'square'].map(shape => (
                         <div key={shape} className="flex flex-wrap gap-2">
                             <span className="w-16 text-sm text-neutral-600 dark:text-neutral-400">{shape}:</span>
-                            {['default', 'success', 'error', 'warning', 'info', 'neutral'].map((variant) => (
-                                <Badge
-                                    key={variant}
-                                    value={variant}
-                                    shape={shape as 'rounded' | 'pill' | 'square'}
-                                    variant={variant as any}
-                                />
+                            {['default', 'success', 'error', 'warning', 'info', 'neutral'].map(variant => (
+                                <Badge key={variant} value={variant} shape={shape as 'rounded' | 'pill' | 'square'} variant={variant as any} />
                             ))}
                         </div>
                     ))}

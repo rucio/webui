@@ -120,10 +120,7 @@ export const PageSubscription = (props: PageSubscriptionPageProps) => {
                             <PageSubscriptionJSONEditor defaultString={meta.filter} submit={props.editFilter} />
                         </Accordion>
                         <Accordion name="Replication Rules" className="p-1">
-                            <PageSubscriptionJSONEditor
-                                defaultString={meta.replication_rules}
-                                submit={props.editReplicationRules}
-                            />
+                            <PageSubscriptionJSONEditor defaultString={meta.replication_rules} submit={props.editReplicationRules} />
                         </Accordion>
                     </div>
                 </SubPage>

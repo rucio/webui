@@ -2,18 +2,21 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/component-library/utils';
 
-const progressBarVariants = cva('rounded-full w-full bg-neutral-100 dark:bg-neutral-700 border border-neutral-900 border-opacity-10 dark:border-none overflow-hidden', {
-    variants: {
-        size: {
-            sm: 'h-1.5',
-            md: 'h-2.5',
-            lg: 'h-4',
+const progressBarVariants = cva(
+    'rounded-full w-full bg-neutral-100 dark:bg-neutral-700 border border-neutral-900 border-opacity-10 dark:border-none overflow-hidden',
+    {
+        variants: {
+            size: {
+                sm: 'h-1.5',
+                md: 'h-2.5',
+                lg: 'h-4',
+            },
+        },
+        defaultVariants: {
+            size: 'md',
         },
     },
-    defaultVariants: {
-        size: 'md',
-    },
-});
+);
 
 const progressFillVariants = cva('h-full rounded-full transition-all duration-300 ease-in-out', {
     variants: {
@@ -41,7 +44,15 @@ export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement>, 
     showLabel?: boolean;
 }
 
-export default function ProgressBar({ className, percentage = 0, size, variant, indeterminate = false, showLabel = false, ...props }: ProgressBarProps) {
+export default function ProgressBar({
+    className,
+    percentage = 0,
+    size,
+    variant,
+    indeterminate = false,
+    showLabel = false,
+    ...props
+}: ProgressBarProps) {
     const validPercentage = Math.min(Math.max(percentage, 0), 100);
 
     return (
@@ -60,9 +71,7 @@ export default function ProgressBar({ className, percentage = 0, size, variant, 
                     style={{ width: indeterminate ? '100%' : `${validPercentage}%` }}
                 />
             </div>
-            {showLabel && !indeterminate && (
-                <p className="text-xs text-neutral-600 dark:text-neutral-400 text-right">{validPercentage}%</p>
-            )}
+            {showLabel && !indeterminate && <p className="text-xs text-neutral-600 dark:text-neutral-400 text-right">{validPercentage}%</p>}
         </div>
     );
 }

@@ -59,20 +59,22 @@ export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider): OAuthCo
                 // Audience is required by Rucio for token validation
                 // Rucio expects tokens to have aud: "rucio" claim
                 audience: 'rucio',
-            }
+            },
         },
         token: {
             url: oidcProvider.tokenUrl,
         },
         // UserInfo endpoint is optional but recommended for getting user profile
-        userinfo: oidcProvider.userInfoUrl ? {
-            url: oidcProvider.userInfoUrl,
-        } : undefined,
+        userinfo: oidcProvider.userInfoUrl
+            ? {
+                  url: oidcProvider.userInfoUrl,
+              }
+            : undefined,
         profile(profile: OIDCProfile) {
             // Extract user info from OIDC profile response
             // This data will be available in the JWT callback as 'user' and 'profile'
             // The profile parameter in JWT callback will have the full OIDC claims
-             
+
             return {
                 id: profile.sub, // Subject - unique user identifier
                 email: profile.email || '',

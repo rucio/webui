@@ -21,7 +21,7 @@ const meta: Meta<typeof Skeleton> = {
         },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[400px]">
                 <Story />
             </div>
@@ -136,7 +136,7 @@ export const ListItem: Story = {
 export const ListItems: Story = {
     render: () => (
         <div className="space-y-4 w-full">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
                 <div key={i} className="flex items-center gap-4">
                     <Skeleton shape="circle" className="h-12 w-12" />
                     <div className="flex-1 space-y-2">
@@ -164,7 +164,7 @@ export const TableRow: Story = {
 export const Table: Story = {
     render: () => (
         <div className="space-y-2 w-full">
-            {[1, 2, 3, 4, 5].map((i) => (
+            {[1, 2, 3, 4, 5].map(i => (
                 <div key={i} className="flex gap-4">
                     <Skeleton className="h-8 w-1/4" />
                     <Skeleton className="h-8 w-1/4" />
@@ -221,7 +221,7 @@ export const FormField: Story = {
 export const Form: Story = {
     render: () => (
         <div className="space-y-4 w-full">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
                 <div key={i} className="space-y-2">
                     <Skeleton shape="text" className="h-4 w-24" />
                     <Skeleton className="h-10 w-full" />

@@ -152,13 +152,7 @@ export const CopyableLinkCell = ({ text, href, children, className, showIcon = t
                     title="Copy to clipboard"
                 />
             )}
-            <div
-                className="cursor-pointer hover:underline"
-                onClick={handleLink}
-                onKeyDown={handleLinkKeyDown}
-                role="button"
-                tabIndex={0}
-            >
+            <div className="cursor-pointer hover:underline" onClick={handleLink} onKeyDown={handleLinkKeyDown} role="button" tabIndex={0}>
                 {children || <span>{text}</span>}
             </div>
         </div>

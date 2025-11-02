@@ -60,7 +60,7 @@ function getCacheKey(identityString: string, rucioHost: string): string {
  */
 function isCacheValid(entry: CacheEntry): boolean {
     const now = Date.now();
-    return (now - entry.timestamp) < CACHE_TTL;
+    return now - entry.timestamp < CACHE_TTL;
 }
 
 /**
@@ -131,11 +131,7 @@ export function clearAccountCache(): void {
  * );
  * // Returns: ["mayank_account"]
  */
-export async function getRucioAccountsForIdentity(
-    identityString: string,
-    rucioHost: string,
-    oidcToken: string
-): Promise<string[]> {
+export async function getRucioAccountsForIdentity(identityString: string, rucioHost: string, oidcToken: string): Promise<string[]> {
     console.log(`[OIDC Helper] Looking up accounts for identity: ${identityString}`);
 
     // Check cache first
@@ -149,8 +145,8 @@ export async function getRucioAccountsForIdentity(
     // New endpoint: GET /identities/accounts?identity_key={identity}&type={type}
     // Old endpoint: GET /identities/{identity}/{type}/accounts (had encoding issues)
     const params = new URLSearchParams({
-        identity_key: identityString,  // URLSearchParams handles encoding automatically
-        type: 'OIDC'
+        identity_key: identityString, // URLSearchParams handles encoding automatically
+        type: 'OIDC',
     });
 
     // Construct the API URL with query parameters
@@ -201,7 +197,7 @@ export async function getRucioAccountsForIdentity(
                 console.error('');
                 console.error('To debug:');
                 console.error('1. Check Rucio database for identity format:');
-                console.error('   SELECT * FROM identities WHERE identity LIKE \'%mayank%\';');
+                console.error("   SELECT * FROM identities WHERE identity LIKE '%mayank%';");
                 console.error('2. Try manual curl with the token from [OIDC_TOKEN] log:');
                 console.error(`   curl -H "X-Rucio-Auth-Token: $TOKEN" \\`);
                 console.error(`        "${rucioHost}/identities/accounts?identity_key=${encodeURIComponent(identityString)}&type=OIDC"`);
@@ -228,9 +224,7 @@ export async function getRucioAccountsForIdentity(
 
         // Extract account names from the response
         // The API returns an array of objects with 'account' property
-        const accounts: string[] = Array.isArray(accountsData)
-            ? accountsData.map((item: any) => item.account || item)
-            : [];
+        const accounts: string[] = Array.isArray(accountsData) ? accountsData.map((item: any) => item.account || item) : [];
 
         if (accounts.length === 0) {
             throw new IdentityNotMappedError(identityString);
@@ -244,9 +238,7 @@ export async function getRucioAccountsForIdentity(
         return accounts;
     } catch (error) {
         // Re-throw our custom errors
-        if (error instanceof IdentityNotMappedError ||
-            error instanceof InvalidTokenError ||
-            error instanceof RucioAPIError) {
+        if (error instanceof IdentityNotMappedError || error instanceof InvalidTokenError || error instanceof RucioAPIError) {
             throw error;
         }
 
