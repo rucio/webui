@@ -51,32 +51,30 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>,
     error?: boolean;
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, variant, error, onEnterKey, onKeyDown, ...props }, ref) => {
-        const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-            if (event.key === 'Enter' && onEnterKey) {
-                onEnterKey(event);
-            }
-            // Call the base callback
-            if (onKeyDown) {
-                onKeyDown(event);
-            }
-        };
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, type, variant, error, onEnterKey, onKeyDown, ...props }, ref) => {
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter' && onEnterKey) {
+            onEnterKey(event);
+        }
+        // Call the base callback
+        if (onKeyDown) {
+            onKeyDown(event);
+        }
+    };
 
-        const computedVariant = error ? 'error' : variant;
+    const computedVariant = error ? 'error' : variant;
 
-        return (
-            <input
-                type={type}
-                className={cn(inputVariants({ variant: computedVariant }), 'h-10', className)}
-                ref={ref}
-                onKeyDown={handleKeyDown}
-                aria-invalid={error ? 'true' : 'false'}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <input
+            type={type}
+            className={cn(inputVariants({ variant: computedVariant }), 'h-10', className)}
+            ref={ref}
+            onKeyDown={handleKeyDown}
+            aria-invalid={error ? 'true' : 'false'}
+            {...props}
+        />
+    );
+});
 Input.displayName = 'Input';
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof inputVariants> {

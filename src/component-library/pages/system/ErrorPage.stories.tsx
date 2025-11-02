@@ -167,7 +167,7 @@ export const DarkMode: Story = {
         backgrounds: { default: 'dark' },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="dark">
                 <Story />
             </div>

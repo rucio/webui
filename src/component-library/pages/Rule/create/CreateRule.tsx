@@ -180,9 +180,13 @@ export const CreateRule = (props: CreateRuleProps) => {
 
     if (isLoading) {
         return (
-            <div className="flex w-full grow items-center justify-center">
-                <LoadingSpinner />
-            </div>
+            <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+                    <div className="flex w-full items-center justify-center min-h-[400px]">
+                        <LoadingSpinner />
+                    </div>
+                </div>
+            </main>
         );
     }
 
@@ -202,32 +206,40 @@ export const CreateRule = (props: CreateRuleProps) => {
 
     // Keep stage DIDs rendered, as it may contain large streamed data
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="New Rule" />
-            <Timeline steps={steps} activeIndex={activeIndex} onSwitch={activeIndex !== 4 ? setActiveIndex : undefined} />
-            <div>
-                <CreateRuleStageData visible={activeIndex === 0} parameters={parameters} addDID={addDID} removeDID={removeDID} />
-                {activeIndex === 1 && (
-                    <CreateRuleStageStorage
-                        parameters={parameters}
-                        updateStorage={updateStorage}
-                        updateNeedsApproval={updateNeedsApproval}
-                        updateAskApproval={updateAskApproval}
-                    />
-                )}
-                {activeIndex === 2 && <CreateRuleStageOptions parameters={parameters} updateOptionValue={updateOptionValue} errors={optionsErrors} />}
-                {activeIndex === 3 && <CreateRuleStageSummary parameters={parameters} />}
+        <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+                <div className="flex flex-col space-y-6 w-full">
+                    <header className="mb-2">
+                        <Heading text="New Rule" />
+                    </header>
+                    <Timeline steps={steps} activeIndex={activeIndex} onSwitch={activeIndex !== 4 ? setActiveIndex : undefined} />
+                    <div>
+                        <CreateRuleStageData visible={activeIndex === 0} parameters={parameters} addDID={addDID} removeDID={removeDID} />
+                        {activeIndex === 1 && (
+                            <CreateRuleStageStorage
+                                parameters={parameters}
+                                updateStorage={updateStorage}
+                                updateNeedsApproval={updateNeedsApproval}
+                                updateAskApproval={updateAskApproval}
+                            />
+                        )}
+                        {activeIndex === 2 && (
+                            <CreateRuleStageOptions parameters={parameters} updateOptionValue={updateOptionValue} errors={optionsErrors} />
+                        )}
+                        {activeIndex === 3 && <CreateRuleStageSummary parameters={parameters} />}
+                    </div>
+                    {activeIndex === 4 && (
+                        <CreateRuleStageSubmission
+                            parameters={parameters}
+                            removeSaved={() => {
+                                props.removeSavedIndex();
+                                props.removeSavedParameters();
+                            }}
+                        />
+                    )}
+                    {activeIndex !== 4 && getPaginationPanel()}
+                </div>
             </div>
-            {activeIndex === 4 && (
-                <CreateRuleStageSubmission
-                    parameters={parameters}
-                    removeSaved={() => {
-                        props.removeSavedIndex();
-                        props.removeSavedParameters();
-                    }}
-                />
-            )}
-            {activeIndex !== 4 && getPaginationPanel()}
-        </div>
+        </main>
     );
 };

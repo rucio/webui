@@ -65,7 +65,7 @@ export const chartColors = {
  */
 export const getBorderColor = (isDarkMode: boolean, opacity: number = 0.15): string => {
     return isDarkMode
-        ? hexToRgba(colors.neutral[100], opacity)  // Light border in dark mode
+        ? hexToRgba(colors.neutral[100], opacity) // Light border in dark mode
         : hexToRgba(colors.neutral[900], opacity); // Dark border in light mode
 };
 
@@ -76,22 +76,12 @@ export const chartPalettes = {
     /**
      * Primary palette - semantic colors
      */
-    semantic: [
-        chartColors.success,
-        chartColors.warning,
-        chartColors.error,
-        chartColors.info,
-    ],
+    semantic: [chartColors.success, chartColors.warning, chartColors.error, chartColors.info],
 
     /**
      * Brand palette - variations of brand color
      */
-    brand: [
-        chartColors.brand,
-        chartColors.brandDark,
-        chartColors.brandLight,
-        hexToRgba(colors.brand[700], 0.8),
-    ],
+    brand: [chartColors.brand, chartColors.brandDark, chartColors.brandLight, hexToRgba(colors.brand[700], 0.8)],
 
     /**
      * Diverse palette - mix of colors for multi-category data
@@ -126,10 +116,7 @@ export const chartPalettes = {
  * @param palette - Color palette to use (default: diverse)
  * @returns rgba color string
  */
-export const getChartColor = (
-    index: number,
-    palette: readonly string[] = chartPalettes.diverse
-): string => {
+export const getChartColor = (index: number, palette: readonly string[] = chartPalettes.diverse): string => {
     return palette[index % palette.length];
 };
 
@@ -145,11 +132,7 @@ export const getChartColor = (
  * getColorFromToken('brand', 600, 0.9)
  * getColorFromToken('base.success', 500, 0.7)
  */
-export const getColorFromToken = (
-    category: string,
-    shade: number,
-    opacity: number = 0.8
-): string => {
+export const getColorFromToken = (category: string, shade: number, opacity: number = 0.8): string => {
     // Parse nested category (e.g., 'base.success')
     const parts = category.split('.');
     let colorObj: any = colors;

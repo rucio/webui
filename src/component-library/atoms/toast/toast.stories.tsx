@@ -13,7 +13,7 @@ const meta: Meta<typeof Toaster> = {
     },
     tags: ['autodocs'],
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[600px] min-h-[400px]">
                 <Story />
             </div>

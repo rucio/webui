@@ -20,7 +20,7 @@ const meta: Meta<typeof Heading> = {
         },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[600px]">
                 <Story />
             </div>
@@ -168,8 +168,8 @@ export const ArticleTitle: Story = {
                 <p>By John Doe • March 15, 2024 • 5 min read</p>
             </div>
             <p className="text-neutral-700 dark:text-neutral-300">
-                React Hooks revolutionized how we write components in React. In this comprehensive guide, we'll explore the most
-                commonly used hooks and learn how to leverage them effectively in your applications.
+                React Hooks revolutionized how we write components in React. In this comprehensive guide, we'll explore the most commonly used hooks
+                and learn how to leverage them effectively in your applications.
             </p>
         </article>
     ),

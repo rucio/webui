@@ -15,17 +15,13 @@ export const StreamedTable = (props: StreamedTableProps) => {
     const showErrorToast = () => {
         if (!error) return;
         if (error.type === StreamingErrorType.BAD_METHOD_CALL) return;
+        // Show toast only for NOT_FOUND (brief, informational)
+        // Fatal errors are displayed by NoLoadedRowsOverlay within the table
         if (error.type === StreamingErrorType.NOT_FOUND) {
             toast({
                 title: 'Oops!',
                 description: error.message,
                 variant: 'info',
-            });
-        } else {
-            toast({
-                title: 'Fatal error',
-                description: error.message,
-                variant: 'error',
             });
         }
     };

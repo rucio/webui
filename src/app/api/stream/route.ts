@@ -4,11 +4,7 @@ import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
 import { HTTPRequest } from '@/lib/sdk/http';
-import {
-    nodeStreamToWebStream,
-    createStreamingResponse,
-    STREAMING_HEADERS,
-} from '@/lib/infrastructure/adapters/streaming-adapter';
+import { nodeStreamToWebStream, createStreamingResponse, STREAMING_HEADERS } from '@/lib/infrastructure/adapters/streaming-adapter';
 import { PassThrough } from 'node:stream';
 
 /**
@@ -54,7 +50,7 @@ export async function GET(request: NextRequest) {
             {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },
-            }
+            },
         );
     }
 }

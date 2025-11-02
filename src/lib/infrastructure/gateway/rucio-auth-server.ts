@@ -13,7 +13,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
             username,
             account: account || '(none)',
             vo,
-            authHost: process.env.RUCIO_AUTH_HOST
+            authHost: process.env.RUCIO_AUTH_HOST,
         });
 
         const authHost = process.env.RUCIO_AUTH_HOST;
@@ -50,7 +50,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
                 status: response?.status,
                 hasAuthToken: !!response?.headers.get('X-Rucio-Auth-Token'),
                 hasAccount: !!response?.headers.get('X-Rucio-Auth-Account'),
-                hasMultipleAccounts: !!response?.headers.get('X-Rucio-Auth-Accounts')
+                hasMultipleAccounts: !!response?.headers.get('X-Rucio-Auth-Accounts'),
             });
         } catch (error: Error | any) {
             if (authHost === undefined || authHost === null || authHost === '') {
@@ -96,7 +96,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
 
         if (response.status === 200) {
             console.log('[LOGIN FLOW 10d] Processing 200 response', {
-                status: response.status
+                status: response.status,
             });
 
             const dto: UserPassLoginAuthServerDTO = {
@@ -123,7 +123,7 @@ class RucioAuthServer implements AuthServerGatewayOutputPort {
             return Promise.resolve(dto);
         } else if (response.status === 206) {
             console.log('[LOGIN FLOW 10e] Processing 206 response (multiple accounts)', {
-                status: response.status
+                status: response.status,
             });
 
             const multipleAccounts = response.headers.get('X-Rucio-Auth-Accounts');

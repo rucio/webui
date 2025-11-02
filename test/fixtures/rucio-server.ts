@@ -1,6 +1,5 @@
 import { HTTPRequest } from '@/lib/sdk/http';
 import { Readable } from 'stream';
-import { Response } from 'node-fetch';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 
 /**

@@ -172,6 +172,16 @@ function toast({ ...props }: Toast) {
         },
     });
 
+    // Auto-dismiss based on variant (Design System recommendation)
+    const variant = props.variant as keyof typeof TOAST_AUTO_DISMISS_DURATION | undefined;
+    const duration = variant ? TOAST_AUTO_DISMISS_DURATION[variant] : TOAST_AUTO_DISMISS_DURATION.info;
+
+    if (duration !== Infinity) {
+        setTimeout(() => {
+            dismiss();
+        }, duration);
+    }
+
     return {
         id: id,
         dismiss,

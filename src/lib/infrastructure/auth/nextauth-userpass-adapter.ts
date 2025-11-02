@@ -37,7 +37,7 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
             rucioIdentity: response.rucioIdentity,
             vo: response.vo,
             role: response.role,
-            tokenExpires: response.rucioAuthTokenExpires
+            tokenExpires: response.rucioAuthTokenExpires,
         });
 
         const sessionUser: SessionUser = {
@@ -62,7 +62,7 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
     async presentError(error: UserpassLoginError): Promise<void> {
         console.error('[LOGIN FLOW 15] Presenter presentError called', {
             type: error.type,
-            message: error.message
+            message: error.message,
         });
         console.error('UserPass login error:', error);
 
@@ -73,7 +73,7 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
 
     async presentIncomplete(incomplete: UserpassLoginIncomplete): Promise<void> {
         console.log('[LOGIN FLOW 16] Presenter presentIncomplete called (multiple accounts)', {
-            availableAccounts: incomplete.availableAccounts
+            availableAccounts: incomplete.availableAccounts,
         });
         // Handle multiple accounts scenario
         // Reject with a special error that contains the available accounts
@@ -88,16 +88,11 @@ class NextAuthUserPassLoginPresenter implements UserPassLoginOutputPort<Promise<
  * Creates the UserPassLoginUseCase directly without going through the factory,
  * using a custom presenter that works with Promises instead of IronSession.
  */
-export async function authorizeUserPass(
-    username: string,
-    password: string,
-    account: string,
-    vo: string,
-): Promise<SessionUser | null> {
+export async function authorizeUserPass(username: string, password: string, account: string, vo: string): Promise<SessionUser | null> {
     console.log('[LOGIN FLOW 8] authorizeUserPass started', {
         username,
         account: account || '(none)',
-        vo
+        vo,
     });
 
     return new Promise((resolve, reject) => {

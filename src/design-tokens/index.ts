@@ -21,16 +21,7 @@ import { colors, semanticColors, colorUsage } from './colors';
 import { fontFamilies, fontWeights, fontSizes, letterSpacing, lineHeights, typographyPresets, maxLineLength, typographyUtils } from './typography';
 import { spacing, containerWidths, semanticSpacing, gridGutters, borderRadius, borderWidth, spacingUtils } from './spacing';
 import { shadows, darkShadows, zIndex, semanticElevation, backdropEffects, elevationUtils } from './elevation';
-import {
-    duration,
-    easing,
-    keyframes,
-    animations,
-    transitions,
-    semanticMotion,
-    motionUtils,
-    reducedMotion,
-} from './motion';
+import { duration, easing, keyframes, animations, transitions, semanticMotion, motionUtils, reducedMotion } from './motion';
 import {
     breakpoints,
     breakpointRanges,
@@ -64,30 +55,12 @@ export type { Shadow, ZIndex, SemanticElevation, BackdropEffect } from './elevat
 
 // Motion
 export * from './motion';
-export {
-    duration,
-    easing,
-    keyframes,
-    animations,
-    transitions,
-    semanticMotion,
-    motionUtils,
-    reducedMotion,
-};
+export { duration, easing, keyframes, animations, transitions, semanticMotion, motionUtils, reducedMotion };
 export type { Duration, Easing, Keyframes, Transitions, SemanticMotion } from './motion';
 
 // Breakpoints
 export * from './breakpoints';
-export {
-    breakpoints,
-    breakpointRanges,
-    containerMaxWidths,
-    semanticBreakpoints,
-    mediaQueries,
-    gridColumns,
-    breakpointUtils,
-    responsivePatterns,
-};
+export { breakpoints, breakpointRanges, containerMaxWidths, semanticBreakpoints, mediaQueries, gridColumns, breakpointUtils, responsivePatterns };
 export type { Breakpoint, MediaQuery, SemanticBreakpoint } from './breakpoints';
 
 /**

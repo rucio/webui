@@ -12,13 +12,14 @@ import { ListDIDTable } from '@/component-library/pages/DID/list/ListDIDTable';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
-import { DIDSearchPanel } from '@/component-library/features/search/DIDSearchPanel';
+import { DIDSearchPanel, DIDSearchParams } from '@/component-library/features/search/DIDSearchPanel';
 
 export interface ListDIDProps {
     firstPattern?: string;
     initialData?: DIDViewModel[];
     autoSearch?: boolean;
     initialType?: DIDType;
+    onSearchStart?: (params: DIDSearchParams) => void;
 }
 
 export const ListDID = (props: ListDIDProps) => {
@@ -124,6 +125,7 @@ export const ListDID = (props: ListDIDProps) => {
                     initialPattern={props.firstPattern}
                     autoSearch={props.autoSearch}
                     initialType={props.initialType}
+                    onSearchStart={props.onSearchStart}
                 />
             </div>
 

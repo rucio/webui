@@ -29,7 +29,7 @@ const meta: Meta<typeof Field> = {
         },
     },
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[600px]">
                 <Story />
             </div>
@@ -193,7 +193,7 @@ export const DataTable: Story = {
                 <span className="text-sm font-medium">Name</span>
                 <span className="text-sm font-medium">Status</span>
             </div>
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
                 <div key={i} className="grid grid-cols-3 gap-2 p-2">
                     <Field size="sm" variant="subtle">
                         {`#${1000 + i}`}
@@ -403,11 +403,11 @@ export const DarkMode: Story = {
 export const AllCombinations: Story = {
     render: () => (
         <div className="space-y-6">
-            {(['sm', 'md', 'lg'] as const).map((size) => (
+            {(['sm', 'md', 'lg'] as const).map(size => (
                 <div key={size} className="space-y-2">
                     <h3 className="text-sm font-medium capitalize">{size}</h3>
                     <div className="flex flex-wrap gap-2">
-                        {(['default', 'subtle', 'brand', 'success', 'error', 'warning'] as const).map((variant) => (
+                        {(['default', 'subtle', 'brand', 'success', 'error', 'warning'] as const).map(variant => (
                             <Field key={variant} size={size} variant={variant}>
                                 {variant}
                             </Field>

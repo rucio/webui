@@ -33,10 +33,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (!sessionUser.rucioAccount) {
-            return NextResponse.json(
-                { error: 'Unauthorized: Rucio Account is not set' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'Unauthorized: Rucio Account is not set' }, { status: 401 });
         }
 
         const body = await parseRequestBody(request);
@@ -46,15 +43,10 @@ export async function POST(request: NextRequest) {
 
         const params = RequestSchema.safeParse(body);
         if (!params.success) {
-            return NextResponse.json(
-                { error: 'Invalid parameters', details: params.error.errors },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Invalid parameters', details: params.error.errors }, { status: 400 });
         }
 
-        const controller = appContainer.get<BaseController<ListAccountRSEQuotasControllerParameters, void>>(
-            CONTROLLERS.LIST_ACCOUNT_RSE_QUOTAS
-        );
+        const controller = appContainer.get<BaseController<ListAccountRSEQuotasControllerParameters, void>>(CONTROLLERS.LIST_ACCOUNT_RSE_QUOTAS);
 
         return executeAuthenticatedController(
             controller,
@@ -63,13 +55,10 @@ export async function POST(request: NextRequest) {
                 requestedDIDs: params.data.requestedDIDs as DIDLong[],
                 rseExpression: params.data.rseExpression,
             },
-            true // streaming endpoint
+            true, // streaming endpoint
         );
     } catch (error) {
         console.error('Error in list-account-rse-quotas:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

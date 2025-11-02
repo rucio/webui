@@ -10,37 +10,73 @@ import { DIDAvailabilityBadge } from '@/component-library/features/badges/DID/DI
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { DIDType } from '@/lib/core/entity/rucio';
 
+/**
+ * A responsive divider component for DID metadata sections.
+ * Renders a horizontal divider on mobile/tablet and a vertical divider on lg+ screens.
+ */
+const MetaSectionDivider = () => (
+    <>
+        {/* Horizontal divider for mobile/tablet */}
+        <div className="w-full lg:hidden">
+            <Divider />
+        </div>
+        {/* Vertical divider for lg and above */}
+        <div className="hidden lg:block h-auto">
+            <Divider orientation="vertical" spacing="md" />
+        </div>
+    </>
+);
+
+/**
+ * A responsive divider component for file information section.
+ * Renders a horizontal divider on mobile/xl and a vertical divider on 2xl+ screens.
+ */
+const FileInfoDivider = () => (
+    <>
+        {/* Horizontal divider for smaller screens */}
+        <div className="w-full 2xl:hidden">
+            <Divider />
+        </div>
+        {/* Vertical divider for 2xl and above */}
+        <div className="hidden 2xl:block h-auto">
+            <Divider orientation="vertical" spacing="md" />
+        </div>
+    </>
+);
+
 export const DetailsDIDMeta = ({ meta }: { meta: DIDMetaViewModel }) => {
     const getFileInformation = () => {
         return (
-            <div>
-                <Divider className="2xl:hidden" />
-                {meta.bytes && (
-                    <KeyValueRow name="Size">
-                        <Field>{formatFileSize(meta.bytes)}</Field>
-                    </KeyValueRow>
-                )}
-                {meta.guid && (
-                    <KeyValueRow name="GUID">
-                        <CopyableField text={meta.guid} />
-                    </KeyValueRow>
-                )}
-                {meta.adler32 && (
-                    <KeyValueRow name="Adler32">
-                        <CopyableField text={meta.adler32} />
-                    </KeyValueRow>
-                )}
-                {meta.md5 && (
-                    <KeyValueRow name="MD5">
-                        <CopyableField text={meta.md5} />
-                    </KeyValueRow>
-                )}
-            </div>
+            <>
+                <FileInfoDivider />
+                <div>
+                    {meta.bytes && (
+                        <KeyValueRow name="Size">
+                            <Field>{formatFileSize(meta.bytes)}</Field>
+                        </KeyValueRow>
+                    )}
+                    {meta.guid && (
+                        <KeyValueRow name="GUID">
+                            <CopyableField text={meta.guid} />
+                        </KeyValueRow>
+                    )}
+                    {meta.adler32 && (
+                        <KeyValueRow name="Adler32">
+                            <CopyableField text={meta.adler32} />
+                        </KeyValueRow>
+                    )}
+                    {meta.md5 && (
+                        <KeyValueRow name="MD5">
+                            <CopyableField text={meta.md5} />
+                        </KeyValueRow>
+                    )}
+                </div>
+            </>
         );
     };
 
     return (
-        <KeyValueWrapper className="flex 2xl:flex-row flex-col py-3 px-5">
+        <KeyValueWrapper className="flex 2xl:flex-row flex-col p-6">
             <div className="flex lg:flex-row flex-col lg:justify-between grow">
                 <div>
                     <KeyValueRow name="Type">
@@ -65,7 +101,7 @@ export const DetailsDIDMeta = ({ meta }: { meta: DIDMetaViewModel }) => {
                     )}
                 </div>
 
-                <Divider className="lg:hidden" />
+                <MetaSectionDivider />
 
                 <div>
                     <KeyValueRow name="Monotonic">

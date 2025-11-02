@@ -16,7 +16,7 @@ import { CopyableLinkCell } from '@/component-library/features/table/cells/Copya
 
 /**
  * A responsive divider component for rule sections.
- * 
+ *
  * Renders a full-width divider that is only visible on screens smaller than the 'lg' breakpoint.
  * Useful for visually separating sections in mobile and tablet layouts.
  *
@@ -61,7 +61,12 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                     <KeyValueRow name="RSE Expression">
                         <div className="max-w-[20rem]">
-                            <Field>{meta.rse_expression}</Field>
+                            <CopyableLinkCell
+                                text={meta.rse_expression}
+                                href={`/rse/list?expression=${encodeURIComponent(meta.rse_expression)}&autoSearch=true`}
+                            >
+                                <Field>{meta.rse_expression}</Field>
+                            </CopyableLinkCell>
                         </div>
                     </KeyValueRow>
                     <KeyValueRow name="Account">
@@ -124,7 +129,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                 </div>
                 <RuleSectionDivider />
                 <div className="flex flex-col flex-1">
-                     <KeyValueRow name="Ignore Account Limit">
+                    <KeyValueRow name="Ignore Account Limit">
                         <Checkbox checked={meta.ignore_account_limit} />
                     </KeyValueRow>
                     <KeyValueRow name="Ignore Availability">

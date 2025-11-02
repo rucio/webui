@@ -8,13 +8,14 @@ import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { CreateRuleStageStorageTable } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorageTable';
-import { GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { GridReadyEvent } from 'ag-grid-community';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
 import { RSESearchPanel } from '@/component-library/features/search/RSESearchPanel';
+import { CreateRuleStageStorageSelectedTable } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorageSelectedTable';
 
 const DEFAULT_EXPRESSION = '*';
 
@@ -37,6 +38,9 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
     const onSearch = (expression: string) => {
         startStreaming('/api/feature/list-account-rse-quotas', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             // TODO: redo the endpoint to only accept the rseExpression via GET
             body: JSON.stringify({
                 rseExpression: expression ?? DEFAULT_EXPRESSION,
@@ -45,11 +49,21 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
         });
     };
 
-    const onSelectionChanged = (event: SelectionChangedEvent) => {
-        const selected: RSEAccountUsageLimitViewModel[] = event.api.getSelectedRows();
-        // TODO: determine if all rows are picked and simplify the request to the rseExpression
+    const addRSE = (rse: RSEAccountUsageLimitViewModel) => {
+        // Use RSE name for comparison since rse_id is undefined from the API
+        const rseExists = selectedItems.some(item => item.rse === rse.rse);
+        if (rseExists) return;
+
         props.updateStorage({
-            rses: selected,
+            rses: [...selectedItems, rse],
+        });
+    };
+
+    const removeRSE = (rse: RSEAccountUsageLimitViewModel) => {
+        // Use RSE name for comparison since rse_id is undefined from the API
+        const updatedRSEs = selectedItems.filter(item => item.rse !== rse.rse);
+        props.updateStorage({
+            rses: updatedRSEs,
         });
     };
 
@@ -101,22 +115,30 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
     };
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <RSESearchPanel
-                onSearch={onSearch}
-                stopStreaming={stopStreaming}
-                isRunning={streamingHook.status === StreamingStatus.RUNNING}
-                gridApi={gridApi ?? undefined}
-            />
+        <div className="flex flex-col space-y-6 w-full">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+                <RSESearchPanel
+                    onSearch={onSearch}
+                    stopStreaming={stopStreaming}
+                    isRunning={streamingHook.status === StreamingStatus.RUNNING}
+                    gridApi={gridApi ?? undefined}
+                />
+            </div>
             <CreateRuleTableWrapper>
                 <CreateRuleStageStorageTable
                     streamingHook={streamingHook}
-                    onSelectionChanged={onSelectionChanged}
+                    addRSE={addRSE}
+                    removeRSE={removeRSE}
                     onGridReady={onGridReady}
                     totalDataSize={totalDataSize}
                     selectedItems={selectedItems}
                 />
             </CreateRuleTableWrapper>
+            {selectedItems.length !== 0 && (
+                <CreateRuleTableWrapper>
+                    <CreateRuleStageStorageSelectedTable rowData={selectedItems} removeRSE={removeRSE} />
+                </CreateRuleTableWrapper>
+            )}
             {isChoiceInvalid ? getWarningField() : getInfoField()}
             <LabeledCheckbox checked={askApproval} onChange={() => setAskApproval(prevState => !prevState)} label="Ask for approval" />
         </div>

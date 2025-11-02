@@ -58,7 +58,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
     return (
         <div className="flex flex-col justify-center h-fit w-full mx-3 my-5 overflow-hidden">
             <Link
-                href={`/rse/page/${rse}`}
+                href={`/rse/list?expression=${rse}&autoSearch=true`}
                 className="flex space-x-2 justify-center items-center text-neutral-900 dark:text-neutral-100 hover:text-brand-500 dark:hover:text-brand-500 font-medium"
             >
                 <HiExternalLink className="flex-shrink-0" />
@@ -141,15 +141,13 @@ export const TopStorageUsageWidget = ({ usages, isLoading, errorMessage }: TopSt
                 <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg p-5 dark:bg-neutral-800/50">
                     <div className="flex items-center space-x-2 mb-4">
                         <div className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500"></div>
-                        <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">
-                            Available RSEs
-                        </p>
+                        <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">Available RSEs</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {emptyRSEs.map(rse => (
                             <Link
                                 key={rse.rse_id}
-                                href={`/rse/page/${rse.rse}`}
+                                href={`/rse/list?expression=${rse.rse}&autoSearch=true`}
                                 className="inline-flex items-center space-x-1.5 px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:border-brand-500 dark:hover:border-brand-500 hover:shadow-sm transition-all text-neutral-900 dark:text-neutral-100 group"
                             >
                                 <HiExternalLink className="text-sm flex-shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-brand-500" />

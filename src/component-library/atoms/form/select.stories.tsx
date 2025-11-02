@@ -10,7 +10,7 @@ const meta: Meta<typeof Select> = {
     },
     tags: ['autodocs'],
     decorators: [
-        (Story) => (
+        Story => (
             <div className="w-[300px]">
                 <Story />
             </div>

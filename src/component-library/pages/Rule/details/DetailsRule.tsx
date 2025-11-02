@@ -12,6 +12,7 @@ import { RuleMetaViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { cn } from '@/component-library/utils';
 import { DetailsRuleLocks } from '@/component-library/pages/Rule/details/DetailsRuleLocks';
 import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsRuleMeta';
+import { Alert } from '@/component-library/atoms/feedback/Alert';
 
 export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
     const tabNames = ['Attributes', 'Locks'];
@@ -40,21 +41,21 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
 export const DetailsRule = ({ id }: { id: string }) => {
     const { toast } = useToast();
     const validator = new BaseViewModelValidator(toast);
+    const [fetchErrorMessage, setFetchErrorMessage] = useState<string | null>(null);
 
     const queryMeta = async () => {
         const url = '/api/feature/get-rule?' + new URLSearchParams({ id });
 
+        setFetchErrorMessage(null); // Clear any previous errors
         const res = await fetch(url);
         if (!res.ok) {
+            let errorMsg = res.statusText;
             try {
                 const json = await res.json();
-                toast({
-                    title: 'Fatal error',
-                    description: json.message,
-                    variant: 'error',
-                });
+                errorMsg = json.message || errorMsg;
             } catch (e) {}
-            throw new Error(res.statusText);
+            setFetchErrorMessage(errorMsg);
+            throw new Error(errorMsg);
         }
 
         const json = await res.json();
@@ -68,6 +69,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
         data: meta,
         error: metaError,
         isFetching: isMetaFetching,
+        refetch,
     } = useQuery<RuleMetaViewModel>({
         queryKey: metaQueryKey,
         queryFn: queryMeta,
@@ -77,9 +79,16 @@ export const DetailsRule = ({ id }: { id: string }) => {
 
     if (metaError) {
         return (
-            <WarningField>
-                <span>Could not load the rule with ID {id}.</span>
-            </WarningField>
+            <div className="w-full p-6">
+                <Alert
+                    variant="error"
+                    message={`Failed to load rule ${id}. ${fetchErrorMessage || 'Please try again.'}`}
+                    onClose={() => {
+                        setFetchErrorMessage(null);
+                        refetch();
+                    }}
+                />
+            </div>
         );
     }
 

@@ -337,12 +337,7 @@ export const motionUtils = {
      * @param iteration - Iteration count
      * @returns CSS animation string
      */
-    getAnimation: (
-        keyframe: string,
-        dur: keyof typeof duration,
-        ease: keyof typeof easing,
-        iteration: string = '1',
-    ): string => {
+    getAnimation: (keyframe: string, dur: keyof typeof duration, ease: keyof typeof easing, iteration: string = '1'): string => {
         return `${keyframe} ${duration[dur]} ${easing[ease]} ${iteration}`;
     },
 

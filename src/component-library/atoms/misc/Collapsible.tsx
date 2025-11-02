@@ -28,18 +28,21 @@ const collapsibleTriggerVariants = cva(
     },
 );
 
-const collapsibleContentVariants = cva('overflow-hidden transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down', {
-    variants: {
-        variant: {
-            default: 'border-x border-b border-neutral-200 dark:border-neutral-800 rounded-b',
-            ghost: '',
-            outline: 'border-x border-b border-neutral-200 dark:border-neutral-800 rounded-b',
+const collapsibleContentVariants = cva(
+    'overflow-hidden transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down',
+    {
+        variants: {
+            variant: {
+                default: 'border-x border-b border-neutral-200 dark:border-neutral-800 rounded-b',
+                ghost: '',
+                outline: 'border-x border-b border-neutral-200 dark:border-neutral-800 rounded-b',
+            },
+        },
+        defaultVariants: {
+            variant: 'default',
         },
     },
-    defaultVariants: {
-        variant: 'default',
-    },
-});
+);
 
 interface CollapsibleTriggerProps
     extends React.ComponentPropsWithoutRef<typeof CollapsiblePrimitive.CollapsibleTrigger>,

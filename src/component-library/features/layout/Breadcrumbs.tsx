@@ -96,18 +96,12 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
                                             {item.label}
                                         </span>
                                     ) : item.href && !isLast ? (
-                                        <Link
-                                            href={item.href}
-                                            className={cn(breadcrumbItemVariants({ active: false }))}
-                                        >
+                                        <Link href={item.href} className={cn(breadcrumbItemVariants({ active: false }))}>
                                             {item.icon && <span className="mr-1">{item.icon}</span>}
                                             {item.label}
                                         </Link>
                                     ) : (
-                                        <span
-                                            className={cn(breadcrumbItemVariants({ active: isLast }))}
-                                            aria-current={isLast ? 'page' : undefined}
-                                        >
+                                        <span className={cn(breadcrumbItemVariants({ active: isLast }))} aria-current={isLast ? 'page' : undefined}>
                                             {item.icon && <span className="mr-1">{item.icon}</span>}
                                             {item.label}
                                         </span>

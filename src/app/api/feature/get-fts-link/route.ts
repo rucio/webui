@@ -19,36 +19,22 @@ export async function GET(request: NextRequest) {
         const rse = params.rse as string;
 
         if (!scope) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: scope' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: scope' }, { status: 400 });
         }
 
         if (!name) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: name' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: name' }, { status: 400 });
         }
 
         if (!rse) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: rse' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: rse' }, { status: 400 });
         }
 
-        const controller = appContainer.get<BaseController<GetFTSLinkControllerParameters, void>>(
-            CONTROLLERS.GET_FTS_LINK
-        );
+        const controller = appContainer.get<BaseController<GetFTSLinkControllerParameters, void>>(CONTROLLERS.GET_FTS_LINK);
 
         return executeAuthenticatedController(controller, { scope, name, rse });
     } catch (error) {
         console.error('Error in get-fts-link:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

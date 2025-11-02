@@ -49,14 +49,7 @@ export interface TabSwitcherProps extends VariantProps<typeof tabContainerVarian
     className?: string;
 }
 
-export const TabSwitcher = ({
-    tabNames,
-    onSwitch,
-    activeIndex,
-    orientation = 'horizontal',
-    fullWidth = true,
-    className
-}: TabSwitcherProps) => {
+export const TabSwitcher = ({ tabNames, onSwitch, activeIndex, orientation = 'horizontal', fullWidth = true, className }: TabSwitcherProps) => {
     const [mounted, setMounted] = React.useState(false);
     const [indicatorStyle, setIndicatorStyle] = React.useState<React.CSSProperties>({ left: 0, width: 0, opacity: 0 });
     const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
@@ -91,11 +84,11 @@ export const TabSwitcher = ({
                 const isActive = index === activeIndex;
                 return (
                     <div
-                        ref={(el) => {
+                        ref={el => {
                             tabRefs.current[index] = el;
                         }}
                         onClick={() => onSwitch(index)}
-                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        onKeyDown={e => handleKeyDown(e, index)}
                         key={name}
                         className={cn(tabItemVariants({ active: isActive, fullWidth }))}
                         role="tab"

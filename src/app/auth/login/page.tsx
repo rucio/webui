@@ -44,7 +44,7 @@ function LoginContent() {
             vo: vo.shortName,
             account: account || '(none)',
             redirectURL,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         });
 
         try {
@@ -60,14 +60,14 @@ function LoginContent() {
                 ok: result?.ok,
                 error: result?.error,
                 status: result?.status,
-                url: result?.url
+                url: result?.url,
             });
 
             // Check for error first, as NextAuth can return ok: true with an error
             if (result?.error) {
                 console.log('[LOGIN FLOW 4] Login failed with error', {
                     error: result.error,
-                    errorType: result.error === 'CredentialsSignin' ? 'CredentialsSignin' : 'Other'
+                    errorType: result.error === 'CredentialsSignin' ? 'CredentialsSignin' : 'Other',
                 });
 
                 // NextAuth wraps errors from the authorize function as CredentialsSignin

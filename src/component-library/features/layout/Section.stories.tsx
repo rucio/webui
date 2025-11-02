@@ -170,13 +170,9 @@ export const HeroSection: Story = {
         <Section variant="subtle" spacing="xl" padding="md">
             <div className="text-center max-w-3xl mx-auto">
                 <h1 className="text-5xl font-bold mb-6">Welcome to Rucio</h1>
-                <p className="text-xl text-neutral-600 dark:text-neutral-400 mb-8">
-                    Scientific Data Management at scale
-                </p>
+                <p className="text-xl text-neutral-600 dark:text-neutral-400 mb-8">Scientific Data Management at scale</p>
                 <div className="flex gap-4 justify-center">
-                    <button className="px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700">
-                        Get Started
-                    </button>
+                    <button className="px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700">Get Started</button>
                     <button className="px-6 py-3 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">
                         Learn More
                     </button>
@@ -193,8 +189,8 @@ export const ContentSection: Story = {
                 About
             </h2>
             <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-                This is a standard content section with default styling. It uses semantic HTML (&lt;section&gt; tag) and proper ARIA
-                labeling for accessibility.
+                This is a standard content section with default styling. It uses semantic HTML (&lt;section&gt; tag) and proper ARIA labeling for
+                accessibility.
             </p>
             <p className="text-neutral-600 dark:text-neutral-400">
                 The section automatically handles responsive spacing, adjusting padding based on viewport size using Tailwind CSS.
@@ -265,9 +261,7 @@ export const FullPageLayout: Story = {
             <Section variant="subtle" spacing="xl" padding="md">
                 <div className="text-center">
                     <h1 className="text-4xl font-bold mb-4">Full Page Layout</h1>
-                    <p className="text-xl text-neutral-600 dark:text-neutral-400">
-                        Example of multiple sections composing a complete page
-                    </p>
+                    <p className="text-xl text-neutral-600 dark:text-neutral-400">Example of multiple sections composing a complete page</p>
                 </div>
             </Section>
 
@@ -290,9 +284,7 @@ export const FullPageLayout: Story = {
             <Section variant="subtle" spacing="lg" padding="md">
                 <div className="text-center">
                     <h2 className="text-2xl font-bold mb-4">Ready to get started?</h2>
-                    <button className="px-8 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700">
-                        Start Now
-                    </button>
+                    <button className="px-8 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700">Start Now</button>
                 </div>
             </Section>
         </div>
@@ -351,15 +343,11 @@ export const WithARIA: Story = {
                 <h2 id="main-content" className="text-2xl font-bold mb-4">
                     Main Content
                 </h2>
-                <p className="text-neutral-600 dark:text-neutral-400">
-                    This section uses aria-labelledby to associate it with the heading.
-                </p>
+                <p className="text-neutral-600 dark:text-neutral-400">This section uses aria-labelledby to associate it with the heading.</p>
             </Section>
 
             <Section spacing="md" aria-label="Additional information" className="mt-8">
-                <p className="text-neutral-600 dark:text-neutral-400">
-                    This section uses aria-label for sections without visible headings.
-                </p>
+                <p className="text-neutral-600 dark:text-neutral-400">This section uses aria-label for sections without visible headings.</p>
             </Section>
         </div>
     ),

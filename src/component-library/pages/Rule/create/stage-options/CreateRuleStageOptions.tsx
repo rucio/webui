@@ -6,23 +6,32 @@ import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckb
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component-library/atoms/misc/Collapsible';
-import { HiChevronUpDown } from 'react-icons/hi2';
 
 interface FieldWithLabelProps {
     label: string;
     children: React.ReactNode;
     className?: string;
     required?: boolean;
+    helpText?: string;
+    error?: boolean;
+    errorMessage?: string;
 }
 
-const InputWithLabel: React.FC<FieldWithLabelProps> = ({ label, children, className, required }) => {
+const InputWithLabel: React.FC<FieldWithLabelProps> = ({ label, children, className, required, helpText, error, errorMessage }) => {
     return (
-        <div className={cn('space-y-1', className)}>
-            <label className="text-neutral-900 dark:text-neutral-100">
+        <div className={cn('space-y-2', className)}>
+            <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                 {label}
-                {required && <span className="text-base-error-500 font-medium ml-1">*</span>}
+                {required && <span className="text-base-error-600 dark:text-base-error-500 ml-1">*</span>}
             </label>
+            {helpText && <p className="text-sm text-neutral-600 dark:text-neutral-400 -mt-1">{helpText}</p>}
             {children}
+            {error && errorMessage && (
+                <p className="text-sm text-base-error-600 dark:text-base-error-500 flex items-start gap-1">
+                    <span className="font-medium">Error:</span>
+                    <span>{errorMessage}</span>
+                </p>
+            )}
         </div>
     );
 };
@@ -47,36 +56,14 @@ export const getEmptyOptionsErrors = (): CreateRuleOptionsErrors => {
     };
 };
 
-interface OptionsCollapsibleTriggerProps {
-    label: string;
-    className?: string;
-}
-
-const OptionsCollapsibleTrigger: React.FC<OptionsCollapsibleTriggerProps> = ({ label, className }) => {
-    return (
-        <CollapsibleTrigger
-            className={cn(
-                'flex w-full items-center justify-between space-x-2',
-                'py-2 px-3',
-                'text-neutral-900 dark:text-neutral-100',
-                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
-                className,
-            )}
-        >
-            <span>{label}</span>
-            <HiChevronUpDown className="h-6 w-6" />
-        </CollapsibleTrigger>
-    );
-};
-
-const collapsibleContentStyle = 'pt-3 space-y-5';
-
 const LifetimeInput = ({
     parameters,
     updateOptionValue,
+    errors,
 }: {
     parameters: CreateRuleParameters;
     updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
+    errors: CreateRuleOptionsErrors;
 }) => {
     const lifetimeInputRef = useRef<HTMLInputElement>(null);
 
@@ -117,16 +104,33 @@ const LifetimeInput = ({
     };
 
     return (
-        <Collapsible>
-            <OptionsCollapsibleTrigger label="Lifetime" />
-            <CollapsibleContent className={collapsibleContentStyle}>
-                <InputWithLabel label="Days">
-                    <Input onInput={onLifetimeInput} type="number" min="1" max="1000" defaultValue={getDefaultLifetime()} ref={lifetimeInputRef} />
-                </InputWithLabel>
+        <Collapsible className="space-y-0">
+            <CollapsibleTrigger variant="outline" className="font-medium text-neutral-900 dark:text-neutral-100">
+                Lifetime
+            </CollapsibleTrigger>
+            <CollapsibleContent variant="outline">
+                <div className="space-y-4">
+                    <InputWithLabel
+                        label="Days"
+                        helpText="Number of days before the rule expires (leave empty for no expiration)"
+                        error={errors.lifetimeInvalid}
+                        errorMessage="Lifetime should be greater than 1 or not specified"
+                    >
+                        <Input
+                            onInput={onLifetimeInput}
+                            type="number"
+                            min="1"
+                            max="1000"
+                            defaultValue={getDefaultLifetime()}
+                            ref={lifetimeInputRef}
+                            error={errors.lifetimeInvalid}
+                        />
+                    </InputWithLabel>
 
-                <InputWithLabel label="Expires on">
-                    <Input type="date" value={getExpiryDate()} onInput={onDateInput} />
-                </InputWithLabel>
+                    <InputWithLabel label="Expires on" helpText="Alternatively, select a specific expiration date">
+                        <Input type="date" value={getExpiryDate()} onInput={onDateInput} />
+                    </InputWithLabel>
+                </div>
             </CollapsibleContent>
         </Collapsible>
     );
@@ -135,9 +139,11 @@ const LifetimeInput = ({
 const AdvancedInput = ({
     parameters,
     updateOptionValue,
+    errors,
 }: {
     parameters: CreateRuleParameters;
     updateOptionValue: (key: keyof CreateRuleOptions, value: any) => void;
+    errors: CreateRuleOptionsErrors;
 }) => {
     const onFileCountInput = (event: FormEvent<HTMLInputElement>) => {
         let value;
@@ -156,45 +162,61 @@ const AdvancedInput = ({
     };
 
     return (
-        <Collapsible>
-            <OptionsCollapsibleTrigger label="Advanced" />
-            <CollapsibleContent className={collapsibleContentStyle}>
-                <InputWithLabel label="Grouping">
-                    <Select
-                        onValueChange={value => {
-                            const grouping = value === UNDEFINED_GROUPING ? undefined : (value as CreateRuleGrouping);
-                            updateOptionValue('grouping', grouping);
-                        }}
-                        defaultValue={parameters.grouping ?? UNDEFINED_GROUPING}
+        <Collapsible className="space-y-0">
+            <CollapsibleTrigger variant="outline" className="font-medium text-neutral-900 dark:text-neutral-100">
+                Advanced Options
+            </CollapsibleTrigger>
+            <CollapsibleContent variant="outline">
+                <div className="space-y-4">
+                    <InputWithLabel
+                        label="Grouping"
+                        helpText="Defines how files in datasets/containers are grouped for replication"
+                        error={errors.groupingInvalid}
+                        errorMessage="The value of grouping is invalid"
                     >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Grouping" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value={UNDEFINED_GROUPING}>Undefined</SelectItem>
-                                <SelectItem value={CreateRuleGrouping.ALL}>All</SelectItem>
-                                <SelectItem value={CreateRuleGrouping.DATASET}>Dataset</SelectItem>
-                                <SelectItem value={CreateRuleGrouping.NONE}>None</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </InputWithLabel>
-                <LabeledCheckbox
-                    checked={parameters.asynchronous}
-                    onChange={() => updateOptionValue('asynchronous', !parameters.asynchronous)}
-                    label="Asynchronous"
-                />
-                <LabeledCheckbox
-                    checked={parameters.sample}
-                    onChange={() => updateOptionValue('sample', !parameters.sample)}
-                    label="Create a sample"
-                />
-                {parameters.sample && (
-                    <InputWithLabel label="Number of files">
-                        <Input type="number" min="1" onInput={onFileCountInput} defaultValue={getDefaultFileCount()} />
+                        <Select
+                            onValueChange={value => {
+                                const grouping = value === UNDEFINED_GROUPING ? undefined : (value as CreateRuleGrouping);
+                                updateOptionValue('grouping', grouping);
+                            }}
+                            defaultValue={parameters.grouping ?? UNDEFINED_GROUPING}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Grouping" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value={UNDEFINED_GROUPING}>Undefined</SelectItem>
+                                    <SelectItem value={CreateRuleGrouping.ALL}>All</SelectItem>
+                                    <SelectItem value={CreateRuleGrouping.DATASET}>Dataset</SelectItem>
+                                    <SelectItem value={CreateRuleGrouping.NONE}>None</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </InputWithLabel>
-                )}
+                    <div className="space-y-3">
+                        <LabeledCheckbox
+                            checked={parameters.asynchronous}
+                            onChange={() => updateOptionValue('asynchronous', !parameters.asynchronous)}
+                            label="Asynchronous"
+                        />
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400 ml-7">Create rule asynchronously in the background</p>
+                    </div>
+                    <div className="space-y-3">
+                        <LabeledCheckbox checked={parameters.sample} onChange={() => updateOptionValue('sample', !parameters.sample)} label="Create a sample" />
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400 ml-7">Create a rule for a random sample of files</p>
+                    </div>
+                    {parameters.sample && (
+                        <InputWithLabel
+                            label="Number of files"
+                            helpText="Specify how many files to include in the sample"
+                            error={errors.sampleCountInvalid}
+                            errorMessage="Number of files should be greater than 1 or not specified"
+                        >
+                            <Input type="number" min="1" onInput={onFileCountInput} defaultValue={getDefaultFileCount()} error={errors.sampleCountInvalid} />
+                        </InputWithLabel>
+                    )}
+                </div>
             </CollapsibleContent>
         </Collapsible>
     );
@@ -217,72 +239,60 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
     const defaultCopies = isNaN(parameters.copies) ? '' : parameters.copies;
 
     return (
-        <div className="flex flex-col space-y-5 w-full grow">
-            <InputWithLabel label="Copies" required>
-                <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length} defaultValue={defaultCopies} />
-            </InputWithLabel>
+        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+            <div className="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-700">
+                {/* Basic Configuration Section */}
+                <div className="space-y-4 pb-6">
+                    <InputWithLabel
+                        label="Copies"
+                        required
+                        helpText={`Number of replicas to create (max: ${parameters.rses.length} based on selected RSEs)`}
+                        error={errors.copiesInvalid}
+                        errorMessage={`Copies should range from 1 to ${parameters.rses.length} (number of chosen RSEs)`}
+                    >
+                        <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length} defaultValue={defaultCopies} error={errors.copiesInvalid} />
+                    </InputWithLabel>
 
-            <LifetimeInput parameters={parameters} updateOptionValue={updateOptionValue} />
+                    {/* Show contextual warning for quota issues */}
+                    {!errors.copiesInvalid && errors.tooManyCopies && (
+                        <WarningField>
+                            <span>
+                                There are less than <b>{parameters.copies}</b> chosen RSEs with enough quota left. Please change the number of <b>copies</b> or
+                                mark the rule as needing approval in Step 2.
+                            </span>
+                        </WarningField>
+                    )}
+                </div>
 
-            <InputWithLabel label="Comments" required={parameters.askApproval}>
-                <Textarea onChange={event => updateOptionValue('comments', event.target.value)} defaultValue={parameters.comments} />
-            </InputWithLabel>
-            <LabeledCheckbox
-                checked={parameters.notify}
-                onChange={() => updateOptionValue('notify', !parameters.notify)}
-                label="Receive notifications"
-            />
-            <AdvancedInput parameters={parameters} updateOptionValue={updateOptionValue} />
+                {/* Lifetime Configuration */}
+                <div className="py-6">
+                    <LifetimeInput parameters={parameters} updateOptionValue={updateOptionValue} errors={errors} />
+                </div>
 
-            {/* Error handling */}
-            {errors.copiesInvalid && (
-                <WarningField>
-                    <span>
-                        Invalid value for <b>copies</b>. It should range from 1 to the number of chosen RSEs.
-                    </span>
-                </WarningField>
-            )}
+                {/* Comments Section */}
+                <div className="pt-6 pb-6">
+                    <InputWithLabel
+                        label="Comments"
+                        required={parameters.askApproval}
+                        helpText={parameters.askApproval ? 'Required when asking for approval' : 'Optional comments about this rule'}
+                        error={errors.commentsEmpty}
+                        errorMessage="A comment should be specified when asking for approval"
+                    >
+                        <Textarea onChange={event => updateOptionValue('comments', event.target.value)} defaultValue={parameters.comments} error={errors.commentsEmpty} />
+                    </InputWithLabel>
+                </div>
 
-            {!errors.copiesInvalid && errors.tooManyCopies && (
-                <WarningField>
-                    <span>
-                        There are less than <b>{parameters.copies}</b> chosen RSEs with enough quota left. Please change the number of <b>copies</b>{' '}
-                        or mark the rule as needing approval.
-                    </span>
-                </WarningField>
-            )}
+                {/* Notifications */}
+                <div className="space-y-3 pt-6 pb-6">
+                    <LabeledCheckbox checked={parameters.notify} onChange={() => updateOptionValue('notify', !parameters.notify)} label="Receive notifications" />
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 ml-7">Get notified when the rule state changes</p>
+                </div>
 
-            {errors.lifetimeInvalid && (
-                <WarningField>
-                    <span>
-                        Invalid value for <b>lifetime</b>. It should be greater than 1 or not specified.
-                    </span>
-                </WarningField>
-            )}
-
-            {errors.commentsEmpty && (
-                <WarningField>
-                    <span>
-                        A <b>comment</b> should be specified if there is a need for rule approval.
-                    </span>
-                </WarningField>
-            )}
-
-            {errors.groupingInvalid && (
-                <WarningField>
-                    <span>
-                        The value of <b>grouping</b> is invalid.
-                    </span>
-                </WarningField>
-            )}
-
-            {errors.sampleCountInvalid && (
-                <WarningField>
-                    <span>
-                        Invalid value for <b>number of files</b>. It should be greater than 1 or not specified.
-                    </span>
-                </WarningField>
-            )}
+                {/* Advanced Configuration */}
+                <div className="pt-6">
+                    <AdvancedInput parameters={parameters} updateOptionValue={updateOptionValue} errors={errors} />
+                </div>
+            </div>
         </div>
     );
 };

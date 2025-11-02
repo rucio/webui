@@ -18,22 +18,14 @@ export async function GET(request: NextRequest) {
         const name = params.name as string;
 
         if (!scope || !name) {
-            return NextResponse.json(
-                { error: 'Missing required parameters: scope and name' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameters: scope and name' }, { status: 400 });
         }
 
-        const controller = appContainer.get<BaseController<DIDMetaControllerParameters, void>>(
-            CONTROLLERS.DID_META
-        );
+        const controller = appContainer.get<BaseController<DIDMetaControllerParameters, void>>(CONTROLLERS.DID_META);
 
         return executeAuthenticatedController(controller, { scope, name });
     } catch (error) {
         console.error('Error in get-did-meta:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

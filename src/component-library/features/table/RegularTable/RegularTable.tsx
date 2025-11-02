@@ -11,6 +11,7 @@ import { useTheme } from 'next-themes';
 
 export interface RegularTableProps extends AgGridReactProps {
     tableRef: RefObject<AgGridReact | null>;
+    paginationPageSize?: number;
 }
 
 // This implementation of the pagination panel uses refs to prevent excessive state updates
@@ -172,7 +173,8 @@ export const RegularTable = (props: RegularTableProps) => {
                     <AgGridReact
                         {...props}
                         pagination={true}
-                        paginationAutoPageSize={true}
+                        paginationAutoPageSize={false}
+                        paginationPageSize={props.paginationPageSize ?? 100}
                         ref={props.tableRef}
                         loadingOverlayComponent={NoDataYetOverlay}
                         onGridReady={onGridReady}
