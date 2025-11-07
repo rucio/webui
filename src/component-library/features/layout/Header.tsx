@@ -153,6 +153,7 @@ export const Header = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: He
         { title: 'DIDs', path: '/did/list' },
         { title: 'RSEs', path: '/rse/list' },
         { title: 'Subscriptions', path: '/subscription/list' },
+        { title: 'Tutorial', path: '/tutorial/subscriptions' },
         {
             title: 'Rules',
             children: [

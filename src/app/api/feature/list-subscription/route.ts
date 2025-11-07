@@ -9,8 +9,11 @@ import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils
 
 /**
  * GET /api/feature/list-subscription
- * Query params: account (optional), name (optional)
- * Returns a list of subscriptions
+ * Query params: account (optional) - defaults to session account if not provided
+ * Returns a list of subscriptions as NDJSON stream
+ *
+ * WebUI Tutorial: This endpoint is used in the Developer Onboarding Tutorial
+ * to demonstrate the list-subscriptions feature.
  */
 export async function GET(request: NextRequest) {
     try {
@@ -27,15 +30,9 @@ export async function GET(request: NextRequest) {
             );
         }
 
+        // Parse query params - account defaults to session account if not provided
         const params = parseQueryParams(request);
-        const account = params.account as string;
-
-        if (!account) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: account' },
-                { status: 400 }
-            );
-        }
+        const account = (params.account as string) || sessionUser.rucioAccount;
 
         const controller = appContainer.get<BaseController<ListSubscriptionsControllerParameters, void>>(
             CONTROLLERS.LIST_SUBSCRIPTIONS
@@ -44,7 +41,7 @@ export async function GET(request: NextRequest) {
         return executeAuthenticatedController(
             controller,
             {
-                sessionAccount: sessionUser.rucioAccount
+                sessionAccount: account
             },
             true // streaming endpoint
         );

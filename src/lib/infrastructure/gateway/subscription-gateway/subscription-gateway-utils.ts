@@ -1,6 +1,8 @@
+// WebUI Tutorial: This file contains utility functions for the subscription gateway
+// Used in Step 1.5 of the Developer Onboarding Tutorial
+
 import { SubscriptionDTO, SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
 import { RuleState, SubscriptionReplicationRule, SubscriptionState } from '@/lib/core/entity/rucio';
-import { de } from '@faker-js/faker';
 
 /**
  * Represents the data returned by Rucio Server for a subscription.
