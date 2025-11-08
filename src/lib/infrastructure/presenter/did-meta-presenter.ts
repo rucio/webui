@@ -26,6 +26,7 @@ export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DID
             md5: responseModel.md5,
             guid: responseModel.guid,
             bytes: responseModel.bytes,
+            is_opendata: responseModel.is_opendata,
         };
         return {
             status: 200,
@@ -57,6 +58,7 @@ export default class DIDMetaPresenter extends BasePresenter<DIDMetaResponse, DID
             md5: '',
             guid: '',
             bytes: 0,
+            is_opendata: false,
         };
         return { status, viewModel };
     }
