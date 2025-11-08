@@ -1,7 +1,6 @@
 import { CreateRuleDTO } from '@/lib/core/dto/rule-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { RuleCreationParameters } from '@/lib/core/entity/rucio';
 
 export default class CreateRuleEndpoint extends BaseEndpoint<CreateRuleDTO> {

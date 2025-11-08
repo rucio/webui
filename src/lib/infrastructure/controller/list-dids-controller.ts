@@ -42,7 +42,7 @@ class ListDIDsController extends BaseController<ListDIDsControllerParameters, Au
             query: parameters.query,
             type: did_type,
             rucioAuthToken: parameters.rucioAuthToken,
-            filters: parameters.filters
+            filters: parameters.filters,
         };
     }
 }

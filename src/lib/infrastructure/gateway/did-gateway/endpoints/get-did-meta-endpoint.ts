@@ -2,7 +2,6 @@ import { HTTPRequest } from '@/lib/sdk/http';
 import { DIDMetaDTO } from '@/lib/core/dto/did-dto';
 import { DIDAvailability, DIDType } from '@/lib/core/entity/rucio';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
-import { Response } from 'node-fetch';
 
 export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
     constructor(private rucioAuthToken: string, private scope: string, private name: string) {

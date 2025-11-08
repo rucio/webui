@@ -1,21 +1,17 @@
 import { twMerge } from 'tailwind-merge';
-import { Button } from '../../../atoms/legacy/Button/Button';
+import { Button } from '../../../atoms/form/button';
 import { AreaInput } from '../../../atoms/legacy/input/AreaInput/AreaInput';
 import React, { useState, useEffect } from 'react';
-import { Value } from '@sinclair/typebox/value';
-import { Type, Static } from '@sinclair/typebox';
-import { Code } from '../../../atoms/legacy/text/content/Code/Code';
-import { Collapsible } from '../../../atoms/legacy/helpers/Collapsible/Collapsible';
 import { HiQuestionMarkCircle } from 'react-icons/hi';
-import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
+import { Collapsible } from '../../../atoms/legacy/helpers/Collapsible/Collapsible';
 
 export const PageSubscriptionJSONEditor: React.FC<
     React.ComponentPropsWithoutRef<'div'> & {
         defaultString: string;
         submit: (json: string) => void;
-        schema: any;
+        schemaDescription?: string;
     }
-> = ({ defaultString, submit, schema, ...props }) => {
+> = ({ defaultString, submit, schemaDescription, ...props }) => {
     const { className, ...otherprops } = props;
     const [json, setJson] = useState<string>(defaultString);
     useEffect(() => {
@@ -60,59 +56,63 @@ export const PageSubscriptionJSONEditor: React.FC<
                 </div>
                 <div className="flex flex-row space-x-2">
                     <Button
-                        icon={<HiQuestionMarkCircle />}
-                        className="w-fit text-2xl"
+                        size="icon"
                         aria-label="Show schema"
                         onClick={e => {
                             setHelpWanted(!helpWanted);
                         }}
-                    />
+                    >
+                        <HiQuestionMarkCircle className="h-5 w-5" />
+                    </Button>
                     <Button
-                        label="Reset"
-                        type="reset"
+                        variant="error"
                         className="w-28"
                         onClick={e => {
                             setJson(defaultString);
                             setJsonError('');
                         }}
-                    />
+                    >
+                        Reset
+                    </Button>
                     <Button
-                        label="Check"
-                        type="button"
+                        variant="neutral"
                         className="w-28"
                         onClick={e => {
                             try {
                                 const parsed = JSON.parse(json);
-                                if (Value.Check(schema, parsed)) {
-                                    setJsonError(null);
-                                } else {
-                                    setJsonError('JSON does not match schema');
-                                }
                                 const reformatted = JSON.stringify(parsed, null, 2);
                                 if (reformatted === defaultString) {
                                     setJsonError('JSON unchanged');
+                                } else {
+                                    setJsonError(null);
                                 }
                                 setJson(reformatted);
                             } catch (SyntaxError) {
                                 setJsonError('Syntax Error');
                             }
                         }}
-                    />
+                    >
+                        Check
+                    </Button>
                     <Button
-                        label="Commit"
+                        variant="success"
                         type="submit"
                         disabled={jsonError !== null}
                         className="w-28"
                         onClick={e => {
                             submit(json);
                         }}
-                    />
+                    >
+                        Commit
+                    </Button>
                 </div>
             </div>
-            <Collapsible showIf={helpWanted}>
-                <h4 className="text-text-800 dark:text-text-100 font-bold">Schema</h4>
-                <Code className="h-48 overflow-y-auto mt-2">{JSON.stringify(schema, null, 2)}</Code>
-            </Collapsible>
+            {schemaDescription && (
+                <Collapsible showIf={helpWanted}>
+                    <h4 className="text-neutral-800 dark:text-neutral-100 font-bold">Help</h4>
+                    <div className="mt-2 p-4 bg-base-neutral-100 dark:bg-base-neutral-800 rounded">{schemaDescription}</div>
+                </Collapsible>
+            )}
         </div>
     );
 };

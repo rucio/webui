@@ -14,25 +14,17 @@ import { executeAuthenticatedController, parseQueryParams } from '@/lib/infrastr
 export async function GET(request: NextRequest) {
     try {
         const params = parseQueryParams(request);
-        const rseName = params.rse as string || params.rseName as string;
+        const rseName = (params.rse as string) || (params.rseName as string);
 
         if (!rseName) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: rse or rseName' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: rse or rseName' }, { status: 400 });
         }
 
-        const controller = appContainer.get<BaseController<GetRSEProtocolsControllerParameters, void>>(
-            CONTROLLERS.GET_RSE_PROTOCOLS
-        );
+        const controller = appContainer.get<BaseController<GetRSEProtocolsControllerParameters, void>>(CONTROLLERS.GET_RSE_PROTOCOLS);
 
         return executeAuthenticatedController(controller, { rseName });
     } catch (error) {
         console.error('Error in get-rse-protocols:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

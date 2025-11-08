@@ -17,8 +17,21 @@ export const KeyValueLinkHeader = ({ href, children }: { href: string; children:
         window.open(href, '_blank', 'noopener,noreferrer');
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+        }
+    };
+
     return (
-        <div onClick={onClick} className={cn(headerCommonClasses, 'hover:text-brand-600 dark:hover:text-brand-400')}>
+        <div
+            onClick={onClick}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            className={cn(headerCommonClasses, 'hover:text-brand-600 dark:hover:text-brand-400 cursor-pointer')}
+        >
             <HiExternalLink className="h-5 w-5" />
             {children}
         </div>

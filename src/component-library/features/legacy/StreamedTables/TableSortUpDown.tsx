@@ -22,6 +22,14 @@ export function TableSortUpDown(
         desc: 'asc',
         asc: 'null',
     };
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            column.toggleSorting();
+            setState(next[state] as updown);
+        }
+    };
+
     return (
         <div
             className={twMerge(
@@ -35,10 +43,13 @@ export function TableSortUpDown(
                 column.toggleSorting();
                 setState(next[state] as updown);
             }}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
             {...otherdivprops}
         >
             {element ?? <H3 className={props.nocollapse ? 'inline hover:text-brand-500' : 'hidden md:inline hover:text-brand-500'}>{name}</H3>}
-            <span className="text-text-500 dark:text-text-200 hover:text-brand-500 text-2xl h6">
+            <span className="text-neutral-500 dark:text-neutral-200 hover:text-brand-500 text-2xl h6">
                 {
                     {
                         asc: <HiSortAscending />,

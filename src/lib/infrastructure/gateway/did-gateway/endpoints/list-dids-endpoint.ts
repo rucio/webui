@@ -3,7 +3,6 @@ import { BaseHttpErrorTypes } from '@/lib/sdk/http';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { ListDIDDTO } from '@/lib/core/dto/did-dto';
 import { DID, DIDType, DIDFilter } from '@/lib/core/entity/rucio';
-import { Response } from 'node-fetch';
 
 /**
  * A class that extends the `BaseStreamableEndpoint` class and provides an implementation for a streamable API endpoint that lists data identifiers (DIDs) from a Rucio server.
@@ -17,7 +16,13 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
      * @param type A `DIDType` value that represents the type of the DIDs to be listed.
      * @param filters A list of user-defined DID filters
      */
-    constructor(private rucioAuthToken: string, private scope: string, private name: string, private type: DIDType, private filters: DIDFilter[] = []) {
+    constructor(
+        private rucioAuthToken: string,
+        private scope: string,
+        private name: string,
+        private type: DIDType,
+        private filters: DIDFilter[] = [],
+    ) {
         super(true);
     }
 
@@ -27,35 +32,32 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
         const rucioHost = await this.envConfigGateway.rucioHost();
         const endpoint = `${rucioHost}/dids/${this.scope}/dids/search`;
 
-
         const queryString = [
             `name=${encodeURIComponent(this.name)}`,
             `type=${encodeURIComponent(this.type.toLowerCase())}`,
-            ...this.filters.map(f => 
-                `${encodeURIComponent(f.key)}${f.operator}${encodeURIComponent(String(f.value ?? ''))}`
-            )
-            ].join('&');
-        
+            ...this.filters.map(f => `${encodeURIComponent(f.key)}${f.operator}${encodeURIComponent(String(f.value ?? ''))}`),
+        ].join('&');
+
         const request: HTTPRequest = {
-            method: "GET",
+            method: 'GET',
             url: `${endpoint}?${queryString}`,
             headers: {
                 'X-Rucio-Auth-Token': this.rucioAuthToken,
                 'Content-Type': 'application/x-json-stream',
-            }
-            };
-        
+            },
+        };
+
         this.request = request;
         this.initialized = true;
     }
-    
+
     private formatFilters(filters: DIDFilter[]): Record<string, string> {
         const result: Record<string, string> = {};
-        
+
         filters.forEach(filter => {
             result[filter.key] = filter.operator + filter.value;
         });
-        
+
         return result;
     }
 

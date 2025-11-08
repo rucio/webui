@@ -29,6 +29,10 @@ const ClickableId = (props: { value: string }) => {
     return <ClickableCell href={`/rule/page/${props.value}`}>{props.value}</ClickableCell>;
 };
 
+const ClickableRSEExpression = (props: { value: string }) => {
+    return <ClickableCell href={`/rse/list?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
+};
+
 const NullableRemainingLifetime = (props: { value: number }) => {
     const timeString = formatSeconds(props.value);
     if (!timeString) {
@@ -40,19 +44,66 @@ const NullableRemainingLifetime = (props: { value: number }) => {
 export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null);
 
-
     const [columnDefs] = useState([
         {
             headerName: 'ID',
             field: 'id',
-            width: 390,
-            sortable: false,
+            width: 350,
+            pinned: 'left' as const,
             cellRenderer: ClickableId,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'RSE Expression',
             field: 'rse_expression',
-            minWidth: 150,
+            minWidth: 250,
+            flex: 2,
+            pinned: 'left' as const,
+            cellRenderer: ClickableRSEExpression,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
+        },
+        {
+            headerName: 'State',
+            field: 'state',
+            minWidth: 200,
+            width: 150,
+            cellStyle: badgeCellWrapperStyle,
+            cellRenderer: RuleStateBadge,
+            cellRendererParams: {
+                className: badgeCellClasses,
+            },
+            filter: true,
+            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
+        },
+        // TODO: minified header with a tooltip
+        {
+            headerName: 'OK',
+            field: 'locks_ok_cnt',
+            minWidth: 115,
+            width: 140,
+            filter: 'agNumberColumnFilter',
+        },
+        {
+            headerName: 'Replicating',
+            field: 'locks_replicating_cnt',
+            minWidth: 115,
+            width: 130,
+            filter: 'agNumberColumnFilter',
+        },
+        {
+            headerName: 'Stuck',
+            field: 'locks_stuck_cnt',
+            minWidth: 115,
+            width: 130,
+            sortable: true,
+            comparator: ruleActivityComparator,
+        },
+        {
+            headerName: 'Account',
+            field: 'account',
+            minWidth: 200,
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
@@ -60,7 +111,8 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
         {
             headerName: 'Created At',
             field: 'created_at',
-            minWidth: 150,
+            minWidth: 300,
+            width: 350,
             valueFormatter: (params: ValueFormatterParams) => {
                 return formatDate(params.value);
             },
@@ -70,47 +122,9 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
         {
             headerName: 'Remaining',
             field: 'remaining_lifetime',
-            minWidth: 125,
+            minWidth: 120,
+            width: 140,
             cellRenderer: NullableRemainingLifetime,
-        },
-        {
-            headerName: 'State',
-            field: 'state',
-            minWidth: 200,
-            cellStyle: badgeCellWrapperStyle,
-            cellRenderer: RuleStateBadge,
-            cellRendererParams: {
-                className: badgeCellClasses,
-            },
-            filter: true,
-            sortable: false,
-            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
-        },
-        // TODO: minified header with a tooltip
-        {
-            headerName: 'OK',
-            field: 'locks_ok_cnt',
-            minWidth: 75,
-            sortable: false,
-        },
-        {
-            headerName: 'Replicating',
-            field: 'locks_replicating_cnt',
-            minWidth: 135,
-            sortable: false,
-        },
-        {
-            headerName: 'Stuck',
-            field: 'locks_stuck_cnt',
-            minWidth: 90,
-            sortable: true,
-            comparator: ruleActivityComparator,
-        },
-        {
-            headerName: 'Account',
-            field: 'account',
-            filter: true,
-            filterParams: DefaultTextFilterParams,
         },
     ]);
 

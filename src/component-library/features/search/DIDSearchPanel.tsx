@@ -7,11 +7,25 @@ import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { Button } from '@/component-library/atoms/form/button';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 import { HiFilter } from 'react-icons/hi';
-
+import { DateInput } from '@/component-library/atoms/legacy/input/DateInput/DateInput';
+import { TimeInput } from '@/component-library/atoms/legacy/input/TimeInput/TimeInput';
+import { Alert } from '@/component-library/atoms/feedback/Alert';
 
 const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
 const delimiterToastMessage = 'Neither scope nor name should contain ":".';
+
+export interface DIDSearchParams {
+    scope: string;
+    name: string;
+    type: DIDType;
+    limit?: string;
+    createdMode?: 'before' | 'after';
+    createdDate?: Date;
+    createdTime?: string;
+    lengthOperator?: DIDFilterOperator;
+    lengthValue?: string;
+}
 
 interface SearchPanelProps {
     startStreaming: (url: string) => void;
@@ -20,20 +34,21 @@ interface SearchPanelProps {
     isRunning: boolean;
     autoSearch?: boolean;
     initialType?: DIDType;
+    onSearchStart?: (params: DIDSearchParams) => void;
 }
 
 // Helper to convert dates
-const dateToRFC1123 = (dateStr: string, timeStr: string): string | undefined => {
-    if (!dateStr) return undefined;
-    const [year, month, day] = dateStr.split('-').map(Number);
+const dateToRFC1123 = (date: Date | undefined, timeStr: string): string | undefined => {
+    if (!date) return undefined;
     const [hours, minutes, seconds] = (timeStr || '00:00:00').split(':').map(Number);
-    if (!year || !month || !day) return undefined;
 
-    const d = new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, seconds));
 
     const pad = (n: number) => n.toString().padStart(2, '0');
-    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ` +
-           `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+    return (
+        `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ` +
+        `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`
+    );
 };
 
 // Map length operator to proper filter key
@@ -53,11 +68,10 @@ const mapLengthOperatorToKey = (op: DIDFilterOperator): string => {
     return key;
 };
 
-
 // Small reusable wrapper for label + input
 const DIDFilterField = ({ label, children }: { label: string; children: React.ReactNode }) => (
     <div className="flex flex-col grow">
-        <div className="text-neutral-900 dark:text-neutral-100 mb-1">{label}</div>
+        <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">{label}</label>
         {children}
     </div>
 );
@@ -70,20 +84,13 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         [initialScope, initialName] = initialPatternParts;
     }
 
+    const [initialPatternError, setInitialPatternError] = useState<string | null>(null);
+
     // Check the validity of the initial pattern
     useEffect(() => {
-        // A short timeout is required for the toast context to initialize
-        const timeout = setTimeout(() => {
-            if (props.initialPattern && !initialScope && !initialName) {
-                toast({
-                    variant: 'warning',
-                    title: 'Invalid initial pattern',
-                    description: `Could not resolve "${props.initialPattern}"`,
-                });
-            }
-        }, 0);
-
-        return () => clearTimeout(timeout);
+        if (props.initialPattern && !initialScope && !initialName) {
+            setInitialPatternError(`Invalid URL pattern: could not resolve "${props.initialPattern}"`);
+        }
     }, []);
 
     const [scope, setScope] = useState<string | null>(initialScope ?? null);
@@ -92,7 +99,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const [type, setType] = useState<DIDType>(props.initialType ?? DIDType.DATASET);
     const [limit, setLimit] = useState<string>('');
     const [createdMode, setCreatedMode] = useState<'before' | 'after'>('after');
-    const [createdDate, setCreatedDate] = useState<string>('');
+    const [createdDate, setCreatedDate] = useState<Date | undefined>(undefined);
     const [createdTime, setCreatedTime] = useState<string>('');
     const [lengthOperator, setLengthOperator] = useState<DIDFilterOperator>('=');
     const [lengthValue, setLengthValue] = useState<string>('');
@@ -104,7 +111,6 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const nameInputRef = useRef<HTMLInputElement>(null);
 
     const { toast } = useToast();
-
 
     const showToastAndFocus = (title: string, description: string, inputRef: React.RefObject<HTMLInputElement | null>) => {
         toast({
@@ -135,54 +141,43 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     };
 
     const DIDFilterKeys = {
-            limit,
-            created: {mode: createdMode, date: createdDate, time: createdTime},
-            length: { operator: lengthOperator, value: lengthValue }
+        limit,
+        created: { mode: createdMode, date: createdDate, time: createdTime },
+        length: { operator: lengthOperator, value: lengthValue },
     };
-    
-    const validateDIDFilters = (
-        type: DIDType,
-        filters: typeof DIDFilterKeys,
-        toast: ReturnType<typeof useToast>['toast']
-        ): boolean => {
+
+    const validateDIDFilters = (type: DIDType, filters: typeof DIDFilterKeys, toast: ReturnType<typeof useToast>['toast']): boolean => {
         const isRFC1123 = (date: string): boolean => !isNaN(Date.parse(date));
 
         // Validate limit
         if (filters.limit) {
             const num = Number(filters.limit);
             if (!Number.isInteger(num) || num < 0) {
-            toast({
-                variant: 'warning',
-                title: 'Invalid limit',
-                description: 'Limit must be a positive integer.',
-            });
-            return false;
+                toast({
+                    variant: 'warning',
+                    title: 'Invalid limit',
+                    description: 'Limit must be a positive integer.',
+                });
+                return false;
             }
         }
-        
-        // Validate created
-        if (filters.created.date && isNaN(Date.parse(filters.created.date))) {
-            toast({
-                variant: 'warning',
-                title: 'Invalid created date',
-                description: 'Please enter a valid date and time.',
-            });
-            return false;
-        }
+
+        // Validate created - Date object is always valid if present
+        // No validation needed for Date objects from DatePicker
 
         // Validate length (only for dataset/container)
         if (type === DIDType.CONTAINER || type === DIDType.DATASET) {
             const len = filters.length;
             if (len?.value) {
-            const num = Number(len.value);
-            if (!Number.isInteger(num)) {
-                toast({
-                variant: 'warning',
-                title: 'Invalid length',
-                description: 'Length must be an integer value.',
-                });
-                return false;
-            }
+                const num = Number(len.value);
+                if (!Number.isInteger(num)) {
+                    toast({
+                        variant: 'warning',
+                        title: 'Invalid length',
+                        description: 'Length must be an integer value.',
+                    });
+                    return false;
+                }
             }
         }
 
@@ -193,6 +188,21 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         event.preventDefault();
 
         if (!validateScope() || !validateName() || !validateDIDFilters(type, DIDFilterKeys, toast)) return;
+
+        // Call onSearchStart callback if provided
+        if (props.onSearchStart && scope && name) {
+            props.onSearchStart({
+                scope,
+                name,
+                type,
+                limit: limit || undefined,
+                createdMode: createdDate ? createdMode : undefined,
+                createdDate: createdDate || undefined,
+                createdTime: createdDate ? createdTime : undefined,
+                lengthOperator: lengthValue ? lengthOperator : undefined,
+                lengthValue: lengthValue || undefined,
+            });
+        }
 
         const params = new URLSearchParams({
             query: `${scope}${SCOPE_DELIMITER}${name}`,
@@ -243,7 +253,10 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     };
 
     return (
-        <div className="flex flex-col space-y-2 w-full">
+        <div className="flex flex-col space-y-4 w-full">
+            {/* Alert for invalid initial pattern */}
+            {initialPatternError && <Alert variant="warning" message={initialPatternError} onClose={() => setInitialPatternError(null)} />}
+
             {/* Main search row */}
             <div className="flex flex-col md:items-start md:flex-row md:space-y-0 md:space-x-2">
                 <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
@@ -299,80 +312,71 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
 
             {/* DID filters */}
             {isFilterExpanded && (
-                <div className="flex flex-col space-y-2 mt-2">
+                <div className="rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6 space-y-6">
                     <DIDFilterField label="Created">
-                        <div className="flex flex-row items-center space-x-2 w-full">
-                            <Select
-                            value={createdMode}
-                            onValueChange={(v) => setCreatedMode(v as 'before' | 'after')}
-                            >
-                            <SelectTrigger className="w-32 flex-shrink-0">
-                                <SelectValue placeholder="Mode" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                <SelectItem value="after">After</SelectItem>
-                                <SelectItem value="before">Before</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+                            <Select value={createdMode} onValueChange={v => setCreatedMode(v as 'before' | 'after')}>
+                                <SelectTrigger className="w-full sm:w-32 flex-shrink-0">
+                                    <SelectValue placeholder="Mode" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="after">After</SelectItem>
+                                        <SelectItem value="before">Before</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
                             </Select>
                             <div className="flex flex-row flex-1 gap-2">
-                            <Input
-                                type="date"
-                                value={createdDate}
-                                onChange={(e) => setCreatedDate(e.target.value)}
-                                className="flex-grow-[2]"
-                            />
-                            <Input
-                                type="time"
-                                step="1"
-                                value={createdTime}
-                                onChange={(e) => setCreatedTime(e.target.value)}
-                                className="flex-grow-[1]"
-                            />
+                                <div className="flex-grow-[2]">
+                                    <DateInput onchange={(date: Date) => setCreatedDate(date)} initialdate={createdDate} placeholder="Select date" />
+                                </div>
+                                <div className="flex-grow">
+                                    <TimeInput
+                                        onchange={(time: string) => setCreatedTime(time)}
+                                        initialtime={createdTime}
+                                        placeholder="Select time"
+                                        showSeconds={true}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </DIDFilterField>
-                    <div className="flex flex-row items-center space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-4">
                         <DIDFilterField label="Limit">
-                            <div className="flex items-center space-x-2">
-                                {/*<span className="text-neutral-900 dark:text-neutral-100 font-medium">Limit</span>*/}
-                                <Input
-                                    type="number"
-                                    value={limit}
-                                    onChange={e => setLimit(e.target.value)}
-                                    placeholder="Maximum number of DID returned"
-                                    className="w-full"
-                                />
-                            </div>
+                            <Input
+                                type="number"
+                                value={limit}
+                                onChange={e => setLimit(e.target.value)}
+                                placeholder="Maximum number of DID returned"
+                                className="w-full"
+                            />
                         </DIDFilterField>
                         {(type === DIDType.CONTAINER || type === DIDType.DATASET) && (
                             <DIDFilterField label="Length">
-                            <div className="flex items-center space-x-2">
-                                {/*<span className="text-neutral-900 dark:text-neutral-100 font-medium">Length</span>*/}
-                                <Select value={lengthOperator} onValueChange={v => setLengthOperator(v as DIDFilterOperator)}>
-                                    <SelectTrigger className="w-20">
-                                        <SelectValue placeholder="=" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem value="=">=</SelectItem>
-                                            <SelectItem value=">">{'>'}</SelectItem>
-                                            <SelectItem value="<">{'<'}</SelectItem>
-                                            <SelectItem value=">=">≥</SelectItem>
-                                            <SelectItem value="<=">≤</SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                                <Input
-                                    type="number"
-                                    value={lengthValue}
-                                    onChange={e => setLengthValue(e.target.value)}
-                                    placeholder="Number of attached DIDs"
-                                    className="w-full"
-                                />
-                            </div>
-                        </DIDFilterField>
+                                <div className="flex items-center gap-2">
+                                    <Select value={lengthOperator} onValueChange={v => setLengthOperator(v as DIDFilterOperator)}>
+                                        <SelectTrigger className="w-20 flex-shrink-0">
+                                            <SelectValue placeholder="=" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectItem value="=">=</SelectItem>
+                                                <SelectItem value=">">{'>'}</SelectItem>
+                                                <SelectItem value="<">{'<'}</SelectItem>
+                                                <SelectItem value=">=">≥</SelectItem>
+                                                <SelectItem value="<=">≤</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    <Input
+                                        type="number"
+                                        value={lengthValue}
+                                        onChange={e => setLengthValue(e.target.value)}
+                                        placeholder="Number of attached DIDs"
+                                        className="w-full"
+                                    />
+                                </div>
+                            </DIDFilterField>
                         )}
                     </div>
                 </div>

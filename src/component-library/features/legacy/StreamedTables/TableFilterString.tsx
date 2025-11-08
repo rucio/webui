@@ -18,7 +18,7 @@ const Filter = (props: React.ComponentPropsWithoutRef<'input'> & { column: Colum
             value={(column.getFilterValue() as string) ?? ''}
             onChange={e => column.setFilterValue(e.target.value)}
             className={twMerge(
-                'w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 dark:bg-neutral-800 bg-neutral-0 dark:text-text-0 text-text-1000 h-8',
+                'w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 dark:bg-neutral-800 bg-neutral-0 dark:text-neutral-0 text-neutral-1000 h-8',
                 className ?? '',
             )}
             {...otherprops}
@@ -77,7 +77,7 @@ export function TableFilterString(props: TableFilterString): React.ReactElement 
                     }}
                     className="sm:hidden pr-4"
                 >
-                    <HiSearch className="text-xl text-text-500 dark:text-text-200" />
+                    <HiSearch className="text-xl text-neutral-500 dark:text-neutral-200" />
                 </button>
             </form>
         );
@@ -99,7 +99,7 @@ export function TableFilterString(props: TableFilterString): React.ReactElement 
                         setSmallScreenNameFiltering(!smallScreenNameFiltering);
                     }}
                 >
-                    <HiCheck className="text-xl text-text-500 dark:text-text-200" />
+                    <HiCheck className="text-xl text-neutral-500 dark:text-neutral-200" />
                 </button>
             </form>
         );

@@ -11,6 +11,7 @@ import { useTheme } from 'next-themes';
 
 export interface RegularTableProps extends AgGridReactProps {
     tableRef: RefObject<AgGridReact | null>;
+    paginationPageSize?: number;
 }
 
 // This implementation of the pagination panel uses refs to prevent excessive state updates
@@ -164,15 +165,16 @@ export const RegularTable = (props: RegularTableProps) => {
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
     return (
-        <>
-            <div className={twMerge('grid grow w-full', 'relative', 'min-h-[300px]')} ref={gridWrapper}>
+        <div className="flex flex-col h-full w-full">
+            <div className={twMerge('grid grow w-full', 'relative')} ref={gridWrapper}>
                 {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
                 {/*The substitute div is required to supress hydration warning*/}
                 {isContainerReady && resolvedTheme ? (
                     <AgGridReact
                         {...props}
                         pagination={true}
-                        paginationAutoPageSize={true}
+                        paginationAutoPageSize={false}
+                        paginationPageSize={props.paginationPageSize ?? 100}
                         ref={props.tableRef}
                         loadingOverlayComponent={NoDataYetOverlay}
                         onGridReady={onGridReady}
@@ -206,6 +208,6 @@ export const RegularTable = (props: RegularTableProps) => {
                 firstPageRef={firstPageRef}
                 lastPageRef={lastPageRef}
             />
-        </>
+        </div>
     );
 };

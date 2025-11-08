@@ -21,31 +21,20 @@ export async function GET(request: NextRequest) {
         const filters = params.filters;
 
         if (!query) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: query' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: query' }, { status: 400 });
         }
 
         if (!type) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: type' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: type' }, { status: 400 });
         }
 
         // Parse DID filters
         const didfilters = parseDIDFilters(filters);
 
-        const controller = appContainer.get<BaseController<ListDIDsControllerParameters, void>>(
-            CONTROLLERS.LIST_DIDS
-        );
+        const controller = appContainer.get<BaseController<ListDIDsControllerParameters, void>>(CONTROLLERS.LIST_DIDS);
         return executeAuthenticatedController(controller, { query, type, filters: didfilters }, true);
     } catch (error) {
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
 
@@ -56,13 +45,13 @@ function parseDIDFilters(filters: string | string[] | undefined): DIDFilter[] {
 
     return filtersArray.map(m => {
         // Match the first valid operator
-        const operatorMatch = m.match(/(!=|>=|<=|>|<|=)/)?.[0] as DIDFilterOperator || '=';
+        const operatorMatch = (m.match(/(!=|>=|<=|>|<|=)/)?.[0] as DIDFilterOperator) || '=';
         const operatorIndex = m.indexOf(operatorMatch);
 
         return {
             key: m.substring(0, operatorIndex),
             operator: operatorMatch,
-            value: m.substring(operatorIndex + operatorMatch.length)
+            value: m.substring(operatorIndex + operatorMatch.length),
         };
     });
 }

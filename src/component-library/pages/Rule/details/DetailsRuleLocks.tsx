@@ -26,17 +26,14 @@ const ClickableDID = (props: { value: string[] }) => {
     const [scope, name] = props.value;
     const didString = `${scope}:${name}`;
     return (
-        <CopyableLinkCell
-            text={didString}
-            href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}
-        >
+        <CopyableLinkCell text={didString} href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
             {didString}
         </CopyableLinkCell>
     );
 };
 
 const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rse/list?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const FTSLinkButton = (props: any) => {
@@ -126,8 +123,9 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             valueGetter: (params: ValueGetterParams<ListRuleReplicaLockStatesViewModel>) => {
                 return [params.data?.scope, params.data?.name];
             },
-            minWidth: 150,
+            minWidth: 400,
             flex: 1,
+            pinned: 'left' as const,
             filter: true,
             filterParams: DefaultTextFilterParams,
             cellRenderer: ClickableDID,
@@ -151,13 +149,13 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
                 className: badgeCellClasses,
             },
             filter: true,
-            sortable: false,
             filterParams: buildDiscreteFilterParams(Object.values(LockStateDisplayNames), Object.values(LockState)),
         },
         {
             headerName: 'FTS Monitoring',
             cellRenderer: FTSLinkButton,
             minWidth: 200,
+            sortable: false,
         },
     ]);
 

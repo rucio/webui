@@ -10,7 +10,7 @@ export const STREAMING_HEADERS = {
     'Content-Type': 'text/event-stream;charset=utf-8',
     'Cache-Control': 'no-cache, no-transform',
     'X-Accel-Buffering': 'no',
-    'Connection': 'keep-alive',
+    Connection: 'keep-alive',
     'Content-Encoding': 'none',
 } as const;
 
@@ -35,7 +35,7 @@ export function nodeStreamToWebStream(nodeStream: Readable): ReadableStream<Uint
                 controller.close();
             });
 
-            nodeStream.on('error', (error) => {
+            nodeStream.on('error', error => {
                 console.error('Stream error:', error);
                 controller.error(error);
             });
@@ -44,6 +44,38 @@ export function nodeStreamToWebStream(nodeStream: Readable): ReadableStream<Uint
             nodeStream.destroy();
         },
     });
+}
+
+/**
+ * Convert a Web ReadableStream to a Node.js Readable stream
+ * Useful for adapting fetch responses to existing Node.js stream infrastructure
+ *
+ * @param webStream - Web ReadableStream (e.g., from fetch response.body)
+ * @returns Node.js PassThrough stream
+ */
+export function webStreamToNodeStream(webStream: ReadableStream<Uint8Array>): PassThrough {
+    const passThrough = new PassThrough();
+    const reader = webStream.getReader();
+
+    const pump = async () => {
+        try {
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    passThrough.end();
+                    break;
+                }
+                if (!passThrough.write(value)) {
+                    await new Promise(resolve => passThrough.once('drain', resolve));
+                }
+            }
+        } catch (error) {
+            passThrough.destroy(error as Error);
+        }
+    };
+
+    pump();
+    return passThrough;
 }
 
 /**
@@ -77,9 +109,7 @@ export function arrayToNDJSONStream<T>(data: T[]): ReadableStream<Uint8Array> {
  * @param generator - Async generator yielding objects
  * @returns Web ReadableStream with NDJSON format
  */
-export function asyncGeneratorToNDJSONStream<T>(
-    generator: AsyncGenerator<T>
-): ReadableStream<Uint8Array> {
+export function asyncGeneratorToNDJSONStream<T>(generator: AsyncGenerator<T>): ReadableStream<Uint8Array> {
     const encoder = new TextEncoder();
 
     return new ReadableStream({
@@ -109,10 +139,7 @@ export function asyncGeneratorToNDJSONStream<T>(
  * @param additionalHeaders - Additional headers to include
  * @returns Response object ready for App Router
  */
-export function createStreamingResponse(
-    stream: ReadableStream<Uint8Array>,
-    additionalHeaders?: Record<string, string>
-): Response {
+export function createStreamingResponse(stream: ReadableStream<Uint8Array>, additionalHeaders?: Record<string, string>): Response {
     return new Response(stream, {
         headers: {
             ...STREAMING_HEADERS,
@@ -137,9 +164,7 @@ export function createStreamingResponse(
  *   });
  * }
  */
-export async function executeAuthenticatedStream(
-    streamHandler: (user: SessionUser, token: string) => Promise<Response>
-): Promise<Response> {
+export async function executeAuthenticatedStream(streamHandler: (user: SessionUser, token: string) => Promise<Response>): Promise<Response> {
     return withAuthenticatedSession(streamHandler) as Promise<Response>;
 }
 

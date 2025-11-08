@@ -14,7 +14,7 @@ const AttachDIDsSchema = z.object({
             z.object({
                 scope: z.string().min(1),
                 name: z.string().min(1),
-            })
+            }),
         )
         .nonempty(),
     scope: z.string().min(1),
@@ -31,10 +31,7 @@ export async function POST(request: NextRequest) {
         const body = await parseRequestBody(request);
 
         if (!body) {
-            return NextResponse.json(
-                { error: 'Invalid request body' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
         }
 
         const params = AttachDIDsSchema.safeParse(body);
@@ -44,20 +41,15 @@ export async function POST(request: NextRequest) {
                     error: 'Missing required parameters or provided parameters are invalid',
                     details: params.error.errors,
                 },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
-        const controller = appContainer.get<BaseController<AttachDIDsControllerParameters, AttachDIDsRequest>>(
-            CONTROLLERS.ATTACH_DIDS
-        );
+        const controller = appContainer.get<BaseController<AttachDIDsControllerParameters, AttachDIDsRequest>>(CONTROLLERS.ATTACH_DIDS);
 
         return executeAuthenticatedController(controller, params.data);
     } catch (error) {
         console.error('Error in attach-dids:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

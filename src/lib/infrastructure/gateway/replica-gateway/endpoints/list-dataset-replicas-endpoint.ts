@@ -1,7 +1,6 @@
 import { DatasetReplicasDTO, ListReplicasDTO } from '@/lib/core/dto/replica-dto';
 import { BaseStreamableEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToDatasetReplicaDTO, TRucioDatasetReplica } from '../replica-gateway-utils';
 
 export default class ListDatasetReplicasEndpoint extends BaseStreamableEndpoint<ListReplicasDTO, DatasetReplicasDTO> {

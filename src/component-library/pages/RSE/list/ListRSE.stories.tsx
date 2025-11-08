@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 import { fixtureErrorViewModel, fixtureRSEViewModel } from '@/test/fixtures/table-fixtures';
 import { ListRSE } from './ListRSE';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';

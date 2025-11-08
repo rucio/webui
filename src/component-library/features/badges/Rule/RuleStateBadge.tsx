@@ -1,7 +1,6 @@
 import { RuleState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { cn } from '@/component-library/utils';
 
 const stateString: Record<RuleState, string> = {
     [RuleState.REPLICATING]: 'Replicating',
@@ -13,17 +12,28 @@ const stateString: Record<RuleState, string> = {
     [RuleState.UNKNOWN]: 'Unknown',
 };
 
-const stateColorClasses: Record<RuleState, string> = {
-    [RuleState.REPLICATING]: 'bg-base-warning-400',
-    [RuleState.OK]: 'bg-base-success-500',
-    [RuleState.STUCK]: 'bg-base-error-500',
-    [RuleState.SUSPENDED]: 'bg-neutral-500',
-    [RuleState.WAITING_APPROVAL]: 'bg-extra-indigo-500',
-    [RuleState.INJECT]: 'bg-base-info-500',
-    [RuleState.UNKNOWN]: 'bg-neutral-0 dark:bg-neutral-800',
+/**
+ * Maps rule states to semantic badge variants from the design system.
+ *
+ * Semantic color assignments:
+ * - OK: Success (green) - Rule completed successfully
+ * - REPLICATING: Warning (amber) - In progress
+ * - STUCK: Error (red) - Failed state
+ * - SUSPENDED: Neutral (gray) - Paused/inactive
+ * - WAITING_APPROVAL: Info (brand purple) - Pending action
+ * - INJECT: Info (brand purple) - Initial state
+ * - UNKNOWN: Neutral (gray) - Undefined state
+ */
+const stateVariants: Record<RuleState, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
+    [RuleState.REPLICATING]: 'warning',
+    [RuleState.OK]: 'success',
+    [RuleState.STUCK]: 'error',
+    [RuleState.SUSPENDED]: 'neutral',
+    [RuleState.WAITING_APPROVAL]: 'info',
+    [RuleState.INJECT]: 'info',
+    [RuleState.UNKNOWN]: 'neutral',
 };
 
 export const RuleStateBadge = (props: { value: RuleState; className?: string }) => {
-    const classes = cn(stateColorClasses[props.value], props.className);
-    return <Badge value={stateString[props.value]} className={classes} />;
+    return <Badge value={stateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
 };

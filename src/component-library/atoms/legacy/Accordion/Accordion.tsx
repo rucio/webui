@@ -25,7 +25,7 @@ export const Accordion: React.FC<React.ComponentPropsWithoutRef<'div'> & { name:
                     className={twMerge(
                         'flex items-center justify-between',
                         'w-full py-2',
-                        'text-text-600 dark:text-text-100',
+                        'text-neutral-600 dark:text-neutral-100',
                         'border-b-2 border-neutral-300 dark:border-neutral-100',
                     )}
                     onClick={() => {

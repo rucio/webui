@@ -5,6 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 
 type StageSummaryStageTableProps = {
     rowData: RSEAccountUsageLimitViewModel[];
@@ -13,6 +14,10 @@ type StageSummaryStageTableProps = {
 const WarningCell = (props: { value: string; warn: boolean }) => {
     const textColor = props.warn ? 'text-base-error-500 font-semibold' : '';
     return <span className={textColor}>{props.value}</span>;
+};
+
+const ClickableRSE = (props: { value: string }) => {
+    return <ClickableCell href={`/rse/list?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTableProps> = ({ ...props }) => {
@@ -25,6 +30,8 @@ export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTable
             field: 'rse',
             minWidth: 250,
             flex: 1,
+            pinned: 'left' as const,
+            cellRenderer: ClickableRSE,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
@@ -44,6 +51,7 @@ export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTable
                 return params.data.bytes_limit < 0 ? 2 : 1;
             },
             minWidth: 200,
+            filter: 'agNumberColumnFilter',
         },
         {
             headerName: 'Remaining',
@@ -54,6 +62,7 @@ export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTable
                 return <WarningCell warn={!item.has_quota} {...params} value={value} />;
             },
             minWidth: 200,
+            filter: 'agNumberColumnFilter',
         },
     ]);
 

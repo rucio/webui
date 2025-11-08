@@ -24,10 +24,7 @@ export async function PUT(request: NextRequest) {
         const body = await parseRequestBody(request);
 
         if (!body) {
-            return NextResponse.json(
-                { error: 'Invalid request body' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
         }
 
         const params = SetDIDStatusSchema.safeParse(body);
@@ -37,20 +34,15 @@ export async function PUT(request: NextRequest) {
                     error: 'Missing required parameters or provided parameters are invalid',
                     details: params.error.errors,
                 },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
-        const controller = appContainer.get<BaseController<SetDIDStatusControllerParameters, SetDIDStatusRequest>>(
-            CONTROLLERS.SET_DID_STATUS
-        );
+        const controller = appContainer.get<BaseController<SetDIDStatusControllerParameters, SetDIDStatusRequest>>(CONTROLLERS.SET_DID_STATUS);
 
         return executeAuthenticatedController(controller, params.data);
     } catch (error) {
         console.error('Error in set-did-status:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

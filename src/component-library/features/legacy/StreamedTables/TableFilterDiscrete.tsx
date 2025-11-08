@@ -34,6 +34,13 @@ export function TableFilterDiscrete<T>(props: TableFilterDiscrete<T>): React.Rea
     useEffect(() => {
         column.setFilterValue(filter);
     }, [filter, column]);
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setFilter(nextMap.get(filter ?? 'undefined') as T | undefined);
+        }
+    };
+
     return (
         <div
             className={twMerge(
@@ -46,6 +53,9 @@ export function TableFilterDiscrete<T>(props: TableFilterDiscrete<T>): React.Rea
             onClick={e => {
                 setFilter(nextMap.get(filter ?? 'undefined') as T | undefined);
             }}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
             {...otherdivprops}
         >
             <H3 className="hidden md:inline">{name}</H3>
