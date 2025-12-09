@@ -3,9 +3,11 @@ import { AuthViewModel, x509AuthRequestHeaders as X509AuthRequestHeaders } from 
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
-import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
-import { signIn } from 'next-auth/react';
+import { Login as LoginStory } from '@/component-library/pages/Login/Login';
+import { AuthType, OIDCProvider, Role, VO } from '@/lib/core/entity/auth-models';
+import { signIn, useSession } from 'next-auth/react';
+import { AUTH_ERROR_MESSAGES, LoginError } from '@/lib/core/entity/auth-errors';
+import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 
 function LoginContent() {
     useEffect(() => {
@@ -17,8 +19,34 @@ function LoginContent() {
     const [authViewModel, setAuthViewModel] = useState<AuthViewModel>();
     const router = useRouter();
     const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl');
+    const { data: session } = useSession();
+
+    // Check for OIDC errors after redirect from OIDC provider
+    useEffect(() => {
+        if (session && (session as any).oidcError) {
+            console.error('[Login] OIDC error detected:', (session as any).oidcError);
+            setAuthViewModel({
+                status: 'error',
+                message: (session as any).oidcError,
+                rucioAccount: '',
+                rucioAuthType: AuthType.OIDC,
+                rucioIdentity: (session as any).oidcIdentity || '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
+        }
+    }, [session]);
 
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
+        console.log('[LOGIN FLOW 1] handleUserpassSubmit called', {
+            username,
+            vo: vo.shortName,
+            account: account || '(none)',
+            redirectURL,
+            timestamp: new Date().toISOString(),
+        });
+
         try {
             const result = await signIn('userpass', {
                 username: username,
@@ -28,45 +56,67 @@ function LoginContent() {
                 redirect: false,
             });
 
-            if (result?.ok) {
+            console.log('[LOGIN FLOW 2] signIn result received', {
+                ok: result?.ok,
+                error: result?.error,
+                status: result?.status,
+                url: result?.url,
+            });
+
+            // Check for error first, as NextAuth can return ok: true with an error
+            if (result?.error) {
+                console.log('[LOGIN FLOW 4] Login failed with error', {
+                    error: result.error,
+                    errorType: result.error === 'CredentialsSignin' ? 'CredentialsSignin' : 'Other',
+                });
+
+                // NextAuth wraps errors from the authorize function as CredentialsSignin
+                // We need to extract the original error message if available
+                let errorMessage = 'Login failed. Please try again.';
+
+                if (result.error === 'CredentialsSignin') {
+                    // Default to invalid credentials message
+                    errorMessage = AUTH_ERROR_MESSAGES.INVALID_CREDENTIALS;
+                } else {
+                    // Use the error as-is for other error types
+                    errorMessage = result.error;
+                }
+
+                setAuthViewModel({
+                    status: 'error',
+                    message: errorMessage,
+                    rucioAccount: '',
+                    rucioAuthType: '',
+                    rucioIdentity: '',
+                    rucioAuthToken: '',
+                    rucioAuthTokenExpires: '',
+                    role: Role.USER,
+                });
+            } else if (result?.ok) {
+                console.log('[LOGIN FLOW 3] Login successful, redirecting to:', redirectURL);
                 // Login successful, redirect to dashboard
                 router.push(redirectURL);
-            } else if (result?.error) {
-                // Check if it's a credentials error that might indicate multiple accounts
-                // NextAuth wraps errors from the authorize function as CredentialsSignin
-                if (result.error === 'CredentialsSignin') {
-                    // Try to parse if there's additional info about multiple accounts
-                    // For now, show a more specific error message
-                    setAuthViewModel({
-                        status: 'error',
-                        message: 'Login failed. Please check your credentials or select an account if multiple accounts are available.',
-                        rucioAccount: '',
-                        rucioAuthType: '',
-                        rucioIdentity: '',
-                        rucioAuthToken: '',
-                        rucioAuthTokenExpires: '',
-                        role: Role.USER,
-                    });
-                } else {
-                    // Other login errors
-                    setAuthViewModel({
-                        status: 'error',
-                        message: result.error,
-                        rucioAccount: '',
-                        rucioAuthType: '',
-                        rucioIdentity: '',
-                        rucioAuthToken: '',
-                        rucioAuthTokenExpires: '',
-                        role: Role.USER,
-                    });
-                }
             }
         } catch (error: any) {
             console.error('An unexpected error occurred:', error);
 
+            // Check if it's a LoginError with specific error details
+            if (error instanceof LoginError || error?.name === 'LoginError') {
+                setAuthViewModel({
+                    status: 'error',
+                    message: error.message || AUTH_ERROR_MESSAGES.UNKNOWN_ERROR,
+                    rucioAccount: '',
+                    rucioAuthType: '',
+                    rucioIdentity: '',
+                    rucioAuthToken: '',
+                    rucioAuthTokenExpires: '',
+                    role: Role.USER,
+                });
+                return;
+            }
+
             // Check if it's a MultipleAccountsError
-            // NextAuth may pass error details in the error object
-            if (error?.type === 'CredentialsSignin' || error?.name === 'MultipleAccountsError') {
+            if (error?.name === 'MultipleAccountsError') {
                 // Extract available accounts if present
                 const availableAccounts = error?.availableAccounts;
                 if (availableAccounts) {
@@ -88,7 +138,7 @@ function LoginContent() {
             // Generic error fallback
             setAuthViewModel({
                 status: 'error',
-                message: 'An unexpected error occurred during login',
+                message: AUTH_ERROR_MESSAGES.UNKNOWN_ERROR,
                 rucioAccount: '',
                 rucioAuthType: '',
                 rucioIdentity: '',
@@ -293,6 +343,49 @@ function LoginContent() {
         }
     };
 
+    /**
+     * Handle OIDC provider authentication (Dynamic - works with any provider)
+     *
+     * For OAuth/OIDC providers, NextAuth must handle the redirect to perform the OAuth flow.
+     * Unlike Credentials providers (userpass, x509), we cannot use redirect: false here.
+     */
+    const handleOIDCSubmit = async (provider: OIDCProvider, vo: VO, account?: string) => {
+        try {
+            console.log(`[Login] Starting OIDC authentication with provider: ${provider.name}`);
+
+            // Build callback URL with VO and account parameters
+            // After successful OIDC authentication, user will be redirected here
+            const params = new URLSearchParams({
+                vo: vo.shortName,
+            });
+            if (account) {
+                params.set('account', account);
+            }
+            const callbackUrlWithParams = `${redirectURL}?${params.toString()}`;
+
+            console.log(`[Login] Callback URL: ${callbackUrlWithParams}`);
+            console.log(`[Login] Redirecting to ${provider.name} SSO for authentication...`);
+
+            await signIn(provider.name.toLowerCase(), {
+                callbackUrl: callbackUrlWithParams,
+                // Note: redirect defaults to true for OAuth providers
+                // The browser will redirect before this function returns
+            });
+        } catch (error: any) {
+            console.error(`[Login] OIDC login error with ${provider.name}:`, error);
+            setAuthViewModel({
+                status: 'error',
+                message: `An unexpected error occurred during OIDC login: ${error.message || 'Unknown error'}`,
+                rucioAccount: '',
+                rucioAuthType: AuthType.OIDC,
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
+        }
+    };
+
     useEffect(() => {
         if (callbackUrl) {
             const redirectURL = decodeURIComponent(callbackUrl);
@@ -310,26 +403,24 @@ function LoginContent() {
 
     if (viewModel === undefined) {
         // the hook has not yet run
-        return <p>Loading...</p>;
+        return <LoadingPage message="Loading login..." />;
     } else {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <LoginStory
-                    loginViewModel={viewModel}
-                    authViewModel={authViewModel}
-                    userPassSubmitHandler={handleUserpassSubmit}
-                    oidcSubmitHandler={() => {}}
-                    x509SubmitHandler={handleX509Submit}
-                    x509SessionHandler={handleX509Session}
-                />
-            </div>
+            <LoginStory
+                loginViewModel={viewModel}
+                authViewModel={authViewModel}
+                userPassSubmitHandler={handleUserpassSubmit}
+                oidcSubmitHandler={handleOIDCSubmit}
+                x509SubmitHandler={handleX509Submit}
+                x509SessionHandler={handleX509Session}
+            />
         );
     }
 }
 
 export default function Login() {
     return (
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<LoadingPage message="Loading login..." />}>
             <LoginContent />
         </Suspense>
     );

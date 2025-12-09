@@ -21,17 +21,23 @@ export const ListRSE = (props: ListRSEProps) => {
     };
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <Heading text="RSEs" />
-            <RSESearchPanel
-                onSearch={onSearch}
-                stopStreaming={stopStreaming}
-                isRunning={streamingHook.status === StreamingStatus.RUNNING}
-                initialExpression={props.initialExpression}
-                autoSearch={props.autoSearch}
-                gridApi={gridApi || undefined}
-            />
-            <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />
+        <div className="flex flex-col space-y-6 w-full">
+            {/* Search Panel */}
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+                <RSESearchPanel
+                    onSearch={onSearch}
+                    stopStreaming={stopStreaming}
+                    isRunning={streamingHook.status === StreamingStatus.RUNNING}
+                    initialExpression={props.initialExpression}
+                    autoSearch={props.autoSearch}
+                    gridApi={gridApi || undefined}
+                />
+            </div>
+
+            {/* Results Section */}
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+                <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />
+            </div>
         </div>
     );
 };

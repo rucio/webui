@@ -5,69 +5,114 @@ import { RSEAttributeViewModel, RSEDetailsViewModel } from '@/lib/infrastructure
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { RSEAvailabilityBadge } from '@/component-library/features/badges/RSE/RSEAvailabilityBadge';
 import { DetailsRSEProtocolsTable } from '@/component-library/pages/RSE/details/DetailsRSEProtocolsTable';
 import { DetailsRSEAttributesTable } from '@/component-library/pages/RSE/details/DetailsRSEAttributesTable';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { RSEDetailsProtocol } from '@/lib/core/entity/rucio';
 import { InfoField } from '@/component-library/features/fields/InfoField';
+import { Divider } from '@/component-library/atoms/misc/Divider';
+
+/**
+ * A responsive divider component for RSE sections.
+ *
+ * Renders a horizontal divider on mobile/tablet and a vertical divider on lg+ screens.
+ * Useful for visually separating sections across all screen sizes.
+ *
+ * @returns {React.ReactElement} The divider element.
+ */
+const RSESectionDivider = () => (
+    <>
+        {/* Horizontal divider for mobile/tablet */}
+        <div className="w-full lg:hidden my-4">
+            <Divider />
+        </div>
+        {/* Vertical divider for lg and above */}
+        <div className="hidden lg:block h-auto mx-4">
+            <Divider orientation="vertical" />
+        </div>
+    </>
+);
 
 const DetailsRSEKeyValues = ({ meta }: { meta: RSEDetailsViewModel }) => {
     return (
-        <KeyValueWrapper className="flex sm:flex sm:flex-row flex-col p-3">
-            <div className="grow">
-                <KeyValueRow name="Type">
-                    <RSETypeBadge value={meta.rse_type} />
-                </KeyValueRow>
-                <KeyValueRow name="Availability">
-                    {meta.availability_read && <RSEAvailabilityBadge operation="Read" />}
-                    {meta.availability_write && <RSEAvailabilityBadge operation="Write" />}
-                    {meta.availability_delete && <RSEAvailabilityBadge operation="Delete" />}
-                </KeyValueRow>
-                <KeyValueRow name="Volatile">
-                    <Checkbox checked={meta.volatile} />
-                </KeyValueRow>
-            </div>
-            <div className="grow">
-                <KeyValueRow name="Deterministic">
-                    <Checkbox checked={meta.deterministic} />
-                </KeyValueRow>
-                <KeyValueRow name="Staging Area">
-                    <Checkbox checked={meta.staging_area} />
-                </KeyValueRow>
-            </div>
-        </KeyValueWrapper>
+        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
+            <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
+                <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+                    <div className="flex flex-col flex-1">
+                        <KeyValueRow name="Type">
+                            <RSETypeBadge value={meta.rse_type} />
+                        </KeyValueRow>
+                        <KeyValueRow name="Availability">
+                            <div className="flex flex-wrap gap-2">
+                                {meta.availability_read && <RSEAvailabilityBadge operation="Read" />}
+                                {meta.availability_write && <RSEAvailabilityBadge operation="Write" />}
+                                {meta.availability_delete && <RSEAvailabilityBadge operation="Delete" />}
+                            </div>
+                        </KeyValueRow>
+                        <KeyValueRow name="Volatile">
+                            <Checkbox checked={meta.volatile} />
+                        </KeyValueRow>
+                    </div>
+                    <RSESectionDivider />
+                    <div className="flex flex-col flex-1">
+                        <KeyValueRow name="Deterministic">
+                            <Checkbox checked={meta.deterministic} />
+                        </KeyValueRow>
+                        <KeyValueRow name="Staging Area">
+                            <Checkbox checked={meta.staging_area} />
+                        </KeyValueRow>
+                    </div>
+                </div>
+            </KeyValueWrapper>
+        </div>
     );
 };
 
 const DetailsRSEAttributes = ({ attributes }: { attributes: RSEAttributeViewModel }) => {
-    return attributes.attributes.length !== 0 ? (
-        <>
-            <Heading text="Attributes" size="md" />
-            <DetailsRSEAttributesTable viewModel={attributes} />
-        </>
-    ) : (
-        <InfoField>
-            <span>No attributes found.</span>
-        </InfoField>
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <Heading text="Attributes" size="md" />
+                {attributes.attributes.length > 0 && (
+                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">{attributes.attributes.length}</span>
+                )}
+            </div>
+            {attributes.attributes.length !== 0 ? (
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+                    <DetailsRSEAttributesTable viewModel={attributes} />
+                </div>
+            ) : (
+                <InfoField>
+                    <span>No attributes found.</span>
+                </InfoField>
+            )}
+        </div>
     );
 };
 
 const DetailsRSEProtocols = ({ protocols }: { protocols: RSEDetailsProtocol[] }) => {
-    return protocols.length !== 0 ? (
-        <>
-            <Heading text="Protocols" size="md" />
-            <DetailsRSEProtocolsTable rowData={protocols} />
-        </>
-    ) : (
-        <InfoField>
-            <span>No protocols found.</span>
-        </InfoField>
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <Heading text="Protocols" size="md" />
+                {protocols.length > 0 && <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">{protocols.length}</span>}
+            </div>
+            {protocols.length !== 0 ? (
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-80">
+                    <DetailsRSEProtocolsTable rowData={protocols} />
+                </div>
+            ) : (
+                <InfoField>
+                    <span>No protocols found.</span>
+                </InfoField>
+            )}
+        </div>
     );
 };
 
@@ -102,7 +147,7 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
         return null;
     };
 
-    const metaQueryKey = ['meta'];
+    const metaQueryKey = ['meta', props.name];
     const {
         data: meta,
         error: metaError,
@@ -112,6 +157,8 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
         initialData: props.initialMeta,
         queryFn: queryMeta,
         enabled: !props.initialMeta,
+        retry: false,
+        refetchOnWindowFocus: false,
     });
 
     const queryAttributes = async () => {
@@ -141,27 +188,33 @@ export const DetailsRSE = (props: DetailsRSEProps) => {
     const hasError = metaError || attributesError;
     if (hasError) {
         return (
-            <WarningField>
-                <span>Could not load the RSE {props.name}.</span>
-            </WarningField>
+            <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+                    <WarningField>
+                        <span>Could not load the RSE {props.name}.</span>
+                    </WarningField>
+                </div>
+            </main>
         );
     }
 
     const isLoading = isMetaFetching || meta === undefined;
     if (isLoading) {
-        return (
-            <div className="flex grow items-center justify-center">
-                <LoadingSpinner />
-            </div>
-        );
+        return <LoadingPage message="Loading RSE details..." />;
     }
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <CopyableHeading text={props.name} />
-            <DetailsRSEKeyValues meta={meta} />
-            <DetailsRSEProtocols protocols={meta.protocols} />
-            {!isAttributesFetching && attributes !== undefined && <DetailsRSEAttributes attributes={attributes} />}
-        </div>
+        <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+                <div className="flex flex-col space-y-6 w-full">
+                    <header className="mb-2">
+                        <CopyableHeading text={props.name} />
+                    </header>
+                    <DetailsRSEKeyValues meta={meta} />
+                    <DetailsRSEProtocols protocols={meta.protocols} />
+                    {!isAttributesFetching && attributes !== undefined && <DetailsRSEAttributes attributes={attributes} />}
+                </div>
+            </div>
+        </main>
     );
 };

@@ -24,11 +24,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
                 disabled={props.disabled}
                 className={twMerge(
                     'py-1 px-3 h-8 rounded',
-                    type === 'submit' ? 'bg-base-success-500 hover:bg-base-success-600 text-text-0' : '',
-                    type === 'reset' ? 'bg-base-error-500 hover:bg-base-error-600 text-text-0' : '',
-                    type === 'button' || type === undefined ? 'bg-brand-500 hover:bg-brand-600 text-text-0' : '',
-                    theme === 'orange' ? 'bg-base-warning-500 hover:bg-base-warning-600 text-text-0' : '',
-                    props.disabled ? 'cursor-not-allowed bg-neutral-500 hover:bg-neutral-600 text-text-200' : 'cursor-pointer',
+                    type === 'submit' ? 'bg-base-success-500 hover:bg-base-success-600 text-neutral-0' : '',
+                    type === 'reset' ? 'bg-base-error-500 hover:bg-base-error-600 text-neutral-0' : '',
+                    type === 'button' || type === undefined ? 'bg-brand-500 hover:bg-brand-600 text-neutral-0' : '',
+                    theme === 'orange' ? 'bg-base-warning-500 hover:bg-base-warning-600 text-neutral-0' : '',
+                    props.disabled ? 'cursor-not-allowed bg-neutral-500 hover:bg-neutral-600 text-neutral-200' : 'cursor-pointer',
                     fullwidth ?? true ? 'w-full' : '',
                     'font-bold',
                     className ?? '',
@@ -54,11 +54,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
                 disabled={props.disabled}
                 className={twMerge(
                     'py-1 px-3 rounded',
-                    type === 'submit' ? 'bg-base-success-500 hover:bg-base-success-600 text-text-0' : '',
-                    type === 'reset' ? 'bg-base-error-500 hover:bg-base-error-600 text-text-0' : '',
-                    type ?? 'button' === 'button' ? 'bg-brand-500 hover:bg-brand-600 text-text-0' : '',
-                    theme === 'orange' ? 'bg-base-warning-500 hover:bg-base-warning-600 text-text-0' : '',
-                    props.disabled ? 'cursor-not-allowed bg-neutral-500 hover:bg-neutral-500 text-text-200' : 'cursor-pointer',
+                    type === 'submit' ? 'bg-base-success-500 hover:bg-base-success-600 text-neutral-0' : '',
+                    type === 'reset' ? 'bg-base-error-500 hover:bg-base-error-600 text-neutral-0' : '',
+                    type ?? 'button' === 'button' ? 'bg-brand-500 hover:bg-brand-600 text-neutral-0' : '',
+                    theme === 'orange' ? 'bg-base-warning-500 hover:bg-base-warning-600 text-neutral-0' : '',
+                    props.disabled ? 'cursor-not-allowed bg-neutral-500 hover:bg-neutral-500 text-neutral-200' : 'cursor-pointer',
                     fullwidth ?? true ? 'w-full' : '',
                     'font-bold',
                     className ?? '',

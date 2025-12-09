@@ -70,8 +70,13 @@ export class WebUIEnvTemplateCompiler {
   }
   validateOIDCProvider(provider: string, global_prefix: string): EnvValidationError[] {
     const prefix = `OIDC_PROVIDER_${provider.toUpperCase()}_`
-    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "userinfo_url", "redirect_url", "refresh_token_url"]
+    // Required OIDC variables (must match env-config-gateway.ts)
+    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "redirect_url"]
+    // Optional OIDC variables (must match env-config-gateway.ts)
+    const optionalVariables: string[] = ["icon_url", "refresh_token_url", "userinfo_url", "scopes", "logout_url", "issuer"]
     const errors: EnvValidationError[] = []
+
+    // Validate required variables
     requiredVariables.forEach((key) => {
       const varName = `${prefix}${key.toUpperCase()}`
       if (!this.environmentVariables[varName]) {
@@ -81,6 +86,18 @@ export class WebUIEnvTemplateCompiler {
         })
       }
     })
+
+    // Validate optional variables (warnings only)
+    optionalVariables.forEach((key) => {
+      const varName = `${prefix}${key.toUpperCase()}`
+      if (!this.environmentVariables[varName]) {
+        errors.push({
+          type: 'warning',
+          message: `optional variable ${global_prefix}${varName} is not set. Consider setting a value for ${global_prefix}${varName} if needed`
+        })
+      }
+    })
+
     return errors
   }
   validateVO(vo: string, global_prefix: string): EnvValidationError[] {

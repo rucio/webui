@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { mockUseComDOM } from '@/test/fixtures/table-fixtures';
 import { TableFetchstatus as T } from './TableFetchstatus';
 

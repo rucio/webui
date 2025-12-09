@@ -26,6 +26,8 @@ export default [
       'test/**/*', // Test files (can be linted separately)
       'tools/**/*', // Build tools
       '.storybook/**/*', // Storybook config
+      '.claude/**/*',
+      'pages-api-backup/**/*', // Backup API files
     ],
   },
   js.configs.recommended,
@@ -33,6 +35,7 @@ export default [
   ...compat.extends('plugin:react/recommended'),
   ...compat.extends('plugin:react-hooks/recommended'),
   ...compat.extends('plugin:@next/next/recommended'),
+  ...compat.extends('plugin:jsx-a11y/recommended'),
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
     languageOptions: {
@@ -70,6 +73,15 @@ export default [
       'no-empty': 'warn', // Warn on empty blocks
       'prefer-const': 'warn', // Warn instead of error
       'no-case-declarations': 'warn', // Warn on case declarations
+    },
+  },
+  // Override for Storybook files - allow hooks in render functions and unescaped entities
+  {
+    files: ['**/*.stories.tsx', '**/*.stories.ts'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+      'react/no-unescaped-entities': 'off',
     },
   },
 ];

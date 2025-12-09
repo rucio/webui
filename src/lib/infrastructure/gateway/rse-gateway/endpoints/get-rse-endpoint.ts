@@ -2,7 +2,6 @@ import { RSEDetailsDTO } from '@/lib/core/dto/rse-dto';
 import { RSEDetails, RSEType } from '@/lib/core/entity/rucio';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class GetRSEEndpoint extends BaseEndpoint<RSEDetailsDTO> {
     constructor(private rucioAuthToken: string, private rseName: string) {

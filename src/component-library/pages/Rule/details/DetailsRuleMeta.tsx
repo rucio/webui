@@ -5,7 +5,7 @@ import { Field } from '@/component-library/atoms/misc/Field';
 import { formatDate } from '@/component-library/features/utils/text-formatters';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { RuleMetaViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
@@ -16,7 +16,7 @@ import { CopyableLinkCell } from '@/component-library/features/table/cells/Copya
 
 /**
  * A responsive divider component for rule sections.
- * 
+ *
  * Renders a full-width divider that is only visible on screens smaller than the 'lg' breakpoint.
  * Useful for visually separating sections in mobile and tablet layouts.
  *
@@ -38,14 +38,14 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     };
 
     return (
-        <KeyValueWrapper className="w-full p-4 flex flex-col ">
-            <div className="w-full flex flex-col lg:flex-row justify-between">
-                <div className="flex flex-col">
+        <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
+            <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+                <div className="flex flex-col flex-1">
                     <KeyValueRow name="State">
                         <RuleStateBadge value={meta.state} />
                     </KeyValueRow>
                     <KeyValueRow name="DID">
-                        <div className="flex flex-row gap-2 overflow-hidden items-center">
+                        <div className="flex flex-row gap-2 items-center max-w-[20rem]">
                             <CopyableLinkCell
                                 text={`${meta.scope}:${meta.name}`}
                                 href={`/did/page/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
@@ -60,14 +60,21 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                         <DIDTypeBadge value={meta.did_type} className="w-full" />
                     </KeyValueRow>
                     <KeyValueRow name="RSE Expression">
-                        <Field>{meta.rse_expression}</Field>
+                        <div className="max-w-[20rem]">
+                            <CopyableLinkCell
+                                text={meta.rse_expression}
+                                href={`/rse/list?expression=${encodeURIComponent(meta.rse_expression)}&autoSearch=true`}
+                            >
+                                <Field>{meta.rse_expression}</Field>
+                            </CopyableLinkCell>
+                        </div>
                     </KeyValueRow>
                     <KeyValueRow name="Account">
                         <Field>{meta.account}</Field>
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1">
                     <KeyValueRow name="Locks OK">
                         <Field>{meta.locks_ok_cnt}</Field>
                     </KeyValueRow>
@@ -79,7 +86,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1">
                     <KeyValueRow name="Created At">
                         <Field>{formatDate(meta.created_at)}</Field>
                     </KeyValueRow>
@@ -90,8 +97,8 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                 </div>
             </div>
             <Divider />
-            <div className="w-full flex flex-col lg:flex-row justify-between">
-                <div className="flex flex-col">
+            <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+                <div className="flex flex-col flex-1">
                     <KeyValueRow name="Copies">
                         <Field>{meta.copies}</Field>
                     </KeyValueRow>
@@ -109,7 +116,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1">
                     <KeyValueRow name="Purge Replicas">
                         <Checkbox checked={meta.purge_replicas} />
                     </KeyValueRow>
@@ -121,8 +128,8 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
-                     <KeyValueRow name="Ignore Account Limit">
+                <div className="flex flex-col flex-1">
+                    <KeyValueRow name="Ignore Account Limit">
                         <Checkbox checked={meta.ignore_account_limit} />
                     </KeyValueRow>
                     <KeyValueRow name="Ignore Availability">

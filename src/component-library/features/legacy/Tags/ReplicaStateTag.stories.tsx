@@ -1,5 +1,5 @@
 import { ReplicaState } from '@/lib/core/entity/rucio';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { ReplicaStateTag as RST } from './ReplicaStateTag';
 
 export default {

@@ -2,7 +2,6 @@ import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { DIDExtendedDTO } from '@/lib/core/dto/did-dto';
 import { DIDType } from '@/lib/core/entity/rucio';
-import { Response } from 'node-fetch';
 
 export default class GetDIDEndpoint extends BaseEndpoint<DIDExtendedDTO> {
     constructor(

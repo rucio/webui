@@ -12,7 +12,6 @@ import { CreateRuleSummaryRequest, CreateRuleSummaryResponse, CreateRuleSummaryE
 import { createDIDSummaryRow } from '../utils/create-rule-utils';
 import { TDIDSummaryRow, TRSESummaryRow } from '../entity/rule-summary';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import DIDTypeTagStories from '@/component-library/features/legacy/Tags/DIDTypeTag.stories';
 
 @injectable()
 export default class CreateRuleSummayUseCase

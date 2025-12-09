@@ -24,7 +24,7 @@ export const LockStateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { l
                     : lockState === LockState.REPLICATING
                     ? 'bg-base-error-400 border-base-error-700 dark:bg-base-error-700 dark:border-base-error-200'
                     : '',
-                'text-text-1000 dark:text-text-0 font-sans',
+                'text-neutral-1000 dark:text-neutral-0 font-sans',
                 !tiny ? 'w-28 rounded border text-center' : 'w-6 h-6 rounded-full border text-center select-none shrink-0',
                 'flex justify-center items-center',
                 className ?? '',

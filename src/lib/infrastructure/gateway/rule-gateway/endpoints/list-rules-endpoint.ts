@@ -2,7 +2,6 @@ import { RuleDTO } from '@/lib/core/dto/rule-dto';
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
 import { BaseStreamableEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertRuleState, convertToRuleDTO, formatFilterDate, ListRulesFilter, TRucioRule } from '../rule-gateway-utils';
 
 const DEFAULT_PARAMETER = '*';

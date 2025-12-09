@@ -1,5 +1,5 @@
 import React from 'react';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 
 export const CheckboxCell = (props: { value: boolean }) => {
     return <Checkbox checked={props.value} />;

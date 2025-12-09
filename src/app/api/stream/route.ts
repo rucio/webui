@@ -4,13 +4,8 @@ import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
 import { HTTPRequest } from '@/lib/sdk/http';
-import {
-    nodeStreamToWebStream,
-    createStreamingResponse,
-    STREAMING_HEADERS,
-} from '@/lib/infrastructure/adapters/streaming-adapter';
+import { nodeStreamToWebStream, createStreamingResponse, STREAMING_HEADERS } from '@/lib/infrastructure/adapters/streaming-adapter';
 import { PassThrough } from 'node:stream';
-import { Response as NodeFetchResponse } from 'node-fetch';
 
 /**
  * GET /api/stream
@@ -35,7 +30,7 @@ export async function GET(request: NextRequest) {
 
         // If error response, return immediately
         if (type === 'response') {
-            const response: NodeFetchResponse = content as NodeFetchResponse;
+            const response = content as Response;
             return new Response(response.statusText, { status: response.status });
         }
 
@@ -55,7 +50,7 @@ export async function GET(request: NextRequest) {
             {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },
-            }
+            },
         );
     }
 }

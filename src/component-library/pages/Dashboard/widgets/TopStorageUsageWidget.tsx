@@ -11,6 +11,7 @@ import { Field } from '@/component-library/atoms/misc/Field';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import CustomLegend, { LegendOption } from '@/component-library/pages/Dashboard/widgets/CustomLegend';
 import { useTheme } from 'next-themes';
+import { chartColors, getBorderColor } from '@/lib/utils/chart-colors';
 
 const CustomTooltip = ({ active, payload, totalBytes }: any) => {
     if (active && payload && payload.length) {
@@ -32,18 +33,16 @@ const CustomTooltip = ({ active, payload, totalBytes }: any) => {
 const PIE_HEIGHT = 275;
 
 const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
-    const COLORS = [
-        // Used
-        'rgba(239,68,68,0.8)', // Tailwind base-success-500
-        // Remaining
-        'rgba(34,197,94,0.8)', // Tailwind base-error-500
-    ];
-
     const { resolvedTheme } = useTheme();
     const isDarkMode = resolvedTheme === 'dark';
 
-    // Tailwind neutral-100 or neutral-900
-    const borderColor = isDarkMode ? 'rgba(241,245,249,0.15)' : 'rgba(15,23,42,0.15)';
+    // Use design system colors via chart utility
+    const COLORS = [
+        chartColors.warning, // Used - Warning color indicates consumption
+        chartColors.success, // Remaining - Success color indicates availability
+    ];
+
+    const borderColor = getBorderColor(isDarkMode);
 
     const { rse, used_bytes, bytes_limit } = usage;
     const remainingBytes = bytes_limit - used_bytes;
@@ -59,7 +58,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
     return (
         <div className="flex flex-col justify-center h-fit w-full mx-3 my-5 overflow-hidden">
             <Link
-                href={`/rse/page/${rse}`}
+                href={`/rse/list?expression=${rse}&autoSearch=true`}
                 className="flex space-x-2 justify-center items-center text-neutral-900 dark:text-neutral-100 hover:text-brand-500 dark:hover:text-brand-500 font-medium"
             >
                 <HiExternalLink className="flex-shrink-0" />
@@ -98,7 +97,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
 };
 
 const legendOptions: LegendOption[] = [
-    { label: 'Used', color: 'bg-base-error-500' },
+    { label: 'Used', color: 'bg-base-warning-500' },
     { label: 'Remaining', color: 'bg-base-success-500' },
 ];
 
@@ -142,15 +141,13 @@ export const TopStorageUsageWidget = ({ usages, isLoading, errorMessage }: TopSt
                 <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg p-5 dark:bg-neutral-800/50">
                     <div className="flex items-center space-x-2 mb-4">
                         <div className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500"></div>
-                        <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">
-                            Available RSEs
-                        </p>
+                        <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">Available RSEs</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {emptyRSEs.map(rse => (
                             <Link
                                 key={rse.rse_id}
-                                href={`/rse/page/${rse.rse}`}
+                                href={`/rse/list?expression=${rse.rse}&autoSearch=true`}
                                 className="inline-flex items-center space-x-1.5 px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:border-brand-500 dark:hover:border-brand-500 hover:shadow-sm transition-all text-neutral-900 dark:text-neutral-100 group"
                             >
                                 <HiExternalLink className="text-sm flex-shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-brand-500" />

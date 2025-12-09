@@ -18,22 +18,16 @@ export async function GET(request: NextRequest) {
         const id = params.id as string;
 
         if (!id) {
-            return NextResponse.json(
-                { error: 'Missing required parameter: id (rule ID)' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required parameter: id (rule ID)' }, { status: 400 });
         }
 
         const controller = appContainer.get<BaseController<ListRuleReplicaLockStatesControllerParameters, ListRuleReplicaLockStatesRequest>>(
-            CONTROLLERS.LIST_RULE_REPLICA_LOCK_STATES
+            CONTROLLERS.LIST_RULE_REPLICA_LOCK_STATES,
         );
 
         return executeAuthenticatedController(controller, { id }, true);
     } catch (error) {
         console.error('Error in list-rule-replica-lock-states:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

@@ -2,7 +2,6 @@ import { BaseDTO } from '@/lib/sdk/dto';
 import { AuthError, RucioTokenExpiredError } from '@/lib/core/exceptions/auth-exceptions';
 import { SessionUser } from '@/lib/core/entity/auth-models';
 import { IronSession } from 'iron-session';
-import { Response } from 'node-fetch';
 
 /**
  * A decorator for Gateway functions that need to make authenticated calls to Rucio Server

@@ -4,7 +4,7 @@ import { CopyableHeading, Heading } from '@/component-library/atoms/misc/Heading
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
 import { useState } from 'react';
 import { WarningField } from '@/component-library/features/fields/WarningField';
@@ -12,6 +12,7 @@ import { RuleMetaViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { cn } from '@/component-library/utils';
 import { DetailsRuleLocks } from '@/component-library/pages/Rule/details/DetailsRuleLocks';
 import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsRuleMeta';
+import { Alert } from '@/component-library/atoms/feedback/Alert';
 
 export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
     const tabNames = ['Attributes', 'Locks'];
@@ -19,7 +20,7 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
 
     const getViewClasses = (index: number) => {
         const visibilityClass = index === activeIndex ? 'flex' : 'hidden';
-        return cn('flex-col grow min-h-[450px]', visibilityClass);
+        return cn('flex-col grow', visibilityClass);
     };
 
     return (
@@ -29,7 +30,9 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
                 <DetailsRuleMeta meta={meta} />
             </div>
             <div className={getViewClasses(1)}>
-                <DetailsRuleLocks id={id} />
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+                    <DetailsRuleLocks id={id} />
+                </div>
             </div>
         </>
     );
@@ -38,21 +41,21 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
 export const DetailsRule = ({ id }: { id: string }) => {
     const { toast } = useToast();
     const validator = new BaseViewModelValidator(toast);
+    const [fetchErrorMessage, setFetchErrorMessage] = useState<string | null>(null);
 
     const queryMeta = async () => {
         const url = '/api/feature/get-rule?' + new URLSearchParams({ id });
 
+        setFetchErrorMessage(null); // Clear any previous errors
         const res = await fetch(url);
         if (!res.ok) {
+            let errorMsg = res.statusText;
             try {
                 const json = await res.json();
-                toast({
-                    title: 'Fatal error',
-                    description: json.message,
-                    variant: 'error',
-                });
+                errorMsg = json.message || errorMsg;
             } catch (e) {}
-            throw new Error(res.statusText);
+            setFetchErrorMessage(errorMsg);
+            throw new Error(errorMsg);
         }
 
         const json = await res.json();
@@ -66,6 +69,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
         data: meta,
         error: metaError,
         isFetching: isMetaFetching,
+        refetch,
     } = useQuery<RuleMetaViewModel>({
         queryKey: metaQueryKey,
         queryFn: queryMeta,
@@ -75,26 +79,31 @@ export const DetailsRule = ({ id }: { id: string }) => {
 
     if (metaError) {
         return (
-            <WarningField>
-                <span>Could not load the rule with ID {id}.</span>
-            </WarningField>
+            <div className="w-full p-6">
+                <Alert
+                    variant="error"
+                    message={`Failed to load rule ${id}. ${fetchErrorMessage || 'Please try again.'}`}
+                    onClose={() => {
+                        setFetchErrorMessage(null);
+                        refetch();
+                    }}
+                />
+            </div>
         );
     }
 
     const isLoading = isMetaFetching || meta === undefined;
     if (isLoading) {
-        return (
-            <div className="flex grow items-center justify-center">
-                <LoadingSpinner />
-            </div>
-        );
+        return <LoadingPage message="Loading rule details..." />;
     }
 
     return (
-        <div className="flex flex-col space-y-3 w-full grow">
-            <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
-                <CopyableHeading text={id} />
-            </div>
+        <div className="flex flex-col space-y-6 w-full">
+            <header className="mb-2">
+                <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
+                    <CopyableHeading text={id} />
+                </div>
+            </header>
             <DetailsRuleTabs id={id} meta={meta} />
         </div>
     );
