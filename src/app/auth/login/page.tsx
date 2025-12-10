@@ -4,8 +4,8 @@ import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Login';
-import { AuthType, Role, VO } from '@/lib/core/entity/auth-models';
-import { signIn } from 'next-auth/react';
+import { AuthType, OIDCProvider, Role, VO } from '@/lib/core/entity/auth-models';
+import { signIn, useSession } from 'next-auth/react';
 
 function LoginContent() {
     useEffect(() => {
@@ -17,6 +17,24 @@ function LoginContent() {
     const [authViewModel, setAuthViewModel] = useState<AuthViewModel>();
     const router = useRouter();
     const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl');
+    const { data: session } = useSession();
+
+    // Check for OIDC errors after redirect from OIDC provider
+    useEffect(() => {
+        if (session && (session as any).oidcError) {
+            console.error('[Login] OIDC error detected:', (session as any).oidcError);
+            setAuthViewModel({
+                status: 'error',
+                message: (session as any).oidcError,
+                rucioAccount: '',
+                rucioAuthType: AuthType.OIDC,
+                rucioIdentity: (session as any).oidcIdentity || '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
+        }
+    }, [session]);
 
     const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
         try {
@@ -293,6 +311,49 @@ function LoginContent() {
         }
     };
 
+    /**
+     * Handle OIDC provider authentication (Dynamic - works with any provider)
+     *
+     * For OAuth/OIDC providers, NextAuth must handle the redirect to perform the OAuth flow.
+     * Unlike Credentials providers (userpass, x509), we cannot use redirect: false here.
+     */
+    const handleOIDCSubmit = async (provider: OIDCProvider, vo: VO, account?: string) => {
+        try {
+            console.log(`[Login] Starting OIDC authentication with provider: ${provider.name}`);
+
+            // Build callback URL with VO and account parameters
+            // After successful OIDC authentication, user will be redirected here
+            const params = new URLSearchParams({
+                vo: vo.shortName,
+            });
+            if (account) {
+                params.set('account', account);
+            }
+            const callbackUrlWithParams = `${redirectURL}?${params.toString()}`;
+
+            console.log(`[Login] Callback URL: ${callbackUrlWithParams}`);
+            console.log(`[Login] Redirecting to ${provider.name} SSO for authentication...`);
+
+            await signIn(provider.name.toLowerCase(), {
+                callbackUrl: callbackUrlWithParams,
+                // Note: redirect defaults to true for OAuth providers
+                // The browser will redirect before this function returns
+            });
+        } catch (error: any) {
+            console.error(`[Login] OIDC login error with ${provider.name}:`, error);
+            setAuthViewModel({
+                status: 'error',
+                message: `An unexpected error occurred during OIDC login: ${error.message || 'Unknown error'}`,
+                rucioAccount: '',
+                rucioAuthType: AuthType.OIDC,
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
+        }
+    };
+
     useEffect(() => {
         if (callbackUrl) {
             const redirectURL = decodeURIComponent(callbackUrl);
@@ -318,7 +379,7 @@ function LoginContent() {
                     loginViewModel={viewModel}
                     authViewModel={authViewModel}
                     userPassSubmitHandler={handleUserpassSubmit}
-                    oidcSubmitHandler={() => {}}
+                    oidcSubmitHandler={handleOIDCSubmit}
                     x509SubmitHandler={handleX509Submit}
                     x509SessionHandler={handleX509Session}
                 />
