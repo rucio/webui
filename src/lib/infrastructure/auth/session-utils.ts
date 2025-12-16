@@ -1,10 +1,12 @@
 /**
- * Session utilities for testing and backwards compatibility
+ * Session utilities for testing
  *
- * Note: For production code, use nextauth-session-utils.ts instead.
- * This file is kept primarily for test fixtures.
+ * These functions provide pure transformations for session data.
+ * They do not persist changes - that is handled by NextAuth's JWT callbacks.
  *
- * Session management is now handled by NextAuth.
+ * For production code, use the NextAuth session management:
+ * - Client: useSession().update({ account: '...' })
+ * - Server: auth() to get session, JWT callback handles persistence
  */
 
 import { Role, SessionUser } from '@/lib/core/entity/auth-models';
@@ -12,15 +14,18 @@ import { RucioSession } from './session';
 
 /**
  * Mock session interface for testing purposes
- * Extends RucioSession to ensure type compatibility
+ * Includes save/destroy methods that can be mocked with jest.fn()
  */
-export interface MockSession extends RucioSession {}
+export interface MockSession extends RucioSession {
+    save(): Promise<void>;
+    destroy(): Promise<void>;
+}
 
 /**
  * Set an empty {@link SessionUser} object in the session
  * Used in tests to initialize a session
  */
-export async function setEmptySession(session: RucioSession, saveSession: boolean = true) {
+export function setEmptySession(session: RucioSession): void {
     const sessionUser: SessionUser = {
         rucioIdentity: '',
         rucioAccount: '',
@@ -34,9 +39,6 @@ export async function setEmptySession(session: RucioSession, saveSession: boolea
     };
     session.user = sessionUser;
     session.allUsers = [sessionUser];
-    if (saveSession) {
-        await session.save();
-    }
 }
 
 /**
@@ -59,9 +61,9 @@ export function getSessionUserIndex(session: RucioSession, sessionUser: SessionU
 
 /**
  * Adds a new {@link SessionUser} to the session or updates an existing one.
- * Used in tests to populate sessions
+ * This is a pure transformation - it does not persist changes.
  */
-export async function addOrUpdateSessionUser(session: RucioSession, sessionUser: SessionUser, saveSession: boolean = true) {
+export function addOrUpdateSessionUser(session: RucioSession, sessionUser: SessionUser): void {
     session.user = sessionUser;
     session.allUsers = session.allUsers ? session.allUsers : [];
 
@@ -71,17 +73,15 @@ export async function addOrUpdateSessionUser(session: RucioSession, sessionUser:
     } else {
         session.allUsers[sessionUserIndex] = sessionUser;
     }
-    if (saveSession) {
-        await session.save();
-    }
 }
 
 /**
  * Removes a {@link SessionUser} from the session.
  * If an active session user is removed, the first {@link SessionUser} in the allUsers list will be set as active
  * If no {@link SessionUser} is left in the allUsers list, the active session user will be set to undefined
+ * This is a pure transformation - it does not persist changes.
  */
-export async function removeSessionUser(session: RucioSession, sessionUser: SessionUser, saveSession: boolean = true) {
+export function removeSessionUser(session: RucioSession, sessionUser: SessionUser): void {
     const sessionUserIndex = getSessionUserIndex(session, sessionUser);
     if (sessionUserIndex !== -1) {
         session.allUsers?.splice(sessionUserIndex, 1);
@@ -94,27 +94,21 @@ export async function removeSessionUser(session: RucioSession, sessionUser: Sess
     ) {
         session.user = session.allUsers?.length ? session.allUsers[0] : undefined;
     }
-
-    if (saveSession) {
-        await session.save();
-    }
 }
 
 /**
  * Sets the current {@link SessionUser} as active in the session.
  * Creates or updates the {@link SessionUser} if necessary
+ * This is a pure transformation - it does not persist changes.
  */
-export async function setActiveSessionUser(session: RucioSession, sessionUser: SessionUser, saveSession: boolean = true) {
-    await addOrUpdateSessionUser(session, sessionUser, false);
+export function setActiveSessionUser(session: RucioSession, sessionUser: SessionUser): void {
+    addOrUpdateSessionUser(session, sessionUser);
     session.user = sessionUser;
-    if (saveSession) {
-        await session.save();
-    }
 }
 
 /**
  * Returns the active {@link SessionUser} object from the session
  */
-export async function getActiveSessionUser(session: RucioSession): Promise<SessionUser | undefined> {
-    return Promise.resolve(session.user);
+export function getActiveSessionUser(session: RucioSession): SessionUser | undefined {
+    return session.user;
 }

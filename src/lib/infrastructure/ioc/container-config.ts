@@ -27,10 +27,6 @@ import SetX509LoginSessionPresenter from '../presenter/set-x509-login-session-pr
 import StreamInputPort from '@/lib/core/port/primary/stream-input-port';
 import StreamUseCase from '@/lib/core/use-case/stream-usecase';
 import { RSEOld } from '@/lib/core/entity/rucio';
-import SwitchAccountInputPort from '@/lib/core/port/primary/switch-account-input-port';
-import SwitchAccountUseCase from '@/lib/core/use-case/switch-account-usecase';
-import SwitchAccountController, { ISwitchAccountController } from '../controller/switch-account-controller';
-import SwitchAccountPresenter from '../presenter/switch-account-presenter';
 import { loadFeaturesSync } from '@/lib/sdk/ioc-helpers';
 import ListDidsFeature from './features/list-dids-feature';
 import LoginConfigFeature from './features/logic-config-feature';
@@ -185,14 +181,5 @@ appContainer.bind<StreamInputPort<RSEOld>>(INPUT_PORT.STREAM).to(StreamUseCase).
 //         return new GetSiteHeaderUseCase(presenter, envConfigGateway);
 //     }
 // );
-
-appContainer.bind<SwitchAccountInputPort>(INPUT_PORT.SWITCH_ACCOUNT).to(SwitchAccountUseCase).inRequestScope();
-appContainer.bind<ISwitchAccountController>(CONTROLLERS.SWITCH_ACCOUNT).to(SwitchAccountController);
-appContainer
-    .bind<interfaces.Factory<SwitchAccountInputPort>>(USECASE_FACTORY.SWITCH_ACCOUNT)
-    .toFactory<SwitchAccountUseCase, [NextApiResponse]>((context: interfaces.Context) => (response: NextApiResponse) => {
-        const switchAccountPresenter = new SwitchAccountPresenter(response);
-        return new SwitchAccountUseCase(switchAccountPresenter);
-    });
 
 export default appContainer;

@@ -58,7 +58,7 @@ export default class UserPassLoginPresenter implements UserPassLoginOutputPort<N
             sessionUser.countryRole = responseModel.countryRole;
         }
 
-        await setActiveSessionUser(this.session, sessionUser);
+        setActiveSessionUser(this.session, sessionUser);
         this.response.status(200).json(viewModel);
     }
 

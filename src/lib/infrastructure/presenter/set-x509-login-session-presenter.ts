@@ -31,7 +31,7 @@ export default class SetX509LoginSessionPresenter implements SetX509LoginSession
         responseModel.country ? (sessionUser.country = responseModel.country) : null;
         responseModel.countryRole ? (sessionUser.countryRole = responseModel.countryRole) : null;
 
-        await setActiveSessionUser(this.session, sessionUser);
+        setActiveSessionUser(this.session, sessionUser);
 
         const viewModel: AuthViewModel = {
             status: 'success',
