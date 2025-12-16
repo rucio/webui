@@ -55,9 +55,11 @@ export type MockGatewayResponse = {
  */
 async function streamToString(nodeStream: Readable): Promise<string> {
     return new Promise((resolve, reject) => {
-        const chunks: Buffer[] = [];
-        nodeStream.on('data', (chunk: Buffer) => chunks.push(Buffer.from(chunk)));
-        nodeStream.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
+        let data = '';
+        nodeStream.on('data', (chunk: Buffer | string) => {
+            data += chunk.toString();
+        });
+        nodeStream.on('end', () => resolve(data));
         nodeStream.on('error', reject);
     });
 }

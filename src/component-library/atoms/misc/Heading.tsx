@@ -46,7 +46,7 @@ export const CopyableHeading = ({ text, size, className, ...props }: HeadingProp
 
     const handleCopy = () => {
         navigator.clipboard
-            .writeText(text)
+            .writeText(text || '')
             .then(() => {
                 toast(copiedToast);
             })

@@ -79,10 +79,10 @@ export function webStreamToNodeStream(webStream: ReadableStream<Uint8Array> | Re
         };
 
         pump();
-    } else if (webStream instanceof Readable || typeof (webStream as Readable).pipe === 'function') {
+    } else if (webStream instanceof Readable || typeof (webStream as unknown as Readable).pipe === 'function') {
         // If it's already a Node.js Readable stream (e.g., in test environments with mocked fetch),
         // just pipe it through
-        (webStream as Readable).pipe(passThrough);
+        (webStream as unknown as Readable).pipe(passThrough);
     } else if (Buffer.isBuffer(webStream)) {
         // Handle Buffer (common in test environments with jest-fetch-mock)
         passThrough.write(webStream);
