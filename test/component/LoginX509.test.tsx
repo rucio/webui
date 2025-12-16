@@ -1,21 +1,43 @@
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Login from '@/app/auth/login/page';
 import { act, render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { getSampleVOs } from 'test/fixtures/multi-vo-fixtures';
 import { getSampleOIDCProviders } from 'test/fixtures/oidc-provider-config';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
+
 jest.mock('next/navigation');
+jest.mock('next-auth/react');
 
 describe('Login Component Tests for x509 Login workflow', () => {
     beforeEach(() => {
-        useSearchParams.mockReturnValue({
+        (useSession as jest.Mock).mockReturnValue({
+            data: null,
+            status: 'unauthenticated',
+        });
+        (useSearchParams as jest.Mock).mockReturnValue({
             get: jest.fn(() => null),
         });
-        useRouter.mockReturnValue({
+        (useRouter as jest.Mock).mockReturnValue({
             push: jest.fn(),
         });
         fetchMock.doMock();
+
+        // Mock window.matchMedia
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: jest.fn().mockImplementation(query => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: jest.fn(),
+                removeListener: jest.fn(),
+                addEventListener: jest.fn(),
+                removeEventListener: jest.fn(),
+                dispatchEvent: jest.fn(),
+            })),
+        });
     });
     afterEach(() => {
         fetchMock.mockClear();
