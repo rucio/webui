@@ -24,6 +24,7 @@ export const CommandPaletteItem: React.FC<CommandPaletteItemProps> = ({ item, is
         <div
             role="option"
             aria-selected={isSelected}
+            tabIndex={0}
             className={`
                 px-4 py-3 cursor-pointer
                 transition-colors duration-150
@@ -31,6 +32,12 @@ export const CommandPaletteItem: React.FC<CommandPaletteItemProps> = ({ item, is
                 ${isSelected ? 'bg-brand-50 dark:bg-brand-900/20 ring-2 ring-brand-500/50' : 'hover:bg-neutral-100 dark:hover:bg-neutral-800'}
             `}
             onClick={onClick}
+            onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onClick();
+                }
+            }}
             onMouseEnter={e => {
                 // Visual feedback on hover
                 e.currentTarget.focus();

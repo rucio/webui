@@ -238,6 +238,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
                             <Dialog.Title>Command Palette</Dialog.Title>
                         </VisuallyHidden.Root>
 
+                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                         <div
                             className="bg-neutral-0 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl overflow-hidden"
                             onKeyDown={handleKeyDown}
@@ -251,6 +252,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
                                     className="flex-1 bg-transparent text-base text-neutral-900 dark:text-neutral-0 placeholder:text-neutral-500 focus:outline-none"
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
                                     autoFocus
                                     role="combobox"
                                     aria-expanded={hasResults}
