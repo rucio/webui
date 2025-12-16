@@ -25,7 +25,6 @@ const INPUT_PORT = {
     SET_X509_LOGIN_SESSION: Symbol.for('SetX509LoginSessionInputPort'),
     GET_SITE_HEADER: Symbol.for('SiteHeaderInputPort'),
     STREAM: Symbol.for('StreamInputPort'),
-    SWITCH_ACCOUNT: Symbol.for('SwitchAccountInputPort'),
     TEST: Symbol.for('TestInputPort'),
     USERPASS_LOGIN: Symbol.for('UserPassLoginInputPort'),
     GET_RSE_USAGE: Symbol.for('GetRSEUsageInputPort'),

@@ -1,37 +1,28 @@
 /**
  * Session configuration for the Rucio WebUI
  *
- * Note: Session management is now handled by NextAuth.
+ * Session management is handled by NextAuth.
  * See auth.ts and auth.config.ts for the NextAuth configuration.
  *
- * Session types are extended in src/types/next-auth.d.ts
- * Use `import { Session } from 'next-auth'` to get the session type.
+ * The RucioSession interface is the base type for session data.
+ * NextAuth's Session type extends this in src/types/next-auth.d.ts
  */
 
 import { SessionUser } from '@/lib/core/entity/auth-models';
 
 /**
- * RucioSession interface for session management in use cases and controllers.
- * This interface is used throughout the application for session manipulation.
+ * RucioSession interface represents the session data structure.
+ * This is a data-only interface (no methods) - session persistence
+ * is handled by NextAuth's JWT callbacks.
  *
- * In tests, MockSession from session-utils.ts implements this interface.
- * In production, this is implemented by the session wrapper in App Router routes.
+ * NextAuth's Session type extends this interface in next-auth.d.ts
  */
 export interface RucioSession {
     user?: SessionUser;
     allUsers?: SessionUser[];
-    save(): Promise<void>;
-    destroy(): Promise<void>;
+    expires?: string;
+    // OIDC error handling
+    oidcError?: string;
+    oidcIdentity?: string;
+    oidcProvider?: string;
 }
-
-/**
- * Session options (kept for backwards compatibility with tests)
- * @deprecated Use NextAuth session configuration instead
- */
-export const sessionOptions = {
-    password: process.env.SESSION_PASSWORD as string,
-    cookieName: (process.env.NEXT_SESSION_COOKIE_NAME as string) || 'rucio_webui_session',
-    cookieOptions: {
-        secure: process.env.NODE_ENV === 'production',
-    },
-};

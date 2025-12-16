@@ -27,7 +27,6 @@ const CONTROLLERS = {
     SET_X509_LOGIN_SESSION: Symbol.for('SetX509LoginSessionController'),
     GET_SITE_HEADER: Symbol.for('SiteHeaderController'),
     STREAM: Symbol.for('StreamController'),
-    SWITCH_ACCOUNT: Symbol.for('SwitchAccountController'),
     USERPASS_LOGIN: Symbol.for('UserPassLoginController'),
     GET_RSE_USAGE: Symbol.for('GetRSEUsageController'),
     LIST_RULES: Symbol.for('ListRulesController'),

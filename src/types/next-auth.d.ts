@@ -1,4 +1,5 @@
 import { SessionUser as BaseSessionUser } from '@/lib/core/entity/auth-models';
+import { RucioSession } from '@/lib/infrastructure/auth/session';
 
 /**
  * Extended SessionUser that includes AdapterUser properties required by NextAuth
@@ -18,17 +19,13 @@ export interface SessionUser extends BaseSessionUser {
  */
 declare module 'next-auth' {
     /**
-     * Override the Session interface with our custom user type and multi-account support
-     * We don't extend DefaultSession to avoid conflicts
+     * Override the Session interface extending RucioSession
+     * Makes user and allUsers required (not optional) for authenticated sessions
      */
-    interface Session {
+    interface Session extends RucioSession {
         user: SessionUser;
         allUsers: SessionUser[];
         expires: string;
-        // OIDC error handling
-        oidcError?: string;
-        oidcIdentity?: string;
-        oidcProvider?: string;
     }
 
     /**
