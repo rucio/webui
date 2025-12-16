@@ -3,7 +3,6 @@ import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-ou
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import { PassThrough } from 'node:stream';
-import { Response } from 'node-fetch';
 
 describe('Streaming tests for JSON encoded text payloads', () => {
     beforeEach(async () => {

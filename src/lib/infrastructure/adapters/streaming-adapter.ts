@@ -53,28 +53,46 @@ export function nodeStreamToWebStream(nodeStream: Readable): ReadableStream<Uint
  * @param webStream - Web ReadableStream (e.g., from fetch response.body)
  * @returns Node.js PassThrough stream
  */
-export function webStreamToNodeStream(webStream: ReadableStream<Uint8Array>): PassThrough {
+export function webStreamToNodeStream(webStream: ReadableStream<Uint8Array> | Readable | Buffer): PassThrough {
     const passThrough = new PassThrough();
-    const reader = webStream.getReader();
 
-    const pump = async () => {
-        try {
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) {
-                    passThrough.end();
-                    break;
+    // Check if it's a Web ReadableStream (has getReader method)
+    if (typeof (webStream as ReadableStream<Uint8Array>).getReader === 'function') {
+        // Handle Web ReadableStream
+        const reader = (webStream as ReadableStream<Uint8Array>).getReader();
+
+        const pump = async () => {
+            try {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) {
+                        passThrough.end();
+                        break;
+                    }
+                    if (!passThrough.write(value)) {
+                        await new Promise(resolve => passThrough.once('drain', resolve));
+                    }
                 }
-                if (!passThrough.write(value)) {
-                    await new Promise(resolve => passThrough.once('drain', resolve));
-                }
+            } catch (error) {
+                passThrough.destroy(error as Error);
             }
-        } catch (error) {
-            passThrough.destroy(error as Error);
-        }
-    };
+        };
 
-    pump();
+        pump();
+    } else if (webStream instanceof Readable || typeof (webStream as Readable).pipe === 'function') {
+        // If it's already a Node.js Readable stream (e.g., in test environments with mocked fetch),
+        // just pipe it through
+        (webStream as Readable).pipe(passThrough);
+    } else if (Buffer.isBuffer(webStream)) {
+        // Handle Buffer (common in test environments with jest-fetch-mock)
+        passThrough.write(webStream);
+        passThrough.end();
+    } else {
+        // Unknown stream type
+        console.error('webStreamToNodeStream: Unknown stream type received', typeof webStream);
+        passThrough.end();
+    }
+
     return passThrough;
 }
 
@@ -248,7 +266,8 @@ export class StreamingResponseAdapter {
         }
     }
 
-    json(data: any): this {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    json(_data: any): this {
         // For error responses in streaming endpoints
         return this;
     }

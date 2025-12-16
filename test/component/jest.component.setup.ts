@@ -6,6 +6,80 @@ import { toHaveNoViolations } from 'jest-axe';
 
 fetchMock.enableMocks();
 
+// Mock window.matchMedia for all component tests
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+    })),
+});
+
+// Mock framer-motion to skip animations in tests
+jest.mock('motion/react', () => {
+    const React = require('react');
+
+    // Filter out framer-motion specific props that aren't valid HTML attributes
+    const filterMotionProps = (props: any) => {
+        const {
+            initial,
+            animate,
+            exit,
+            transition,
+            variants,
+            whileHover,
+            whileTap,
+            whileFocus,
+            whileDrag,
+            whileInView,
+            drag,
+            dragConstraints,
+            dragElastic,
+            dragMomentum,
+            dragTransition,
+            dragPropagation,
+            dragControls,
+            dragListener,
+            onDragStart,
+            onDragEnd,
+            onDrag,
+            onAnimationStart,
+            onAnimationComplete,
+            layout,
+            layoutId,
+            custom,
+            ...rest
+        } = props;
+        return rest;
+    };
+
+    return {
+        __esModule: true,
+        motion: {
+            div: React.forwardRef(({ children, ...props }: any, ref: any) =>
+                React.createElement('div', { ...filterMotionProps(props), ref }, children),
+            ),
+            button: React.forwardRef(({ children, ...props }: any, ref: any) =>
+                React.createElement('button', { ...filterMotionProps(props), ref }, children),
+            ),
+            span: React.forwardRef(({ children, ...props }: any, ref: any) =>
+                React.createElement('span', { ...filterMotionProps(props), ref }, children),
+            ),
+            form: React.forwardRef(({ children, ...props }: any, ref: any) =>
+                React.createElement('form', { ...filterMotionProps(props), ref }, children),
+            ),
+        },
+        AnimatePresence: ({ children }: any) => children,
+        useReducedMotion: () => true,
+    };
+});
+
 // Extend Jest matchers with jest-axe custom matchers
 expect.extend(toHaveNoViolations);
 

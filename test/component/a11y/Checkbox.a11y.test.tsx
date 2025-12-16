@@ -209,7 +209,8 @@ describe('Checkbox Accessibility', () => {
             );
 
             const checkbox = screen.getByRole('checkbox');
-            expect(checkbox).toBeRequired();
+            // Radix UI Checkbox renders as a button, so we check aria-required instead of native required
+            expect(checkbox).toHaveAttribute('aria-required', 'true');
         });
 
         it('should support aria-required', () => {
