@@ -49,7 +49,7 @@
     "tools/meow-maker/**/*",
     "tools/env-generator/**/*",
     "playwright.config.ts",
-    "test/e2e/**/*",
+    "test/**/*",
     ".storybook/**/*",
     "pages-api-backup/**/*"
   ]

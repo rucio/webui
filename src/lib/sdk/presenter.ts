@@ -1,7 +1,7 @@
 import { Signal, TWebResponse } from './web';
 import { Transform, TransformCallback } from 'stream';
 import { BaseOutputPort, BaseStreamingOutputPort } from './primary-ports';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '@/lib/infrastructure/auth/session';
 import { BaseErrorResponseModel, BaseResponseModel } from './usecase-models';
 import { BaseViewModel } from './view-models';
 
@@ -13,9 +13,9 @@ import { BaseViewModel } from './view-models';
  */
 export abstract class BasePresenter<TResponseModel, TErrorModel, TViewModel> implements BaseOutputPort<TResponseModel, TErrorModel> {
     response: Signal<TViewModel>;
-    session: IronSession | undefined;
+    session: RucioSession | undefined;
 
-    constructor(response: Signal<TViewModel>, session?: IronSession) {
+    constructor(response: Signal<TViewModel>, session?: RucioSession) {
         this.response = response;
         this.session = session;
     }

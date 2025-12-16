@@ -6,7 +6,7 @@ import RucioAccountGateway from '../gateway/account-gateway/account-gateway';
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
 import RucioDIDGateway from '../gateway/did-gateway/did-gateway';
 import { Container, interfaces } from 'inversify';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '../auth/session';
 import { NextApiResponse } from 'next';
 import CONTROLLERS from './ioc-symbols-controllers';
 import INPUT_PORT from './ioc-symbols-input-port';
@@ -146,8 +146,8 @@ appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPass
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
 appContainer
     .bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN)
-    .toFactory<UserPassLoginUseCase, [IronSession, NextApiResponse]>(
-        (context: interfaces.Context) => (session: IronSession, response: NextApiResponse) => {
+    .toFactory<UserPassLoginUseCase, [RucioSession, NextApiResponse]>(
+        (context: interfaces.Context) => (session: RucioSession, response: NextApiResponse) => {
             const rucioAuthServer: AuthServerGatewayOutputPort = appContainer.get(GATEWAYS.AUTH_SERVER);
             const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
             const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
@@ -159,8 +159,8 @@ appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSIO
 appContainer.bind<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionController);
 appContainer
     .bind<interfaces.Factory<SetX509LoginSessionInputPort>>(USECASE_FACTORY.SET_X509_LOGIN_SESSION)
-    .toFactory<SetX509LoginSessionUseCase, [IronSession, NextApiResponse]>(
-        (context: interfaces.Context) => (session: IronSession, response: NextApiResponse) => {
+    .toFactory<SetX509LoginSessionUseCase, [RucioSession, NextApiResponse]>(
+        (context: interfaces.Context) => (session: RucioSession, response: NextApiResponse) => {
             const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
             const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
             return new SetX509LoginSessionUseCase(new SetX509LoginSessionPresenter(session, response), envConfigGateway, rucioAccountGateway);

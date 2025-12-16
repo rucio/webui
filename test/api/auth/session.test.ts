@@ -1,24 +1,10 @@
 import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
-import { addOrUpdateSessionUser, removeSessionUser, setActiveSessionUser, setEmptySession } from '@/lib/infrastructure/auth/session-utils';
-import { getIronSession, IronSession } from 'iron-session';
-import { createMocks } from 'node-mocks-http';
+import { addOrUpdateSessionUser, removeSessionUser, setActiveSessionUser, setEmptySession, MockSession } from '@/lib/infrastructure/auth/session-utils';
+import { createMockSession } from 'test/fixtures/http-fixtures';
 
-describe('IronSession tests', () => {
+describe('MockSession tests', () => {
     it('should set and get a value in the session', async () => {
-        const { req, res } = createMocks({
-            method: 'POST',
-            body: {
-                username: 'ddmlab',
-                password: 'secret',
-            },
-        });
-        const session: IronSession = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session: MockSession = createMockSession();
         expect(session.user).toBeUndefined();
 
         await setEmptySession(session, true);
@@ -48,20 +34,7 @@ describe('IronSession tests', () => {
     });
 
     it('should add a new, update and delete user to/from the session', async () => {
-        const { req, res } = createMocks({
-            method: 'POST',
-            body: {
-                username: 'ddmlab',
-                password: 'secret',
-            },
-        });
-        const session: IronSession = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session: MockSession = createMockSession();
 
         session.allUsers = [];
 
@@ -105,20 +78,7 @@ describe('IronSession tests', () => {
     });
 
     it('should manage an active session user', async () => {
-        const { req, res } = createMocks({
-            method: 'POST',
-            body: {
-                username: 'ddmlab',
-                password: 'secret',
-            },
-        });
-        const session: IronSession = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session: MockSession = createMockSession();
         const sessionUserPassDDMLab: SessionUser = {
             rucioAuthToken: 'rucio-ddmlab-adadadad',
             rucioAuthTokenExpires: '2021-09-01T12:00:00Z',

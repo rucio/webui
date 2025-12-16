@@ -4,9 +4,9 @@ import { IUserPassLoginController } from '@/lib/infrastructure/controller/userpa
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { NextApiResponse } from 'next';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
-import { getIronSession } from 'iron-session';
 import { setEmptySession } from '@/lib/infrastructure/auth/session-utils';
 import { Role } from '@/lib/core/entity/auth-models';
+import { createMockSession } from 'test/fixtures/http-fixtures';
 
 describe('UserPassLogin API Test', () => {
     beforeEach(() => {
@@ -59,13 +59,7 @@ describe('UserPassLogin API Test', () => {
                 password: 'secret',
             },
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session = createMockSession();
 
         await setEmptySession(session, true);
 

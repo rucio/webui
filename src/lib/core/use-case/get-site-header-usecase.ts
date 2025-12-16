@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '@/lib/infrastructure/auth/session';
 import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from '../usecase-models/get-site-header-usecase-models';
 import type { User } from '../entity/auth-models';
 import type { GetSiteHeaderInputPort, GetSiteHeaderOutputPort } from '../port/primary/get-site-header-ports';
@@ -14,7 +14,7 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
         this.envConfigGateway = envConfigGateway;
     }
 
-    async generateSiteHeader(session: IronSession): Promise<void> {
+    async generateSiteHeader(session: RucioSession): Promise<void> {
         let projectURL: string | undefined;
 
         let activeUser: User | undefined;

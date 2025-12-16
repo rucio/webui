@@ -1,16 +1,16 @@
 import { SetX509LoginSessionError, SetX509LoginSessionResponse } from '@/lib/core/usecase-models/set-x509-login-session-usecase-models';
 import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
 import SetX509LoginSessionOutputPort from '@/lib/core/port/primary/set-x509-login-session-output-port';
-import { IronSession } from 'iron-session';
-import { setActiveSessionUser, setEmptySession } from '../auth/session-utils';
+import { RucioSession } from '../auth/session';
+import { setActiveSessionUser } from '../auth/session-utils';
 import { AuthViewModel } from '../data/auth/auth';
 import { Signal } from '@/lib/sdk/web';
 
 export default class SetX509LoginSessionPresenter implements SetX509LoginSessionOutputPort<Signal> {
     response: Signal;
-    session: IronSession;
+    session: RucioSession;
 
-    constructor(session: IronSession, res: Signal) {
+    constructor(session: RucioSession, res: Signal) {
         this.response = res;
         this.session = session;
     }

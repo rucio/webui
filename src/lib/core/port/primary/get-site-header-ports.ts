@@ -1,5 +1,4 @@
 import { BaseInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
-import { IronSession } from 'iron-session';
 import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from '../../usecase-models/get-site-header-usecase-models';
 
 /**

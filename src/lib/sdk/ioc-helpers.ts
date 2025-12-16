@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Container, interfaces } from 'inversify';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '@/lib/infrastructure/auth/session';
 import path from 'path';
 import { BaseController, TParameters } from './controller';
 import { BasePresenter, BaseStreamingPresenter } from './presenter';
@@ -62,7 +62,7 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         private UseCase: new (presenter: BaseOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
         private useCaseContructorArgs: any[] = [],
-        private Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
+        private Presenter: new (response: Signal<TViewModel>, session?: RucioSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
     ) {}
@@ -103,7 +103,7 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         UseCase: new (presenter: BaseOutputPort<TResponseModel, TErrorModel>, ...args: any[]) => TUseCase<TRequestModel>,
         useCaseContructorArgs: any[] = [],
-        Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
+        Presenter: new (response: Signal<TViewModel>, session?: RucioSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
         passSessionToPresenter: boolean = false,
         symbols: IOCSymbols,
     ) {
@@ -117,8 +117,8 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         if (passSessionToPresenter) {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>, session: IronSession]>(
-                    (context: interfaces.Context) => (response: Signal<TViewModel>, session: IronSession) => {
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>, session: RucioSession]>(
+                    (context: interfaces.Context) => (response: Signal<TViewModel>, session: RucioSession) => {
                         const presenter = new Presenter(response, session);
                         return new UseCase(presenter, ...useCaseContructorArgs);
                     },
@@ -167,7 +167,7 @@ export class BaseStreamableFeature<
         private Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         private UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>, ...args: any[]) => TUseCase<TRequestModel>,
         private useCaseContructorArgs: any[] = [],
-        private Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BaseStreamingPresenter<
+        private Presenter: new (response: Signal<TViewModel>, session?: RucioSession) => BaseStreamingPresenter<
             TResponseModel,
             TErrorModel,
             TViewModel
@@ -213,7 +213,7 @@ export class BaseStreamableFeature<
         Controller: new (useCaseFactory: TUseCaseFactory<TRequestModel>) => BaseController<TControllerParams, TRequestModel>,
         UseCase: new (presenter: BaseStreamingOutputPort<TResponseModel, TErrorModel, TViewModel>, ...args: any[]) => TUseCase<TRequestModel>,
         useCaseContructorArgs: any[] = [],
-        Presenter: new (response: Signal<TViewModel>, session?: IronSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
+        Presenter: new (response: Signal<TViewModel>, session?: RucioSession) => BaseStreamingPresenter<TResponseModel, TErrorModel, TViewModel>,
         passSessionToPresenter: boolean = false,
         symbols: IOCSymbols,
     ) {
@@ -227,8 +227,8 @@ export class BaseStreamableFeature<
         if (passSessionToPresenter) {
             appContainer
                 .bind<interfaces.Factory<TUseCase<TRequestModel>>>(symbolUseCaseFactory)
-                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>, session: IronSession]>(
-                    (context: interfaces.Context) => (response: Signal<TViewModel>, session: IronSession) => {
+                .toFactory<TUseCase<TRequestModel>, [response: Signal<TViewModel>, session: RucioSession]>(
+                    (context: interfaces.Context) => (response: Signal<TViewModel>, session: RucioSession) => {
                         const presenter = new Presenter(response, session);
                         return new UseCase(presenter, ...useCaseContructorArgs);
                     },

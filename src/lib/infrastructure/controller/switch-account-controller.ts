@@ -2,13 +2,13 @@ import { SwitchAccountRequest } from '@/lib/core/usecase-models/switch-account-u
 import { AuthType } from '@/lib/core/entity/auth-models';
 import type SwitchAccountInputPort from '@/lib/core/port/primary/switch-account-input-port';
 import { inject, injectable } from 'inversify';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '../auth/session';
 import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 export interface ISwitchAccountController {
     handle(
-        session: IronSession,
+        session: RucioSession,
         response: Signal,
         rucioIdentity: string,
         rucioAccount: string,
@@ -23,7 +23,7 @@ class SwitchAccountController implements ISwitchAccountController {
         this.useCaseFactory = useCaseFactory;
     }
 
-    async handle(session: IronSession, response: Signal, rucioIdentity: string, rucioAccount: string, rucioAuthType: AuthType, redirectTo: string) {
+    async handle(session: RucioSession, response: Signal, rucioIdentity: string, rucioAccount: string, rucioAuthType: AuthType, redirectTo: string) {
         const switchAccountUseCase: SwitchAccountInputPort = this.useCaseFactory(response);
         const switchAccountRequest: SwitchAccountRequest = {
             rucioIdentity: rucioIdentity,
