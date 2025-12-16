@@ -1,8 +1,21 @@
-import { getIronSession } from 'iron-session';
 import { createMocks, createResponse, MockResponse } from 'node-mocks-http';
 import { EventEmitter } from 'stream';
 import { Response } from 'express';
 import MockRucioServerFactory from './rucio-server';
+import { MockSession } from '@/lib/infrastructure/auth/session-utils';
+
+/**
+ * Creates a mock session for testing
+ * @returns A mock session object compatible with MockSession interface
+ */
+export function createMockSession(): MockSession {
+    return {
+        user: undefined,
+        allUsers: [],
+        save: jest.fn().mockResolvedValue(undefined),
+        destroy: jest.fn().mockResolvedValue(undefined),
+    };
+}
 
 /**
  * Creates mock HTTP request and response objects for testing. This is used to mock the requests to NextJS endpoints.
@@ -18,13 +31,7 @@ export async function createHttpMocks(url?: string, method?: 'GET' | 'POST' | 'P
         method: method ? method : 'GET',
         body: body,
     });
-    const session = await getIronSession(req, res, {
-        password: 'passwordpasswordpasswordpasswordpassword',
-        cookieName: 'test-request-session',
-        cookieOptions: {
-            secure: false,
-        },
-    });
+    const session = createMockSession();
     return { req, res, session };
 }
 

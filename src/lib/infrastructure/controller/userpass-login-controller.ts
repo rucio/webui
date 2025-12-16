@@ -1,7 +1,7 @@
 import { UserpassLoginRequest } from '@/lib/core/usecase-models/userpass-login-usecase-models';
 import UserPassLoginInputPort from '@/lib/core/port/primary/userpass-login-input-port';
 import { inject, injectable } from 'inversify';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '../auth/session';
 import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
@@ -9,7 +9,7 @@ import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
  * Declares an interface to initiate the UserPassLogin workflow via the {@link UserPassLoginUseCase}
  */
 export interface IUserPassLoginController {
-    handle(username: string, password: string, account: string, vo: string, session: IronSession, response: Signal, redirectTo: string): void;
+    handle(username: string, password: string, account: string, vo: string, session: RucioSession, response: Signal, redirectTo: string): void;
 }
 
 /**
@@ -18,13 +18,13 @@ export interface IUserPassLoginController {
 @injectable()
 class UserPassLoginController implements IUserPassLoginController {
     private useCase: UserPassLoginInputPort | null = null;
-    private useCaseFactory: (session: IronSession, response: Signal) => UserPassLoginInputPort;
+    private useCaseFactory: (session: RucioSession, response: Signal) => UserPassLoginInputPort;
 
-    public constructor(@inject(USECASE_FACTORY.USERPASS_LOGIN) useCaseFactory: (session: IronSession, response: Signal) => UserPassLoginInputPort) {
+    public constructor(@inject(USECASE_FACTORY.USERPASS_LOGIN) useCaseFactory: (session: RucioSession, response: Signal) => UserPassLoginInputPort) {
         this.useCaseFactory = useCaseFactory;
     }
 
-    async handle(username: string, password: string, account: string, vo: string, session: IronSession, response: Signal, redirectTo: string) {
+    async handle(username: string, password: string, account: string, vo: string, session: RucioSession, response: Signal, redirectTo: string) {
         this.useCase = this.useCaseFactory(session, response);
         const requestModel: UserpassLoginRequest = {
             username: username,

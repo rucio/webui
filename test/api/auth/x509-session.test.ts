@@ -1,11 +1,11 @@
 import { setEmptySession } from '@/lib/infrastructure/auth/session-utils';
-import { getIronSession } from 'iron-session';
 import { createMocks } from 'node-mocks-http';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import { ISetX509LoginSessionController } from '@/lib/infrastructure/controller/set-x509-login-session-controller';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 import { Role } from '@/lib/core/entity/auth-models';
+import { createMockSession } from 'test/fixtures/http-fixtures';
 
 describe('X509Login API Test', () => {
     beforeEach(() => {
@@ -49,14 +49,8 @@ describe('X509Login API Test', () => {
                 shortVOName: 'def',
             },
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
-        req.session = session;
+        const session = createMockSession();
+        (req as any).session = session;
         const requestBody = req.body;
         await setEmptySession(session, true);
         const setX509LoginSessionController = appContainer.get<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION);
@@ -120,14 +114,8 @@ describe('X509Login API Test', () => {
                 shortVOName: 'ERROR_VO_WILL_NOT_BE_FOUND',
             },
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
-        req.session = session;
+        const session = createMockSession();
+        (req as any).session = session;
         const requestBody = req.body;
         await setEmptySession(session, true);
         const setX509LoginSessionController = appContainer.get<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION);

@@ -2,14 +2,14 @@ import { GetSiteHeaderInputPort } from '@/lib/core/port/primary/get-site-header-
 import { GetSiteHeaderRequest } from '@/lib/core/usecase-models/get-site-header-usecase-models';
 import { BaseController, TAuthenticatedControllerParameters, TSimpleControllerParameters } from '@/lib/sdk/controller';
 import { inject, injectable } from 'inversify';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '../auth/session';
 import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 // Note: TAuthenticatedControllerParameters is NOT required, but is used to avoid type errors
 // Yes, it is a hack
 export type GetSiteHeaderControllerParameters = TSimpleControllerParameters & {
-    session: IronSession;
+    session: RucioSession;
 };
 
 @injectable()

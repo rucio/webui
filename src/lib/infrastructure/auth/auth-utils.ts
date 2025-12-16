@@ -1,17 +1,17 @@
 import { BaseDTO } from '@/lib/sdk/dto';
 import { AuthError, RucioTokenExpiredError } from '@/lib/core/exceptions/auth-exceptions';
 import { SessionUser } from '@/lib/core/entity/auth-models';
-import { IronSession } from 'iron-session';
+import { RucioSession } from './session';
 
 /**
  * A decorator for Gateway functions that need to make authenticated calls to Rucio Server
  * This checks if the user is authenticated with a valid rucio token and if so, passes the token to the function
- * @param session The {@link IronSession} object containing the session user
+ * @param session The {@link RucioSession} object containing the session user
  * @returns The decorated function
  * @throws AuthError if the user is not present in the session
  * @throws RucioTokenExpiredError if the user is authenticated but the rucio token has expired
  */
-export function withRucioAuth(session: IronSession, wrappedAsyncFunction: any) {
+export function withRucioAuth(session: RucioSession, wrappedAsyncFunction: any) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
         descriptor.value = async function (...args: any[]) {

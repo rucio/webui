@@ -3,21 +3,16 @@ import { addOrUpdateSessionUser } from '@/lib/infrastructure/auth/session-utils'
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { ISwitchAccountController } from '@/lib/infrastructure/controller/switch-account-controller';
-import { getIronSession } from 'iron-session';
+import { NextApiResponse } from 'next';
 import { createMocks } from 'node-mocks-http';
+import { createMockSession } from 'test/fixtures/http-fixtures';
 
 describe('Switch Account API Test', () => {
     it('should switch to existing account in the session and redirect', async () => {
         const { req, res } = createMocks({
             url: 'http://testhost:3000/api/site-header',
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session = createMockSession();
 
         res.redirect = jest.fn();
 
@@ -57,7 +52,7 @@ describe('Switch Account API Test', () => {
         const switchAccountController: ISwitchAccountController = appContainer.get(CONTROLLERS.SWITCH_ACCOUNT);
         await switchAccountController.handle(
             session,
-            res as undefined as NextApiRequest,
+            res as unknown as NextApiResponse,
             mockUser2.rucioIdentity,
             mockUser2.rucioAccount,
             mockUser2.rucioAuthType,
@@ -71,13 +66,7 @@ describe('Switch Account API Test', () => {
         const { req, res } = createMocks({
             url: 'http://testhost:3000/api/site-header',
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session = createMockSession();
 
         res.redirect = jest.fn();
 
@@ -114,7 +103,7 @@ describe('Switch Account API Test', () => {
         const switchAccountController: ISwitchAccountController = appContainer.get(CONTROLLERS.SWITCH_ACCOUNT);
         await switchAccountController.handle(
             session,
-            res as undefined as NextApiRequest,
+            res as unknown as NextApiResponse,
             mockUser2.rucioIdentity,
             mockUser2.rucioAccount,
             mockUser2.rucioAuthType,

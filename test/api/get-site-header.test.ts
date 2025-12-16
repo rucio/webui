@@ -5,23 +5,16 @@ import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import GetSiteHeaderController from '@/lib/infrastructure/controller/get-site-header-controller';
 import { GetSiteHeaderControllerParameters } from '@/lib/infrastructure/controller/get-site-header-controller';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
-import { getIronSession } from 'iron-session';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks } from 'node-mocks-http';
-import { createHttpMocks } from 'test/fixtures/http-fixtures';
+import { createHttpMocks, createMockSession } from 'test/fixtures/http-fixtures';
 
 describe('Get SiteHeader API Test', () => {
     it('should present successful SiteHeaderViewModel', async () => {
         const { req, res } = createMocks({
             url: 'http://testhost:3000/api/site-header',
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session = createMockSession();
 
         process.env['PROJECT_URL'] = 'https://atlas.cern';
 
@@ -71,6 +64,6 @@ describe('Get SiteHeader API Test', () => {
         expect(data.homeUrl).toBe('/dashboard');
 
         expect(session.user).toBeUndefined();
-        expect(session.allUsers).toBeUndefined();
+        expect(session.allUsers).toHaveLength(0);
     });
 });

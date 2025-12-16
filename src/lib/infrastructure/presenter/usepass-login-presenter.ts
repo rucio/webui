@@ -1,9 +1,9 @@
 import { UserpassLoginError, UserpassLoginIncomplete, UserpassLoginResponse } from '@/lib/core/usecase-models/userpass-login-usecase-models';
 import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
 import UserPassLoginOutputPort from '@/lib/core/port/primary/userpass-login-output-port';
-import { IronSession } from 'iron-session';
 import { NextApiResponse } from 'next';
-import { setActiveSessionUser, setEmptySession } from '../auth/session-utils';
+import { RucioSession } from '../auth/session';
+import { setActiveSessionUser } from '../auth/session-utils';
 import type { AuthViewModel } from '../data/auth/auth';
 
 /**
@@ -12,9 +12,9 @@ import type { AuthViewModel } from '../data/auth/auth';
  */
 export default class UserPassLoginPresenter implements UserPassLoginOutputPort<NextApiResponse> {
     response: NextApiResponse;
-    session: IronSession;
+    session: RucioSession;
 
-    constructor(session: IronSession, response: NextApiResponse) {
+    constructor(session: RucioSession, response: NextApiResponse) {
         this.response = response;
         this.session = session;
     }

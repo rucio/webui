@@ -1,104 +1,26 @@
-import { RucioTokenExpiredError } from '@/lib/core/exceptions/auth-exceptions';
+/**
+ * Session utilities for testing and backwards compatibility
+ *
+ * Note: For production code, use nextauth-session-utils.ts instead.
+ * This file is kept primarily for test fixtures.
+ *
+ * Session management is now handled by NextAuth.
+ */
+
 import { Role, SessionUser } from '@/lib/core/entity/auth-models';
-import { IronSession, unsealData } from 'iron-session';
-import { withIronSessionApiRoute } from 'iron-session/next';
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
-import { RequestCookies } from 'next/dist/server/web/spec-extension/cookies';
-import { sessionOptions } from './session';
-import { validateRucioToken } from './auth-utils';
+import { RucioSession } from './session';
 
 /**
- * Returns the {@link Ruciouser} object from the iron session
- * @param cookies {@link ReadOnlyRequestCookies} from the iron session object
- * @returns {@link RucioUser} object or null
+ * Mock session interface for testing purposes
+ * Extends RucioSession to ensure type compatibility
  */
-export const getSessionUser = async (cookies: ReadonlyRequestCookies): Promise<SessionUser | undefined> => {
-    const cookieName = (process.env.NEXT_SESSION_COOKIE_NAME as string) || 'rucio_webui_session';
-    const cookie = cookies.get(cookieName);
-    if (!cookie) return new Promise<SessionUser | undefined>(resolve => resolve(undefined));
-
-    const sessionData = await unsealData<any>(cookie.value, {
-        password: process.env.SESSION_PASSWORD as string,
-    });
-    return new Promise<SessionUser | undefined>(resolve => resolve(sessionData.user));
-};
+export interface MockSession extends RucioSession {}
 
 /**
- * Get the rucioAuthToken from the {@link SessionUser} object in the iron session
- * @param cookies {@link ReadonlyRequestCookies} from the iron session object
- * @returns rucioAuthToken for the current {@link SessionUser} or an empty string
+ * Set an empty {@link SessionUser} object in the session
+ * Used in tests to initialize a session
  */
-export const getRucioAuthToken = async (cookies: RequestCookies | ReadonlyRequestCookies): Promise<string> => {
-    const readOnlyCookies = cookies as unknown as ReadonlyRequestCookies;
-    const rucioUser = await getSessionUser(readOnlyCookies);
-    if (!rucioUser) return new Promise<string>(resolve => resolve(''));
-    const rucioAuthToken = rucioUser.rucioAuthToken;
-    return Promise.resolve(rucioAuthToken);
-};
-
-/**
- * Makes a iron session available to a NEXT.js API route via its req.session.user property
- * @param handler {@link NextApiHandler} or a NEXT.js API route
- * @returns wrapped {@link NextApiHandler} or a NEXT.js API route
- */
-export function withSessionRoute(handler: NextApiHandler) {
-    return withIronSessionApiRoute(handler, sessionOptions);
-}
-
-/**
- * A wrapper around Next API routes that require a valid rucioAuthToken
- * @param handler (req, res, validAuthToken, sessionUser?) => Promise<void> or a NEXT.js API route that required a valid rucioAuthToken
- * @returns the wrapped route with a valid rucioAuthToken injected or returns a HTTP 401 error response
- */
-export function withAuthenticatedSessionRoute(
-    handler: (req: NextApiRequest, res: NextApiResponse, validAuthToken: string, sessionUser?: SessionUser) => Promise<void>,
-) {
-    return withIronSessionApiRoute(async (req, res) => {
-        const session = req.session as IronSession;
-        if (!session) {
-            res.status(401).json({ error: 'Unauthorized: Session does not exists' });
-            return;
-        }
-
-        const sessionUser = session.user;
-        if (!sessionUser) {
-            res.status(401).json({ error: 'Unauthorized: User does not exist in Session' });
-            return;
-        }
-
-        if (!sessionUser.isLoggedIn) {
-            res.status(401).json({ error: 'Unauthorized' });
-            return;
-        }
-
-        try {
-            validateRucioToken(sessionUser);
-        } catch (error) {
-            if (error instanceof RucioTokenExpiredError) {
-                res.status(401).json({ error: 'Unauthorized: Rucio Token has expired' });
-                return;
-            }
-            res.status(401).json({ error: 'Unauthorized: Rucio Token is invalid' });
-            return;
-        }
-
-        const validToken = session.user?.rucioAuthToken;
-        if (!validToken) {
-            res.status(401).json({ error: 'Unauthorized: Rucio Token is invalid' });
-            return;
-        }
-
-        return handler(req, res, validToken, sessionUser);
-    }, sessionOptions);
-}
-
-/**
- * Set am empty {@link SessionUser} object in the iron session if login fails
- * @param session The {@link IronSession} object
- * @param saveSession If true, the session will be saved
- */
-export async function setEmptySession(session: IronSession, saveSession: boolean = true) {
+export async function setEmptySession(session: RucioSession, saveSession: boolean = true) {
     const sessionUser: SessionUser = {
         rucioIdentity: '',
         rucioAccount: '',
@@ -112,16 +34,19 @@ export async function setEmptySession(session: IronSession, saveSession: boolean
     };
     session.user = sessionUser;
     session.allUsers = [sessionUser];
-    saveSession ? await session.save() : null;
+    if (saveSession) {
+        await session.save();
+    }
 }
 
 /**
- * Checks if a {@link SessionUser} is in the iron session. The check is based on the rucioIdentity, rucioAccount and rucioAuthType properties
- * @param session The {@link IronSession} object
+ * Checks if a {@link SessionUser} is in the session.
+ * The check is based on the rucioIdentity, rucioAccount and rucioAuthType properties
+ * @param session The session object
  * @param sessionUser The {@link SessionUser} object to check
- * @returns Index of the {@link SessionUser} is in the iron session's allUsers list, -1 otherwise
+ * @returns Index of the {@link SessionUser} in the session's allUsers list, -1 otherwise
  */
-export function getSessionUserIndex(session: IronSession, sessionUser: SessionUser): number {
+export function getSessionUserIndex(session: RucioSession, sessionUser: SessionUser): number {
     if (!session.allUsers) return -1;
     const userIndex = session.allUsers.findIndex(
         user =>
@@ -133,12 +58,10 @@ export function getSessionUserIndex(session: IronSession, sessionUser: SessionUs
 }
 
 /**
- * Adds a new {@link SessionUser} to the iron session or updates an existing one.
- * @param session The {@link IronSession} object
- * @param sessionUser The {@link SessionUser} object to add or update
- * @param saveSession If true, the session will be saved
+ * Adds a new {@link SessionUser} to the session or updates an existing one.
+ * Used in tests to populate sessions
  */
-export async function addOrUpdateSessionUser(session: IronSession, sessionUser: SessionUser, saveSession: boolean = true) {
+export async function addOrUpdateSessionUser(session: RucioSession, sessionUser: SessionUser, saveSession: boolean = true) {
     session.user = sessionUser;
     session.allUsers = session.allUsers ? session.allUsers : [];
 
@@ -148,19 +71,17 @@ export async function addOrUpdateSessionUser(session: IronSession, sessionUser: 
     } else {
         session.allUsers[sessionUserIndex] = sessionUser;
     }
-    saveSession ? await session.save() : null;
+    if (saveSession) {
+        await session.save();
+    }
 }
 
 /**
- * Removes a {@link SessionUser} from the iron session.
- * If an active session user is removed, the first {@link SessionUser} in the allUsers list will be set as active in the iron session
+ * Removes a {@link SessionUser} from the session.
+ * If an active session user is removed, the first {@link SessionUser} in the allUsers list will be set as active
  * If no {@link SessionUser} is left in the allUsers list, the active session user will be set to undefined
- * @param session The {@link IronSession} object
- * @param sessionUser The {@link SessionUser} object to remove
- * @param saveSession If true, the session will be saved
- **/
-
-export async function removeSessionUser(session: IronSession, sessionUser: SessionUser, saveSession: boolean = true) {
+ */
+export async function removeSessionUser(session: RucioSession, sessionUser: SessionUser, saveSession: boolean = true) {
     const sessionUserIndex = getSessionUserIndex(session, sessionUser);
     if (sessionUserIndex !== -1) {
         session.allUsers?.splice(sessionUserIndex, 1);
@@ -174,26 +95,26 @@ export async function removeSessionUser(session: IronSession, sessionUser: Sessi
         session.user = session.allUsers?.length ? session.allUsers[0] : undefined;
     }
 
-    saveSession ? await session.save() : null;
+    if (saveSession) {
+        await session.save();
+    }
 }
 
 /**
- * Sets the current {@link SessionUser} as active in the iron session. Creates or updates the {@link SessionUser} if necessary
- * @param session The {@link IronSession} object
- * @param sessionUser The {@link SessionUser} object to set as active
- * @param saveSession If true, the session will be saved
+ * Sets the current {@link SessionUser} as active in the session.
+ * Creates or updates the {@link SessionUser} if necessary
  */
-export async function setActiveSessionUser(session: IronSession, sessionUser: SessionUser, saveSession: boolean = true) {
+export async function setActiveSessionUser(session: RucioSession, sessionUser: SessionUser, saveSession: boolean = true) {
     await addOrUpdateSessionUser(session, sessionUser, false);
     session.user = sessionUser;
-    saveSession ? await session.save() : null;
+    if (saveSession) {
+        await session.save();
+    }
 }
 
 /**
- * Returns the active {@link SessionUser} object from the iron session
- * @param session The {@link IronSession} object
- * @returns SessionUser object of the active user or undefined
+ * Returns the active {@link SessionUser} object from the session
  */
-export async function getActiveSessionUser(session: IronSession): Promise<SessionUser | undefined> {
-    return new Promise<SessionUser | undefined>(resolve => resolve(session.user));
+export async function getActiveSessionUser(session: RucioSession): Promise<SessionUser | undefined> {
+    return Promise.resolve(session.user);
 }
