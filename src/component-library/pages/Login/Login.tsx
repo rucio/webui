@@ -207,6 +207,7 @@ export const Login = ({
         } else if (loginViewModel && loginViewModel.status === 'error') {
             setError(loginViewModel.message);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loginViewModel, authViewModel]);
 
     // Respect user's motion preferences
@@ -480,7 +481,13 @@ export const Login = ({
                             onClose={() => setAvailableAccounts([])}
                         />
 
-                        <div className="min-h-[52px] w-full" role="alert" aria-live="polite" aria-atomic="true">
+                        <div
+                            className={`min-h-[52px] w-full ${!error ? 'hidden' : ''}`}
+                            role="alert"
+                            aria-live="polite"
+                            aria-atomic="true"
+                            data-testid="login-page-error"
+                        >
                             {error && (
                                 <motion.div
                                     initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}

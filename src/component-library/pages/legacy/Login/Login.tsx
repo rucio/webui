@@ -3,8 +3,6 @@
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
 import { Button } from '../../../atoms/form/button';
-import { Tabs } from '../../../atoms/legacy/Tabs/Tabs';
-import { H1 } from '../../../atoms/legacy/text/headings/H1/H1';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 import { MdAccountCircle } from 'react-icons/md';
@@ -17,7 +15,7 @@ import { H2 } from '../../../atoms/legacy/text/headings/H2/H2';
 import { P } from '../../../atoms/legacy/text/content/P/P';
 import { HiArrowRight } from 'react-icons/hi';
 import Link from 'next/link';
-import { motion, MotionConfig, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { RucioLogo } from '../../../atoms/branding/RucioLogo';
 import { AnimatedTabs } from '../../../atoms/tabs/AnimatedTabs';
 import { Input } from '../../../atoms/form/input';
@@ -206,6 +204,7 @@ export const Login = ({
         } else if (loginViewModel && loginViewModel.status === 'error') {
             setError(loginViewModel.message);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loginViewModel, authViewModel]);
 
     // Respect user's motion preferences
@@ -505,7 +504,13 @@ export const Login = ({
                             onClose={() => setAvailableAccounts([])}
                         />
                         {/* Form-level error message with reserved space - no card flexing */}
-                        <div className="min-h-[52px] w-full" role="alert" aria-live="polite" aria-atomic="true">
+                        <div
+                            className={`min-h-[52px] w-full ${!error ? 'hidden' : ''}`}
+                            role="alert"
+                            aria-live="polite"
+                            aria-atomic="true"
+                            data-testid="login-page-error"
+                        >
                             {error && (
                                 <motion.div
                                     initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}

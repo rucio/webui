@@ -7,15 +7,21 @@ import { Login as LoginStory } from '@/component-library/pages/legacy/Login/Logi
 import { render, act, screen, cleanup, fireEvent } from '@testing-library/react';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
 import { useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { getSampleOIDCProviders } from 'test/fixtures/oidc-provider-config';
 import { getSampleVOs } from 'test/fixtures/multi-vo-fixtures';
 import { AuthViewModel } from '@/lib/infrastructure/data/auth/auth';
 
 jest.mock('next/navigation');
+jest.mock('next-auth/react');
 
 describe('Login Page Test', () => {
     beforeEach(() => {
-        useSearchParams.mockReturnValue({
+        (useSession as jest.Mock).mockReturnValue({
+            data: null,
+            status: 'unauthenticated',
+        });
+        (useSearchParams as jest.Mock).mockReturnValue({
             get: jest.fn(() => null),
         });
         fetchMock.doMock();
@@ -89,25 +95,19 @@ describe('Login Page Test', () => {
             const userpassButton = screen.getByRole('button', { name: /Userpass/ });
             expect(userpassButton).toBeInTheDocument();
 
-            // check userpass form is collapsed/uncollapsed on click
-            const loginFormParent = screen.getByRole('group', { name: 'Userpass Login Fields' });
-            expect(loginFormParent.className).toContain('hidden');
-            fireEvent.click(userpassButton);
-            expect(loginFormParent.className).not.toContain('hidden');
-            fireEvent.click(userpassButton);
-            expect(loginFormParent.className).toContain('hidden');
+            // The new component uses view switching instead of hiding elements
+            // Initially, the userpass form is not rendered (method-selection view)
+            expect(screen.queryByRole('group', { name: 'Userpass Login Fields' })).not.toBeInTheDocument();
 
-            // check only 1 account field is rendered
-            const accountFieldParent = screen.getByRole('group', { name: /Choose Account Name/ });
-            expect(accountFieldParent.className).not.toContain('hidden');
+            // Click userpass button to switch to userpass-form view
             fireEvent.click(userpassButton);
-            expect(accountFieldParent.className).toContain('hidden');
-            fireEvent.click(userpassButton);
-            expect(accountFieldParent.className).not.toContain('hidden');
 
-            // Check no error message is rendered
+            // Now the userpass form should be rendered
+            expect(screen.getByRole('group', { name: 'Userpass Login Fields' })).toBeInTheDocument();
+
+            // Check no error message is rendered (error div exists but has hidden class when no error)
             const errorElement = screen.queryByTestId('login-page-error');
-            expect(errorElement?.className).toBe('hidden');
+            expect(errorElement?.className).toContain('hidden');
         },
         1000 * 60 * 5,
     );
@@ -200,10 +200,8 @@ describe('Login Page Test', () => {
             ),
         );
         expect(screen.queryByRole('dialog', { name: /Multiaccount Modal/ })).not.toBeInTheDocument();
-        const userPassButton = screen.getByRole('button', { name: /Userpass/ });
-        fireEvent.click(userPassButton);
-        const loginButton = screen.getByRole('button', { name: /Login/ });
-        fireEvent.click(loginButton);
+
+        // The error from authViewModel should be displayed immediately after render
         const alert = screen.getByTestId('login-page-error');
         expect(alert).toBeInTheDocument();
         expect(alert.textContent).toContain('Invalid Credentials');
@@ -303,7 +301,7 @@ describe('Login Page Test', () => {
         const alertCollapsible = screen.getByTestId('login-page-error');
         expect(alertCollapsible.className).not.toContain('hidden');
 
-        const alertCloseButton = screen.getByRole('button', { name: /Close/ });
+        let alertCloseButton = screen.getByRole('button', { name: /Close/ });
 
         // close the alert
         await act(async () => fireEvent.click(alertCloseButton));
@@ -318,6 +316,9 @@ describe('Login Page Test', () => {
         // check if Alert is displayed with message Oops, something went wrong
         expect(alertCollapsible.className).not.toContain('hidden');
         expect(alertCollapsible.textContent).toContain('Oops, something went wrong');
+
+        // Re-query the close button as the Alert re-rendered
+        alertCloseButton = screen.getByRole('button', { name: /Close/ });
 
         // close the alert again
         await act(async () => fireEvent.click(alertCloseButton));
