@@ -35,6 +35,19 @@ The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells 
 | OIDC_PROVIDERS            | RUCIO_WEBUI_OIDC_PROVIDERS            | CSV string containing names of OIDC Providers                                              | cern, indigo                   |                    |
 | RULE_ACTIVITY             | RUCIO_WEBUI_RULE_ACTIVITY             | The `Activity` to associate with rules created with WebUI                                  | User Subscriptions             | User Subscriptions |
 
+### NextAuth Configuration
+
+The following NextAuth-related variables configure authentication. `NEXTAUTH_URL` is required, while the others are automatically generated with default values that can be overridden:
+
+| Variable Name   | Full Name                   | Description                                                                                              | Example                          | Default                              | Required |
+|-----------------|-----------------------------|----------------------------------------------------------------------------------------------------------|----------------------------------|--------------------------------------|----------|
+| NEXTAUTH_URL    | RUCIO_WEBUI_NEXTAUTH_URL    | The canonical URL of your site. Used for callbacks and redirects.                                        | https://rucio-ui.cern.ch         |                                      | Yes      |
+| AUTH_SECRET     | RUCIO_WEBUI_AUTH_SECRET     | Secret used by NextAuth for encrypting tokens and cookies. Auto-generated 32-character random string.    | (auto-generated)                 | (auto-generated random string)       | No       |
+| NEXTAUTH_SECRET | RUCIO_WEBUI_NEXTAUTH_SECRET | Alias for AUTH_SECRET for NextAuth v4 compatibility. Set to the same value as AUTH_SECRET.               | (auto-generated)                 | (same as AUTH_SECRET)                | No       |
+| AUTH_TRUST_HOST | RUCIO_WEBUI_AUTH_TRUST_HOST | Whether to trust the host header. Set to true for deployments behind reverse proxies.                    | true                             | true                                 | No       |
+
+**Note:** The `AUTH_SECRET` and `NEXTAUTH_SECRET` are automatically generated with the same cryptographically secure random value if not explicitly provided. In production, you may want to set these explicitly to maintain session consistency across deployments or when running multiple instances.
+
 For each `VO` specified in the `VO_LIST` variable, the additional variables need to be specified. The variables should be added in the following format:
 `export RUCIO_WEBUI_VO_<VO_SHORT_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>`. An example for the default VO is shown below:
 
