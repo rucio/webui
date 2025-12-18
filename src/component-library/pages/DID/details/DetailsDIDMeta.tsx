@@ -119,6 +119,9 @@ export const DetailsDIDMeta = ({ meta }: { meta: DIDMetaViewModel }) => {
                     <KeyValueRow name="Purge Replicas">
                         <Checkbox checked={meta.purge_replicas} />
                     </KeyValueRow>
+                    <KeyValueRow name="Opendata">
+                        <Checkbox checked={meta.is_opendata} />
+                    </KeyValueRow>
                 </div>
             </div>
 
