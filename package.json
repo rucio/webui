@@ -3,7 +3,7 @@
   "version": "39.0.2",
   "private": true,
   "scripts": {
-    "clean": "rimraf .next .swc",
+    "clean": "rimraf .next .swc build",
     "dev": "next dev",
     "dev:https": "next dev --experimental-https",
     "build": "next build",
