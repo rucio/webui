@@ -2,17 +2,18 @@
 
 import { cn } from '@/component-library/utils';
 import { useTheme } from 'next-themes';
-import { HiChevronDown, HiMenu, HiMoon, HiSun, HiX } from 'react-icons/hi';
-import React, { useEffect, useRef, useState } from 'react';
+import { HiChevronDown, HiMenu, HiMoon, HiSun, HiX, HiLightBulb } from 'react-icons/hi';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Searchbar } from '@/component-library/features/layout/Searchbar';
 import Image from 'next/image';
-import { AccountButton, AccountDropdown } from '@/component-library/features/layout/AccountDropdown';
+import { AccountButton } from '@/component-library/features/layout/AccountDropdown';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { LoadingElement } from '@/component-library/atoms/loading/LoadingElement';
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { motion } from 'framer-motion';
+import { useTips } from '@/lib/infrastructure/hooks/useTips';
 
 type TMenuItem = {
     title: string;
@@ -207,6 +208,44 @@ const ThemeSwitchButton = () => {
     );
 };
 
+const TipsButton = () => {
+    const { openPanel, dismissedTips, allTips } = useTips();
+    const unreadCount = allTips.length - dismissedTips.size;
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openPanel();
+        }
+    };
+
+    return (
+        <div
+            className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center flex relative cursor-pointer"
+            onClick={openPanel}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-label={`Tips and help${unreadCount > 0 ? ` (${unreadCount} available)` : ''}`}
+        >
+            <HiLightBulb className="h-6 w-6" />
+            {unreadCount > 0 && (
+                <span
+                    className={cn(
+                        'absolute -top-1 -right-1',
+                        'flex items-center justify-center',
+                        'h-4 w-4 text-[10px] font-medium',
+                        'bg-brand-500 text-white',
+                        'rounded-full',
+                    )}
+                >
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+            )}
+        </div>
+    );
+};
+
 interface HeaderClientProps {
     siteHeader?: SiteHeaderViewModel;
     siteHeaderError: unknown;
@@ -278,6 +317,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                         <DesktopNavigationBar menuItems={menuItems} />
                     </div>
                     <div className="flex h-full">
+                        <TipsButton />
                         <ThemeSwitchButton />
                         <AccountButton siteHeader={siteHeader} />
                         <MobileNavigationBar menuItems={menuItems} />

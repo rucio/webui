@@ -5,9 +5,11 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import { CommandPaletteProvider } from '@/lib/infrastructure/hooks/useCommandPalette';
 import { CommandPaletteWrapper } from '@/component-library/features/command-palette';
+import { TipsProvider } from '@/lib/infrastructure/hooks/useTips';
+import { TipsPanelWrapper } from '@/component-library/features/tips';
 
 /**
- * Client component that provides React Query and Command Palette context.
+ * Client component that provides React Query, Command Palette, and Tips context.
  * This is separated from the server layout to enable server-side data fetching.
  */
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -16,9 +18,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <CommandPaletteProvider>
-                {children}
-                <CommandPaletteWrapper />
-                <ReactQueryDevtools initialIsOpen={false} />
+                <TipsProvider>
+                    {children}
+                    <CommandPaletteWrapper />
+                    <TipsPanelWrapper />
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </TipsProvider>
             </CommandPaletteProvider>
         </QueryClientProvider>
     );
