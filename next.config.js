@@ -10,6 +10,13 @@ const nextConfig = {
     // ESLint is run separately in CI/CD
     ignoreDuringBuilds: true,
   },
+  // Enable source maps for debugging
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.devtool = 'source-map';
+    }
+    return config;
+  },
 }
 
 module.exports = nextConfig
