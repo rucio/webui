@@ -110,6 +110,7 @@ const SearchDropdown = forwardRef(function SearchDropdown(
 export const Searchbar = () => {
     const [isFocused, setIsFocused] = useState(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [shortcutKey, setShortcutKey] = useState('Ctrl + K');
 
     const [searchLocations, setSearchLocations] = useState<SearchLocation[]>([didLocation, rseLocation, ruleLocation]);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -123,8 +124,28 @@ export const Searchbar = () => {
         }
     };
 
+    // Detect OS and set appropriate shortcut key
+    useEffect(() => {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
+        setShortcutKey(isMac ? '⌘ K' : 'Ctrl + K');
+    }, []);
+
+    // Handle keyboard shortcut to focus search
+    useEffect(() => {
+        const handleKeyboardShortcut = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInputRef.current?.focus();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyboardShortcut);
+        return () => document.removeEventListener('keydown', handleKeyboardShortcut);
+    }, []);
+
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [searchDropdownRef]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,7 +193,7 @@ export const Searchbar = () => {
     return (
         <span className="relative">
             <Input
-                placeholder="Search"
+                placeholder={shortcutKey}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 onChange={handleInputChange}
