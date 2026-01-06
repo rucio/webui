@@ -137,7 +137,7 @@ export const TopStorageUsageWidget = ({ usages, isLoading, errorMessage }: TopSt
         if (emptyRSEs.length === 0) return null;
 
         return (
-            <div className="w-full mt-10 p-4">
+            <div className="w-full p-4 pb-6 mb-4 border-b border-neutral-200 dark:border-neutral-700">
                 <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg p-5 dark:bg-neutral-800/50">
                     <div className="flex items-center space-x-2 mb-4">
                         <div className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500"></div>
@@ -186,8 +186,9 @@ export const TopStorageUsageWidget = ({ usages, isLoading, errorMessage }: TopSt
                 )}
                 {!isLoading && !errorMessage && (
                     <>
+                        {hasEmptyRSEs && getEmptyRSEsList()}
                         {hasUsages ? (
-                            <div className="h-[740px] flex items-center justify-center w-full">{getCharts()}</div>
+                            <div className="flex items-center justify-center w-full py-4">{getCharts()}</div>
                         ) : (
                             hasEmptyRSEs && (
                                 <div className="py-8 flex items-center justify-center w-full">
@@ -200,7 +201,6 @@ export const TopStorageUsageWidget = ({ usages, isLoading, errorMessage }: TopSt
                                 </div>
                             )
                         )}
-                        {hasEmptyRSEs && getEmptyRSEsList()}
                     </>
                 )}
             </div>
