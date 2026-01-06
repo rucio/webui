@@ -1,6 +1,6 @@
 'use client';
 
-import { CopyableHeading, Heading } from '@/component-library/atoms/misc/Heading';
+import { CopyableHeading } from '@/component-library/atoms/misc/Heading';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
@@ -69,7 +69,7 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
 
                 if (ViewComponent === undefined) return;
 
-                const viewClasses = cn('flex-col h-[calc(100vh-32rem)]', visibilityClass);
+                const viewClasses = cn('flex-col h-[calc(100vh-22rem)]', visibilityClass);
 
                 return (
                     <div key={tabName} className={viewClasses}>
