@@ -66,6 +66,8 @@ export const SimplePaginationPanel = (props: {
 };
 
 export const RegularTable = (props: RegularTableProps) => {
+    // Destructure custom props to prevent them from being passed to AgGridReact
+    const { tableRef, paginationPageSize, ...gridProps } = props;
     const [isMounted, setIsMounted] = useState(false);
     const [isContainerReady, setIsContainerReady] = useState(false);
     // Refs for controlling the pagination panel
@@ -171,18 +173,17 @@ export const RegularTable = (props: RegularTableProps) => {
                 {/*The substitute div is required to supress hydration warning*/}
                 {isContainerReady && resolvedTheme ? (
                     <AgGridReact
-                        {...props}
+                        {...gridProps}
                         pagination={true}
                         paginationAutoPageSize={false}
-                        paginationPageSize={props.paginationPageSize ?? 100}
-                        ref={props.tableRef}
+                        paginationPageSize={paginationPageSize ?? 100}
+                        ref={tableRef}
                         loadingOverlayComponent={NoDataYetOverlay}
                         onGridReady={onGridReady}
                         domLayout="normal" // Ensures the grid fits within the flex container
                         suppressPaginationPanel={true}
                         onPaginationChanged={onPaginationChanged}
                         suppressMovableColumns={true}
-                        rowMultiSelectWithClick={true}
                         theme="legacy" // Use legacy theming to maintain custom CSS themes
                         // AG-Grid Community Features (Enterprise features like sideBar require license)
                         defaultColDef={{

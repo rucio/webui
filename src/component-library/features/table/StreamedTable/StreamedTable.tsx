@@ -37,7 +37,7 @@ export const StreamedTable = (props: StreamedTableProps) => {
         showErrorToast();
     }, [error, status]);
 
-    const { noRowsOverlayComponent, ...otherProps } = props;
+    const { noRowsOverlayComponent, streamingHook: _, ...otherProps } = props;
 
     const getDefaultNoRowsElement = (gridProps: any) => {
         return <NoLoadedRowsOverlay error={error} status={status} {...gridProps} />;
