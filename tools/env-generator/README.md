@@ -33,6 +33,7 @@ The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells 
 | MULTIVO_ENABLED           | RUCIO_WEBUI_MULTIVO_ENABLED           | Whether to enable multi-VO config (true or false)                                          | true                           |                    |
 | OIDC_ENABLED              | RUCIO_WEBUI_OIDC_ENABLED              | Enable or Disable OIDC Authentication (true or false)                                      | true                           |                    |
 | OIDC_PROVIDERS            | RUCIO_WEBUI_OIDC_PROVIDERS            | CSV string containing names of OIDC Providers                                              | cern, indigo                   |                    |
+| OIDC_EXPECTED_AUDIENCE_CLAIM | RUCIO_WEBUI_OIDC_EXPECTED_AUDIENCE_CLAIM | Expected audience claim value for JWT token validation. Must match 'aud' claim in tokens. | atlas-rucio-oidc-client        | rucio              |
 | RULE_ACTIVITY             | RUCIO_WEBUI_RULE_ACTIVITY             | The `Activity` to associate with rules created with WebUI                                  | User Subscriptions             | User Subscriptions |
 
 ### NextAuth Configuration
@@ -62,6 +63,8 @@ For each `VO` specified in the `VO_LIST` variable, additional variables need to 
 
 For each `OIDC Provider` specified in the `OIDC_PROVIDERS` variable, the additional variables need to be specified. The variables should be added in the following format:
 `export RUCIO_WEBUI_OIDC_PROVIDER_<PROVIDER_NAME>_<VARIABLE_NAME>=<VARIABLE_VALUE>`. An example for the CERN OIDC provider is shown below:
+
+**Note on Audience Claim:** The `OIDC_EXPECTED_AUDIENCE_CLAIM` is a global setting that applies to all OIDC providers. When registering your application with an OIDC provider, ensure the audience parameter in your OAuth configuration matches this value. For ATLAS Rucio instances, use `atlas-rucio-oidc-client`. For standard Rucio deployments, use `rucio` (default).
 
 | Variable Name                        | Full Name                                        | Description                                                           | Example | Default |
 | ------------------------------------ | ------------------------------------------------ | --------------------------------------------------------------------- | ------- | ------- |

@@ -60,6 +60,7 @@ export class WebUIEnvTemplateCompiler {
       'VO_LIST': 'def',
       'VO_DEFAULT': 'def',
       'OIDC_ENABLED': 'false',
+      'OIDC_EXPECTED_AUDIENCE_CLAIM': 'rucio',
       'ENABLE_SSL': 'false',
       'PARAMS_ENCODING_ENABLED': 'false',
       'RULE_ACTIVITY': 'User Subscriptions',

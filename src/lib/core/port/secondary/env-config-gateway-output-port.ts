@@ -80,4 +80,10 @@ export default interface EnvConfigGatewayOutputPort {
      * @returns whether the query parameters should get URI encoded
      */
     paramsEncodingEnabled(): Promise<boolean>;
+
+    /**
+     * @returns the expected OIDC audience claim value for JWT token validation
+     * @returns "rucio" if not configured (default fallback)
+     */
+    oidcExpectedAudience(): Promise<string>;
 }
