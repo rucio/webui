@@ -28,6 +28,53 @@ function getSessionUserIndex(allUsers: SessionUser[] | undefined, user: SessionU
 }
 
 /**
+ * Validates the audience claim in a JWT token payload
+ * Logs a warning if validation fails but does NOT reject authentication
+ *
+ * @param payload - Decoded JWT token payload
+ * @param expectedAudience - Expected audience value from configuration
+ * @param providerName - Name of the OIDC provider (for logging)
+ * @returns true if validation passes, false otherwise
+ */
+function validateAudienceClaim(payload: any, expectedAudience: string, providerName: string): boolean {
+    const audience = payload.aud;
+
+    if (!audience) {
+        console.warn(
+            `[OIDC] WARNING: No audience (aud) claim found in JWT token from ${providerName}. ` +
+                `Expected audience: ${expectedAudience}`,
+        );
+        return false;
+    }
+
+    // Handle both string and array audience claims
+    // Some OIDC providers return a single string, others return an array
+    let audienceMatches = false;
+    if (Array.isArray(audience)) {
+        audienceMatches = audience.includes(expectedAudience);
+        if (!audienceMatches) {
+            console.warn(
+                `[OIDC] WARNING: Audience claim mismatch for ${providerName}. ` +
+                    `Expected: "${expectedAudience}", Found: [${audience.join(', ')}]`,
+            );
+        }
+    } else {
+        audienceMatches = audience === expectedAudience;
+        if (!audienceMatches) {
+            console.warn(
+                `[OIDC] WARNING: Audience claim mismatch for ${providerName}. ` + `Expected: "${expectedAudience}", Found: "${audience}"`,
+            );
+        }
+    }
+
+    if (audienceMatches) {
+        console.log(`[OIDC] Audience validation passed for ${providerName}: ${expectedAudience}`);
+    }
+
+    return audienceMatches;
+}
+
+/**
  * NextAuth configuration for Rucio WebUI
  * Supports UserPass and x509 authentication with multi-account sessions
  */
@@ -135,7 +182,7 @@ export const authConfig: NextAuthConfig = {
                 const rucioAuthToken = account.access_token;
                 const rucioAuthTokenExpires = new Date(account.expires_at! * 1000).toISOString();
 
-                // Decode and log JWT token claims (for debugging)
+                // Decode and validate JWT token claims
                 try {
                     const tokenParts = rucioAuthToken.split('.');
                     if (tokenParts.length === 3) {
@@ -145,9 +192,24 @@ export const authConfig: NextAuthConfig = {
                         console.log(`[OIDC] Audience (aud) claim: ${JSON.stringify(payload.aud)}`);
                         console.log(`[OIDC] Issuer (iss) claim: ${payload.iss}`);
                         console.log(`[OIDC] Subject (sub) claim: ${payload.sub}`);
+
+                        // Validate audience claim
+                        const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
+                        const expectedAudience = await envConfigGateway.oidcExpectedAudience();
+
+                        const validationPassed = validateAudienceClaim(payload, expectedAudience, providerName);
+
+                        // Note: We log warnings but don't reject authentication
+                        // This allows for gradual rollout and doesn't break existing deployments
+                        if (!validationPassed) {
+                            console.warn(
+                                `[OIDC] Continuing with authentication despite audience validation failure. ` +
+                                    `Review your OIDC_EXPECTED_AUDIENCE_CLAIM configuration.`,
+                            );
+                        }
                     }
                 } catch (e) {
-                    console.error('[OIDC] Failed to decode JWT token:', e);
+                    console.error('[OIDC] Failed to decode or validate JWT token:', e);
                 }
 
                 // Log the full token for manual testing (on separate line for easy extraction)

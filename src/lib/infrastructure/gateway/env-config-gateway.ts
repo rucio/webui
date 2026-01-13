@@ -205,6 +205,16 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
             return Promise.resolve(false);
         }
     }
+
+    async oidcExpectedAudience(): Promise<string> {
+        const value = await this.get('OIDC_EXPECTED_AUDIENCE_CLAIM');
+        // Default to "rucio" if not configured
+        // This is the standard audience claim expected by Rucio
+        if (!value || value.trim() === '') {
+            return Promise.resolve('rucio');
+        }
+        return Promise.resolve(value.trim());
+    }
 }
 
 export default EnvConfigGateway;

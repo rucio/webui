@@ -38,7 +38,10 @@ interface OIDCUser {
  * @param oidcProvider - OIDC provider configuration from environment
  * @returns NextAuth OAuth provider configuration
  */
-export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider): OAuthConfig<OIDCProfile> {
+export function createNextAuthOAuthProvider(
+    oidcProvider: OIDCProvider,
+    audienceClaim: string
+): OAuthConfig<OIDCProfile> {
     const providerName = oidcProvider.name.toLowerCase();
 
     // Parse scopes (default to 'openid profile email' if not specified)
@@ -57,8 +60,8 @@ export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider): OAuthCo
             params: {
                 scope: scopes,
                 // Audience is required by Rucio for token validation
-                // Rucio expects tokens to have aud: "rucio" claim
-                audience: 'rucio',
+                // Configurable via OIDC_EXPECTED_AUDIENCE_CLAIM env var
+                audience: audienceClaim,
             },
         },
         token: {
@@ -125,6 +128,10 @@ export async function loadOIDCProviders(): Promise<OAuthConfig<OIDCProfile>[]> {
             return [];
         }
 
+        // Load expected audience claim from environment
+        const audienceClaim = await envConfigGateway.oidcExpectedAudience();
+        console.log(`[OIDC] Using audience claim: ${audienceClaim}`);
+
         // Load OIDC providers from environment variables
         // This uses the existing EnvConfigGateway.oidcProviders() method
         // which reads OIDC_PROVIDERS and parses all provider configurations
@@ -134,8 +141,8 @@ export async function loadOIDCProviders(): Promise<OAuthConfig<OIDCProfile>[]> {
 
         // Convert each Rucio OIDC provider to NextAuth OAuth provider
         const nextAuthProviders = oidcProviders.map(provider => {
-            console.log(`[OIDC] Creating NextAuth provider for: ${provider.name}`);
-            return createNextAuthOAuthProvider(provider);
+            console.log(`[OIDC] Creating NextAuth provider for: ${provider.name} with audience: ${audienceClaim}`);
+            return createNextAuthOAuthProvider(provider, audienceClaim);
         });
 
         return nextAuthProviders;
