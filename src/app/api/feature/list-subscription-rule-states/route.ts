@@ -9,8 +9,8 @@ import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils
 
 /**
  * GET /api/feature/list-subscription-rule-states
- * Query params: account, name
- * Returns rule states for subscriptions of the authenticated user's account
+ * Query params: account (optional - defaults to authenticated user's account), name
+ * Returns rule states for subscriptions of the specified account
  */
 export async function GET(request: NextRequest) {
     try {
@@ -20,7 +20,11 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const account = sessionUser.rucioAccount;
+        // Check for account query parameter first, fall back to session user's account
+        const { searchParams } = new URL(request.url);
+        const accountParam = searchParams.get('account');
+        const account = accountParam || sessionUser.rucioAccount;
+
         if (!account) {
             return NextResponse.json({ error: 'Could not determine account name. Are you logged in?' }, { status: 400 });
         }
