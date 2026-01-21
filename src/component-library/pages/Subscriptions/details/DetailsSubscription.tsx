@@ -8,7 +8,7 @@ import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subs
 import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 import { useState } from 'react';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
-import { DetailsSubscriptionTabs } from '@/component-library/pages/Subscriptions/details/DetailsSubscriptionTabs';
+import { DetailsSubscriptionSections } from '@/component-library/pages/Subscriptions/details/DetailsSubscriptionSections';
 import { DetailsSubscriptionMeta } from '@/component-library/pages/Subscriptions/details/DetailsSubscriptionMeta';
 
 export type DetailsSubscriptionProps = {
@@ -87,7 +87,7 @@ export const DetailsSubscription = ({ account, name }: DetailsSubscriptionProps)
                         </div>
                     </header>
                     <DetailsSubscriptionMeta meta={meta} />
-                    <DetailsSubscriptionTabs account={account} name={name} meta={meta} />
+                    <DetailsSubscriptionSections account={account} name={name} meta={meta} />
                 </div>
             </div>
         </main>
