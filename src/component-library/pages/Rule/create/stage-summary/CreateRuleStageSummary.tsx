@@ -108,14 +108,16 @@ export const CreateRuleStageSummary = ({ parameters }: CreateRuleStageSummaryPro
                 <div className="p-6 space-y-4">
                     <div className="space-y-3">
                         <Heading text="DIDs" size="md" />
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Review the data identifiers (DIDs) that will be included in this rule</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                            Review the data identifiers (DIDs) that will be included in this rule
+                        </p>
                     </div>
                     {getDefaultDataInfoField()}
                     {parameters.dids.some(did => did.open) && (
                         <InfoField>
                             <span>
-                                There are open DIDs present in your request. Everything that will be added to them after you created the rule will also be
-                                transferred to the selected RSEs.
+                                There are open DIDs present in your request. Everything that will be added to them after you created the rule will
+                                also be transferred to the selected RSEs.
                             </span>
                         </InfoField>
                     )}
