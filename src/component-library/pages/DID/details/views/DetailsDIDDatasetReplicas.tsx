@@ -85,7 +85,10 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name }: Detai
             },
             cellRenderer: StateCell,
             filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(ReplicaStateDisplayNames), Object.values(ReplicaState).filter(state => state === ReplicaState.AVAILABLE || state === ReplicaState.UNAVAILABLE)),
+            filterParams: buildDiscreteFilterParams(
+                Object.values(ReplicaStateDisplayNames),
+                Object.values(ReplicaState).filter(state => state === ReplicaState.AVAILABLE || state === ReplicaState.UNAVAILABLE),
+            ),
         },
         {
             headerName: 'Replication Progress',
