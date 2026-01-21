@@ -238,10 +238,7 @@ const TipsPanelDemo = () => {
 
     return (
         <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 p-8">
-            <button
-                onClick={() => setOpen(true)}
-                className="px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600"
-            >
+            <button onClick={() => setOpen(true)} className="px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600">
                 Open Tips Panel
             </button>
             <TipsPanel
@@ -263,9 +260,7 @@ export const Panel: PanelStory = {
 const TipsPanelWithSomeDismissed = () => {
     const [open, setOpen] = useState(true);
     const allTips = getAllTips();
-    const [dismissedTips, setDismissedTips] = useState<Set<string>>(
-        new Set(allTips.slice(0, 5).map(t => t.id))
-    );
+    const [dismissedTips, setDismissedTips] = useState<Set<string>>(new Set(allTips.slice(0, 5).map(t => t.id)));
 
     const handleDismiss = (tipId: string) => {
         setDismissedTips(prev => {
@@ -281,10 +276,7 @@ const TipsPanelWithSomeDismissed = () => {
 
     return (
         <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 p-8">
-            <button
-                onClick={() => setOpen(true)}
-                className="px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600"
-            >
+            <button onClick={() => setOpen(true)} className="px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600">
                 Open Tips Panel (5 dismissed)
             </button>
             <TipsPanel
@@ -321,18 +313,12 @@ const IntegrationExample = () => {
     return (
         <div className="p-8 space-y-8">
             <h2 className="text-xl font-semibold">Contextual Tips Example</h2>
-            <p className="text-neutral-600 dark:text-neutral-400">
-                Click the help icons below to see contextual tips:
-            </p>
+            <p className="text-neutral-600 dark:text-neutral-400">Click the help icons below to see contextual tips:</p>
 
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 p-4 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
                     <span>Search DIDs</span>
-                    <TipPopover
-                        tip={sampleTip}
-                        isDismissed={dismissedTips.has(sampleTip.id)}
-                        onDismiss={() => handleDismiss(sampleTip.id)}
-                    />
+                    <TipPopover tip={sampleTip} isDismissed={dismissedTips.has(sampleTip.id)} onDismiss={() => handleDismiss(sampleTip.id)} />
                 </div>
 
                 <div className="flex items-center gap-2 p-4 bg-neutral-100 dark:bg-neutral-800 rounded-lg">

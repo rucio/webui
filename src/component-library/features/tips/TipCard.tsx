@@ -15,43 +15,40 @@ import { Tip, TipVariant } from '@/lib/infrastructure/tips/tip-registry';
  * ```
  */
 
-const tipCardVariants = cva(
-    cn('relative rounded-lg border', 'flex items-start gap-3', 'transition-colors duration-150'),
-    {
-        variants: {
-            variant: {
-                info: cn(
-                    'bg-base-info-50 dark:bg-base-info-950',
-                    'border-base-info-200 dark:border-base-info-800',
-                    'text-base-info-900 dark:text-base-info-100',
-                ),
-                success: cn(
-                    'bg-base-success-50 dark:bg-base-success-950',
-                    'border-base-success-200 dark:border-base-success-800',
-                    'text-base-success-900 dark:text-base-success-100',
-                ),
-                warning: cn(
-                    'bg-base-warning-50 dark:bg-base-warning-950',
-                    'border-base-warning-200 dark:border-base-warning-800',
-                    'text-base-warning-900 dark:text-base-warning-100',
-                ),
-            },
-            compact: {
-                true: 'p-3',
-                false: 'p-4',
-            },
-            dismissed: {
-                true: 'opacity-50',
-                false: '',
-            },
+const tipCardVariants = cva(cn('relative rounded-lg border', 'flex items-start gap-3', 'transition-colors duration-150'), {
+    variants: {
+        variant: {
+            info: cn(
+                'bg-base-info-50 dark:bg-base-info-950',
+                'border-base-info-200 dark:border-base-info-800',
+                'text-base-info-900 dark:text-base-info-100',
+            ),
+            success: cn(
+                'bg-base-success-50 dark:bg-base-success-950',
+                'border-base-success-200 dark:border-base-success-800',
+                'text-base-success-900 dark:text-base-success-100',
+            ),
+            warning: cn(
+                'bg-base-warning-50 dark:bg-base-warning-950',
+                'border-base-warning-200 dark:border-base-warning-800',
+                'text-base-warning-900 dark:text-base-warning-100',
+            ),
         },
-        defaultVariants: {
-            variant: 'info',
-            compact: false,
-            dismissed: false,
+        compact: {
+            true: 'p-3',
+            false: 'p-4',
+        },
+        dismissed: {
+            true: 'opacity-50',
+            false: '',
         },
     },
-);
+    defaultVariants: {
+        variant: 'info',
+        compact: false,
+        dismissed: false,
+    },
+});
 
 const iconVariants = cva('shrink-0', {
     variants: {

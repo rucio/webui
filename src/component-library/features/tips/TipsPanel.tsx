@@ -41,9 +41,7 @@ export const TipsPanel: React.FC<TipsPanelProps> = ({ open, onOpenChange, tips, 
         // Filter by search query
         if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase();
-            filtered = filtered.filter(
-                tip => tip.title.toLowerCase().includes(query) || tip.content.toLowerCase().includes(query),
-            );
+            filtered = filtered.filter(tip => tip.title.toLowerCase().includes(query) || tip.content.toLowerCase().includes(query));
         }
 
         // Filter by dismissed state
@@ -127,9 +125,7 @@ export const TipsPanel: React.FC<TipsPanelProps> = ({ open, onOpenChange, tips, 
                                 <HiLightBulb className="h-5 w-5 text-brand-600 dark:text-brand-400" />
                             </div>
                             <div>
-                                <Dialog.Title className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                                    Tips & Help
-                                </Dialog.Title>
+                                <Dialog.Title className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Tips & Help</Dialog.Title>
                                 <VisuallyHidden.Root>
                                     <Dialog.Description>Browse tips and help content for using Rucio WebUI</Dialog.Description>
                                 </VisuallyHidden.Root>

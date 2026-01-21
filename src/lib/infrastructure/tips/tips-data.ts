@@ -67,8 +67,7 @@ export const TIPS: Tip[] = [
     {
         id: 'did-replicas',
         title: 'File Replicas',
-        content:
-            'Files can have multiple replicas across different storage elements (RSEs). The "Replicas" tab shows where each copy is stored.',
+        content: 'Files can have multiple replicas across different storage elements (RSEs). The "Replicas" tab shows where each copy is stored.',
         category: TipCategory.DIDS,
         priority: 'helpful',
         pages: ['/did/page'],
@@ -102,8 +101,7 @@ export const TIPS: Tip[] = [
     {
         id: 'rule-lifetime',
         title: 'Rule Lifetime',
-        content:
-            'Rules can have an expiration date. When a rule expires, Rucio may delete the associated replicas if no other rules protect them.',
+        content: 'Rules can have an expiration date. When a rule expires, Rucio may delete the associated replicas if no other rules protect them.',
         category: TipCategory.RULES,
         priority: 'helpful',
         pages: ['/rule/create', '/rule/page'],
@@ -148,8 +146,7 @@ export const TIPS: Tip[] = [
     {
         id: 'rse-protocols',
         title: 'Storage Protocols',
-        content:
-            'RSEs support different access protocols (e.g., root://, davs://, gsiftp://) that can be used to read/write data.',
+        content: 'RSEs support different access protocols (e.g., root://, davs://, gsiftp://) that can be used to read/write data.',
         category: TipCategory.RSES,
         priority: 'advanced',
         pages: ['/rse/page'],
@@ -174,8 +171,7 @@ export const TIPS: Tip[] = [
     {
         id: 'subscription-filters',
         title: 'Subscription Filters',
-        content:
-            'Subscriptions use filters to match DIDs. Filters can include scope patterns, DID name patterns, and metadata conditions.',
+        content: 'Subscriptions use filters to match DIDs. Filters can include scope patterns, DID name patterns, and metadata conditions.',
         category: TipCategory.SUBSCRIPTIONS,
         priority: 'helpful',
         pages: ['/subscription/list', '/subscription/page'],
