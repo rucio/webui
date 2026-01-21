@@ -6,7 +6,14 @@ import { Signal } from '@/lib/sdk/web';
 import USECASE_FACTORY from '../ioc/ioc-symbols-usecase-factory';
 
 export interface ISetX509LoginSessionController {
-    handle(session: RucioSession, response: Signal, rucioAuthToken: string, rucioAccount: string, shortVOName: string, rucioTokenExpiry: string): void;
+    handle(
+        session: RucioSession,
+        response: Signal,
+        rucioAuthToken: string,
+        rucioAccount: string,
+        shortVOName: string,
+        rucioTokenExpiry: string,
+    ): void;
 }
 
 @injectable()

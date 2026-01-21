@@ -38,10 +38,7 @@ interface OIDCUser {
  * @param oidcProvider - OIDC provider configuration from environment
  * @returns NextAuth OAuth provider configuration
  */
-export function createNextAuthOAuthProvider(
-    oidcProvider: OIDCProvider,
-    audienceClaim: string
-): OAuthConfig<OIDCProfile> {
+export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider, audienceClaim: string): OAuthConfig<OIDCProfile> {
     const providerName = oidcProvider.name.toLowerCase();
 
     // Parse scopes (default to 'openid profile email' if not specified)
