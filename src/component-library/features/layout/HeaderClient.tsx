@@ -300,7 +300,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
             return (
                 <>
                     <div className="flex items-center">
-                        <a className="w-12 h-full stroke-white fill-white" href="https://rucio.cern.ch/">
+                        <Link className="w-12 h-full stroke-white fill-white" href="/dashboard">
                             <Image
                                 src={logoPath}
                                 alt="Rucio Logo"
@@ -309,7 +309,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                                 style={{ height: 'auto' }}
                                 suppressHydrationWarning
                             />
-                        </a>
+                        </Link>
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
                             <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} />
                         </a>
