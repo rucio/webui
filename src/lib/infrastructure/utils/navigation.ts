@@ -128,6 +128,21 @@ export function buildRuleDetailUrl(ruleId: string): string {
 }
 
 /**
+ * Build URL for Subscription search with autoSearch=true
+ */
+export function buildSubscriptionSearchUrl(account?: string): string {
+    if (!account) {
+        return '/subscription/list';
+    }
+
+    const urlParams = new URLSearchParams();
+    urlParams.set('account', account);
+    urlParams.set('autoSearch', 'true');
+
+    return `/subscription/list?${urlParams.toString()}`;
+}
+
+/**
  * Detect the type of search query based on patterns
  * Uses same logic as SearchBar for consistency
  */
