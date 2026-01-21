@@ -18,7 +18,7 @@ import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
-import { ruleActivityComparator } from '@/lib/core/utils/rule-sorting-utils';
+import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
@@ -76,6 +76,8 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             },
             filter: true,
             filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
+            sortable: true,
+            comparator: ruleStateComparator,
         },
         // TODO: minified header with a tooltip
         {
@@ -125,16 +127,18 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             minWidth: 120,
             width: 140,
             cellRenderer: NullableRemainingLifetime,
+            sortable: true,
+            comparator: remainingLifetimeComparator,
         },
     ]);
 
     const onGridReady = (event: GridReadyEvent) => {
         props.onGridReady(event);
-        // Apply default sort to prioritize stuck rules
+        // Apply default sort to prioritize error/stuck rules
         event.api.applyColumnState({
             state: [
                 {
-                    colId: 'locks_stuck_cnt',
+                    colId: 'state',
                     sort: 'desc',
                 },
             ],

@@ -78,3 +78,57 @@ export function remainingLifetimeComparator(valueA: number | null | undefined, v
     // Numeric comparison (values are in seconds)
     return valueA - valueB;
 }
+
+/**
+ * Get priority score for lock states
+ * Higher scores indicate higher priority (more urgent states)
+ */
+function getLockStatePriority(state: string): number {
+    const stateLower = state.toLowerCase();
+
+    if (stateLower.includes('error')) return 4;
+    if (stateLower === 'stuck') return 3;
+    if (stateLower === 'replicating') return 2;
+    if (stateLower === 'ok') return 1;
+    return 0; // unknown or other states
+}
+
+/**
+ * Comparator function for ag-Grid that sorts lock states by priority
+ * Order: ERROR > STUCK > REPLICATING > OK > UNKNOWN
+ */
+export function lockStateComparator(valueA: string, valueB: string): number {
+    const priorityA = getLockStatePriority(valueA);
+    const priorityB = getLockStatePriority(valueB);
+
+    // Higher priority first
+    return priorityB - priorityA;
+}
+
+/**
+ * Get priority score for rule states
+ * Higher scores indicate higher priority (more urgent states)
+ */
+function getRuleStatePriority(state: string): number {
+    const stateLower = state.toLowerCase();
+
+    if (stateLower === 'stuck') return 6;
+    if (stateLower === 'suspended') return 5;
+    if (stateLower === 'replicating') return 4;
+    if (stateLower === 'waiting_approval') return 3;
+    if (stateLower === 'inject') return 2;
+    if (stateLower === 'ok') return 1;
+    return 0; // unknown or other states
+}
+
+/**
+ * Comparator function for ag-Grid that sorts rule states by priority
+ * Order: STUCK > SUSPENDED > REPLICATING > WAITING_APPROVAL > INJECT > OK > UNKNOWN
+ */
+export function ruleStateComparator(valueA: string, valueB: string): number {
+    const priorityA = getRuleStatePriority(valueA);
+    const priorityB = getRuleStatePriority(valueB);
+
+    // Higher priority first
+    return priorityB - priorityA;
+}
