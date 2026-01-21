@@ -14,6 +14,7 @@ import { LoadingElement } from '@/component-library/atoms/loading/LoadingElement
 import { WarningField } from '@/component-library/features/fields/WarningField';
 import { motion } from 'framer-motion';
 import { useTips } from '@/lib/infrastructure/hooks/useTips';
+import { buildSubscriptionSearchUrl } from '@/lib/infrastructure/utils/navigation';
 
 type TMenuItem = {
     title: string;
@@ -253,11 +254,14 @@ interface HeaderClientProps {
 }
 
 export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching }: HeaderClientProps) => {
+    // Build subscription URL with account parameter
+    const subscriptionUrl = buildSubscriptionSearchUrl(siteHeader?.activeAccount?.rucioAccount);
+
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
         { title: 'DIDs', path: '/did/list' },
         { title: 'RSEs', path: '/rse/list' },
-        { title: 'Subscriptions', path: '/subscription/list' },
+        { title: 'Subscriptions', path: subscriptionUrl },
         {
             title: 'Rules',
             children: [

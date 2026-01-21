@@ -1,5 +1,11 @@
 import { AuthType, Role, SessionUser } from '@/lib/core/entity/auth-models';
-import { addOrUpdateSessionUser, removeSessionUser, setActiveSessionUser, setEmptySession, MockSession } from '@/lib/infrastructure/auth/session-utils';
+import {
+    addOrUpdateSessionUser,
+    removeSessionUser,
+    setActiveSessionUser,
+    setEmptySession,
+    MockSession,
+} from '@/lib/infrastructure/auth/session-utils';
 import { createMockSession } from 'test/fixtures/http-fixtures';
 
 describe('MockSession tests', () => {

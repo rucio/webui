@@ -40,10 +40,7 @@ function validateAudienceClaim(payload: any, expectedAudience: string, providerN
     const audience = payload.aud;
 
     if (!audience) {
-        console.warn(
-            `[OIDC] WARNING: No audience (aud) claim found in JWT token from ${providerName}. ` +
-                `Expected audience: ${expectedAudience}`,
-        );
+        console.warn(`[OIDC] WARNING: No audience (aud) claim found in JWT token from ${providerName}. ` + `Expected audience: ${expectedAudience}`);
         return false;
     }
 
@@ -54,16 +51,13 @@ function validateAudienceClaim(payload: any, expectedAudience: string, providerN
         audienceMatches = audience.includes(expectedAudience);
         if (!audienceMatches) {
             console.warn(
-                `[OIDC] WARNING: Audience claim mismatch for ${providerName}. ` +
-                    `Expected: "${expectedAudience}", Found: [${audience.join(', ')}]`,
+                `[OIDC] WARNING: Audience claim mismatch for ${providerName}. ` + `Expected: "${expectedAudience}", Found: [${audience.join(', ')}]`,
             );
         }
     } else {
         audienceMatches = audience === expectedAudience;
         if (!audienceMatches) {
-            console.warn(
-                `[OIDC] WARNING: Audience claim mismatch for ${providerName}. ` + `Expected: "${expectedAudience}", Found: "${audience}"`,
-            );
+            console.warn(`[OIDC] WARNING: Audience claim mismatch for ${providerName}. ` + `Expected: "${expectedAudience}", Found: "${audience}"`);
         }
     }
 

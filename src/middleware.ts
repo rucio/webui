@@ -48,9 +48,7 @@ function shouldUseSecureCookies(): boolean {
  * Get the appropriate cookie name based on secure cookie setting
  */
 function getSessionCookieName(): string {
-    return shouldUseSecureCookies()
-        ? '__Secure-authjs.session-token'
-        : 'authjs.session-token';
+    return shouldUseSecureCookies() ? '__Secure-authjs.session-token' : 'authjs.session-token';
 }
 
 export async function middleware(request: NextRequest) {
