@@ -33,6 +33,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellRenderer: ClickableName,
             filter: true,
             filterParams: DefaultTextFilterParams,
+            sort: 'asc' as const,
         },
         {
             headerName: 'Type',
