@@ -63,5 +63,12 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} rowSelection={props.onSelectionChanged ? { mode: 'singleRow', enableClickSelection: true } : undefined} tableRef={tableRef} {...props} />;
+    return (
+        <StreamedTable
+            columnDefs={columnDefs}
+            rowSelection={props.onSelectionChanged ? { mode: 'singleRow', enableClickSelection: true } : undefined}
+            tableRef={tableRef}
+            {...props}
+        />
+    );
 };
