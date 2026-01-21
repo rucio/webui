@@ -203,7 +203,11 @@ const AdvancedInput = ({
                         <p className="text-sm text-neutral-600 dark:text-neutral-400 ml-7">Create rule asynchronously in the background</p>
                     </div>
                     <div className="space-y-3">
-                        <LabeledCheckbox checked={parameters.sample} onChange={() => updateOptionValue('sample', !parameters.sample)} label="Create a sample" />
+                        <LabeledCheckbox
+                            checked={parameters.sample}
+                            onChange={() => updateOptionValue('sample', !parameters.sample)}
+                            label="Create a sample"
+                        />
                         <p className="text-sm text-neutral-600 dark:text-neutral-400 ml-7">Create a rule for a random sample of files</p>
                     </div>
                     {parameters.sample && (
@@ -213,7 +217,13 @@ const AdvancedInput = ({
                             error={errors.sampleCountInvalid}
                             errorMessage="Number of files should be greater than 1 or not specified"
                         >
-                            <Input type="number" min="1" onInput={onFileCountInput} defaultValue={getDefaultFileCount()} error={errors.sampleCountInvalid} />
+                            <Input
+                                type="number"
+                                min="1"
+                                onInput={onFileCountInput}
+                                defaultValue={getDefaultFileCount()}
+                                error={errors.sampleCountInvalid}
+                            />
                         </InputWithLabel>
                     )}
                 </div>
@@ -250,15 +260,22 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
                         error={errors.copiesInvalid}
                         errorMessage={`Copies should range from 1 to ${parameters.rses.length} (number of chosen RSEs)`}
                     >
-                        <Input onChange={onCopiesInput} type="number" min="1" max={parameters.rses.length} defaultValue={defaultCopies} error={errors.copiesInvalid} />
+                        <Input
+                            onChange={onCopiesInput}
+                            type="number"
+                            min="1"
+                            max={parameters.rses.length}
+                            defaultValue={defaultCopies}
+                            error={errors.copiesInvalid}
+                        />
                     </InputWithLabel>
 
                     {/* Show contextual warning for quota issues */}
                     {!errors.copiesInvalid && errors.tooManyCopies && (
                         <WarningField>
                             <span>
-                                There are less than <b>{parameters.copies}</b> chosen RSEs with enough quota left. Please change the number of <b>copies</b> or
-                                mark the rule as needing approval in Step 2.
+                                There are less than <b>{parameters.copies}</b> chosen RSEs with enough quota left. Please change the number of{' '}
+                                <b>copies</b> or mark the rule as needing approval in Step 2.
                             </span>
                         </WarningField>
                     )}
@@ -278,13 +295,21 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
                         error={errors.commentsEmpty}
                         errorMessage="A comment should be specified when asking for approval"
                     >
-                        <Textarea onChange={event => updateOptionValue('comments', event.target.value)} defaultValue={parameters.comments} error={errors.commentsEmpty} />
+                        <Textarea
+                            onChange={event => updateOptionValue('comments', event.target.value)}
+                            defaultValue={parameters.comments}
+                            error={errors.commentsEmpty}
+                        />
                     </InputWithLabel>
                 </div>
 
                 {/* Notifications */}
                 <div className="space-y-3 pt-6 pb-6">
-                    <LabeledCheckbox checked={parameters.notify} onChange={() => updateOptionValue('notify', !parameters.notify)} label="Receive notifications" />
+                    <LabeledCheckbox
+                        checked={parameters.notify}
+                        onChange={() => updateOptionValue('notify', !parameters.notify)}
+                        label="Receive notifications"
+                    />
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 ml-7">Get notified when the rule state changes</p>
                 </div>
 

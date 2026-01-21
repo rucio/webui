@@ -82,7 +82,14 @@ const AccountInput = ({ value, onChange, onSearch, onFilterToggle, isFilterExpan
 
     return (
         <div className="flex space-x-2">
-            <Input id={id} className="w-full sm:flex-grow" onChange={handleInputChange} onEnterKey={onSearch} placeholder="Current Account" value={value} />
+            <Input
+                id={id}
+                className="w-full sm:flex-grow"
+                onChange={handleInputChange}
+                onEnterKey={onSearch}
+                placeholder="Current Account"
+                value={value}
+            />
             <FilterDropdownButton isExpanded={isFilterExpanded} onToggle={onFilterToggle} />
         </div>
     );
@@ -191,7 +198,9 @@ const SearchForm = ({ filters, onFiltersChange, onSearch, onStop, isRunning }: S
         <div className="flex flex-col space-y-6 w-full">
             {/* Search Panel */}
             <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
-                <label htmlFor="account-input" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">Account</label>
+                <label htmlFor="account-input" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">
+                    Account
+                </label>
                 <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-2 items-start">
                     <div className="flex flex-col w-full space-y-4">
                         <AccountInput

@@ -122,5 +122,13 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
         });
     };
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} onAsyncTransactionsFlushed={() => updateSelection()} />;
+    return (
+        <StreamedTable
+            columnDefs={columnDefs}
+            tableRef={tableRef}
+            {...props}
+            onGridReady={onGridReady}
+            onAsyncTransactionsFlushed={() => updateSelection()}
+        />
+    );
 };
