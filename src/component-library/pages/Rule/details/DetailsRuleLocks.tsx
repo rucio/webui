@@ -16,6 +16,7 @@ import { FTSLinkViewModel } from '@/lib/infrastructure/data/view-model/request';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { HiExternalLink } from 'react-icons/hi';
+import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
@@ -150,6 +151,8 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             },
             filter: true,
             filterParams: buildDiscreteFilterParams(Object.values(LockStateDisplayNames), Object.values(LockState)),
+            sortable: true,
+            comparator: lockStateComparator,
         },
         {
             headerName: 'FTS Monitoring',
@@ -159,7 +162,20 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    const onGridReady = (event: GridReadyEvent) => {
+        props.onGridReady(event);
+        // Apply default sort to prioritize error/stuck locks
+        event.api.applyColumnState({
+            state: [
+                {
+                    colId: 'state',
+                    sort: 'desc',
+                },
+            ],
+        });
+    };
+
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };
 
 export const DetailsRuleLocks = ({ id }: { id: string }) => {
