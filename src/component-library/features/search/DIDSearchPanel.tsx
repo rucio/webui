@@ -242,13 +242,26 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
 
     const onScopeArrowDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'ArrowRight') {
-            nameInputRef.current?.focus();
+            const input = event.currentTarget;
+            const cursorPosition = input.selectionStart;
+            const textLength = input.value.length;
+
+            // Only switch to name input if cursor is at the end
+            if (cursorPosition === textLength) {
+                nameInputRef.current?.focus();
+            }
         }
     };
 
     const onNameArrowDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'ArrowLeft') {
-            scopeInputRef.current?.focus();
+            const input = event.currentTarget;
+            const cursorPosition = input.selectionStart;
+
+            // Only switch to scope input if cursor is at the beginning
+            if (cursorPosition === 0) {
+                scopeInputRef.current?.focus();
+            }
         }
     };
 
