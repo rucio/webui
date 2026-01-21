@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Highlight from 'react-highlight';
 import 'react-highlight/node_modules/highlight.js/styles/github.css';
-import { HiClipboard, HiClipboardCheck, HiArrowsPointingOut } from 'react-icons/hi2';
+import { HiClipboard, HiClipboardCheck } from 'react-icons/hi';
+import { HiArrowsPointingOut } from 'react-icons/hi2';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import * as Dialog from '@radix-ui/react-dialog';
 import { toast } from '@/lib/infrastructure/hooks/useToast';
