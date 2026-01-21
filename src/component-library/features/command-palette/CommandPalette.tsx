@@ -19,6 +19,8 @@ import { getCards } from '@/lib/utils/hotbar-storage';
 import { getNavigationCommands, getActionCommands, getHelpCommands } from '@/lib/infrastructure/command-palette/command-registry';
 import { navigateToSearch } from '@/lib/infrastructure/utils/navigation';
 import { ClockIcon, BookmarkIcon } from '@heroicons/react/24/outline';
+import { useQuery } from '@tanstack/react-query';
+import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 
 export interface CommandPaletteProps {
     /** Whether the palette is open */
@@ -31,6 +33,22 @@ export interface CommandPaletteProps {
 export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChange }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
+
+    // Fetch site header to get active account
+    const querySiteHeader = async () => {
+        const res = await fetch('/api/feature/get-site-header');
+        return res.json();
+    };
+
+    const { data: siteHeader } = useQuery<SiteHeaderViewModel>({
+        queryKey: ['command-palette-site-header'],
+        queryFn: querySiteHeader,
+        retry: false,
+        refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+
+    const account = siteHeader?.activeAccount?.rucioAccount;
 
     // Build all sections with filtering
     const sections = useMemo<CommandSection[]>(() => {
@@ -80,7 +98,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         // Navigation Section
-        const navigationItems = getNavigationCommands();
+        const navigationItems = getNavigationCommands(account);
         allSections.push({
             id: 'navigation',
             title: 'Navigation',
@@ -122,7 +140,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         return allSections;
-    }, [searchQuery]);
+    }, [searchQuery, account]);
 
     // Calculate total items count for keyboard navigation
     const totalItems = useMemo(() => {

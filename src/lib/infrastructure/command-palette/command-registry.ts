@@ -14,13 +14,14 @@ import {
     QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline';
 import { CommandItem } from '@/lib/core/entity/command-palette';
-import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, detectSearchType } from '@/lib/infrastructure/utils/navigation';
+import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, buildSubscriptionSearchUrl, detectSearchType } from '@/lib/infrastructure/utils/navigation';
 
 /**
  * Get static navigation commands
  * These provide quick access to main app sections
+ * @param account - Optional account for building subscription URLs with parameters
  */
-export function getNavigationCommands(): CommandItem[] {
+export function getNavigationCommands(account?: string): CommandItem[] {
     return [
         {
             id: 'nav-dashboard',
@@ -64,7 +65,7 @@ export function getNavigationCommands(): CommandItem[] {
             title: 'Subscriptions',
             description: 'Browse data subscriptions',
             icon: BellIcon,
-            url: '/subscription/list',
+            url: buildSubscriptionSearchUrl(account),
             keywords: ['subscription', 'subscribe', 'data'],
         },
     ];
