@@ -16,7 +16,7 @@ import { formatDate, formatSeconds } from '@/component-library/features/utils/te
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
-import { ruleActivityComparator } from '@/lib/core/utils/rule-sorting-utils';
+import { ruleActivityComparator, remainingLifetimeComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
@@ -146,6 +146,8 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             width: 140,
             minWidth: 140,
             cellRenderer: NullableRemainingLifetime,
+            sortable: true,
+            comparator: remainingLifetimeComparator,
         },
     ]);
 

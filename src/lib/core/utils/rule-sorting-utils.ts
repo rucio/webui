@@ -63,3 +63,18 @@ export function sortRulesByActivity<T extends RuleWithActivity>(rules: T[]): T[]
         return scoreB - scoreA;
     });
 }
+
+/**
+ * Comparator function for ag-Grid that sorts remaining_lifetime values numerically
+ * The field stores time in seconds, which gets formatted as "X days, Y hours" for display
+ * This ensures proper numeric sorting instead of alphanumeric
+ */
+export function remainingLifetimeComparator(valueA: number | null | undefined, valueB: number | null | undefined): number {
+    // Handle null/undefined values - place them at the end
+    if (valueA == null && valueB == null) return 0;
+    if (valueA == null) return 1;
+    if (valueB == null) return -1;
+
+    // Numeric comparison (values are in seconds)
+    return valueA - valueB;
+}
