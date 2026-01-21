@@ -8,8 +8,14 @@ import { JSONViewer } from '@/component-library/features/json/JSONViewer';
  */
 export const DetailsSubscriptionFilter: DetailsSubscriptionView = ({ meta }: DetailsSubscriptionProps) => {
     return (
-        <div className="w-full p-4">
-            <JSONViewer value={meta.filter} mode="interactive" expandDepth={2} showCopyButton maxHeight="calc(100vh - 24rem)" />
-        </div>
+        <JSONViewer
+            value={meta.filter}
+            mode="interactive"
+            expandDepth={2}
+            showCopyButton
+            maxHeight="100%"
+            showExpandButton
+            expandTitle="Subscription Filter"
+        />
     );
 };

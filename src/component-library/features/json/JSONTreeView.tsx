@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { HiChevronRight, HiChevronDown, HiClipboard, HiClipboardCheck } from 'react-icons/hi';
+import { HiArrowsPointingOut } from 'react-icons/hi2';
 import { toast } from '@/lib/infrastructure/hooks/useToast';
 import { twMerge } from 'tailwind-merge';
 
@@ -9,6 +10,8 @@ export type JSONTreeViewProps = {
     value: string;
     expandDepth?: number;
     showCopyButton?: boolean;
+    showExpandButton?: boolean;
+    onExpand?: () => void;
     maxHeight?: string;
     className?: string;
 };
@@ -213,6 +216,8 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
     value,
     expandDepth = 2,
     showCopyButton = true,
+    showExpandButton = false,
+    onExpand,
     maxHeight = '600px',
     className,
 }) => {
@@ -272,6 +277,11 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
             : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600',
     );
 
+    const expandButtonClasses = twMerge(
+        buttonBaseClasses,
+        'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600',
+    );
+
     const treeWrapperClasses = 'overflow-auto p-3 font-mono text-sm leading-relaxed';
 
     const warningBadgeClasses =
@@ -293,22 +303,37 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
     return (
         <div className={containerClasses}>
             {/* Header with controls */}
-            {showCopyButton && (
+            {(showCopyButton || showExpandButton) && (
                 <div className={headerClasses}>
                     <div className="text-xs text-neutral-600 dark:text-neutral-400">Interactive Tree View</div>
-                    <button type="button" onClick={handleCopy} className={copyButtonClasses} aria-label="Copy to clipboard">
-                        {isCopied ? (
-                            <>
-                                <HiClipboardCheck className="w-4 h-4" />
-                                <span>Copied!</span>
-                            </>
-                        ) : (
-                            <>
-                                <HiClipboard className="w-4 h-4" />
-                                <span>Copy</span>
-                            </>
+                    <div className="flex items-center gap-2">
+                        {showExpandButton && onExpand && (
+                            <button
+                                type="button"
+                                onClick={onExpand}
+                                className={expandButtonClasses}
+                                aria-label="Expand to full screen"
+                            >
+                                <HiArrowsPointingOut className="w-4 h-4" />
+                                <span>Expand</span>
+                            </button>
                         )}
-                    </button>
+                        {showCopyButton && (
+                            <button type="button" onClick={handleCopy} className={copyButtonClasses} aria-label="Copy to clipboard">
+                                {isCopied ? (
+                                    <>
+                                        <HiClipboardCheck className="w-4 h-4" />
+                                        <span>Copied!</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <HiClipboard className="w-4 h-4" />
+                                        <span>Copy</span>
+                                    </>
+                                )}
+                            </button>
+                        )}
+                    </div>
                 </div>
             )}
 

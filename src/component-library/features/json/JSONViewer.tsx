@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Highlight from 'react-highlight';
 import 'react-highlight/node_modules/highlight.js/styles/github.css';
-import { HiClipboard, HiClipboardCheck } from 'react-icons/hi';
+import { HiClipboard, HiClipboardCheck, HiArrowsPointingOut } from 'react-icons/hi2';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import * as Dialog from '@radix-ui/react-dialog';
 import { toast } from '@/lib/infrastructure/hooks/useToast';
 import { twMerge } from 'tailwind-merge';
 import { JSONTreeView } from './JSONTreeView';
@@ -17,6 +19,8 @@ export type JSONViewerProps = {
     showLineNumbers?: boolean;
     showCopyButton?: boolean;
     showRawToggle?: boolean;
+    showExpandButton?: boolean;
+    expandTitle?: string;
     maxHeight?: string;
     className?: string;
 };
@@ -60,6 +64,8 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
     showLineNumbers = false,
     showCopyButton = true,
     showRawToggle = true,
+    showExpandButton = false,
+    expandTitle = 'JSON Viewer',
     maxHeight = '600px',
     className,
 }) => {
@@ -70,6 +76,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
     const [isValidJSON, setIsValidJSON] = useState<boolean>(true);
     const [formattedValue, setFormattedValue] = useState<string>('');
     const [displayValue, setDisplayValue] = useState<string>('');
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     // Detect dark mode
     useEffect(() => {
@@ -166,6 +173,11 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
         'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600',
     );
 
+    const expandButtonClasses = twMerge(
+        buttonBaseClasses,
+        'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600',
+    );
+
     const codeWrapperClasses = twMerge('overflow-auto p-3 text-sm font-mono leading-relaxed', showLineNumbers && 'counter-reset-line');
 
     const warningBadgeClasses =
@@ -173,7 +185,72 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
 
     // Render interactive tree view for complex JSON
     if (resolvedMode === 'interactive') {
-        return <JSONTreeView value={value} expandDepth={expandDepth} showCopyButton={showCopyButton} maxHeight={maxHeight} className={className} />;
+        return (
+            <>
+                <JSONTreeView
+                    value={value}
+                    expandDepth={expandDepth}
+                    showCopyButton={showCopyButton}
+                    showExpandButton={showExpandButton}
+                    onExpand={() => setIsModalOpen(true)}
+                    maxHeight={maxHeight}
+                    className={className}
+                />
+
+                {/* Modal for expanded view */}
+                {showExpandButton && (
+                    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
+                        <Dialog.Portal>
+                            <Dialog.Overlay className="fixed inset-0 bg-neutral-900/80 backdrop-blur-sm z-50" />
+                            <Dialog.Content
+                                className="
+                                    fixed inset-4 md:inset-8
+                                    bg-neutral-0 dark:bg-neutral-900
+                                    border border-neutral-200 dark:border-neutral-700
+                                    rounded-lg
+                                    shadow-lg
+                                    z-50
+                                    focus:outline-none
+                                    flex flex-col
+                                "
+                            >
+                                {/* Modal Header */}
+                                <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-700">
+                                    <Dialog.Title className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+                                        {expandTitle}
+                                    </Dialog.Title>
+                                    <Dialog.Close asChild>
+                                        <button
+                                            className="
+                                                p-1.5
+                                                rounded
+                                                hover:bg-neutral-100 dark:hover:bg-neutral-800
+                                                focus:outline-none focus:ring-2 focus:ring-brand-500
+                                                transition-colors duration-150
+                                            "
+                                            aria-label="Close"
+                                        >
+                                            <XMarkIcon className="w-6 h-6 text-neutral-600 dark:text-neutral-400" />
+                                        </button>
+                                    </Dialog.Close>
+                                </div>
+
+                                {/* Modal Content */}
+                                <div className="flex-1 overflow-hidden p-6">
+                                    <JSONTreeView
+                                        value={value}
+                                        expandDepth={expandDepth}
+                                        showCopyButton={true}
+                                        maxHeight="100%"
+                                        className="h-full"
+                                    />
+                                </div>
+                            </Dialog.Content>
+                        </Dialog.Portal>
+                    </Dialog.Root>
+                )}
+            </>
+        );
     }
 
     // Render static view with syntax highlighting for simple JSON
@@ -182,12 +259,23 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
             <style>{styles()}</style>
             <div className={containerClasses}>
                 {/* Header with controls */}
-                {(showCopyButton || showRawToggle || !isValidJSON) && (
+                {(showCopyButton || showRawToggle || showExpandButton || !isValidJSON) && (
                     <div className={headerClasses}>
                         <div className="flex items-center gap-2">
                             {!isValidJSON && <span className={warningBadgeClasses}>Invalid JSON - displaying raw value</span>}
                         </div>
                         <div className="flex items-center gap-2">
+                            {showExpandButton && (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(true)}
+                                    className={expandButtonClasses}
+                                    aria-label="Expand to full screen"
+                                >
+                                    <HiArrowsPointingOut className="w-4 h-4" />
+                                    <span>Expand</span>
+                                </button>
+                            )}
                             {showRawToggle && isValidJSON && (
                                 <button
                                     type="button"
@@ -226,6 +314,60 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                     )}
                 </div>
             </div>
+
+            {/* Modal for expanded view (static mode) */}
+            {showExpandButton && (
+                <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
+                    <Dialog.Portal>
+                        <Dialog.Overlay className="fixed inset-0 bg-neutral-900/80 backdrop-blur-sm z-50" />
+                        <Dialog.Content
+                            className="
+                                fixed inset-4 md:inset-8
+                                bg-neutral-0 dark:bg-neutral-900
+                                border border-neutral-200 dark:border-neutral-700
+                                rounded-lg
+                                shadow-lg
+                                z-50
+                                focus:outline-none
+                                flex flex-col
+                            "
+                        >
+                            {/* Modal Header */}
+                            <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-700">
+                                <Dialog.Title className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+                                    {expandTitle}
+                                </Dialog.Title>
+                                <Dialog.Close asChild>
+                                    <button
+                                        className="
+                                            p-1.5
+                                            rounded
+                                            hover:bg-neutral-100 dark:hover:bg-neutral-800
+                                            focus:outline-none focus:ring-2 focus:ring-brand-500
+                                            transition-colors duration-150
+                                        "
+                                        aria-label="Close"
+                                    >
+                                        <XMarkIcon className="w-6 h-6 text-neutral-600 dark:text-neutral-400" />
+                                    </button>
+                                </Dialog.Close>
+                            </div>
+
+                            {/* Modal Content */}
+                            <div className="flex-1 overflow-auto p-6">
+                                <style>{styles()}</style>
+                                <div className="font-mono text-sm leading-relaxed">
+                                    {isValidJSON && isFormatted ? (
+                                        <Highlight className="language-json">{displayValue}</Highlight>
+                                    ) : (
+                                        <pre className="text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-words m-0">{displayValue}</pre>
+                                    )}
+                                </div>
+                            </div>
+                        </Dialog.Content>
+                    </Dialog.Portal>
+                </Dialog.Root>
+            )}
         </>
     );
 };
