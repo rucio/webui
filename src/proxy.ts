@@ -51,7 +51,7 @@ function getSessionCookieName(): string {
     return shouldUseSecureCookies() ? '__Secure-authjs.session-token' : 'authjs.session-token';
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const publicHost = process.env.NEXT_PUBLIC_WEBUI_HOST || `${request.nextUrl.protocol}//${request.nextUrl.host}`;
     const cookieName = getSessionCookieName();
     const secret = process.env.NEXTAUTH_SECRET;
@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest) {
             salt: cookieName,
         });
 
-        console.log('[Middleware] getToken result:', {
+        console.log('[Proxy] getToken result:', {
             hasToken: !!token,
             hasUser: !!token?.user,
             cookieName,
@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
         // If getToken failed, try manual decode to see the error
         if (!token) {
             const cookieValue = request.cookies.get(cookieName)?.value;
-            console.log('[Middleware] Cookie check:', {
+            console.log('[Proxy] Cookie check:', {
                 cookieName,
                 hasCookie: !!cookieValue,
                 cookieLength: cookieValue?.length,
@@ -89,12 +89,12 @@ export async function middleware(request: NextRequest) {
                         secret: secret!,
                         salt: cookieName,
                     });
-                    console.log('[Middleware] Manual decode result:', {
+                    console.log('[Proxy] Manual decode result:', {
                         success: !!decoded,
                         hasUser: !!decoded?.user,
                     });
                 } catch (decodeError) {
-                    console.error('[Middleware] Manual decode error:', decodeError);
+                    console.error('[Proxy] Manual decode error:', decodeError);
                 }
             }
         }
@@ -119,7 +119,7 @@ export async function middleware(request: NextRequest) {
         // All checks have passed, allow the request
         return NextResponse.next();
     } catch (error) {
-        console.error('Middleware error:', error);
+        console.error('Proxy error:', error);
         return new Response('Internal Server Error. Could not authenticate or redirect to login page', { status: 500 });
     }
 }

@@ -16,7 +16,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -30,8 +30,12 @@
       "@/*": [
         "./src/*"
       ],
-      "@/tailwind": ["./tailwind.config.js"],
-      "@/test/*": ["./test/*"],
+      "@/tailwind": [
+        "./tailwind.config.js"
+      ],
+      "@/test/*": [
+        "./test/*"
+      ]
     }
   },
   "include": [
@@ -40,7 +44,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "babel.config.js",
-    "build/types/**/*.ts"
+    "build/types/**/*.ts",
+    "build/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

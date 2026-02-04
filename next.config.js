@@ -6,11 +6,14 @@ const nextConfig = {
   //   // Story files and test files are type-checked separately
   //   ignoreBuildErrors: true,
   // },
-  eslint: {
-    // ESLint is run separately in CI/CD
-    ignoreDuringBuilds: true,
-  },
-  // Enable source maps for debugging
+  // Note: eslint config removed - no longer supported in Next.js 16
+  // ESLint is run separately in CI/CD via npm run lint
+
+  // Turbopack configuration (empty config silences webpack/turbopack warning)
+  // Turbopack is the default bundler in Next.js 16
+  turbopack: {},
+
+  // Keep webpack config for production builds or when explicitly using webpack
   webpack: (config, { dev }) => {
     if (dev) {
       config.devtool = 'source-map';
