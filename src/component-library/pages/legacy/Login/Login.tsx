@@ -215,7 +215,7 @@ export const Login = ({
         visible: {
             opacity: 1,
             scale: 1,
-            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' },
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' as const },
         },
     };
 
@@ -224,7 +224,7 @@ export const Login = ({
         visible: {
             opacity: 1,
             scale: 1,
-            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' },
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' as const },
         },
     };
 
@@ -237,12 +237,12 @@ export const Login = ({
         center: {
             x: 0,
             opacity: 1,
-            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeInOut' },
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeInOut' as const },
         },
         exit: (direction: number) => ({
             x: prefersReducedMotion ? 0 : direction < 0 ? 300 : -300,
             opacity: prefersReducedMotion ? 1 : 0,
-            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeInOut' },
+            transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: 'easeInOut' as const },
         }),
     };
 
