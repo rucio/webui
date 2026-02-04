@@ -1,7 +1,6 @@
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
 import { Meta, StoryObj } from '@storybook/nextjs';
-import { within } from '@storybook/testing-library';
-import userEvent from '@testing-library/user-event';
+import { within, userEvent } from 'storybook/test';
 import { Login } from '@/component-library/pages/Login/Login';
 import { sleep } from '../utils';
 

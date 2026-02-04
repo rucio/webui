@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Highlight from 'react-highlight';
-import 'react-highlight/node_modules/highlight.js/styles/github.css';
+import 'highlight.js/styles/github.css';
 import { HiClipboard, HiClipboardCheck } from 'react-icons/hi';
 import { HiArrowsPointingOut } from 'react-icons/hi2';
 import { XMarkIcon } from '@heroicons/react/24/outline';

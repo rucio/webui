@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import Highlight from 'react-highlight';
-import 'react-highlight/node_modules/highlight.js/styles/github.css';
+import 'highlight.js/styles/github.css';
 import React, { useState, useEffect } from 'react';
 
 export const Code: React.FC<React.ComponentPropsWithoutRef<'div'>> = ({ ...props }) => {
