@@ -74,9 +74,9 @@ export class WebUIEnvTemplateCompiler {
   validateOIDCProvider(provider: string, global_prefix: string): EnvValidationError[] {
     const prefix = `OIDC_PROVIDER_${provider.toUpperCase()}_`
     // Required OIDC variables (must match env-config-gateway.ts)
-    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "redirect_url"]
+    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "redirect_url", "issuer"]
     // Optional OIDC variables (must match env-config-gateway.ts)
-    const optionalVariables: string[] = ["icon_url", "refresh_token_url", "userinfo_url", "scopes", "logout_url", "issuer"]
+    const optionalVariables: string[] = ["icon_url", "refresh_token_url", "userinfo_url", "scopes", "logout_url"]
     const errors: EnvValidationError[] = []
 
     // Validate required variables

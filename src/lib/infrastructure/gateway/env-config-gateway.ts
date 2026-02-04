@@ -215,6 +215,11 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         }
         return Promise.resolve(value.trim());
     }
+
+    async oidcProviderIssuer(providerName: string): Promise<string | undefined> {
+        const key = `OIDC_PROVIDER_${providerName.toUpperCase()}_ISSUER`;
+        return this.get(key);
+    }
 }
 
 export default EnvConfigGateway;
