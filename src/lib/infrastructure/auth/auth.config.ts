@@ -219,7 +219,7 @@ export const authConfig: NextAuthConfig = {
                 // This matches the format expected in Rucio's identity_account_association table
                 // The sub and iss claims come from the OIDC profile, not the mapped user object
                 const sub = profile?.sub || user?.id;
-                const iss = profile?.iss || getIssuerFromEnv(providerName);
+                const iss = profile?.iss || (await getIssuerFromEnv(providerName));
                 const rucioIdentity = `SUB=${sub}, ISS=${iss}`;
 
                 console.log(`[OIDC] Created Rucio identity: ${rucioIdentity}`);

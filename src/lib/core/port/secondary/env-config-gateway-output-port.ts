@@ -86,4 +86,11 @@ export default interface EnvConfigGatewayOutputPort {
      * @returns "rucio" if not configured (default fallback)
      */
     oidcExpectedAudience(): Promise<string>;
+
+    /**
+     * Returns the issuer URL for a specific OIDC provider
+     * @param providerName The name of the OIDC provider (e.g., 'cern', 'atlas')
+     * @returns The issuer URL from OIDC_PROVIDER_{NAME}_ISSUER env var
+     */
+    oidcProviderIssuer(providerName: string): Promise<string | undefined>;
 }

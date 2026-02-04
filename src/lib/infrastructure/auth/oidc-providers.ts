@@ -184,34 +184,19 @@ export function loadOIDCProvidersSync(): OAuthConfig<OIDCProfile>[] {
  * This is used in the JWT callback when we need to construct the Rucio identity string
  * Format: "SUB={sub}, ISS={issuer}"
  *
- * @param providerName - Name of the OIDC provider (e.g., 'cern', 'indigo')
+ * @param providerName - Name of the OIDC provider (e.g., 'cern', 'atlas')
  * @returns Issuer URL or empty string if not found
  */
-export function getIssuerFromEnv(providerName: string): string {
+export async function getIssuerFromEnv(providerName: string): Promise<string> {
     try {
-        // Try to get authorization URL and extract the issuer from it
-        const authUrlKey = `OIDC_PROVIDER_${providerName.toUpperCase()}_AUTHORIZATION_URL`;
-        const authUrl = process.env[authUrlKey];
+        const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
+        const issuer = await envConfigGateway.oidcProviderIssuer(providerName);
 
-        if (authUrl) {
-            // Extract base URL from authorization endpoint
-            // For example: https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/auth
-            // Should return: https://auth.cern.ch/auth/realms/cern
-            const url = new URL(authUrl);
-            const pathParts = url.pathname.split('/');
-
-            // Remove '/protocol/openid-connect/auth' or similar suffixes
-            const protocolIndex = pathParts.indexOf('protocol');
-            if (protocolIndex > 0) {
-                const issuerPath = pathParts.slice(0, protocolIndex).join('/');
-                return `${url.protocol}//${url.host}${issuerPath}`;
-            }
-
-            // Fallback: just return the origin
-            return url.origin;
+        if (issuer) {
+            return issuer;
         }
 
-        console.warn(`[OIDC] Could not determine issuer for provider: ${providerName}`);
+        console.warn(`[OIDC] Could not find issuer for provider: ${providerName}. Expected env var: OIDC_PROVIDER_${providerName.toUpperCase()}_ISSUER`);
         return '';
     } catch (error) {
         console.error(`[OIDC] Error getting issuer for provider ${providerName}:`, error);
