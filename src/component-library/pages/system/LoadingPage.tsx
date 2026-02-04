@@ -77,7 +77,7 @@ export const LoadingPage = React.forwardRef<HTMLDivElement, LoadingPageProps>(
                 y: 0,
                 transition: {
                     duration: shouldReduceMotion ? 0 : 0.3,
-                    ease: [0, 0, 0.2, 1], // easeOut
+                    ease: [0, 0, 0.2, 1] as const, // easeOut
                 },
             },
         };
@@ -89,7 +89,7 @@ export const LoadingPage = React.forwardRef<HTMLDivElement, LoadingPageProps>(
                 scale: 1,
                 transition: {
                     duration: shouldReduceMotion ? 0 : 0.5,
-                    ease: [0, 0, 0.2, 1],
+                    ease: [0, 0, 0.2, 1] as const,
                 },
             },
         };
@@ -103,7 +103,7 @@ export const LoadingPage = React.forwardRef<HTMLDivElement, LoadingPageProps>(
                 transition: {
                     pathLength: {
                         duration: shouldReduceMotion ? 0 : 1.5,
-                        ease: 'easeInOut',
+                        ease: 'easeInOut' as const,
                     },
                     opacity: {
                         duration: shouldReduceMotion ? 0 : 0.5,
@@ -164,7 +164,7 @@ export const LoadingPage = React.forwardRef<HTMLDivElement, LoadingPageProps>(
                                 transition={{
                                     duration: 20,
                                     repeat: Infinity,
-                                    ease: 'linear',
+                                    ease: 'linear' as const,
                                 }}
                             >
                                 <div
@@ -180,7 +180,7 @@ export const LoadingPage = React.forwardRef<HTMLDivElement, LoadingPageProps>(
                                 transition={{
                                     duration: 15,
                                     repeat: Infinity,
-                                    ease: 'linear',
+                                    ease: 'linear' as const,
                                 }}
                             >
                                 <div
@@ -200,7 +200,7 @@ export const LoadingPage = React.forwardRef<HTMLDivElement, LoadingPageProps>(
                             transition={{
                                 duration: 2,
                                 repeat: Infinity,
-                                ease: 'easeInOut',
+                                ease: 'easeInOut' as const,
                             }}
                         >
                             <RucioLogo width={logoSize} height={logoSize} className="text-brand-500 dark:text-brand-400" aria-label="Rucio Logo" />

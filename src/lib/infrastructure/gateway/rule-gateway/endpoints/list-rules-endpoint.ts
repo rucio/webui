@@ -10,8 +10,11 @@ const DEFAULT_PARAMETER = '*';
  * Endpoint for listing rules with an optional filter
  */
 export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStreamableDTO, RuleDTO> {
-    constructor(private readonly rucioAuthToken: string, private readonly filter?: ListRulesFilter) {
+    private readonly ruleFilter?: ListRulesFilter;
+
+    constructor(private readonly rucioAuthToken: string, ruleFilter?: ListRulesFilter) {
         super(true);
+        this.ruleFilter = ruleFilter;
     }
 
     async initialize(): Promise<void> {
@@ -20,27 +23,27 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
         const endpoint = `${rucioHost}/rules/`;
 
         const params: any = {
-            account: this.filter?.account ?? DEFAULT_PARAMETER,
-            scope: this.filter?.scope ?? DEFAULT_PARAMETER,
+            account: this.ruleFilter?.account ?? DEFAULT_PARAMETER,
+            scope: this.ruleFilter?.scope ?? DEFAULT_PARAMETER,
         };
 
-        if (this.filter?.activity) {
-            params.activity = this.filter.activity;
+        if (this.ruleFilter?.activity) {
+            params.activity = this.ruleFilter.activity;
         }
-        if (this.filter?.updated_after) {
-            params.updated_after = formatFilterDate(this.filter.updated_after);
+        if (this.ruleFilter?.updated_after) {
+            params.updated_after = formatFilterDate(this.ruleFilter.updated_after);
         }
-        if (this.filter?.updated_before) {
-            params.updated_before = formatFilterDate(this.filter.updated_before);
+        if (this.ruleFilter?.updated_before) {
+            params.updated_before = formatFilterDate(this.ruleFilter.updated_before);
         }
-        if (this.filter?.state) {
-            const ruleFilter = convertRuleState(this.filter.state);
+        if (this.ruleFilter?.state) {
+            const ruleFilter = convertRuleState(this.ruleFilter.state);
             if (ruleFilter) {
                 params.state = ruleFilter;
             }
         }
-        if (this.filter?.name) {
-            params.name = this.filter.name;
+        if (this.ruleFilter?.name) {
+            params.name = this.ruleFilter.name;
         }
 
         const request: HTTPRequest = {

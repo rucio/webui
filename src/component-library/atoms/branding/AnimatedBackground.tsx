@@ -150,7 +150,7 @@ export function AnimatedBackground() {
                             pathLength: {
                                 duration: path.duration,
                                 delay: path.delay,
-                                ease: 'easeInOut',
+                                ease: 'easeInOut' as const,
                             },
                             opacity: {
                                 duration: 1,
@@ -185,13 +185,13 @@ export function AnimatedBackground() {
                         x: {
                             duration: orb.duration,
                             repeat: Infinity,
-                            ease: 'easeInOut',
+                            ease: 'easeInOut' as const,
                             delay: index * 0.5,
                         },
                         y: {
                             duration: orb.duration,
                             repeat: Infinity,
-                            ease: 'easeInOut',
+                            ease: 'easeInOut' as const,
                             delay: index * 0.5,
                         },
                     }}
@@ -255,7 +255,7 @@ export function AnimatedBackground() {
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 0.2 }}
                     transition={{
-                        pathLength: { duration: 2, delay: 1.5, ease: 'easeInOut' },
+                        pathLength: { duration: 2, delay: 1.5, ease: 'easeInOut' as const },
                         opacity: { duration: 1, delay: 1.5 },
                     }}
                 />
@@ -271,7 +271,7 @@ export function AnimatedBackground() {
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 0.2 }}
                     transition={{
-                        pathLength: { duration: 2, delay: 2, ease: 'easeInOut' },
+                        pathLength: { duration: 2, delay: 2, ease: 'easeInOut' as const },
                         opacity: { duration: 1, delay: 2 },
                     }}
                 />
@@ -287,7 +287,7 @@ export function AnimatedBackground() {
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 0.2 }}
                     transition={{
-                        pathLength: { duration: 2, delay: 2.5, ease: 'easeInOut' },
+                        pathLength: { duration: 2, delay: 2.5, ease: 'easeInOut' as const },
                         opacity: { duration: 1, delay: 2.5 },
                     }}
                 />
@@ -303,7 +303,7 @@ export function AnimatedBackground() {
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 0.2 }}
                     transition={{
-                        pathLength: { duration: 2, delay: 3, ease: 'easeInOut' },
+                        pathLength: { duration: 2, delay: 3, ease: 'easeInOut' as const },
                         opacity: { duration: 1, delay: 3 },
                     }}
                 />
@@ -319,7 +319,7 @@ export function AnimatedBackground() {
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 0.2 }}
                     transition={{
-                        pathLength: { duration: 2.5, delay: 3.5, ease: 'easeInOut' },
+                        pathLength: { duration: 2.5, delay: 3.5, ease: 'easeInOut' as const },
                         opacity: { duration: 1, delay: 3.5 },
                     }}
                 />

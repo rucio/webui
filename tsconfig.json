@@ -49,8 +49,8 @@
   ],
   "exclude": [
     "node_modules",
-    // "**/*.stories.ts",
-    // "**/*.stories.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.tsx",
     "tools/meow-maker/**/*",
     "tools/env-generator/**/*",
     "playwright.config.ts",

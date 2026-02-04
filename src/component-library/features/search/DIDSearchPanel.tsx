@@ -291,7 +291,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             placeholder="scope"
                             className="max-w-[250px]"
                             defaultValue={initialScope}
-                            onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                 setScope(event.target.value);
                             }}
                             onEnterKey={onSearch}
@@ -302,7 +302,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             ref={nameInputRef}
                             placeholder="name"
                             defaultValue={initialName}
-                            onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                 setName(event.target.value);
                             }}
                             onEnterKey={onSearch}
