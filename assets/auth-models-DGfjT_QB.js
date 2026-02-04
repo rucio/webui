@@ -1,0 +1,1 @@
+var r=(function(a){return a.x509="x509",a.USERPASS="userpass",a.OIDC="oidc",a})({}),s=(function(a){return a.ADMIN="admin",a.USER="user",a})({});const e={name:"Default",shortName:"def",logoUrl:"",oidcEnabled:!1,oidcProviders:[]};export{r as A,e as D,s as R};
