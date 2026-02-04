@@ -152,18 +152,18 @@ export async function getRucioAccountsForIdentity(identityString: string, rucioH
     // Construct the API URL with query parameters
     const apiUrl = `${rucioHost}/identities/accounts?${params.toString()}`;
 
-    // Detailed debug logging for troubleshooting
-    console.log('='.repeat(70));
-    console.log('=== OIDC IDENTITY LOOKUP DEBUG INFO ===');
-    console.log('='.repeat(70));
-    console.log(`Identity String (raw):     "${identityString}"`);
-    console.log(`Identity Type:             OIDC`);
-    console.log(`Rucio Host:                ${rucioHost}`);
-    console.log(`Full API URL:              ${apiUrl}`);
-    console.log(`Token (first 50 chars):    ${oidcToken.substring(0, 50)}...`);
-    console.log(`Token (last 20 chars):     ...${oidcToken.substring(oidcToken.length - 20)}`);
-    console.log('='.repeat(70));
-    console.log('');
+    // SECURITY: Detailed debug logging disabled - DO NOT enable in production
+    // console.log('='.repeat(70));
+    // console.log('=== OIDC IDENTITY LOOKUP DEBUG INFO ===');
+    // console.log('='.repeat(70));
+    // console.log(`Identity String (raw):     "${identityString}"`);
+    // console.log(`Identity Type:             OIDC`);
+    // console.log(`Rucio Host:                ${rucioHost}`);
+    // console.log(`Full API URL:              ${apiUrl}`);
+    // console.log(`Token (first 50 chars):    ${oidcToken.substring(0, 50)}...`);
+    // console.log(`Token (last 20 chars):     ...${oidcToken.substring(oidcToken.length - 20)}`);
+    // console.log('='.repeat(70));
+    // console.log('');
     console.log(`[OIDC Helper] Calling Rucio API: GET ${apiUrl}`);
 
     try {
@@ -195,15 +195,16 @@ export async function getRucioAccountsForIdentity(identityString: string, rucioH
                 console.error('2. Identity not registered in Rucio database');
                 console.error('3. Wrong identity type (should be OIDC)');
                 console.error('');
-                console.error('To debug:');
-                console.error('1. Check Rucio database for identity format:');
-                console.error("   SELECT * FROM identities WHERE identity LIKE '%mayank%';");
-                console.error('2. Try manual curl with the token from [OIDC_TOKEN] log:');
-                console.error(`   curl -H "X-Rucio-Auth-Token: $TOKEN" \\`);
-                console.error(`        "${rucioHost}/identities/accounts?identity_key=${encodeURIComponent(identityString)}&type=OIDC"`);
-                console.error('3. Verify identity is associated with an account:');
-                console.error(`   SELECT * FROM account_map WHERE identity = '${identityString}';`);
-                console.error('='.repeat(70));
+                // SECURITY: Debug instructions disabled - DO NOT enable in production
+                // console.error('To debug:');
+                // console.error('1. Check Rucio database for identity format:');
+                // console.error("   SELECT * FROM identities WHERE identity LIKE '%mayank%';");
+                // console.error('2. Try manual curl with the token from [OIDC_TOKEN] log:');
+                // console.error(`   curl -H "X-Rucio-Auth-Token: $TOKEN" \\`);
+                // console.error(`        "${rucioHost}/identities/accounts?identity_key=${encodeURIComponent(identityString)}&type=OIDC"`);
+                // console.error('3. Verify identity is associated with an account:');
+                // console.error(`   SELECT * FROM account_map WHERE identity = '${identityString}';`);
+                // console.error('='.repeat(70));
                 throw new IdentityNotMappedError(identityString);
             } else if (response.status === 401) {
                 // Token is invalid or expired

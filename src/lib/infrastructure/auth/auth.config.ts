@@ -182,10 +182,11 @@ export const authConfig: NextAuthConfig = {
                     if (tokenParts.length === 3) {
                         // Decode the payload (second part of JWT)
                         const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
-                        console.log('[OIDC] JWT Token Claims:', JSON.stringify(payload, null, 2));
-                        console.log(`[OIDC] Audience (aud) claim: ${JSON.stringify(payload.aud)}`);
-                        console.log(`[OIDC] Issuer (iss) claim: ${payload.iss}`);
-                        console.log(`[OIDC] Subject (sub) claim: ${payload.sub}`);
+                        // SECURITY: Do not log token claims in production
+                        // console.log('[OIDC] JWT Token Claims:', JSON.stringify(payload, null, 2));
+                        // console.log(`[OIDC] Audience (aud) claim: ${JSON.stringify(payload.aud)}`);
+                        // console.log(`[OIDC] Issuer (iss) claim: ${payload.iss}`);
+                        // console.log(`[OIDC] Subject (sub) claim: ${payload.sub}`);
 
                         // Validate audience claim
                         const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
@@ -206,14 +207,14 @@ export const authConfig: NextAuthConfig = {
                     console.error('[OIDC] Failed to decode or validate JWT token:', e);
                 }
 
-                // Log the full token for manual testing (on separate line for easy extraction)
-                console.log('=== OIDC TOKEN FOR MANUAL TESTING ===');
-                const tokenPreview = `${rucioAuthToken.substring(0, 50)}...${rucioAuthToken.substring(rucioAuthToken.length - 20)}`;
-                console.log(`[OIDC] Access Token (truncated): ${tokenPreview}`);
-                console.log(`[OIDC] Full token length: ${rucioAuthToken.length} characters`);
-                console.log(`[OIDC] Extract full token from the line below (search for [OIDC_TOKEN]):`);
-                console.log(`[OIDC_TOKEN] ${rucioAuthToken}`);
-                console.log('=====================================');
+                // SECURITY: Token logging disabled - DO NOT enable in production
+                // console.log('=== OIDC TOKEN FOR MANUAL TESTING ===');
+                // const tokenPreview = `${rucioAuthToken.substring(0, 50)}...${rucioAuthToken.substring(rucioAuthToken.length - 20)}`;
+                // console.log(`[OIDC] Access Token (truncated): ${tokenPreview}`);
+                // console.log(`[OIDC] Full token length: ${rucioAuthToken.length} characters`);
+                // console.log(`[OIDC] Extract full token from the line below (search for [OIDC_TOKEN]):`);
+                // console.log(`[OIDC_TOKEN] ${rucioAuthToken}`);
+                // console.log('=====================================');
 
                 // Create Rucio identity string (format: "SUB=xxx, ISS=xxx")
                 // This matches the format expected in Rucio's identity_account_association table
@@ -446,11 +447,4 @@ export const authConfig: NextAuthConfig = {
     debug: process.env.NODE_ENV === 'development',
 };
 
-// export TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJWYUQzRDBQUm5QVzB5MXpBLTBieVIxZkhsSFVqalNFZzAxNngyY3JjaHljIn0.eyJleHAiOjE3NjE4MzQxNDksImlhdCI6MTc2MTgzMjk0OSwianRpIjoiYjM0ZGI3NjctYTg0ZS00YWVhLWE0MzQtZjQ2ODNjYTc2ZDQ5IiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmNlcm4uY2gvYXV0aC9yZWFsbXMvY2VybiIsImF1ZCI6ImF0bGFzLXJ1Y2lvLXdlYnVpIiwic3ViIjoibWF5YW5rIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXRsYXMtcnVjaW8td2VidWkiLCJzaWQiOiIwMWNkNTc4OS1jNzUzLTRiYWYtYjFkMy04ZTE2MGI5MjllMjIiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly9hdGxhcy1ydWNpby13ZWJ1aS5jZXJuLmNoIiwiaHR0cDovL2xvY2FsaG9zdDozMDAwIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiMmZhLW1pZ3JhdGVkIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYXRsYXMtcnVjaW8td2VidWkiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCIsImNlcm5fcGVyc29uX2lkIjoiODAxNjU5IiwibmFtZSI6Ik1heWFuayBTaGFybWEiLCJjZXJuX21haWxfdXBuIjoibWF5YW5rQGNlcm4uY2giLCJjZXJuX2lkZW50aXR5X2lkIjoiMWEwZTI0YjItNWFhYy00ZDJkLTg2MWUtMjBkOGY4NDY1ZmZlIiwicHJlZmVycmVkX3VzZXJuYW5rIjoibWF5YW5rIiwiZ2l2ZW5fbmFtZSI6Ik1heWFuayIsImNlcm5fcm9sZXMiOlsiZGVmYXVsdC1yb2xlIl0sImNlcm5fcHJlZmVycmVkX2xhbmd1YWdlIjoiRU4iLCJmYW1pbHlfbmFtZSI6IlNoYXJtYSIsImVtYWlsIjoibWF5YW5rLnNoYXJtYUBjZXJuLmNoIiwiY2Vybl91cG4iOiJtYXlhbmsifQ.Xkoi10W-UfUJI-0jgrCbuYYBaW34w6PdX7ETMqvK8fHOMLxA8QnU2yxbTKvBa1OnzwclQBLwiYpoHQzF_vkzcgTs8cQwaz15-LOnwRJ-NywP_MBchwQu2zNfaAVDYbj8xb_s_smVHukzNTApIwPypQwIerezWH72vs6dpRRmicgZYqcUd_-EXAoL2zuX3c9oym7ueksdIquiOJEaUfeDr4FI1Nv-uL9dosZy-SGTNo8In65X-W3zqwL-k9VBPKCvgk4yPn6SlLKbojgItm65Q6RYqQT3gjy4pLCL8W2oGIPKWp3YY8l8g1lURI5TQ393j6vU14SImcfeilR65DHdCg"
-
-// export IDENTITY_ENCODED="SUB%3Dmayank%2C%20ISS%3Dhttps%3A%2F%2Fauth.cern.ch%2Fauth%2Frealms%2Fcern"
-
-// curl -v \
-//     -H "X-Rucio-Auth-Token: $TOKEN" \
-//     -H "Content-Type: application/json" \
-//     "https://mayank-ops.cern.ch/identities/${IDENTITY_ENCODED}/OIDC/accounts"
+// SECURITY: Example tokens and curl commands removed - do not commit sensitive data
