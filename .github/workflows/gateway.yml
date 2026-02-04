@@ -1,11 +1,7 @@
 name: Gateway Tests
 on:
   push:
-    branches:
-      - master
   pull_request:
-    branches:
-      - master
 jobs:
   test:
     name: Gateway Tests

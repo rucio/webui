@@ -2,11 +2,7 @@ name: Prettier Code Check
 
 on:
   push:
-    branches:
-      - master
   pull_request:
-    branches:
-      - master
 
 jobs:
   prettier-check:

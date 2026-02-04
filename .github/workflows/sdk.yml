@@ -1,11 +1,7 @@
 name: SDK Tests
 on:
   push:
-    branches:
-      - master
   pull_request:
-    branches:
-      - master
 jobs:
   test:
     name: Test WebUI SDK
