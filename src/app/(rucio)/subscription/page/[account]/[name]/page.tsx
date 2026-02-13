@@ -6,5 +6,5 @@ import { DetailsSubscription } from '@/component-library/pages/Subscriptions/det
 export default function PageSubscription({ params }: { params: Promise<{ account: string; name: string }> }) {
     const { account, name } = use(params);
 
-    return <DetailsSubscription account={account} name={name} />;
+    return <DetailsSubscription account={decodeURIComponent(account)} name={decodeURIComponent(name)} />;
 }
