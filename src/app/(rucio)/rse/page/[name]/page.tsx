@@ -8,7 +8,8 @@ import { getRucioAuthToken } from '@/lib/infrastructure/auth/nextauth-session-ut
 import { MockSignal } from '@/lib/infrastructure/utils/mock-signal';
 
 export default async function Page({ params }: { params: Promise<{ name: string }> }) {
-    const { name } = await params;
+    const { name: rawName } = await params;
+    const name = decodeURIComponent(rawName);
     const usecaseFactory = appContainer.get<TUseCaseFactory<GetRSERequest>>(USECASE_FACTORY.GET_RSE);
 
     const signal = new MockSignal<RSEDetailsViewModel>();
