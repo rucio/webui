@@ -16,6 +16,7 @@ export const DetailsSubscriptionRules: DetailsSubscriptionView = ({ meta }: Deta
             maxHeight="100%"
             showExpandButton
             expandTitle="Replication Rules"
+            className="h-full"
         />
     );
 };
