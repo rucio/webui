@@ -16,6 +16,7 @@ export const DetailsSubscriptionFilter: DetailsSubscriptionView = ({ meta }: Det
             maxHeight="100%"
             showExpandButton
             expandTitle="Subscription Filter"
+            className="h-full"
         />
     );
 };

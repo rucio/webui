@@ -258,10 +258,13 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
         }
     };
 
+    const isFlexFill = maxHeight === '100%';
+
     const containerClasses = twMerge(
         'relative rounded border',
         'bg-neutral-100 dark:bg-neutral-800',
         'border-neutral-200 dark:border-neutral-700',
+        isFlexFill && 'flex flex-col',
         className,
     );
 
@@ -282,7 +285,10 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
         'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600',
     );
 
-    const treeWrapperClasses = 'overflow-auto p-3 font-mono text-sm leading-relaxed';
+    const treeWrapperClasses = twMerge(
+        'overflow-auto p-3 font-mono text-sm leading-relaxed',
+        isFlexFill && 'flex-1 min-h-0',
+    );
 
     const warningBadgeClasses =
         'inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700';
@@ -338,7 +344,7 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
             )}
 
             {/* JSON tree content */}
-            <div className={treeWrapperClasses} style={{ maxHeight }}>
+            <div className={treeWrapperClasses} style={isFlexFill ? undefined : { maxHeight }}>
                 <JSONNode data={parsedValue} level={0} expandDepth={expandDepth} isLast />
             </div>
         </div>
