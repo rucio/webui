@@ -327,6 +327,7 @@ export function fixtureDIDMetaViewModel(type?: DIDType): DIDMetaViewModel {
         guid: did_type === DIDType.FILE ? faker.string.uuid() : null,
         md5: did_type === DIDType.FILE ? faker.string.hexadecimal({ length: 32, prefix: '' }) : null,
         bytes: did_type === DIDType.FILE ? faker.number.int({ min: 0, max: 1e12 }) : null,
+        is_opendata: faker.datatype.boolean(),
     };
 }
 

@@ -73,6 +73,7 @@ export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
             access_cnt: null | any;
             created_at: string;
             updated_at: string;
+            is_opendata: boolean;
         };
 
         let didType: DIDType = DIDType.UNKNOWN;
@@ -134,6 +135,7 @@ export default class GetDIDMetaEndpoint extends BaseEndpoint<DIDMetaDTO> {
             md5: data.md5,
             guid: data.guid,
             bytes: data.bytes,
+            is_opendata: data.is_opendata,
         };
         return dto;
     }
