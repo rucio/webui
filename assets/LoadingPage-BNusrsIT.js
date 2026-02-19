@@ -1,0 +1,22 @@
+import{r as f,j as e}from"./iframe-CbZ9RuD1.js";import{P as h}from"./PageContainer-BuffACpx.js";import{R as x}from"./RucioLogo-je1npqWy.js";import{L as g}from"./LoadingSpinner-DNn-SVom.js";import{H as b}from"./Heading-BBK5GD02.js";import{m as t}from"./proxy-vEXAzVUV.js";import{u as v}from"./use-reduced-motion-CgJySeb8.js";const r=f.forwardRef(({message:o="Loading Rucio WebUI...",logoSize:a=146,spinnerSize:d="xl",showOrbitAnimation:l=!0,className:c},u)=>{const i=v(),m={hidden:{opacity:0},visible:{opacity:1,transition:{staggerChildren:.15,delayChildren:.1}}},n={hidden:{opacity:0,y:20},visible:{opacity:1,y:0,transition:{duration:i?0:.3,ease:[0,0,.2,1]}}},p={hidden:{opacity:0,scale:.8},visible:{opacity:1,scale:1,transition:{duration:i?0:.5,ease:[0,0,.2,1]}}},s={hidden:{pathLength:0,opacity:0},visible:{pathLength:1,opacity:.2,transition:{pathLength:{duration:i?0:1.5,ease:"easeInOut"},opacity:{duration:i?0:.5}}}};return e.jsx(h,{ref:u,centered:!0,className:`min-h-screen flex items-center justify-center ${c||""}`,children:e.jsxs(t.div,{variants:m,initial:"hidden",animate:"visible",className:"flex flex-col items-center justify-center space-y-8 relative",role:"status","aria-live":"polite","aria-label":"Loading Rucio WebUI",children:[l&&!i&&e.jsxs("div",{className:"absolute inset-0 flex items-center justify-center pointer-events-none",children:[e.jsxs("svg",{width:a*2,height:a*2,className:"absolute",children:[e.jsx(t.circle,{cx:a,cy:a,r:a*.9,fill:"none",stroke:"currentColor",strokeWidth:"1",className:"text-brand-500/20 dark:text-brand-400/20",variants:s,initial:"hidden",animate:"visible"}),e.jsx(t.circle,{cx:a,cy:a,r:a*.7,fill:"none",stroke:"currentColor",strokeWidth:"1",className:"text-brand-600/20 dark:text-brand-500/20",variants:s,initial:"hidden",animate:"visible",transition:{delay:.2}})]}),e.jsx(t.div,{className:"absolute",style:{width:a*2,height:a*2},animate:{rotate:360},transition:{duration:20,repeat:1/0,ease:"linear"},children:e.jsx("div",{className:"absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-brand-500 dark:bg-brand-400",style:{filter:"blur(1px)"}})}),e.jsx(t.div,{className:"absolute",style:{width:a*1.4,height:a*1.4},animate:{rotate:-360},transition:{duration:15,repeat:1/0,ease:"linear"},children:e.jsx("div",{className:"absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-brand-600 dark:bg-brand-500",style:{filter:"blur(1px)"}})})]}),e.jsx(t.div,{variants:p,className:"relative z-10",children:e.jsx(t.div,{animate:{scale:i?1:[1,1.05,1]},transition:{duration:2,repeat:1/0,ease:"easeInOut"},children:e.jsx(x,{width:a,height:a,className:"text-brand-500 dark:text-brand-400","aria-label":"Rucio Logo"})})}),e.jsx(t.div,{variants:n,children:e.jsx(g,{size:d,variant:"default"})}),e.jsx(t.div,{variants:n,children:e.jsx(b,{text:o,size:"md",className:"text-neutral-900 dark:text-neutral-100"})})]})})});r.displayName="LoadingPage";r.__docgenInfo={description:`LoadingPage component with dynamic animations
+
+A full-page loading state with animated logo, orbiting elements, and smooth entrance effects.
+Features path drawing-inspired animations and respects reduced motion preferences.
+Used by Next.js during route transitions and can be used in Storybook for testing.
+
+@component
+@example
+\`\`\`tsx
+// Default usage with animations
+<LoadingPage />
+
+// Custom message
+<LoadingPage message="Loading data..." />
+
+// Without orbit animations
+<LoadingPage showOrbitAnimation={false} />
+\`\`\``,methods:[],displayName:"LoadingPage",props:{message:{required:!1,tsType:{name:"string"},description:`Loading message to display
+@default "Loading Rucio WebUI..."`,defaultValue:{value:"'Loading Rucio WebUI...'",computed:!1}},logoSize:{required:!1,tsType:{name:"number"},description:`Size of the logo
+@default 146`,defaultValue:{value:"146",computed:!1}},spinnerSize:{required:!1,tsType:{name:"union",raw:"'sm' | 'md' | 'lg' | 'xl'",elements:[{name:"literal",value:"'sm'"},{name:"literal",value:"'md'"},{name:"literal",value:"'lg'"},{name:"literal",value:"'xl'"}]},description:`Size of the loading spinner
+@default "xl"`,defaultValue:{value:"'xl'",computed:!1}},showOrbitAnimation:{required:!1,tsType:{name:"boolean"},description:`Whether to show animated orbit effects
+@default true`,defaultValue:{value:"true",computed:!1}},className:{required:!1,tsType:{name:"string"},description:"Additional CSS classes for the container"}}};export{r as L};

@@ -1,0 +1,1 @@
+import{j as s}from"./iframe-CbZ9RuD1.js";import{t as a}from"./tw-merge-Ds6tgvmq.js";const n=({...t})=>{const{children:e,className:o,...r}=t;return s.jsx("h1",{className:a("text-4xl font-extrabold leading-none dark:text-neutral-0 text-neutral-1000",o??""),...r,children:e})};n.__docgenInfo={description:"",methods:[],displayName:"H1"};export{n as H};
