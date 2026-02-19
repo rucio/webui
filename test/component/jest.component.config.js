@@ -11,6 +11,7 @@ const customJestConfig = {
     displayName: 'component',
     rootDir: '../../',
     // Add more setup options before each test is run
+    setupFiles: ['<rootDir>/test/jest.polyfills.js'],
     setupFilesAfterEnv: ['<rootDir>/test/component/jest.component.setup.ts'],
     // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
     moduleDirectories: ['node_modules', '<rootDir>/'],
