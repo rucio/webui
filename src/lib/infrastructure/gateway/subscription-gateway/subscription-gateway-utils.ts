@@ -1,6 +1,5 @@
 import { SubscriptionDTO, SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
 import { RuleState, SubscriptionReplicationRule, SubscriptionState } from '@/lib/core/entity/rucio';
-import { de } from '@faker-js/faker';
 
 /**
  * Represents the data returned by Rucio Server for a subscription.

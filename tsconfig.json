@@ -44,7 +44,10 @@
   ],
   "exclude": [
     "node_modules",
-    "**/*FullFilter.stories.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.tsx",
+    "test/**/*",
+    ".storybook/**/*",
     "tools/meow-maker/**/*",
     "tools/env-generator/**/*"
   ]
