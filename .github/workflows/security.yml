@@ -1,8 +1,11 @@
 name: Security Audit
 on:
     pull_request:
+    schedule:
+        - cron: "0 8 * * 1"  # Every Monday at 08:00 UTC
 jobs:
     dependency-review:
+        if: github.event_name == 'pull_request'
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -16,3 +19,18 @@ jobs:
               with:
                   fail-on-severity: high
                   comment-summary-in-pr: always
+
+    npm-audit:
+        if: github.event_name == 'schedule'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout 🛎️
+              uses: actions/checkout@v6
+
+            - name: Install 🔧
+              run: npm install --legacy-peer-deps
+
+            - name: npm audit 🔒
+              run: npm audit --audit-level=high
