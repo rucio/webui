@@ -2,9 +2,6 @@ name: Security Audit
 on:
     pull_request:
     push:
-        branches:
-            - release-38-LTS
-            - release-38
     schedule:
         - cron: "0 8 * * 1"  # Every Monday at 08:00 UTC
 jobs:
