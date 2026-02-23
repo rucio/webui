@@ -1,16 +1,10 @@
-import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
-import tsparser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 import globals from 'globals';
-import { fileURLToPath } from 'url';
-import path from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import nextPlugin from '@next/eslint-plugin-next';
 
 export default [
   {
@@ -29,14 +23,21 @@ export default [
     ],
   },
   js.configs.recommended,
-  ...compat.extends('plugin:@typescript-eslint/recommended'),
-  ...compat.extends('plugin:react/recommended'),
-  ...compat.extends('plugin:react-hooks/recommended'),
-  ...compat.extends('plugin:@next/next/recommended'),
+  ...tsPlugin.configs['flat/recommended'],
+  reactPlugin.configs.flat.recommended,
+  reactHooksPlugin.configs['recommended-latest'],
+  {
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+    },
+  },
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
     languageOptions: {
-      parser: tsparser,
+      parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
