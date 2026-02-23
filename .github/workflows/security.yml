@@ -1,5 +1,8 @@
 name: Security Audit
 on:
+    push:
+        branches:
+            - master
     pull_request:
     schedule:
         - cron: "0 8 * * 1"  # Every Monday at 08:00 UTC
@@ -21,7 +24,7 @@ jobs:
                   comment-summary-in-pr: always
 
     npm-audit:
-        if: github.event_name == 'schedule'
+        if: github.event_name == 'schedule' || github.event_name == 'push'
         runs-on: ubuntu-latest
         permissions:
             contents: read
