@@ -9,19 +9,19 @@
     },
     "author": "Mayank Sharma ( imptodefeat@gmail.com )",
     "license": "ISC",
+    "dependencies": {
+        "liquidjs": "^10.10.1",
+        "yargs": "^17.7.2"
+    },
     "devDependencies": {
         "@types/node": "^20.5.9",
         "@types/yargs": "^17.0.24",
         "chalk": "^5.3.0",
         "nodemon": "^3.0.1",
         "typescript": "^5.2.2",
-        "watch": "^0.13.0",
-        "yargs": "^17.7.2"
+        "watch": "^0.13.0"
     },
     "files": [
         "templates"
-    ],
-    "dependencies": {
-        "liquidjs": "^10.10.1"
-    }
+    ]
 }
