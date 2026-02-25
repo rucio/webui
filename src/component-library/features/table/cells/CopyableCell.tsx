@@ -96,7 +96,7 @@ interface CopyableLinkCellProps extends CopyableCellProps {
  * ```tsx
  * <CopyableLinkCell
  *   text="scope:dataset_name"
- *   href="/did/page/scope/dataset_name"
+ *   href="/did/scope/dataset_name"
  * >
  *   scope:dataset_name
  * </CopyableLinkCell>

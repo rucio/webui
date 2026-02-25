@@ -61,7 +61,7 @@ export function buildDIDSearchUrl(params: DIDSearchParams = {}): string {
     }
 
     const queryString = urlParams.toString();
-    return queryString ? `/did/list?${queryString}` : '/did/list';
+    return queryString ? `/dids?${queryString}` : '/dids';
 }
 
 /**

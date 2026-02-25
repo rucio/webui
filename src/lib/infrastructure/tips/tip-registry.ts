@@ -62,7 +62,7 @@ export interface Tip {
     /** Priority level for sorting and auto-display logic */
     priority: TipPriority;
 
-    /** Page routes where this tip is relevant (e.g., ['/did/list']) */
+    /** Page routes where this tip is relevant (e.g., ['/dids']) */
     pages?: string[];
 
     /** CSS selector or element ID for positioning contextual tips */

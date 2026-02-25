@@ -16,8 +16,8 @@ export function inferCardType(url: string): HotBarCardType {
         const urlObj = new URL(url, window.location.origin);
         const pathname = urlObj.pathname;
 
-        if (pathname.includes('/did/list')) return HotBarCardType.DID_LIST;
-        if (pathname.includes('/did/page/')) return HotBarCardType.DID;
+        if (pathname.includes('/dids')) return HotBarCardType.DID_LIST;
+        if (pathname.includes('/did/')) return HotBarCardType.DID;
         if (pathname.includes('/rule/list')) return HotBarCardType.RULE_LIST;
         if (pathname.includes('/rule/page/')) return HotBarCardType.RULE;
         if (pathname.includes('/rse/list')) return HotBarCardType.RSE_LIST;

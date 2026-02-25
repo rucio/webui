@@ -259,7 +259,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
 
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
-        { title: 'DIDs', path: '/did/list' },
+        { title: 'DIDs', path: '/dids' },
         { title: 'RSEs', path: '/rse/list' },
         { title: 'Subscriptions', path: subscriptionUrl },
         {

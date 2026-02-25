@@ -79,9 +79,9 @@ export const WithHomeIconAndManyLevels: Story = {
         showHomeIcon: true,
         items: [
             { label: 'DIDs', href: '/did' },
-            { label: 'List', href: '/did/list' },
-            { label: 'Physics', href: '/did/list/physics' },
-            { label: 'ATLAS', href: '/did/list/physics/atlas' },
+            { label: 'List', href: '/dids' },
+            { label: 'Physics', href: '/dids/physics' },
+            { label: 'ATLAS', href: '/dids/physics/atlas' },
             { label: 'Dataset Details' },
         ],
     },
@@ -157,9 +157,9 @@ export const DatasetPath: Story = {
         <div className="p-6 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
             <Breadcrumbs
                 items={[
-                    { label: 'DIDs', href: '/did/list' },
-                    { label: 'user.jdoe', href: '/did/list/user.jdoe' },
-                    { label: 'dataset.physics.2024', href: '/did/list/user.jdoe/dataset.physics.2024' },
+                    { label: 'DIDs', href: '/dids' },
+                    { label: 'user.jdoe', href: '/dids/user.jdoe' },
+                    { label: 'dataset.physics.2024', href: '/dids/user.jdoe/dataset.physics.2024' },
                     { label: 'Details' },
                 ]}
             />

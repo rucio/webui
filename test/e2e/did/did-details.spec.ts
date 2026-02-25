@@ -3,7 +3,7 @@ import { test, expect } from '../fixtures/auth.fixture';
 test.describe('DID Details Page', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to DID list first to find a valid DID
-        await page.goto('/did/list');
+        await page.goto('/dids');
 
         // Wait for table to load
         await page.waitForSelector('table, [role="table"]', { timeout: 15000 });
@@ -169,7 +169,7 @@ test.describe('DID Details Page', () => {
     test('should handle direct URL access to DID details page', async ({ page }) => {
         // Try to access a DID detail page directly with a test scope/name
         // This test uses a generic pattern - adjust if specific test DIDs are known
-        await page.goto('/did/page/test/test_dataset');
+        await page.goto('/did/test/test_dataset');
 
         // Page should either:
         // 1. Display DID details if it exists
