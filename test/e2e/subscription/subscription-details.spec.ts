@@ -3,7 +3,7 @@ import { test, expect } from '../fixtures/auth.fixture';
 test.describe('Subscription Details Page', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to subscription list first to find a valid subscription
-        await page.goto('/subscription/list');
+        await page.goto('/subscriptions');
 
         // Wait for table to load
         await page.waitForSelector('table, [role="table"]', { timeout: 15000 });
@@ -261,7 +261,7 @@ test.describe('Subscription Details Page', () => {
     test('should handle direct URL access to subscription details page', async ({ page }) => {
         // Try to access a subscription detail page directly with a test account/name
         // This test uses a generic pattern - adjust if specific test subscriptions are known
-        await page.goto('/subscription/page/test/test_subscription');
+        await page.goto('/subscription/test/test_subscription');
 
         // Page should either:
         // 1. Display subscription details if it exists

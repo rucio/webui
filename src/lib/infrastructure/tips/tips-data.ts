@@ -163,7 +163,7 @@ export const TIPS: Tip[] = [
             'Subscriptions automatically create rules for new data matching specific patterns. They help automate data placement as new files are registered.',
         category: TipCategory.SUBSCRIPTIONS,
         priority: 'essential',
-        pages: ['/subscription/list'],
+        pages: ['/subscriptions'],
         showOnFirstVisit: true,
         variant: 'info',
         learnMoreUrl: 'https://rucio.github.io/documentation/started/concepts/subscriptions',
@@ -174,7 +174,7 @@ export const TIPS: Tip[] = [
         content: 'Subscriptions use filters to match DIDs. Filters can include scope patterns, DID name patterns, and metadata conditions.',
         category: TipCategory.SUBSCRIPTIONS,
         priority: 'helpful',
-        pages: ['/subscription/list', '/subscription/page'],
+        pages: ['/subscriptions', '/subscription'],
         variant: 'info',
     },
 
