@@ -37,7 +37,7 @@ const ClickableDID = (props: { value: string[] }) => {
 };
 
 const ClickableRSEExpression = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/list?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rses?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const NullableRemainingLifetime = (props: { value: number }) => {

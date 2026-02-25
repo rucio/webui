@@ -63,7 +63,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                         <div className="max-w-[20rem]">
                             <CopyableLinkCell
                                 text={meta.rse_expression}
-                                href={`/rse/list?expression=${encodeURIComponent(meta.rse_expression)}&autoSearch=true`}
+                                href={`/rses?expression=${encodeURIComponent(meta.rse_expression)}&autoSearch=true`}
                             >
                                 <Field>{meta.rse_expression}</Field>
                             </CopyableLinkCell>

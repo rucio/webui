@@ -172,7 +172,7 @@ export const RSENavigation: Story = {
         <div className="p-6 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
             <Breadcrumbs
                 showHomeIcon
-                items={[{ label: 'RSEs', href: '/rse/list' }, { label: 'CERN-PROD', href: '/rse/CERN-PROD' }, { label: 'Configuration' }]}
+                items={[{ label: 'RSEs', href: '/rses' }, { label: 'CERN-PROD', href: '/rse/CERN-PROD' }, { label: 'Configuration' }]}
             />
         </div>
     ),
