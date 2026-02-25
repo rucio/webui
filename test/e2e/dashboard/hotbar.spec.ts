@@ -126,8 +126,8 @@ test.describe('HotBar Widget', () => {
         const testCases = [
             { url: '/dids', expectedType: 'DID LIST' },
             { url: '/did/scope:name', expectedType: 'DID' },
-            { url: '/rule/list', expectedType: 'RULE LIST' },
-            { url: '/rule/page/123', expectedType: 'RULE' },
+            { url: '/rules', expectedType: 'RULE LIST' },
+            { url: '/rule/123', expectedType: 'RULE' },
             { url: '/rse/list', expectedType: 'RSE LIST' },
             { url: '/rse/page/CERN-PROD', expectedType: 'RSE' },
         ];
@@ -184,7 +184,7 @@ test.describe('HotBar Widget', () => {
         await addBookmark(page, {
             title: 'To Be Deleted',
             description: 'This will be removed',
-            url: '/rule/list',
+            url: '/rules',
         });
 
         // Verify bookmark is displayed
@@ -253,7 +253,7 @@ test.describe('HotBar Widget', () => {
         });
         await addBookmark(page, {
             title: 'Persistent Bookmark 2',
-            url: '/rule/list',
+            url: '/rules',
         });
 
         // Reload the page

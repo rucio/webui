@@ -206,7 +206,7 @@ export const CreateRuleStageSubmission = ({ parameters, removeSaved }: CreateRul
                                     transition={{ delay: 1.2 + index * 0.1, duration: 0.3 }}
                                 >
                                     <Link
-                                        href={`/rule/page/${id}`}
+                                        href={`/rule/${id}`}
                                         className="flex items-center space-x-2 p-3 rounded-md bg-neutral-100 dark:bg-neutral-700 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors duration-200 border border-transparent hover:border-brand-500 dark:hover:border-brand-400"
                                     >
                                         <span className="text-neutral-900 dark:text-neutral-100 font-mono text-sm">{id}</span>
@@ -226,7 +226,7 @@ export const CreateRuleStageSubmission = ({ parameters, removeSaved }: CreateRul
                 >
                     <span>
                         You can also view all your rules in the{' '}
-                        <Link href="/rule/list" className="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                        <Link href="/rules" className="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
                             rules list
                         </Link>
                     </span>

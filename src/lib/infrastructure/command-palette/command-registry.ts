@@ -47,7 +47,7 @@ export function getNavigationCommands(account?: string): CommandItem[] {
             title: 'Rules',
             description: 'Browse replication rules',
             icon: ShieldCheckIcon,
-            url: '/rule/list',
+            url: '/rules',
             keywords: ['rule', 'replication', 'policy'],
         },
         {
