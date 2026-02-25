@@ -181,7 +181,7 @@ export const RSENavigation: Story = {
 export const RuleCreation: Story = {
     render: () => (
         <div className="p-6 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
-            <Breadcrumbs items={[{ label: 'Rules', href: '/rule/list' }, { label: 'Create Rule', href: '/rule/create' }, { label: 'Select DIDs' }]} />
+            <Breadcrumbs items={[{ label: 'Rules', href: '/rules' }, { label: 'Create Rule', href: '/rule/create' }, { label: 'Select DIDs' }]} />
         </div>
     ),
 };

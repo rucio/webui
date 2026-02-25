@@ -84,7 +84,7 @@ export const TIPS: Tip[] = [
             'Rules define where data should be stored. A rule requests copies of DIDs at specific RSEs. Rucio automatically manages data placement based on rules.',
         category: TipCategory.RULES,
         priority: 'essential',
-        pages: ['/rule/list', '/rule/create'],
+        pages: ['/rules', '/rule/create'],
         showOnFirstVisit: true,
         variant: 'info',
     },
@@ -95,7 +95,7 @@ export const TIPS: Tip[] = [
             'Rules progress through states: REPLICATING (copying data), OK (all copies made), STUCK (transfer issues), or SUSPENDED (paused). Check the state to monitor progress.',
         category: TipCategory.RULES,
         priority: 'essential',
-        pages: ['/rule/list', '/rule/page'],
+        pages: ['/rules', '/rule'],
         variant: 'info',
     },
     {
@@ -104,7 +104,7 @@ export const TIPS: Tip[] = [
         content: 'Rules can have an expiration date. When a rule expires, Rucio may delete the associated replicas if no other rules protect them.',
         category: TipCategory.RULES,
         priority: 'helpful',
-        pages: ['/rule/create', '/rule/page'],
+        pages: ['/rule/create', '/rule'],
         variant: 'warning',
     },
     {

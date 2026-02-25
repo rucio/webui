@@ -90,7 +90,7 @@ export function buildRuleSearchUrl(filters: RuleSearchFilters = {}): string {
         filters.account || filters.scope || filters.name || filters.activity || filters.state || filters.updatedBefore || filters.updatedAfter;
 
     if (!hasFilters) {
-        return '/rule/list';
+        return '/rules';
     }
 
     urlParams.set('autoSearch', 'true');
@@ -117,14 +117,14 @@ export function buildRuleSearchUrl(filters: RuleSearchFilters = {}): string {
         urlParams.set('updated_after', formatDateForUrl(filters.updatedAfter));
     }
 
-    return `/rule/list?${urlParams.toString()}`;
+    return `/rules?${urlParams.toString()}`;
 }
 
 /**
  * Build URL for Rule detail page (direct navigation by ID)
  */
 export function buildRuleDetailUrl(ruleId: string): string {
-    return `/rule/page/${ruleId}`;
+    return `/rule/${ruleId}`;
 }
 
 /**
