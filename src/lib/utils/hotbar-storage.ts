@@ -20,8 +20,8 @@ export function inferCardType(url: string): HotBarCardType {
         if (pathname.includes('/did/')) return HotBarCardType.DID;
         if (pathname.includes('/rules')) return HotBarCardType.RULE_LIST;
         if (pathname.includes('/rule/')) return HotBarCardType.RULE;
-        if (pathname.includes('/rse/list')) return HotBarCardType.RSE_LIST;
-        if (pathname.includes('/rse/page/')) return HotBarCardType.RSE;
+        if (pathname.includes('/rses')) return HotBarCardType.RSE_LIST;
+        if (pathname.includes('/rse/')) return HotBarCardType.RSE;
 
         // Default fallback
         return HotBarCardType.DID;

@@ -3,7 +3,7 @@ import { test, expect } from '../fixtures/auth.fixture';
 test.describe('RSE Details Page', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to RSE list first to find a valid RSE
-        await page.goto('/rse/list');
+        await page.goto('/rses');
 
         // Wait for table to load
         await page.waitForSelector('table, [role="table"]', { timeout: 15000 });
@@ -193,7 +193,7 @@ test.describe('RSE Details Page', () => {
 
     test('should handle direct URL access to RSE details page', async ({ page }) => {
         // Try to access an RSE detail page directly with a test name
-        await page.goto('/rse/page/TEST-RSE');
+        await page.goto('/rse/TEST-RSE');
 
         // Page should either:
         // 1. Display RSE details if it exists

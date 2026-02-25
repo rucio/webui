@@ -128,8 +128,8 @@ test.describe('HotBar Widget', () => {
             { url: '/did/scope:name', expectedType: 'DID' },
             { url: '/rules', expectedType: 'RULE LIST' },
             { url: '/rule/123', expectedType: 'RULE' },
-            { url: '/rse/list', expectedType: 'RSE LIST' },
-            { url: '/rse/page/CERN-PROD', expectedType: 'RSE' },
+            { url: '/rses', expectedType: 'RSE LIST' },
+            { url: '/rse/CERN-PROD', expectedType: 'RSE' },
         ];
 
         for (const testCase of testCases) {
