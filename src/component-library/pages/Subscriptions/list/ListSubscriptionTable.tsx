@@ -17,7 +17,7 @@ type ListSubscriptionTableProps = {
 };
 
 const ClickableName = (props: { value: string; account: string }) => {
-    return <ClickableCell href={`/subscription/page/${props.account}/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/subscription/${props.account}/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
