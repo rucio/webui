@@ -132,14 +132,14 @@ export function buildRuleDetailUrl(ruleId: string): string {
  */
 export function buildSubscriptionSearchUrl(account?: string): string {
     if (!account) {
-        return '/subscription/list';
+        return '/subscriptions';
     }
 
     const urlParams = new URLSearchParams();
     urlParams.set('account', account);
     urlParams.set('autoSearch', 'true');
 
-    return `/subscription/list?${urlParams.toString()}`;
+    return `/subscriptions?${urlParams.toString()}`;
 }
 
 /**
