@@ -3,12 +3,12 @@ import { test, expect } from '../fixtures/auth.fixture';
 test.describe('DID List Page', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to DID list page
-        await page.goto('/did/list');
+        await page.goto('/dids');
     });
 
     test('should display DID list page', async ({ page }) => {
         // Verify URL
-        await expect(page).toHaveURL(/.*did\/list/);
+        await expect(page).toHaveURL(/.*dids/);
 
         // Verify page title or heading
         await expect(page.locator('h1, h2, [role="heading"]').filter({ hasText: /DID|Data Identifier/i })).toBeVisible({ timeout: 10000 });
@@ -32,7 +32,7 @@ test.describe('DID List Page', () => {
 
     test('should display loading state while fetching DIDs', async ({ page }) => {
         // Navigate to DID list
-        await page.goto('/did/list');
+        await page.goto('/dids');
 
         // Check for loading indicator (spinner, skeleton, or loading text)
         // This may be very quick, so we use a short timeout

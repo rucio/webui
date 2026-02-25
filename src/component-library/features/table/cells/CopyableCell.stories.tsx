@@ -78,7 +78,7 @@ export const LinkWithCopy: StoryObj<typeof CopyableLinkCell> = {
                 <tbody>
                     <tr>
                         <td className="border p-2">
-                            <CopyableLinkCell text="user.scope:dataset_name_003" href="/did/page/user.scope/dataset_name_003">
+                            <CopyableLinkCell text="user.scope:dataset_name_003" href="/did/user.scope/dataset_name_003">
                                 user.scope:dataset_name_003
                             </CopyableLinkCell>
                         </td>
@@ -87,7 +87,7 @@ export const LinkWithCopy: StoryObj<typeof CopyableLinkCell> = {
                         <td className="border p-2">
                             <CopyableLinkCell
                                 text="data18_13TeV:AOD.987654._000002.pool.root.1"
-                                href="/did/page/data18_13TeV/AOD.987654._000002.pool.root.1"
+                                href="/did/data18_13TeV/AOD.987654._000002.pool.root.1"
                             >
                                 data18_13TeV:AOD.987654._000002.pool.root.1
                             </CopyableLinkCell>
@@ -117,7 +117,7 @@ export const InTableContext: StoryObj = {
                 <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                     <tr>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <CopyableLinkCell text="user.jdoe:MyDataset.v1" href="/did/page/user.jdoe/MyDataset.v1">
+                            <CopyableLinkCell text="user.jdoe:MyDataset.v1" href="/did/user.jdoe/MyDataset.v1">
                                 user.jdoe:MyDataset.v1
                             </CopyableLinkCell>
                         </td>
@@ -130,7 +130,7 @@ export const InTableContext: StoryObj = {
                         <td className="px-6 py-4 whitespace-nowrap">
                             <CopyableLinkCell
                                 text="mc16_13TeV:AOD.28395012._000001.pool.root.1"
-                                href="/did/page/mc16_13TeV/AOD.28395012._000001.pool.root.1"
+                                href="/did/mc16_13TeV/AOD.28395012._000001.pool.root.1"
                             >
                                 mc16_13TeV:AOD.28395012._000001.pool.root.1
                             </CopyableLinkCell>
@@ -142,7 +142,7 @@ export const InTableContext: StoryObj = {
                     </tr>
                     <tr>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <CopyableLinkCell text="data18_13TeV:physics_Main.period_A" href="/did/page/data18_13TeV/physics_Main.period_A">
+                            <CopyableLinkCell text="data18_13TeV:physics_Main.period_A" href="/did/data18_13TeV/physics_Main.period_A">
                                 data18_13TeV:physics_Main.period_A
                             </CopyableLinkCell>
                         </td>

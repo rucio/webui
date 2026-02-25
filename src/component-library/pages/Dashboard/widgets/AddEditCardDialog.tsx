@@ -185,7 +185,7 @@ export const AddEditCardDialog: React.FC<AddEditCardDialogProps> = ({ open, onOp
                                         setErrors({ ...errors, url: undefined });
                                     }
                                 }}
-                                placeholder="/did/page/scope:name"
+                                placeholder="/did/scope:name"
                                 className={errors.url ? 'border-base-error-500' : ''}
                             />
                             {errors.url && <p className="mt-1 text-sm text-base-error-600 dark:text-base-error-400">{errors.url}</p>}

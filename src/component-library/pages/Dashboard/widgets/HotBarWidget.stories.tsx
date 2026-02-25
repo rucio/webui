@@ -45,7 +45,7 @@ export const WithInstructions: Story = {
 ### Usage
 1. Click "Add Card" to create a new bookmark
 2. Enter title (required), description (optional), and URL (required)
-3. URL must be from the same host (e.g., /did/page/scope:name)
+3. URL must be from the same host (e.g., /did/scope:name)
 4. Type is auto-detected from URL pattern
 5. Maximum 5 bookmarks allowed
                 `,

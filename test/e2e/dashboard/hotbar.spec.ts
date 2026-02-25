@@ -76,7 +76,7 @@ test.describe('HotBar Widget', () => {
         // Fill in form
         await page.locator('label:has-text("Title")').locator('..').locator('input').fill('My DID List');
         await page.locator('label:has-text("Description")').locator('..').locator('textarea').fill('Quick access to DID list');
-        await page.locator('label:has-text("URL")').locator('..').locator('input').fill('/did/list');
+        await page.locator('label:has-text("URL")').locator('..').locator('input').fill('/dids');
 
         // Verify type is auto-detected
         await expect(page.locator('text=DID LIST')).toBeVisible();
@@ -124,8 +124,8 @@ test.describe('HotBar Widget', () => {
 
     test('should infer correct type for different URLs', async ({ page }) => {
         const testCases = [
-            { url: '/did/list', expectedType: 'DID LIST' },
-            { url: '/did/page/scope:name', expectedType: 'DID' },
+            { url: '/dids', expectedType: 'DID LIST' },
+            { url: '/did/scope:name', expectedType: 'DID' },
             { url: '/rule/list', expectedType: 'RULE LIST' },
             { url: '/rule/page/123', expectedType: 'RULE' },
             { url: '/rse/list', expectedType: 'RSE LIST' },
@@ -152,7 +152,7 @@ test.describe('HotBar Widget', () => {
         await addBookmark(page, {
             title: 'Original Title',
             description: 'Original Description',
-            url: '/did/list',
+            url: '/dids',
         });
 
         // Hover over the card to show edit button
@@ -210,14 +210,14 @@ test.describe('HotBar Widget', () => {
         // Add a bookmark
         await addBookmark(page, {
             title: 'DID List Page',
-            url: '/did/list',
+            url: '/dids',
         });
 
         // Click the card
         await page.locator('text=DID List Page').click();
 
         // Verify navigation
-        await expect(page).toHaveURL(/.*\/did\/list/);
+        await expect(page).toHaveURL(/.*\/dids/);
     });
 
     test('should enforce maximum 5 bookmarks limit', async ({ page }) => {
@@ -249,7 +249,7 @@ test.describe('HotBar Widget', () => {
         // Add bookmarks
         await addBookmark(page, {
             title: 'Persistent Bookmark 1',
-            url: '/did/list',
+            url: '/dids',
         });
         await addBookmark(page, {
             title: 'Persistent Bookmark 2',
@@ -293,7 +293,7 @@ test.describe('HotBar Widget', () => {
         // Add a bookmark
         await addBookmark(page, {
             title: 'Timestamped Bookmark',
-            url: '/did/list',
+            url: '/dids',
         });
 
         // Verify created timestamp is displayed
@@ -345,7 +345,7 @@ test.describe('HotBar Widget', () => {
         // Add a bookmark
         await addBookmark(page, {
             title: 'Keyboard Test',
-            url: '/did/list',
+            url: '/dids',
         });
 
         // Focus on the card using Tab key

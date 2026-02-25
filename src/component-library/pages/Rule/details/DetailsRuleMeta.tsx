@@ -48,7 +48,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                         <div className="flex flex-row gap-2 items-center max-w-[20rem]">
                             <CopyableLinkCell
                                 text={`${meta.scope}:${meta.name}`}
-                                href={`/did/page/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
+                                href={`/did/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
                             >
                                 <Field>
                                     {meta.scope}:{meta.name}

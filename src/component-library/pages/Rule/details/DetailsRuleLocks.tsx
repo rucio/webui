@@ -27,7 +27,7 @@ const ClickableDID = (props: { value: string[] }) => {
     const [scope, name] = props.value;
     const didString = `${scope}:${name}`;
     return (
-        <CopyableLinkCell text={didString} href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
+        <CopyableLinkCell text={didString} href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
             {didString}
         </CopyableLinkCell>
     );

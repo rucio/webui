@@ -38,7 +38,7 @@ export function getNavigationCommands(account?: string): CommandItem[] {
             title: 'DIDs',
             description: 'Browse Data Identifiers',
             icon: DocumentDuplicateIcon,
-            url: '/did/list',
+            url: '/dids',
             keywords: ['did', 'data', 'identifier', 'dataset', 'file', 'container'],
         },
         {
@@ -126,7 +126,7 @@ export function getActionCommands(searchQuery: string = ''): CommandItem[] {
                 title: 'Search DIDs',
                 description: 'Search for Data Identifiers',
                 icon: MagnifyingGlassIcon,
-                url: '/did/list',
+                url: '/dids',
                 keywords: ['search', 'did', 'find'],
             },
             {
