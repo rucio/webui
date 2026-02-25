@@ -3,7 +3,7 @@ import { test, expect } from '../fixtures/auth.fixture';
 test.describe('Rule List Page', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to Rule list page
-        await page.goto('/rule/list');
+        await page.goto('/rules');
     });
 
     test('should display Rule list page', async ({ page }) => {
@@ -156,7 +156,7 @@ test.describe('Rule List Page', () => {
 
     test('should display loading state while fetching rules', async ({ page }) => {
         // Navigate to rule list
-        await page.goto('/rule/list');
+        await page.goto('/rules');
 
         // Check for loading indicator (may be very quick)
         const loadingIndicator = page.locator('[role="status"], .loading, .spinner, text=Loading').first();

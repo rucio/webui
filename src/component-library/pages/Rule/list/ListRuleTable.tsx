@@ -24,7 +24,7 @@ type ListRuleTableProps = {
 };
 
 const ClickableId = (props: { value: string }) => {
-    return <ClickableCell href={`/rule/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rule/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 const ClickableDID = (props: { value: string[] }) => {

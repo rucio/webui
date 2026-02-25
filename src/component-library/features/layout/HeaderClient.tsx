@@ -265,7 +265,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
         {
             title: 'Rules',
             children: [
-                { title: 'List Rules', path: '/rule/list' },
+                { title: 'List Rules', path: '/rules' },
                 { title: 'Create a rule', path: '/rule/create' },
             ],
         },

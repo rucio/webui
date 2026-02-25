@@ -14,7 +14,7 @@ import { calculateRuleActivityScore } from '@/lib/core/utils/rule-sorting-utils'
 import { chartColors, getBorderColor, getColorFromToken } from '@/lib/utils/chart-colors';
 
 const openRule = (id: string) => {
-    window.open(`/rule/page/${id}`, '_blank');
+    window.open(`/rule/${id}`, '_blank');
 };
 
 const LinkTick = (props: any) => {

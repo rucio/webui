@@ -29,7 +29,7 @@ const ruleLocation: SearchLocation = {
     name: 'Rules',
     parameter: 'ID',
     getHref: (query: string) => {
-        return query.length === 0 ? '/rule/list' : buildRuleDetailUrl(query);
+        return query.length === 0 ? '/rules' : buildRuleDetailUrl(query);
     },
 };
 
