@@ -41,7 +41,7 @@ export const TIPS: Tip[] = [
             'Unless explicitly specified, use the scope:name format to search for DIDs. For example, "mc16_13TeV:data*" finds all data files in that scope. Wildcards (*) are supported.',
         category: TipCategory.DIDS,
         priority: 'essential',
-        pages: ['/did/list'],
+        pages: ['/dids'],
         showOnFirstVisit: true,
         variant: 'info',
     },
@@ -52,7 +52,7 @@ export const TIPS: Tip[] = [
             'DIDs come in three types: Files (individual data files), Datasets (collections of files), and Containers (collections of datasets or other containers).',
         category: TipCategory.DIDS,
         priority: 'essential',
-        pages: ['/did/list', '/did/page'],
+        pages: ['/dids', '/did'],
         variant: 'info',
     },
     {
@@ -61,7 +61,7 @@ export const TIPS: Tip[] = [
         content: 'Click on any DID to view its metadata, including replicas, rules, and parent/child relationships.',
         category: TipCategory.DIDS,
         priority: 'helpful',
-        pages: ['/did/list'],
+        pages: ['/dids'],
         variant: 'info',
     },
     {
@@ -70,7 +70,7 @@ export const TIPS: Tip[] = [
         content: 'Files can have multiple replicas across different storage elements (RSEs). The "Replicas" tab shows where each copy is stored.',
         category: TipCategory.DIDS,
         priority: 'helpful',
-        pages: ['/did/page'],
+        pages: ['/did'],
         variant: 'info',
     },
 
