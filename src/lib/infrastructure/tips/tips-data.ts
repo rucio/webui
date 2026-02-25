@@ -128,7 +128,7 @@ export const TIPS: Tip[] = [
             'RSEs (Rucio Storage Elements) represent physical or logical storage locations where your data can be stored. Each RSE has specific protocols and quotas.',
         category: TipCategory.RSES,
         priority: 'essential',
-        pages: ['/rse/list'],
+        pages: ['/rses'],
         showOnFirstVisit: true,
         variant: 'info',
         learnMoreUrl: 'https://rucio.github.io/documentation/started/concepts/rse_expressions',
@@ -140,7 +140,7 @@ export const TIPS: Tip[] = [
             'RSEs have attributes like availability (for read/write/delete), supported protocols, and quota limits. Check these when choosing where to store data.',
         category: TipCategory.RSES,
         priority: 'helpful',
-        pages: ['/rse/list', '/rse/page'],
+        pages: ['/rses', '/rse'],
         variant: 'info',
     },
     {
@@ -149,7 +149,7 @@ export const TIPS: Tip[] = [
         content: 'RSEs support different access protocols (e.g., root://, davs://, gsiftp://) that can be used to read/write data.',
         category: TipCategory.RSES,
         priority: 'advanced',
-        pages: ['/rse/page'],
+        pages: ['/rse'],
         variant: 'info',
     },
 

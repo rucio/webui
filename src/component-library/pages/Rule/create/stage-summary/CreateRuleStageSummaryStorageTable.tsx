@@ -17,7 +17,7 @@ const WarningCell = (props: { value: string; warn: boolean }) => {
 };
 
 const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/list?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTableProps> = ({ ...props }) => {

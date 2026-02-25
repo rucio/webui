@@ -69,14 +69,14 @@ export function buildDIDSearchUrl(params: DIDSearchParams = {}): string {
  */
 export function buildRSESearchUrl(expression?: string): string {
     if (!expression || expression.length === 0) {
-        return '/rse/list';
+        return '/rses';
     }
 
     const urlParams = new URLSearchParams();
     urlParams.set('expression', expression);
     urlParams.set('autoSearch', 'true');
 
-    return `/rse/list?${urlParams.toString()}`;
+    return `/rses?${urlParams.toString()}`;
 }
 
 /**

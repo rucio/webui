@@ -17,7 +17,7 @@ type ListRSETableProps = {
 };
 
 const ClickableName = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rse/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 export const ListRSETable = (props: ListRSETableProps) => {

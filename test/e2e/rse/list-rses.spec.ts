@@ -3,7 +3,7 @@ import { test, expect } from '../fixtures/auth.fixture';
 test.describe('RSE List Page', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to RSE list page
-        await page.goto('/rse/list');
+        await page.goto('/rses');
     });
 
     test('should display RSE list page', async ({ page }) => {
@@ -52,7 +52,7 @@ test.describe('RSE List Page', () => {
             const firstLink = rseLinks.first();
             const href = await firstLink.getAttribute('href');
 
-            expect(href).toContain('/rse/page/');
+            expect(href).toContain('/rse/');
 
             // Click the link
             await firstLink.click();
@@ -138,7 +138,7 @@ test.describe('RSE List Page', () => {
 
     test('should display loading state while fetching RSEs', async ({ page }) => {
         // Navigate to RSE list
-        await page.goto('/rse/list');
+        await page.goto('/rses');
 
         // Check for loading indicator (may be very quick)
         const loadingIndicator = page.locator('[role="status"], .loading, .spinner, text=Loading').first();

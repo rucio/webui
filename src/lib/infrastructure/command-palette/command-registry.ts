@@ -56,7 +56,7 @@ export function getNavigationCommands(account?: string): CommandItem[] {
             title: 'RSEs',
             description: 'Browse Rucio Storage Elements',
             icon: ServerIcon,
-            url: '/rse/list',
+            url: '/rses',
             keywords: ['rse', 'storage', 'element', 'endpoint'],
         },
         {
@@ -135,7 +135,7 @@ export function getActionCommands(searchQuery: string = ''): CommandItem[] {
                 title: 'Search RSEs',
                 description: 'Search for Rucio Storage Elements',
                 icon: MagnifyingGlassIcon,
-                url: '/rse/list',
+                url: '/rses',
                 keywords: ['search', 'rse', 'find'],
             },
         );
