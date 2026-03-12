@@ -71,6 +71,7 @@ class DIDMetaUseCase
                 md5: dto.md5,
                 guid: dto.guid,
                 bytes: dto.bytes,
+                is_opendata: dto.is_opendata,
             },
             status: 'success',
         };
