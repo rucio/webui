@@ -35,6 +35,9 @@
       ],
       "@/test/*": [
         "./test/*"
+      ],
+      "@storybook/nextjs": [
+        "./node_modules/@storybook/nextjs-vite"
       ]
     }
   },

@@ -4,18 +4,19 @@
 
 ## **Table of Contents**
 
-1. [Overview](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#overview)
-2. [Design Principles](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#design-principles)
-3. [Design Tokens](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#design-tokens)
-4. [Color System](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#color-system)
-5. [Typography](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#typography)
-6. [Spacing & Layout](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#spacing--layout)
-7. [Elevation & Depth](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#elevation--depth)
-8. [Motion & Animation](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#motion--animation)
-9. [Component Guidelines](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#component-guidelines)
-10. [Accessibility](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#accessibility)
-11. [Dark Mode](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#dark-mode)
-12. [Best Practices](https://file+.vscode-resource.vscode-cdn.net/Users/maany/Projects/webui/.dadai/docs/DESIGN_SYSTEM.md#best-practices)
+1. [Overview](#overview)
+2. [Design Principles](#design-principles)
+3. [Design Tokens](#design-tokens)
+4. [Color System](#color-system)
+5. [Typography](#typography)
+6. [Spacing & Layout](#spacing--layout)
+7. [Elevation & Depth](#elevation--depth)
+8. [Motion & Animation](#motion--animation)
+9. [Component Guidelines](#component-guidelines)
+10. [Mutation UI Patterns](#mutation-ui-patterns)
+11. [Accessibility](#accessibility)
+12. [Dark Mode](#dark-mode)
+13. [Best Practices](#best-practices)
 
 ---
 
@@ -786,6 +787,158 @@ Component.displayName = 'Component';
 export { Component, componentVariants };
 
 ```
+
+---
+
+## **Mutation UI Patterns**
+
+Mutation operations (delete, update, create) follow a consistent 3-tier pattern to balance clarity, safety, and simplicity.
+
+### **Tier 1: Detail Page Action Bar**
+
+Place a `DetailActions` toolbar between the page heading and tabs/content on detail pages. This is the primary entry point for mutations on an entity the user is already viewing.
+
+```tsx
+// Rule detail page
+<div className="flex flex-col space-y-6 w-full">
+    <header>
+        <CopyableHeading text={ruleId} />
+    </header>
+    <DetailActions>
+        <Button variant="error" size="sm">
+            <HiOutlineTrash className="mr-1.5 h-4 w-4" />
+            Delete Rule
+        </Button>
+        <Button variant="default" size="sm">
+            <HiOutlineLightningBolt className="mr-1.5 h-4 w-4" />
+            Boost Rule
+        </Button>
+        <Button variant="neutral" size="sm">
+            <HiOutlineAdjustments className="mr-1.5 h-4 w-4" />
+            Update Priority
+        </Button>
+    </DetailActions>
+    <TabSwitcher ... />
+</div>
+```
+
+**Guidelines:**
+
+- Use `role="toolbar"` and `aria-label="Actions"` for accessibility
+- Use `size="sm"` buttons to keep the bar compact
+- Use semantic button variants: `error` for destructive, `default` for primary, `neutral` for secondary
+- Include icons for visual clarity — place them before the label with `mr-1.5`
+- Buttons open confirmation dialogs; they never execute mutations directly
+
+### **Tier 2: Mutation Dialogs**
+
+All mutations go through a confirmation dialog built on `MutationDialog` (Radix Dialog). This prevents accidental actions and provides a clear "commit point".
+
+**When to use which dialog type:**
+
+| Operation | Dialog Type | Submit Variant |
+| --- | --- | --- |
+| Delete (irreversible) | Confirmation with warning banner | `error` |
+| Update a single field | Form with one input, pre-filled | `default` |
+| Create/Add | Form with required inputs | `default` or `success` |
+
+**Dialog Structure:**
+
+```tsx
+<MutationDialog
+    open={isOpen}
+    onOpenChange={setIsOpen}
+    title="Delete Rule"                    // Clear, action-oriented
+    description="This cannot be undone."   // Optional context
+    onSubmit={handleDelete}
+    submitLabel="Delete Rule"              // Specific, not generic "OK"
+    submitVariant="error"                  // Matches the severity
+    loading={isDeleting}
+>
+    {/* Warning banner for destructive operations */}
+    <WarningBanner message="..." />
+    {/* Entity identifier so users confirm the right item */}
+    <EntityDisplay id={ruleId} />
+</MutationDialog>
+```
+
+**Guidelines:**
+
+- **Title**: Use verb + noun (e.g., "Delete Rule", "Update Priority", "Add Attribute")
+- **Submit label**: Mirror the title — never use generic "OK" or "Submit"
+- **Destructive dialogs**: Always include a warning banner and display the entity being affected
+- **Form dialogs**: Pre-fill with current values where applicable (e.g., current priority)
+- **Validation**: Show inline errors below inputs, use `aria-describedby` to link errors
+- **Loading state**: Disable both Cancel and Submit while loading; show spinner on Submit
+- **Close on success**: Close the dialog and show a toast notification after successful mutation
+
+### **Tier 3: Inline Table Actions**
+
+For row-level operations in tables (e.g., deleting an RSE attribute), use an `ActionCell` in the last column instead of a toolbar.
+
+```tsx
+// AG-Grid column definition
+{
+    headerName: 'Actions',
+    cellRenderer: (params) => (
+        <ActionCell actions={[
+            {
+                label: 'Delete',
+                icon: 'delete',
+                variant: 'error',
+                onClick: () => openDeleteDialog(params.data),
+            },
+        ]} />
+    ),
+    sortable: false,
+    filter: false,
+    width: 100,
+}
+```
+
+**Guidelines:**
+
+- Use `e.stopPropagation()` to prevent row click interference
+- Action buttons should open dialogs, not execute mutations directly
+- Keep actions minimal (1-2 per row) — move complex operations to the detail page
+- Use `variant="error"` for destructive actions, `variant="default"` for others
+
+### **Anti-Patterns to Avoid**
+
+| Pattern | Why to Avoid |
+| --- | --- |
+| Separate edit pages (`/rule/[id]/edit`) | Over-engineering for 1-3 field edits. Adds navigation complexity. |
+| Inline editing in KeyValue rows | Mixing read/edit modes creates ambiguity — violates Clarity principle. |
+| Toolbar with checkbox selection on tables | Introduces selection state complexity. Only add if real bulk operations are needed. |
+| Slide-over panels | No existing pattern in the codebase. More complex than dialogs for simple mutations. |
+| Executing mutations without confirmation | Dangerous for destructive operations. Always use a dialog. |
+
+### **Mutation Flow Architecture**
+
+```
+DetailActions / ActionCell (click)
+    ↓
+MutationDialog (confirm)
+    ↓
+API Route (POST/PUT/DELETE) with Zod validation
+    ↓
+Controller → Use Case → Gateway → Rucio Server
+    ↓
+Toast notification (success/error) + React Query cache invalidation
+```
+
+### **Component Reference**
+
+| Component | Location | Purpose |
+| --- | --- | --- |
+| `MutationDialog` | `features/mutations/MutationDialog.tsx` | Reusable dialog base |
+| `DetailActions` | `features/mutations/DetailActions.tsx` | Action bar for detail pages |
+| `DeleteRuleDialog` | `features/mutations/DeleteRuleDialog.tsx` | Rule deletion confirmation |
+| `BoostRuleDialog` | `features/mutations/BoostRuleDialog.tsx` | Rule lifetime extension |
+| `UpdatePriorityDialog` | `features/mutations/UpdatePriorityDialog.tsx` | Rule priority update |
+| `AddRSEAttributeDialog` | `features/mutations/AddRSEAttributeDialog.tsx` | RSE attribute creation |
+| `DeleteRSEAttributeDialog` | `features/mutations/DeleteRSEAttributeDialog.tsx` | RSE attribute deletion |
+| `ActionCell` | `features/table/cells/ActionCell.tsx` | Table row action buttons |
 
 ---
 
