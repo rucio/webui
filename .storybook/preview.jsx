@@ -35,18 +35,24 @@ export const parameters = {
     },
   },
   backgrounds: {
-    default: 'light',
-    values: [
-      {
+    options: {
+      light: {
         name: 'light',
         value: '#FFFFFF',
       },
-      {
+
+      dark: {
         name: 'dark',
         value: '#0F172A',
-      },
-    ],
+      }
+    }
   },
 };
 
 export const tags = ['autodocs'];
+
+export const initialGlobals = {
+  backgrounds: {
+    value: 'light'
+  }
+};
