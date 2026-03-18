@@ -28,4 +28,6 @@ export interface CreateRuleDTO extends BaseDTO {
 
 export interface UpdateRuleDTO extends BaseDTO {}
 
+export interface DeleteRuleDTO extends BaseDTO {}
+
 export interface RuleAnalysisDTO extends BaseDTO, RuleAnalysis {}
