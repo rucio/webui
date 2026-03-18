@@ -186,6 +186,14 @@ else
     print_info ".claude folder not found in root, skipping"
 fi
 
+# Copy .dadai folder from root
+if [ -d "$REPO_ROOT/.dadai" ]; then
+    cp -r "$REPO_ROOT/.dadai" "$WORKTREE_PATH/.dadai"
+    print_success "Copied .dadai folder"
+else
+    print_info ".dadai folder not found in root, skipping"
+fi
+
 # Copy CLAUDE.md from root
 if [ -f "$REPO_ROOT/CLAUDE.md" ]; then
     cp "$REPO_ROOT/CLAUDE.md" "$WORKTREE_PATH/CLAUDE.md"
