@@ -455,9 +455,6 @@ export const AutoDismiss: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => {
         const { toast } = useToast();
 
@@ -514,6 +511,11 @@ export const DarkMode: Story = {
                 <Toaster />
             </div>
         );
+    },
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
     },
 };
 

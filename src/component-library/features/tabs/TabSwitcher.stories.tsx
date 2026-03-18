@@ -273,9 +273,6 @@ export const ScrollableTabs: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => {
         const [activeIndex1, setActiveIndex1] = useState(0);
         const [activeIndex2, setActiveIndex2] = useState(0);
@@ -303,6 +300,11 @@ export const DarkMode: Story = {
                 </div>
             </div>
         );
+    },
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
     },
 };
 

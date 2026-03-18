@@ -84,9 +84,6 @@ export const DarkMode: Story = {
         showSeconds: true,
         onchange: (time: string) => console.log('Time changed:', time),
     },
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     decorators: [
         Story => (
             <div className="dark">
@@ -94,6 +91,11 @@ export const DarkMode: Story = {
             </div>
         ),
     ],
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 export const InForm: Story = {

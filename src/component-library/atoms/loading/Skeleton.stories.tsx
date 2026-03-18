@@ -234,9 +234,6 @@ export const Form: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark p-8 rounded-lg bg-neutral-900 space-y-4 w-full">
             <Skeleton shape="text" className="h-8 w-3/4" />
@@ -249,6 +246,11 @@ export const DarkMode: Story = {
             </div>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Sizes showcase

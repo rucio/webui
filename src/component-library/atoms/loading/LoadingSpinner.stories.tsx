@@ -200,9 +200,6 @@ export const FullPageLoading: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark p-8 rounded-lg bg-neutral-900">
             <div className="flex items-center gap-8">
@@ -225,6 +222,11 @@ export const DarkMode: Story = {
             </div>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Overlay

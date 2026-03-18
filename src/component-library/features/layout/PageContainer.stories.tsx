@@ -272,9 +272,6 @@ export const WithFixedHeader: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark bg-neutral-900 min-h-screen">
             <PageContainer>
@@ -292,6 +289,11 @@ export const DarkMode: Story = {
             </PageContainer>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Responsive demonstration

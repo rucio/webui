@@ -303,9 +303,6 @@ export const MultiStep: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark p-8 rounded-lg bg-neutral-900 space-y-6 w-full">
             <div className="space-y-2">
@@ -330,6 +327,11 @@ export const DarkMode: Story = {
             </div>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // With descriptive text

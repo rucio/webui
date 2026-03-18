@@ -338,9 +338,6 @@ export const WithIcons: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark p-8 rounded-lg bg-neutral-900 space-y-4">
             <div className="space-y-2">
@@ -372,6 +369,11 @@ export const DarkMode: Story = {
             </div>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Interactive grid

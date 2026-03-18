@@ -175,9 +175,6 @@ export const AllStates: Story = {
 
 // Dark mode showcase
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark p-8 rounded-lg bg-neutral-900">
             <div className="flex flex-col gap-4">
@@ -194,6 +191,11 @@ export const DarkMode: Story = {
             </div>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Form examples

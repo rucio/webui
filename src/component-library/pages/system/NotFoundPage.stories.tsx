@@ -169,9 +169,6 @@ export const DarkMode: Story = {
         returnLabel: 'Return to Home',
         showAnimatedBackground: true,
     },
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     decorators: [
         Story => (
             <div className="dark">
@@ -179,6 +176,11 @@ export const DarkMode: Story = {
             </div>
         ),
     ],
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 /**

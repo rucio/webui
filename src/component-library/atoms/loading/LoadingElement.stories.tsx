@@ -290,9 +290,6 @@ export const DarkMode: Story = {
         text: 'Loading in dark mode...',
         description: 'Please wait while we load your data',
     },
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     decorators: [
         Story => (
             <div className="dark h-64 bg-neutral-900 rounded-lg border border-neutral-700">
@@ -300,6 +297,11 @@ export const DarkMode: Story = {
             </div>
         ),
     ],
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Comparison with old pattern

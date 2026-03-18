@@ -244,9 +244,6 @@ export const DarkMode: Story = {
         showCopyButton: true,
         showRawToggle: true,
     },
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     decorators: [
         Story => (
             <div className="dark p-8 rounded-lg bg-neutral-900 w-[800px]">
@@ -254,6 +251,11 @@ export const DarkMode: Story = {
             </div>
         ),
     ],
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Edge cases
@@ -587,9 +589,6 @@ export const InteractiveDarkMode: Story = {
         showCopyButton: true,
         maxHeight: '500px',
     },
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     decorators: [
         Story => (
             <div className="dark p-8 rounded-lg bg-neutral-900 w-[800px]">
@@ -597,6 +596,11 @@ export const InteractiveDarkMode: Story = {
             </div>
         ),
     ],
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Side-by-side comparison
