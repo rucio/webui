@@ -1,7 +1,7 @@
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
-import { CreateRuleDTO, ListRulesDTO, RuleDTO, RuleMetaDTO } from '../../dto/rule-dto';
+import { CreateRuleDTO, ListRulesDTO, RuleAnalysisDTO, RuleDTO, RuleMetaDTO, UpdateRuleDTO } from '../../dto/rule-dto';
 import { ListRulesFilter } from '@/lib/infrastructure/gateway/rule-gateway/rule-gateway-utils';
-import { RuleCreationParameters } from '@/lib/core/entity/rucio';
+import { RuleCreationParameters, RuleUpdateOptions } from '@/lib/core/entity/rucio';
 
 export default interface RuleGatewayOutputPort {
     /**
@@ -31,4 +31,19 @@ export default interface RuleGatewayOutputPort {
      * @param params An object containing parameters for rule creation.
      */
     createRule(rucioAuthToken: string, params: RuleCreationParameters): Promise<CreateRuleDTO>;
+
+    /**
+     * Update a replication rule's options (lifetime, approve/deny, priority).
+     * @param rucioAuthToken A valid Rucio Auth Token.
+     * @param ruleId The rule to update.
+     * @param options The options to update on the rule.
+     */
+    updateRule(rucioAuthToken: string, ruleId: string, options: RuleUpdateOptions): Promise<UpdateRuleDTO>;
+
+    /**
+     * Examine/analyze a rule to get details about stuck transfers.
+     * @param rucioAuthToken A valid Rucio Auth Token.
+     * @param ruleId The rule to examine.
+     */
+    examineRule(rucioAuthToken: string, ruleId: string): Promise<RuleAnalysisDTO>;
 }
