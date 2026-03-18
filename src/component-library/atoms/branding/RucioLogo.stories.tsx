@@ -45,8 +45,10 @@ export const LightTheme: Story = {
         width: 194,
         height: 194,
     },
-    parameters: {
-        backgrounds: { default: 'light' },
+    globals: {
+        backgrounds: {
+            value: "light"
+        }
     },
 };
 
@@ -59,8 +61,10 @@ export const DarkTheme: Story = {
         width: 194,
         height: 194,
     },
-    parameters: {
-        backgrounds: { default: 'dark' },
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
     },
 };
 
@@ -123,8 +127,10 @@ export const BrandColor: Story = {
         width: 146,
         height: 146,
     },
-    parameters: {
-        backgrounds: { default: 'light' },
+    globals: {
+        backgrounds: {
+            value: "light"
+        }
     },
 };
 

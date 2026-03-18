@@ -102,9 +102,6 @@ export const DarkMode: Story = {
         spinnerSize: 'xl',
         showOrbitAnimation: true,
     },
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     decorators: [
         Story => (
             <div className="dark">
@@ -112,6 +109,11 @@ export const DarkMode: Story = {
             </div>
         ),
     ],
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 /**

@@ -293,9 +293,6 @@ export const FullPageLayout: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark bg-neutral-900 p-8">
             <Section variant="default" spacing="md">
@@ -319,6 +316,11 @@ export const DarkMode: Story = {
             </Section>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // All variants showcase

@@ -254,9 +254,6 @@ export const Interactive: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: () => (
         <div className="dark bg-neutral-900 p-8">
             <div className="space-y-6">
@@ -286,6 +283,11 @@ export const DarkMode: Story = {
             </div>
         </div>
     ),
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    },
 };
 
 // Truncation on mobile

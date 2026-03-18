@@ -94,14 +94,15 @@ export const DarkMode: Story = {
         open: true,
         onOpenChange: () => {},
     },
+
     parameters: {
-        backgrounds: { default: 'dark' },
         docs: {
             description: {
                 story: 'The command palette in dark mode with proper contrast and color adaptation.',
             },
-        },
+        }
     },
+
     decorators: [
         Story => (
             <div className="dark">
@@ -109,6 +110,12 @@ export const DarkMode: Story = {
             </div>
         ),
     ],
+
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
+    }
 };
 
 /**

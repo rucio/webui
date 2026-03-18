@@ -164,9 +164,6 @@ export const Tablet: Story = {
 
 // Dark mode
 export const DarkMode: Story = {
-    parameters: {
-        backgrounds: { default: 'dark' },
-    },
     render: args => (
         <div className="dark bg-neutral-900 min-h-screen">
             <HeaderClient {...args} />
@@ -180,6 +177,11 @@ export const DarkMode: Story = {
         siteHeader: mockSiteHeader,
         siteHeaderError: null,
         isSiteHeaderFetching: false,
+    },
+    globals: {
+        backgrounds: {
+            value: "dark"
+        }
     },
 };
 
