@@ -1,4 +1,4 @@
-import { CreateRuleDTO, ListLocksDTO, ListRulesDTO, RuleAnalysisDTO, RuleMetaDTO, UpdateRuleDTO } from '@/lib/core/dto/rule-dto';
+import { CreateRuleDTO, DeleteRuleDTO, ListLocksDTO, ListRulesDTO, RuleAnalysisDTO, RuleMetaDTO, UpdateRuleDTO } from '@/lib/core/dto/rule-dto';
 import RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output-port';
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
 import { injectable } from 'inversify';
@@ -9,6 +9,7 @@ import { ListRulesFilter } from '@/lib/infrastructure/gateway/rule-gateway/rule-
 import { RuleCreationParameters, RuleUpdateOptions } from '@/lib/core/entity/rucio';
 import CreateRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/create-rule-endpoint';
 import UpdateRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/update-rule-endpoint';
+import DeleteRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/delete-rule-endpoint';
 import ExamineRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/examine-rule-endpoint';
 
 @injectable()
@@ -78,6 +79,22 @@ export default class RuleGateway implements RuleGatewayOutputPort {
             const errorDTO: UpdateRuleDTO = {
                 status: 'error',
                 errorName: 'Exception occurred while updating rule',
+                errorType: 'gateway_endpoint_error',
+                errorMessage: error?.toString(),
+            };
+            return Promise.resolve(errorDTO);
+        }
+    }
+
+    async deleteRule(rucioAuthToken: string, ruleId: string): Promise<DeleteRuleDTO> {
+        try {
+            const endpoint = new DeleteRuleEndpoint(rucioAuthToken, ruleId);
+            const dto = await endpoint.fetch();
+            return dto;
+        } catch (error) {
+            const errorDTO: DeleteRuleDTO = {
+                status: 'error',
+                errorName: 'Exception occurred while deleting rule',
                 errorType: 'gateway_endpoint_error',
                 errorMessage: error?.toString(),
             };
