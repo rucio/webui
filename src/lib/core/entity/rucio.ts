@@ -237,6 +237,36 @@ export type RuleCreationParameters = {
     meta?: string;
 };
 
+export type RuleUpdateOptions = {
+    lifetime?: number | null;
+    approve?: boolean;
+    comment?: string;
+    priority?: number;
+};
+
+/**
+ * Represents a transfer entry from rule analysis (examine rule).
+ */
+export type RuleAnalysisTransfer = {
+    scope: string;
+    name: string;
+    rse: string;
+    attempts: number;
+    last_retry: string | null;
+    last_error: string | null;
+    last_source: string | null;
+    available_sources: string | null;
+    blocklisted_sources: string | null;
+};
+
+/**
+ * Represents the result of examining/analyzing a rule.
+ */
+export type RuleAnalysis = {
+    rule_error: string;
+    transfers: RuleAnalysisTransfer[];
+};
+
 /**
  * Represents the replication rule metadata avilable for a rule in a subscription.
  */
