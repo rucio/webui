@@ -37,6 +37,7 @@ const INPUT_PORT = {
     GET_RULE: Symbol.for('GetRuleInputPort'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesInputPort'),
     GET_FTS_LINK: Symbol.for('GetFTSLinkInputPort'),
+    UPDATE_RULE: Symbol.for('UpdateRuleInputPort'),
 };
 
 export default INPUT_PORT;

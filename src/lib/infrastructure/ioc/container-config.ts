@@ -68,6 +68,7 @@ import ListRuleReplicaLockStatesFeature from '@/lib/infrastructure/ioc/features/
 import RequestGateway from '../gateway/request-gateway/request-gateway';
 import RequestGatewayOutputPort from '@/lib/core/port/secondary/request-gateway-output-port';
 import GetFTSLinkFeature from './features/get-fts-link-feature';
+import UpdateRuleFeature from '@/lib/infrastructure/ioc/features/update-rule-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -134,6 +135,7 @@ loadFeaturesSync(appContainer, [new ListSubscriptionRuleStatesFeature(appContain
 // Features: List Rules
 loadFeaturesSync(appContainer, [new ListRulesFeature(appContainer)]);
 loadFeaturesSync(appContainer, [new ListRuleReplicaLockStatesFeature(appContainer)]);
+loadFeaturesSync(appContainer, [new UpdateRuleFeature(appContainer)]);
 
 // Features: Dashboard
 loadFeaturesSync(appContainer, [new ListAccountRSEUsageFeature(appContainer)]);

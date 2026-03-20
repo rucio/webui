@@ -38,6 +38,7 @@ const USECASE_FACTORY = {
     GET_RULE: Symbol.for('Factory<GetRuleUseCase>'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('Factory<ListRuleReplicaLockStatesUseCase>'),
     GET_FTS_LINK: Symbol.for('Factory<GetFTSLinkUseCase>'),
+    UPDATE_RULE: Symbol.for('Factory<UpdateRuleUseCase>'),
 };
 
 export default USECASE_FACTORY;

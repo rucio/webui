@@ -113,6 +113,17 @@ export const getEmptyGetRuleViewModel = (): GetRuleViewModel => {
     };
 };
 
+export interface UpdateRuleViewModel extends BaseViewModel {
+    errorType?: 'unauthorized' | 'permission_denied' | 'not_found' | 'conflict' | 'unknown';
+}
+
+export const getEmptyUpdateRuleViewModel = (): UpdateRuleViewModel => {
+    return {
+        status: 'error',
+        errorType: undefined,
+    };
+};
+
 export interface ListRuleReplicaLockStatesViewModel extends BaseViewModel, RulePageLockEntry {}
 
 export const getEmptyListRuleReplicaLockStatesViewModel = (): ListRuleReplicaLockStatesViewModel => {
