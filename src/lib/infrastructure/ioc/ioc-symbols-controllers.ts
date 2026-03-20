@@ -38,6 +38,7 @@ const CONTROLLERS = {
     GET_RULE: Symbol.for('GetRuleController'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesController'),
     GET_FTS_LINK: Symbol.for('GetFTSLinkController'),
+    UPDATE_RULE: Symbol.for('UpdateRuleController'),
 };
 
 export default CONTROLLERS;
