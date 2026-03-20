@@ -118,8 +118,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
         );
     }
 
-    const isLoading = isMetaLoading;
-    if (isLoading) {
+    if (isMetaLoading || !meta) {
         return <LoadingPage message="Loading rule details..." />;
     }
 
