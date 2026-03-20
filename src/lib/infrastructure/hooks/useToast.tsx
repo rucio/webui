@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import type { ToastActionElement, ToastProps } from '@/component-library/atoms/toast/toast';
 
-const TOAST_LIMIT = 1;
+const TOAST_LIMIT = 5;
 const TOAST_REMOVE_DELAY = 1000; // Time to remove toast from DOM after dismiss (for exit animation)
 
 /**

@@ -1,18 +1,21 @@
 'use client';
 
 import { CopyableHeading, Heading } from '@/component-library/atoms/misc/Heading';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { BaseViewModelValidator } from '@/component-library/features/utils/BaseViewModelValidator';
 import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
 import { useState } from 'react';
-import { WarningField } from '@/component-library/features/fields/WarningField';
-import { RuleMetaViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { RuleMetaViewModel, UpdateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { cn } from '@/component-library/utils';
 import { DetailsRuleLocks } from '@/component-library/pages/Rule/details/DetailsRuleLocks';
 import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsRuleMeta';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
+import { DetailActions } from '@/component-library/features/mutations/DetailActions';
+import { Button } from '@/component-library/atoms/form/button';
+import { HiOutlineLightningBolt } from 'react-icons/hi';
+import { QUERY_KEYS, invalidateForMutation } from '@/lib/infrastructure/query';
 
 export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
     const tabNames = ['Attributes', 'Locks'];
@@ -40,8 +43,31 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
 
 export const DetailsRule = ({ id }: { id: string }) => {
     const { toast } = useToast();
+    const queryClient = useQueryClient();
     const validator = new BaseViewModelValidator(toast);
     const [fetchErrorMessage, setFetchErrorMessage] = useState<string | null>(null);
+
+    const { mutate: boostRule, isPending: isBoosting } = useMutation({
+        mutationFn: async () => {
+            const res = await fetch('/api/feature/update-rule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ruleId: id, options: { priority: 5 } }),
+            });
+            const viewModel: UpdateRuleViewModel = await res.json();
+            if (!res.ok || viewModel.status !== 'success') {
+                throw viewModel;
+            }
+            return viewModel;
+        },
+        onSuccess: (viewModel) => {
+            toast({ variant: 'success', title: 'Rule Boosted', description: viewModel.message || 'Priority set to 5.' });
+            invalidateForMutation(queryClient, 'update-rule');
+        },
+        onError: (error: UpdateRuleViewModel) => {
+            toast({ variant: 'error', title: 'Boost Failed', description: error.message || 'Failed to boost rule.' });
+        },
+    });
 
     const queryMeta = async () => {
         const url = '/api/feature/get-rule?' + new URLSearchParams({ id });
@@ -64,11 +90,11 @@ export const DetailsRule = ({ id }: { id: string }) => {
         return null;
     };
 
-    const metaQueryKey = ['rule-meta'];
+    const metaQueryKey = [...QUERY_KEYS.RULE_META];
     const {
         data: meta,
         error: metaError,
-        isFetching: isMetaFetching,
+        isLoading: isMetaLoading,
         refetch,
     } = useQuery<RuleMetaViewModel>({
         queryKey: metaQueryKey,
@@ -92,7 +118,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
         );
     }
 
-    const isLoading = isMetaFetching || meta === undefined;
+    const isLoading = isMetaLoading;
     if (isLoading) {
         return <LoadingPage message="Loading rule details..." />;
     }
@@ -104,6 +130,12 @@ export const DetailsRule = ({ id }: { id: string }) => {
                     <CopyableHeading text={id} />
                 </div>
             </header>
+            <DetailActions>
+                <Button variant="default" size="sm" loading={isBoosting} onClick={() => boostRule()}>
+                    <HiOutlineLightningBolt className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                    Boost Rule
+                </Button>
+            </DetailActions>
             <DetailsRuleTabs id={id} meta={meta} />
         </div>
     );
