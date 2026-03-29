@@ -8,13 +8,17 @@ import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 import { TabSwitcher } from '@/component-library/features/tabs/TabSwitcher';
 import { useState } from 'react';
 import { RuleMetaViewModel, UpdateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { RuleState } from '@/lib/core/entity/rucio';
 import { cn } from '@/component-library/utils';
 import { DetailsRuleLocks } from '@/component-library/pages/Rule/details/DetailsRuleLocks';
 import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsRuleMeta';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { DetailActions } from '@/component-library/features/mutations/DetailActions';
+import { UpdateRuleLifetimeDialog } from '@/component-library/features/mutations/UpdateRuleLifetimeDialog';
+import { UpdateRulePriorityDialog } from '@/component-library/features/mutations/UpdateRulePriorityDialog';
+import { ApproveRuleDialog } from '@/component-library/features/mutations/ApproveRuleDialog';
 import { Button } from '@/component-library/atoms/form/button';
-import { HiOutlineLightningBolt } from 'react-icons/hi';
+import { HiOutlineLightningBolt, HiOutlineClock, HiOutlineAdjustments, HiOutlineCheck } from 'react-icons/hi';
 import { QUERY_KEYS, invalidateForMutation } from '@/lib/infrastructure/query';
 
 export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
@@ -46,6 +50,9 @@ export const DetailsRule = ({ id }: { id: string }) => {
     const queryClient = useQueryClient();
     const validator = new BaseViewModelValidator(toast);
     const [fetchErrorMessage, setFetchErrorMessage] = useState<string | null>(null);
+    const [showUpdateLifetime, setShowUpdateLifetime] = useState(false);
+    const [showUpdatePriority, setShowUpdatePriority] = useState(false);
+    const [showApproveRule, setShowApproveRule] = useState(false);
 
     const { mutate: boostRule, isPending: isBoosting } = useMutation({
         mutationFn: async () => {
@@ -134,8 +141,39 @@ export const DetailsRule = ({ id }: { id: string }) => {
                     <HiOutlineLightningBolt className="mr-1.5 h-4 w-4" aria-hidden="true" />
                     Boost Rule
                 </Button>
+                <Button variant="default" size="sm" onClick={() => setShowUpdateLifetime(true)}>
+                    <HiOutlineClock className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                    Update Lifetime
+                </Button>
+                <Button variant="default" size="sm" onClick={() => setShowUpdatePriority(true)}>
+                    <HiOutlineAdjustments className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                    Update Priority
+                </Button>
+                {meta.state === RuleState.WAITING_APPROVAL && (
+                    <Button variant="success" size="sm" onClick={() => setShowApproveRule(true)}>
+                        <HiOutlineCheck className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                        Approve Rule
+                    </Button>
+                )}
             </DetailActions>
             <DetailsRuleTabs id={id} meta={meta} />
+            <UpdateRuleLifetimeDialog
+                ruleId={id}
+                currentLifetime={null}
+                show={showUpdateLifetime}
+                onClose={() => setShowUpdateLifetime(false)}
+            />
+            <UpdateRulePriorityDialog
+                ruleId={id}
+                currentPriority={meta.priority}
+                show={showUpdatePriority}
+                onClose={() => setShowUpdatePriority(false)}
+            />
+            <ApproveRuleDialog
+                ruleId={id}
+                show={showApproveRule}
+                onClose={() => setShowApproveRule(false)}
+            />
         </div>
     );
 };
