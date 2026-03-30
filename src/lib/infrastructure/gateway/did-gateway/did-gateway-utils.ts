@@ -98,6 +98,7 @@ export function convertToDIDRulesDTO(data: TRucioRules): DIDRulesDTO {
         name: data.name,
         state: state,
         account: data.account,
+        comments: null,
     };
     return dto;
 }

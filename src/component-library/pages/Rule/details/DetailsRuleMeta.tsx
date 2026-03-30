@@ -137,6 +137,14 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
             </div>
+            {meta.comments && (
+                <div className="w-full pt-2">
+                    <span className="text-neutral-600 dark:text-neutral-400 font-medium text-sm">Comments</span>
+                    <p className="mt-1 text-sm text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-words">
+                        {meta.comments}
+                    </p>
+                </div>
+            )}
         </KeyValueWrapper>
     );
 };

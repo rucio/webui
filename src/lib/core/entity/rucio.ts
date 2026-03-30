@@ -176,6 +176,7 @@ export type RuleMeta = {
     split_container: boolean;
     state: RuleState;
     updated_at: DateISO;
+    comments: string | null;
 };
 
 export type RulePageLockEntry = {

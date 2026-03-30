@@ -110,6 +110,7 @@ export const getEmptyGetRuleViewModel = (): GetRuleViewModel => {
         split_container: false,
         state: RuleState.UNKNOWN,
         updated_at: '',
+        comments: null,
     };
 };
 
