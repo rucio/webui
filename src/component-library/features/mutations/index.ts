@@ -18,3 +18,12 @@ export type { AddRSEAttributeDialogProps } from './AddRSEAttributeDialog';
 
 export { DeleteRSEAttributeDialog } from './DeleteRSEAttributeDialog';
 export type { DeleteRSEAttributeDialogProps } from './DeleteRSEAttributeDialog';
+
+export { UpdateLifetimeDialog } from './UpdateLifetimeDialog';
+export type { UpdateLifetimeDialogProps } from './UpdateLifetimeDialog';
+
+export { ApproveRuleDialog } from './ApproveRuleDialog';
+export type { ApproveRuleDialogProps } from './ApproveRuleDialog';
+
+export { CommentRuleDialog } from './CommentRuleDialog';
+export type { CommentRuleDialogProps } from './CommentRuleDialog';
