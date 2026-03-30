@@ -14,8 +14,14 @@ import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsR
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { DetailActions } from '@/component-library/features/mutations/DetailActions';
 import { Button } from '@/component-library/atoms/form/button';
-import { HiOutlineLightningBolt } from 'react-icons/hi';
+import { HiOutlineLightningBolt, HiInformationCircle, HiChevronDown } from 'react-icons/hi';
 import { QUERY_KEYS, invalidateForMutation } from '@/lib/infrastructure/query';
+import { RuleState } from '@/lib/core/entity/rucio';
+import { canApproveRule, canUpdateRule } from '@/lib/core/permissions';
+import { UpdateLifetimeDialog } from '@/component-library/features/mutations/UpdateLifetimeDialog';
+import { ApproveRuleDialog } from '@/component-library/features/mutations/ApproveRuleDialog';
+import { CommentRuleDialog } from '@/component-library/features/mutations/CommentRuleDialog';
+import { useSession } from 'next-auth/react';
 
 export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
     const tabNames = ['Attributes', 'Locks'];
@@ -46,6 +52,12 @@ export const DetailsRule = ({ id }: { id: string }) => {
     const queryClient = useQueryClient();
     const validator = new BaseViewModelValidator(toast);
     const [fetchErrorMessage, setFetchErrorMessage] = useState<string | null>(null);
+    const { data: session } = useSession();
+
+    const [isTipsOpen, setIsTipsOpen] = useState(false);
+    const [isLifetimeOpen, setIsLifetimeOpen] = useState(false);
+    const [isApproveOpen, setIsApproveOpen] = useState(false);
+    const [isCommentOpen, setIsCommentOpen] = useState(false);
 
     const { mutate: boostRule, isPending: isBoosting } = useMutation({
         mutationFn: async () => {
@@ -66,6 +78,75 @@ export const DetailsRule = ({ id }: { id: string }) => {
         },
         onError: (error: UpdateRuleViewModel) => {
             toast({ variant: 'error', title: 'Boost Failed', description: error.message || 'Failed to boost rule.' });
+        },
+    });
+
+    const updateLifetimeMutation = useMutation({
+        mutationFn: async (lifetimeSeconds: number | null) => {
+            const res = await fetch('/api/feature/update-rule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ruleId: id, options: { lifetime: lifetimeSeconds } }),
+            });
+            const viewModel: UpdateRuleViewModel = await res.json();
+            if (!res.ok || viewModel.status !== 'success') {
+                throw viewModel;
+            }
+            return viewModel;
+        },
+        onSuccess: () => {
+            invalidateForMutation(queryClient, 'update-rule');
+            setIsLifetimeOpen(false);
+            toast({ variant: 'success', title: 'Lifetime updated' });
+        },
+        onError: (error: UpdateRuleViewModel) => {
+            toast({ variant: 'error', title: 'Failed to update lifetime', description: error.message || 'Failed to update lifetime.' });
+        },
+    });
+
+    const approveRuleMutation = useMutation({
+        mutationFn: async () => {
+            const res = await fetch('/api/feature/update-rule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ruleId: id, options: { approve: true } }),
+            });
+            const viewModel: UpdateRuleViewModel = await res.json();
+            if (!res.ok || viewModel.status !== 'success') {
+                throw viewModel;
+            }
+            return viewModel;
+        },
+        onSuccess: () => {
+            invalidateForMutation(queryClient, 'update-rule');
+            setIsApproveOpen(false);
+            toast({ variant: 'success', title: 'Rule approved' });
+        },
+        onError: (error: UpdateRuleViewModel) => {
+            toast({ variant: 'error', title: 'Failed to approve rule', description: error.message || 'Failed to approve rule.' });
+        },
+    });
+
+    const commentRuleMutation = useMutation({
+        mutationFn: async (comment: string) => {
+            const res = await fetch('/api/feature/update-rule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ruleId: id, options: { comment } }),
+            });
+            const viewModel: UpdateRuleViewModel = await res.json();
+            if (!res.ok || viewModel.status !== 'success') {
+                throw viewModel;
+            }
+            return viewModel;
+        },
+        onSuccess: () => {
+            invalidateForMutation(queryClient, 'update-rule');
+            setIsCommentOpen(false);
+            toast({ variant: 'success', title: 'Comment added' });
+        },
+        onError: (error: UpdateRuleViewModel) => {
+            toast({ variant: 'error', title: 'Failed to add comment', description: error.message || 'Failed to add comment.' });
         },
     });
 
@@ -122,6 +203,11 @@ export const DetailsRule = ({ id }: { id: string }) => {
         return <LoadingPage message="Loading rule details..." />;
     }
 
+    const sessionAccount = session?.user;
+    const permCtx = sessionAccount ? { account: sessionAccount } : null;
+    const userCanUpdateRule = permCtx ? canUpdateRule(permCtx, { account: meta.account }) : false;
+    const userCanApproveRule = permCtx ? canApproveRule(permCtx) : false;
+
     return (
         <div className="flex flex-col space-y-6 w-full">
             <header className="mb-2">
@@ -129,13 +215,90 @@ export const DetailsRule = ({ id }: { id: string }) => {
                     <CopyableHeading text={id} />
                 </div>
             </header>
+            <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 text-sm text-base-info-700 dark:text-base-info-200">
+                <button
+                    type="button"
+                    className="flex w-full items-center gap-2 p-3 text-left"
+                    onClick={() => setIsTipsOpen(prev => !prev)}
+                    aria-expanded={isTipsOpen}
+                >
+                    <HiInformationCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <span className="font-medium flex-1">Rule Actions</span>
+                    <HiChevronDown
+                        className={cn('h-4 w-4 shrink-0 transition-transform duration-200', isTipsOpen && 'rotate-180')}
+                        aria-hidden="true"
+                    />
+                </button>
+                {isTipsOpen && (
+                    <ul className="list-disc list-inside space-y-0.5 px-3 pb-3 pl-10">
+                        <li>
+                            <span className="font-medium">Boost Rule:</span> Immediately sets the rule priority to maximum (5) to accelerate
+                            transfers.
+                        </li>
+                        <li>
+                            <span className="font-medium">Update Priority:</span> Change the rule&apos;s transfer priority (1–5, where 5 is
+                            highest).
+                        </li>
+                        <li>
+                            <span className="font-medium">Update Lifetime:</span> Set or clear when this rule expires. Minimum lifetime is 1
+                            hour.
+                        </li>
+                        <li>
+                            <span className="font-medium">Approve Rule:</span> Approve a rule that is waiting for administrator approval (admin
+                            only). Only visible when rule is in &apos;Waiting Approval&apos; state.
+                        </li>
+                        <li>
+                            <span className="font-medium">Add Comment:</span> Attach a note to this rule visible to all users who can view it.
+                        </li>
+                    </ul>
+                )}
+            </div>
             <DetailActions>
-                <Button variant="default" size="sm" loading={isBoosting} onClick={() => boostRule()}>
-                    <HiOutlineLightningBolt className="mr-1.5 h-4 w-4" aria-hidden="true" />
-                    Boost Rule
-                </Button>
+                {userCanUpdateRule && (
+                    <Button variant="default" size="sm" loading={isBoosting} onClick={() => boostRule()}>
+                        <HiOutlineLightningBolt className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                        Boost Rule
+                    </Button>
+                )}
+                {userCanUpdateRule && (
+                    <Button variant="neutral" size="sm" onClick={() => setIsLifetimeOpen(true)}>
+                        Update Lifetime
+                    </Button>
+                )}
+                {userCanApproveRule && meta.state === RuleState.WAITING_APPROVAL && (
+                    <Button variant="success" size="sm" onClick={() => setIsApproveOpen(true)}>
+                        Approve Rule
+                    </Button>
+                )}
+                {userCanUpdateRule && (
+                    <Button variant="neutral" size="sm" onClick={() => setIsCommentOpen(true)}>
+                        Add Comment
+                    </Button>
+                )}
             </DetailActions>
             <DetailsRuleTabs id={id} meta={meta} />
+            <UpdateLifetimeDialog
+                open={isLifetimeOpen}
+                onOpenChange={setIsLifetimeOpen}
+                ruleId={id}
+                currentExpiresAt={meta.expires_at}
+                onConfirm={lifetimeSeconds => updateLifetimeMutation.mutate(lifetimeSeconds)}
+                loading={updateLifetimeMutation.isPending}
+            />
+            <ApproveRuleDialog
+                open={isApproveOpen}
+                onOpenChange={setIsApproveOpen}
+                ruleId={id}
+                onConfirm={() => approveRuleMutation.mutate()}
+                loading={approveRuleMutation.isPending}
+            />
+            <CommentRuleDialog
+                open={isCommentOpen}
+                onOpenChange={setIsCommentOpen}
+                ruleId={id}
+                onConfirm={comment => commentRuleMutation.mutate(comment)}
+                loading={commentRuleMutation.isPending}
+            />
         </div>
     );
 };
