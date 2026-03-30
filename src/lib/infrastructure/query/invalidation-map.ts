@@ -8,6 +8,6 @@ import { QUERY_KEYS } from './query-keys';
  * Add entries here when creating new mutations.
  */
 export const INVALIDATION_MAP: Record<string, readonly (readonly string[])[]> = {
-    'update-rule': [QUERY_KEYS.RULE_META],
+    'update-rule': [QUERY_KEYS.RULE_META, QUERY_KEYS.RULE_PAGE],
     'delete-rule': [QUERY_KEYS.RULE_META],
 };

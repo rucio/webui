@@ -14,4 +14,7 @@ export const QUERY_KEYS = {
 
     /** Rule replica lock states — used by DetailsRuleLocks */
     RULE_LOCKS: ['rule-locks'] as const,
+
+    /** Paginated/streamed rule list — used by ListRule page */
+    RULE_PAGE: ['rule-page'] as const,
 } as const;
