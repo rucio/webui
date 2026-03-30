@@ -166,6 +166,7 @@ export function convertToRuleMetaDTO(rule: TRucioRule): RuleMetaDTO {
         split_container: rule.split_container,
         state: getRuleState(rule.state),
         updated_at: rule.updated_at,
+        comments: rule.comments ?? null,
     };
 }
 
@@ -220,6 +221,7 @@ export function getEmptyRuleMetaDTO(): RuleMetaDTO {
         rse_expression: '',
         scope: '',
         split_container: false,
+        comments: null,
         state: RuleState.UNKNOWN,
         updated_at: '',
     };
