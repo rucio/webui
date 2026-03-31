@@ -14,12 +14,14 @@ import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsR
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { DetailActions } from '@/component-library/features/mutations/DetailActions';
 import { Button } from '@/component-library/atoms/form/button';
-import { HiOutlineLightningBolt, HiInformationCircle, HiChevronDown } from 'react-icons/hi';
+import { HiOutlineLightningBolt, HiInformationCircle, HiChevronDown, HiOutlineClock, HiOutlineCheckCircle, HiOutlineBan, HiOutlineTrash, HiOutlineAnnotation } from 'react-icons/hi';
 import { QUERY_KEYS, invalidateForMutation } from '@/lib/infrastructure/query';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { UpdateLifetimeDialog } from '@/component-library/features/mutations/UpdateLifetimeDialog';
 import { ApproveRuleDialog } from '@/component-library/features/mutations/ApproveRuleDialog';
 import { CommentRuleDialog } from '@/component-library/features/mutations/CommentRuleDialog';
+import { DenyRuleDialog } from '@/component-library/features/mutations/DenyRuleDialog';
+import { DeleteRuleDialog } from '@/component-library/features/mutations/DeleteRuleDialog';
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 
 export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
@@ -57,6 +59,8 @@ export const DetailsRule = ({ id }: { id: string }) => {
     const [isLifetimeOpen, setIsLifetimeOpen] = useState(false);
     const [isApproveOpen, setIsApproveOpen] = useState(false);
     const [isCommentOpen, setIsCommentOpen] = useState(false);
+    const [isDenyOpen, setIsDenyOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
     const { mutate: boostRule, isPending: isBoosting } = useMutation({
         mutationFn: async () => {
@@ -123,6 +127,55 @@ export const DetailsRule = ({ id }: { id: string }) => {
         },
         onError: (error: UpdateRuleViewModel) => {
             toast({ variant: 'error', title: 'Failed to approve rule', description: error.message || 'Failed to approve rule.' });
+        },
+    });
+
+    const denyRuleMutation = useMutation({
+        mutationFn: async (comment?: string) => {
+            const options: Record<string, unknown> = { approve: false };
+            if (comment) options.comment = comment;
+            const res = await fetch('/api/feature/update-rule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ruleId: id, options }),
+            });
+            const viewModel: UpdateRuleViewModel = await res.json();
+            if (!res.ok || viewModel.status !== 'success') {
+                throw viewModel;
+            }
+            return viewModel;
+        },
+        onSuccess: () => {
+            invalidateForMutation(queryClient, 'update-rule');
+            setIsDenyOpen(false);
+            toast({ variant: 'success', title: 'Rule denied' });
+        },
+        onError: (error: UpdateRuleViewModel) => {
+            toast({ variant: 'error', title: 'Failed to deny rule', description: error.message || 'Failed to deny rule.' });
+        },
+    });
+
+    const deleteRuleMutation = useMutation({
+        mutationFn: async () => {
+            const lifetimeSeconds = userCanApproveRule ? 3600 : 86400;
+            const res = await fetch('/api/feature/update-rule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ruleId: id, options: { lifetime: lifetimeSeconds } }),
+            });
+            const viewModel: UpdateRuleViewModel = await res.json();
+            if (!res.ok || viewModel.status !== 'success') {
+                throw viewModel;
+            }
+            return viewModel;
+        },
+        onSuccess: () => {
+            invalidateForMutation(queryClient, 'update-rule');
+            setIsDeleteOpen(false);
+            toast({ variant: 'success', title: 'Rule scheduled for deletion' });
+        },
+        onError: (error: UpdateRuleViewModel) => {
+            toast({ variant: 'error', title: 'Failed to delete rule', description: error.message || 'Failed to delete rule.' });
         },
     });
 
@@ -229,48 +282,75 @@ export const DetailsRule = ({ id }: { id: string }) => {
                 </button>
                 {isTipsOpen && (
                     <ul className="list-disc list-inside space-y-0.5 px-3 pb-3 pl-10">
+                        {userCanApproveRule && (
+                            <li>
+                                <span className="font-medium">Boost Rule:</span> Immediately sets the rule priority to maximum (5) to accelerate
+                                transfers.
+                            </li>
+                        )}
+                        {userCanApproveRule && meta.state === RuleState.WAITING_APPROVAL && (
+                            <li>
+                                <span className="font-medium">Approve Rule:</span> Approve this rule to begin active replication.
+                            </li>
+                        )}
+                        {userCanApproveRule && meta.state === RuleState.WAITING_APPROVAL && (
+                            <li>
+                                <span className="font-medium">Deny Rule:</span> Reject this rule. You may optionally provide a reason for
+                                the denial.
+                            </li>
+                        )}
                         <li>
-                            <span className="font-medium">Boost Rule:</span> Immediately sets the rule priority to maximum (5) to accelerate
-                            transfers.
+                            <span className="font-medium">Update Lifetime:</span> Set or clear when this rule expires.
+                            {!userCanApproveRule && ' The server may reject this request depending on the policy.'}
                         </li>
                         <li>
-                            <span className="font-medium">Update Priority:</span> Change the rule&apos;s transfer priority (1–5, where 5 is
-                            highest).
+                            <span className="font-medium">Add Comment:</span> Attach a note to this rule.
+                            {!userCanApproveRule && ' The server may reject this request depending on the policy.'}
                         </li>
                         <li>
-                            <span className="font-medium">Update Lifetime:</span> Set or clear when this rule expires. Minimum lifetime is 1
-                            hour.
-                        </li>
-                        <li>
-                            <span className="font-medium">Approve Rule:</span> Approve a rule that is waiting for administrator approval (admin
-                            only). Only visible when rule is in &apos;Waiting Approval&apos; state.
-                        </li>
-                        <li>
-                            <span className="font-medium">Add Comment:</span> Attach a note to this rule visible to all users who can view it.
+                            <span className="font-medium">Delete Rule:</span> Schedule this rule for deletion
+                            {userCanApproveRule
+                                ? ' by setting the lifetime to 1 hour.'
+                                : ' by setting the lifetime to 24 hours. The server may reject this request depending on the policy.'}
                         </li>
                     </ul>
                 )}
             </div>
             <DetailActions>
-                {userCanUpdateRule && (
+                {userCanApproveRule && (
                     <Button variant="default" size="sm" loading={isBoosting} onClick={() => boostRule()}>
                         <HiOutlineLightningBolt className="mr-1.5 h-4 w-4" aria-hidden="true" />
                         Boost Rule
                     </Button>
                 )}
-                {userCanUpdateRule && (
-                    <Button variant="neutral" size="sm" onClick={() => setIsLifetimeOpen(true)}>
-                        Update Lifetime
+                {userCanApproveRule && meta.state === RuleState.WAITING_APPROVAL && (
+                    <Button variant="success" size="sm" onClick={() => setIsApproveOpen(true)}>
+                        <HiOutlineCheckCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                        Approve Rule
                     </Button>
                 )}
                 {userCanApproveRule && meta.state === RuleState.WAITING_APPROVAL && (
-                    <Button variant="success" size="sm" onClick={() => setIsApproveOpen(true)}>
-                        Approve Rule
+                    <Button variant="error" size="sm" onClick={() => setIsDenyOpen(true)}>
+                        <HiOutlineBan className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                        Deny Rule
+                    </Button>
+                )}
+                {userCanUpdateRule && (
+                    <Button variant="neutral" size="sm" onClick={() => setIsLifetimeOpen(true)}>
+                        <HiOutlineClock className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                        Update Lifetime
                     </Button>
                 )}
                 {userCanUpdateRule && (
                     <Button variant="neutral" size="sm" onClick={() => setIsCommentOpen(true)}>
+                        <HiOutlineAnnotation className="mr-1.5 h-4 w-4" aria-hidden="true" />
                         Add Comment
+                    </Button>
+                )}
+                {userCanUpdateRule && (
+                    <Button variant="error" size="sm" onClick={() => setIsDeleteOpen(true)}>
+                        <HiOutlineTrash className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                        Delete Rule
                     </Button>
                 )}
             </DetailActions>
@@ -285,6 +365,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
                 canSetInfinite={userCanSetInfiniteLifetime}
                 maxLifetimeSeconds={userCanSetInfiniteLifetime ? undefined : 365 * 86400}
                 minLifetimeSeconds={userCanSetInfiniteLifetime ? 0 : 24 * 3600}
+                isAdmin={userCanApproveRule}
             />
             <ApproveRuleDialog
                 open={isApproveOpen}
@@ -293,12 +374,28 @@ export const DetailsRule = ({ id }: { id: string }) => {
                 onConfirm={() => approveRuleMutation.mutate()}
                 loading={approveRuleMutation.isPending}
             />
+            <DenyRuleDialog
+                open={isDenyOpen}
+                onOpenChange={setIsDenyOpen}
+                ruleId={id}
+                onConfirm={comment => denyRuleMutation.mutate(comment)}
+                loading={denyRuleMutation.isPending}
+            />
+            <DeleteRuleDialog
+                open={isDeleteOpen}
+                onOpenChange={setIsDeleteOpen}
+                ruleId={id}
+                isAdmin={userCanApproveRule}
+                onConfirm={() => deleteRuleMutation.mutate()}
+                loading={deleteRuleMutation.isPending}
+            />
             <CommentRuleDialog
                 open={isCommentOpen}
                 onOpenChange={setIsCommentOpen}
                 ruleId={id}
                 onConfirm={comment => commentRuleMutation.mutate(comment)}
                 loading={commentRuleMutation.isPending}
+                isAdmin={userCanApproveRule}
             />
         </div>
     );
