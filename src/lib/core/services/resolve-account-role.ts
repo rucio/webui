@@ -22,7 +22,6 @@ export function resolveAccountRole(attributes: TAccountAttributes): AccountRoleI
     let country: string | undefined;
     let countryRole: Role | undefined;
 
-    console.log('[resolveAccountRole] attributes:', JSON.stringify(attributes));
     attributes.forEach(attr => {
         if (attr.key === 'admin' && (attr.value === 'True' || attr.value === true)) {
             isAdmin = true;
@@ -38,7 +37,5 @@ export function resolveAccountRole(attributes: TAccountAttributes): AccountRoleI
         }
     });
 
-    const result = { role: isAdmin ? Role.ADMIN : Role.USER, country, countryRole };
-    console.log('[resolveAccountRole] result:', JSON.stringify(result));
-    return result;
+    return { role: isAdmin ? Role.ADMIN : Role.USER, country, countryRole };
 }
