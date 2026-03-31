@@ -76,7 +76,7 @@ export const Layout = ({ children, siteHeader, siteHeaderError }: LayoutProps) =
     return (
         <div className="min-h-screen flex flex-col">
             <HeaderClient siteHeader={siteHeader} siteHeaderError={siteHeaderError} isSiteHeaderFetching={false} />
-            <main id="main-content" className="flex flex-col grow px-4 py-6 sm:px-8 md:px-12 lg:px-24 xl:px-32 2xl:px-48 3xl:px-64">
+            <main id="main-content" className="flex flex-col grow px-4 py-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32 min-w-0 overflow-x-hidden">
                 {children}
             </main>
             <Toaster />
