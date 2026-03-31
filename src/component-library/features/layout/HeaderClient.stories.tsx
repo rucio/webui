@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
+import React from 'react';
+import { PermixProvider } from 'permix/react';
 import { HeaderClient } from './HeaderClient';
 import { Role, User } from '@/lib/core/entity/auth-models';
+import { permix, adminRuleTemplate } from '@/lib/core/permissions';
+import { TipsProvider } from '@/lib/infrastructure/hooks/useTips';
 
 const meta: Meta<typeof HeaderClient> = {
     title: 'Features/Layout/HeaderClient',
@@ -9,6 +13,15 @@ const meta: Meta<typeof HeaderClient> = {
         layout: 'fullscreen',
     },
     tags: ['autodocs'],
+    decorators: [
+        Story => (
+            <TipsProvider>
+                <PermixProvider permix={permix}>
+                    <Story />
+                </PermixProvider>
+            </TipsProvider>
+        ),
+    ],
 };
 
 export default meta;
@@ -29,6 +42,14 @@ const mockSiteHeader = {
     homeUrl: 'https://rucio.cern.ch',
     projectUrl: 'https://home.cern',
 };
+
+const getMockAdminUser = (accountName: string): User => ({
+    rucioIdentity: 'mock-identity',
+    rucioAccount: accountName,
+    rucioVO: 'mock-vo',
+    role: Role.ADMIN,
+    country: 'Switzerland',
+});
 
 // Basic states
 export const Default: Story = {
@@ -101,6 +122,31 @@ export const WithMainContent: Story = {
     ),
     args: {
         siteHeader: mockSiteHeader,
+        siteHeaderError: null,
+        isSiteHeaderFetching: false,
+    },
+};
+
+/**
+ * AdminRole — demonstrates the 'Approve Rules' nav entry that is only visible
+ * to admin users. The `loaders` hook calls permix.setup(adminRuleTemplate())
+ * before the story renders so the PermixProvider reflects admin permissions
+ * without mutating the singleton during render (which could cause cross-story
+ * state bleed if story order changes).
+ */
+export const AdminRole: Story = {
+    loaders: [
+        async () => {
+            permix.setup(adminRuleTemplate());
+            return {};
+        },
+    ],
+    args: {
+        siteHeader: {
+            ...mockSiteHeader,
+            activeAccount: getMockAdminUser('admin'),
+            availableAccounts: [getMockAdminUser('admin')],
+        },
         siteHeaderError: null,
         isSiteHeaderFetching: false,
     },
