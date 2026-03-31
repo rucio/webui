@@ -14,6 +14,12 @@ export interface UpdateLifetimeDialogProps {
     currentExpiresAt?: string | null;
     onConfirm: (lifetimeSeconds: number | null) => void;
     loading?: boolean;
+    /** Whether the user can set infinite lifetime (clear expiry). Defaults to true. */
+    canSetInfinite?: boolean;
+    /** Maximum lifetime in seconds the user can set. Undefined means no limit. */
+    maxLifetimeSeconds?: number;
+    /** Minimum lifetime in seconds. Defaults to 3600 (1 hour). */
+    minLifetimeSeconds?: number;
 }
 
 type InputMode = 'date' | 'duration';
@@ -40,6 +46,9 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
     currentExpiresAt,
     onConfirm,
     loading = false,
+    canSetInfinite = true,
+    maxLifetimeSeconds,
+    minLifetimeSeconds = 3600,
 }) => {
     const [mode, setMode] = useState<InputMode>('duration');
     const [clearLifetime, setClearLifetime] = useState(false);
@@ -67,8 +76,34 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
         }
     };
 
+    const formatMinLifetime = () => {
+        const h = Math.floor(minLifetimeSeconds / 3600);
+        if (h >= 24 && minLifetimeSeconds % 86400 === 0) {
+            const d = minLifetimeSeconds / 86400;
+            return `${d} day${d !== 1 ? 's' : ''}`;
+        }
+        return `${h} hour${h !== 1 ? 's' : ''}`;
+    };
+
+    const validateMinLifetime = (seconds: number): boolean => {
+        if (seconds < minLifetimeSeconds) {
+            setError(`Minimum lifetime is ${formatMinLifetime()}`);
+            return false;
+        }
+        return true;
+    };
+
+    const validateMaxLifetime = (seconds: number): boolean => {
+        if (maxLifetimeSeconds !== undefined && seconds > maxLifetimeSeconds) {
+            const maxDays = Math.floor(maxLifetimeSeconds / 86400);
+            setError(`Maximum lifetime is ${maxDays} day${maxDays !== 1 ? 's' : ''}`);
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = () => {
-        if (clearLifetime) {
+        if (clearLifetime && canSetInfinite) {
             onConfirm(null);
             return;
         }
@@ -81,10 +116,8 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
             const target = new Date(dateValue);
             const now = new Date();
             const diffSeconds = Math.floor((target.getTime() - now.getTime()) / 1000);
-            if (diffSeconds < 3600) {
-                setError('The date must be at least 1 hour in the future');
-                return;
-            }
+            if (!validateMinLifetime(diffSeconds)) return;
+            if (!validateMaxLifetime(diffSeconds)) return;
             setError(undefined);
             onConfirm(diffSeconds);
         } else {
@@ -99,13 +132,11 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
                 setError('Hours must be between 0 and 23');
                 return;
             }
-            const totalHours = parsedDays * 24 + parsedHours;
-            if (totalHours < 1) {
-                setError('Minimum lifetime is 1 hour');
-                return;
-            }
+            const totalSeconds = (parsedDays * 24 + parsedHours) * 3600;
+            if (!validateMinLifetime(totalSeconds)) return;
+            if (!validateMaxLifetime(totalSeconds)) return;
             setError(undefined);
-            onConfirm(totalHours * 3600);
+            onConfirm(totalSeconds);
         }
     };
 
@@ -128,8 +159,8 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
                 <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 p-3 text-sm text-base-info-700 dark:text-base-info-200 flex gap-2 items-start">
                     <HiInformationCircle className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
                     <p>
-                        Tips: Setting the lifetime controls when this rule expires and is deleted. You can extend, shorten, or clear the lifetime
-                        entirely. Minimum lifetime is 1 hour.
+                        Tips: Setting the lifetime controls when this rule expires and is deleted. You can extend or shorten the lifetime.
+                        {canSetInfinite && ' You can also clear the lifetime entirely.'} Minimum lifetime is {formatMinLifetime()}.
                     </p>
                 </div>
 
@@ -149,19 +180,21 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
                     </p>
                 </div>
 
-                {/* Clear lifetime checkbox */}
-                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                <label htmlFor="clear-lifetime-checkbox" className="flex items-center gap-2 cursor-pointer select-none">
-                    <Checkbox
-                        id="clear-lifetime-checkbox"
-                        checked={clearLifetime}
-                        onCheckedChange={checked => {
-                            setClearLifetime(checked === true);
-                            if (error) setError(undefined);
-                        }}
-                    />
-                    <span className="text-sm text-neutral-900 dark:text-neutral-100">Clear lifetime (no expiry)</span>
-                </label>
+                {/* Clear lifetime checkbox — only shown when user has permission */}
+                {canSetInfinite && (
+                    // eslint-disable-next-line jsx-a11y/label-has-associated-control
+                    <label htmlFor="clear-lifetime-checkbox" className="flex items-center gap-2 cursor-pointer select-none">
+                        <Checkbox
+                            id="clear-lifetime-checkbox"
+                            checked={clearLifetime}
+                            onCheckedChange={checked => {
+                                setClearLifetime(checked === true);
+                                if (error) setError(undefined);
+                            }}
+                        />
+                        <span className="text-sm text-neutral-900 dark:text-neutral-100">Clear lifetime (no expiry)</span>
+                    </label>
+                )}
 
                 {/* Mode toggle */}
                 {!clearLifetime && (
