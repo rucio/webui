@@ -21,6 +21,7 @@ import { navigateToSearch } from '@/lib/infrastructure/utils/navigation';
 import { ClockIcon, BookmarkIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
+import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 
 export interface CommandPaletteProps {
     /** Whether the palette is open */
@@ -49,6 +50,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
     });
 
     const account = siteHeader?.activeAccount?.rucioAccount;
+
+    const { check, isReady } = usePermissions();
+    const canViewApprovalQueue = isReady ? check('rule', 'viewApprovalQueue') : false;
 
     // Build all sections with filtering
     const sections = useMemo<CommandSection[]>(() => {
@@ -98,7 +102,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         // Navigation Section
-        const navigationItems = getNavigationCommands(account);
+        const navigationItems = getNavigationCommands(account, canViewApprovalQueue);
         allSections.push({
             id: 'navigation',
             title: 'Navigation',
@@ -140,7 +144,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         return allSections;
-    }, [searchQuery, account]);
+    }, [searchQuery, account, canViewApprovalQueue]);
 
     // Calculate total items count for keyboard navigation
     const totalItems = useMemo(() => {

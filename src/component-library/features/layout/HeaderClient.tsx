@@ -15,6 +15,7 @@ import { WarningField } from '@/component-library/features/fields/WarningField';
 import { motion } from 'framer-motion';
 import { useTips } from '@/lib/infrastructure/hooks/useTips';
 import { buildSubscriptionSearchUrl } from '@/lib/infrastructure/utils/navigation';
+import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 
 type TMenuItem = {
     title: string;
@@ -257,6 +258,15 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     // Build subscription URL with account parameter
     const subscriptionUrl = buildSubscriptionSearchUrl(siteHeader?.activeAccount?.rucioAccount);
 
+    const { check, isReady } = usePermissions();
+    const canViewApprovalQueue = isReady ? check('rule', 'viewApprovalQueue') : false;
+
+    const rulesChildren: TMenuItem[] = [
+        { title: 'List Rules', path: '/rules' },
+        { title: 'Create a rule', path: '/rule/create' },
+        ...(canViewApprovalQueue ? [{ title: 'Approve Rules', path: '/rules/approve' }] : []),
+    ];
+
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
         { title: 'DIDs', path: '/dids' },
@@ -264,10 +274,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
         { title: 'Subscriptions', path: subscriptionUrl },
         {
             title: 'Rules',
-            children: [
-                { title: 'List Rules', path: '/rules' },
-                { title: 'Create a rule', path: '/rule/create' },
-            ],
+            children: rulesChildren,
         },
     ];
 
