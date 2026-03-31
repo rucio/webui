@@ -17,11 +17,10 @@ import { Button } from '@/component-library/atoms/form/button';
 import { HiOutlineLightningBolt, HiInformationCircle, HiChevronDown } from 'react-icons/hi';
 import { QUERY_KEYS, invalidateForMutation } from '@/lib/infrastructure/query';
 import { RuleState } from '@/lib/core/entity/rucio';
-import { canApproveRule, canUpdateRule } from '@/lib/core/permissions';
 import { UpdateLifetimeDialog } from '@/component-library/features/mutations/UpdateLifetimeDialog';
 import { ApproveRuleDialog } from '@/component-library/features/mutations/ApproveRuleDialog';
 import { CommentRuleDialog } from '@/component-library/features/mutations/CommentRuleDialog';
-import { useSession } from 'next-auth/react';
+import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 
 export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
     const tabNames = ['Attributes', 'Locks'];
@@ -52,7 +51,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
     const queryClient = useQueryClient();
     const validator = new BaseViewModelValidator(toast);
     const [fetchErrorMessage, setFetchErrorMessage] = useState<string | null>(null);
-    const { data: session } = useSession();
+    const { check, isReady } = usePermissions();
 
     const [isTipsOpen, setIsTipsOpen] = useState(false);
     const [isLifetimeOpen, setIsLifetimeOpen] = useState(false);
@@ -203,13 +202,12 @@ export const DetailsRule = ({ id }: { id: string }) => {
         return <LoadingPage message="Loading rule details..." />;
     }
 
-    const sessionAccount = session?.user;
-    const permCtx = sessionAccount ? { account: sessionAccount } : null;
-    const userCanUpdateRule = permCtx ? canUpdateRule(permCtx, { account: meta.account }) : false;
-    const userCanApproveRule = permCtx ? canApproveRule(permCtx) : false;
+    const userCanUpdateRule = isReady ? check('rule', 'update', { account: meta.account }) : false;
+    const userCanApproveRule = isReady ? check('rule', 'approve') : false;
+    const userCanSetInfiniteLifetime = isReady ? check('rule', 'set_infinite_lifetime') : false;
 
     return (
-        <div className="flex flex-col space-y-6 w-full">
+        <div className="flex flex-col space-y-6 w-full min-w-0">
             <header className="mb-2">
                 <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
                     <CopyableHeading text={id} />
@@ -284,6 +282,9 @@ export const DetailsRule = ({ id }: { id: string }) => {
                 currentExpiresAt={meta.expires_at}
                 onConfirm={lifetimeSeconds => updateLifetimeMutation.mutate(lifetimeSeconds)}
                 loading={updateLifetimeMutation.isPending}
+                canSetInfinite={userCanSetInfiniteLifetime}
+                maxLifetimeSeconds={userCanSetInfiniteLifetime ? undefined : 365 * 86400}
+                minLifetimeSeconds={userCanSetInfiniteLifetime ? 0 : 24 * 3600}
             />
             <ApproveRuleDialog
                 open={isApproveOpen}
