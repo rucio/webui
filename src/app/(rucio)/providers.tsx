@@ -7,6 +7,7 @@ import { CommandPaletteProvider } from '@/lib/infrastructure/hooks/useCommandPal
 import { CommandPaletteWrapper } from '@/component-library/features/command-palette';
 import { TipsProvider } from '@/lib/infrastructure/hooks/useTips';
 import { TipsPanelWrapper } from '@/component-library/features/tips';
+import { PermissionProvider } from '@/lib/infrastructure/permissions';
 
 /**
  * Client component that provides React Query, Command Palette, and Tips context.
@@ -17,14 +18,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <CommandPaletteProvider>
-                <TipsProvider>
-                    {children}
-                    <CommandPaletteWrapper />
-                    <TipsPanelWrapper />
-                    <ReactQueryDevtools initialIsOpen={false} />
-                </TipsProvider>
-            </CommandPaletteProvider>
+            <PermissionProvider>
+                <CommandPaletteProvider>
+                    <TipsProvider>
+                        {children}
+                        <CommandPaletteWrapper />
+                        <TipsPanelWrapper />
+                        <ReactQueryDevtools initialIsOpen={false} />
+                    </TipsProvider>
+                </CommandPaletteProvider>
+            </PermissionProvider>
         </QueryClientProvider>
     );
 }
