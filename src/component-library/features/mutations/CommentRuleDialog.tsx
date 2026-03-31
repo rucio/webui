@@ -14,6 +14,8 @@ export interface CommentRuleDialogProps {
     loading?: boolean;
     /** Pre-populate the comment field when the dialog opens. */
     initialComment?: string;
+    /** Whether the current user is an admin. Non-admins see a policy warning. */
+    isAdmin?: boolean;
 }
 
 /**
@@ -30,7 +32,7 @@ export interface CommentRuleDialogProps {
  * />
  * ```
  */
-export const CommentRuleDialog: React.FC<CommentRuleDialogProps> = ({ open, onOpenChange, ruleId, onConfirm, loading = false, initialComment = '' }) => {
+export const CommentRuleDialog: React.FC<CommentRuleDialogProps> = ({ open, onOpenChange, ruleId, onConfirm, loading = false, initialComment = '', isAdmin = false }) => {
     const [comment, setComment] = useState('');
     const [error, setError] = useState<string | undefined>();
 
@@ -72,6 +74,16 @@ export const CommentRuleDialog: React.FC<CommentRuleDialogProps> = ({ open, onOp
                         help communicate the purpose or status of a rule.
                     </p>
                 </div>
+
+                {/* Policy warning for non-admins */}
+                {!isAdmin && (
+                    <div className="flex items-start gap-3 rounded-md bg-base-warning-50 dark:bg-base-warning-950 border border-base-warning-200 dark:border-base-warning-800 p-3">
+                        <HiInformationCircle className="h-5 w-5 shrink-0 text-base-warning-600 dark:text-base-warning-400 mt-0.5" aria-hidden="true" />
+                        <p className="text-sm text-base-warning-900 dark:text-base-warning-100">
+                            The server may reject this request depending on the policy configured by your administrator.
+                        </p>
+                    </div>
+                )}
 
                 {/* Rule ID */}
                 <div>
