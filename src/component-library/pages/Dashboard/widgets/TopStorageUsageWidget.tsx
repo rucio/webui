@@ -75,7 +75,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
                 </div>
             )}
             {!isInfiniteWithoutUsage && (
-                <ResponsiveContainer height={PIE_HEIGHT}>
+                <ResponsiveContainer height={PIE_HEIGHT} width="100%" minWidth={0}>
                     <PieChart>
                         <Pie data={pieData} dataKey="value" nameKey="name" stroke={borderColor}>
                             {pieData.map((entry, index) => (

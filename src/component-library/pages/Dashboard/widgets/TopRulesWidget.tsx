@@ -124,7 +124,7 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
     };
 
     return (
-        <ResponsiveContainer>
+        <ResponsiveContainer width="100%" height={480} minWidth={0}>
             <BarChart
                 layout="vertical"
                 data={data}
