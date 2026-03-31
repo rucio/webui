@@ -40,7 +40,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     return (
         <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
             <div className="w-full flex flex-col lg:flex-row lg:gap-8">
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="State">
                         <RuleStateBadge value={meta.state} />
                     </KeyValueRow>
@@ -74,7 +74,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Locks OK">
                         <Field>{meta.locks_ok_cnt}</Field>
                     </KeyValueRow>
@@ -86,7 +86,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Created At">
                         <Field>{formatDate(meta.created_at)}</Field>
                     </KeyValueRow>
@@ -98,7 +98,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
             </div>
             <Divider />
             <div className="w-full flex flex-col lg:flex-row lg:gap-8">
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Copies">
                         <Field>{meta.copies}</Field>
                     </KeyValueRow>
@@ -116,7 +116,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Purge Replicas">
                         <Checkbox checked={meta.purge_replicas} />
                     </KeyValueRow>
@@ -128,7 +128,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Ignore Account Limit">
                         <Checkbox checked={meta.ignore_account_limit} />
                     </KeyValueRow>
