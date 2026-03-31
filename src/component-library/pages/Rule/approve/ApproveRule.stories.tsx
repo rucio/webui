@@ -3,13 +3,13 @@
 import { useEffect, useRef } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from 'storybook/test';
-import { fixtureRuleViewModel } from '@/test/fixtures/table-fixtures';
+import { fixtureApproveRuleViewModel } from '@/test/fixtures/table-fixtures';
 import { ApproveRule, ApproveRuleProps } from '@/component-library/pages/Rule/approve/ApproveRule';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';
 import { getMockStreamEndpoint } from '@/test/mocks/handlers/streaming-handlers';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
-import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { ApproveRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { RuleState } from '@/lib/core/entity/rucio';
 
 // ── Story wrapper ─────────────────────────────────────────────────────────────
@@ -17,14 +17,14 @@ import { RuleState } from '@/lib/core/entity/rucio';
 // so we wrap it here to provide that hook and optional initial/auto-load data.
 
 type StoryWrapperProps = Omit<ApproveRuleProps, 'streamingHook' | 'onGridReady'> & {
-    initialData?: RuleViewModel[];
+    initialData?: ApproveRuleViewModel[];
     autoSearch?: boolean;
 };
 
-const WAITING_URL = `/api/feature/list-rules?${new URLSearchParams({ state: RuleState.WAITING_APPROVAL }).toString()}`;
+const WAITING_URL = `/api/feature/list-rules-pending-approval`;
 
 const ApproveRuleStoryWrapper = ({ initialData, autoSearch, ...approveRuleProps }: StoryWrapperProps) => {
-    const { onGridReady, streamingHook, startStreaming, gridApi } = useTableStreaming<RuleViewModel>(initialData);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<ApproveRuleViewModel>(initialData);
     const hasAutoLoaded = useRef(false);
 
     useEffect(() => {
@@ -34,10 +34,16 @@ const ApproveRuleStoryWrapper = ({ initialData, autoSearch, ...approveRuleProps 
         }
     }, [gridApi]);
 
+    const handleSearch = () => {
+        startStreaming(WAITING_URL);
+    };
+
     return (
         <ApproveRule
             streamingHook={streamingHook}
             onGridReady={onGridReady}
+            onSearch={handleSearch}
+            onStop={stopStreaming}
             {...approveRuleProps}
         />
     );
@@ -78,7 +84,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
     args: {
         initialData: Array.from({ length: 12 }, () => ({
-            ...fixtureRuleViewModel(),
+            ...fixtureApproveRuleViewModel(),
             state: RuleState.WAITING_APPROVAL,
         })),
     },
@@ -105,10 +111,10 @@ export const Loading: Story = {
     },
     decorators: [
         getDecoratorWithWorker([
-            getMockStreamEndpoint('/api/feature/list-rules', {
+            getMockStreamEndpoint('/api/feature/list-rules-pending-approval', {
                 // Large delay per record keeps the RUNNING overlay on screen
                 data: Array.from({ length: 500 }, () => ({
-                    ...fixtureRuleViewModel(),
+                    ...fixtureApproveRuleViewModel(),
                     state: RuleState.WAITING_APPROVAL,
                 })),
                 delay: 100,
@@ -127,9 +133,9 @@ export const RegularStreaming: Story = {
     },
     decorators: [
         getDecoratorWithWorker([
-            getMockStreamEndpoint('/api/feature/list-rules', {
+            getMockStreamEndpoint('/api/feature/list-rules-pending-approval', {
                 data: Array.from({ length: 500 }, () => ({
-                    ...fixtureRuleViewModel(),
+                    ...fixtureApproveRuleViewModel(),
                     state: RuleState.WAITING_APPROVAL,
                 })),
                 delay: 1,
