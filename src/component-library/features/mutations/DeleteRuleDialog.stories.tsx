@@ -24,17 +24,16 @@ const meta: Meta<typeof DeleteRuleDialog> = {
 export default meta;
 type Story = StoryObj<typeof DeleteRuleDialog>;
 
-const DeleteRuleWrapper = ({ loading = false }: { loading?: boolean }) => {
+const DeleteRuleWrapper = ({ isAdmin = false, loading = false }: { isAdmin?: boolean; loading?: boolean }) => {
     const [open, setOpen] = useState(false);
     return (
         <>
-            <Button variant="error" onClick={() => setOpen(true)}>
-                Delete Rule
-            </Button>
+            <Button variant="error" onClick={() => setOpen(true)}>Delete Rule</Button>
             <DeleteRuleDialog
                 open={open}
                 onOpenChange={setOpen}
-                ruleId="8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d"
+                ruleId="8a7b6c5d4e3f2a1b"
+                isAdmin={isAdmin}
                 onConfirm={() => {
                     alert('Rule deleted!');
                     setOpen(false);
@@ -45,29 +44,14 @@ const DeleteRuleWrapper = ({ loading = false }: { loading?: boolean }) => {
     );
 };
 
-export const Default: Story = {
+export const AsUser: Story = {
     render: () => <DeleteRuleWrapper />,
+};
+
+export const AsAdmin: Story = {
+    render: () => <DeleteRuleWrapper isAdmin />,
 };
 
 export const Loading: Story = {
     render: () => <DeleteRuleWrapper loading />,
-};
-
-export const LongRuleId: Story = {
-    render: () => {
-        const [open, setOpen] = useState(false);
-        return (
-            <>
-                <Button variant="error" onClick={() => setOpen(true)}>
-                    Delete Rule (Long ID)
-                </Button>
-                <DeleteRuleDialog
-                    open={open}
-                    onOpenChange={setOpen}
-                    ruleId="8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d8a7b6c5d4e3f2a1b"
-                    onConfirm={() => setOpen(false)}
-                />
-            </>
-        );
-    },
 };
