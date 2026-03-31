@@ -20,7 +20,7 @@ import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, buildSubscrip
  * Get static navigation commands
  * These provide quick access to main app sections
  * @param account - Optional account for building subscription URLs with parameters
- * @param canViewApprovalQueue - Whether the current user can access the approval queue.
+ * @param canViewApprovalQueue - Whether the current user can access the approve rules page.
  *   Must be resolved by the caller (e.g. via `usePermissions().check`) so this function
  *   remains pure and works before PermixProvider has run setup().
  */
@@ -61,7 +61,7 @@ export function getNavigationCommands(account?: string, canViewApprovalQueue?: b
                       title: 'Approve Rules',
                       description: 'Review and approve/deny rules awaiting approval',
                       icon: ShieldCheckIcon,
-                      url: '/rules/approve',
+                      url: '/rules/approve?autoSearch=true',
                       keywords: ['approve', 'rule', 'approval', 'queue', 'admin', 'deny', 'waiting'],
                   },
               ]

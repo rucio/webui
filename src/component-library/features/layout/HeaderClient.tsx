@@ -264,7 +264,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     const rulesChildren: TMenuItem[] = [
         { title: 'List Rules', path: '/rules' },
         { title: 'Create a rule', path: '/rule/create' },
-        ...(canViewApprovalQueue ? [{ title: 'Approve Rules', path: '/rules/approve' }] : []),
+        ...(canViewApprovalQueue ? [{ title: 'Approve Rules', path: '/rules/approve?autoSearch=true' }] : []),
     ];
 
     const menuItems: TFullMenuItem[] = [
