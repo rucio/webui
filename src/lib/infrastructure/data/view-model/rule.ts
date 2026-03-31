@@ -5,6 +5,15 @@ import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did
 
 export interface RuleViewModel extends Rule, BaseViewModel {}
 
+export interface ApproveRuleViewModel extends Rule, BaseViewModel {
+    did_type: DIDType;
+    grouping: RuleGrouping;
+    comments: string | null;
+    bytes: number | null;
+    length: number;
+    open: boolean;
+}
+
 export interface RulePageLockEntryViewModel extends RulePageLockEntry, BaseViewModel {}
 
 export interface RuleMetaViewModel extends RuleMeta, BaseViewModel {}
@@ -69,6 +78,29 @@ export const generateEmptyRuleViewModel = (): RuleViewModel => {
         rse_expression: '',
         state: RuleState.UNKNOWN,
         status: 'error',
+    };
+};
+
+export const generateEmptyApproveRuleViewModel = (): ApproveRuleViewModel => {
+    return {
+        account: '',
+        created_at: '',
+        id: '',
+        scope: '',
+        locks_ok_cnt: 0,
+        locks_replicating_cnt: 0,
+        locks_stuck_cnt: 0,
+        name: '',
+        remaining_lifetime: 0,
+        rse_expression: '',
+        state: RuleState.UNKNOWN,
+        status: 'error',
+        did_type: DIDType.UNKNOWN,
+        grouping: RuleGrouping.NONE,
+        comments: null,
+        bytes: null,
+        length: 0,
+        open: false,
     };
 };
 

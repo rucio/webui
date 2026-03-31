@@ -29,6 +29,7 @@ const INPUT_PORT = {
     USERPASS_LOGIN: Symbol.for('UserPassLoginInputPort'),
     GET_RSE_USAGE: Symbol.for('GetRSEUsageInputPort'),
     LIST_RULES: Symbol.for('ListRulesInputPort'),
+    LIST_RULES_PENDING_APPROVAL: Symbol.for('ListRulesPendingApprovalInputPort'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageInputPort'),
     CREATE_RULE: Symbol.for('CreateRuleInputPort'),
     ADD_DID: Symbol.for('AddDIDInputPort'),
