@@ -1,2 +1,3 @@
-export type { PermissionContext } from './permission-types';
-export { canApproveRule, canUpdateRule } from './rule-permissions';
+export { permissionSchema as permix } from './permission-schema';
+export type { RucioPermissions } from './permission-schema';
+export { adminRuleTemplate, userRuleTemplate } from './rule-templates';
