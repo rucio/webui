@@ -59,7 +59,7 @@ test.describe('Approve Rules – admin access', () => {
         });
 
         // Page heading visible
-        await expect(page.locator('h1')).toContainText('Approval Queue', { timeout: 10000 });
+        await expect(page.locator('h1')).toContainText('Approve Rules', { timeout: 10000 });
 
         expect(errors.filter(e => e.includes('TypeError') || e.includes('ReferenceError'))).toHaveLength(0);
     });

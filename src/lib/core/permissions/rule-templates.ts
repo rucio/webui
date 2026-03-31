@@ -10,7 +10,7 @@ export const adminRuleTemplate = permissionSchema.template({
         update: true,
         comment: true,
         set_infinite_lifetime: true,
-        // Admin-only: only global admins can view and act on the approval queue page.
+        // Admin-only: only global admins can view and act on the approve rules page.
         viewApprovalQueue: true,
     },
 });
@@ -32,7 +32,7 @@ export const userRuleTemplate = permissionSchema.template((user: SessionUser) =>
         update: rule => true,
         comment: rule => true,
         set_infinite_lifetime: false,
-        // Non-admins cannot access the approval queue page; it is a global-admin-only surface.
+        // Non-admins cannot access the approve rules page; it is a global-admin-only surface.
         viewApprovalQueue: false,
     },
 }));
