@@ -22,12 +22,17 @@ module.exports = {
 
   async viteFinal(config) {
     config.resolve = config.resolve || {};
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@/test': path.resolve(__dirname, '../test'),
-      '@/tailwind': path.resolve(__dirname, '../tailwind.config.js'),
-      '@': path.resolve(__dirname, '../src'),
-    };
+    // Use array format for aliases to ensure correct resolution order on all platforms
+    const customAliases = [
+      { find: '@/test', replacement: path.resolve(__dirname, '../test') },
+      { find: '@/tailwind', replacement: path.resolve(__dirname, '../tailwind.config.js') },
+      { find: /^@\//, replacement: path.resolve(__dirname, '../src') + '/' },
+    ];
+    if (Array.isArray(config.resolve.alias)) {
+      config.resolve.alias = [...customAliases, ...config.resolve.alias];
+    } else {
+      config.resolve.alias = customAliases;
+    }
     return config;
   }
 };
