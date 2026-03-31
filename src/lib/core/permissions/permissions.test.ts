@@ -37,6 +37,10 @@ describe('Rule permissions via Permix', () => {
         it('can set infinite lifetime', () => {
             expect(permissionSchema.check('rule', 'set_infinite_lifetime')).toBe(true);
         });
+
+        it('can view the approval queue page', () => {
+            expect(permissionSchema.check('rule', 'viewApprovalQueue')).toBe(true);
+        });
     });
 
     describe('user role', () => {
@@ -63,6 +67,10 @@ describe('Rule permissions via Permix', () => {
         it('cannot set infinite lifetime', () => {
             expect(permissionSchema.check('rule', 'set_infinite_lifetime')).toBe(false);
         });
+
+        it('cannot view the approval queue page', () => {
+            expect(permissionSchema.check('rule', 'viewApprovalQueue')).toBe(false);
+        });
     });
 
     describe('countryRole does not grant admin privileges', () => {
@@ -70,6 +78,12 @@ describe('Rule permissions via Permix', () => {
             const user = makeSessionUser(Role.USER, 'testuser', Role.ADMIN);
             permissionSchema.setup(userRuleTemplate(user));
             expect(permissionSchema.check('rule', 'approve')).toBe(false);
+        });
+
+        it('user with countryRole ADMIN cannot view the approval queue page', () => {
+            const user = makeSessionUser(Role.USER, 'testuser', Role.ADMIN);
+            permissionSchema.setup(userRuleTemplate(user));
+            expect(permissionSchema.check('rule', 'viewApprovalQueue')).toBe(false);
         });
     });
 });

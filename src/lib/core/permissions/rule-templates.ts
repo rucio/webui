@@ -10,6 +10,8 @@ export const adminRuleTemplate = permissionSchema.template({
         update: true,
         comment: true,
         set_infinite_lifetime: true,
+        // Admin-only: only global admins can view and act on the approval queue page.
+        viewApprovalQueue: true,
     },
 });
 
@@ -24,9 +26,13 @@ export const adminRuleTemplate = permissionSchema.template({
 export const userRuleTemplate = permissionSchema.template((user: SessionUser) => ({
     rule: {
         approve: false,
-        /* TODO: we need a proper PermissionGateway, usecase and endpoint that connects with the Rucio Policy Package via the Rucio Server */
-        update: rule => true, //rule?.account === user.rucioAccount,
-        comment: rule => true, // rule?.account === user.rucioAccount,
+        // TODO: enforce ownership — should be `rule => rule.account === user.rucioAccount`.
+        // Blocked on PermissionGateway integration that supplies the rule object at call-site.
+        // Tracked in the follow-up for PermissionGateway integration.
+        update: rule => true,
+        comment: rule => true,
         set_infinite_lifetime: false,
+        // Non-admins cannot access the approval queue page; it is a global-admin-only surface.
+        viewApprovalQueue: false,
     },
 }));
