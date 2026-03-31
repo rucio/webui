@@ -25,5 +25,8 @@ export type { UpdateLifetimeDialogProps } from './UpdateLifetimeDialog';
 export { ApproveRuleDialog } from './ApproveRuleDialog';
 export type { ApproveRuleDialogProps } from './ApproveRuleDialog';
 
+export { DenyRuleDialog } from './DenyRuleDialog';
+export type { DenyRuleDialogProps } from './DenyRuleDialog';
+
 export { CommentRuleDialog } from './CommentRuleDialog';
 export type { CommentRuleDialogProps } from './CommentRuleDialog';
