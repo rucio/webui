@@ -18,7 +18,7 @@ export type RucioPermissions = {
          * - update: modify rule attributes
          * - comment: add a comment to a rule
          * - set_infinite_lifetime: remove the rule's expiry
-         * - viewApprovalQueue: access the admin-only approval queue page that lists
+         * - viewApprovalQueue: access the admin-only approve rules page that lists
          *   all rules in WAITING_APPROVAL state. Kept separate from `approve` so the
          *   page guard has an explicit, descriptive symbol rather than re-using the
          *   per-rule action.

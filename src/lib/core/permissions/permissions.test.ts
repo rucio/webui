@@ -38,7 +38,7 @@ describe('Rule permissions via Permix', () => {
             expect(permissionSchema.check('rule', 'set_infinite_lifetime')).toBe(true);
         });
 
-        it('can view the approval queue page', () => {
+        it('can view the approve rules page', () => {
             expect(permissionSchema.check('rule', 'viewApprovalQueue')).toBe(true);
         });
     });
@@ -68,7 +68,7 @@ describe('Rule permissions via Permix', () => {
             expect(permissionSchema.check('rule', 'set_infinite_lifetime')).toBe(false);
         });
 
-        it('cannot view the approval queue page', () => {
+        it('cannot view the approve rules page', () => {
             expect(permissionSchema.check('rule', 'viewApprovalQueue')).toBe(false);
         });
     });
@@ -80,7 +80,7 @@ describe('Rule permissions via Permix', () => {
             expect(permissionSchema.check('rule', 'approve')).toBe(false);
         });
 
-        it('user with countryRole ADMIN cannot view the approval queue page', () => {
+        it('user with countryRole ADMIN cannot view the approve rules page', () => {
             const user = makeSessionUser(Role.USER, 'testuser', Role.ADMIN);
             permissionSchema.setup(userRuleTemplate(user));
             expect(permissionSchema.check('rule', 'viewApprovalQueue')).toBe(false);
