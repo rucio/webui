@@ -20,6 +20,8 @@ export interface UpdateLifetimeDialogProps {
     maxLifetimeSeconds?: number;
     /** Minimum lifetime in seconds. Defaults to 3600 (1 hour). */
     minLifetimeSeconds?: number;
+    /** Whether the current user is an admin. Non-admins see a policy warning. */
+    isAdmin?: boolean;
 }
 
 type InputMode = 'date' | 'duration';
@@ -49,6 +51,7 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
     canSetInfinite = true,
     maxLifetimeSeconds,
     minLifetimeSeconds = 3600,
+    isAdmin = false,
 }) => {
     const [mode, setMode] = useState<InputMode>('duration');
     const [clearLifetime, setClearLifetime] = useState(false);
@@ -163,6 +166,16 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
                         {canSetInfinite && ' You can also clear the lifetime entirely.'} Minimum lifetime is {formatMinLifetime()}.
                     </p>
                 </div>
+
+                {/* Policy warning for non-admins */}
+                {!isAdmin && (
+                    <div className="flex items-start gap-3 rounded-md bg-base-warning-50 dark:bg-base-warning-950 border border-base-warning-200 dark:border-base-warning-800 p-3">
+                        <HiInformationCircle className="h-5 w-5 shrink-0 text-base-warning-600 dark:text-base-warning-400 mt-0.5" aria-hidden="true" />
+                        <p className="text-sm text-base-warning-900 dark:text-base-warning-100">
+                            The server may reject this request depending on the policy configured by your administrator.
+                        </p>
+                    </div>
+                )}
 
                 {/* Current expiry */}
                 {currentExpiresAt && (
