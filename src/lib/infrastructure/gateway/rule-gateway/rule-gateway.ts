@@ -11,6 +11,7 @@ import CreateRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoi
 import UpdateRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/update-rule-endpoint';
 import DeleteRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/delete-rule-endpoint';
 import ExamineRuleEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/examine-rule-endpoint';
+import ListRulesPendingApprovalEndpoint from '@/lib/infrastructure/gateway/rule-gateway/endpoints/list-rules-pending-approval-endpoint';
 
 @injectable()
 export default class RuleGateway implements RuleGatewayOutputPort {
@@ -35,6 +36,28 @@ export default class RuleGateway implements RuleGatewayOutputPort {
             const errorDTO: BaseStreamableDTO = {
                 status: 'error',
                 errorName: 'Exception occurred while fetching rules',
+                errorType: 'gateway_endpoint_error',
+                errorMessage: error?.toString(),
+            };
+            return Promise.resolve(errorDTO);
+        }
+    }
+
+    async listRulesPendingApproval(rucioAuthToken: string, filter?: ListRulesFilter): Promise<ListRulesDTO> {
+        try {
+            const endpoint = new ListRulesPendingApprovalEndpoint(rucioAuthToken, filter);
+            const errorDTO: BaseStreamableDTO | undefined = await endpoint.fetch();
+            if (!errorDTO) {
+                return {
+                    status: 'success',
+                    stream: endpoint,
+                };
+            }
+            return errorDTO;
+        } catch (error) {
+            const errorDTO: BaseStreamableDTO = {
+                status: 'error',
+                errorName: 'Exception occurred while fetching rules pending approval',
                 errorType: 'gateway_endpoint_error',
                 errorMessage: error?.toString(),
             };

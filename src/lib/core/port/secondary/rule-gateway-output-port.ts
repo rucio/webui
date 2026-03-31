@@ -1,5 +1,5 @@
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
-import { CreateRuleDTO, DeleteRuleDTO, ListRulesDTO, RuleAnalysisDTO, RuleDTO, RuleMetaDTO, UpdateRuleDTO } from '../../dto/rule-dto';
+import { CreateRuleDTO, DeleteRuleDTO, ListRulesDTO, RuleAnalysisDTO, RuleDTO, RuleExtendedDTO, RuleMetaDTO, UpdateRuleDTO } from '../../dto/rule-dto';
 import { ListRulesFilter } from '@/lib/infrastructure/gateway/rule-gateway/rule-gateway-utils';
 import { RuleCreationParameters, RuleUpdateOptions } from '@/lib/core/entity/rucio';
 
@@ -46,6 +46,13 @@ export default interface RuleGatewayOutputPort {
      * @param ruleId The rule to delete.
      */
     deleteRule(rucioAuthToken: string, ruleId: string): Promise<DeleteRuleDTO>;
+
+    /**
+     * Lists rules pending approval with extended metadata (did_type, grouping, comments, bytes).
+     * @param rucioAuthToken A valid Rucio Auth Token.
+     * @param filters An object containing filter parameters for the rules.
+     */
+    listRulesPendingApproval(rucioAuthToken: string, filters?: ListRulesFilter): Promise<ListRulesDTO>;
 
     /**
      * Examine/analyze a rule to get details about stuck transfers.

@@ -30,6 +30,7 @@ const CONTROLLERS = {
     USERPASS_LOGIN: Symbol.for('UserPassLoginController'),
     GET_RSE_USAGE: Symbol.for('GetRSEUsageController'),
     LIST_RULES: Symbol.for('ListRulesController'),
+    LIST_RULES_PENDING_APPROVAL: Symbol.for('ListRulesPendingApprovalController'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageController'),
     CREATE_RULE: Symbol.for('CreateRuleController'),
     ADD_DID: Symbol.for('AddDIDController'),

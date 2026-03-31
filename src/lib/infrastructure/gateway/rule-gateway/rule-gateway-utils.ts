@@ -1,4 +1,4 @@
-import { RuleDTO, RuleMetaDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
+import { RuleDTO, RuleExtendedDTO, RuleMetaDTO, RuleReplicaLockStateDTO } from '@/lib/core/dto/rule-dto';
 import { DIDType, LockState, RuleFilter, RuleGrouping, RuleNotification, RuleState } from '@/lib/core/entity/rucio';
 
 export type TRucioRule = {
@@ -138,6 +138,17 @@ export function getRuleGrouping(grouping: string): RuleGrouping {
         default:
             return RuleGrouping.NONE;
     }
+}
+
+export function convertToRuleExtendedDTO(rule: TRucioRule): RuleExtendedDTO {
+    const baseDTO = convertToRuleDTO(rule);
+    return {
+        ...baseDTO,
+        did_type: getDIDType(rule.did_type),
+        grouping: getRuleGrouping(rule.grouping),
+        comments: rule.comments ?? null,
+        bytes: rule.bytes ?? null,
+    };
 }
 
 export function convertToRuleMetaDTO(rule: TRucioRule): RuleMetaDTO {

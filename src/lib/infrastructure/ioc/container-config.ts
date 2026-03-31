@@ -58,6 +58,7 @@ import ListAccountRSEQuotasFeature from './features/list-account-rse-quotas-feat
 import GetAccountInfoFeature from './features/get-account-info-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
+import ListRulesPendingApprovalFeature from '@/lib/infrastructure/ioc/features/list-rules-pending-approval-feature';
 import ListAccountRSEUsageFeature from '@/lib/infrastructure/ioc/features/list-account-rse-usage-feature';
 import CreateRuleFeature from '@/lib/infrastructure/ioc/features/create-rule-feature';
 import AddDIDFeature from '@/lib/infrastructure/ioc/features/add-did-feature';
@@ -134,6 +135,7 @@ loadFeaturesSync(appContainer, [new ListSubscriptionRuleStatesFeature(appContain
 
 // Features: List Rules
 loadFeaturesSync(appContainer, [new ListRulesFeature(appContainer)]);
+loadFeaturesSync(appContainer, [new ListRulesPendingApprovalFeature(appContainer)]);
 loadFeaturesSync(appContainer, [new ListRuleReplicaLockStatesFeature(appContainer)]);
 loadFeaturesSync(appContainer, [new UpdateRuleFeature(appContainer)]);
 

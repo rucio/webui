@@ -30,6 +30,7 @@ const USECASE_FACTORY = {
     USERPASS_LOGIN: Symbol.for('Factory<UserPassLoginUseCase>'),
     GET_RSE_USAGE: Symbol.for('Factory<GetRSEUsageUseCase>'),
     LiST_RULES: Symbol.for('Factory<ListRulesUseCase>'),
+    LIST_RULES_PENDING_APPROVAL: Symbol.for('Factory<ListRulesPendingApprovalUseCase>'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('Factory<ListAccountRSEUsageUseCase>'),
     CREATE_RULE: Symbol.for('Factory<CreateRuleUseCase>'),
     ADD_DID: Symbol.for('Factory<AddDIDUseCase>'),

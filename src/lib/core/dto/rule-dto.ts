@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { LockState, Rule, RuleAnalysis, RuleMeta } from '../entity/rucio';
+import { DIDType, LockState, Rule, RuleAnalysis, RuleGrouping, RuleMeta } from '../entity/rucio';
 
 /**
  * The Data Transfer Object for the ListRulesEndpoint which contains the stream
@@ -21,6 +21,17 @@ export interface RuleReplicaLockStateDTO extends BaseDTO {
 export interface ListLocksDTO extends BaseStreamableDTO {}
 
 export interface ListRulesDTO extends BaseStreamableDTO {}
+
+/**
+ * Extended Rule DTO that includes additional fields from the Rucio API response
+ * (did_type, grouping, comments, bytes) that are not part of the base RuleDTO.
+ */
+export interface RuleExtendedDTO extends RuleDTO {
+    did_type: DIDType;
+    grouping: RuleGrouping;
+    comments: string | null;
+    bytes: number | null;
+}
 
 export interface CreateRuleDTO extends BaseDTO {
     rule_ids: string[];
