@@ -7,6 +7,7 @@ import {
     UserpassLoginIncomplete,
 } from '../usecase-models/userpass-login-usecase-models';
 import { Role } from '../entity/auth-models';
+import { resolveAccountRole } from '../services/resolve-account-role';
 import UserPassLoginInputPort from '../port/primary/userpass-login-input-port';
 import type UserPassLoginOutputPort from '../port/primary/userpass-login-output-port';
 import type AccountGatewayOutputPort from '../port/secondary/account-gateway-output-port';
@@ -61,22 +62,7 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
         let countryRole: Role | undefined;
         try {
             const accountAttrs: AccountAttributesDTO = await this.rucioAccountGateway.listAccountAttributes(request.account, dto.authToken);
-            accountAttrs.attributes.forEach(attr => {
-                if (attr.key == 'admin' && attr.value == 'True') {
-                    role = Role.ADMIN;
-                } else if (attr.key.startsWith('country-')) {
-                    country = attr.key.split('-')[1];
-                    if (attr.value == 'admin') {
-                        countryRole = Role.ADMIN;
-                    } else if (attr.value == 'user') {
-                        countryRole = Role.USER;
-                    } else {
-                        countryRole = undefined;
-                    }
-                } else {
-                    role = Role.USER;
-                }
-            });
+            ({ role, country, countryRole } = resolveAccountRole(accountAttrs.attributes));
         } catch (error: AccountAttributesDTO | any) {
             role = undefined;
         }

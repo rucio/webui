@@ -6,6 +6,7 @@ import {
     SetX509LoginSessionResponse,
 } from '../usecase-models/set-x509-login-session-usecase-models';
 import { Role, VO } from '../entity/auth-models';
+import { resolveAccountRole } from '../services/resolve-account-role';
 import SetX509LoginSessionInputPort from '../port/primary/set-x509-login-session-input-port';
 import type SetX509LoginSessionOutputPort from '../port/primary/set-x509-login-session-output-port';
 import type AccountGatewayOutputPort from '../port/secondary/account-gateway-output-port';
@@ -56,22 +57,7 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
         let countryRole: Role | undefined;
         try {
             const accountAttrs: AccountAttributesDTO = await this.rucioAccountGateway.listAccountAttributes(rucioAccount, rucioAuthToken);
-            accountAttrs.attributes.forEach(attr => {
-                if (attr.key == 'admin' && attr.value == 'True') {
-                    role = Role.ADMIN;
-                } else if (attr.key.startsWith('country-')) {
-                    country = attr.key.split('-')[1];
-                    if (attr.value == 'admin') {
-                        countryRole = Role.ADMIN;
-                    } else if (attr.value == 'user') {
-                        countryRole = Role.USER;
-                    } else {
-                        countryRole = undefined;
-                    }
-                } else {
-                    role = Role.USER;
-                }
-            });
+            ({ role, country, countryRole } = resolveAccountRole(accountAttrs.attributes));
         } catch (error: AccountAttributesDTO | any) {
             role = undefined;
         }

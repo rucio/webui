@@ -16,6 +16,8 @@ import {
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
+import { resolveAccountRole } from '@/lib/core/services/resolve-account-role';
 
 /**
  * Helper function to find user index in allUsers array
@@ -280,6 +282,21 @@ export const authConfig: NextAuthConfig = {
                     return token;
                 }
 
+                // Resolve role from Rucio account attributes
+                let oidcRole: Role = Role.USER;
+                let oidcCountry: string | undefined;
+                let oidcCountryRole: Role | undefined;
+                try {
+                    const accountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
+                    const accountAttrs = await accountGateway.listAccountAttributes(rucioAccount, rucioAuthToken);
+                    const resolved = resolveAccountRole(accountAttrs.attributes);
+                    oidcRole = resolved.role ?? Role.USER;
+                    oidcCountry = resolved.country;
+                    oidcCountryRole = resolved.countryRole;
+                } catch (error) {
+                    console.error(`[OIDC] Failed to fetch account attributes for role resolution:`, error);
+                }
+
                 const oidcUser: SessionUser = {
                     id: `${rucioAccount}@${providerName}`,
                     email: user?.email || profile?.email || '',
@@ -291,7 +308,9 @@ export const authConfig: NextAuthConfig = {
                     rucioAuthTokenExpires: rucioAuthTokenExpires,
                     rucioOIDCProvider: providerName,
                     rucioVO: 'atl', // TODO: Get from callback URL state parameter or default VO
-                    role: Role.USER, // TODO: Query Rucio for user role from account attributes
+                    role: oidcRole,
+                    country: oidcCountry,
+                    countryRole: oidcCountryRole,
                     isLoggedIn: true,
                 };
 
