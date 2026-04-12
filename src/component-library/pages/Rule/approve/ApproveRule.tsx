@@ -121,7 +121,8 @@ export const ApproveRule = (props: ApproveRuleProps) => {
                             <span className="font-medium">View:</span> Opens the full rule detail page in a new tab for more information.
                         </li>
                         <li>
-                            <span className="font-medium">Filters:</span> Use the filter panel to narrow results by account, scope, activity, or date range.
+                            <span className="font-medium">Filters:</span> Use the filter panel to narrow results by account, scope, activity, or date
+                            range.
                         </li>
                     </ul>
                 )}
@@ -143,7 +144,13 @@ export const ApproveRule = (props: ApproveRuleProps) => {
                                 placeholder="Filter by account"
                                 value={filters.account}
                             />
-                            <Button className="px-3" variant="neutral" onClick={() => setIsFilterExpanded(!isFilterExpanded)} aria-expanded={isFilterExpanded} aria-label="Toggle filters">
+                            <Button
+                                className="px-3"
+                                variant="neutral"
+                                onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+                                aria-expanded={isFilterExpanded}
+                                aria-label="Toggle filters"
+                            >
                                 <HiFilter />
                                 {isFilterExpanded ? <HiChevronUp className="ml-1" /> : <HiChevronDown className="ml-1" />}
                             </Button>
@@ -152,13 +159,29 @@ export const ApproveRule = (props: ApproveRuleProps) => {
                             <div className="rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6 space-y-6">
                                 <div className="flex flex-col sm:flex-row w-full gap-4">
                                     <div className="grow flex-1">
-                                        <label htmlFor="filter-activity" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Activity</label>
-                                        <Input id="filter-activity" className="w-full" value={filters.activity} onChange={(e: ChangeEvent<HTMLInputElement>) => handleFiltersChange({ activity: e.target.value })} placeholder="Any Activity" />
+                                        <label
+                                            htmlFor="filter-activity"
+                                            className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block"
+                                        >
+                                            Activity
+                                        </label>
+                                        <Input
+                                            id="filter-activity"
+                                            className="w-full"
+                                            value={filters.activity}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleFiltersChange({ activity: e.target.value })}
+                                            placeholder="Any Activity"
+                                        />
                                     </div>
                                 </div>
                                 <div className="flex flex-col sm:flex-row w-full gap-4">
                                     <div className="grow flex-1">
-                                        <label htmlFor="filter-scope" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Scope</label>
+                                        <label
+                                            htmlFor="filter-scope"
+                                            className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block"
+                                        >
+                                            Scope
+                                        </label>
                                         <Input
                                             id="filter-scope"
                                             className="w-full"
@@ -168,18 +191,48 @@ export const ApproveRule = (props: ApproveRuleProps) => {
                                         />
                                     </div>
                                     <div className="grow flex-1">
-                                        <label htmlFor="filter-name" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Name</label>
-                                        <Input id="filter-name" className="w-full" value={filters.name} onChange={(e: ChangeEvent<HTMLInputElement>) => handleFiltersChange({ name: e.target.value })} />
+                                        <label
+                                            htmlFor="filter-name"
+                                            className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block"
+                                        >
+                                            Name
+                                        </label>
+                                        <Input
+                                            id="filter-name"
+                                            className="w-full"
+                                            value={filters.name}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleFiltersChange({ name: e.target.value })}
+                                        />
                                     </div>
                                 </div>
                                 <div className="flex flex-col sm:flex-row w-full gap-4">
                                     <div className="grow flex-1">
-                                        <label htmlFor="filter-updated-after" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Updated After</label>
-                                        <DateInput id="filter-updated-after" onchange={(date: Date) => handleFiltersChange({ updatedAfter: date })} initialdate={filters.updatedAfter} placeholder="Select date" />
+                                        <label
+                                            htmlFor="filter-updated-after"
+                                            className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block"
+                                        >
+                                            Updated After
+                                        </label>
+                                        <DateInput
+                                            id="filter-updated-after"
+                                            onchange={(date: Date) => handleFiltersChange({ updatedAfter: date })}
+                                            initialdate={filters.updatedAfter}
+                                            placeholder="Select date"
+                                        />
                                     </div>
                                     <div className="grow flex-1">
-                                        <label htmlFor="filter-updated-before" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Updated Before</label>
-                                        <DateInput id="filter-updated-before" onchange={(date: Date) => handleFiltersChange({ updatedBefore: date })} initialdate={filters.updatedBefore} placeholder="Select date" />
+                                        <label
+                                            htmlFor="filter-updated-before"
+                                            className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block"
+                                        >
+                                            Updated Before
+                                        </label>
+                                        <DateInput
+                                            id="filter-updated-before"
+                                            onchange={(date: Date) => handleFiltersChange({ updatedBefore: date })}
+                                            initialdate={filters.updatedBefore}
+                                            placeholder="Select date"
+                                        />
                                     </div>
                                 </div>
                             </div>
