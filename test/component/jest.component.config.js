@@ -24,7 +24,7 @@ const customJestConfig = {
         '@/(.*)$': '<rootDir>/src/$1',
     },
     testEnvironment: 'jest-environment-jsdom',
-    testMatch: ['<rootDir>/test/component/**/*.test.ts', '<rootDir>/test/component/**/*.test.tsx'],
+    testRegex: 'test/component/.*\\.test\\.(ts|tsx)$',
 
 }
 
