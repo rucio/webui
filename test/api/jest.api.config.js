@@ -31,7 +31,7 @@ const customJestConfig = {
     '^@auth/core/(.*)$': '<rootDir>/test/gateway/__mocks__/auth-core.js',
   },
   testEnvironment: 'jest-environment-jsdom',
-  testMatch: ['<rootDir>/test/api/**/*.test.ts', '<rootDir>/test/api/**/*.test.tsx'],
+  testRegex: 'test/api/.*\\.test\\.(ts|tsx)$',
 
 }
 
