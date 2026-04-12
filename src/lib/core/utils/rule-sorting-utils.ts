@@ -1,4 +1,4 @@
-import { RuleState } from '@/lib/core/entity/rucio';
+import { LockState, RuleState } from '@/lib/core/entity/rucio';
 
 /**
  * Interface for rule data that can be sorted by activity
@@ -82,10 +82,18 @@ export function remainingLifetimeComparator(valueA: number | null | undefined, v
 /**
  * Get priority score for lock states
  * Higher scores indicate higher priority (more urgent states)
+ * Handles both single-character LockState enum codes ('S', 'R', 'O', 'U')
+ * and full-name strings ('stuck', 'replicating', 'ok') for compatibility.
  */
 function getLockStatePriority(state: string): number {
-    const stateLower = state.toLowerCase();
+    // Handle single-character LockState enum codes (e.g. LockState.STUCK = 'S')
+    if (state === LockState.STUCK) return 3;
+    if (state === LockState.REPLICATING) return 2;
+    if (state === LockState.OK) return 1;
+    if (state === LockState.UNKNOWN) return 0;
 
+    // Fall back to full-name string comparison for compatibility
+    const stateLower = state.toLowerCase();
     if (stateLower.includes('error')) return 4;
     if (stateLower === 'stuck') return 3;
     if (stateLower === 'replicating') return 2;
