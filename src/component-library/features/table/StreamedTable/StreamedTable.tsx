@@ -6,11 +6,13 @@ import { useToast } from '@/lib/infrastructure/hooks/useToast';
 
 export interface StreamedTableProps extends RegularTableProps {
     streamingHook: UseStreamReader<any>;
+    isActive?: boolean;
 }
 
 export const StreamedTable = (props: StreamedTableProps) => {
     const { toast } = useToast();
     const { error, status } = props.streamingHook;
+    const { isActive } = props;
 
     const showErrorToast = () => {
         if (!error) return;
@@ -34,10 +36,12 @@ export const StreamedTable = (props: StreamedTableProps) => {
         } else {
             gridApi?.hideOverlay();
         }
-        showErrorToast();
+        if (isActive !== false) {
+            showErrorToast();
+        }
     }, [error, status]);
 
-    const { noRowsOverlayComponent, streamingHook: _, ...otherProps } = props;
+    const { noRowsOverlayComponent, streamingHook: _, isActive: _isActive, ...otherProps } = props;
 
     const getDefaultNoRowsElement = (gridProps: any) => {
         return <NoLoadedRowsOverlay error={error} status={status} {...gridProps} />;

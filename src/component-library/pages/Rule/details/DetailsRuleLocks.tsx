@@ -21,6 +21,7 @@ import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
+    isActive?: boolean;
 };
 
 const ClickableDID = (props: { value: string[] }) => {
@@ -178,7 +179,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };
 
-export const DetailsRuleLocks = ({ id }: { id: string }) => {
+export const DetailsRuleLocks = ({ id, isActive }: { id: string; isActive?: boolean }) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<ListRuleReplicaLockStatesViewModel>();
 
     useEffect(() => {
@@ -188,5 +189,5 @@ export const DetailsRuleLocks = ({ id }: { id: string }) => {
         }
     }, [gridApi]);
 
-    return <DetailsRuleLocksTable streamingHook={streamingHook} onGridReady={onGridReady} />;
+    return <DetailsRuleLocksTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
 };

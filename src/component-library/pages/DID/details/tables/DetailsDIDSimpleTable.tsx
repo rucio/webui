@@ -15,6 +15,7 @@ type DetailsDIDSimpleTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
     onSelectionChanged?: (event: SelectionChangedEvent) => void;
     onGridReady: (event: GridReadyEvent) => void;
+    isActive?: boolean;
 };
 
 const ClickableDID = (props: { value: string[] }) => {

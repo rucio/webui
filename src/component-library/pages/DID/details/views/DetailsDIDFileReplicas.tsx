@@ -4,7 +4,7 @@ import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/d
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { DetailsDIDFileReplicasTable } from '@/component-library/pages/DID/details/tables/DetailsDIDFileReplicasTable';
 
-export const DetailsDIDFileReplicas: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDFileReplicas: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<FileReplicaStateViewModel>();
 
     useEffect(() => {
@@ -14,5 +14,5 @@ export const DetailsDIDFileReplicas: DetailsDIDView = ({ scope, name }: DetailsD
         }
     }, [gridApi]);
 
-    return <DetailsDIDFileReplicasTable streamingHook={streamingHook} onGridReady={onGridReady} />;
+    return <DetailsDIDFileReplicasTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
 };

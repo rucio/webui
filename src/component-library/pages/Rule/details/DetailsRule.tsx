@@ -14,7 +14,16 @@ import { DetailsRuleMeta } from '@/component-library/pages/Rule/details/DetailsR
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { DetailActions } from '@/component-library/features/mutations/DetailActions';
 import { Button } from '@/component-library/atoms/form/button';
-import { HiOutlineLightningBolt, HiInformationCircle, HiChevronDown, HiOutlineClock, HiOutlineCheckCircle, HiOutlineBan, HiOutlineTrash, HiOutlineAnnotation } from 'react-icons/hi';
+import {
+    HiOutlineLightningBolt,
+    HiInformationCircle,
+    HiChevronDown,
+    HiOutlineClock,
+    HiOutlineCheckCircle,
+    HiOutlineBan,
+    HiOutlineTrash,
+    HiOutlineAnnotation,
+} from 'react-icons/hi';
 import { QUERY_KEYS, invalidateForMutation } from '@/lib/infrastructure/query';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { UpdateLifetimeDialog } from '@/component-library/features/mutations/UpdateLifetimeDialog';
@@ -41,7 +50,7 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
             </div>
             <div className={getViewClasses(1)}>
                 <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
-                    <DetailsRuleLocks id={id} />
+                    <DetailsRuleLocks id={id} isActive={1 === activeIndex} />
                 </div>
             </div>
         </>
@@ -75,7 +84,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
             }
             return viewModel;
         },
-        onSuccess: (viewModel) => {
+        onSuccess: viewModel => {
             toast({ variant: 'success', title: 'Rule Boosted', description: viewModel.message || 'Priority set to 5.' });
             invalidateForMutation(queryClient, 'update-rule');
         },
@@ -295,8 +304,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
                         )}
                         {userCanApproveRule && meta.state === RuleState.WAITING_APPROVAL && (
                             <li>
-                                <span className="font-medium">Deny Rule:</span> Reject this rule. You may optionally provide a reason for
-                                the denial.
+                                <span className="font-medium">Deny Rule:</span> Reject this rule. You may optionally provide a reason for the denial.
                             </li>
                         )}
                         <li>

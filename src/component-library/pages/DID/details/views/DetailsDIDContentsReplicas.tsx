@@ -6,7 +6,7 @@ import { DetailsDIDSimpleTable } from '@/component-library/pages/DID/details/tab
 import { SelectionChangedEvent } from 'ag-grid-community';
 import { DetailsDIDFileReplicasTable } from '@/component-library/pages/DID/details/tables/DetailsDIDFileReplicasTable';
 
-export const DetailsDIDContentsReplicas: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDContentsReplicas: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const {
         gridApi: contentsGridApi,
         onGridReady: onContentsGridReady,
@@ -59,10 +59,11 @@ export const DetailsDIDContentsReplicas: DetailsDIDView = ({ scope, name }: Deta
                     streamingHook={contentsStreamingHook}
                     onGridReady={onContentsGridReady}
                     onSelectionChanged={onSelectionChanged}
+                    isActive={isActive}
                 />
             </div>
             <div className="flex flex-col grow">
-                <DetailsDIDFileReplicasTable streamingHook={replicasStreamingHook} onGridReady={onReplicasGridReady} />
+                <DetailsDIDFileReplicasTable streamingHook={replicasStreamingHook} onGridReady={onReplicasGridReady} isActive={isActive} />
             </div>
         </div>
     );
