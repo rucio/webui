@@ -4,7 +4,7 @@ import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/d
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { DetailsDIDSimpleTable } from '@/component-library/pages/DID/details/tables/DetailsDIDSimpleTable';
 
-export const DetailsDIDContents: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDContents: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDViewModel>();
 
     useEffect(() => {
@@ -14,5 +14,5 @@ export const DetailsDIDContents: DetailsDIDView = ({ scope, name }: DetailsDIDPr
         }
     }, [gridApi]);
 
-    return <DetailsDIDSimpleTable streamingHook={streamingHook} onGridReady={onGridReady} />;
+    return <DetailsDIDSimpleTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
 };

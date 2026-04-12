@@ -73,7 +73,7 @@ export const DetailsDIDTables = ({ scope, name, type }: DetailsDIDTablesProps) =
 
                 return (
                     <div key={tabName} className={viewClasses}>
-                        <ViewComponent scope={scope} name={name} />
+                        <ViewComponent scope={scope} name={name} isActive={index === activeIndex} />
                     </div>
                 );
             })}

@@ -47,7 +47,7 @@ const ReplicaStateDisplayNames = {
     [ReplicaState.UNAVAILABLE]: 'Unavailable',
 };
 
-export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDDatasetReplicasViewModel>();
     const gridRef = useRef<AgGridReact>(null);
 
@@ -102,5 +102,14 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name }: Detai
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={gridRef} onGridReady={onGridReady} streamingHook={streamingHook} rowHeight={75} />;
+    return (
+        <StreamedTable
+            columnDefs={columnDefs}
+            tableRef={gridRef}
+            onGridReady={onGridReady}
+            streamingHook={streamingHook}
+            rowHeight={75}
+            isActive={isActive}
+        />
+    );
 };

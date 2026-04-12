@@ -23,6 +23,7 @@ import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparato
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
+    isActive?: boolean;
 };
 
 const ClickableId = (props: { value: string }) => {
@@ -148,7 +149,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };
 
-export const DetailsDIDRules: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDRules: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDRulesViewModel>();
 
     useEffect(() => {
@@ -158,5 +159,5 @@ export const DetailsDIDRules: DetailsDIDView = ({ scope, name }: DetailsDIDProps
         }
     }, [gridApi]);
 
-    return <DetailsDIDRulesTable streamingHook={streamingHook} onGridReady={onGridReady} />;
+    return <DetailsDIDRulesTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
 };

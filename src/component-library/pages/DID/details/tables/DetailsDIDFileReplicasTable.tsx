@@ -13,6 +13,7 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
+    isActive?: boolean;
 };
 
 const ClickableRSE = (props: { value: string }) => {
