@@ -8,7 +8,8 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { DefaultTextFilterParams, DefaultDateFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { ApproveRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
-import { formatDate, formatFileSize, formatSeconds } from '@/component-library/features/utils/text-formatters';
+import { formatFileSize, formatSeconds } from '@/component-library/features/utils/text-formatters';
+import { DateCellRenderer } from '@/component-library/features/utils/DateWithTooltip';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { RuleGroupingBadge } from '@/component-library/features/badges/Rule/RuleGroupingBadge';
@@ -175,9 +176,7 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
             field: 'created_at',
             width: 140,
             minWidth: 140,
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatDate(params.value);
-            },
+            cellRenderer: DateCellRenderer,
             filter: 'agDateColumnFilter',
             filterParams: DefaultDateFilterParams,
         },
