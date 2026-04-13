@@ -10,9 +10,10 @@ import {
     buildDiscreteFilterParams,
     RuleStateDisplayNames,
 } from '@/component-library/features/utils/filter-parameters';
-import { GridReadyEvent, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
+import { GridReadyEvent, ValueGetterParams } from 'ag-grid-community';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
-import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
+import { formatSeconds } from '@/component-library/features/utils/text-formatters';
+import { DateCellRenderer } from '@/component-library/features/utils/DateWithTooltip';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
@@ -136,9 +137,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             field: 'created_at',
             width: 140,
             minWidth: 140,
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatDate(params.value);
-            },
+            cellRenderer: DateCellRenderer,
             filter: 'agDateColumnFilter',
             filterParams: DefaultDateFilterParams,
         },

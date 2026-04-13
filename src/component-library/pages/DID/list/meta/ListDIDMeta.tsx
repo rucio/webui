@@ -1,7 +1,8 @@
 import { DIDMetaViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { cn } from '@/component-library/utils';
 import { Field } from '@/component-library/atoms/misc/Field';
-import { formatDate, formatFileSize } from '@/component-library/features/utils/text-formatters';
+import { formatFileSize } from '@/component-library/features/utils/text-formatters';
+import { DateWithTooltip } from '@/component-library/features/utils/DateWithTooltip';
 import { Divider } from '@/component-library/atoms/misc/Divider';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { DIDType } from '@/lib/core/entity/rucio';
@@ -72,10 +73,10 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
                 </KeyValueRow>
                 <Divider />
                 <KeyValueRow name="Created At">
-                    <Field>{formatDate(meta.created_at)}</Field>
+                    <DateWithTooltip date={meta.created_at} />
                 </KeyValueRow>
                 <KeyValueRow name="Updated At">
-                    <Field>{formatDate(meta.updated_at)}</Field>
+                    <DateWithTooltip date={meta.updated_at} />
                 </KeyValueRow>
                 <Divider />
                 {meta.did_type === DIDType.FILE && getFileInformation()}
