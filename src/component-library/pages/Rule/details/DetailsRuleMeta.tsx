@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider } from '@/component-library/atoms/misc/Divider';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { Field } from '@/component-library/atoms/misc/Field';
-import { formatDate } from '@/component-library/features/utils/text-formatters';
+import { DateWithTooltip } from '@/component-library/features/utils/DateWithTooltip';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
@@ -31,7 +31,7 @@ const RuleSectionDivider = () => (
 export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     const getExpiredField = () => {
         if (meta.expires_at) {
-            return <Field>{formatDate(meta.expires_at)}</Field>;
+            return <DateWithTooltip date={meta.expires_at} />;
         } else {
             return <NullBadge />;
         }
@@ -88,10 +88,10 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                 <RuleSectionDivider />
                 <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Created At">
-                        <Field>{formatDate(meta.created_at)}</Field>
+                        <DateWithTooltip date={meta.created_at} />
                     </KeyValueRow>
                     <KeyValueRow name="Updated At">
-                        <Field>{formatDate(meta.updated_at)}</Field>
+                        <DateWithTooltip date={meta.updated_at} />
                     </KeyValueRow>
                     <KeyValueRow name="Expires At">{getExpiredField()}</KeyValueRow>
                 </div>

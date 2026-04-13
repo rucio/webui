@@ -2,7 +2,8 @@ import { DIDMetaViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { Divider } from '@/component-library/atoms/misc/Divider';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { Field } from '@/component-library/atoms/misc/Field';
-import { formatDate, formatFileSize } from '@/component-library/features/utils/text-formatters';
+import { formatFileSize } from '@/component-library/features/utils/text-formatters';
+import { DateWithTooltip } from '@/component-library/features/utils/DateWithTooltip';
 import { CopyableField } from '@/component-library/features/fields/CopyableField';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
@@ -86,10 +87,10 @@ export const DetailsDIDMeta = ({ meta }: { meta: DIDMetaViewModel }) => {
                         <Field>{meta.account}</Field>
                     </KeyValueRow>
                     <KeyValueRow name="Created At">
-                        <Field>{formatDate(meta.created_at)}</Field>
+                        <DateWithTooltip date={meta.created_at} />
                     </KeyValueRow>
                     <KeyValueRow name="Updated At">
-                        <Field>{formatDate(meta.updated_at)}</Field>
+                        <DateWithTooltip date={meta.updated_at} />
                     </KeyValueRow>
                     <KeyValueRow name="Availability">
                         <DIDAvailabilityBadge value={meta.availability} />
