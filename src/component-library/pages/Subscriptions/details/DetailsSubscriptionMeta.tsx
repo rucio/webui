@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider } from '@/component-library/atoms/misc/Divider';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { Field } from '@/component-library/atoms/misc/Field';
-import { formatDate } from '@/component-library/features/utils/text-formatters';
+import { DateWithTooltip } from '@/component-library/features/utils/DateWithTooltip';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
@@ -31,14 +31,14 @@ const SubscriptionSectionDivider = () => (
 export const DetailsSubscriptionMeta = ({ meta }: { meta: SubscriptionViewModel }) => {
     const getLifetimeField = () => {
         if (meta.lifetime && meta.lifetime !== '') {
-            return <Field>{meta.lifetime}</Field>;
+            return <DateWithTooltip date={meta.lifetime} />;
         }
         return <NullBadge />;
     };
 
     const getLastProcessedField = () => {
         if (meta.last_processed && meta.last_processed !== '') {
-            return <Field>{formatDate(meta.last_processed)}</Field>;
+            return <DateWithTooltip date={meta.last_processed} />;
         }
         return <NullBadge />;
     };
@@ -65,10 +65,10 @@ export const DetailsSubscriptionMeta = ({ meta }: { meta: SubscriptionViewModel 
                     <SubscriptionSectionDivider />
                     <div className="flex flex-col">
                         <KeyValueRow name="Created At">
-                            <Field>{formatDate(meta.created_at)}</Field>
+                            <DateWithTooltip date={meta.created_at} />
                         </KeyValueRow>
                         <KeyValueRow name="Updated At">
-                            <Field>{formatDate(meta.updated_at)}</Field>
+                            <DateWithTooltip date={meta.updated_at} />
                         </KeyValueRow>
                         <KeyValueRow name="Last Processed">{getLastProcessedField()}</KeyValueRow>
                         <KeyValueRow name="Lifetime">{getLifetimeField()}</KeyValueRow>
