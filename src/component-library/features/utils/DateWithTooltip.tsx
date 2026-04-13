@@ -13,52 +13,17 @@ export interface DateWithTooltipProps {
 }
 
 /**
- * DateWithTooltip — renders a short YYYY/MM/DD date with a hover/focus tooltip
- * showing the full datetime (YYYY/MM/DD HH:MM:SS UTC).
+ * DateWithTooltip — renders a short YYYY/MM/DD date that reveals the full
+ * datetime (YYYY/MM/DD HH:MM:SS UTC) in a popover on click.
  *
- * Uses the existing @radix-ui/react-popover primitive (same as TipPopover) with
- * controlled open state driven by mouse-enter/leave and focus/blur events so that
- * the tooltip is accessible via both mouse hover and keyboard focus.
- *
- * A delayed-close strategy (80 ms grace period) keeps the popover open while the
- * pointer travels from the trigger button into the popover content, preventing the
- * flicker that would otherwise occur because the trigger's onMouseLeave fires before
- * the content's onMouseEnter.
+ * Uses @radix-ui/react-popover (same primitive as TipPopover) portaled to the
+ * body so the popover escapes AG Grid's overflow:hidden cells. Clicking the
+ * date toggles the popover; clicking outside or pressing Escape closes it.
  */
 export const DateWithTooltip: React.FC<DateWithTooltipProps> = ({ date, className }) => {
-    const [open, setOpen] = React.useState(false);
-    const closeTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    // Cancel any pending close and open immediately.
-    const openPopover = React.useCallback(() => {
-        if (closeTimeoutRef.current !== null) {
-            clearTimeout(closeTimeoutRef.current);
-            closeTimeoutRef.current = null;
-        }
-        setOpen(true);
-    }, []);
-
-    // Schedule a close after a short grace period so the pointer can move into the content.
-    const scheduleClose = React.useCallback(() => {
-        closeTimeoutRef.current = setTimeout(() => {
-            setOpen(false);
-            closeTimeoutRef.current = null;
-        }, 80);
-    }, []);
-
-    // Clean up on unmount.
-    React.useEffect(() => {
-        return () => {
-            if (closeTimeoutRef.current !== null) {
-                clearTimeout(closeTimeoutRef.current);
-            }
-        };
-    }, []);
-
     const shortDate = date != null ? formatDate(date instanceof Date ? date.toISOString() : date) : 'N/A';
     const fullDateTime = formatDateTime(date);
 
-    // Don't show tooltip when there is no meaningful date
     const hasDate = date != null && shortDate !== 'N/A';
 
     if (!hasDate) {
@@ -66,22 +31,17 @@ export const DateWithTooltip: React.FC<DateWithTooltipProps> = ({ date, classNam
     }
 
     return (
-        <Popover.Root open={open} onOpenChange={setOpen}>
+        <Popover.Root>
             <Popover.Trigger asChild>
-                {/* Use a button so the element is interactive — required for tabIndex + a11y */}
                 <button
                     type="button"
                     className={cn(
-                        'inline-block cursor-default bg-transparent border-0 p-0 m-0',
+                        'inline-block cursor-pointer bg-transparent border-0 p-0 m-0',
                         'font-[inherit] text-[inherit]',
                         'underline decoration-dotted underline-offset-2',
                         'outline-none focus-visible:ring-1 focus-visible:ring-neutral-500',
                         className,
                     )}
-                    onMouseEnter={openPopover}
-                    onMouseLeave={scheduleClose}
-                    onFocus={openPopover}
-                    onBlur={() => setOpen(false)}
                     aria-label={fullDateTime}
                 >
                     {shortDate}
@@ -93,20 +53,12 @@ export const DateWithTooltip: React.FC<DateWithTooltipProps> = ({ date, classNam
                     side="top"
                     align="center"
                     sideOffset={6}
-                    // Prevent the popover from stealing focus (which would close it immediately)
                     onOpenAutoFocus={e => e.preventDefault()}
-                    // Keep the popover open while the pointer is over its content
-                    onMouseEnter={openPopover}
-                    onMouseLeave={scheduleClose}
                     className={cn(
                         'z-50 px-3 py-1.5 rounded-md text-xs font-mono',
                         'bg-neutral-800 text-neutral-100',
                         'dark:bg-neutral-200 dark:text-neutral-900',
                         'shadow-md',
-                        'animate-in fade-in-0 zoom-in-95',
-                        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-                        'data-[side=bottom]:slide-in-from-top-2',
-                        'data-[side=top]:slide-in-from-bottom-2',
                     )}
                 >
                     {fullDateTime}
