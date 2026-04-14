@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/component-library/utils';
-import { cva } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { copiedToast, errorCopyingToast } from '@/component-library/features/utils/list-toasts';
 import { HiOutlineClipboardCopy } from 'react-icons/hi';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
@@ -12,23 +12,32 @@ const headingStyles = cva('text-neutral-900 dark:text-neutral-100 font-bold', {
             md: 'text-2xl',
             lg: 'text-4xl',
         },
+        variant: {
+            display: 'text-5xl font-extrabold',
+            title: 'text-3xl font-bold',
+            subtitle: 'text-xl font-semibold',
+        },
     },
     defaultVariants: {
         size: 'lg',
     },
 });
 
-interface HeadingProps {
-    text: string;
-    size?: 'sm' | 'md' | 'lg';
-    className?: string;
+type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement>, VariantProps<typeof headingStyles> {
+    /** @deprecated Use children instead */
+    text?: string;
+    level?: HeadingLevel;
+    children?: React.ReactNode;
 }
 
-export const Heading = ({ text, size, className, ...props }: HeadingProps) => {
+export const Heading = ({ text, size, variant, level = 'h1', className, children, ...props }: HeadingProps) => {
+    const Tag = level;
     return (
-        <h1 className={cn(headingStyles({ size }), className)} {...props}>
-            {text}
-        </h1>
+        <Tag className={cn(headingStyles({ size, variant }), className)} {...props}>
+            {children || text}
+        </Tag>
     );
 };
 
@@ -37,7 +46,7 @@ export const CopyableHeading = ({ text, size, className, ...props }: HeadingProp
 
     const handleCopy = () => {
         navigator.clipboard
-            .writeText(text)
+            .writeText(text || '')
             .then(() => {
                 toast(copiedToast);
             })
@@ -46,8 +55,21 @@ export const CopyableHeading = ({ text, size, className, ...props }: HeadingProp
             });
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCopy();
+        }
+    };
+
     return (
-        <div className="flex items-center space-x-2 cursor-pointer" onClick={handleCopy}>
+        <div
+            className="flex items-center space-x-2 cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-neutral-0 dark:focus:ring-offset-neutral-900"
+            onClick={handleCopy}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+        >
             <HiOutlineClipboardCopy className="h-8 w-8 inline" />
             <Heading text={text} size={size} className={className} {...props} />
         </div>

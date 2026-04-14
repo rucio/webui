@@ -54,24 +54,32 @@ export class WebUIEnvTemplateCompiler {
   }
 
   mergeWithDefaults(): void {
+    const authSecret = this.generateRandomString()
     this.environmentVariables = {
-      'SESSION_COOKIE_NAME': 'rucio-webui-session',
-      'SESSION_PASSWORD': this.generateRandomString(),
       'MULTI_VO_ENABLED': 'false',
       'VO_LIST': 'def',
       'VO_DEFAULT': 'def',
       'OIDC_ENABLED': 'false',
+      'OIDC_EXPECTED_AUDIENCE_CLAIM': 'rucio',
       'ENABLE_SSL': 'false',
       'PARAMS_ENCODING_ENABLED': 'false',
       'RULE_ACTIVITY': 'User Subscriptions',
       'ENABLE_USERPASS_LOGIN': 'true',
+      'AUTH_TRUST_HOST': 'true',
+      'AUTH_SECRET': authSecret,
+      'NEXTAUTH_SECRET': authSecret,
       ...this.environmentVariables,
     }
   }
   validateOIDCProvider(provider: string, global_prefix: string): EnvValidationError[] {
     const prefix = `OIDC_PROVIDER_${provider.toUpperCase()}_`
-    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "userinfo_url", "redirect_url", "refresh_token_url"]
+    // Required OIDC variables (must match env-config-gateway.ts)
+    const requiredVariables: string[] = ["client_id", "client_secret", "authorization_url", "token_url", "redirect_url", "issuer"]
+    // Optional OIDC variables (must match env-config-gateway.ts)
+    const optionalVariables: string[] = ["icon_url", "refresh_token_url", "userinfo_url", "scopes", "logout_url"]
     const errors: EnvValidationError[] = []
+
+    // Validate required variables
     requiredVariables.forEach((key) => {
       const varName = `${prefix}${key.toUpperCase()}`
       if (!this.environmentVariables[varName]) {
@@ -81,6 +89,18 @@ export class WebUIEnvTemplateCompiler {
         })
       }
     })
+
+    // Validate optional variables (warnings only)
+    optionalVariables.forEach((key) => {
+      const varName = `${prefix}${key.toUpperCase()}`
+      if (!this.environmentVariables[varName]) {
+        errors.push({
+          type: 'warning',
+          message: `optional variable ${global_prefix}${varName} is not set. Consider setting a value for ${global_prefix}${varName} if needed`
+        })
+      }
+    })
+
     return errors
   }
   validateVO(vo: string, global_prefix: string): EnvValidationError[] {
@@ -134,7 +154,7 @@ export class WebUIEnvTemplateCompiler {
     const env = this.environmentVariables
     const errors: EnvValidationError[] = []
 
-    const requiredVariables: string[] = ["rucio_host", "rucio_auth_host", "hostname", "project_url", "vo_default", "vo_list"]
+    const requiredVariables: string[] = ["rucio_host", "rucio_auth_host", "hostname", "project_url", "vo_default", "vo_list", "nextauth_url"]
 
     // check if NODE_TLS_REJECT_UNAUTHORIZED is set to 1, then NODE_EXTRA_TLS_CERTS should be set
     if(env['NODE_TLS_REJECT_UNAUTHORIZED'] === '1') {
@@ -143,7 +163,7 @@ export class WebUIEnvTemplateCompiler {
 
     // check if all required variables are set
     requiredVariables.forEach((key) => {
-      let keyName = `${key.toUpperCase()}`
+      const keyName = `${key.toUpperCase()}`
       console.log(`checking if ${keyName} is set`)
       console.log(env[keyName])
       if (!env[key.toUpperCase()]) {

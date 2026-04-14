@@ -1,7 +1,8 @@
+import React from 'react';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 
-export const RuleStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: RuleState; tiny?: boolean }> = ({
+export const RuleStateTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { state: RuleState; tiny?: boolean }> = ({
     state = 'OK',
     tiny = false,
     ...props
@@ -37,7 +38,7 @@ export const RuleStateTag: React.FC<JSX.IntrinsicElements['span'] & { state: Rul
                     : state === 'Waiting_Approval'
                     ? 'bg-extra-indigo-300 border-extra-indigo-700 dark:bg-extra-indigo-700 dark:border-extra-indigo-200'
                     : 'bg-base-info-300 border-base-info-700 dark:bg-base-info-700 dark:border-base-info-200',
-                'text-text-1000 dark:text-text-0 underline font-sans',
+                'text-neutral-1000 dark:text-neutral-0 underline font-sans',
                 !tiny ? 'w-28 md:w-44 rounded border text-center' : 'w-6 h-6 rounded-full border text-center select-none shrink-0',
                 'flex justify-center items-center',
                 className ?? '',

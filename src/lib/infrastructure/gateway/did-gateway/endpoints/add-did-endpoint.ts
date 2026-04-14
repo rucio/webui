@@ -2,7 +2,6 @@ import { AddDIDDTO } from '@/lib/core/dto/did-dto';
 import { DIDType } from '@/lib/core/entity/rucio';
 import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
     constructor(
@@ -53,10 +52,11 @@ export default class AddDIDEndpoint extends BaseEndpoint<AddDIDDTO> {
         return errorDTO;
     }
 
-    createDTO(data: string): AddDIDDTO {
+    createDTO(data: object): AddDIDDTO {
+        const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
         const dto: AddDIDDTO = {
             status: 'success',
-            created: data.toLowerCase() === 'created' ? true : false,
+            created: dataStr.toLowerCase() === 'created' ? true : false,
         };
         return dto;
     }

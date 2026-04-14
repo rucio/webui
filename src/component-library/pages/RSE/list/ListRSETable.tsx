@@ -17,7 +17,7 @@ type ListRSETableProps = {
 };
 
 const ClickableName = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rse/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 export const ListRSETable = (props: ListRSETableProps) => {
@@ -29,9 +29,11 @@ export const ListRSETable = (props: ListRSETableProps) => {
             field: 'name',
             flex: 4,
             minWidth: 250,
+            pinned: 'left' as const,
             cellRenderer: ClickableName,
             filter: true,
             filterParams: DefaultTextFilterParams,
+            sort: 'asc' as const,
         },
         {
             headerName: 'Type',
@@ -44,7 +46,6 @@ export const ListRSETable = (props: ListRSETableProps) => {
                 className: badgeCellClasses,
             },
             filter: true,
-            sortable: false,
             filterParams: buildDiscreteFilterParams(Object.values(RSEType)),
         },
         {
@@ -54,7 +55,6 @@ export const ListRSETable = (props: ListRSETableProps) => {
             minWidth: 125,
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
-            sortable: false,
             filter: true,
             filterParams: DefaultBooleanFilterParams,
         },
@@ -65,7 +65,6 @@ export const ListRSETable = (props: ListRSETableProps) => {
             minWidth: 175,
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
-            sortable: false,
             filter: true,
             filterParams: DefaultBooleanFilterParams,
         },
@@ -76,7 +75,6 @@ export const ListRSETable = (props: ListRSETableProps) => {
             minWidth: 125,
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
-            sortable: false,
             filter: true,
             filterParams: DefaultBooleanFilterParams,
         },

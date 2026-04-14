@@ -1,21 +1,22 @@
 import { DIDMetaViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { cn } from '@/component-library/utils';
 import { Field } from '@/component-library/atoms/misc/Field';
-import { formatDate, formatFileSize } from '@/component-library/features/utils/text-formatters';
+import { formatFileSize } from '@/component-library/features/utils/text-formatters';
+import { DateWithTooltip } from '@/component-library/features/utils/DateWithTooltip';
 import { Divider } from '@/component-library/atoms/misc/Divider';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { DIDType } from '@/lib/core/entity/rucio';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { CopyableField } from '@/component-library/features/fields/CopyableField';
 import { DIDAvailabilityBadge } from '@/component-library/features/badges/DID/DIDAvailabilityBadge';
-import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
+import { LoadingElement } from '@/component-library/atoms/loading/LoadingElement';
 import { KeyValueLinkHeader } from '@/component-library/features/key-value/headers';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 
 const MetaHeader = ({ scope, name }: { scope: string; name: string }) => {
     return (
-        <KeyValueLinkHeader href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
+        <KeyValueLinkHeader href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
             <span>
                 {scope}:{name}
             </span>
@@ -53,7 +54,7 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
     };
 
     return (
-        <div className="min-w-full w-fit md:max-h-[0px]">
+        <div className="min-w-full w-fit h-full">
             <MetaHeader scope={meta.scope} name={meta.name} />
             <div className="flex flex-col px-4 py-2 w-full">
                 <KeyValueRow name="Type">
@@ -72,10 +73,10 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
                 </KeyValueRow>
                 <Divider />
                 <KeyValueRow name="Created At">
-                    <Field>{formatDate(meta.created_at)}</Field>
+                    <DateWithTooltip date={meta.created_at} />
                 </KeyValueRow>
                 <KeyValueRow name="Updated At">
-                    <Field>{formatDate(meta.updated_at)}</Field>
+                    <DateWithTooltip date={meta.updated_at} />
                 </KeyValueRow>
                 <Divider />
                 {meta.did_type === DIDType.FILE && getFileInformation()}
@@ -104,7 +105,11 @@ const MetaStub = ({ isLoading, hasError }: { isLoading: boolean; hasError: boole
         return <span className="text-sm text-neutral-800 dark:text-neutral-100">{hasError ? 'An error has occurred' : 'Select an identifier'}</span>;
     };
 
-    return <div className="justify-center flex grow">{isLoading ? <LoadingSpinner /> : getTextStub()}</div>;
+    return (
+        <div className="flex grow">
+            {isLoading ? <LoadingElement context="section" size="md" /> : <div className="justify-center flex grow">{getTextStub()}</div>}
+        </div>
+    );
 };
 
 export interface ListDIDMetaProps {
@@ -117,7 +122,7 @@ export const ListDIDMeta = ({ meta, isLoading, hasError }: ListDIDMetaProps) => 
     const showMeta = meta && !isLoading && !hasError;
 
     return (
-        <KeyValueWrapper className={cn(showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]', 'md:flex-1 overflow-auto')}>
+        <KeyValueWrapper className={cn(showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]', 'h-full overflow-auto')}>
             {showMeta ? <MetaContents meta={meta} /> : <MetaStub isLoading={isLoading} hasError={hasError} />}
         </KeyValueWrapper>
     );

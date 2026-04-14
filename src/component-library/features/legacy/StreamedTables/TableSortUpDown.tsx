@@ -1,18 +1,18 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
 import { Column } from '@tanstack/react-table';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { HiSortAscending, HiSortDescending, HiDotsHorizontal } from 'react-icons/hi';
 
 export function TableSortUpDown(
-    props: JSX.IntrinsicElements['div'] & {
+    props: React.ComponentPropsWithoutRef<'div'> & {
         name: string;
         column: Column<any, any>;
-        element?: JSX.Element; // to replace name
+        element?: React.ReactElement; // to replace name
         stack?: boolean; // whether to use column instead of row
         nocollapse?: boolean;
     },
-): JSX.Element {
+): React.ReactElement {
     const { name, column, element, stack, nocollapse, ...otherprops } = props;
     const { className, ...otherdivprops } = otherprops;
     type updown = 'null' | 'desc' | 'asc';
@@ -22,6 +22,14 @@ export function TableSortUpDown(
         desc: 'asc',
         asc: 'null',
     };
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            column.toggleSorting();
+            setState(next[state] as updown);
+        }
+    };
+
     return (
         <div
             className={twMerge(
@@ -35,10 +43,13 @@ export function TableSortUpDown(
                 column.toggleSorting();
                 setState(next[state] as updown);
             }}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
             {...otherdivprops}
         >
             {element ?? <H3 className={props.nocollapse ? 'inline hover:text-brand-500' : 'hidden md:inline hover:text-brand-500'}>{name}</H3>}
-            <span className="text-text-500 dark:text-text-200 hover:text-brand-500 text-2xl h6">
+            <span className="text-neutral-500 dark:text-neutral-200 hover:text-brand-500 text-2xl h6">
                 {
                     {
                         asc: <HiSortAscending />,

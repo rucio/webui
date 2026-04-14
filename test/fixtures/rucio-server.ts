@@ -1,7 +1,5 @@
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Headers } from 'node-fetch';
 import { Readable } from 'stream';
-import { Response } from 'node-fetch';
 import { BaseViewModel } from '@/lib/sdk/view-models';
 
 /**
@@ -52,6 +50,21 @@ export type MockGatewayResponse = {
 };
 
 /**
+ * Consume a Node.js Readable stream and return its content as a string
+ * This is needed because jest-fetch-mock doesn't handle Node.js streams properly
+ */
+async function streamToString(nodeStream: Readable): Promise<string> {
+    return new Promise((resolve, reject) => {
+        let data = '';
+        nodeStream.on('data', (chunk: Buffer | string) => {
+            data += chunk.toString();
+        });
+        nodeStream.on('end', () => resolve(data));
+        nodeStream.on('error', reject);
+    });
+}
+
+/**
  * A factory for creating mock Rucio servers.
  */
 export default class MockRucioServerFactory {
@@ -96,21 +109,40 @@ export default class MockRucioServerFactory {
                 return false;
             });
             if (!endpoint) {
-                return Promise.resolve({
-                    status: 404,
-                    body: JSON.stringify('Not found'),
-                } as MockGatewayResponse);
+                return Promise.resolve(
+                    new Response(JSON.stringify('Not found'), {
+                        status: 404,
+                    }),
+                );
             }
             if (endpoint.requestValidator) {
                 const isValid = await endpoint.requestValidator(req);
                 if (!isValid) {
-                    return Promise.resolve({
-                        status: 400,
-                        body: JSON.stringify('Bad request'),
-                    } as MockGatewayResponse);
+                    return Promise.resolve(
+                        new Response(JSON.stringify('Bad request'), {
+                            status: 400,
+                        }),
+                    );
                 }
             }
-            return Promise.resolve(endpoint.response);
+            // Convert Node.js Readable streams to strings for jest-fetch-mock compatibility
+            const { status, headers, body } = endpoint.response;
+            let responseBody: string | null = null;
+
+            if (body instanceof Readable) {
+                responseBody = await streamToString(body);
+            } else {
+                responseBody = body;
+            }
+
+            const responseHeaders = headers instanceof Headers ? Object.fromEntries(headers.entries()) : headers || {};
+
+            // Return a simple object format that jest-fetch-mock can handle
+            return Promise.resolve({
+                status,
+                headers: responseHeaders,
+                body: responseBody,
+            });
         });
     }
 }

@@ -1,17 +1,17 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Column } from '@tanstack/react-table';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { BoolTag } from '@/component-library/features/legacy/Tags/BoolTag';
 
-type TableFilterBoolean = JSX.IntrinsicElements['div'] & {
+type TableFilterBoolean = React.ComponentPropsWithoutRef<'div'> & {
     name: string;
     column: Column<any, boolean>; // to be a tanstack column
     stack?: boolean; // whether to use column instead of row
 };
 
-export function TableFilterBoolean<T>(props: TableFilterBoolean): JSX.Element {
+export function TableFilterBoolean<T>(props: TableFilterBoolean): React.ReactElement {
     // split up props
     const { name, column, stack, ...otherprops } = props;
     const { className, ...otherdivprops } = otherprops;
@@ -33,6 +33,13 @@ export function TableFilterBoolean<T>(props: TableFilterBoolean): JSX.Element {
     useEffect(() => {
         column.setFilterValue(filter);
     }, [filter, column]);
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setFilter(next(filter ?? undefined));
+        }
+    };
+
     return (
         <div
             className={twMerge(
@@ -45,10 +52,13 @@ export function TableFilterBoolean<T>(props: TableFilterBoolean): JSX.Element {
             onClick={e => {
                 setFilter(next(filter ?? undefined));
             }}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
             {...otherdivprops}
         >
             <H3 className="hidden md:inline">{name}</H3>
-            {filter === undefined ? <HiDotsHorizontal className="text-2xl text-text-500 dark:text-text-200" /> : <BoolTag val={filter} />}
+            {filter === undefined ? <HiDotsHorizontal className="text-2xl text-neutral-500 dark:text-neutral-200" /> : <BoolTag val={filter} />}
         </div>
     );
 }

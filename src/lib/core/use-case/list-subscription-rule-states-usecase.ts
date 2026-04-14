@@ -83,7 +83,7 @@ export default class ListSubscriptionRuleStatesUseCase
     }
 
     addOrUpdateSubscriptionRuleState(ruleStateDTO: SubscriptionRuleStateDTO): ListSubscriptionRuleStatesResponse {
-        let existingEntryIndex = this.responseModels.findIndex(rs => rs.name === ruleStateDTO.subscriptionName);
+        const existingEntryIndex = this.responseModels.findIndex(rs => rs.name === ruleStateDTO.subscriptionName);
         const newEntry: ListSubscriptionRuleStatesResponse = {
             status: 'success',
             name: ruleStateDTO.subscriptionName,

@@ -1,12 +1,12 @@
 import { injectable } from 'inversify';
-import { IronSession } from 'iron-session';
 import { NextApiResponse } from 'next';
+import { Session } from 'next-auth';
 import { BaseInputPort } from './primary-ports';
 import { TUseCase } from './usecase';
 import type TUseCaseFactory from './usecase-factory';
 import { AuthenticatedRequestModel } from './usecase-models';
 
-export type TSimpleControllerParameters = { response: NextApiResponse; session?: IronSession };
+export type TSimpleControllerParameters = { response: NextApiResponse; session?: Session };
 export type TAuthenticatedControllerParameters = TSimpleControllerParameters & { rucioAuthToken: string };
 export type TParameters = TSimpleControllerParameters | TAuthenticatedControllerParameters;
 
@@ -30,13 +30,7 @@ export abstract class BaseController<TParams extends TParameters, TRequestModel>
         if (parameters instanceof Object && 'rucioAuthToken' in parameters) {
             authenticatedRequest = true;
         }
-        let useCase: TUseCase<TRequestModel>;
-        if (parameters.session) {
-            useCase = this.useCaseFactory(parameters.response, parameters.session) as TUseCase<TRequestModel>;
-        } else {
-            useCase = this.useCaseFactory(parameters.response) as TUseCase<TRequestModel>;
-        }
-
+        const useCase = this.useCaseFactory(parameters.response) as TUseCase<TRequestModel>;
         const requestModel: TRequestModel = this.prepareRequestModel(parameters);
         if (authenticatedRequest) {
             await useCase.execute(requestModel as AuthenticatedRequestModel<TRequestModel>);

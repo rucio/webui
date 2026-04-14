@@ -1,9 +1,9 @@
 import { twMerge } from 'tailwind-merge';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { HiChevronUp, HiChevronDown } from 'react-icons/hi';
 import { Collapsible } from '../helpers/Collapsible/Collapsible';
 
-export const Accordion: React.FC<JSX.IntrinsicElements['div'] & { name: string }> = ({ name, ...props }) => {
+export const Accordion: React.FC<React.ComponentPropsWithoutRef<'div'> & { name: string }> = ({ name, ...props }) => {
     /*
         Accordion: a collapsible section with a header that can be clicked to expand/collapse the section.
 
@@ -25,7 +25,7 @@ export const Accordion: React.FC<JSX.IntrinsicElements['div'] & { name: string }
                     className={twMerge(
                         'flex items-center justify-between',
                         'w-full py-2',
-                        'text-text-600 dark:text-text-100',
+                        'text-neutral-600 dark:text-neutral-100',
                         'border-b-2 border-neutral-300 dark:border-neutral-100',
                     )}
                     onClick={() => {

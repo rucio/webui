@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export const Tabs: React.FC<
-    JSX.IntrinsicElements['div'] & {
+    React.ComponentPropsWithoutRef<'div'> & {
         tabs: string[];
         _ariaControls?: string[];
         active: number;
@@ -28,7 +28,7 @@ export const Tabs: React.FC<
         document.getElementById(`tab-${activestate.toString()}`)?.focus();
     }, [activestate]); // focus on tab when internal state changes
     const changeFunc = (id: number) => {
-        var newId = id;
+        let newId = id;
         if (id < 0) {
             newId = tabs.length - 1;
         }
@@ -88,7 +88,7 @@ export const Tabs: React.FC<
                         className={twMerge(
                             'flex-1 p-4 hover:cursor-pointer',
                             'border-b-4 border-neutral-300 dark:border-neutral-100',
-                            'text-text-600 dark:text-text-100 hover:bg-neutral-100 dark:hover:bg-transparent',
+                            'text-neutral-600 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-transparent',
                         )}
                         key={index.toString()}
                         role="tab"

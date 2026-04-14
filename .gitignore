@@ -8,6 +8,13 @@
 # testing
 /coverage
 
+# Playwright E2E testing
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/test/e2e/.auth/
+*.webm
+
 # next.js
 /.next/
 /out/
@@ -27,6 +34,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env.e2e
 
 # vercel
 .vercel
@@ -37,6 +45,16 @@ next-env.d.ts
 
 certificates
 
-# AI
+# contexts
 .claude
 CLAUDE.md
+.dadai
+.mcp.json
+.playwright-mcp
+dadbod-*
+
+
+# other
+design-audit/
+docs/
+storybook-static/

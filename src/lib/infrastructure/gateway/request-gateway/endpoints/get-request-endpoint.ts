@@ -1,7 +1,6 @@
 import { RequestDTO } from '@/lib/core/dto/request-dto';
 import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class GetRequestEndpoint extends BaseEndpoint<RequestDTO> {
     constructor(private rucioAuthToken: string, private scope: string, private name: string, private rse: string) {
@@ -33,7 +32,7 @@ export default class GetRequestEndpoint extends BaseEndpoint<RequestDTO> {
             return Promise.resolve(undefined);
         }
 
-        let errorDetails = await extractErrorMessage(response);
+        const errorDetails = await extractErrorMessage(response);
 
         const errorDTO: RequestDTO = {
             status: 'error',

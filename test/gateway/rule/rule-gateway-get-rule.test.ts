@@ -32,6 +32,7 @@ describe('Rule Gateway', () => {
         id: '817b3030097446a38b3b842bf528e112',
         locks_replicating_cnt: 4,
         split_container: false,
+        comments: null,
     };
 
     beforeEach(() => {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { HiOutlineRefresh } from 'react-icons/hi';
 
 import { cn } from '@/component-library/utils';
 
@@ -9,6 +10,7 @@ const buttonVariants = cva(
         'rounded-md border border-neutral-900 border-opacity-10 dark:border-none',
         'font-medium transition-colors disabled:pointer-events-none disabled:opacity-50',
         'bg-opacity-90 dark:bg-opacity-70 hover:bg-opacity-90 dark:hover:bg-opacity-70',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
     ),
     {
         variants: {
@@ -35,11 +37,20 @@ const buttonVariants = cva(
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
     asChild?: boolean;
+    loading?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, ...props }, ref) => {
-    return <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
-});
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ({ className, variant, size, asChild, loading = false, children, disabled, ...props }, ref) => {
+        return (
+            <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} disabled={disabled || loading} {...props}>
+                {loading && <HiOutlineRefresh className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
+                {children}
+            </button>
+        );
+    },
+);
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };

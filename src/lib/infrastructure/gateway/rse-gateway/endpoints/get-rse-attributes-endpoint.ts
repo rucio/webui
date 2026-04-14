@@ -2,7 +2,6 @@ import { RSEAttributeDTO } from '@/lib/core/dto/rse-dto';
 import { RSEAttribute } from '@/lib/core/entity/rucio';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class GetRSEAttributesEndpoint extends BaseEndpoint<RSEAttributeDTO> {
     constructor(private rucioAuthToken: string, private rseName: string) {
@@ -38,7 +37,7 @@ export default class GetRSEAttributesEndpoint extends BaseEndpoint<RSEAttributeD
         return error as RSEAttributeDTO;
     }
 
-    createDTO(data: Object): RSEAttributeDTO {
+    createDTO(data: object): RSEAttributeDTO {
         const attributes: RSEAttribute[] = [];
         for (const [key, value] of Object.entries(data)) {
             const attribute: RSEAttribute = {

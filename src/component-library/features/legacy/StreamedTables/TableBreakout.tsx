@@ -1,14 +1,14 @@
 import { flexRender, Row } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Contenttd, Generaltable, Titleth } from '../../../atoms/legacy/helpers/Metatable/Metatable';
 
-type TableBreakout<T> = JSX.IntrinsicElements['div'] & {
+type TableBreakout<T> = React.ComponentPropsWithoutRef<'div'> & {
     keys: Record<string, string>; // column id, displayname
     row?: Row<T>;
 };
 
-export const TableBreakout = <T,>(props: TableBreakout<T>): JSX.Element => {
+export const TableBreakout = <T,>(props: TableBreakout<T>): React.ReactElement => {
     const [row, setRow] = useState<Row<T> | undefined>(props.row);
     useEffect(() => {
         setRow(props.row);

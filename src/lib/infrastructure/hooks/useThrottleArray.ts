@@ -32,7 +32,7 @@ export function useThrottleArray<T>(options: ThrottleArrayOptions): [T[], (item:
             setData(prevData => [...prevData, ...bufferRef.current]);
             bufferRef.current = [];
         }
-    }, []);
+    }, [options.maxUpdateLength]);
 
     useEffect(() => {
         intervalRef.current = setInterval(() => {

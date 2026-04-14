@@ -1,9 +1,9 @@
 import { DIDType } from '@/lib/core/entity/rucio';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { FC } from 'react';
 
-type DIDTypeTagProps = JSX.IntrinsicElements['span'] & {
+type DIDTypeTagProps = React.ComponentPropsWithoutRef<'span'> & {
     didtype: DIDType;
     forcesmall?: boolean;
     neversmall?: boolean;
@@ -30,7 +30,7 @@ export const DIDTypeTag: FC<DIDTypeTagProps> = ({ didtype = DIDType.DATASET, for
             case DIDType.FILE:
                 return 'bg-extra-rose-100 text-extra-rose-800 dark:bg-extra-rose-900 dark:text-extra-rose-300';
             case DIDType.COLLECTION:
-                return 'bg-neutral-200 text-text-800 dark:bg-neutral-900 dark:text-text-300';
+                return 'bg-neutral-200 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-300';
             default:
                 return '';
         }

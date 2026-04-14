@@ -10,7 +10,8 @@ import '@/component-library/features/table/RegularTable/styles/agGridThemeRucioL
 import { useTheme } from 'next-themes';
 
 export interface RegularTableProps extends AgGridReactProps {
-    tableRef: RefObject<AgGridReact>;
+    tableRef: RefObject<AgGridReact | null>;
+    paginationPageSize?: number;
 }
 
 // This implementation of the pagination panel uses refs to prevent excessive state updates
@@ -18,13 +19,13 @@ export interface RegularTableProps extends AgGridReactProps {
  * A component for flexible and responsive pagination of the table
  */
 export const SimplePaginationPanel = (props: {
-    currentPageRef: RefObject<HTMLSpanElement>;
-    totalPagesRef: RefObject<HTMLSpanElement>;
-    previousPageRef: RefObject<HTMLButtonElement>;
-    nextPageRef: RefObject<HTMLButtonElement>;
-    lastPageRef: RefObject<HTMLButtonElement>;
-    firstPageRef: RefObject<HTMLButtonElement>;
-    containerRef: RefObject<HTMLDivElement>;
+    currentPageRef: RefObject<HTMLSpanElement | null>;
+    totalPagesRef: RefObject<HTMLSpanElement | null>;
+    previousPageRef: RefObject<HTMLButtonElement | null>;
+    nextPageRef: RefObject<HTMLButtonElement | null>;
+    lastPageRef: RefObject<HTMLButtonElement | null>;
+    firstPageRef: RefObject<HTMLButtonElement | null>;
+    containerRef: RefObject<HTMLDivElement | null>;
 }) => {
     const enabledTextClasses = 'text-neutral-800 dark:text-neutral-100';
     const disabledTextClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-500';
@@ -65,6 +66,10 @@ export const SimplePaginationPanel = (props: {
 };
 
 export const RegularTable = (props: RegularTableProps) => {
+    // Destructure custom props to prevent them from being passed to AgGridReact
+    const { tableRef, paginationPageSize, ...gridProps } = props;
+    const [isMounted, setIsMounted] = useState(false);
+    const [isContainerReady, setIsContainerReady] = useState(false);
     // Refs for controlling the pagination panel
     const currentPageRef = useRef<HTMLSpanElement>(null);
     const totalPagesRef = useRef<HTMLSpanElement>(null);
@@ -142,32 +147,52 @@ export const RegularTable = (props: RegularTableProps) => {
     }, [resolvedTheme]);
 
     useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (isMounted && gridWrapper.current) {
+            // Wait for next tick to ensure DOM is fully ready
+            const timer = setTimeout(() => {
+                setIsContainerReady(true);
+            }, 0);
+            return () => clearTimeout(timer);
+        }
+    }, [isMounted]);
+
+    useEffect(() => {
         onPaginationChanged();
     }, [isTableLoaded]);
 
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
     return (
-        <>
-            <div className={twMerge('grid grow w-full', 'relative', 'min-h-[300px]')} ref={gridWrapper}>
+        <div className="flex flex-col h-full w-full">
+            <div className={twMerge('grid grow w-full', 'relative')} ref={gridWrapper}>
                 {!isTableLoaded && <Skeleton className="absolute flex items-center justify-center w-full h-full rounded-b-none" />}
                 {/*The substitute div is required to supress hydration warning*/}
-                {resolvedTheme ? (
+                {isContainerReady && resolvedTheme ? (
                     <AgGridReact
-                        {...props}
+                        {...gridProps}
                         pagination={true}
-                        paginationAutoPageSize={true}
-                        ref={props.tableRef}
+                        paginationAutoPageSize={false}
+                        paginationPageSize={paginationPageSize ?? 100}
+                        ref={tableRef}
                         loadingOverlayComponent={NoDataYetOverlay}
                         onGridReady={onGridReady}
                         domLayout="normal" // Ensures the grid fits within the flex container
                         suppressPaginationPanel={true}
                         onPaginationChanged={onPaginationChanged}
                         suppressMovableColumns={true}
-                        rowMultiSelectWithClick={true}
+                        theme="legacy" // Use legacy theming to maintain custom CSS themes
+                        // AG-Grid Community Features (Enterprise features like sideBar require license)
                         defaultColDef={{
                             flex: 1,
                             cellStyle: { userSelect: 'text' },
+                            filter: true, // Enable filtering on all columns
+                            floatingFilter: true, // Show quick filter inputs below headers
+                            sortable: true, // Enable column sorting
+                            resizable: true, // Enable column resizing by dragging borders
                         }}
                         //asyncTransactionWaitMillis={500}
                     />
@@ -184,6 +209,6 @@ export const RegularTable = (props: RegularTableProps) => {
                 firstPageRef={firstPageRef}
                 lastPageRef={lastPageRef}
             />
-        </>
+        </div>
     );
 };

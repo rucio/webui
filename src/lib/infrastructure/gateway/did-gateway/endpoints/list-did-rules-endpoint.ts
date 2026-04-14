@@ -1,7 +1,6 @@
 import { DIDRulesDTO, ListDIDRulesDTO } from '@/lib/core/dto/did-dto';
 import { BaseStreamableEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToDIDRulesDTO, TRucioRules } from '../did-gateway-utils';
 
 export default class ListDIDRulesEndpoint extends BaseStreamableEndpoint<ListDIDRulesDTO, DIDRulesDTO> {
@@ -37,7 +36,7 @@ export default class ListDIDRulesEndpoint extends BaseStreamableEndpoint<ListDID
             return Promise.resolve(undefined);
         }
 
-        let errorDetails = await extractErrorMessage(response);
+        const errorDetails = await extractErrorMessage(response);
 
         const errorDTO: ListDIDRulesDTO = {
             status: 'error',

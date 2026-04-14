@@ -34,7 +34,7 @@ import {
     FilereplicaStateDViewModel,
     FileReplicaStateViewModel,
 } from '@/lib/infrastructure/data/view-model/did';
-import { RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
+import { ApproveRuleViewModel, RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import useStreamReader, { StreamingSettings, StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 
@@ -300,6 +300,18 @@ export function fixtureRuleViewModel(): RuleViewModel {
         locks_ok_cnt: faker.number.int({ min: 0, max: 10 }),
         locks_replicating_cnt: faker.number.int({ min: 0, max: 10 }),
         locks_stuck_cnt: faker.number.int({ min: 0, max: 10 }),
+    };
+}
+
+export function fixtureApproveRuleViewModel(): ApproveRuleViewModel {
+    return {
+        ...fixtureRuleViewModel(),
+        did_type: faker.helpers.arrayElement<DIDType>([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]),
+        grouping: faker.helpers.arrayElement<RuleGrouping>([RuleGrouping.ALL, RuleGrouping.DATASET, RuleGrouping.NONE]),
+        comments: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+        bytes: faker.number.int({ min: 0, max: 1e12 }),
+        length: faker.number.int({ min: 1, max: 10000 }),
+        open: faker.datatype.boolean(),
     };
 }
 

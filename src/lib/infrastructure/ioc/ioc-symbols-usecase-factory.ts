@@ -27,10 +27,10 @@ const USECASE_FACTORY = {
     SET_X509_LOGIN_SESSION: Symbol.for('Factory<SetX509LoginSessionUseCase>'),
     GET_SITE_HEADER: Symbol.for('Factory<SiteHeaderUseCase>'),
     STREAM: Symbol.for('Factory<StreamUseCase>'),
-    SWITCH_ACCOUNT: Symbol.for('Factory<SwitchAccountUseCase>'),
     USERPASS_LOGIN: Symbol.for('Factory<UserPassLoginUseCase>'),
     GET_RSE_USAGE: Symbol.for('Factory<GetRSEUsageUseCase>'),
     LiST_RULES: Symbol.for('Factory<ListRulesUseCase>'),
+    LIST_RULES_PENDING_APPROVAL: Symbol.for('Factory<ListRulesPendingApprovalUseCase>'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('Factory<ListAccountRSEUsageUseCase>'),
     CREATE_RULE: Symbol.for('Factory<CreateRuleUseCase>'),
     ADD_DID: Symbol.for('Factory<AddDIDUseCase>'),
@@ -39,6 +39,7 @@ const USECASE_FACTORY = {
     GET_RULE: Symbol.for('Factory<GetRuleUseCase>'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('Factory<ListRuleReplicaLockStatesUseCase>'),
     GET_FTS_LINK: Symbol.for('Factory<GetFTSLinkUseCase>'),
+    UPDATE_RULE: Symbol.for('Factory<UpdateRuleUseCase>'),
 };
 
 export default USECASE_FACTORY;

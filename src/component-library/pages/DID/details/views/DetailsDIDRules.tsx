@@ -18,15 +18,20 @@ import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
-import { ruleActivityComparator } from '@/lib/core/utils/rule-sorting-utils';
+import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
+    isActive?: boolean;
 };
 
 const ClickableId = (props: { value: string }) => {
-    return <ClickableCell href={`/rule/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rule/${props.value}`}>{props.value}</ClickableCell>;
+};
+
+const ClickableRSEExpression = (props: { value: string }) => {
+    return <ClickableCell href={`/rses?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const NullableRemainingLifetime = (props: { value: number }) => {
@@ -40,19 +45,68 @@ const NullableRemainingLifetime = (props: { value: number }) => {
 export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null);
 
-
     const [columnDefs] = useState([
         {
             headerName: 'ID',
             field: 'id',
-            width: 390,
-            sortable: false,
+            width: 350,
+            pinned: 'left' as const,
             cellRenderer: ClickableId,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
         },
         {
             headerName: 'RSE Expression',
             field: 'rse_expression',
-            minWidth: 150,
+            minWidth: 250,
+            flex: 2,
+            pinned: 'left' as const,
+            cellRenderer: ClickableRSEExpression,
+            filter: true,
+            filterParams: DefaultTextFilterParams,
+        },
+        {
+            headerName: 'State',
+            field: 'state',
+            minWidth: 200,
+            width: 150,
+            cellStyle: badgeCellWrapperStyle,
+            cellRenderer: RuleStateBadge,
+            cellRendererParams: {
+                className: badgeCellClasses,
+            },
+            filter: true,
+            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
+            sortable: true,
+            comparator: ruleStateComparator,
+        },
+        // TODO: minified header with a tooltip
+        {
+            headerName: 'OK',
+            field: 'locks_ok_cnt',
+            minWidth: 115,
+            width: 140,
+            filter: 'agNumberColumnFilter',
+        },
+        {
+            headerName: 'Replicating',
+            field: 'locks_replicating_cnt',
+            minWidth: 115,
+            width: 130,
+            filter: 'agNumberColumnFilter',
+        },
+        {
+            headerName: 'Stuck',
+            field: 'locks_stuck_cnt',
+            minWidth: 115,
+            width: 130,
+            sortable: true,
+            comparator: ruleActivityComparator,
+        },
+        {
+            headerName: 'Account',
+            field: 'account',
+            minWidth: 200,
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
@@ -60,7 +114,8 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
         {
             headerName: 'Created At',
             field: 'created_at',
-            minWidth: 150,
+            minWidth: 300,
+            width: 350,
             valueFormatter: (params: ValueFormatterParams) => {
                 return formatDate(params.value);
             },
@@ -70,57 +125,21 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
         {
             headerName: 'Remaining',
             field: 'remaining_lifetime',
-            minWidth: 125,
+            minWidth: 120,
+            width: 140,
             cellRenderer: NullableRemainingLifetime,
-        },
-        {
-            headerName: 'State',
-            field: 'state',
-            minWidth: 200,
-            cellStyle: badgeCellWrapperStyle,
-            cellRenderer: RuleStateBadge,
-            cellRendererParams: {
-                className: badgeCellClasses,
-            },
-            filter: true,
-            sortable: false,
-            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
-        },
-        // TODO: minified header with a tooltip
-        {
-            headerName: 'OK',
-            field: 'locks_ok_cnt',
-            minWidth: 75,
-            sortable: false,
-        },
-        {
-            headerName: 'Replicating',
-            field: 'locks_replicating_cnt',
-            minWidth: 135,
-            sortable: false,
-        },
-        {
-            headerName: 'Stuck',
-            field: 'locks_stuck_cnt',
-            minWidth: 90,
             sortable: true,
-            comparator: ruleActivityComparator,
-        },
-        {
-            headerName: 'Account',
-            field: 'account',
-            filter: true,
-            filterParams: DefaultTextFilterParams,
+            comparator: remainingLifetimeComparator,
         },
     ]);
 
     const onGridReady = (event: GridReadyEvent) => {
         props.onGridReady(event);
-        // Apply default sort to prioritize stuck rules
+        // Apply default sort to prioritize error/stuck rules
         event.api.applyColumnState({
             state: [
                 {
-                    colId: 'locks_stuck_cnt',
+                    colId: 'state',
                     sort: 'desc',
                 },
             ],
@@ -130,7 +149,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };
 
-export const DetailsDIDRules: DetailsDIDView = ({ scope, name }: DetailsDIDProps) => {
+export const DetailsDIDRules: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDRulesViewModel>();
 
     useEffect(() => {
@@ -140,5 +159,5 @@ export const DetailsDIDRules: DetailsDIDView = ({ scope, name }: DetailsDIDProps
         }
     }, [gridApi]);
 
-    return <DetailsDIDRulesTable streamingHook={streamingHook} onGridReady={onGridReady} />;
+    return <DetailsDIDRulesTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
 };

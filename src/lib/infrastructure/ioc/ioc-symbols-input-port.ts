@@ -25,11 +25,11 @@ const INPUT_PORT = {
     SET_X509_LOGIN_SESSION: Symbol.for('SetX509LoginSessionInputPort'),
     GET_SITE_HEADER: Symbol.for('SiteHeaderInputPort'),
     STREAM: Symbol.for('StreamInputPort'),
-    SWITCH_ACCOUNT: Symbol.for('SwitchAccountInputPort'),
     TEST: Symbol.for('TestInputPort'),
     USERPASS_LOGIN: Symbol.for('UserPassLoginInputPort'),
     GET_RSE_USAGE: Symbol.for('GetRSEUsageInputPort'),
     LIST_RULES: Symbol.for('ListRulesInputPort'),
+    LIST_RULES_PENDING_APPROVAL: Symbol.for('ListRulesPendingApprovalInputPort'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageInputPort'),
     CREATE_RULE: Symbol.for('CreateRuleInputPort'),
     ADD_DID: Symbol.for('AddDIDInputPort'),
@@ -38,6 +38,7 @@ const INPUT_PORT = {
     GET_RULE: Symbol.for('GetRuleInputPort'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesInputPort'),
     GET_FTS_LINK: Symbol.for('GetFTSLinkInputPort'),
+    UPDATE_RULE: Symbol.for('UpdateRuleInputPort'),
 };
 
 export default INPUT_PORT;

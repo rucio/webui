@@ -1,4 +1,19 @@
-const DEFAULT_VALUE = 'NaN';
+const DEFAULT_VALUE = 'N/A';
+
+export const formatDateTime = (input: Date | string | undefined | null): string => {
+    if (input === null || input === undefined) return 'N/A';
+    const date = input instanceof Date ? input : new Date(input as string);
+    if (isNaN(date.getTime())) return 'N/A';
+
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+    return `${year}/${month}/${day} ${hours}:${minutes}:${seconds} UTC`;
+};
 
 export const formatDate = (isoString: string): string => {
     const date = new Date(isoString);
@@ -6,9 +21,9 @@ export const formatDate = (isoString: string): string => {
         return DEFAULT_VALUE;
     }
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
 
     return `${year}/${month}/${day}`;
 };

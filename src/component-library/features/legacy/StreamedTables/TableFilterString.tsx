@@ -1,16 +1,16 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
 import { Column, Table } from '@tanstack/react-table';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HiCheck, HiSearch } from 'react-icons/hi';
 
-type TableFilterString = JSX.IntrinsicElements['form'] & {
+type TableFilterString = React.ComponentPropsWithoutRef<'form'> & {
     column: Column<any, string>;
     name: string;
     placeholder?: string;
 };
 
-const Filter = (props: JSX.IntrinsicElements['input'] & { column: Column<any, string> }) => {
+const Filter = (props: React.ComponentPropsWithoutRef<'input'> & { column: Column<any, string> }) => {
     const { column, className, ...otherprops } = props;
     return (
         <input
@@ -18,7 +18,7 @@ const Filter = (props: JSX.IntrinsicElements['input'] & { column: Column<any, st
             value={(column.getFilterValue() as string) ?? ''}
             onChange={e => column.setFilterValue(e.target.value)}
             className={twMerge(
-                'w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 dark:bg-neutral-800 bg-neutral-0 dark:text-text-0 text-text-1000 h-8',
+                'w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 dark:bg-neutral-800 bg-neutral-0 dark:text-neutral-0 text-neutral-1000 h-8',
                 className ?? '',
             )}
             {...otherprops}
@@ -26,7 +26,7 @@ const Filter = (props: JSX.IntrinsicElements['input'] & { column: Column<any, st
     );
 };
 
-export function TableFilterString(props: TableFilterString): JSX.Element {
+export function TableFilterString(props: TableFilterString): React.ReactElement {
     const { column, name, placeholder, ...otherprops } = props;
     const { className, ...otherdivprops } = otherprops;
 
@@ -77,7 +77,7 @@ export function TableFilterString(props: TableFilterString): JSX.Element {
                     }}
                     className="sm:hidden pr-4"
                 >
-                    <HiSearch className="text-xl text-text-500 dark:text-text-200" />
+                    <HiSearch className="text-xl text-neutral-500 dark:text-neutral-200" />
                 </button>
             </form>
         );
@@ -99,7 +99,7 @@ export function TableFilterString(props: TableFilterString): JSX.Element {
                         setSmallScreenNameFiltering(!smallScreenNameFiltering);
                     }}
                 >
-                    <HiCheck className="text-xl text-text-500 dark:text-text-200" />
+                    <HiCheck className="text-xl text-neutral-500 dark:text-neutral-200" />
                 </button>
             </form>
         );

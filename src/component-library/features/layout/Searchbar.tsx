@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Input } from '@/component-library/atoms/form/input';
 import { cn } from '@/component-library/utils';
+import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, detectSearchType, navigateToSearch } from '@/lib/infrastructure/utils/navigation';
 
 type SearchLocation = {
     name: string;
@@ -12,7 +13,7 @@ const didLocation: SearchLocation = {
     name: 'DIDs',
     parameter: 'Pattern',
     getHref: (query: string) => {
-        return query.length === 0 ? '/did/list' : `/did/list?pattern=${query}&autoSearch=true`;
+        return buildDIDSearchUrl({ pattern: query.length > 0 ? query : undefined });
     },
 };
 
@@ -20,7 +21,7 @@ const rseLocation: SearchLocation = {
     name: 'RSEs',
     parameter: 'Expression',
     getHref: (query: string) => {
-        return query.length === 0 ? '/rse/list' : `/rse/list?expression=${query}&autoSearch=true`;
+        return buildRSESearchUrl(query.length > 0 ? query : undefined);
     },
 };
 
@@ -28,7 +29,7 @@ const ruleLocation: SearchLocation = {
     name: 'Rules',
     parameter: 'ID',
     getHref: (query: string) => {
-        return query.length === 0 ? '/rule/list' : `/rule/page/${query}`;
+        return query.length === 0 ? '/rules' : buildRuleDetailUrl(query);
     },
 };
 
@@ -37,13 +38,18 @@ const createDIDLocation = (type: string, typeName: string): SearchLocation => ({
     name: 'DIDs',
     parameter: `Search ${typeName}`,
     getHref: (query: string) => {
-        return query.length === 0
-            ? '/did/list'
-            : `/did/list?pattern=${query}&type=${type}&autoSearch=true`;
+        return buildDIDSearchUrl({ pattern: query.length > 0 ? query : undefined, type });
     },
 });
 
 const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; children: React.ReactNode }) => {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            props.onMouseDown();
+        }
+    };
+
     return (
         <div
             className={cn(
@@ -53,6 +59,9 @@ const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; 
                     : 'md:hover:bg-neutral-200 md:dark:bg-neutral-800 md:hover:dark:bg-neutral-600 hover:text-brand-500 md:hover:text-neutral-900 md:hover:dark:text-neutral-100',
             )}
             onMouseDown={props.onMouseDown}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
         >
             {props.children}
         </div>
@@ -101,6 +110,7 @@ const SearchDropdown = forwardRef(function SearchDropdown(
 export const Searchbar = () => {
     const [isFocused, setIsFocused] = useState(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [shortcutKey, setShortcutKey] = useState('Ctrl + K');
 
     const [searchLocations, setSearchLocations] = useState<SearchLocation[]>([didLocation, rseLocation, ruleLocation]);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -114,40 +124,60 @@ export const Searchbar = () => {
         }
     };
 
+    // Detect OS and set appropriate shortcut key
+    useEffect(() => {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
+        setShortcutKey(isMac ? '⌘ K' : 'Ctrl + K');
+    }, []);
+
+    // Handle keyboard shortcut to focus search
+    useEffect(() => {
+        const handleKeyboardShortcut = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInputRef.current?.focus();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyboardShortcut);
+        return () => document.removeEventListener('keydown', handleKeyboardShortcut);
+    }, []);
+
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [searchDropdownRef]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
+        const searchType = detectSearchType(query);
+
         if (query.length === 0) {
             setSearchLocations([didLocation, rseLocation, ruleLocation]);
-        } else if (query.includes(':')) {
-            // Certainly a DID pattern - show all three types
+        } else if (searchType === 'did') {
+            // DID pattern detected - show all three types
             setSearchLocations([
                 createDIDLocation('dataset', 'Dataset'),
                 createDIDLocation('file', 'File'),
-                createDIDLocation('container', 'Container')
+                createDIDLocation('container', 'Container'),
             ]);
+        } else if (searchType === 'rse') {
+            // RSE expression detected
+            setSearchLocations([rseLocation]);
+        } else if (searchType === 'rule') {
+            // Rule UUID detected
+            setSearchLocations([ruleLocation, rseLocation, didLocation]);
         } else {
-            if (/[=|&\\]/.test(query)) {
-                // Certainly an RSE expression
-                setSearchLocations([rseLocation]);
-            } else if (query.length === 32 && /^[a-zA-Z0-9]+$/.test(query)) {
-                // Certainly a Rule UUID
-                setSearchLocations([ruleLocation, rseLocation, didLocation]);
-            } else {
-                // Anything but a UUID
-                setSearchLocations([rseLocation, didLocation]);
-            }
+            // Generic search
+            setSearchLocations([rseLocation, didLocation]);
         }
         setHighlightedIndex(0);
         setSearchQuery(query);
     };
 
     const proceedTo = (location: SearchLocation) => {
-        // Not using Next.js routing because of caching
-        window.location.href = location.getHref(searchQuery);
+        // Use shared navigation utility (uses window.location.href to avoid caching)
+        navigateToSearch(location.getHref(searchQuery));
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -163,7 +193,7 @@ export const Searchbar = () => {
     return (
         <span className="relative">
             <Input
-                placeholder="Search"
+                placeholder={shortcutKey}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 onChange={handleInputChange}

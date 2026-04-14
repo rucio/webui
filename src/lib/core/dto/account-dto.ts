@@ -3,7 +3,7 @@ import { AccountInfo, RSEAccountUsage } from '../entity/rucio';
 
 type TAccountAttribute = {
     key: string;
-    value: string;
+    value: string | boolean;
 };
 
 export type TAccountAttributes = TAccountAttribute[];

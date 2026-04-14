@@ -1,5 +1,5 @@
 import { RuleNotification } from '@/lib/core/entity/rucio';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { RuleNotificationTag as R } from './RuleNotificationTag';
 
 export default {

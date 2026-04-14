@@ -2,11 +2,11 @@ import { setEmptySession } from '@/lib/infrastructure/auth/session-utils';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { LoginViewModel } from '@/lib/infrastructure/data/view-model/login';
-import { getIronSession } from 'iron-session';
 import { createMocks } from 'node-mocks-http';
 import { createOIDCProviders, deleteOIDCProviders } from 'test/fixtures/oidc-provider-config';
 import { BaseController } from '@/lib/sdk/controller';
 import { LoginConfigControllerParams } from '@/lib/infrastructure/controller/login-config-controller';
+import { createMockSession } from 'test/fixtures/http-fixtures';
 
 describe('Login Page Config API Test', () => {
     beforeEach(() => {
@@ -21,13 +21,7 @@ describe('Login Page Config API Test', () => {
         const { req, res } = createMocks({
             method: 'GET',
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session = createMockSession();
         await setEmptySession(session, true);
 
         const loginConfigController = appContainer.get<BaseController<LoginConfigControllerParams, void>>(CONTROLLERS.LOGIN_CONFIG);
@@ -67,13 +61,7 @@ describe('Login Page Config API Test', () => {
         const { req, res } = createMocks({
             method: 'POST',
         });
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session = createMockSession();
         await setEmptySession(session, true);
 
         process.env['MULTIVO_ENABLED'] = 'true';
@@ -122,13 +110,7 @@ describe('Login Page Config API Test', () => {
             method: 'POST',
         });
 
-        const session = await getIronSession(req, res, {
-            password: 'passwordpasswordpasswordpasswordpassword',
-            cookieName: 'test-request-session',
-            cookieOptions: {
-                secure: false,
-            },
-        });
+        const session = createMockSession();
 
         await setEmptySession(session, true);
 

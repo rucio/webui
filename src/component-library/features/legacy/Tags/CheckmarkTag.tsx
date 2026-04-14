@@ -1,7 +1,8 @@
+import React from 'react';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
 
-type CheckmarkTagProps = JSX.IntrinsicElements['span'] & { val: boolean };
+type CheckmarkTagProps = React.ComponentPropsWithoutRef<'span'> & { val: boolean };
 
 export const CheckmarkTag = ({ val = true, ...props }) => {
     const { className, ...otherprops } = props;

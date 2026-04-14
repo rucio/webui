@@ -1,7 +1,6 @@
 import { FileReplicaStateDTO, ListReplicasDTO } from '@/lib/core/dto/replica-dto';
 import { BaseStreamableEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToFileReplicaStateDTOs, TRucioFileReplica } from '../replica-gateway-utils';
 
 /**
@@ -46,7 +45,7 @@ export default class ListFileReplicasEndpoint extends BaseStreamableEndpoint<Lis
             return Promise.resolve(undefined);
         }
 
-        let errorDetails = await extractErrorMessage(response);
+        const errorDetails = await extractErrorMessage(response);
 
         const errorDTO: ListReplicasDTO = {
             status: 'error',

@@ -1,10 +1,11 @@
+import React from 'react';
 import { Divider } from '@/component-library/atoms/misc/Divider';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { Field } from '@/component-library/atoms/misc/Field';
-import { formatDate } from '@/component-library/features/utils/text-formatters';
+import { DateWithTooltip } from '@/component-library/features/utils/DateWithTooltip';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
-import Checkbox from '@/component-library/atoms/form/Checkbox';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { RuleMetaViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
@@ -15,11 +16,11 @@ import { CopyableLinkCell } from '@/component-library/features/table/cells/Copya
 
 /**
  * A responsive divider component for rule sections.
- * 
+ *
  * Renders a full-width divider that is only visible on screens smaller than the 'lg' breakpoint.
  * Useful for visually separating sections in mobile and tablet layouts.
  *
- * @returns {JSX.Element} The divider element.
+ * @returns {React.ReactElement} The divider element.
  */
 const RuleSectionDivider = () => (
     <div className="w-full lg:hidden my-4">
@@ -30,24 +31,24 @@ const RuleSectionDivider = () => (
 export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     const getExpiredField = () => {
         if (meta.expires_at) {
-            return <Field>{formatDate(meta.expires_at)}</Field>;
+            return <DateWithTooltip date={meta.expires_at} />;
         } else {
             return <NullBadge />;
         }
     };
 
     return (
-        <KeyValueWrapper className="w-full p-4 flex flex-col ">
-            <div className="w-full flex flex-col lg:flex-row justify-between">
-                <div className="flex flex-col">
+        <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
+            <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="State">
                         <RuleStateBadge value={meta.state} />
                     </KeyValueRow>
                     <KeyValueRow name="DID">
-                        <div className="flex flex-row gap-2 overflow-hidden items-center">
+                        <div className="flex flex-row gap-2 items-center max-w-[20rem]">
                             <CopyableLinkCell
                                 text={`${meta.scope}:${meta.name}`}
-                                href={`/did/page/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
+                                href={`/did/${encodeURIComponent(meta.scope)}/${encodeURIComponent(meta.name)}`}
                             >
                                 <Field>
                                     {meta.scope}:{meta.name}
@@ -59,14 +60,21 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                         <DIDTypeBadge value={meta.did_type} className="w-full" />
                     </KeyValueRow>
                     <KeyValueRow name="RSE Expression">
-                        <Field>{meta.rse_expression}</Field>
+                        <div className="max-w-[20rem]">
+                            <CopyableLinkCell
+                                text={meta.rse_expression}
+                                href={`/rses?expression=${encodeURIComponent(meta.rse_expression)}&autoSearch=true`}
+                            >
+                                <Field>{meta.rse_expression}</Field>
+                            </CopyableLinkCell>
+                        </div>
                     </KeyValueRow>
                     <KeyValueRow name="Account">
                         <Field>{meta.account}</Field>
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Locks OK">
                         <Field>{meta.locks_ok_cnt}</Field>
                     </KeyValueRow>
@@ -78,19 +86,19 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Created At">
-                        <Field>{formatDate(meta.created_at)}</Field>
+                        <DateWithTooltip date={meta.created_at} />
                     </KeyValueRow>
                     <KeyValueRow name="Updated At">
-                        <Field>{formatDate(meta.updated_at)}</Field>
+                        <DateWithTooltip date={meta.updated_at} />
                     </KeyValueRow>
                     <KeyValueRow name="Expires At">{getExpiredField()}</KeyValueRow>
                 </div>
             </div>
             <Divider />
-            <div className="w-full flex flex-col lg:flex-row justify-between">
-                <div className="flex flex-col">
+            <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Copies">
                         <Field>{meta.copies}</Field>
                     </KeyValueRow>
@@ -108,7 +116,7 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Purge Replicas">
                         <Checkbox checked={meta.purge_replicas} />
                     </KeyValueRow>
@@ -120,8 +128,8 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col">
-                     <KeyValueRow name="Ignore Account Limit">
+                <div className="flex flex-col flex-1 min-w-0">
+                    <KeyValueRow name="Ignore Account Limit">
                         <Checkbox checked={meta.ignore_account_limit} />
                     </KeyValueRow>
                     <KeyValueRow name="Ignore Availability">
@@ -129,6 +137,14 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
             </div>
+            {meta.comments && (
+                <div className="w-full pt-2">
+                    <span className="text-neutral-600 dark:text-neutral-400 font-medium text-sm">Comments</span>
+                    <p className="mt-1 text-sm text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-words">
+                        {meta.comments}
+                    </p>
+                </div>
+            )}
         </KeyValueWrapper>
     );
 };

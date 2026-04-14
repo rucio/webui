@@ -1,8 +1,9 @@
+import React from 'react';
 import { RSEBlockState } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { RSEBlockTag } from './RSEBlockTag';
 
-export const RSETag: React.FC<JSX.IntrinsicElements['span'] & { blocked: RSEBlockState }> = ({ blocked, ...props }) => {
+export const RSETag: React.FC<React.ComponentPropsWithoutRef<'span'> & { blocked: RSEBlockState }> = ({ blocked, ...props }) => {
     const { className, ...otherprops } = props;
     const [mayread, maywrite, maydelete] = [Boolean(blocked & 1), Boolean(blocked & 2), Boolean(blocked & 4)];
     return (

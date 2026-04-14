@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   staticDirs: ['../public', '../test/static'],
 
@@ -8,23 +10,29 @@ module.exports = {
 
   addons: [
     "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "storybook-dark-mode"
+    "@storybook/addon-docs",
+    "@storybook/addon-a11y",
+    "@storybook/addon-themes"
   ],
 
   framework: {
-    name: "@storybook/nextjs",
+    name: "@storybook/nextjs-vite",
     options: {}
   },
 
-  resolve: {
-    fallback: {
-      util: require.resolve("util")
+  async viteFinal(config) {
+    config.resolve = config.resolve || {};
+    // Use array format for aliases to ensure correct resolution order on all platforms
+    const customAliases = [
+      { find: '@/test', replacement: path.resolve(__dirname, '../test') },
+      { find: '@/tailwind', replacement: path.resolve(__dirname, '../tailwind.config.js') },
+      { find: /^@\//, replacement: path.resolve(__dirname, '../src') + '/' },
+    ];
+    if (Array.isArray(config.resolve.alias)) {
+      config.resolve.alias = [...customAliases, ...config.resolve.alias];
+    } else {
+      config.resolve.alias = customAliases;
     }
-  },
-
-  docs: {
-    autodocs: true
+    return config;
   }
 };

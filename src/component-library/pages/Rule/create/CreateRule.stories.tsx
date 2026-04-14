@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
 import { CreateRule } from '@/component-library/pages/Rule/create/CreateRule';
 import { getDecoratorWithWorker } from '@/test/mocks/handlers/story-decorators';

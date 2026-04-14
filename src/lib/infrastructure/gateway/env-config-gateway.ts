@@ -60,11 +60,7 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         const providerNames = providerList.split(',').map(provider => provider.trim());
         for (const providerName of providerNames) {
             const requiredProviderConfig = ['AUTHORIZATION_URL', 'TOKEN_URL', 'CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URL'];
-            const optionalProviderConfig = ['ICON_URL', 'REFRESH_TOKEN_URL', 'USERINFO_URL', 'SCOPES', 'LOGOUT_URL'];
-            for (const config of optionalProviderConfig) {
-                const key = `OIDC_PROVIDER_${providerName}_${config}`;
-                const value = await this.get(key);
-            }
+            // Optional configs: ICON_URL, REFRESH_TOKEN_URL, USERINFO_URL, SCOPES, LOGOUT_URL, ISSUER
             for (const config of requiredProviderConfig) {
                 const key = `OIDC_PROVIDER_${providerName}_${config}`;
                 const value = await this.get(key);
@@ -72,7 +68,7 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
                     throw new ConfigNotFound(key);
                 }
             }
-            let scopesConfig = await this.get(`OIDC_PROVIDER_${providerName}_SCOPES`);
+            const scopesConfig = await this.get(`OIDC_PROVIDER_${providerName}_SCOPES`);
             const scopes = scopesConfig?.split(',').map(scope => scope.trim());
             const provider: OIDCProvider = {
                 name: providerName,
@@ -86,6 +82,7 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
                 userInfoUrl: (await this.get(`OIDC_PROVIDER_${providerName}_USERINFO_URL`)) as string,
                 redirectUrl: (await this.get(`OIDC_PROVIDER_${providerName}_REDIRECT_URL`)) as string,
                 scopes: scopes as [string],
+                issuer: (await this.get(`OIDC_PROVIDER_${providerName}_ISSUER`)) as string,
             };
             providers.push(provider);
         }
@@ -105,12 +102,16 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         const vos: VO[] = [];
 
         if (!multiVOEnabled) {
+            // When Multi-VO is disabled, create a default VO that respects global OIDC settings
+            const globalOIDCEnabled = await this.oidcEnabled();
+            const allOIDCProviders = globalOIDCEnabled ? await this.oidcProviders() : [];
+
             vos.push({
                 name: 'default',
                 shortName: 'def',
                 logoUrl: '',
-                oidcEnabled: false,
-                oidcProviders: [],
+                oidcEnabled: globalOIDCEnabled,
+                oidcProviders: allOIDCProviders,
             });
             return Promise.resolve(vos);
         }
@@ -126,11 +127,11 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
             const logoUrl = await this.get(`VO_${voName}_LOGO_URL`);
             const voOIDCEnabledStr = await this.get(`VO_${voName}_OIDC_ENABLED`);
             let voOIDCEnabled = false;
-            let voOIDCProviders: OIDCProvider[] = [];
+            const voOIDCProviders: OIDCProvider[] = [];
             // if oidc_enabled is true, oidc_providers must be defined
             if (voOIDCEnabledStr === 'true' || voOIDCEnabledStr === 'True' || voOIDCEnabledStr === 'TRUE') {
                 voOIDCEnabled = true;
-                let voOIDCProviderNames = await this.get(`VO_${voName}_OIDC_PROVIDERS`);
+                const voOIDCProviderNames = await this.get(`VO_${voName}_OIDC_PROVIDERS`);
                 if (voOIDCProviderNames === undefined) {
                     throw new InvalidConfig(`VO_${voName}_OIDC_PROVIDERS is not defined, but VO_${voName}_OIDC_ENABLED is true`);
                 }
@@ -203,6 +204,21 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         } else {
             return Promise.resolve(false);
         }
+    }
+
+    async oidcExpectedAudience(): Promise<string> {
+        const value = await this.get('OIDC_EXPECTED_AUDIENCE_CLAIM');
+        // Default to "rucio" if not configured
+        // This is the standard audience claim expected by Rucio
+        if (!value || value.trim() === '') {
+            return Promise.resolve('rucio');
+        }
+        return Promise.resolve(value.trim());
+    }
+
+    async oidcProviderIssuer(providerName: string): Promise<string | undefined> {
+        const key = `OIDC_PROVIDER_${providerName.toUpperCase()}_ISSUER`;
+        return this.get(key);
     }
 }
 

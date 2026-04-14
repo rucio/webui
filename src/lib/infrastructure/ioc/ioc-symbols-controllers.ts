@@ -27,10 +27,10 @@ const CONTROLLERS = {
     SET_X509_LOGIN_SESSION: Symbol.for('SetX509LoginSessionController'),
     GET_SITE_HEADER: Symbol.for('SiteHeaderController'),
     STREAM: Symbol.for('StreamController'),
-    SWITCH_ACCOUNT: Symbol.for('SwitchAccountController'),
     USERPASS_LOGIN: Symbol.for('UserPassLoginController'),
     GET_RSE_USAGE: Symbol.for('GetRSEUsageController'),
     LIST_RULES: Symbol.for('ListRulesController'),
+    LIST_RULES_PENDING_APPROVAL: Symbol.for('ListRulesPendingApprovalController'),
     LIST_ACCOUNT_RSE_USAGE: Symbol.for('ListAccountRSEUsageController'),
     CREATE_RULE: Symbol.for('CreateRuleController'),
     ADD_DID: Symbol.for('AddDIDController'),
@@ -39,6 +39,7 @@ const CONTROLLERS = {
     GET_RULE: Symbol.for('GetRuleController'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesController'),
     GET_FTS_LINK: Symbol.for('GetFTSLinkController'),
+    UPDATE_RULE: Symbol.for('UpdateRuleController'),
 };
 
 export default CONTROLLERS;

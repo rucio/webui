@@ -4,7 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { FetchStatus } from '@tanstack/react-query';
 import { HiPause, HiPlay, HiRefresh } from 'react-icons/hi';
 
-const StateButton: React.FC<JSX.IntrinsicElements['button'] & { icon: JSX.Element; state: FetchStatus }> = ({ icon, state, ...props }) => {
+const StateButton: React.FC<React.ComponentPropsWithoutRef<'button'> & { icon: React.ReactElement; state: FetchStatus }> = ({
+    icon,
+    state,
+    ...props
+}) => {
     const { className, onClick, ...otherprops } = props;
     const onClickHandler = async (e: any) => {
         e.preventDefault();
@@ -18,7 +22,7 @@ const StateButton: React.FC<JSX.IntrinsicElements['button'] & { icon: JSX.Elemen
                     : state === 'idle'
                     ? 'bg-base-info-200 text-base-info-800 hover:bg-base-info-400'
                     : state === 'paused'
-                    ? 'bg-neutral-200 text-text-800 hover:bg-neutral-400'
+                    ? 'bg-neutral-200 text-neutral-800 hover:bg-neutral-400'
                     : '',
                 'h-6 w-6',
                 'rounded',
@@ -33,7 +37,7 @@ const StateButton: React.FC<JSX.IntrinsicElements['button'] & { icon: JSX.Elemen
 };
 
 export const TableFetchstatus: React.FC<
-    JSX.IntrinsicElements['form'] & {
+    React.ComponentPropsWithoutRef<'form'> & {
         comdom: UseComDOM<any>;
     }
 > = ({ comdom, ...props }) => {
@@ -57,7 +61,7 @@ export const TableFetchstatus: React.FC<
                     : state === 'idle'
                     ? 'bg-base-info-200 text-base-info-800'
                     : state === 'paused'
-                    ? 'bg-neutral-200 text-text-800'
+                    ? 'bg-neutral-200 text-neutral-800'
                     : '',
                 'p-1 rounded-md h-8',
                 'flex flex-row justify-center space-x-2 md:space-x-0 md:justify-between',

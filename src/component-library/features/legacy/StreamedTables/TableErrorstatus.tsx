@@ -1,10 +1,10 @@
 import { twMerge } from 'tailwind-merge';
 import { UseComDOM } from '@/lib/infrastructure/hooks/useComDOM';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HiCheck, HiLifebuoy } from 'react-icons/hi2';
 
 export const TableErrorstatus: React.FC<
-    JSX.IntrinsicElements['form'] & {
+    React.ComponentPropsWithoutRef<'form'> & {
         comdom: UseComDOM<any>;
         showDetailedErrors: boolean;
         setShowDetailedErrors: (show: boolean) => void;

@@ -1,8 +1,9 @@
+import React from 'react';
 import { RuleNotification } from '@/lib/core/entity/rucio';
 import { twMerge } from 'tailwind-merge';
 import { HiBellAlert, HiBellSlash, HiBell } from 'react-icons/hi2'; // hi does not have the bell decorations
 
-export const RuleNotificationTag: React.FC<JSX.IntrinsicElements['span'] & { notificationState: RuleNotification; tiny?: boolean }> = ({
+export const RuleNotificationTag: React.FC<React.ComponentPropsWithoutRef<'span'> & { notificationState: RuleNotification; tiny?: boolean }> = ({
     notificationState = RuleNotification.Yes,
     tiny = false,
     ...props
@@ -18,9 +19,9 @@ export const RuleNotificationTag: React.FC<JSX.IntrinsicElements['span'] & { not
         <span
             className={twMerge(
                 notificationState === RuleNotification.No
-                    ? 'bg-neutral-300 text-text-800 dark:bg-neutral-600 dark:text-text-200'
+                    ? 'bg-neutral-300 text-neutral-800 dark:bg-neutral-600 dark:text-neutral-200'
                     : notificationState === RuleNotification.Close
-                    ? 'bg-neutral-300 text-text-800 dark:bg-neutral-600 dark:text-teext-200'
+                    ? 'bg-neutral-300 text-neutral-800 dark:bg-neutral-600 dark:text-teext-200'
                     : notificationState === RuleNotification.Yes
                     ? 'bg-base-success-300 text-base-success-800 dark:bg-base-success-700 dark:text-base-success-200'
                     : notificationState === RuleNotification.Progress

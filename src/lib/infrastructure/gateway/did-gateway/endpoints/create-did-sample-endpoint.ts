@@ -1,7 +1,6 @@
 import { CreateDIDSampleDTO } from '@/lib/core/dto/did-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 
 export default class CreateDidSampleEndpoint extends BaseEndpoint<CreateDIDSampleDTO> {
     constructor(
@@ -52,10 +51,11 @@ export default class CreateDidSampleEndpoint extends BaseEndpoint<CreateDIDSampl
         return Promise.resolve(errorDTO);
     }
 
-    createDTO(data: string): CreateDIDSampleDTO {
+    createDTO(data: object): CreateDIDSampleDTO {
+        const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
         const dto: CreateDIDSampleDTO = {
             status: 'success',
-            created: data.toLowerCase() === 'created' ? true : false,
+            created: dataStr.toLowerCase() === 'created' ? true : false,
         };
         return dto;
     }

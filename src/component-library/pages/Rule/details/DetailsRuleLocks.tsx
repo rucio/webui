@@ -16,27 +16,26 @@ import { FTSLinkViewModel } from '@/lib/infrastructure/data/view-model/request';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { HiExternalLink } from 'react-icons/hi';
+import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
+    isActive?: boolean;
 };
 
 const ClickableDID = (props: { value: string[] }) => {
     const [scope, name] = props.value;
     const didString = `${scope}:${name}`;
     return (
-        <CopyableLinkCell
-            text={didString}
-            href={`/did/page/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}
-        >
+        <CopyableLinkCell text={didString} href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
             {didString}
         </CopyableLinkCell>
     );
 };
 
 const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/page/${props.value}`}>{props.value}</ClickableCell>;
+    return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const FTSLinkButton = (props: any) => {
@@ -126,8 +125,9 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             valueGetter: (params: ValueGetterParams<ListRuleReplicaLockStatesViewModel>) => {
                 return [params.data?.scope, params.data?.name];
             },
-            minWidth: 150,
+            minWidth: 400,
             flex: 1,
+            pinned: 'left' as const,
             filter: true,
             filterParams: DefaultTextFilterParams,
             cellRenderer: ClickableDID,
@@ -151,20 +151,35 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
                 className: badgeCellClasses,
             },
             filter: true,
-            sortable: false,
             filterParams: buildDiscreteFilterParams(Object.values(LockStateDisplayNames), Object.values(LockState)),
+            sortable: true,
+            comparator: lockStateComparator,
         },
         {
             headerName: 'FTS Monitoring',
             cellRenderer: FTSLinkButton,
             minWidth: 200,
+            sortable: false,
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    const onGridReady = (event: GridReadyEvent) => {
+        props.onGridReady(event);
+        // Apply default sort to prioritize error/stuck locks
+        event.api.applyColumnState({
+            state: [
+                {
+                    colId: 'state',
+                    sort: 'desc',
+                },
+            ],
+        });
+    };
+
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };
 
-export const DetailsRuleLocks = ({ id }: { id: string }) => {
+export const DetailsRuleLocks = ({ id, isActive }: { id: string; isActive?: boolean }) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<ListRuleReplicaLockStatesViewModel>();
 
     useEffect(() => {
@@ -174,5 +189,5 @@ export const DetailsRuleLocks = ({ id }: { id: string }) => {
         }
     }, [gridApi]);
 
-    return <DetailsRuleLocksTable streamingHook={streamingHook} onGridReady={onGridReady} />;
+    return <DetailsRuleLocksTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
 };

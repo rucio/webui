@@ -32,7 +32,7 @@ class ListDIDsUseCase
         let scope: string;
         let name: string;
         try {
-            let didComponents = parseDIDString(requestModel.query);
+            const didComponents = parseDIDString(requestModel.query);
             scope = didComponents.scope;
             name = didComponents.name;
         } catch (error: any) {
@@ -50,13 +50,19 @@ class ListDIDsUseCase
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): Promise<ListDIDDTO> {
         const { scope, name } = parseDIDString(requestModel.query);
-        const listDIDDTO: ListDIDDTO = await this.didGateway.listDIDs(requestModel.rucioAuthToken, scope, name, requestModel.type, requestModel.filters);
+        const listDIDDTO: ListDIDDTO = await this.didGateway.listDIDs(
+            requestModel.rucioAuthToken,
+            scope,
+            name,
+            requestModel.type,
+            requestModel.filters,
+        );
         return listDIDDTO;
     }
 
     handleGatewayError(error: ListDIDDTO): ListDIDsError {
         let errorType = 'Unknown Error';
-        let message = error.errorMessage;
+        const message = error.errorMessage;
         if (message === 'Invalid Auth Token') {
             errorType = 'Invalid Request';
         } else if (message !== 'Unknown Error') {

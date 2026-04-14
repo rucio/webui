@@ -29,5 +29,5 @@ export const ListDIDTable = (props: ListDIDTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} rowSelection="single" tableRef={tableRef} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} rowSelection={{ mode: 'singleRow', enableClickSelection: true }} tableRef={tableRef} {...props} />;
 };

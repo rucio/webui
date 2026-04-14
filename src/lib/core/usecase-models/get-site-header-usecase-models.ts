@@ -1,9 +1,9 @@
 import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '@/lib/infrastructure/auth/session';
 import { User } from '../entity/auth-models';
 
 export interface GetSiteHeaderRequest {
-    session: IronSession;
+    session: RucioSession;
 }
 
 /**

@@ -11,6 +11,7 @@ const customJestConfig = {
     displayName: 'gateway',
     rootDir: '../../',
     // Add more setup options before each test is run
+    setupFiles: ['<rootDir>/test/jest.polyfills.js'],
     setupFilesAfterEnv: ['<rootDir>/test/gateway/jest.gateway.setup.ts'],
     // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
     moduleDirectories: ['node_modules', '<rootDir>/'],
@@ -20,9 +21,17 @@ const customJestConfig = {
     // The paths have to be matching with the paths option within the compilerOptions in the tsconfig.json
     // For example:
     moduleNameMapper: {
+        '^@/lib/infrastructure/auth/auth$': '<rootDir>/test/__mocks__/auth.ts',
         '@/(.*)$': '<rootDir>/src/$1',
+        '^next-auth/providers/credentials$': '<rootDir>/test/gateway/__mocks__/next-auth-providers-credentials.js',
+        '^next-auth$': '<rootDir>/test/gateway/__mocks__/next-auth.js',
+        '^next-auth/(.*)$': '<rootDir>/test/gateway/__mocks__/next-auth.js',
+        '^@auth/core/providers/credentials$': '<rootDir>/test/gateway/__mocks__/next-auth-providers-credentials.js',
+        '^@auth/core$': '<rootDir>/test/gateway/__mocks__/auth-core.js',
+        '^@auth/core/(.*)$': '<rootDir>/test/gateway/__mocks__/auth-core.js',
     },
     testEnvironment: 'jest-environment-jsdom',
+    testRegex: 'test/gateway/.*\\.test\\.(ts|tsx)$',
 
 }
 

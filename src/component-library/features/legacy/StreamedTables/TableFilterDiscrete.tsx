@@ -1,17 +1,17 @@
 import { twMerge } from 'tailwind-merge';
 import { H3 } from '../../../atoms/legacy/text/headings/H3/H3';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Column } from '@tanstack/react-table';
 
-type TableFilterDiscrete<T> = JSX.IntrinsicElements['div'] & {
+type TableFilterDiscrete<T> = React.ComponentPropsWithoutRef<'div'> & {
     name: string;
     keys: T[];
-    renderFunc: (key: T | undefined) => JSX.Element;
+    renderFunc: (key: T | undefined) => React.ReactElement;
     column: Column<any, T>; // to be a tanstack column
     stack?: boolean; // whether to use column instead of row
 };
 
-export function TableFilterDiscrete<T>(props: TableFilterDiscrete<T>): JSX.Element {
+export function TableFilterDiscrete<T>(props: TableFilterDiscrete<T>): React.ReactElement {
     // split up props
     const { name, keys, renderFunc, column, stack, ...otherprops } = props;
     const { className, ...otherdivprops } = otherprops;
@@ -34,6 +34,13 @@ export function TableFilterDiscrete<T>(props: TableFilterDiscrete<T>): JSX.Eleme
     useEffect(() => {
         column.setFilterValue(filter);
     }, [filter, column]);
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setFilter(nextMap.get(filter ?? 'undefined') as T | undefined);
+        }
+    };
+
     return (
         <div
             className={twMerge(
@@ -46,6 +53,9 @@ export function TableFilterDiscrete<T>(props: TableFilterDiscrete<T>): JSX.Eleme
             onClick={e => {
                 setFilter(nextMap.get(filter ?? 'undefined') as T | undefined);
             }}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
             {...otherdivprops}
         >
             <H3 className="hidden md:inline">{name}</H3>

@@ -1,16 +1,16 @@
 import { twMerge } from 'tailwind-merge';
 import { HiChevronDown } from 'react-icons/hi';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-type DropdownProps<T> = JSX.IntrinsicElements['div'] & {
+type DropdownProps<T> = React.ComponentPropsWithoutRef<'div'> & {
     keys: T[];
-    renderFunc: (key: T | undefined) => JSX.Element;
+    renderFunc: (key: T | undefined) => React.ReactElement;
     handleChange: (key: T | undefined) => void; // communicate back to parent
     value?: T | undefined; // the current value, set by the parent
     disableUndefined?: boolean; // if the selection may not be left undefined
 };
 
-export function Dropdown<T>(props: DropdownProps<T>): JSX.Element {
+export function Dropdown<T>(props: DropdownProps<T>): React.ReactElement {
     const [isActive, setActive] = useState<boolean>(false);
     const [selection, setSelection] = useState<T | undefined>(props.value ?? undefined);
     const divref = useRef<HTMLDivElement>(null);
@@ -42,7 +42,7 @@ export function Dropdown<T>(props: DropdownProps<T>): JSX.Element {
                 }}
                 className={twMerge(
                     'py-1 px-3 rounded w-full',
-                    'bg-brand-500 hover:bg-brand-600 text-text-0',
+                    'bg-brand-500 hover:bg-brand-600 text-neutral-0',
                     'cursor-pointer',
                     'font-bold',
                     'flex justify-center space-x-2',
@@ -62,6 +62,14 @@ export function Dropdown<T>(props: DropdownProps<T>): JSX.Element {
                 )}
             >
                 {keys.map((key, index) => {
+                    const handleKeyDown = (e: React.KeyboardEvent) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setActive(!isActive);
+                            setSelection(key);
+                        }
+                    };
+
                     return (
                         <div
                             key={index}
@@ -69,13 +77,17 @@ export function Dropdown<T>(props: DropdownProps<T>): JSX.Element {
                                 'p-1 rounded select-none cursor-pointer',
                                 'bg-neutral-0 odd:bg-neutral-100', // bg normal
                                 'dark:bg-neutral-700 dark:odd:bg-neutral-800',
-                                'dark:text-text-0', // bg dark
+                                'dark:text-neutral-0', // bg dark
                                 'hover:bg-neutral-200 dark:hover:bg-neutral-900', // hover (dark and light)
                             )}
                             onClick={e => {
                                 setActive(!isActive);
                                 setSelection(key);
                             }}
+                            onKeyDown={handleKeyDown}
+                            role="option"
+                            aria-selected={selection === key}
+                            tabIndex={0}
                         >
                             {props.renderFunc(key)}
                         </div>

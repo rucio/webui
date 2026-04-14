@@ -247,7 +247,7 @@ export default function useComDOM<TData extends BaseViewModel>(
             reportError('Error stopping ComDOM', 'Error Destroying ComDOM');
             setStatus(UseComDOMStatus.ERROR);
         }
-        queryClient.invalidateQueries([...queryKey, 'comdom-status']);
+        queryClient.invalidateQueries({ queryKey: [...queryKey, 'comdom-status'] });
         return success;
     };
 
@@ -269,7 +269,7 @@ export default function useComDOM<TData extends BaseViewModel>(
 
     const clean = () => {
         try {
-            queryClient.setQueriesData(queryKey, initialData);
+            queryClient.setQueriesData({ queryKey: queryKey }, initialData);
             dataSink.current = initialData;
             successViewModelsDataSink.current = [];
             errorViewModelsDataSink.current = [];

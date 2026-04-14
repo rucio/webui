@@ -3,7 +3,6 @@ import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-ou
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import { PassThrough } from 'node:stream';
-import { Response } from 'node-fetch';
 
 describe('Streaming tests for JSON encoded text payloads', () => {
     beforeEach(async () => {
@@ -101,7 +100,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (textStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: string[] = [];
+        const chunks: string[] = [];
         const outputStream = new PassThrough();
         textStream.pipe(outputStream);
 
@@ -137,7 +136,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (jsonStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: any[] = [];
+        const chunks: any[] = [];
         const outputStream = new PassThrough();
         jsonStream.pipe(outputStream);
 
@@ -177,7 +176,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (jsonStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: Object[] = [];
+        const chunks: object[] = [];
         const outputStream = new PassThrough();
         jsonStream.pipe(outputStream);
 
@@ -225,7 +224,7 @@ describe('Streaming tests for JSON encoded text payloads', () => {
         if (jsonStream instanceof Response) {
             fail('response is not a stream');
         }
-        let chunks: Object[] = [];
+        const chunks: object[] = [];
         const outputStream = new PassThrough();
         jsonStream.pipe(outputStream);
 

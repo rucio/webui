@@ -1,5 +1,3 @@
-import { Headers as NodeFetchHeaders } from 'node-fetch';
-import { RequestInit, Headers } from 'node-fetch';
 import fs from 'fs';
 import https from 'https';
 
@@ -10,18 +8,25 @@ export type HTTPRequest = {
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     url: URL | string;
     params?: { [key: string]: string };
-    headers?: Headers | { [key: string]: string } | NodeFetchHeaders | HeadersInit | null;
+    headers?: HeadersInit | { [key: string]: string } | null;
     body?: { [key: string]: any } | null;
 };
 
 /**
+ * Extended RequestInit that includes Node.js-specific options
+ */
+export interface NodeRequestInit extends RequestInit {
+    agent?: https.Agent;
+}
+
+/**
  * Prepares the request arguments for an HTTP request.
  * @param {HTTPRequest} request - The HTTP request to prepare arguments for.
- * @returns {{ url: string | URL; requestArgs: RequestInit }} - An object containing the URL and request arguments.
+ * @returns {{ url: string | URL; requestArgs: NodeRequestInit }} - An object containing the URL and request arguments.
  */
 export function prepareRequestArgs(request: HTTPRequest): {
     url: string | URL;
-    requestArgs: RequestInit;
+    requestArgs: NodeRequestInit;
 } {
     if (request.params) {
         const url = new URL(request.url);
@@ -31,14 +36,14 @@ export function prepareRequestArgs(request: HTTPRequest): {
         });
         request.url = url.toString();
     }
-    const requestArgs: RequestInit = {
+    const requestArgs: NodeRequestInit = {
         method: request.method || 'GET',
     };
     if (request.body) {
         requestArgs.body = JSON.stringify(request.body);
     }
     if (request.headers) {
-        requestArgs.headers = request.headers as Headers;
+        requestArgs.headers = request.headers as HeadersInit;
     }
     if (process.env.NODE_TLS_REJECT_UNAUTHORIZED === '1') {
         try {

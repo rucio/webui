@@ -1,7 +1,6 @@
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { cn } from '@/component-library/utils';
 
 const stateString: Record<ReplicaState, string> = {
     Available: 'Available',
@@ -13,17 +12,28 @@ const stateString: Record<ReplicaState, string> = {
     Unknown: 'Unknown',
 };
 
-const stateColorClasses: Record<ReplicaState, string> = {
-    Available: 'bg-base-success-500',
-    Bad: 'bg-base-error-500',
-    Being_Deleted: 'bg-base-error-300',
-    Copying: 'bg-base-info-500',
-    Temporary_Unavailable: 'bg-base-warning-400',
-    Unavailable: 'bg-neutral-0 dark:bg-neutral-800',
-    Unknown: 'bg-neutral-0 dark:bg-neutral-800',
+/**
+ * Maps replica states to semantic badge variants from the design system.
+ *
+ * Semantic color assignments:
+ * - Available: Success (green) - Replica is accessible
+ * - Copying: Info (brand purple) - Transfer in progress
+ * - Temporary_Unavailable: Warning (amber) - Temporarily inaccessible
+ * - Bad: Error (red) - Corrupted replica
+ * - Being_Deleted: Error (red) - Deletion in progress
+ * - Unavailable: Neutral (gray) - Not accessible
+ * - Unknown: Neutral (gray) - Undefined state
+ */
+const stateVariants: Record<ReplicaState, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
+    Available: 'success',
+    Bad: 'error',
+    Being_Deleted: 'error',
+    Copying: 'info',
+    Temporary_Unavailable: 'warning',
+    Unavailable: 'warning',
+    Unknown: 'neutral',
 };
 
 export const ReplicaStateBadge = (props: { value: ReplicaState; className?: string }) => {
-    const classes = cn(stateColorClasses[props.value], props.className);
-    return <Badge value={stateString[props.value]} className={classes} />;
+    return <Badge value={stateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
 };

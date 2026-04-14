@@ -1,7 +1,6 @@
 import { SubscriptionDTO } from '@/lib/core/dto/subscription-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { BaseHttpErrorTypes, HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { convertToSubscriptionDTO, getEmptySubscriptionDTO, TRucioSubscription } from '../subscription-gateway-utils';
 
 export default class GetSubscriptionByIdEndpoint extends BaseEndpoint<SubscriptionDTO> {
@@ -51,7 +50,7 @@ export default class GetSubscriptionByIdEndpoint extends BaseEndpoint<Subscripti
         return Promise.resolve(dto);
     }
 
-    createDTO(data: Object): SubscriptionDTO {
+    createDTO(data: object): SubscriptionDTO {
         const subscription = data as TRucioSubscription;
         const dto = convertToSubscriptionDTO(subscription, subscription.account);
         return dto;

@@ -6,7 +6,7 @@ import { TableFetchstatus } from './TableFetchstatus';
 import { TableBreakout } from './TableBreakout';
 import { TableErrorstatus } from './TableErrorstatus';
 import { TableErrorreader } from './TableErrorreader';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 /**
  * @param T the type of the data in the table
@@ -15,7 +15,7 @@ import { useState } from 'react';
  * @param breakout if breakout is defined, the breakout will be shown
  * @param stacked if true, the pagination and fetchstatus will be stacked vertically
  */
-type TableFooterProps<T> = JSX.IntrinsicElements['tfoot'] & {
+type TableFooterProps<T> = React.ComponentPropsWithoutRef<'tfoot'> & {
     table: Table<T>;
     comdom: UseComDOM<any>; // TODO: fix this any, use BaseViewModel
     breakout?: {
@@ -30,7 +30,7 @@ export function TableFooter<T>(props: TableFooterProps<T>) {
     const [showDetailedErrors, setShowDetailedErrors] = useState<boolean>(false);
 
     return (
-        <tfoot className={twMerge('h-8', className ?? '')} role="rowgroup" aria-label="Table Footer" {...otherprops}>
+        <tfoot className={twMerge('h-8', className ?? '')} aria-label="Table Footer" {...otherprops}>
             <tr aria-label="Extra Information">
                 <td
                     className={twMerge(props.breakout?.breakoutVisibility ? 'table-cell' : 'hidden')}

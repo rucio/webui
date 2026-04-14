@@ -1,7 +1,6 @@
 import { AttachDIDDTO } from '@/lib/core/dto/did-dto';
 import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
-import { Response } from 'node-fetch';
 import { DIDShort } from '@/lib/core/entity/rucio';
 
 export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
@@ -57,10 +56,11 @@ export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
         return errorDTO;
     }
 
-    createDTO(data: string): AttachDIDDTO {
+    createDTO(data: object): AttachDIDDTO {
+        const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
         const dto: AttachDIDDTO = {
             status: 'success',
-            created: data.toLowerCase() === 'created' ? true : false,
+            created: dataStr.toLowerCase() === 'created' ? true : false,
         };
         return dto;
     }

@@ -1,7 +1,7 @@
-import { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export type BoolTagProps = JSX.IntrinsicElements['span'] & { val: boolean };
+export type BoolTagProps = React.ComponentPropsWithoutRef<'span'> & { val: boolean };
 
 export const BoolTag: FC<BoolTagProps> = ({ val = true, ...props }) => {
     return (

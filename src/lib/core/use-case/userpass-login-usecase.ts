@@ -7,6 +7,7 @@ import {
     UserpassLoginIncomplete,
 } from '../usecase-models/userpass-login-usecase-models';
 import { Role } from '../entity/auth-models';
+import { resolveAccountRole } from '../services/resolve-account-role';
 import UserPassLoginInputPort from '../port/primary/userpass-login-input-port';
 import type UserPassLoginOutputPort from '../port/primary/userpass-login-output-port';
 import type AccountGatewayOutputPort from '../port/secondary/account-gateway-output-port';
@@ -30,7 +31,16 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
         this.envConfigGateway = envConfigGateway;
     }
     async execute(request: UserpassLoginRequest): Promise<void> {
+        console.log('[LOGIN FLOW 10] UserPassLoginUseCase execute started', {
+            username: request.username,
+            account: request.account || '(none)',
+            vo: request.vo,
+            redirectTo: request.redirectTo,
+        });
+
         const userpassLoginEnabled = await this.envConfigGateway.userpassEnabled();
+        console.log('[LOGIN FLOW 10a] Userpass enabled:', userpassLoginEnabled);
+
         if (!userpassLoginEnabled) {
             const errorModel: UserpassLoginError = {
                 type: 'AUTH_SERVER_CONFIGURATION_ERROR',
@@ -40,31 +50,30 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             return;
         }
         const dto = await this.authServer.userpassLogin(request.username, request.password, request.account, request.vo);
+        console.log('[LOGIN FLOW 11] Auth server response received', {
+            statusCode: dto.statusCode,
+            account: dto.account,
+            hasToken: !!dto.authToken,
+            message: dto.message,
+        });
+
         let role: Role | undefined;
         let country: string | undefined;
         let countryRole: Role | undefined;
         try {
             const accountAttrs: AccountAttributesDTO = await this.rucioAccountGateway.listAccountAttributes(request.account, dto.authToken);
-            accountAttrs.attributes.forEach(attr => {
-                if (attr.key == 'admin' && attr.value == 'True') {
-                    role = Role.ADMIN;
-                } else if (attr.key.startsWith('country-')) {
-                    country = attr.key.split('-')[1];
-                    if (attr.value == 'admin') {
-                        countryRole = Role.ADMIN;
-                    } else if (attr.value == 'user') {
-                        countryRole = Role.USER;
-                    } else {
-                        countryRole = undefined;
-                    }
-                } else {
-                    role = Role.USER;
-                }
-            });
+            ({ role, country, countryRole } = resolveAccountRole(accountAttrs.attributes));
         } catch (error: AccountAttributesDTO | any) {
             role = undefined;
         }
         if (dto.statusCode == 200) {
+            console.log('[LOGIN FLOW 12] Success response - creating session', {
+                rucioAccount: dto.account,
+                role,
+                country,
+                countryRole,
+            });
+
             const responseModel: UserpassLoginResponse = {
                 rucioIdentity: request.username,
                 rucioAccount: dto.account,
@@ -79,6 +88,10 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
             return;
         }
         if (dto.statusCode === 206) {
+            console.log('[LOGIN FLOW 13a] Multiple accounts detected', {
+                availableAccounts: dto.message,
+            });
+
             const incompleteModel: UserpassLoginIncomplete = {
                 availableAccounts: dto.message,
             };
@@ -103,6 +116,12 @@ class UserPassLoginUseCase implements UserPassLoginInputPort {
                 error_type = 'UNKNOWN_ERROR';
                 break;
         }
+        console.log('[LOGIN FLOW 13b] Error response', {
+            type: error_type,
+            message: dto.message,
+            statusCode: dto.statusCode,
+        });
+
         const errorModel: UserpassLoginError = {
             type: error_type,
             message: dto.message,

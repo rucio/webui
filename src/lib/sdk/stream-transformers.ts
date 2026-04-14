@@ -220,10 +220,10 @@ export class BytesToStringifiedJSONTransform extends Transform {
      * @returns The DTO
      * @throws Error if the JSON string could not be converted to a DTO
      **/
-    convertJSONObjectToDTO(json: string): Object {
+    convertJSONObjectToDTO(json: string): object {
         try {
             const jsonObject = JSON.parse(json);
-            return jsonObject as Object;
+            return jsonObject as object;
         } catch (error) {
             this.emit('error', `Could not convert JSON ${json} to DTO: ${error}`);
             throw error;

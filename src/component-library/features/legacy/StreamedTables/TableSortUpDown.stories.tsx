@@ -1,4 +1,4 @@
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/nextjs';
 import { TableSortUpDown as T } from './TableSortUpDown';
 import { Column } from '@tanstack/react-table';
 

@@ -2,7 +2,6 @@ import { RuleMetaDTO } from '@/lib/core/dto/rule-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { convertToRuleMetaDTO, getEmptyRuleMetaDTO, TRucioRule } from '../rule-gateway-utils';
-import { Response } from 'node-fetch';
 
 export default class GetRuleEndpoint extends BaseEndpoint<RuleMetaDTO> {
     constructor(private readonly rucioAuthToken: string, private readonly ruleId: string) {

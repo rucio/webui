@@ -39,13 +39,19 @@ export type BatchResponse<TData> = {
  * @description Represents the ComDOM web worker
  */
 export interface ComDOM<TData> {
-    new (verbose: boolean): ComDOM<TData>;
     run: (request: HTTPRequest) => Promise<any>;
     getNextBatch: () => Promise<BatchResponse<TData> | null>;
     isDone: () => Promise<boolean>;
     isBatchAvailable: () => Promise<boolean>;
     getStatus: () => Promise<ComDOMStatus>;
     status: () => Promise<string>;
+}
+
+/**
+ * @description Constructor type for ComDOM
+ */
+export interface ComDOMConstructor {
+    new <TData>(verbose: boolean): ComDOM<TData>;
 }
 
 /**
@@ -87,7 +93,7 @@ export interface IComDOMWrapper<TData> {
 export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     private worker: Worker | null = null;
     private verbose: boolean;
-    private wrappedComDOM: Remote<ComDOM<TData>> | null = null;
+    private wrappedComDOM: any | null = null;
     private comDOM: Remote<ComDOM<TData>> | undefined;
 
     constructor(verbose: boolean = false) {
@@ -103,11 +109,11 @@ export default class ComDOMWrapper<TData> implements IComDOMWrapper<TData> {
     async init() {
         if (this.worker === null || this.wrappedComDOM === null) {
             this.worker = new Worker('/comdom.js');
-            this.wrappedComDOM = wrap<ComDOM<TData>>(this.worker);
+            this.wrappedComDOM = wrap(this.worker);
         }
         this.log('Initializing ComDOM');
         try {
-            this.comDOM = await new this.wrappedComDOM(this.verbose);
+            this.comDOM = (await new this.wrappedComDOM(this.verbose)) as Remote<ComDOM<TData>>;
         } catch (error) {
             this.log('Error initializing ComDOM', error);
 

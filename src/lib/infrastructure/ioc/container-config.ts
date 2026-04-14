@@ -6,7 +6,7 @@ import RucioAccountGateway from '../gateway/account-gateway/account-gateway';
 import DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
 import RucioDIDGateway from '../gateway/did-gateway/did-gateway';
 import { Container, interfaces } from 'inversify';
-import { IronSession } from 'iron-session';
+import { RucioSession } from '../auth/session';
 import { NextApiResponse } from 'next';
 import CONTROLLERS from './ioc-symbols-controllers';
 import INPUT_PORT from './ioc-symbols-input-port';
@@ -27,10 +27,6 @@ import SetX509LoginSessionPresenter from '../presenter/set-x509-login-session-pr
 import StreamInputPort from '@/lib/core/port/primary/stream-input-port';
 import StreamUseCase from '@/lib/core/use-case/stream-usecase';
 import { RSEOld } from '@/lib/core/entity/rucio';
-import SwitchAccountInputPort from '@/lib/core/port/primary/switch-account-input-port';
-import SwitchAccountUseCase from '@/lib/core/use-case/switch-account-usecase';
-import SwitchAccountController, { ISwitchAccountController } from '../controller/switch-account-controller';
-import SwitchAccountPresenter from '../presenter/switch-account-presenter';
 import { loadFeaturesSync } from '@/lib/sdk/ioc-helpers';
 import ListDidsFeature from './features/list-dids-feature';
 import LoginConfigFeature from './features/logic-config-feature';
@@ -62,6 +58,7 @@ import ListAccountRSEQuotasFeature from './features/list-account-rse-quotas-feat
 import GetAccountInfoFeature from './features/get-account-info-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
+import ListRulesPendingApprovalFeature from '@/lib/infrastructure/ioc/features/list-rules-pending-approval-feature';
 import ListAccountRSEUsageFeature from '@/lib/infrastructure/ioc/features/list-account-rse-usage-feature';
 import CreateRuleFeature from '@/lib/infrastructure/ioc/features/create-rule-feature';
 import AddDIDFeature from '@/lib/infrastructure/ioc/features/add-did-feature';
@@ -72,6 +69,7 @@ import ListRuleReplicaLockStatesFeature from '@/lib/infrastructure/ioc/features/
 import RequestGateway from '../gateway/request-gateway/request-gateway';
 import RequestGatewayOutputPort from '@/lib/core/port/secondary/request-gateway-output-port';
 import GetFTSLinkFeature from './features/get-fts-link-feature';
+import UpdateRuleFeature from '@/lib/infrastructure/ioc/features/update-rule-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -137,7 +135,9 @@ loadFeaturesSync(appContainer, [new ListSubscriptionRuleStatesFeature(appContain
 
 // Features: List Rules
 loadFeaturesSync(appContainer, [new ListRulesFeature(appContainer)]);
+loadFeaturesSync(appContainer, [new ListRulesPendingApprovalFeature(appContainer)]);
 loadFeaturesSync(appContainer, [new ListRuleReplicaLockStatesFeature(appContainer)]);
+loadFeaturesSync(appContainer, [new UpdateRuleFeature(appContainer)]);
 
 // Features: Dashboard
 loadFeaturesSync(appContainer, [new ListAccountRSEUsageFeature(appContainer)]);
@@ -146,8 +146,8 @@ appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPass
 appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
 appContainer
     .bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN)
-    .toFactory<UserPassLoginUseCase, [IronSession, NextApiResponse]>(
-        (context: interfaces.Context) => (session: IronSession, response: NextApiResponse) => {
+    .toFactory<UserPassLoginUseCase, [RucioSession, NextApiResponse]>(
+        (context: interfaces.Context) => (session: RucioSession, response: NextApiResponse) => {
             const rucioAuthServer: AuthServerGatewayOutputPort = appContainer.get(GATEWAYS.AUTH_SERVER);
             const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
             const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
@@ -159,8 +159,8 @@ appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSIO
 appContainer.bind<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionController);
 appContainer
     .bind<interfaces.Factory<SetX509LoginSessionInputPort>>(USECASE_FACTORY.SET_X509_LOGIN_SESSION)
-    .toFactory<SetX509LoginSessionUseCase, [IronSession, NextApiResponse]>(
-        (context: interfaces.Context) => (session: IronSession, response: NextApiResponse) => {
+    .toFactory<SetX509LoginSessionUseCase, [RucioSession, NextApiResponse]>(
+        (context: interfaces.Context) => (session: RucioSession, response: NextApiResponse) => {
             const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
             const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
             return new SetX509LoginSessionUseCase(new SetX509LoginSessionPresenter(session, response), envConfigGateway, rucioAccountGateway);
@@ -185,14 +185,5 @@ appContainer.bind<StreamInputPort<RSEOld>>(INPUT_PORT.STREAM).to(StreamUseCase).
 //         return new GetSiteHeaderUseCase(presenter, envConfigGateway);
 //     }
 // );
-
-appContainer.bind<SwitchAccountInputPort>(INPUT_PORT.SWITCH_ACCOUNT).to(SwitchAccountUseCase).inRequestScope();
-appContainer.bind<ISwitchAccountController>(CONTROLLERS.SWITCH_ACCOUNT).to(SwitchAccountController);
-appContainer
-    .bind<interfaces.Factory<SwitchAccountInputPort>>(USECASE_FACTORY.SWITCH_ACCOUNT)
-    .toFactory<SwitchAccountUseCase, [NextApiResponse]>((context: interfaces.Context) => (response: NextApiResponse) => {
-        const switchAccountPresenter = new SwitchAccountPresenter(response);
-        return new SwitchAccountUseCase(switchAccountPresenter);
-    });
 
 export default appContainer;
