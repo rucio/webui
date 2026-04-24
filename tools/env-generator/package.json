@@ -10,7 +10,7 @@
     "author": "Mayank Sharma ( imptodefeat@gmail.com )",
     "license": "ISC",
     "dependencies": {
-        "liquidjs": "^10.25.5",
+        "liquidjs": "^10.25.7",
         "yargs": "^17.7.2"
     },
     "devDependencies": {
