@@ -23,6 +23,12 @@ export interface GetSiteHeaderResponse extends BaseResponseModel {
      * with a re-auth modal trigger rather than a one-click switch.
      */
     linkedAccountNames: string[];
+    /**
+     * Rucio auth host URL — surfaced so the client-side x509 switch flow can
+     * call /auth/x509/webui directly with the user's cert (#628). Empty
+     * string when the env config is unavailable.
+     */
+    rucioAuthHost: string;
 }
 
 export interface GetSiteHeaderError extends BaseErrorResponseModel, Omit<GetSiteHeaderResponse, 'status'> {

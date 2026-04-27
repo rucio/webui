@@ -15,6 +15,7 @@ export default class GetSiteHeaderPresenter extends BasePresenter<GetSiteHeaderR
             activeAccount: responseModel.activeUser || undefined,
             availableAccounts: responseModel.availableUsers || [],
             linkedAccountNames: responseModel.linkedAccountNames ?? [],
+            rucioAuthHost: responseModel.rucioAuthHost,
             homeUrl: responseModel.homeUrl,
             projectUrl: projectUrl,
         };

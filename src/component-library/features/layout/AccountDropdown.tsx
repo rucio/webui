@@ -7,21 +7,90 @@ import Link from 'next/link';
 import { HiUserCircle } from 'react-icons/hi2';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { cn } from '@/component-library/utils';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { AuthType } from '@/lib/core/entity/auth-models';
 import { ReauthModal } from '@/component-library/features/auth/ReauthModal';
+import { switchX509Account } from '@/lib/infrastructure/auth/x509-switch';
 
 /**
- * Renders one-click switches for accounts with a live token in session.allUsers[],
- * and re-auth-required switches for accounts that share the active identity but
- * have no token (#628 lazy-mint design — see ReauthModal).
+ * One entry in the dropdown's switchable-accounts list.
+ *
+ * Live entries (account already has a token in session.allUsers[]) carry
+ * `kind: 'live'` and switch via `update({ account })`.
+ *
+ * Linked entries (account is mapped to the active identity but has no live
+ * token, see #628) carry `kind: 'linked'`. For userpass these need a password
+ * re-prompt; for x509 the cert is re-presented silently. The same account
+ * name can legitimately appear in both lists scoped to different auth
+ * methods, so keys are derived from `kind:authType:account`.
+ */
+type SwitchableAccount = {
+    account: string;
+    authType: AuthType | null;
+    kind: 'live' | 'linked';
+};
+
+/**
+ * Builds the ordered list of switchable accounts for the dropdown:
+ *   1. live (already-authenticated) entries from session.allUsers, excluding the active one
+ *   2. linked entries (#628) — accounts mapped to the active identity but with no live token
+ *
+ * Linked entries inherit the *active* user's auth type because they describe
+ * accounts on that same identity that haven't been signed into yet. Including
+ * the auth type here lets the dropdown disambiguate same-named accounts that
+ * appear on more than one auth path and gives each row a stable React key.
+ */
+const buildSwitchEntries = (siteHeader: SiteHeaderViewModel, activeAuthType: AuthType | null): SwitchableAccount[] => {
+    const activeName = siteHeader.activeAccount?.rucioAccount ?? '';
+    const live: SwitchableAccount[] = (siteHeader.availableAccounts ?? [])
+        .filter(u => u.rucioAccount !== activeName)
+        .map(u => ({
+            account: u.rucioAccount,
+            // `rucioAuthType` is an optional field added by a follow-up patch — read it
+            // defensively so the dropdown still renders if upstream User shape lacks it.
+            authType: ((u as { rucioAuthType?: AuthType | null }).rucioAuthType ?? null) as AuthType | null,
+            kind: 'live' as const,
+        }));
+    const linked: SwitchableAccount[] = (siteHeader.linkedAccountNames ?? [])
+        .filter(name => name !== activeName)
+        .map(name => ({ account: name, authType: activeAuthType, kind: 'linked' as const }));
+    return [...live, ...linked];
+};
+
+/**
+ * Human-readable label for a Rucio auth method. Shown next to each switch
+ * entry so the user knows which auth path will be used — important when the
+ * same account name maps via more than one method. Returns null when the
+ * auth type is unknown, so the row can omit the "via …" subtitle entirely
+ * instead of rendering a confusing placeholder.
+ */
+const authTypeLabel = (t: AuthType | null | undefined): string | null => {
+    switch (t) {
+        case AuthType.USERPASS:
+            return 'userpass';
+        case AuthType.x509:
+            return 'x509';
+        case AuthType.OIDC:
+            return 'OIDC';
+        default:
+            return null;
+    }
+};
+
+/**
+ * Renders one-click switches for accounts with a live token, and lazy-switch
+ * entries for accounts mapped to the active identity but without a token
+ * yet (#628). Userpass linked entries open a password re-auth modal; x509
+ * linked entries trigger a silent cert-bearing re-fetch.
  */
 const AccountList = (props: {
-    accountList: string[];
-    linkedAccountNames?: string[];
+    entries: SwitchableAccount[];
+    /** Whether linked entries require explicit re-auth (userpass) or are silent (x509). */
+    linkedSwitchRequiresReauth?: boolean;
     onSwitchAccount?: (account: string) => Promise<void>;
     onLinkedSwitchClick?: (account: string) => void;
 }) => {
-    const handleSwitchAccount = async (account: string) => {
+    const handleLiveSwitch = async (account: string) => {
         try {
             if (props.onSwitchAccount) {
                 await props.onSwitchAccount(account);
@@ -31,9 +100,15 @@ const AccountList = (props: {
         }
     };
 
+    const reauth = props.linkedSwitchRequiresReauth ?? false;
+
     return (
         <div className="flex flex-col">
-            {props.accountList.map(account => {
+            {props.entries.map(entry => {
+                const isLinked = entry.kind === 'linked';
+                const showLock = isLinked && reauth;
+                const Icon = showLock ? HiLockClosed : HiSwitchHorizontal;
+                const subLabel = isLinked && reauth ? 'sign in required' : null;
                 return (
                     <button
                         className={cn(
@@ -42,37 +117,30 @@ const AccountList = (props: {
                             'flex items-center justify-between py-2 px-1 space-x-4',
                             'text-right',
                         )}
-                        key={'profile-' + account}
-                        onClick={() => handleSwitchAccount(account)}
+                        key={`${entry.kind}:${entry.authType ?? 'unknown'}:${entry.account}`}
+                        onClick={() => (isLinked ? props.onLinkedSwitchClick?.(entry.account) : handleLiveSwitch(entry.account))}
+                        title={showLock ? 'Sign in required' : isLinked ? 'Switch using your x509 certificate' : undefined}
                     >
-                        <HiSwitchHorizontal className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
+                        <Icon
+                            className={cn(
+                                'text-2xl shrink-0',
+                                showLock ? 'text-neutral-500 dark:text-neutral-400' : 'text-neutral-900 dark:text-neutral-100',
+                            )}
+                        />
                         <span>
                             <span>Switch to </span>
-                            <b className="text-neutral-800 dark:text-neutral-100">{account}</b>
+                            <b className="text-neutral-800 dark:text-neutral-100">{entry.account}</b>
+                            {(() => {
+                                const label = authTypeLabel(entry.authType);
+                                const parts = [label ? `via ${label}` : null, subLabel].filter(Boolean);
+                                return parts.length > 0 ? (
+                                    <span className="text-xs text-neutral-500 dark:text-neutral-400 block">{parts.join(' · ')}</span>
+                                ) : null;
+                            })()}
                         </span>
                     </button>
                 );
             })}
-            {props.linkedAccountNames?.map(account => (
-                <button
-                    className={cn(
-                        'text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer',
-                        'dark:text-neutral-300 dark:hover:bg-neutral-600',
-                        'flex items-center justify-between py-2 px-1 space-x-4',
-                        'text-right',
-                    )}
-                    key={'linked-' + account}
-                    onClick={() => props.onLinkedSwitchClick?.(account)}
-                    title="Sign in required"
-                >
-                    <HiLockClosed className="text-2xl text-neutral-500 dark:text-neutral-400 shrink-0" />
-                    <span>
-                        <span>Switch to </span>
-                        <b className="text-neutral-800 dark:text-neutral-100">{account}</b>
-                        <span className="text-xs text-neutral-500 dark:text-neutral-400 block">sign in required</span>
-                    </span>
-                </button>
-            ))}
         </div>
     );
 };
@@ -138,20 +206,23 @@ const SignIntoButton = () => {
 export const AccountDropdown = (props: {
     menuRef: RefObject<HTMLDivElement | null>;
     accountActive: string;
-    accountsPossible: string[];
-    /** Names of identity-mapped accounts that need re-auth to switch into (#628). */
-    linkedAccountNames?: string[];
+    /** Switchable accounts excluding the active one. Live + linked, ordered by AccountButton. */
+    switchEntries: SwitchableAccount[];
+    /** Total live accounts in session (including active). Drives single-account sign-out shortcut. */
+    liveAccountCount: number;
+    /** True when a linked switch needs an explicit credential re-prompt (userpass). */
+    linkedSwitchRequiresReauth?: boolean;
     onSignOut?: () => Promise<void>;
     onSwitchAccount?: (account: string) => Promise<void>;
     onRemoveAccount?: (account: string) => Promise<void>;
     onLinkedSwitchClick?: (account: string) => void;
 }) => {
-    const hasAccountChoice = props.accountsPossible.length !== 1 || (props.linkedAccountNames?.length ?? 0) > 0;
+    const hasAccountChoice = props.switchEntries.length > 0;
 
     const handleSingleSignOut = async () => {
         try {
             // If this is the only account, sign out completely
-            if (props.accountsPossible.length === 1) {
+            if (props.liveAccountCount === 1) {
                 if (props.onSignOut) {
                     await props.onSignOut();
                 } else {
@@ -213,8 +284,8 @@ export const AccountDropdown = (props: {
             </div>
             {hasAccountChoice && (
                 <AccountList
-                    accountList={props.accountsPossible.filter(account => account !== props.accountActive)}
-                    linkedAccountNames={props.linkedAccountNames?.filter(account => account !== props.accountActive)}
+                    entries={props.switchEntries}
+                    linkedSwitchRequiresReauth={props.linkedSwitchRequiresReauth}
                     onSwitchAccount={props.onSwitchAccount}
                     onLinkedSwitchClick={props.onLinkedSwitchClick}
                 />
@@ -238,8 +309,15 @@ export const AccountButton = ({
 }) => {
     const [isAccountOpen, setIsAccountOpen] = React.useState(false);
     const [reauthTarget, setReauthTarget] = useState<string | null>(null);
+    const [x509SwitchError, setX509SwitchError] = useState<string | null>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+
+    // The active session is the source of truth for auth type — siteHeader.activeAccount
+    // is a slim public User shape and intentionally omits credential-flavoured fields.
+    const { data: session } = useSession();
+    const activeAuthType = session?.user?.rucioAuthType ?? null;
+    const linkedSwitchRequiresReauth = activeAuthType === AuthType.USERPASS;
 
     const handleClickOutside = (event: MouseEvent) => {
         if (!menuRef.current?.contains(event.target as Node) && !buttonRef.current?.contains(event.target as Node)) {
@@ -252,9 +330,27 @@ export const AccountButton = ({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [menuRef, buttonRef]);
 
-    const handleLinkedSwitchClick = (account: string) => {
+    const handleLinkedSwitchClick = async (account: string) => {
         setIsAccountOpen(false);
-        setReauthTarget(account);
+        if (activeAuthType === AuthType.USERPASS) {
+            // Userpass: open the password re-auth modal.
+            setReauthTarget(account);
+            return;
+        }
+        if (activeAuthType === AuthType.x509) {
+            // x509: silent re-fetch via the browser cert. No modal, no password.
+            const rucioAuthHost = siteHeader.rucioAuthHost ?? '';
+            const shortVOName = siteHeader.activeAccount?.rucioVO ?? '';
+            const result = await switchX509Account({ rucioAuthHost, targetAccount: account, shortVOName });
+            if (result.ok) {
+                window.location.reload();
+            } else {
+                setX509SwitchError(result.error);
+            }
+            return;
+        }
+        // OIDC and others: linked-account switching not implemented for this auth type.
+        setX509SwitchError(`Switching is not supported for this authentication method`);
     };
 
     return (
@@ -269,14 +365,29 @@ export const AccountButton = ({
             {isAccountOpen && (
                 <AccountDropdown
                     accountActive={siteHeader.activeAccount?.rucioAccount ?? ''}
-                    accountsPossible={siteHeader.availableAccounts?.map(account => account.rucioAccount) ?? []}
-                    linkedAccountNames={siteHeader.linkedAccountNames}
+                    switchEntries={buildSwitchEntries(siteHeader, activeAuthType)}
+                    liveAccountCount={siteHeader.availableAccounts?.length ?? 0}
+                    linkedSwitchRequiresReauth={linkedSwitchRequiresReauth}
                     menuRef={menuRef}
                     onSignOut={onSignOut}
                     onSwitchAccount={onSwitchAccount}
                     onRemoveAccount={onRemoveAccount}
                     onLinkedSwitchClick={handleLinkedSwitchClick}
                 />
+            )}
+            {x509SwitchError && (
+                <div
+                    role="alert"
+                    className="fixed top-16 right-2 z-50 max-w-sm rounded-md border border-base-error-500 bg-base-error-50 dark:bg-base-error-900 p-3 text-sm text-base-error-700 dark:text-base-error-200"
+                >
+                    <button
+                        className="float-right ml-2 text-base-error-700 dark:text-base-error-200 hover:underline"
+                        onClick={() => setX509SwitchError(null)}
+                    >
+                        ×
+                    </button>
+                    {x509SwitchError}
+                </div>
             )}
             {reauthTarget && siteHeader.activeAccount && (
                 <ReauthModal

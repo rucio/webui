@@ -29,6 +29,21 @@ class NextAuthX509LoginPresenter implements SetX509LoginSessionOutputPort<Promis
     }
 
     async presentSuccess(response: SetX509LoginSessionResponse): Promise<void> {
+        // #628: enumerate every other Rucio account mapped to this cert's identity
+        // (DN). The dropdown surfaces them as silent-switch targets — no token is
+        // minted at this point, the user re-fetches via /auth/x509/webui at switch
+        // time. Failures are non-fatal: primary login still succeeds.
+        let identityAccounts: string[] | undefined;
+        try {
+            const accountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
+            const result = await accountGateway.listAccountsForIdentity(response.rucioIdentity, 'x509', response.rucioAuthToken);
+            if (result.status === 'success' && result.accounts.length > 0) {
+                identityAccounts = result.accounts;
+            }
+        } catch (error) {
+            console.warn('[Auth/x509] Failed to enumerate identity accounts — proceeding without:', error);
+        }
+
         const sessionUser: SessionUser = {
             id: `${response.rucioAccount}@${response.vo.shortName}`, // Create unique ID from account and VO
             email: '', // Not used in Rucio authentication
@@ -44,6 +59,7 @@ class NextAuthX509LoginPresenter implements SetX509LoginSessionOutputPort<Promis
             country: response.country,
             countryRole: response.countryRole,
             isLoggedIn: true,
+            identityAccounts,
         };
         this.resolvePromise(sessionUser);
     }
