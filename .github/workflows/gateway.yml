@@ -2,10 +2,10 @@ name: Gateway Tests
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   test:
     name: Gateway Tests
