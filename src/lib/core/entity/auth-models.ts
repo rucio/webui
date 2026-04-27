@@ -29,6 +29,13 @@ export type User = {
     role: Role;
     country?: string;
     countryRole?: Role;
+    /**
+     * The auth method that produced the live Rucio token for this account.
+     * Surfaced so the AccountDropdown can label switch entries (userpass /
+     * x509 / oidc) and give them stable per-method keys (#628). Optional
+     * because legacy callers of GetSiteHeader did not need it.
+     */
+    rucioAuthType?: AuthType | null;
 };
 
 /**

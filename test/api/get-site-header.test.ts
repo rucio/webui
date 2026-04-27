@@ -47,6 +47,54 @@ describe('Get SiteHeader API Test', () => {
         delete process.env['PROJECT_URL'];
     });
 
+    it('propagates rucioAuthType for active and available accounts (#628 dropdown labels)', async () => {
+        const { res, session } = await createHttpMocks();
+        process.env['PROJECT_URL'] = 'https://atlas.cern';
+
+        // Two live sessions with distinct auth types — the dropdown needs both
+        // surfaced so each entry can render "via x509" / "via userpass".
+        await addOrUpdateSessionUser(session, {
+            rucioIdentity: '/C=CH/O=CERN/CN=Some Cert',
+            rucioAccount: 'root',
+            rucioAuthToken: 'rucio-cert-token',
+            rucioAuthTokenExpires: '2030-01-01T00:00:00Z',
+            rucioAuthType: 'x509',
+            rucioOIDCProvider: '',
+            rucioVO: 'def',
+        } as SessionUser);
+        await addOrUpdateSessionUser(session, {
+            rucioIdentity: 'jdoe',
+            rucioAccount: 'jdoe',
+            rucioAuthToken: 'rucio-userpass-token',
+            rucioAuthTokenExpires: '2030-01-01T00:00:00Z',
+            rucioAuthType: 'userpass',
+            rucioOIDCProvider: '',
+            rucioVO: 'def',
+        } as SessionUser);
+
+        const controller = appContainer.get<GetSiteHeaderController>(CONTROLLERS.GET_SITE_HEADER);
+        await controller.execute({
+            session,
+            response: res as unknown as NextApiResponse,
+        });
+
+        expect(res._getStatusCode()).toBe(200);
+        const vm: SiteHeaderViewModel = JSON.parse(res._getData());
+
+        // Active account is the most-recently-added user (jdoe via userpass).
+        expect(vm.activeAccount?.rucioAccount).toBe('jdoe');
+        expect(vm.activeAccount?.rucioAuthType).toBe('userpass');
+
+        // availableAccounts must carry rucioAuthType per entry so the dropdown
+        // can render "via X" labels and use auth-type-prefixed React keys.
+        const root = vm.availableAccounts?.find(u => u.rucioAccount === 'root');
+        const jdoe = vm.availableAccounts?.find(u => u.rucioAccount === 'jdoe');
+        expect(root?.rucioAuthType).toBe('x509');
+        expect(jdoe?.rucioAuthType).toBe('userpass');
+
+        delete process.env['PROJECT_URL'];
+    });
+
     it('should present SiteHeaderViewModel when Session does not contain any users', async () => {
         const { req, res, session } = await createHttpMocks();
         const siteHeaderController = appContainer.get<GetSiteHeaderController>(CONTROLLERS.GET_SITE_HEADER);

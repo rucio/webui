@@ -44,6 +44,7 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
                 role: session.user.role,
                 country: session.user.country,
                 countryRole: session.user.countryRole,
+                rucioAuthType: session.user.rucioAuthType,
             };
         }
 
@@ -56,6 +57,7 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
                     role: user.role,
                     country: user.country,
                     countryRole: user.countryRole,
+                    rucioAuthType: user.rucioAuthType,
                 });
             });
         }
