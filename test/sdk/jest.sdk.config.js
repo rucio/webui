@@ -22,7 +22,7 @@ const customJestConfig = {
   // For example:
   moduleNameMapper: {
     '^permix$': '<rootDir>/node_modules/permix/dist/core/index.mjs',
-    '^@/lib/infrastructure/auth/auth$': '<rootDir>/test/__mocks__/auth.ts',
+    '^@/lib/infrastructure/auth/auth$': '<rootDir>/test/__mocks__/auth.js',
     '@/(.*)$': '<rootDir>/src/$1',
     '^next-auth/providers/credentials$': '<rootDir>/test/gateway/__mocks__/next-auth-providers-credentials.js',
     '^next-auth$': '<rootDir>/test/gateway/__mocks__/next-auth.js',
