@@ -369,7 +369,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
                 currentExpiresAt={meta.expires_at}
                 onConfirm={lifetimeSeconds => updateLifetimeMutation.mutate(lifetimeSeconds)}
                 loading={updateLifetimeMutation.isPending}
-                canSetInfinite={userCanSetInfiniteLifetime}
+                canSetInfinite
                 maxLifetimeSeconds={userCanSetInfiniteLifetime ? undefined : 365 * 86400}
                 minLifetimeSeconds={userCanSetInfiniteLifetime ? 0 : 24 * 3600}
                 isAdmin={userCanApproveRule}
