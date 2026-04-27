@@ -303,13 +303,13 @@ export const AccountButton = ({
 }) => {
     const [isAccountOpen, setIsAccountOpen] = React.useState(false);
     const [reauthTarget, setReauthTarget] = useState<string | null>(null);
-    const [x509SwitchError, setX509SwitchError] = useState<string | null>(null);
+    const [switchError, setSwitchError] = useState<string | null>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
     // The active session is the source of truth for auth type — siteHeader.activeAccount
     // is a slim public User shape and intentionally omits credential-flavoured fields.
-    const { data: session } = useSession();
+    const { data: session, update: updateSession } = useSession();
     const activeAuthType = session?.user?.rucioAuthType ?? null;
     const linkedSwitchRequiresReauth = activeAuthType === AuthType.USERPASS;
 
@@ -339,12 +339,24 @@ export const AccountButton = ({
             if (result.ok) {
                 window.location.reload();
             } else {
-                setX509SwitchError(result.error);
+                setSwitchError(result.error);
             }
             return;
         }
-        // OIDC and others: linked-account switching not implemented for this auth type.
-        setX509SwitchError(`Switching is not supported for this authentication method`);
+        if (activeAuthType === AuthType.OIDC) {
+            // OIDC: server-side repoint via NextAuth update(). The OIDC token is
+            // identity-scoped (Rucio validates the identity, not per-account),
+            // so the JWT callback can build a new SessionUser for the target
+            // account using the existing token i.e. no identity provider round-trip.
+            try {
+                await updateSession({ switchOidcAccount: account });
+                window.location.reload();
+            } catch (error) {
+                setSwitchError(`Could not switch to ${account}: ${(error as Error).message}`);
+            }
+            return;
+        }
+        setSwitchError(`Switching is not supported for this authentication method`);
     };
 
     return (
@@ -369,18 +381,18 @@ export const AccountButton = ({
                     onLinkedSwitchClick={handleLinkedSwitchClick}
                 />
             )}
-            {x509SwitchError && (
+            {switchError && (
                 <div
                     role="alert"
                     className="fixed top-16 right-2 z-50 max-w-sm rounded-md border border-base-error-500 bg-base-error-50 dark:bg-base-error-900 p-3 text-sm text-base-error-700 dark:text-base-error-200"
                 >
                     <button
                         className="float-right ml-2 text-base-error-700 dark:text-base-error-200 hover:underline"
-                        onClick={() => setX509SwitchError(null)}
+                        onClick={() => setSwitchError(null)}
                     >
                         ×
                     </button>
-                    {x509SwitchError}
+                    {switchError}
                 </div>
             )}
             {reauthTarget && siteHeader.activeAccount && (
