@@ -1,5 +1,5 @@
-// Mock the auth.ts file BEFORE any imports
-jest.mock('@/lib/infrastructure/auth/auth');
+// `@/lib/infrastructure/auth/auth` is redirected to test/__mocks__/auth.ts
+// via moduleNameMapper in jest.api.config.js — no explicit jest.mock needed.
 
 import '@testing-library/jest-dom/extend-expect';
 import 'reflect-metadata';

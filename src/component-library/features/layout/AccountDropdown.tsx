@@ -2,24 +2,19 @@
 
 import { twMerge } from 'tailwind-merge';
 import React, { RefObject, useEffect, useRef } from 'react';
-import { HiSwitchHorizontal, HiLogout, HiUserAdd, HiChevronDown } from 'react-icons/hi';
+import { HiSwitchHorizontal, HiLogout, HiUserAdd } from 'react-icons/hi';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { HiUserCircle } from 'react-icons/hi2';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { cn } from '@/component-library/utils';
-import { useSession, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 
-const AccountList = (props: { accountList: string[] }) => {
-    const { update } = useSession();
-    const router = useRouter();
-
+const AccountList = (props: { accountList: string[]; onSwitchAccount?: (account: string) => Promise<void> }) => {
     const handleSwitchAccount = async (account: string) => {
         try {
-            // Use NextAuth's session.update() to switch accounts
-            await update({ account });
-            // Optionally refresh the page to update all components
-            router.refresh();
+            if (props.onSwitchAccount) {
+                await props.onSwitchAccount(account);
+            }
         } catch (error) {
             console.error('Failed to switch account:', error);
         }
@@ -51,41 +46,41 @@ const AccountList = (props: { accountList: string[] }) => {
     );
 };
 
-const SignOutOfAllButton = () => {
+const SignOutOfAllButton = ({ onSignOut }: { onSignOut?: () => Promise<void> }) => {
     const handleSignOut = async () => {
         try {
-            // Use NextAuth's signOut to clear all sessions
-            await signOut({ callbackUrl: '/auth/login' });
+            if (onSignOut) {
+                await onSignOut();
+            } else {
+                // Fallback: use NextAuth's signOut directly.
+                // NOTE: This path bypasses SessionMonitorProvider's isManualSignOutRef guard,
+                // so the unauthenticated-redirect watcher will append ?expired=true to the
+                // login URL. This is intentional here — this branch is only reached in
+                // Storybook (where SessionMonitorProvider is absent). In the real app the
+                // onSignOut prop is always supplied by HeaderClient via useSessionMonitor().
+                await signOut({ callbackUrl: '/auth/login' });
+            }
         } catch (error) {
             console.error('Failed to sign out:', error);
         }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleSignOut();
-        }
-    };
-
     return (
-        <div
+        <button
             className={cn(
                 'text-neutral-800 hover:bg-base-error-500 hover:bg-opacity-40 hover:cursor-pointer',
                 'dark:text-neutral-100',
-                'flex items-center justify-between py-2 px-1 space-x-4',
+                'flex items-center justify-between py-2 px-1 space-x-4 w-full',
                 'text-right',
             )}
             onClick={handleSignOut}
-            onKeyDown={handleKeyDown}
-            role="button"
-            tabIndex={0}
+            type="button"
         >
             <span>
                 Sign <b>out</b> of all accounts
             </span>
             <HiLogout className="dark:text-neutral-100 text-2xl text-neutral-900 shrink-0" />
-        </div>
+        </button>
     );
 };
 
@@ -109,24 +104,38 @@ const SignIntoButton = () => {
     );
 };
 
-export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement | null>; accountActive: string; accountsPossible: string[] }) => {
+export const AccountDropdown = (props: {
+    menuRef: RefObject<HTMLDivElement | null>;
+    accountActive: string;
+    accountsPossible: string[];
+    onSignOut?: () => Promise<void>;
+    onSwitchAccount?: (account: string) => Promise<void>;
+    onRemoveAccount?: (account: string) => Promise<void>;
+}) => {
     const hasAccountChoice = props.accountsPossible.length !== 1;
-    const { update } = useSession();
-    const router = useRouter();
 
     const handleSingleSignOut = async () => {
         try {
             // If this is the only account, sign out completely
             if (props.accountsPossible.length === 1) {
-                await signOut({ callbackUrl: '/auth/login' });
+                if (props.onSignOut) {
+                    await props.onSignOut();
+                } else {
+                    // Fallback: use NextAuth's signOut directly.
+                    // NOTE: This path bypasses SessionMonitorProvider's isManualSignOutRef guard,
+                    // so the unauthenticated-redirect watcher will append ?expired=true to the
+                    // login URL. This is intentional here — this branch is only reached in
+                    // Storybook (where SessionMonitorProvider is absent). In the real app the
+                    // onSignOut prop is always supplied by HeaderClient via useSessionMonitor().
+                    await signOut({ callbackUrl: '/auth/login' });
+                }
                 return;
             }
 
             // Remove the current account from the session
-            await update({ removeAccount: props.accountActive });
-
-            // Refresh the page to update all components with the new active account
-            router.refresh();
+            if (props.onRemoveAccount) {
+                await props.onRemoveAccount(props.accountActive);
+            }
         } catch (error) {
             console.error('Failed to sign out:', error);
         }
@@ -168,32 +177,43 @@ export const AccountDropdown = (props: { menuRef: RefObject<HTMLDivElement | nul
                     <HiLogout className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
                 </button>
             </div>
-            {hasAccountChoice && <AccountList accountList={props.accountsPossible.filter(account => account !== props.accountActive)} />}
+            {hasAccountChoice && <AccountList accountList={props.accountsPossible.filter(account => account !== props.accountActive)} onSwitchAccount={props.onSwitchAccount} />}
             <SignIntoButton />
-            {hasAccountChoice && <SignOutOfAllButton />}
+            {hasAccountChoice && <SignOutOfAllButton onSignOut={props.onSignOut} />}
         </div>
     );
 };
 
-export const AccountButton = ({ siteHeader }: { siteHeader: SiteHeaderViewModel }) => {
+export const AccountButton = ({
+    siteHeader,
+    onSignOut,
+    onSwitchAccount,
+    onRemoveAccount,
+}: {
+    siteHeader: SiteHeaderViewModel;
+    onSignOut?: () => Promise<void>;
+    onSwitchAccount?: (account: string) => Promise<void>;
+    onRemoveAccount?: (account: string) => Promise<void>;
+}) => {
     const [isAccountOpen, setIsAccountOpen] = React.useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
-    const handleClickOutside = (event: any) => {
-        if (!menuRef.current?.contains(event.target) && !buttonRef.current?.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+        if (!menuRef.current?.contains(event.target as Node) && !buttonRef.current?.contains(event.target as Node)) {
             setIsAccountOpen(false);
         }
     };
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [menuRef, buttonRef]);
 
     return (
         <>
             <button
-                className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
+                className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 flex items-center"
                 onClick={() => setIsAccountOpen(!isAccountOpen)}
                 ref={buttonRef}
             >
@@ -204,6 +224,9 @@ export const AccountButton = ({ siteHeader }: { siteHeader: SiteHeaderViewModel 
                     accountActive={siteHeader.activeAccount?.rucioAccount ?? ''}
                     accountsPossible={siteHeader.availableAccounts?.map(account => account.rucioAccount) ?? []}
                     menuRef={menuRef}
+                    onSignOut={onSignOut}
+                    onSwitchAccount={onSwitchAccount}
+                    onRemoveAccount={onRemoveAccount}
                 />
             )}
         </>
