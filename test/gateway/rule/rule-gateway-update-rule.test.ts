@@ -125,6 +125,65 @@ describe('RuleGateway Update Rule Endpoint Tests', () => {
         expect(dto.status).toEqual('success');
     });
 
+    it('should send lifetime=3600 for soft-delete (1-hour scheduled deletion)', async () => {
+        fetchMock.doMock();
+        const updateRuleMockEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rules/657c2650725d432fab3f1dc14128e9fb`,
+            method: 'PUT',
+            includes: '/rules/657c2650725d432fab3f1dc14128e9fb',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'text/html; charset=utf-8',
+                },
+                body: '',
+            },
+            requestValidator: async (req: Request) => {
+                const body = await req.json();
+                return body.options && body.options.lifetime === 3600;
+            },
+        };
+        MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
+
+        const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
+            MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            '657c2650725d432fab3f1dc14128e9fb',
+            { lifetime: 3600 },
+        );
+        expect(dto.status).toEqual('success');
+    });
+
+    it('should send lifetime=0 for force-delete (immediate deletion, admin only)', async () => {
+        fetchMock.doMock();
+        const updateRuleMockEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rules/657c2650725d432fab3f1dc14128e9fb`,
+            method: 'PUT',
+            includes: '/rules/657c2650725d432fab3f1dc14128e9fb',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'text/html; charset=utf-8',
+                },
+                body: '',
+            },
+            requestValidator: async (req: Request) => {
+                const body = await req.json();
+                // lifetime=0 is falsy in JS, so must check with strict equality not truthiness
+                return body.options && body.options.lifetime === 0;
+            },
+        };
+        MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
+
+        const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
+            MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            '657c2650725d432fab3f1dc14128e9fb',
+            { lifetime: 0 },
+        );
+        expect(dto.status).toEqual('success');
+    });
+
     it('should handle error response when updating a rule', async () => {
         fetchMock.doMock();
         const updateRuleMockEndpoint: MockEndpoint = {
