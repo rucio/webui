@@ -44,13 +44,7 @@ const buildSwitchEntries = (siteHeader: SiteHeaderViewModel, activeAuthType: Aut
     const activeName = siteHeader.activeAccount?.rucioAccount ?? '';
     const live: SwitchableAccount[] = (siteHeader.availableAccounts ?? [])
         .filter(u => u.rucioAccount !== activeName)
-        .map(u => ({
-            account: u.rucioAccount,
-            // `rucioAuthType` is an optional field added by a follow-up patch — read it
-            // defensively so the dropdown still renders if upstream User shape lacks it.
-            authType: ((u as { rucioAuthType?: AuthType | null }).rucioAuthType ?? null) as AuthType | null,
-            kind: 'live' as const,
-        }));
+        .map(u => ({ account: u.rucioAccount, authType: u.rucioAuthType ?? null, kind: 'live' as const }));
     const linked: SwitchableAccount[] = (siteHeader.linkedAccountNames ?? [])
         .filter(name => name !== activeName)
         .map(name => ({ account: name, authType: activeAuthType, kind: 'linked' as const }));
