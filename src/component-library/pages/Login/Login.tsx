@@ -36,10 +36,28 @@ export type SupportedAuthWorkflows = 'oidc' | 'x509' | 'userpass' | 'none';
 export interface LoginPageProps {
     loginViewModel: LoginViewModel;
     authViewModel: AuthViewModel | undefined;
-    userPassSubmitHandler: (username: string, password: string, vo: VO, account?: string) => void;
+    userPassSubmitHandler: (
+        username: string,
+        password: string,
+        vo: VO,
+        loginViewModel: LoginViewModel,
+        account?: string,
+    ) => Promise<AuthViewModel | undefined>;
+    userPassSessionHandler: (authViewModel: AuthViewModel, rucioAccount: string, shortVoName: string) => void;
     x509SubmitHandler: (vo: VO, loginViewModel: LoginViewModel, account?: string) => Promise<AuthViewModel | undefined>;
     x509SessionHandler: (authViewModel: AuthViewModel, rucioAccount: string, shortVoName: string) => void;
     oidcSubmitHandler: (oidcProvider: OIDCProvider, vo: VO, account?: string) => void;
+    /**
+     * Optional: when set, the page detected an OIDC pending-account-selection
+     * state on the session (multiple Rucio accounts mapped to the OIDC identity).
+     * Login renders the modal pre-populated with these accounts; on selection,
+     * `oidcPendingFinalizeHandler` is invoked.
+     */
+    oidcPendingAccounts?: string[];
+    oidcPendingFinalizeHandler?: (account: string) => Promise<void>;
+    oidcPendingCancelHandler?: () => Promise<void>;
+    /** Optional message shown as an info banner at the top of the login card (e.g. session-expired notice). */
+    infoBannerMessage?: string;
 }
 
 interface MultipleAccountsModalProps {
@@ -109,9 +127,14 @@ export const Login = ({
     loginViewModel,
     authViewModel,
     userPassSubmitHandler: handleUserPassSubmit,
+    userPassSessionHandler: handleUserPassSession,
     x509SubmitHandler: handleX509Submit,
     x509SessionHandler: handleX509Session,
     oidcSubmitHandler: handleOIDCSubmit,
+    oidcPendingAccounts,
+    oidcPendingFinalizeHandler,
+    oidcPendingCancelHandler,
+    infoBannerMessage,
 }: LoginPageProps) => {
     const isLoggedIn = loginViewModel.isLoggedIn && loginViewModel.accountActive !== undefined;
     const [currentView, setCurrentView] = useState<LoginView>('method-selection');
@@ -131,7 +154,7 @@ export const Login = ({
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const [availableAccounts, setAvailableAccounts] = useState<string[]>([]);
-    const [lastAuthMethod, setLastAuthMethod] = useState<'userpass' | 'x509' | undefined>(undefined);
+    const [lastAuthMethod, setLastAuthMethod] = useState<'userpass' | 'x509' | 'oidc-pending' | undefined>(undefined);
 
     const handleAuthViewModel = (authViewModel: AuthViewModel) => {
         if (authViewModel.status === 'error') {
@@ -193,12 +216,17 @@ export const Login = ({
 
         setIsSubmitting(true);
         try {
-            handleUserPassSubmit(username, password, loginViewModel.voList[selectedVOTab], account);
+            const vo = loginViewModel.voList[selectedVOTab] || DefaultVO;
+            const userpassAuthViewModel = await handleUserPassSubmit(username, password, vo, loginViewModel, account);
+
+            if (!userpassAuthViewModel) return;
+
             setLastAuthMethod('userpass');
+            handleAuthViewModel(userpassAuthViewModel);
+            handleUserPassSession(userpassAuthViewModel, userpassAuthViewModel.rucioAccount, vo.shortName);
         } finally {
             setIsSubmitting(false);
         }
-        return Promise.resolve();
     };
 
     useEffect(() => {
@@ -209,6 +237,22 @@ export const Login = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loginViewModel, authViewModel]);
+
+    // OIDC pending account selection: the OAuth flow finished server-side but the
+    // identity mapped to multiple Rucio accounts. Open the same modal pre-populated
+    // with the candidate accounts.
+    useEffect(() => {
+        if (oidcPendingAccounts && oidcPendingAccounts.length > 0) {
+            setLastAuthMethod('oidc-pending');
+            const filtered = oidcPendingAccounts.filter(account => !loginViewModel.accountsAvailable?.includes(account));
+            if (filtered.length === 0) {
+                setError('All accounts associated with this OIDC identity are already signed in.');
+            } else {
+                setAvailableAccounts(filtered);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [oidcPendingAccounts]);
 
     // Respect user's motion preferences
     const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -476,10 +520,30 @@ export const Login = ({
                         id="root"
                     >
                         <MultipleAccountsModal
-                            submit={lastAuthMethod === 'x509' ? submitX509 : submitUserPass}
+                            submit={
+                                lastAuthMethod === 'oidc-pending'
+                                    ? async (account: string | undefined) => {
+                                          if (!account || !oidcPendingFinalizeHandler) return;
+                                          await oidcPendingFinalizeHandler(account);
+                                      }
+                                    : lastAuthMethod === 'x509'
+                                      ? submitX509
+                                      : submitUserPass
+                            }
                             availableAccounts={availableAccounts}
-                            onClose={() => setAvailableAccounts([])}
+                            onClose={async () => {
+                                setAvailableAccounts([]);
+                                if (lastAuthMethod === 'oidc-pending' && oidcPendingCancelHandler) {
+                                    await oidcPendingCancelHandler();
+                                }
+                            }}
                         />
+
+                        {infoBannerMessage && (
+                            <div className="w-full mb-2" data-testid="login-page-info-banner">
+                                <Alert variant="warning" message={infoBannerMessage} />
+                            </div>
+                        )}
 
                         <div
                             className={`min-h-[52px] w-full ${!error ? 'hidden' : ''}`}

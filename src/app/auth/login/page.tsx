@@ -6,7 +6,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { Login as LoginStory } from '@/component-library/pages/Login/Login';
 import { AuthType, OIDCProvider, Role, VO } from '@/lib/core/entity/auth-models';
 import { signIn, useSession } from 'next-auth/react';
-import { AUTH_ERROR_MESSAGES, LoginError } from '@/lib/core/entity/auth-errors';
+import { AUTH_ERROR_MESSAGES } from '@/lib/core/entity/auth-errors';
 import { LoadingPage } from '@/component-library/pages/system/LoadingPage';
 
 function LoginContent() {
@@ -18,8 +18,11 @@ function LoginContent() {
     const [viewModel, setViewModel] = useState<LoginViewModel>();
     const [authViewModel, setAuthViewModel] = useState<AuthViewModel>();
     const router = useRouter();
-    const callbackUrl = (useSearchParams() as ReadonlyURLSearchParams).get('callbackUrl');
-    const { data: session } = useSession();
+    const searchParams = useSearchParams() as ReadonlyURLSearchParams;
+    const callbackUrl = searchParams.get('callbackUrl');
+    const isSessionExpired = searchParams.get('expired') === 'true';
+    const isSignedOut = searchParams.get('signedOut') === 'true';
+    const { data: session, update: updateSession } = useSession();
 
     // Check for OIDC errors after redirect from OIDC provider
     useEffect(() => {
@@ -38,73 +41,143 @@ function LoginContent() {
         }
     }, [session]);
 
-    const handleUserpassSubmit = async (username: string, password: string, vo: VO, account?: string) => {
-        console.log('[LOGIN FLOW 1] handleUserpassSubmit called', {
-            username,
-            vo: vo.shortName,
-            account: account || '(none)',
-            redirectURL,
-            timestamp: new Date().toISOString(),
+    // OIDC pending account selection: identity mapped to multiple Rucio accounts.
+    const oidcPendingAccounts: string[] | undefined = session?.pendingAccountSelection?.accounts;
+
+    const handleOidcPendingFinalize = async (account: string) => {
+        try {
+            await updateSession({ chosenPendingAccount: account });
+            // Full reload so the dashboard renders against the freshly-finalised session.
+            window.location.href = redirectURL;
+        } catch (error) {
+            console.error('[Login] Failed to finalise OIDC pending selection:', error);
+            setAuthViewModel({
+                status: 'error',
+                message: 'Could not complete OIDC sign-in. Please try again.',
+                rucioAccount: '',
+                rucioAuthType: AuthType.OIDC,
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            });
+        }
+    };
+
+    const handleOidcPendingCancel = async () => {
+        try {
+            await updateSession({ cancelPendingAccountSelection: true });
+        } catch (error) {
+            console.error('[Login] Failed to cancel OIDC pending selection:', error);
+        }
+    };
+
+    /**
+     * Probes Rucio's /auth/userpass via a WebUI server route (CORS-safe).
+     * Mirrors the x509 probe pattern on the UI side, but the Rucio call
+     * itself happens server-side — /auth/userpass is not browser-facing.
+     *
+     * - success         → AuthViewModel with Rucio token + account (caller then calls handleUserpassSession)
+     * - multiple_accounts → AuthViewModel carrying the comma-separated account list
+     * - error           → AuthViewModel with message
+     */
+    const handleUserpassSubmit = async (
+        username: string,
+        password: string,
+        vo: VO,
+        _loginViewModel: LoginViewModel,
+        account?: string,
+    ): Promise<AuthViewModel> => {
+        const errorViewModel = (message: string): AuthViewModel => ({
+            status: 'error',
+            message,
+            rucioAccount: '',
+            rucioAuthType: '',
+            rucioIdentity: '',
+            rucioAuthToken: '',
+            rucioAuthTokenExpires: '',
+            role: Role.USER,
         });
+
+        let res: Response;
+        try {
+            res = await fetch('/api/auth/userpass/probe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, vo: vo.shortName, account }),
+            });
+        } catch (error) {
+            return errorViewModel('An error occurred while trying to login with userpass: ' + (error as Error).message);
+        }
+
+        let body: {
+            status?: 'success' | 'multiple_accounts' | 'error';
+            message?: string;
+            accounts?: string;
+            rucioAuthToken?: string;
+            rucioAccount?: string;
+            rucioAuthTokenExpires?: string;
+        } = {};
+        try {
+            body = await res.json();
+        } catch {
+            return errorViewModel(`Unexpected response from auth server (${res.status})`);
+        }
+
+        if (body.status === 'success' && body.rucioAuthToken && body.rucioAccount && body.rucioAuthTokenExpires) {
+            return {
+                status: 'success',
+                message: 'Login successful. The session has not been set yet.',
+                rucioAccount: body.rucioAccount,
+                rucioAuthType: AuthType.USERPASS,
+                rucioIdentity: '',
+                rucioAuthToken: body.rucioAuthToken,
+                rucioAuthTokenExpires: body.rucioAuthTokenExpires,
+                role: Role.USER,
+            };
+        }
+
+        if (body.status === 'multiple_accounts' && body.accounts) {
+            return {
+                status: 'multiple_accounts',
+                message: body.accounts,
+                rucioAccount: '',
+                rucioAuthType: '',
+                rucioIdentity: '',
+                rucioAuthToken: '',
+                rucioAuthTokenExpires: '',
+                role: Role.USER,
+            };
+        }
+
+        return errorViewModel(body.message || (res.status === 401 ? AUTH_ERROR_MESSAGES.INVALID_CREDENTIALS : 'Authentication failed'));
+    };
+
+    /**
+     * Establishes the NextAuth session from a pre-validated userpass Rucio token.
+     * Mirrors handleX509Session.
+     */
+    const handleUserpassSession = async (auth: AuthViewModel, rucioAccount: string, shortVOName: string) => {
+        if (auth.status !== 'success') {
+            setAuthViewModel(auth);
+            return;
+        }
 
         try {
             const result = await signIn('userpass', {
-                username: username,
-                password: password,
-                account: account || '',
-                vo: vo.shortName,
+                rucioAuthToken: auth.rucioAuthToken,
+                rucioAccount,
+                shortVOName,
+                rucioTokenExpiry: auth.rucioAuthTokenExpires,
                 redirect: false,
             });
 
-            console.log('[LOGIN FLOW 2] signIn result received', {
-                ok: result?.ok,
-                error: result?.error,
-                status: result?.status,
-                url: result?.url,
-            });
-
-            // Check for error first, as NextAuth can return ok: true with an error
-            if (result?.error) {
-                console.log('[LOGIN FLOW 4] Login failed with error', {
-                    error: result.error,
-                    errorType: result.error === 'CredentialsSignin' ? 'CredentialsSignin' : 'Other',
-                });
-
-                // NextAuth wraps errors from the authorize function as CredentialsSignin
-                // We need to extract the original error message if available
-                let errorMessage = 'Login failed. Please try again.';
-
-                if (result.error === 'CredentialsSignin') {
-                    // Default to invalid credentials message
-                    errorMessage = AUTH_ERROR_MESSAGES.INVALID_CREDENTIALS;
-                } else {
-                    // Use the error as-is for other error types
-                    errorMessage = result.error;
-                }
-
-                setAuthViewModel({
-                    status: 'error',
-                    message: errorMessage,
-                    rucioAccount: '',
-                    rucioAuthType: '',
-                    rucioIdentity: '',
-                    rucioAuthToken: '',
-                    rucioAuthTokenExpires: '',
-                    role: Role.USER,
-                });
-            } else if (result?.ok) {
-                console.log('[LOGIN FLOW 3] Login successful, redirecting to:', redirectURL);
-                // Login successful, redirect to dashboard
+            if (result?.ok) {
                 router.push(redirectURL);
-            }
-        } catch (error: any) {
-            console.error('An unexpected error occurred:', error);
-
-            // Check if it's a LoginError with specific error details
-            if (error instanceof LoginError || error?.name === 'LoginError') {
+            } else if (result?.error) {
                 setAuthViewModel({
                     status: 'error',
-                    message: error.message || AUTH_ERROR_MESSAGES.UNKNOWN_ERROR,
+                    message: result.error === 'CredentialsSignin' ? AUTH_ERROR_MESSAGES.UNKNOWN_ERROR : result.error,
                     rucioAccount: '',
                     rucioAuthType: '',
                     rucioIdentity: '',
@@ -112,30 +185,9 @@ function LoginContent() {
                     rucioAuthTokenExpires: '',
                     role: Role.USER,
                 });
-                return;
             }
-
-            // Check if it's a MultipleAccountsError
-            if (error?.name === 'MultipleAccountsError') {
-                // Extract available accounts if present
-                const availableAccounts = error?.availableAccounts;
-                if (availableAccounts) {
-                    // Show the multiple accounts status with the account list
-                    setAuthViewModel({
-                        status: 'multiple_accounts',
-                        message: availableAccounts,
-                        rucioAccount: '',
-                        rucioAuthType: '',
-                        rucioIdentity: '',
-                        rucioAuthToken: '',
-                        rucioAuthTokenExpires: '',
-                        role: Role.USER,
-                    });
-                    return;
-                }
-            }
-
-            // Generic error fallback
+        } catch (error) {
+            console.error('An unexpected error occurred during userpass session setup:', error);
             setAuthViewModel({
                 status: 'error',
                 message: AUTH_ERROR_MESSAGES.UNKNOWN_ERROR,
@@ -410,9 +462,20 @@ function LoginContent() {
                 loginViewModel={viewModel}
                 authViewModel={authViewModel}
                 userPassSubmitHandler={handleUserpassSubmit}
+                userPassSessionHandler={handleUserpassSession}
                 oidcSubmitHandler={handleOIDCSubmit}
+                oidcPendingAccounts={oidcPendingAccounts}
+                oidcPendingFinalizeHandler={handleOidcPendingFinalize}
+                oidcPendingCancelHandler={handleOidcPendingCancel}
                 x509SubmitHandler={handleX509Submit}
                 x509SessionHandler={handleX509Session}
+                infoBannerMessage={
+                    isSessionExpired
+                        ? 'Your session has expired. Please log in again.'
+                        : isSignedOut
+                          ? 'You have been signed out successfully.'
+                          : undefined
+                }
             />
         );
     }

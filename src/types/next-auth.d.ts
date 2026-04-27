@@ -14,6 +14,24 @@ export interface SessionUser extends BaseSessionUser {
 }
 
 /**
+ * Stashed state when an auth flow yielded a valid Rucio token but the user must
+ * still pick from multiple candidate accounts (currently only OIDC — userpass
+ * and x509 resolve this client-side before signIn). The session is "logged in"
+ * to NextAuth but has no active SessionUser; the login page reads this and
+ * shows the account-selection modal, then finalises via update().
+ */
+export interface PendingAccountSelection {
+    authType: 'oidc';
+    providerName: string;
+    rucioIdentity: string;
+    accounts: string[];
+    rucioAuthToken: string;
+    rucioAuthTokenExpires: string;
+    rucioVO: string;
+    rucioOidcRefreshToken?: string;
+}
+
+/**
  * Module augmentation for next-auth to extend the built-in types
  * This allows us to use our custom SessionUser type throughout the application
  */
@@ -26,6 +44,7 @@ declare module 'next-auth' {
         user: SessionUser;
         allUsers: SessionUser[];
         expires: string;
+        pendingAccountSelection?: PendingAccountSelection;
     }
 
     /**
@@ -48,5 +67,10 @@ declare module '@auth/core/jwt' {
         oidcError?: string;
         oidcIdentity?: string;
         oidcProvider?: string;
+        // OIDC refresh token — stored when rucioAuthType is oidc
+        rucioOidcRefreshToken?: string;
+        // OIDC: present when the identity maps to multiple Rucio accounts and the
+        // user must pick one. Cleared by the finalize update.
+        pendingAccountSelection?: import('./next-auth').PendingAccountSelection;
     }
 }
