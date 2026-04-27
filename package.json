@@ -120,6 +120,13 @@
   },
   "overrides": {
     "minimatch": ">=10.2.1",
-    "tar": ">=7.5.8"
+    "tar": ">=7.5.8",
+    "@tootallnate/once": ">=3.0.1",
+    "cookie": ">=0.7.0",
+    "esbuild": ">=0.25.0",
+    "postcss": ">=8.5.10",
+    "elliptic": ">=6.6.1",
+    "serialize-javascript": ">=6.0.2",
+    "uuid": ">=11.0.0"
   }
 }
