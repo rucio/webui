@@ -53,6 +53,22 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
             });
         }
 
+        // #628: surface accounts the active identity is mapped to but for which
+        // we don't currently hold a live token. The dropdown lists them as
+        // "switch (re-auth required)". Authoritative source is the active user's
+        // identityAccounts (set by the userpass token adapter from the probe
+        // route's listAccountsForIdentity call); we strip out anything already
+        // present in availableUsers for the same identity to avoid duplicates.
+        const linkedAccountNames: string[] = (() => {
+            if (!session.user?.identityAccounts || session.user.identityAccounts.length === 0) return [];
+            const livePeers = new Set(
+                (session.allUsers ?? [])
+                    .filter(u => u.rucioIdentity === session.user!.rucioIdentity && u.rucioAuthType === session.user!.rucioAuthType)
+                    .map(u => u.rucioAccount),
+            );
+            return session.user.identityAccounts.filter(name => !livePeers.has(name));
+        })();
+
         const homeUrl = `/dashboard`;
 
         const baseResponseModel: GetSiteHeaderResponse = {
@@ -60,6 +76,7 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
             homeUrl: homeUrl,
             activeUser: activeUser,
             availableUsers: allUsers,
+            linkedAccountNames,
             projectURL: projectURL,
         };
 

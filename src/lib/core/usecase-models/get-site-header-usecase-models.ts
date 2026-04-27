@@ -16,6 +16,13 @@ export interface GetSiteHeaderResponse extends BaseResponseModel {
     projectURL?: string;
     activeUser: User | undefined;
     availableUsers: User[];
+    /**
+     * Names of accounts mapped to the active user's identity that are NOT
+     * currently in availableUsers — i.e. the user *can* switch into them but
+     * has no live token (#628 lazy-mint design). The dropdown surfaces these
+     * with a re-auth modal trigger rather than a one-click switch.
+     */
+    linkedAccountNames: string[];
 }
 
 export interface GetSiteHeaderError extends BaseErrorResponseModel, Omit<GetSiteHeaderResponse, 'status'> {

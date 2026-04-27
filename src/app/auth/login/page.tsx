@@ -117,6 +117,7 @@ function LoginContent() {
             rucioAuthToken?: string;
             rucioAccount?: string;
             rucioAuthTokenExpires?: string;
+            linkedAccountNames?: string[];
         } = {};
         try {
             body = await res.json();
@@ -134,6 +135,7 @@ function LoginContent() {
                 rucioAuthToken: body.rucioAuthToken,
                 rucioAuthTokenExpires: body.rucioAuthTokenExpires,
                 role: Role.USER,
+                linkedAccountNames: body.linkedAccountNames,
             };
         }
 
@@ -169,6 +171,7 @@ function LoginContent() {
                 rucioAccount,
                 shortVOName,
                 rucioTokenExpiry: auth.rucioAuthTokenExpires,
+                linkedAccountNames: auth.linkedAccountNames ? JSON.stringify(auth.linkedAccountNames) : undefined,
                 redirect: false,
             });
 

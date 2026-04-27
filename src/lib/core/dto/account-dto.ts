@@ -51,3 +51,13 @@ export interface AccountRSELimitDTO extends BaseDTO {
     account: string;
     limits: Record<string, number>;
 }
+
+/**
+ * DTO for storing the response from GET /identities/accounts endpoint.
+ * Returns all Rucio accounts mapped to a given identity.
+ */
+export type ListAccountsForIdentityDTO = {
+    status: 'success' | 'error';
+    accounts: string[];
+    message?: string;
+};

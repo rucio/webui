@@ -5,6 +5,7 @@ import {
     AccountRSELimitDTO,
     AccountRSEUsageDTO,
     ListAccountRSEUsageDTO,
+    ListAccountsForIdentityDTO,
     TAccountAttributes,
 } from '@/lib/core/dto/account-dto';
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
@@ -42,6 +43,44 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
             };
         }
         return errorDTO;
+    }
+
+    async listAccountsForIdentity(identity: string, identityType: string, rucioAuthToken: string): Promise<ListAccountsForIdentityDTO> {
+        let rucioHost: string;
+        try {
+            rucioHost = await this.envConfigGateway.rucioHost();
+        } catch (error: unknown) {
+            return { status: 'error', accounts: [], message: 'Rucio host not configured' };
+        }
+
+        const params = new URLSearchParams({ identity_key: identity, type: identityType });
+        const url = `${rucioHost}/identities/accounts?${params.toString()}`;
+
+        let response: Response;
+        try {
+            response = await fetch(url, {
+                method: 'GET',
+                headers: { 'X-Rucio-Auth-Token': rucioAuthToken },
+            });
+        } catch (error: unknown) {
+            return { status: 'error', accounts: [], message: `Network error: ${error instanceof Error ? error.message : String(error)}` };
+        }
+
+        if (!response.ok) {
+            return { status: 'error', accounts: [], message: `HTTP ${response.status}` };
+        }
+
+        let data: Array<{ account: string } | string>;
+        try {
+            data = await response.json();
+        } catch {
+            return { status: 'error', accounts: [], message: 'Failed to parse response' };
+        }
+
+        const accounts: string[] = Array.isArray(data)
+            ? data.map(item => (typeof item === 'string' ? item : item.account)).filter(Boolean)
+            : [];
+        return { status: 'success', accounts };
     }
 
     generateErrorResponse(error: AccountAttributeErrorTypesDTO, account: string, message: string): AccountAttributesDTO {

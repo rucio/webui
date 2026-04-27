@@ -14,6 +14,12 @@ export type AuthViewModel = {
     role: Role | undefined;
     country?: string;
     countryRole?: Role;
+    /**
+     * Names of every other account mapped to the same Rucio identity. Populated
+     * on the userpass success path so the AccountDropdown can offer "switch to X"
+     * affordances that trigger a fresh re-auth (#628 lazy-mint design).
+     */
+    linkedAccountNames?: string[];
 };
 
 export type x509AuthRequestHeaders = {
