@@ -96,3 +96,68 @@ git config blame.ignoreRevsFile .git-blame-ignore-revs
 ## Architecture
 
 ![Clean Architecture Workflow](https://snipboard.io/2s0eDc.jpg)
+
+## Design System Development
+
+### Project Overview
+
+A comprehensive redesign of the login page focused on improving user experience and updating the visual components to meet modern UI/UX design standards.
+
+Full design system, prototypes and UI Kit → <a href="https://www.figma.com/design/CEwV05RpsE3vbRyLk8NbGG/CERN-RUCIO?node-id=99-1391&t=dJ7eQmhFFyWio4No-1"><img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/figma.png" width="30" height="30"/></a>
+
+
+---
+
+### Improvements
+
+#### 1. UX Flow Analysis and Optimization
+
+>
+- Conducted detailed analysis of the user journey on the login page
+- Identified friction points in the authentication process
+- Optimized action sequences to reduce cognitive load
+- Improved login form interaction logic
+>
+
+#### 2. Visual Component Modernization
+
+>
+- Implemented modern color palette and typography
+- Enhanced contrast and element readability
+- Created balanced composition with clear visual hierarchy
+
+>
+
+### 3. UI Kit Development
+
+>
+- Color system
+- Icons library (Icons sourced from [React Icons](https://react-icons.github.io/react-icons/) library)
+- Button variations
+- Form components
+- Typography scales
+>
+
+### 4. Interactive Prototyping
+
+> - Created high-fidelity interactive prototypes to validate design decisions
+
+---
+
+### Demonstration
+
+<center>
+
+ ![Image](https://github.com/user-attachments/assets/2e41cd83-36a0-42be-aa05-efc00abfb99a) 
+
+</center>
+
+---
+
+###  Screenshots
+
+| **Login method** | **Sign in with ATLAS** |
+|-------------------------|-------------------------|
+|![Image](https://github.com/user-attachments/assets/df184cef-88a2-432e-96f9-60464fe0b688)| ![Image](https://github.com/user-attachments/assets/79cc31ee-27fe-47b4-bca3-226e758038e5) |
+
+
