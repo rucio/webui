@@ -3,9 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { cookies } from 'next/headers';
 import { decode } from 'next-auth/jwt';
 import { SessionUser } from '@/types/next-auth';
-import { authorizeUserPass } from './nextauth-userpass-adapter';
 import { authorizeUserPassToken } from './nextauth-userpass-token-adapter';
-import { MultipleAccountsError } from '@/lib/core/entity/auth-errors';
 import { authorizeX509 } from './nextauth-x509-adapter';
 import { AuthType, Role } from '@/lib/core/entity/auth-models';
 import { getIssuerFromEnv } from './oidc-providers';
@@ -128,54 +126,29 @@ function validateAudienceClaim(payload: Record<string, unknown>, expectedAudienc
  */
 export const authConfig: NextAuthConfig = {
     providers: [
-        // UserPass authentication provider
+        // UserPass authentication provider — pre-validated-token only.
+        // The client probes Rucio's /auth/userpass via /api/auth/userpass/probe (the
+        // browser cannot hit Rucio directly; CORS), then hands the resulting token
+        // + chosen account back through signIn() to establish the session.
         Credentials({
             id: 'userpass',
             name: 'Rucio UserPass',
             credentials: {
-                // Legacy full-credentials path (server-side Rucio call)
-                username: { label: 'Username', type: 'text' },
-                password: { label: 'Password', type: 'password' },
-                account: { label: 'Account', type: 'text', optional: true },
-                vo: { label: 'VO', type: 'text' },
-                // Pre-validated-token path (client probed Rucio directly, mirrors x509)
                 rucioAuthToken: { type: 'text' },
                 rucioAccount: { type: 'text' },
                 shortVOName: { type: 'text' },
                 rucioTokenExpiry: { type: 'text' },
             },
             async authorize(credentials): Promise<User | null> {
-                // Pre-validated-token path: client has already probed Rucio /auth/userpass
-                // and obtained the token + selected account. We just build the session.
-                if (credentials?.rucioAuthToken && credentials?.rucioAccount && credentials?.shortVOName && credentials?.rucioTokenExpiry) {
-                    return await authorizeUserPassToken(
-                        credentials.rucioAuthToken as string,
-                        credentials.rucioAccount as string,
-                        credentials.shortVOName as string,
-                        credentials.rucioTokenExpiry as string,
-                    );
-                }
-
-                if (!credentials?.username || !credentials?.password || !credentials?.vo) {
+                if (!credentials?.rucioAuthToken || !credentials?.rucioAccount || !credentials?.shortVOName || !credentials?.rucioTokenExpiry) {
                     return null;
                 }
-
-                try {
-                    return await authorizeUserPass(
-                        credentials.username as string,
-                        credentials.password as string,
-                        (credentials.account as string) || '',
-                        credentials.vo as string,
-                    );
-                } catch (error) {
-                    // If it's a MultipleAccountsError, we need to handle it specially
-                    if (error instanceof MultipleAccountsError) {
-                        // NextAuth doesn't have a built-in way to return custom errors
-                        // So we throw the error to be caught by the frontend
-                        throw error;
-                    }
-                    return null;
-                }
+                return await authorizeUserPassToken(
+                    credentials.rucioAuthToken as string,
+                    credentials.rucioAccount as string,
+                    credentials.shortVOName as string,
+                    credentials.rucioTokenExpiry as string,
+                );
             },
         }),
 

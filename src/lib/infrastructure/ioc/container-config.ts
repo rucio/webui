@@ -16,10 +16,6 @@ import AuthServerGatewayOutputPort from '@/lib/core/port/secondary/auth-server-g
 import RucioAuthServer from '@/lib/infrastructure/gateway/rucio-auth-server';
 import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import EnvConfigGateway from '../gateway/env-config-gateway';
-import UserPassLoginInputPort from '@/lib/core/port/primary/userpass-login-input-port';
-import UserPassLoginUseCase from '@/lib/core/use-case/userpass-login-usecase';
-import UserPassLoginController, { IUserPassLoginController } from '@/lib/infrastructure/controller/userpass-login-controller';
-import UserPassLoginPresenter from '@/lib/infrastructure/presenter/usepass-login-presenter';
 import SetX509LoginSessionInputPort from '@/lib/core/port/primary/set-x509-login-session-input-port';
 import SetX509LoginSessionUseCase from '@/lib/core/use-case/set-x509-login-session-usecase';
 import SetX509LoginSessionController, { ISetX509LoginSessionController } from '../controller/set-x509-login-session-controller';
@@ -141,19 +137,6 @@ loadFeaturesSync(appContainer, [new UpdateRuleFeature(appContainer)]);
 
 // Features: Dashboard
 loadFeaturesSync(appContainer, [new ListAccountRSEUsageFeature(appContainer)]);
-
-appContainer.bind<UserPassLoginInputPort>(INPUT_PORT.USERPASS_LOGIN).to(UserPassLoginUseCase).inRequestScope();
-appContainer.bind<IUserPassLoginController>(CONTROLLERS.USERPASS_LOGIN).to(UserPassLoginController);
-appContainer
-    .bind<interfaces.Factory<UserPassLoginInputPort>>(USECASE_FACTORY.USERPASS_LOGIN)
-    .toFactory<UserPassLoginUseCase, [RucioSession, NextApiResponse]>(
-        (context: interfaces.Context) => (session: RucioSession, response: NextApiResponse) => {
-            const rucioAuthServer: AuthServerGatewayOutputPort = appContainer.get(GATEWAYS.AUTH_SERVER);
-            const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
-            const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
-            return new UserPassLoginUseCase(new UserPassLoginPresenter(session, response), rucioAuthServer, rucioAccountGateway, envConfigGateway);
-        },
-    );
 
 appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionUseCase).inRequestScope();
 appContainer.bind<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionController);

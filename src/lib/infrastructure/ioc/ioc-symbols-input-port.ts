@@ -26,7 +26,6 @@ const INPUT_PORT = {
     GET_SITE_HEADER: Symbol.for('SiteHeaderInputPort'),
     STREAM: Symbol.for('StreamInputPort'),
     TEST: Symbol.for('TestInputPort'),
-    USERPASS_LOGIN: Symbol.for('UserPassLoginInputPort'),
     GET_RSE_USAGE: Symbol.for('GetRSEUsageInputPort'),
     LIST_RULES: Symbol.for('ListRulesInputPort'),
     LIST_RULES_PENDING_APPROVAL: Symbol.for('ListRulesPendingApprovalInputPort'),
