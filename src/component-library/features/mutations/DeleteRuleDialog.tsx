@@ -10,7 +10,6 @@ export interface DeleteRuleDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     ruleId: string;
-    isAdmin: boolean;
     onConfirm: (forceDelete: boolean) => void;
     loading?: boolean;
     /** Initial checked state of the force-delete checkbox. Primarily for Storybook/testing. */
@@ -28,12 +27,11 @@ export interface DeleteRuleDialogProps {
  *     open={isOpen}
  *     onOpenChange={setIsOpen}
  *     ruleId="abc123def456"
- *     isAdmin={false}
  *     onConfirm={(forceDelete) => handleDelete(forceDelete)}
  * />
  * ```
  */
-export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({ open, onOpenChange, ruleId, isAdmin, onConfirm, loading = false, defaultForceDelete = false }) => {
+export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({ open, onOpenChange, ruleId, onConfirm, loading = false, defaultForceDelete = false }) => {
     const [forceDelete, setForceDelete] = React.useState(defaultForceDelete);
 
     // Reset checkbox state when the dialog closes
@@ -63,37 +61,24 @@ export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({ open, onOpen
                 <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 p-3 text-sm text-base-info-700 dark:text-base-info-200 flex gap-2 items-start">
                     <HiInformationCircle className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
                     <p>
-                        {isAdmin && forceDelete
-                            ? 'Force delete will set the rule lifetime to 0, scheduling it for immediate deletion.'
+                        {forceDelete
+                            ? 'Force delete will set the rule lifetime to 0, scheduling it for immediate deletion. The server may reject this request depending on the policy configured by your administrator.'
                             : 'Standard delete will set the rule lifetime to 1 hour, scheduling it for deletion with a grace period.'}
                     </p>
                 </div>
 
-                {/* Force Delete checkbox — admin-only */}
-                {isAdmin && (
-                    <>
-                        <div className="flex items-center gap-3">
-                            <Checkbox
-                                id="force-delete-checkbox"
-                                checked={forceDelete}
-                                onCheckedChange={checked => setForceDelete(checked === true)}
-                                aria-describedby={forceDelete ? 'force-delete-warning' : undefined}
-                            />
-                            <label htmlFor="force-delete-checkbox" className="text-sm font-medium text-neutral-900 dark:text-neutral-100 cursor-pointer select-none">
-                                Force delete (lifetime = 0, immediate deletion)
-                            </label>
-                        </div>
-
-                        {/* Destructive warning — shown only when force-delete is checked */}
-                        {forceDelete && (
-                            <Alert
-                                id="force-delete-warning"
-                                variant="error"
-                                message="Warning: Force deleting sets the rule lifetime to 0. The rule will be deleted immediately with no grace period and any ongoing replication will be cancelled at once."
-                            />
-                        )}
-                    </>
-                )}
+                {/* Force Delete checkbox — visible to all users; the server enforces policy */}
+                <div className="flex items-center gap-3">
+                    <Checkbox
+                        id="force-delete-checkbox"
+                        checked={forceDelete}
+                        onCheckedChange={checked => setForceDelete(checked === true)}
+                        aria-describedby={forceDelete ? 'force-delete-warning' : undefined}
+                    />
+                    <label htmlFor="force-delete-checkbox" className="text-sm font-medium text-neutral-900 dark:text-neutral-100 cursor-pointer select-none">
+                        Force delete
+                    </label>
+                </div>
 
                 {/* Rule ID */}
                 <div>

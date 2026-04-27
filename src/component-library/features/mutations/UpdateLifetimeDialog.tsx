@@ -88,9 +88,7 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
      * being non-empty (already enforced by the computedSeconds useMemo returning null when empty).
      */
     const showZeroLifetimeWarning =
-        computedSeconds !== null &&
-        computedSeconds === 0 &&
-        (mode === 'date' ? !!dateValue : days !== '' || hours !== '');
+        computedSeconds !== null && computedSeconds === 0 && (mode === 'date' ? !!dateValue : days !== '' || hours !== '');
     /** Show a softer warning when the lifetime is very short but non-zero (< 1 hour). */
     const showShortLifetimeWarning = computedSeconds !== null && computedSeconds > 0 && computedSeconds < 3600;
 
@@ -238,20 +236,32 @@ export const UpdateLifetimeDialog: React.FC<UpdateLifetimeDialogProps> = ({
                     </p>
                 </div>
 
-                {/* Clear lifetime checkbox — only shown when user has permission */}
+                {/* Clear lifetime checkbox */}
                 {canSetInfinite && (
-                    // eslint-disable-next-line jsx-a11y/label-has-associated-control
-                    <label htmlFor="clear-lifetime-checkbox" className="flex items-center gap-2 cursor-pointer select-none">
-                        <Checkbox
-                            id="clear-lifetime-checkbox"
-                            checked={clearLifetime}
-                            onCheckedChange={checked => {
-                                setClearLifetime(checked === true);
-                                if (error) setError(undefined);
-                            }}
-                        />
-                        <span className="text-sm text-neutral-900 dark:text-neutral-100">Clear lifetime (no expiry)</span>
-                    </label>
+                    <>
+                        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                        <label htmlFor="clear-lifetime-checkbox" className="flex items-center gap-2 cursor-pointer select-none">
+                            <Checkbox
+                                id="clear-lifetime-checkbox"
+                                checked={clearLifetime}
+                                onCheckedChange={checked => {
+                                    setClearLifetime(checked === true);
+                                    if (error) setError(undefined);
+                                }}
+                                aria-describedby={clearLifetime && !isAdmin ? 'clear-lifetime-warning' : undefined}
+                            />
+                            <span className="text-sm text-neutral-900 dark:text-neutral-100">Clear lifetime (no expiry)</span>
+                        </label>
+
+                        {/* Non-admin confirmation warning when clearing lifetime */}
+                        {clearLifetime && !isAdmin && (
+                            <Alert
+                                id="clear-lifetime-warning"
+                                variant="warning"
+                                message="Clearing the lifetime makes this rule permanent. It will use storage resources indefinitely. Make sure this is what you intend to do."
+                            />
+                        )}
+                    </>
                 )}
 
                 {/* Mode toggle */}
