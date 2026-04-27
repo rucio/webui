@@ -11,14 +11,14 @@ fi
 echo "Fetching upstream"
 git fetch upstream --progress
 
-echo "Switching to master"
-git checkout upstream/master -B master
+echo "Switching to main"
+git checkout upstream/main -B main
 if [ $? != 0 ]; then
-    echo "Can't reset and checkout master"
+    echo "Can't reset and checkout main"
     exit 1
 fi
 
-echo "Creating feature branch from master"
-git checkout -b feature-$1-${2//[^a-zA-Z0-9]/_} master
+echo "Creating feature branch from main"
+git checkout -b feature-$1-${2//[^a-zA-Z0-9]/_} main
 
 echo "Done"

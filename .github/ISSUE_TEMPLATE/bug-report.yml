@@ -33,7 +33,7 @@ body:
     attributes:
       label: Rucio WebUI Version
       description: The used Rucio WebUI Version.
-      placeholder: "e.g. 1.28.4, master"
+      placeholder: "e.g. 1.28.4, main"
 
   - type: textarea
     attributes:
