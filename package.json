@@ -143,6 +143,7 @@
     },
     "undici": "^6.23.0",
     "minimatch": ">=10.2.1",
+    "postcss": "^8.5.10",
     "@eslint/eslintrc": {
       "minimatch": "^3.1.3"
     },
