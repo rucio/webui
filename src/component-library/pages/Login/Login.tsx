@@ -156,7 +156,12 @@ export const Login = ({
     const [availableAccounts, setAvailableAccounts] = useState<string[]>([]);
     const [lastAuthMethod, setLastAuthMethod] = useState<'userpass' | 'x509' | 'oidc-pending' | undefined>(undefined);
 
-    const handleAuthViewModel = (authViewModel: AuthViewModel) => {
+    /**
+     * `method` is passed explicitly because lastAuthMethod is React state and
+     * isn't yet updated during the synchronous submit/handle dispatch; relying
+     * on it here would auto-select with the previous flow's submitter.
+     */
+    const handleAuthViewModel = (authViewModel: AuthViewModel, method?: 'userpass' | 'x509') => {
         if (authViewModel.status === 'error') {
             setError(authViewModel.message);
         } else if (authViewModel.status === 'multiple_accounts') {
@@ -164,6 +169,14 @@ export const Login = ({
             const accountsFiltered = accounts?.filter(account => !loginViewModel.accountsAvailable?.includes(account));
             if (!accountsFiltered || accountsFiltered.length === 0) {
                 setError('All accounts associated with this identity are signed in to');
+            } else if (accountsFiltered.length === 1 && method) {
+                // A modal with a single option is just friction; sign in directly.
+                const only = accountsFiltered[0];
+                if (method === 'x509') {
+                    submitX509(only);
+                } else {
+                    submitUserPass(only);
+                }
             } else {
                 setAvailableAccounts(accountsFiltered);
             }
@@ -182,7 +195,7 @@ export const Login = ({
         if (!x509AuthViewModel) return;
 
         setLastAuthMethod('x509');
-        handleAuthViewModel(x509AuthViewModel);
+        handleAuthViewModel(x509AuthViewModel, 'x509');
         handleX509Session(x509AuthViewModel, x509AuthViewModel.rucioAccount, vo.shortName);
     };
 
@@ -222,7 +235,7 @@ export const Login = ({
             if (!userpassAuthViewModel) return;
 
             setLastAuthMethod('userpass');
-            handleAuthViewModel(userpassAuthViewModel);
+            handleAuthViewModel(userpassAuthViewModel, 'userpass');
             handleUserPassSession(userpassAuthViewModel, userpassAuthViewModel.rucioAccount, vo.shortName);
         } finally {
             setIsSubmitting(false);
@@ -247,6 +260,10 @@ export const Login = ({
             const filtered = oidcPendingAccounts.filter(account => !loginViewModel.accountsAvailable?.includes(account));
             if (filtered.length === 0) {
                 setError('All accounts associated with this OIDC identity are already signed in.');
+            } else if (filtered.length === 1 && oidcPendingFinalizeHandler) {
+                // A modal with a single option is just friction; finalize directly.
+                // Mirrors the userpass / x509 multi-account branches above.
+                oidcPendingFinalizeHandler(filtered[0]);
             } else {
                 setAvailableAccounts(filtered);
             }
