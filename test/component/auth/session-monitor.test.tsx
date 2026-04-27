@@ -10,7 +10,7 @@
  * (4) Transition from authenticated → unauthenticated redirects to
  *     /auth/login?expired=true&callbackUrl=... (natural expiry).
  * (5) manualSignOut() redirects to /auth/login WITHOUT ?expired=true.
- * (6) userpass auth type fires no refresh API call when the timer fires.
+ * (6) userpass auth type opens the in-place re-auth modal when the timer fires (#628).
  */
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -269,9 +269,9 @@ describe('SessionMonitorProvider', () => {
         expect(allUrls.every((url: string) => !url.includes('expired=true'))).toBe(true);
     });
 
-    // ── (6) userpass auth type: signs out when timer fires ────────────────
+    // ── (6) userpass auth type: opens in-place re-auth modal (#628) ───────
 
-    it('(6) calls signOut() but not the refresh API for userpass auth type when the timer fires', async () => {
+    it('(6) opens the in-place re-auth modal for userpass auth type — does NOT signOut/redirect', async () => {
         const expiry = new Date(Date.now() + 90_000).toISOString();
         (useSession as jest.Mock).mockReturnValue({
             data: {
@@ -284,7 +284,7 @@ describe('SessionMonitorProvider', () => {
             update: mockUpdate,
         });
 
-        render(
+        const { findByRole } = render(
             <SessionMonitorProvider>
                 <div />
             </SessionMonitorProvider>,
@@ -295,11 +295,16 @@ describe('SessionMonitorProvider', () => {
             jest.advanceTimersByTime(30_001);
         });
 
-        // No refresh API call — userpass cannot be refreshed server-side.
+        // userpass cannot be refreshed server-side, so no refresh API call,
+        // no update().
         expect(fetchMock).not.toHaveBeenCalled();
         expect(mockUpdate).not.toHaveBeenCalled();
-        // signOut must be called so the session cookie is cleared immediately,
-        // preventing the login page from seeing a stale authenticated session.
-        expect(signOut).toHaveBeenCalledWith({ redirect: false });
+        // #628: we open the re-auth modal in place rather than tearing down
+        // the session — signOut and the expired-redirect must NOT fire.
+        expect(signOut).not.toHaveBeenCalled();
+        expect(navigateTo).not.toHaveBeenCalled();
+        // The modal renders with a "Session expired" heading.
+        const heading = await findByRole('heading', { name: /session expired/i });
+        expect(heading).toBeInTheDocument();
     });
 });

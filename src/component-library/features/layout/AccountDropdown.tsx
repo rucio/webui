@@ -1,15 +1,26 @@
 'use client';
 
 import { twMerge } from 'tailwind-merge';
-import React, { RefObject, useEffect, useRef } from 'react';
-import { HiSwitchHorizontal, HiLogout, HiUserAdd } from 'react-icons/hi';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
+import { HiSwitchHorizontal, HiLogout, HiUserAdd, HiLockClosed } from 'react-icons/hi';
 import Link from 'next/link';
 import { HiUserCircle } from 'react-icons/hi2';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { cn } from '@/component-library/utils';
 import { signOut } from 'next-auth/react';
+import { ReauthModal } from '@/component-library/features/auth/ReauthModal';
 
-const AccountList = (props: { accountList: string[]; onSwitchAccount?: (account: string) => Promise<void> }) => {
+/**
+ * Renders one-click switches for accounts with a live token in session.allUsers[],
+ * and re-auth-required switches for accounts that share the active identity but
+ * have no token (#628 lazy-mint design — see ReauthModal).
+ */
+const AccountList = (props: {
+    accountList: string[];
+    linkedAccountNames?: string[];
+    onSwitchAccount?: (account: string) => Promise<void>;
+    onLinkedSwitchClick?: (account: string) => void;
+}) => {
     const handleSwitchAccount = async (account: string) => {
         try {
             if (props.onSwitchAccount) {
@@ -42,6 +53,26 @@ const AccountList = (props: { accountList: string[]; onSwitchAccount?: (account:
                     </button>
                 );
             })}
+            {props.linkedAccountNames?.map(account => (
+                <button
+                    className={cn(
+                        'text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer',
+                        'dark:text-neutral-300 dark:hover:bg-neutral-600',
+                        'flex items-center justify-between py-2 px-1 space-x-4',
+                        'text-right',
+                    )}
+                    key={'linked-' + account}
+                    onClick={() => props.onLinkedSwitchClick?.(account)}
+                    title="Sign in required"
+                >
+                    <HiLockClosed className="text-2xl text-neutral-500 dark:text-neutral-400 shrink-0" />
+                    <span>
+                        <span>Switch to </span>
+                        <b className="text-neutral-800 dark:text-neutral-100">{account}</b>
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400 block">sign in required</span>
+                    </span>
+                </button>
+            ))}
         </div>
     );
 };
@@ -108,11 +139,14 @@ export const AccountDropdown = (props: {
     menuRef: RefObject<HTMLDivElement | null>;
     accountActive: string;
     accountsPossible: string[];
+    /** Names of identity-mapped accounts that need re-auth to switch into (#628). */
+    linkedAccountNames?: string[];
     onSignOut?: () => Promise<void>;
     onSwitchAccount?: (account: string) => Promise<void>;
     onRemoveAccount?: (account: string) => Promise<void>;
+    onLinkedSwitchClick?: (account: string) => void;
 }) => {
-    const hasAccountChoice = props.accountsPossible.length !== 1;
+    const hasAccountChoice = props.accountsPossible.length !== 1 || (props.linkedAccountNames?.length ?? 0) > 0;
 
     const handleSingleSignOut = async () => {
         try {
@@ -177,7 +211,14 @@ export const AccountDropdown = (props: {
                     <HiLogout className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
                 </button>
             </div>
-            {hasAccountChoice && <AccountList accountList={props.accountsPossible.filter(account => account !== props.accountActive)} onSwitchAccount={props.onSwitchAccount} />}
+            {hasAccountChoice && (
+                <AccountList
+                    accountList={props.accountsPossible.filter(account => account !== props.accountActive)}
+                    linkedAccountNames={props.linkedAccountNames?.filter(account => account !== props.accountActive)}
+                    onSwitchAccount={props.onSwitchAccount}
+                    onLinkedSwitchClick={props.onLinkedSwitchClick}
+                />
+            )}
             <SignIntoButton />
             {hasAccountChoice && <SignOutOfAllButton onSignOut={props.onSignOut} />}
         </div>
@@ -196,6 +237,7 @@ export const AccountButton = ({
     onRemoveAccount?: (account: string) => Promise<void>;
 }) => {
     const [isAccountOpen, setIsAccountOpen] = React.useState(false);
+    const [reauthTarget, setReauthTarget] = useState<string | null>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -210,6 +252,11 @@ export const AccountButton = ({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [menuRef, buttonRef]);
 
+    const handleLinkedSwitchClick = (account: string) => {
+        setIsAccountOpen(false);
+        setReauthTarget(account);
+    };
+
     return (
         <>
             <button
@@ -223,10 +270,28 @@ export const AccountButton = ({
                 <AccountDropdown
                     accountActive={siteHeader.activeAccount?.rucioAccount ?? ''}
                     accountsPossible={siteHeader.availableAccounts?.map(account => account.rucioAccount) ?? []}
+                    linkedAccountNames={siteHeader.linkedAccountNames}
                     menuRef={menuRef}
                     onSignOut={onSignOut}
                     onSwitchAccount={onSwitchAccount}
                     onRemoveAccount={onRemoveAccount}
+                    onLinkedSwitchClick={handleLinkedSwitchClick}
+                />
+            )}
+            {reauthTarget && siteHeader.activeAccount && (
+                <ReauthModal
+                    isOpen={true}
+                    mode="switch"
+                    targetAccount={reauthTarget}
+                    rucioIdentity={siteHeader.activeAccount.rucioIdentity}
+                    shortVOName={siteHeader.activeAccount.rucioVO}
+                    onClose={() => setReauthTarget(null)}
+                    onSuccess={() => {
+                        // Full reload so the entire React tree, query cache, and RSC tree
+                        // are rebuilt against the new active account's Rucio token —
+                        // mirrors the existing handleSwitchAccount path in HeaderClient.
+                        window.location.reload();
+                    }}
                 />
             )}
         </>

@@ -11,6 +11,12 @@ import { BaseViewModel } from '@/lib/sdk/view-models';
 export interface SiteHeaderViewModel extends BaseViewModel {
     activeAccount?: User;
     availableAccounts?: User[];
+    /**
+     * Names of accounts mapped to the active user's Rucio identity that aren't
+     * already in availableAccounts — i.e. switchable but require a fresh
+     * userpass re-auth (#628 lazy-mint design).
+     */
+    linkedAccountNames?: string[];
     homeUrl: string;
     projectUrl?: string;
 }

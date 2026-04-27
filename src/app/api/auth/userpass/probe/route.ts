@@ -3,6 +3,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import type AuthServerGatewayOutputPort from '@/lib/core/port/secondary/auth-server-gateway-output-port';
+import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
+
+/**
+ * After Rucio returns 200 with a (possibly auto-selected default) account, looks up
+ * every other account mapped to the same identity. Returns just the account *names*
+ * — no tokens. The dropdown uses this list to surface "switch to X" options that
+ * trigger a fresh re-auth (#628 lazy-mint design); we do NOT silently mint bearer
+ * tokens for accounts the user did not explicitly choose to use.
+ *
+ * Failures are non-fatal — the primary login still succeeds with an empty list.
+ */
+async function getIdentityAccountNames(
+    username: string,
+    rucioAuthToken: string,
+    accountGateway: AccountGatewayOutputPort,
+): Promise<string[]> {
+    const result = await accountGateway.listAccountsForIdentity(username, 'userpass', rucioAuthToken);
+    if (result.status !== 'success') {
+        return [];
+    }
+    return result.accounts;
+}
 
 /**
  * POST /api/auth/userpass/probe
@@ -12,8 +34,13 @@ import type AuthServerGatewayOutputPort from '@/lib/core/port/secondary/auth-ser
  * this route wraps it and returns a small JSON payload the Login page can
  * treat like an AuthViewModel (success / multiple_accounts / error).
  *
+ * On 200 (default/single account), the route additionally returns
+ * `linkedAccountNames`: every other account mapped to the same identity.
+ * No tokens for those accounts are minted at this point — the user must
+ * re-enter their password to switch into them (#628 lazy-mint design).
+ *
  * Session is established afterwards by signIn('userpass', { rucioAuthToken, ... }),
- * which triggers the pre-validated-token branch in the NextAuth credentials provider.
+ * which triggers the credentials provider's authorize() in NextAuth.
  */
 export async function POST(request: NextRequest) {
     let body: { username?: string; password?: string; vo?: string; account?: string };
@@ -30,14 +57,17 @@ export async function POST(request: NextRequest) {
 
     try {
         const authServer = appContainer.get<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER);
+        const accountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
         const dto = await authServer.userpassLogin(username, password, account ?? '', vo);
 
         if (dto.statusCode === 200) {
+            const linkedAccountNames = await getIdentityAccountNames(username, dto.authToken!, accountGateway);
             return NextResponse.json({
                 status: 'success',
                 rucioAuthToken: dto.authToken,
                 rucioAccount: dto.account,
                 rucioAuthTokenExpires: dto.authTokenExpires,
+                linkedAccountNames,
             });
         }
 

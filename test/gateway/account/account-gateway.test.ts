@@ -1,4 +1,4 @@
-import { AccountAttributeErrorTypesDTO, AccountAttributesDTO } from '@/lib/core/dto/account-dto';
+import { AccountAttributeErrorTypesDTO, AccountAttributesDTO, ListAccountsForIdentityDTO } from '@/lib/core/dto/account-dto';
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
@@ -71,5 +71,96 @@ describe('Account Gateway Tests', () => {
                 message: 'Rucio Auth Token is invalid or expired',
             });
         }
+    });
+});
+
+describe('Account Gateway - listAccountsForIdentity', () => {
+    afterEach(() => {
+        fetchMock.dontMock();
+    });
+
+    test('should return multiple accounts for a known identity', async () => {
+        fetchMock.doMock();
+        fetchMock.mockIf(/^https?:\/\/rucio-host\.com.*$/, req => {
+            if (req.url.includes('/identities/accounts')) {
+                return Promise.resolve({
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify([{ account: 'root' }, { account: 'atlas' }]),
+                });
+            }
+            return Promise.resolve({ status: 404 });
+        });
+
+        const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
+            'ddmlab',
+            'userpass',
+            'rucio-ddmlab-askdjljioj',
+        );
+        expect(result.status).toBe('success');
+        expect(result.accounts).toEqual(['root', 'atlas']);
+    });
+
+    test('should return error when identity is not found (non-OK HTTP status)', async () => {
+        fetchMock.doMock();
+        fetchMock.mockIf(/^https?:\/\/rucio-host\.com.*$/, req => {
+            if (req.url.includes('/identities/accounts')) {
+                return Promise.resolve({ status: 404 });
+            }
+            return Promise.resolve({ status: 404 });
+        });
+
+        const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
+            'unknown-user',
+            'userpass',
+            'some-token',
+        );
+        expect(result.status).toBe('error');
+        expect(result.accounts).toEqual([]);
+        expect(result.message).toContain('404');
+    });
+
+    test('should return error on network failure', async () => {
+        fetchMock.doMock();
+        fetchMock.mockIf(/^https?:\/\/rucio-host\.com.*$/, req => {
+            if (req.url.includes('/identities/accounts')) {
+                return Promise.reject(new Error('Network failure'));
+            }
+            return Promise.resolve({ status: 500 });
+        });
+
+        const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
+            'ddmlab',
+            'userpass',
+            'rucio-ddmlab-askdjljioj',
+        );
+        expect(result.status).toBe('error');
+        expect(result.message).toContain('Network error');
+    });
+
+    test('should return error on malformed JSON response', async () => {
+        fetchMock.doMock();
+        fetchMock.mockIf(/^https?:\/\/rucio-host\.com.*$/, req => {
+            if (req.url.includes('/identities/accounts')) {
+                return Promise.resolve({
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: '{not-valid-json',
+                });
+            }
+            return Promise.resolve({ status: 404 });
+        });
+
+        const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
+            'ddmlab',
+            'userpass',
+            'rucio-ddmlab-askdjljioj',
+        );
+        expect(result.status).toBe('error');
+        expect(result.message).toBe('Failed to parse response');
     });
 });

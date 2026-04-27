@@ -14,6 +14,7 @@ export default class GetSiteHeaderPresenter extends BasePresenter<GetSiteHeaderR
             status: 'success',
             activeAccount: responseModel.activeUser || undefined,
             availableAccounts: responseModel.availableUsers || [],
+            linkedAccountNames: responseModel.linkedAccountNames ?? [],
             homeUrl: responseModel.homeUrl,
             projectUrl: projectUrl,
         };

@@ -138,6 +138,9 @@ export const authConfig: NextAuthConfig = {
                 rucioAccount: { type: 'text' },
                 shortVOName: { type: 'text' },
                 rucioTokenExpiry: { type: 'text' },
+                // JSON-encoded `string[]` of every account mapped to the same identity
+                // (lazy-mint design — no tokens, just names — see #628).
+                linkedAccountNames: { type: 'text' },
             },
             async authorize(credentials): Promise<User | null> {
                 if (!credentials?.rucioAuthToken || !credentials?.rucioAccount || !credentials?.shortVOName || !credentials?.rucioTokenExpiry) {
@@ -148,6 +151,7 @@ export const authConfig: NextAuthConfig = {
                     credentials.rucioAccount as string,
                     credentials.shortVOName as string,
                     credentials.rucioTokenExpiry as string,
+                    (credentials.linkedAccountNames as string | undefined) ?? undefined,
                 );
             },
         }),
@@ -413,15 +417,25 @@ export const authConfig: NextAuthConfig = {
                     };
                 }
 
-                // Check if user already exists in allUsers
+                // Add or update this account in allUsers[]
                 const existingIndex = getSessionUserIndex(token.allUsers, sessionUser);
-
                 if (existingIndex === -1) {
-                    // New user: add to allUsers
                     token.allUsers.push(sessionUser);
                 } else {
-                    // Existing user: update their info
                     token.allUsers[existingIndex] = sessionUser;
+                }
+
+                // Propagate identityAccounts across every allUsers[] entry that shares
+                // this user's Rucio identity. When the user later re-auths into one of
+                // the linked accounts (#628), the new SessionUser carries the same list
+                // — keeping the dropdown's "switchable but unauthenticated" set in sync
+                // for any user we render as active.
+                if (sessionUser.identityAccounts && sessionUser.identityAccounts.length > 0) {
+                    for (const peer of token.allUsers) {
+                        if (peer.rucioIdentity === sessionUser.rucioIdentity && peer.rucioAuthType === sessionUser.rucioAuthType) {
+                            peer.identityAccounts = sessionUser.identityAccounts;
+                        }
+                    }
                 }
 
                 // Set this user as the active user

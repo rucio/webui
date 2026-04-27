@@ -1,10 +1,11 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { AuthType } from '@/lib/core/entity/auth-models';
 import { navigateTo } from './navigate';
+import { ReauthModal } from '@/component-library/features/auth/ReauthModal';
 
 /**
  * How many milliseconds before token expiry to trigger a refresh attempt.
@@ -66,6 +67,33 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
     /** Handle for the pending refresh timer so we can cancel + reschedule. */
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+    /**
+     * #628: when a userpass session expires we open the ReauthModal in place
+     * instead of redirecting to /auth/login. We capture the identity/account/VO
+     * before NextAuth tears the session down so the modal has the values it
+     * needs. While this is non-null, the unauthenticated watcher is suppressed
+     * — the modal is the user's exit path (success → reload, cancel → redirect).
+     */
+    const [expiredReauth, setExpiredReauth] = useState<{ identity: string; account: string; vo: string } | null>(null);
+    const expiredReauthRef = useRef<typeof expiredReauth>(null);
+    useEffect(() => {
+        expiredReauthRef.current = expiredReauth;
+    }, [expiredReauth]);
+
+    /**
+     * Capture the active userpass identity/account/VO into `expiredReauth` so
+     * the modal can drive re-auth without depending on the (now-expiring)
+     * NextAuth session. Returns true if capture succeeded.
+     */
+    const captureUserpassReauth = useCallback((): boolean => {
+        const u = session?.user;
+        if (u?.rucioIdentity && u.rucioAccount && u.rucioVO) {
+            setExpiredReauth({ identity: u.rucioIdentity, account: u.rucioAccount, vo: u.rucioVO });
+            return true;
+        }
+        return false;
+    }, [session]);
+
     // ── Helper: cancel any pending timer ──────────────────────────────────
     const clearRefreshTimer = useCallback(() => {
         if (timerRef.current !== null) {
@@ -99,13 +127,12 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
                 timerRef.current = null;
 
                 if (authType === AuthType.USERPASS || authType === null) {
-                    // userpass: token cannot be refreshed server-side.
-                    // Explicitly sign out so NextAuth transitions to
-                    // 'unauthenticated', which the watcher below catches and
-                    // redirects with ?expired=true. Without this, the session
-                    // cookie outlives rucioAuthTokenExpires because NextAuth's
-                    // own JWT maxAge is 24 h and useSession() won't refetch
-                    // unless the window loses/regains focus.
+                    // userpass: token cannot be refreshed server-side. We open the
+                    // ReauthModal in place (#628) so the user can re-enter their
+                    // password without losing their current page. If we can't
+                    // capture identity (e.g. no session.user), fall back to the
+                    // signOut-and-redirect path.
+                    if (captureUserpassReauth()) return;
                     signOut({ redirect: false });
                     return;
                 }
@@ -149,13 +176,12 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
                     // 'unauthenticated' on its own — we must act immediately.
                     clearRefreshTimer();
                     if (authType === AuthType.USERPASS || authType === null) {
-                        // Sign out and redirect directly to avoid a second
-                        // signOut call from the unauthenticated effect.
+                        // userpass: open the in-place re-auth modal (#628) instead
+                        // of redirecting. Falls back to redirect if identity capture
+                        // fails (e.g. partial session shape).
+                        if (captureUserpassReauth()) return;
                         signOut({ redirect: false }).then(() => {
                             const callbackUrl = encodeURIComponent(pathname ?? '/');
-                            // Full page navigation so the browser starts a fresh
-                            // request AFTER the Set-Cookie: delete from signOut
-                            // has been committed to the cookie jar.
                             navigateTo(`/auth/login?expired=true&callbackUrl=${callbackUrl}`);
                         });
                     } else {
@@ -183,6 +209,10 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
         // Returning early prevents a double-execution of both actions.
         if (isManualSignOutRef.current) return;
 
+        // The userpass in-place re-auth modal is open (#628) — the modal owns
+        // the user's exit path (success → reload, cancel → redirect).
+        if (expiredReauthRef.current) return;
+
         // Natural expiry: clear any stale NextAuth client-side state, then
         // redirect to the login page with the ?expired=true flag.
         // Use window.location.href (full page load) so the browser sends the
@@ -209,7 +239,42 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
         navigateTo('/auth/login?signedOut=true');
     }, [clearRefreshTimer]);
 
-    return <SessionMonitorContext.Provider value={{ manualSignOut }}>{children}</SessionMonitorContext.Provider>;
+    // #628: in-place re-auth on userpass token expiry. Cancelling falls back
+    // to the standard expired-session redirect so the user always has a
+    // path forward.
+    const handleExpiredCancel = useCallback(() => {
+        const captured = expiredReauth;
+        setExpiredReauth(null);
+        signOut({ redirect: false }).then(() => {
+            const callbackUrl = encodeURIComponent(pathname ?? '/');
+            navigateTo(`/auth/login?expired=true&callbackUrl=${callbackUrl}`);
+        });
+        // Reference `captured` so the linter doesn't complain about shadowed
+        // unused var; nothing else needs it once we've kicked off signOut.
+        void captured;
+    }, [expiredReauth, pathname]);
+
+    return (
+        <SessionMonitorContext.Provider value={{ manualSignOut }}>
+            {children}
+            {expiredReauth && (
+                <ReauthModal
+                    isOpen={true}
+                    mode="expired"
+                    targetAccount={expiredReauth.account}
+                    rucioIdentity={expiredReauth.identity}
+                    shortVOName={expiredReauth.vo}
+                    onClose={handleExpiredCancel}
+                    onSuccess={() => {
+                        // Reload so server-rendered pages re-fetch with the fresh
+                        // Rucio token in the cookie. Avoids subtle staleness in any
+                        // RSC tree that read auth-derived data before re-auth.
+                        window.location.reload();
+                    }}
+                />
+            )}
+        </SessionMonitorContext.Provider>
+    );
 }
 
 // ─── Public hook ──────────────────────────────────────────────────────────────

@@ -21,10 +21,12 @@ import SetX509LoginSessionOutputPort from '@/lib/core/port/primary/set-x509-logi
 class NextAuthUserPassTokenPresenter implements SetX509LoginSessionOutputPort<Promise<void>> {
     response: Promise<void>;
     private resolvePromise: (value: SessionUser | null) => void;
+    private identityAccounts?: string[];
 
-    constructor(resolve: (value: SessionUser | null) => void) {
+    constructor(resolve: (value: SessionUser | null) => void, identityAccounts?: string[]) {
         this.resolvePromise = resolve;
         this.response = Promise.resolve();
+        this.identityAccounts = identityAccounts;
     }
 
     async presentSuccess(response: SetX509LoginSessionResponse): Promise<void> {
@@ -43,6 +45,10 @@ class NextAuthUserPassTokenPresenter implements SetX509LoginSessionOutputPort<Pr
             country: response.country,
             countryRole: response.countryRole,
             isLoggedIn: true,
+            // Drives the dropdown's lazy switch UI: every name listed here that is
+            // *not* already in session.allUsers[] for this identity is shown as a
+            // "needs re-auth" switchable account (#628).
+            identityAccounts: this.identityAccounts,
         };
         this.resolvePromise(sessionUser);
     }
@@ -57,20 +63,39 @@ class NextAuthUserPassTokenPresenter implements SetX509LoginSessionOutputPort<Pr
  * Adapter for NextAuth userpass authentication via a pre-validated Rucio token.
  * Mirrors the x509 pattern: the client probes Rucio's /auth/userpass directly,
  * then hands the resulting token back through NextAuth to establish the session.
+ *
+ * `linkedAccountNamesJson` is an optional JSON-encoded `string[]` listing every
+ * account mapped to the same identity (including the active one). The probe
+ * route fetches this list so the JWT callback can stamp it on the SessionUser
+ * — the dropdown then knows which other accounts the user can switch into via
+ * a re-auth modal (#628 lazy-mint design — no other tokens are minted here).
  */
 export async function authorizeUserPassToken(
     rucioAuthToken: string,
     rucioAccount: string,
     shortVOName: string,
     rucioTokenExpiry: string,
+    linkedAccountNamesJson?: string,
 ): Promise<SessionUser | null> {
+    let identityAccounts: string[] | undefined;
+    if (linkedAccountNamesJson) {
+        try {
+            const parsed = JSON.parse(linkedAccountNamesJson);
+            if (Array.isArray(parsed) && parsed.every(e => typeof e === 'string')) {
+                identityAccounts = parsed as string[];
+            }
+        } catch (error) {
+            console.warn('[Auth] Failed to parse linkedAccountNames payload — proceeding without them:', error);
+        }
+    }
+
     return new Promise(resolve => {
         (async () => {
             try {
                 const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
                 const rucioAccountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
 
-                const presenter = new NextAuthUserPassTokenPresenter(resolve);
+                const presenter = new NextAuthUserPassTokenPresenter(resolve, identityAccounts);
                 const useCase = new SetX509LoginSessionUseCase(presenter, envConfigGateway, rucioAccountGateway);
 
                 const requestModel: SetX509LoginSessionRequest = {
