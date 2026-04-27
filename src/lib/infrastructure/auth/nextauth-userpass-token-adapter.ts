@@ -67,8 +67,8 @@ class NextAuthUserPassTokenPresenter implements SetX509LoginSessionOutputPort<Pr
  * `linkedAccountNamesJson` is an optional JSON-encoded `string[]` listing every
  * account mapped to the same identity (including the active one). The probe
  * route fetches this list so the JWT callback can stamp it on the SessionUser
- * — the dropdown then knows which other accounts the user can switch into via
- * a re-auth modal (#628 lazy-mint design — no other tokens are minted here).
+ * so the dropdown can offer a re-auth-required switch into them via
+ * a re-auth modal (#628 lazy-mint design; no other tokens are minted here).
  */
 export async function authorizeUserPassToken(
     rucioAuthToken: string,
@@ -85,7 +85,7 @@ export async function authorizeUserPassToken(
                 identityAccounts = parsed as string[];
             }
         } catch (error) {
-            console.warn('[Auth] Failed to parse linkedAccountNames payload — proceeding without them:', error);
+            console.warn('[Auth] Failed to parse linkedAccountNames payload; proceeding without them:', error);
         }
     }
 

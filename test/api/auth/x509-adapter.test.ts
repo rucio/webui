@@ -60,7 +60,7 @@ beforeEach(() => {
     });
 });
 
-describe('authorizeX509 — identityAccounts (#628)', () => {
+describe('authorizeX509 identityAccounts (#628)', () => {
     it('(a) populates identityAccounts when identity maps to multiple accounts', async () => {
         listAccountsForIdentityMock.mockResolvedValue({ status: 'success', accounts: ['root', 'atlas', 'cms'] });
 

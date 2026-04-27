@@ -37,7 +37,7 @@ export const SessionMonitorContext = createContext<SessionMonitorContextValue | 
  *
  * 1. Schedules a timer ~60 s before the Rucio token expires.
  * 2. On timer fire:
- *    - **userpass**: does nothing — session expires naturally and the
+ *    - **userpass**: does nothing; session expires naturally and the
  *      unauthenticated-state watcher (see below) handles the redirect.
  *    - **x509 / oidc**: calls `POST /api/auth/refresh`.  On success,
  *      re-schedules the timer; on failure lets the session expire naturally.
@@ -72,7 +72,7 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
      * instead of redirecting to /auth/login. We capture the identity/account/VO
      * before NextAuth tears the session down so the modal has the values it
      * needs. While this is non-null, the unauthenticated watcher is suppressed
-     * — the modal is the user's exit path (success → reload, cancel → redirect).
+     *; the modal is the user's exit path (success → reload, cancel → redirect).
      */
     const [expiredReauth, setExpiredReauth] = useState<{ identity: string; account: string; vo: string } | null>(null);
     const expiredReauthRef = useRef<typeof expiredReauth>(null);
@@ -147,7 +147,7 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
                         await update();
                         return;
                     }
-                    // Refresh failed — force sign-out so NextAuth transitions to
+                    // Refresh failed; force sign-out so NextAuth transitions to
                     // 'unauthenticated'. Without this, NextAuth's own JWT maxAge
                     // keeps the session alive regardless of rucioAuthTokenExpires,
                     // and the unauthenticated watcher would never fire.
@@ -173,7 +173,7 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
                 if (Date.now() >= expiryMs) {
                     // Token is already past expiry. NextAuth does not track
                     // rucioAuthTokenExpires, so status will never transition to
-                    // 'unauthenticated' on its own — we must act immediately.
+                    // 'unauthenticated' on its own; we must act immediately.
                     clearRefreshTimer();
                     if (authType === AuthType.USERPASS || authType === null) {
                         // userpass: open the in-place re-auth modal (#628) instead
@@ -209,7 +209,7 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
         // Returning early prevents a double-execution of both actions.
         if (isManualSignOutRef.current) return;
 
-        // The userpass in-place re-auth modal is open (#628) — the modal owns
+        // The userpass in-place re-auth modal is open (#628); the modal owns
         // the user's exit path (success → reload, cancel → redirect).
         if (expiredReauthRef.current) return;
 
@@ -217,7 +217,7 @@ export function SessionMonitorProvider({ children }: { children: ReactNode }) {
         // redirect to the login page with the ?expired=true flag.
         // Use window.location.href (full page load) so the browser sends the
         // new request only after the Set-Cookie: delete from signOut has been
-        // committed to the cookie jar — router.push can race against it.
+        // committed to the cookie jar; router.push can race against it.
         signOut({ redirect: false }).then(() => {
             const callbackUrl = encodeURIComponent(pathname ?? '/');
             navigateTo(`/auth/login?expired=true&callbackUrl=${callbackUrl}`);

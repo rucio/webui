@@ -13,12 +13,12 @@ export interface SiteHeaderViewModel extends BaseViewModel {
     availableAccounts?: User[];
     /**
      * Names of accounts mapped to the active user's Rucio identity that aren't
-     * already in availableAccounts — i.e. switchable but no live token in
+     * already in availableAccounts; i.e. switchable but no live token in
      * session (#628 lazy-mint design). Userpass switches need a re-auth modal;
      * x509 switches re-fetch via the browser cert silently.
      */
     linkedAccountNames?: string[];
-    /** Rucio auth host URL — for the client-side x509 switch flow (#628). */
+    /** Rucio auth host URL; for the client-side x509 switch flow (#628). */
     rucioAuthHost?: string;
     homeUrl: string;
     projectUrl?: string;

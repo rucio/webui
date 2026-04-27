@@ -33,7 +33,7 @@ type SwitchableAccount = {
 /**
  * Builds the ordered list of switchable accounts for the dropdown:
  *   1. live (already-authenticated) entries from session.allUsers, excluding the active one
- *   2. linked entries (#628) — accounts mapped to the active identity but with no live token
+ *   2. linked entries (#628); accounts mapped to the active identity but with no live token
  *
  * Linked entries inherit the *active* user's auth type because they describe
  * accounts on that same identity that haven't been signed into yet. Including
@@ -53,7 +53,7 @@ const buildSwitchEntries = (siteHeader: SiteHeaderViewModel, activeAuthType: Aut
 
 /**
  * Human-readable label for a Rucio auth method. Shown next to each switch
- * entry so the user knows which auth path will be used — important when the
+ * entry so the user knows which auth path will be used; important when the
  * same account name maps via more than one method. Returns null when the
  * auth type is unknown, so the row can omit the "via …" subtitle entirely
  * instead of rendering a confusing placeholder.
@@ -148,7 +148,7 @@ const SignOutOfAllButton = ({ onSignOut }: { onSignOut?: () => Promise<void> }) 
                 // Fallback: use NextAuth's signOut directly.
                 // NOTE: This path bypasses SessionMonitorProvider's isManualSignOutRef guard,
                 // so the unauthenticated-redirect watcher will append ?expired=true to the
-                // login URL. This is intentional here — this branch is only reached in
+                // login URL. This is intentional here; this branch is only reached in
                 // Storybook (where SessionMonitorProvider is absent). In the real app the
                 // onSignOut prop is always supplied by HeaderClient via useSessionMonitor().
                 await signOut({ callbackUrl: '/auth/login' });
@@ -223,7 +223,7 @@ export const AccountDropdown = (props: {
                     // Fallback: use NextAuth's signOut directly.
                     // NOTE: This path bypasses SessionMonitorProvider's isManualSignOutRef guard,
                     // so the unauthenticated-redirect watcher will append ?expired=true to the
-                    // login URL. This is intentional here — this branch is only reached in
+                    // login URL. This is intentional here; this branch is only reached in
                     // Storybook (where SessionMonitorProvider is absent). In the real app the
                     // onSignOut prop is always supplied by HeaderClient via useSessionMonitor().
                     await signOut({ callbackUrl: '/auth/login' });
@@ -307,7 +307,7 @@ export const AccountButton = ({
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
-    // The active session is the source of truth for auth type — siteHeader.activeAccount
+    // The active session is the source of truth for auth type; siteHeader.activeAccount
     // is a slim public User shape and intentionally omits credential-flavoured fields.
     const { data: session, update: updateSession } = useSession();
     const activeAuthType = session?.user?.rucioAuthType ?? null;
@@ -405,7 +405,7 @@ export const AccountButton = ({
                     onClose={() => setReauthTarget(null)}
                     onSuccess={() => {
                         // Full reload so the entire React tree, query cache, and RSC tree
-                        // are rebuilt against the new active account's Rucio token —
+                        // are rebuilt against the new active account's Rucio token
                         // mirrors the existing handleSwitchAccount path in HeaderClient.
                         window.location.reload();
                     }}

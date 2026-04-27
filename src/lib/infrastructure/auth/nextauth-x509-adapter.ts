@@ -30,7 +30,7 @@ class NextAuthX509LoginPresenter implements SetX509LoginSessionOutputPort<Promis
 
     async presentSuccess(response: SetX509LoginSessionResponse): Promise<void> {
         // #628: enumerate every other Rucio account mapped to this cert's identity
-        // (DN). The dropdown surfaces them as silent-switch targets — no token is
+        // (DN). The dropdown surfaces them as silent-switch targets; no token is
         // minted at this point, the user re-fetches via /auth/x509/webui at switch
         // time. Failures are non-fatal: primary login still succeeds.
         let identityAccounts: string[] | undefined;
@@ -41,7 +41,7 @@ class NextAuthX509LoginPresenter implements SetX509LoginSessionOutputPort<Promis
                 identityAccounts = result.accounts;
             }
         } catch (error) {
-            console.warn('[Auth/x509] Failed to enumerate identity accounts — proceeding without:', error);
+            console.warn('[Auth/x509] Failed to enumerate identity accounts; proceeding without:', error);
         }
 
         const sessionUser: SessionUser = {

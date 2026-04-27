@@ -3,7 +3,7 @@
  *
  * Coverage:
  * (a) OIDC sign-in stores account.refresh_token in token.rucioOidcRefreshToken (JWT only).
- * (b) session() callback does NOT expose rucioOidcRefreshToken — it must remain in the
+ * (b) session() callback does NOT expose rucioOidcRefreshToken; it must remain in the
  *     encrypted JWT and never be surfaced to the client-visible session object.
  * (c) session() callback does NOT add a separate rucioAuthX509DN field; the DN for an
  *     x509 user is already carried by session.user.rucioIdentity.
@@ -12,7 +12,7 @@
  */
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Module mocks — must be declared before any import so Jest can hoist them.
+// Module mocks; must be declared before any import so Jest can hoist them.
 // ──────────────────────────────────────────────────────────────────────────────
 
 jest.mock('@/lib/infrastructure/ioc/container-config', () => ({
@@ -99,7 +99,7 @@ function makeSessionUser(overrides: Partial<SessionUser> = {}): SessionUser {
 // jwt() callback tests
 // ──────────────────────────────────────────────────────────────────────────────
 
-describe('auth.config.ts — jwt() callback', () => {
+describe('auth.config.ts jwt() callback', () => {
     // Type assertion: NextAuthConfig.callbacks is defined in authConfig.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const jwtCallback = authConfig.callbacks!.jwt!;
@@ -244,7 +244,7 @@ describe('auth.config.ts — jwt() callback', () => {
     });
 
     it('caps token.exp at sessionStartedAt + 24h for OIDC when rucioAuthTokenExpires is beyond the ceiling', async () => {
-        // Simulate an OIDC token that expires 48 hours from now — beyond the 24h ceiling.
+        // Simulate an OIDC token that expires 48 hours from now; beyond the 24h ceiling.
         const sessionStartedAt = Math.floor(Date.now() / 1000);
         const farFutureExpiry = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
         const existingUser = makeSessionUser({
@@ -274,7 +274,7 @@ describe('auth.config.ts — jwt() callback', () => {
     });
 
     it('uses rucioAuthTokenExpires (not the ceiling) for OIDC when token expires before 24h', async () => {
-        // Token expires in 1 hour — well within the 24h ceiling.
+        // Token expires in 1 hour; well within the 24h ceiling.
         const sessionStartedAt = Math.floor(Date.now() / 1000);
         const shortExpiry = new Date(Date.now() + 60 * 60 * 1000).toISOString();
         const existingUser = makeSessionUser({
@@ -445,7 +445,7 @@ describe('auth.config.ts — jwt() callback', () => {
         expect(result.user).toBeDefined();
         expect(result.user?.rucioAccount).toBe('root');
         expect(result.user?.rucioAuthType).toBe(AuthType.OIDC);
-        // No pending-selection — the modal would show "all already signed in" and
+        // No pending-selection; the modal would show "all already signed in" and
         // strand the user on the login page.
         expect(result.pendingAccountSelection).toBeUndefined();
         // identityAccounts is updated with the latest mapping.
@@ -507,7 +507,7 @@ describe('auth.config.ts — jwt() callback', () => {
 // session() callback tests
 // ──────────────────────────────────────────────────────────────────────────────
 
-describe('auth.config.ts — session() callback', () => {
+describe('auth.config.ts session() callback', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const sessionCallback = authConfig.callbacks!.session!;
 

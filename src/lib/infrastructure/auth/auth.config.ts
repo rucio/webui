@@ -39,7 +39,7 @@ function getSessionUserIndex(allUsers: SessionUser[] | undefined, user: SessionU
  * NextAuth v5 builds a fresh default token on every signIn (see
  * node_modules/@auth/core/lib/actions/callback/index.js where `defaultToken` is
  * constructed from `{ name, email, picture, sub }` and passed to the jwt callback).
- * The previous session's fields — including `allUsers` — are discarded unless we
+ * The previous session's fields; including `allUsers`; are discarded unless we
  * re-read them ourselves. Without this, "sign in to another account" replaces the
  * current session instead of extending it.
  *
@@ -74,7 +74,7 @@ async function loadPreviousAllUsers(): Promise<SessionUser[] | undefined> {
             return decoded.allUsers as SessionUser[];
         }
     } catch (error) {
-        console.warn('[Auth] Failed to merge previous allUsers — existing session will be replaced:', error);
+        console.warn('[Auth] Failed to merge previous allUsers; existing session will be replaced:', error);
     }
     return undefined;
 }
@@ -126,7 +126,7 @@ function validateAudienceClaim(payload: Record<string, unknown>, expectedAudienc
  */
 export const authConfig: NextAuthConfig = {
     providers: [
-        // UserPass authentication provider — pre-validated-token only.
+        // UserPass authentication provider; pre-validated-token only.
         // The client probes Rucio's /auth/userpass via /api/auth/userpass/probe (the
         // browser cannot hit Rucio directly; CORS), then hands the resulting token
         // + chosen account back through signIn() to establish the session.
@@ -139,7 +139,7 @@ export const authConfig: NextAuthConfig = {
                 shortVOName: { type: 'text' },
                 rucioTokenExpiry: { type: 'text' },
                 // JSON-encoded `string[]` of every account mapped to the same identity
-                // (lazy-mint design — no tokens, just names — see #628).
+                // (lazy-mint design; no tokens, just names; see #628).
                 linkedAccountNames: { type: 'text' },
             },
             async authorize(credentials): Promise<User | null> {
@@ -191,7 +191,7 @@ export const authConfig: NextAuthConfig = {
          * This is called whenever a JWT is created or updated
          */
         async jwt({ token, user, account, profile, trigger, session }) {
-            // On a fresh signIn NextAuth discards the previous session JWT — seed
+            // On a fresh signIn NextAuth discards the previous session JWT; seed
             // token.allUsers from the existing cookie so we accumulate across
             // sequential logins instead of overwriting them.
             if ((trigger === 'signIn' || trigger === 'signUp') && !token.allUsers) {
@@ -275,7 +275,7 @@ export const authConfig: NextAuthConfig = {
                     // before deciding whether to defer to a modal. Matters when a
                     // user re-runs OIDC sign-in (e.g. via "Sign in to another
                     // account") while already authenticated as some/all of the
-                    // candidates — the modal would otherwise show "all already
+                    // candidates; the modal would otherwise show "all already
                     // signed in" and middleware would loop back to /auth/login
                     // because token.user is left undefined.
                     const alreadySignedIn = new Set(
@@ -287,7 +287,7 @@ export const authConfig: NextAuthConfig = {
 
                     if (fresh.length === 0 && alreadySignedIn.size > 0) {
                         // The user is already signed in to every account this
-                        // identity maps to — re-auth is a no-op. Pick the
+                        // identity maps to; re-auth is a no-op. Pick the
                         // first existing entry as the active user and skip the
                         // pending-selection modal entirely.
                         const existing = (token.allUsers ?? []).find(
@@ -301,7 +301,7 @@ export const authConfig: NextAuthConfig = {
                                 token.rucioOidcRefreshToken = account.refresh_token;
                             }
                             token.sessionStartedAt = Math.floor(Date.now() / 1000);
-                            console.log(`[OIDC] Identity already fully authenticated — preserving active=${existing.rucioAccount}`);
+                            console.log(`[OIDC] Identity already fully authenticated; preserving active=${existing.rucioAccount}`);
                             return token;
                         }
                     }
@@ -310,7 +310,7 @@ export const authConfig: NextAuthConfig = {
                         // Multiple new accounts: defer to the modal. The page reads
                         // session.pendingAccountSelection and finalises via
                         // update({ chosenPendingAccount }).
-                        console.log(`[OIDC] Multiple new accounts (${fresh.length}) — deferring to user selection.`);
+                        console.log(`[OIDC] Multiple new accounts (${fresh.length}); deferring to user selection.`);
                         token.pendingAccountSelection = {
                             authType: 'oidc',
                             providerName,
@@ -321,7 +321,7 @@ export const authConfig: NextAuthConfig = {
                             rucioVO: 'atl', // TODO: pull from callback URL state when VO selection is wired
                             rucioOidcRefreshToken: account.refresh_token ?? undefined,
                         };
-                        // Don't set token.user — middleware will redirect to /auth/login,
+                        // Don't set token.user; middleware will redirect to /auth/login,
                         // where the page picks up pendingAccountSelection from the session.
                         return token;
                     }
@@ -398,7 +398,7 @@ export const authConfig: NextAuthConfig = {
                     // #628: every account this OIDC identity is mapped to. The dropdown
                     // surfaces these as switch targets; OIDC tokens are identity-scoped
                     // (not per-account) so switching is a server-side repoint via
-                    // update({ switchOidcAccount }) — see the dedicated branch below.
+                    // update({ switchOidcAccount }); see the dedicated branch below.
                     identityAccounts: candidateAccounts,
                 };
 
@@ -468,7 +468,7 @@ export const authConfig: NextAuthConfig = {
                 // Propagate identityAccounts across every allUsers[] entry that shares
                 // this user's Rucio identity. When the user later re-auths into one of
                 // the linked accounts (#628), the new SessionUser carries the same list
-                // — keeping the dropdown's "switchable but unauthenticated" set in sync
+                //; keeping the dropdown's "switchable but unauthenticated" set in sync
                 // for any user we render as active.
                 if (sessionUser.identityAccounts && sessionUser.identityAccounts.length > 0) {
                     for (const peer of token.allUsers) {
@@ -567,7 +567,7 @@ export const authConfig: NextAuthConfig = {
             // isn't already in allUsers[]. Unlike userpass and x509 the OIDC token
             // is identity-scoped (Rucio validates the identity, not per-account),
             // so we can reuse the existing access token and just build a new
-            // SessionUser for the chosen account — no provider round-trip needed.
+            // SessionUser for the chosen account; no provider round-trip needed.
             if (
                 trigger === 'update' &&
                 session?.switchOidcAccount &&
@@ -652,7 +652,7 @@ export const authConfig: NextAuthConfig = {
 
             // Tie the NextAuth session lifetime to the Rucio token expiry.
             // NextAuth reads token.exp (Unix seconds) to decide if the JWT cookie
-            // is still valid — setting it here ensures that useSession(), auth(),
+            // is still valid; setting it here ensures that useSession(), auth(),
             // and the session cookie all expire exactly when the Rucio token does,
             // rather than after the fixed 24-hour maxAge.
             //
@@ -690,7 +690,7 @@ export const authConfig: NextAuthConfig = {
             }
 
             // Expose pending account-selection state to the login page.
-            // Note: never expose the underlying tokens — the page only needs
+            // Note: never expose the underlying tokens; the page only needs
             // the account list and provider name to drive the modal.
             if (token.pendingAccountSelection) {
                 session.pendingAccountSelection = {

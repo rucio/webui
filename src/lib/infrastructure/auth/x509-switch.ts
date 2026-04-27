@@ -4,7 +4,7 @@ import { signIn } from 'next-auth/react';
  * Result of a silent x509 account switch attempt.
  *
  * - `ok: true`   → the new account is now the active session (a page reload
- *                  is the caller's responsibility — see AccountButton).
+ *                  is the caller's responsibility; see AccountButton).
  * - `ok: false`  → switching failed; `error` is a user-facing message.
  */
 export type X509SwitchResult = { ok: true } | { ok: false; error: string };
@@ -15,7 +15,7 @@ export type X509SwitchResult = { ok: true } | { ok: false; error: string };
  *
  * The browser presents the user's client certificate automatically when
  * fetching Rucio's `/auth/x509/webui`, so unlike userpass we do NOT need to
- * prompt for credentials — the cert IS the credential. We pass the chosen
+ * prompt for credentials; the cert IS the credential. We pass the chosen
  * account via `X-Rucio-Account` so Rucio scopes the token correctly.
  *
  * This is the lazy-mint switch path for x509 (#628): no tokens are pre-minted

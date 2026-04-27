@@ -15,11 +15,11 @@ import { AUTH_ERROR_MESSAGES } from '@/lib/core/entity/auth-errors';
  * identity even when one was auto-selected as the default. We do *not* mint
  * tokens for the linked accounts at login time (that would put N bearer tokens
  * in the cookie for N accounts the user never explicitly chose). Instead, the
- * dropdown surfaces "switch to X — sign in required" entries, and clicking one
+ * dropdown surfaces "switch to X; sign in required" entries, and clicking one
  * opens this modal: it asks for the password, hits /api/auth/userpass/probe
  * scoped to the target account, and calls signIn() with the resulting token.
  *
- * The same component is used when an active userpass session expires — the
+ * The same component is used when an active userpass session expires; the
  * SessionMonitor opens it in 'expired' mode so the user can re-auth in place
  * without losing their current page.
  */
@@ -34,11 +34,11 @@ interface ReauthModalProps {
     /** Called after a successful re-auth + signIn. Parent typically reloads the page. */
     onSuccess: () => void;
 
-    /** Why the modal is open — drives copy. */
+    /** Why the modal is open; drives copy. */
     mode: ReauthMode;
     /** The account the user is re-authenticating into. */
     targetAccount: string;
-    /** The Rucio identity (= username for userpass) — username field is read-only. */
+    /** The Rucio identity (= username for userpass); username field is read-only. */
     rucioIdentity: string;
     /** VO short name to scope the auth call. */
     shortVOName: string;
@@ -103,7 +103,7 @@ export const ReauthModal = ({ isOpen, onClose, onSuccess, mode, targetAccount, r
                 return;
             }
 
-            // 2. Hand the token to NextAuth — same path as the login page's success branch.
+            // 2. Hand the token to NextAuth; same path as the login page's success branch.
             const result = await signIn('userpass', {
                 rucioAuthToken: body.rucioAuthToken,
                 rucioAccount: body.rucioAccount,

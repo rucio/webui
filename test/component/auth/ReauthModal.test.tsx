@@ -6,7 +6,7 @@
  * The modal is the user-facing half of #628's lazy-mint design: it asks for the
  * password, probes Rucio scoped to the chosen account, then hands the resulting
  * token to NextAuth. The same component is reused for SessionMonitor's
- * expired-token re-auth flow — only copy differs.
+ * expired-token re-auth flow; only copy differs.
  *
  * Coverage:
  * (a) Renders read-only username + account, autofocuses password
