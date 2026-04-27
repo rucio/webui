@@ -1,7 +1,10 @@
 import type { NextAuthConfig, User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { cookies } from 'next/headers';
+import { decode } from 'next-auth/jwt';
 import { SessionUser } from '@/types/next-auth';
 import { authorizeUserPass } from './nextauth-userpass-adapter';
+import { authorizeUserPassToken } from './nextauth-userpass-token-adapter';
 import { MultipleAccountsError } from '@/lib/core/entity/auth-errors';
 import { authorizeX509 } from './nextauth-x509-adapter';
 import { AuthType, Role } from '@/lib/core/entity/auth-models';
@@ -19,6 +22,9 @@ import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-confi
 import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import { resolveAccountRole } from '@/lib/core/services/resolve-account-role';
 
+/** Session max-age in seconds (24 hours). */
+export const SESSION_MAX_AGE_SECONDS = 24 * 60 * 60;
+
 /**
  * Helper function to find user index in allUsers array
  */
@@ -30,6 +36,52 @@ function getSessionUserIndex(allUsers: SessionUser[] | undefined, user: SessionU
 }
 
 /**
+ * Reads the existing NextAuth session cookie and returns its decoded `allUsers` array.
+ *
+ * NextAuth v5 builds a fresh default token on every signIn (see
+ * node_modules/@auth/core/lib/actions/callback/index.js where `defaultToken` is
+ * constructed from `{ name, email, picture, sub }` and passed to the jwt callback).
+ * The previous session's fields — including `allUsers` — are discarded unless we
+ * re-read them ourselves. Without this, "sign in to another account" replaces the
+ * current session instead of extending it.
+ *
+ * The cookie is chunked for large payloads using the suffix convention
+ * `{name}`, `{name}.0`, `{name}.1`, … . The chunks are concatenated in numeric order.
+ */
+async function loadPreviousAllUsers(): Promise<SessionUser[] | undefined> {
+    const secret = process.env.NEXTAUTH_SECRET;
+    if (!secret) return undefined;
+
+    try {
+        const cookieStore = await cookies();
+        const useSecureCookies = process.env.NEXTAUTH_URL?.startsWith('https://') ?? false;
+        const cookieName = useSecureCookies ? '__Secure-authjs.session-token' : 'authjs.session-token';
+
+        // Collect all chunks of the session cookie, sorted by numeric suffix.
+        const chunks = cookieStore
+            .getAll()
+            .filter(c => c.name === cookieName || c.name.startsWith(`${cookieName}.`))
+            .sort((a, b) => {
+                const aSuffix = parseInt(a.name.split('.').pop() || '0');
+                const bSuffix = parseInt(b.name.split('.').pop() || '0');
+                return aSuffix - bSuffix;
+            })
+            .map(c => c.value);
+
+        if (chunks.length === 0) return undefined;
+
+        const rawCookie = chunks.join('');
+        const decoded = await decode({ token: rawCookie, secret, salt: cookieName });
+        if (decoded?.allUsers && Array.isArray(decoded.allUsers)) {
+            return decoded.allUsers as SessionUser[];
+        }
+    } catch (error) {
+        console.warn('[Auth] Failed to merge previous allUsers — existing session will be replaced:', error);
+    }
+    return undefined;
+}
+
+/**
  * Validates the audience claim in a JWT token payload
  * Logs a warning if validation fails but does NOT reject authentication
  *
@@ -38,7 +90,7 @@ function getSessionUserIndex(allUsers: SessionUser[] | undefined, user: SessionU
  * @param providerName - Name of the OIDC provider (for logging)
  * @returns true if validation passes, false otherwise
  */
-function validateAudienceClaim(payload: any, expectedAudience: string, providerName: string): boolean {
+function validateAudienceClaim(payload: Record<string, unknown>, expectedAudience: string, providerName: string): boolean {
     const audience = payload.aud;
 
     if (!audience) {
@@ -81,25 +133,34 @@ export const authConfig: NextAuthConfig = {
             id: 'userpass',
             name: 'Rucio UserPass',
             credentials: {
+                // Legacy full-credentials path (server-side Rucio call)
                 username: { label: 'Username', type: 'text' },
                 password: { label: 'Password', type: 'password' },
                 account: { label: 'Account', type: 'text', optional: true },
                 vo: { label: 'VO', type: 'text' },
+                // Pre-validated-token path (client probed Rucio directly, mirrors x509)
+                rucioAuthToken: { type: 'text' },
+                rucioAccount: { type: 'text' },
+                shortVOName: { type: 'text' },
+                rucioTokenExpiry: { type: 'text' },
             },
             async authorize(credentials): Promise<User | null> {
-                console.log('[LOGIN FLOW 5] NextAuth authorize called', {
-                    username: credentials?.username,
-                    vo: credentials?.vo,
-                    account: credentials?.account || '(none)',
-                    hasPassword: !!credentials?.password,
-                });
+                // Pre-validated-token path: client has already probed Rucio /auth/userpass
+                // and obtained the token + selected account. We just build the session.
+                if (credentials?.rucioAuthToken && credentials?.rucioAccount && credentials?.shortVOName && credentials?.rucioTokenExpiry) {
+                    return await authorizeUserPassToken(
+                        credentials.rucioAuthToken as string,
+                        credentials.rucioAccount as string,
+                        credentials.shortVOName as string,
+                        credentials.rucioTokenExpiry as string,
+                    );
+                }
 
                 if (!credentials?.username || !credentials?.password || !credentials?.vo) {
                     return null;
                 }
 
                 try {
-                    console.log('[LOGIN FLOW 6] Calling authorizeUserPass adapter');
                     return await authorizeUserPass(
                         credentials.username as string,
                         credentials.password as string,
@@ -107,11 +168,6 @@ export const authConfig: NextAuthConfig = {
                         credentials.vo as string,
                     );
                 } catch (error) {
-                    console.log('[LOGIN FLOW 7] authorizeUserPass threw error', {
-                        errorName: error instanceof Error ? error.name : 'Unknown',
-                        isMultipleAccounts: error instanceof MultipleAccountsError,
-                        message: error instanceof Error ? error.message : String(error),
-                    });
                     // If it's a MultipleAccountsError, we need to handle it specially
                     if (error instanceof MultipleAccountsError) {
                         // NextAuth doesn't have a built-in way to return custom errors
@@ -158,12 +214,15 @@ export const authConfig: NextAuthConfig = {
          * This is called whenever a JWT is created or updated
          */
         async jwt({ token, user, account, profile, trigger, session }) {
-            console.log('[LOGIN FLOW 17] JWT callback triggered', {
-                hasUser: !!user,
-                accountType: account?.type,
-                trigger,
-                currentUserAccount: token.user?.rucioAccount,
-            });
+            // On a fresh signIn NextAuth discards the previous session JWT — seed
+            // token.allUsers from the existing cookie so we accumulate across
+            // sequential logins instead of overwriting them.
+            if ((trigger === 'signIn' || trigger === 'signUp') && !token.allUsers) {
+                const previousAllUsers = await loadPreviousAllUsers();
+                if (previousAllUsers && previousAllUsers.length > 0) {
+                    token.allUsers = previousAllUsers;
+                }
+            }
 
             // ==========================================
             // Handle OIDC Authentication (Dynamic Providers)
@@ -176,7 +235,14 @@ export const authConfig: NextAuthConfig = {
                 // The OIDC access_token IS the rucioAuthToken
                 // No conversion needed - Rucio will validate it directly
                 const rucioAuthToken = account.access_token;
-                const rucioAuthTokenExpires = new Date(account.expires_at! * 1000).toISOString();
+                // Dev-only override: shorten the session expiry the client sees so the
+                // SessionMonitor refresh flow can be exercised without waiting the full
+                // provider-issued lifetime. The OIDC access token itself remains valid
+                // for its real lifetime; only the client-tracked expiry is shortened.
+                const devShortExpiry = process.env.DEV_SHORT_SESSION_SECONDS;
+                const rucioAuthTokenExpires = devShortExpiry
+                    ? new Date(Date.now() + Number(devShortExpiry) * 1000).toISOString()
+                    : new Date(account.expires_at! * 1000).toISOString();
 
                 // Decode and validate JWT token claims
                 try {
@@ -184,12 +250,6 @@ export const authConfig: NextAuthConfig = {
                     if (tokenParts.length === 3) {
                         // Decode the payload (second part of JWT)
                         const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
-                        // SECURITY: Do not log token claims in production
-                        // console.log('[OIDC] JWT Token Claims:', JSON.stringify(payload, null, 2));
-                        // console.log(`[OIDC] Audience (aud) claim: ${JSON.stringify(payload.aud)}`);
-                        // console.log(`[OIDC] Issuer (iss) claim: ${payload.iss}`);
-                        // console.log(`[OIDC] Subject (sub) claim: ${payload.sub}`);
-
                         // Validate audience claim
                         const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
                         const expectedAudience = await envConfigGateway.oidcExpectedAudience();
@@ -209,15 +269,6 @@ export const authConfig: NextAuthConfig = {
                     console.error('[OIDC] Failed to decode or validate JWT token:', e);
                 }
 
-                // SECURITY: Token logging disabled - DO NOT enable in production
-                // console.log('=== OIDC TOKEN FOR MANUAL TESTING ===');
-                // const tokenPreview = `${rucioAuthToken.substring(0, 50)}...${rucioAuthToken.substring(rucioAuthToken.length - 20)}`;
-                // console.log(`[OIDC] Access Token (truncated): ${tokenPreview}`);
-                // console.log(`[OIDC] Full token length: ${rucioAuthToken.length} characters`);
-                // console.log(`[OIDC] Extract full token from the line below (search for [OIDC_TOKEN]):`);
-                // console.log(`[OIDC_TOKEN] ${rucioAuthToken}`);
-                // console.log('=====================================');
-
                 // Create Rucio identity string (format: "SUB=xxx, ISS=xxx")
                 // This matches the format expected in Rucio's identity_account_association table
                 // The sub and iss claims come from the OIDC profile, not the mapped user object
@@ -231,6 +282,7 @@ export const authConfig: NextAuthConfig = {
                 // This uses Rucio's identity API: GET /identities/{identity}/OIDC/accounts
                 let rucioAccount: string;
                 let accountLookupError: string | undefined;
+                let candidateAccounts: string[] = [];
 
                 try {
                     // Get Rucio host from environment config
@@ -240,10 +292,29 @@ export const authConfig: NextAuthConfig = {
                     console.log(`[OIDC] Looking up Rucio account for identity via API...`);
 
                     // Call Rucio identity API (with caching)
-                    const accounts = await getRucioAccountsForIdentity(rucioIdentity, rucioHost, rucioAuthToken);
+                    candidateAccounts = await getRucioAccountsForIdentity(rucioIdentity, rucioHost, rucioAuthToken);
 
-                    // Handle multiple accounts (use first one for now)
-                    rucioAccount = selectAccountFromMultiple(accounts);
+                    // Multiple accounts: stash a pending-selection state and return.
+                    // The login page reads session.pendingAccountSelection, shows the
+                    // MultipleAccountsModal, and finalises via update({ chosenPendingAccount }).
+                    if (candidateAccounts.length > 1) {
+                        console.log(`[OIDC] Multiple accounts (${candidateAccounts.length}) — deferring to user selection.`);
+                        token.pendingAccountSelection = {
+                            authType: 'oidc',
+                            providerName,
+                            rucioIdentity,
+                            accounts: candidateAccounts,
+                            rucioAuthToken,
+                            rucioAuthTokenExpires,
+                            rucioVO: 'atl', // TODO: pull from callback URL state when VO selection is wired
+                            rucioOidcRefreshToken: account.refresh_token ?? undefined,
+                        };
+                        // Don't set token.user — middleware will redirect to /auth/login,
+                        // where the page picks up pendingAccountSelection from the session.
+                        return token;
+                    }
+
+                    rucioAccount = selectAccountFromMultiple(candidateAccounts);
                     console.log(`[OIDC] Successfully mapped to Rucio account: ${rucioAccount}`);
                 } catch (error) {
                     if (error instanceof IdentityNotMappedError) {
@@ -314,6 +385,15 @@ export const authConfig: NextAuthConfig = {
                     isLoggedIn: true,
                 };
 
+                // Store OIDC refresh token in the JWT so it can be used for session refresh
+                if (account.refresh_token) {
+                    token.rucioOidcRefreshToken = account.refresh_token;
+                }
+
+                // Record the original sign-in time so we can enforce a hard 24-hour
+                // session ceiling even when OIDC tokens keep getting refreshed.
+                token.sessionStartedAt = Math.floor(Date.now() / 1000);
+
                 // Initialize allUsers array if needed
                 if (!token.allUsers) {
                     token.allUsers = [];
@@ -344,31 +424,35 @@ export const authConfig: NextAuthConfig = {
             // On sign in: add or update the user in allUsers array
             // Note: Credentials provider sets account.type to 'credentials'
             if (user && (!account?.type || account?.type === 'credentials')) {
-                console.log('[LOGIN FLOW 18] Adding/updating user in JWT token', {
-                    rucioAccount: (user as SessionUser).rucioAccount,
-                    rucioAuthType: (user as SessionUser).rucioAuthType,
-                    isLoggedIn: (user as SessionUser).isLoggedIn,
-                    existingUsersCount: token.allUsers?.length || 0,
-                });
-
                 // Initialize allUsers if it doesn't exist
                 if (!token.allUsers) {
                     token.allUsers = [];
                 }
 
+                // Dev-only: shorten the session expiry so the expiry/redirect flow
+                // can be exercised without waiting for the real Rucio token lifetime.
+                const devShortSeconds = process.env.DEV_SHORT_SESSION_SECONDS;
+                let sessionUser = user as SessionUser;
+                if (devShortSeconds) {
+                    sessionUser = {
+                        ...sessionUser,
+                        rucioAuthTokenExpires: new Date(Date.now() + Number(devShortSeconds) * 1000).toISOString(),
+                    };
+                }
+
                 // Check if user already exists in allUsers
-                const existingIndex = getSessionUserIndex(token.allUsers, user as SessionUser);
+                const existingIndex = getSessionUserIndex(token.allUsers, sessionUser);
 
                 if (existingIndex === -1) {
                     // New user: add to allUsers
-                    token.allUsers.push(user as SessionUser);
+                    token.allUsers.push(sessionUser);
                 } else {
                     // Existing user: update their info
-                    token.allUsers[existingIndex] = user as SessionUser;
+                    token.allUsers[existingIndex] = sessionUser;
                 }
 
                 // Set this user as the active user
-                token.user = user as SessionUser;
+                token.user = sessionUser;
             }
 
             // Handle account switching
@@ -377,6 +461,92 @@ export const authConfig: NextAuthConfig = {
                 const switchUser = token.allUsers?.find(u => u.rucioAccount === session.account);
                 if (switchUser) {
                     token.user = switchUser;
+                }
+            }
+
+            // Handle OIDC pending-selection finalize
+            // When the frontend calls update({ chosenPendingAccount: 'someAccount' }) after the
+            // user picked from the multi-account modal. Build the final SessionUser from the
+            // stashed Rucio token + chosen account, push to allUsers, and clear the pending state.
+            if (trigger === 'update' && session?.chosenPendingAccount && token.pendingAccountSelection) {
+                const pending = token.pendingAccountSelection;
+                const chosen: string = session.chosenPendingAccount;
+
+                if (!pending.accounts.includes(chosen)) {
+                    console.error(`[OIDC] Rejected finalize: account "${chosen}" not in pending list ${pending.accounts.join(',')}`);
+                } else {
+                    let role: Role = Role.USER;
+                    let country: string | undefined;
+                    let countryRole: Role | undefined;
+                    try {
+                        const accountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
+                        const accountAttrs = await accountGateway.listAccountAttributes(chosen, pending.rucioAuthToken);
+                        const resolved = resolveAccountRole(accountAttrs.attributes);
+                        role = resolved.role ?? Role.USER;
+                        country = resolved.country;
+                        countryRole = resolved.countryRole;
+                    } catch (error) {
+                        console.error('[OIDC] Failed to fetch account attributes during finalize:', error);
+                    }
+
+                    const finalisedUser: SessionUser = {
+                        id: `${chosen}@${pending.providerName}`,
+                        email: '',
+                        emailVerified: null,
+                        rucioIdentity: pending.rucioIdentity,
+                        rucioAccount: chosen,
+                        rucioAuthType: AuthType.OIDC,
+                        rucioAuthToken: pending.rucioAuthToken,
+                        rucioAuthTokenExpires: pending.rucioAuthTokenExpires,
+                        rucioOIDCProvider: pending.providerName,
+                        rucioVO: pending.rucioVO,
+                        role,
+                        country,
+                        countryRole,
+                        isLoggedIn: true,
+                    };
+
+                    if (!token.allUsers) token.allUsers = [];
+                    const existingIndex = getSessionUserIndex(token.allUsers, finalisedUser);
+                    if (existingIndex === -1) {
+                        token.allUsers.push(finalisedUser);
+                    } else {
+                        token.allUsers[existingIndex] = finalisedUser;
+                    }
+                    token.user = finalisedUser;
+                    if (pending.rucioOidcRefreshToken) {
+                        token.rucioOidcRefreshToken = pending.rucioOidcRefreshToken;
+                    }
+                    token.sessionStartedAt = Math.floor(Date.now() / 1000);
+                    delete token.pendingAccountSelection;
+                    console.log(`[OIDC] Finalised pending selection: account=${chosen}`);
+                }
+            }
+
+            // Handle pending-selection abort: clear without finalising (user closed the modal).
+            if (trigger === 'update' && session?.cancelPendingAccountSelection && token.pendingAccountSelection) {
+                console.log('[OIDC] User cancelled pending account selection');
+                delete token.pendingAccountSelection;
+            }
+
+            // Handle OIDC session refresh
+            // Invoked via unstable_update() from the /api/auth/refresh route with
+            // the fresh tokens and expiry returned by the OIDC provider.
+            if (trigger === 'update' && session?.rucioAuthToken && session?.rucioAuthTokenExpires && token.user) {
+                const refreshedUser: SessionUser = {
+                    ...token.user,
+                    rucioAuthToken: session.rucioAuthToken,
+                    rucioAuthTokenExpires: session.rucioAuthTokenExpires,
+                };
+                token.user = refreshedUser;
+                if (token.allUsers) {
+                    const idx = getSessionUserIndex(token.allUsers, refreshedUser);
+                    if (idx !== -1) {
+                        token.allUsers[idx] = refreshedUser;
+                    }
+                }
+                if (session.rucioOidcRefreshToken) {
+                    token.rucioOidcRefreshToken = session.rucioOidcRefreshToken;
                 }
             }
 
@@ -394,6 +564,25 @@ export const authConfig: NextAuthConfig = {
                 }
             }
 
+            // Tie the NextAuth session lifetime to the Rucio token expiry.
+            // NextAuth reads token.exp (Unix seconds) to decide if the JWT cookie
+            // is still valid — setting it here ensures that useSession(), auth(),
+            // and the session cookie all expire exactly when the Rucio token does,
+            // rather than after the fixed 24-hour maxAge.
+            //
+            // For OIDC: cap at sessionStartedAt + SESSION_MAX_AGE_SECONDS so that
+            // repeated token refreshes cannot extend the session beyond 24 hours
+            // from the original sign-in.
+            if (token.user?.rucioAuthTokenExpires) {
+                const rucioExpSec = Math.floor(new Date(token.user.rucioAuthTokenExpires).getTime() / 1000);
+                if (token.user.rucioAuthType === AuthType.OIDC && token.sessionStartedAt) {
+                    const hardCeilSec = (token.sessionStartedAt as number) + SESSION_MAX_AGE_SECONDS;
+                    token.exp = Math.min(rucioExpSec, hardCeilSec);
+                } else {
+                    token.exp = rucioExpSec;
+                }
+            }
+
             return token;
         },
 
@@ -402,12 +591,6 @@ export const authConfig: NextAuthConfig = {
          * This is called whenever getSession() or useSession() is used
          */
         async session({ session, token }) {
-            console.log('[LOGIN FLOW 19] Session callback triggered', {
-                hasTokenUser: !!token.user,
-                allUsersCount: token.allUsers?.length || 0,
-                activeAccount: token.user?.rucioAccount,
-            });
-
             if (token.user) {
                 session.user = token.user;
             }
@@ -418,6 +601,21 @@ export const authConfig: NextAuthConfig = {
                 session.oidcError = token.oidcError as string;
                 session.oidcIdentity = token.oidcIdentity as string;
                 session.oidcProvider = token.oidcProvider as string;
+            }
+
+            // Expose pending account-selection state to the login page.
+            // Note: never expose the underlying tokens — the page only needs
+            // the account list and provider name to drive the modal.
+            if (token.pendingAccountSelection) {
+                session.pendingAccountSelection = {
+                    authType: token.pendingAccountSelection.authType,
+                    providerName: token.pendingAccountSelection.providerName,
+                    rucioIdentity: token.pendingAccountSelection.rucioIdentity,
+                    accounts: token.pendingAccountSelection.accounts,
+                    rucioAuthToken: '',
+                    rucioAuthTokenExpires: token.pendingAccountSelection.rucioAuthTokenExpires,
+                    rucioVO: token.pendingAccountSelection.rucioVO,
+                };
             }
 
             return session;
@@ -458,7 +656,7 @@ export const authConfig: NextAuthConfig = {
 
     session: {
         strategy: 'jwt',
-        maxAge: 24 * 60 * 60, // 24 hours
+        maxAge: SESSION_MAX_AGE_SECONDS,
     },
 
     secret: process.env.NEXTAUTH_SECRET,
