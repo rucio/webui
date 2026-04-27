@@ -51,7 +51,7 @@ describe('Get SiteHeader API Test', () => {
         const { res, session } = await createHttpMocks();
         process.env['PROJECT_URL'] = 'https://atlas.cern';
 
-        // Two live sessions with distinct auth types — the dropdown needs both
+        // Two live sessions with distinct auth types; the dropdown needs both
         // surfaced so each entry can render "via x509" / "via userpass".
         await addOrUpdateSessionUser(session, {
             rucioIdentity: '/C=CH/O=CERN/CN=Some Cert',

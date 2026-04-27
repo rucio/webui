@@ -18,13 +18,13 @@ export interface GetSiteHeaderResponse extends BaseResponseModel {
     availableUsers: User[];
     /**
      * Names of accounts mapped to the active user's identity that are NOT
-     * currently in availableUsers — i.e. the user *can* switch into them but
+     * currently in availableUsers; i.e. the user *can* switch into them but
      * has no live token (#628 lazy-mint design). The dropdown surfaces these
      * with a re-auth modal trigger rather than a one-click switch.
      */
     linkedAccountNames: string[];
     /**
-     * Rucio auth host URL — surfaced so the client-side x509 switch flow can
+     * Rucio auth host URL; surfaced so the client-side x509 switch flow can
      * call /auth/x509/webui directly with the user's cert (#628). Empty
      * string when the env config is unavailable.
      */

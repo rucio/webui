@@ -8,11 +8,11 @@ import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gat
 /**
  * After Rucio returns 200 with a (possibly auto-selected default) account, looks up
  * every other account mapped to the same identity. Returns just the account *names*
- * — no tokens. The dropdown uses this list to surface "switch to X" options that
+ * with no tokens. The dropdown uses this list to surface "switch to X" options that
  * trigger a fresh re-auth (#628 lazy-mint design); we do NOT silently mint bearer
  * tokens for accounts the user did not explicitly choose to use.
  *
- * Failures are non-fatal — the primary login still succeeds with an empty list.
+ * Failures are non-fatal; the primary login still succeeds with an empty list.
  */
 async function getIdentityAccountNames(
     username: string,
@@ -30,13 +30,13 @@ async function getIdentityAccountNames(
  * POST /api/auth/userpass/probe
  *
  * Server-side probe of Rucio's /auth/userpass endpoint. The Rucio endpoint
- * isn't browser-facing (no CORS), so the client can't hit it directly —
+ * isn't browser-facing (no CORS), so the client can't hit it directly
  * this route wraps it and returns a small JSON payload the Login page can
  * treat like an AuthViewModel (success / multiple_accounts / error).
  *
  * On 200 (default/single account), the route additionally returns
  * `linkedAccountNames`: every other account mapped to the same identity.
- * No tokens for those accounts are minted at this point — the user must
+ * No tokens for those accounts are minted at this point; the user must
  * re-enter their password to switch into them (#628 lazy-mint design).
  *
  * Session is established afterwards by signIn('userpass', { rucioAuthToken, ... }),

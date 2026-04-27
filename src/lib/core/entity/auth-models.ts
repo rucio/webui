@@ -57,7 +57,7 @@ export interface SessionUser extends User {
     isLoggedIn: boolean;
     /**
      * All accounts the Rucio identity is mapped to (including this one). Set
-     * when the underlying auth flow can enumerate them — currently only
+     * when the underlying auth flow can enumerate them; currently only
      * userpass via /api/auth/userpass/probe (#628). The AccountDropdown uses
      * this to surface "switch to X (re-auth required)" entries for accounts
      * not currently in session.allUsers[].

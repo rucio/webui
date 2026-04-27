@@ -5,7 +5,7 @@
  * it directly due to CORS) and, on a successful 200, additionally returns the
  * names of every other account mapped to the same identity (#628 lazy-mint).
  *
- * No tokens for those linked accounts are minted here — the dropdown surfaces
+ * No tokens for those linked accounts are minted here; the dropdown surfaces
  * them with a re-auth modal trigger, and the modal calls this same route with
  * the target account explicitly to obtain a fresh token.
  *
@@ -102,7 +102,7 @@ describe('POST /api/auth/userpass/probe', () => {
         expect(userpassLoginMock).toHaveBeenCalledTimes(1);
     });
 
-    it('(c) #628: returns ALL identity account names alongside primary login — no extra tokens minted', async () => {
+    it('(c) #628: returns ALL identity account names alongside primary login; no extra tokens minted', async () => {
         userpassLoginMock.mockResolvedValueOnce({
             statusCode: 200,
             authToken: 'tok-root',

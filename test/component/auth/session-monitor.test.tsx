@@ -271,7 +271,7 @@ describe('SessionMonitorProvider', () => {
 
     // ── (6) userpass auth type: opens in-place re-auth modal (#628) ───────
 
-    it('(6) opens the in-place re-auth modal for userpass auth type — does NOT signOut/redirect', async () => {
+    it('(6) opens the in-place re-auth modal for userpass auth type; does NOT signOut/redirect', async () => {
         const expiry = new Date(Date.now() + 90_000).toISOString();
         (useSession as jest.Mock).mockReturnValue({
             data: {
@@ -300,7 +300,7 @@ describe('SessionMonitorProvider', () => {
         expect(fetchMock).not.toHaveBeenCalled();
         expect(mockUpdate).not.toHaveBeenCalled();
         // #628: we open the re-auth modal in place rather than tearing down
-        // the session — signOut and the expired-redirect must NOT fire.
+        // the session; signOut and the expired-redirect must NOT fire.
         expect(signOut).not.toHaveBeenCalled();
         expect(navigateTo).not.toHaveBeenCalled();
         // The modal renders with a "Session expired" heading.
