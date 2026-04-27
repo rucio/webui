@@ -6,6 +6,19 @@ import { HiCheck, HiMinus } from 'react-icons/hi';
 
 import { cn } from '@/component-library/utils';
 
+/**
+ * Accessible checkbox built on Radix UI's CheckboxPrimitive.
+ *
+ * Accessibility notes:
+ * - The visible control is a `<button role="checkbox">` (the Radix Root); its `aria-checked`
+ *   attribute conveys the checked state to assistive technology.
+ * - Radix internally renders a visually-hidden `<input type="checkbox">` (BubbleInput) for
+ *   native-form serialisation. As of @radix-ui/react-checkbox v1.1+, that element is rendered
+ *   with `aria-hidden="true"` so it is excluded from the accessibility tree.
+ * - The `CheckboxPrimitive.Indicator` and its decorative icon children are marked
+ *   `aria-hidden="true"` here because the state is already communicated by the Root's
+ *   `role`/`aria-checked` attributes.
+ */
 const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>>(
     ({ className, ...props }, ref) => (
         <CheckboxPrimitive.Root
@@ -25,7 +38,9 @@ const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root
             )}
             {...props}
         >
-            <CheckboxPrimitive.Indicator className={cn('flex items-center justify-center text-neutral-100')}>
+            {/* aria-hidden: the state is communicated by the Root's role/aria-checked; the
+                icon is purely decorative and must not be announced by screen readers. */}
+            <CheckboxPrimitive.Indicator aria-hidden="true" className={cn('flex items-center justify-center text-neutral-100')}>
                 {props.checked === 'indeterminate' && <HiMinus className="h-4 w-4" />}
                 {props.checked === true && <HiCheck className="h-4 w-4" />}
             </CheckboxPrimitive.Indicator>

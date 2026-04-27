@@ -2,20 +2,25 @@
 
 import * as React from 'react';
 import { MutationDialog } from '@/component-library/features/mutations/MutationDialog';
-import { HiInformationCircle, HiExclamation } from 'react-icons/hi';
+import { Checkbox } from '@/component-library/atoms/form/checkbox';
+import { Alert } from '@/component-library/atoms/feedback/Alert';
+import { HiInformationCircle } from 'react-icons/hi';
 
 export interface DeleteRuleDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     ruleId: string;
     isAdmin: boolean;
-    onConfirm: () => void;
+    onConfirm: (forceDelete: boolean) => void;
     loading?: boolean;
+    /** Initial checked state of the force-delete checkbox. Primarily for Storybook/testing. */
+    defaultForceDelete?: boolean;
 }
 
 /**
  * Confirmation dialog for deleting a replication rule.
- * Sets the rule lifetime to 1 hour (admin) or 24 hours (user), effectively scheduling deletion.
+ * Soft-delete (default) sets the rule lifetime to 3600 seconds (1 hour).
+ * Force-delete sets lifetime to 0, scheduling immediate deletion with no grace period.
  *
  * @example
  * ```tsx
@@ -24,42 +29,71 @@ export interface DeleteRuleDialogProps {
  *     onOpenChange={setIsOpen}
  *     ruleId="abc123def456"
  *     isAdmin={false}
- *     onConfirm={handleDelete}
+ *     onConfirm={(forceDelete) => handleDelete(forceDelete)}
  * />
  * ```
  */
-export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({ open, onOpenChange, ruleId, isAdmin, onConfirm, loading = false }) => {
+export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({ open, onOpenChange, ruleId, isAdmin, onConfirm, loading = false, defaultForceDelete = false }) => {
+    const [forceDelete, setForceDelete] = React.useState(defaultForceDelete);
+
+    // Reset checkbox state when the dialog closes
+    React.useEffect(() => {
+        if (!open) {
+            setForceDelete(false);
+        }
+    }, [open]);
+
+    const handleSubmit = () => {
+        onConfirm(forceDelete);
+    };
+
     return (
         <MutationDialog
             open={open}
             onOpenChange={onOpenChange}
             title="Delete Rule"
-            description="Schedule this rule for deletion by setting a short lifetime."
-            onSubmit={onConfirm}
+            description="Schedule this rule for deletion."
+            onSubmit={handleSubmit}
             submitLabel="Delete Rule"
             submitVariant="error"
             loading={loading}
         >
             <div className="space-y-4">
-                {/* Tips */}
+                {/* Info tip */}
                 <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 p-3 text-sm text-base-info-700 dark:text-base-info-200 flex gap-2 items-start">
                     <HiInformationCircle className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
                     <p>
-                        {isAdmin
-                            ? 'Tips: As an administrator, this rule will be deleted within 1 hour.'
-                            : 'Tips: This will request deletion by setting the rule lifetime to 24 hours. The server may reject this request depending on the policy.'}
+                        {isAdmin && forceDelete
+                            ? 'Force delete will set the rule lifetime to 0, scheduling it for immediate deletion.'
+                            : 'Standard delete will set the rule lifetime to 1 hour, scheduling it for deletion with a grace period.'}
                     </p>
                 </div>
 
-                {/* Warning banner */}
-                <div className="flex items-start gap-3 rounded-md bg-base-error-50 dark:bg-base-error-950 border border-base-error-200 dark:border-base-error-800 p-3">
-                    <HiExclamation className="h-5 w-5 shrink-0 text-base-error-600 dark:text-base-error-400 mt-0.5" aria-hidden="true" />
-                    <p className="text-sm text-base-error-900 dark:text-base-error-100">
-                        {isAdmin
-                            ? 'This rule will expire in 1 hour. Any ongoing replication will be cancelled.'
-                            : 'This rule will expire in 24 hours if the server accepts the request. Any ongoing replication will be cancelled.'}
-                    </p>
-                </div>
+                {/* Force Delete checkbox — admin-only */}
+                {isAdmin && (
+                    <>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                id="force-delete-checkbox"
+                                checked={forceDelete}
+                                onCheckedChange={checked => setForceDelete(checked === true)}
+                                aria-describedby={forceDelete ? 'force-delete-warning' : undefined}
+                            />
+                            <label htmlFor="force-delete-checkbox" className="text-sm font-medium text-neutral-900 dark:text-neutral-100 cursor-pointer select-none">
+                                Force delete (lifetime = 0, immediate deletion)
+                            </label>
+                        </div>
+
+                        {/* Destructive warning — shown only when force-delete is checked */}
+                        {forceDelete && (
+                            <Alert
+                                id="force-delete-warning"
+                                variant="error"
+                                message="Warning: Force deleting sets the rule lifetime to 0. The rule will be deleted immediately with no grace period and any ongoing replication will be cancelled at once."
+                            />
+                        )}
+                    </>
+                )}
 
                 {/* Rule ID */}
                 <div>
