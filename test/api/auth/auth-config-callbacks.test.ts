@@ -303,6 +303,176 @@ describe('auth.config.ts — jwt() callback', () => {
         expect(result.exp).toBe(expectedExp);
     });
 
+    // ── #628: OIDC identityAccounts + switchOidcAccount ──────────────────────
+
+    it('(#628) OIDC sign-in stores identityAccounts on the SessionUser', async () => {
+        // Single-account OIDC mapping: identity → ['root'].
+        (getRucioAccountsForIdentity as jest.Mock).mockResolvedValue(['root']);
+        const accessToken = makeFakeJwt({
+            sub: 'user-sub',
+            iss: 'https://issuer.example.com',
+            aud: 'test-audience',
+            exp: Math.floor(Date.now() / 1000) + 3600,
+        });
+
+        const result = await jwtCallback({
+            token: {} as any,
+            user: null as any,
+            account: {
+                type: 'oauth',
+                provider: 'test-oidc',
+                access_token: accessToken,
+                expires_at: Math.floor(Date.now() / 1000) + 3600,
+            } as any,
+            profile: {
+                sub: 'user-sub',
+                iss: 'https://issuer.example.com',
+            } as any,
+            trigger: 'signIn',
+            session: null as any,
+        });
+
+        expect(result.user?.rucioAuthType).toBe(AuthType.OIDC);
+        expect(result.user?.identityAccounts).toEqual(['root']);
+    });
+
+    it('(#628) update({switchOidcAccount}) repoints token.user to a new account using the existing OIDC token', async () => {
+        // Make listAccountAttributes return distinguishable role data so we
+        // can verify the new account's attributes were resolved.
+        (resolveAccountRole as jest.Mock).mockReturnValueOnce({ role: Role.ADMIN, country: 'fr', countryRole: Role.USER });
+
+        const activeUser = makeSessionUser({
+            rucioAuthType: AuthType.OIDC,
+            rucioOIDCProvider: 'test-oidc',
+            rucioAuthToken: 'oidc-access-token',
+            rucioAccount: 'root',
+            rucioIdentity: 'SUB=user-sub, ISS=https://issuer.example.com',
+            identityAccounts: ['root', 'atlas', 'cms'],
+        });
+
+        const result = await jwtCallback({
+            token: { user: activeUser, allUsers: [activeUser] } as any,
+            user: null as any,
+            account: null as any,
+            profile: null as any,
+            trigger: 'update',
+            session: { switchOidcAccount: 'atlas' } as any,
+        });
+
+        // Active user is now atlas, with the same OIDC token (no provider round-trip).
+        expect(result.user?.rucioAccount).toBe('atlas');
+        expect(result.user?.rucioAuthToken).toBe('oidc-access-token');
+        expect(result.user?.rucioAuthType).toBe(AuthType.OIDC);
+        // Role/country were resolved from the new account's attributes.
+        expect(result.user?.role).toBe(Role.ADMIN);
+        expect(result.user?.country).toBe('fr');
+        // identityAccounts is preserved (spread from original active user).
+        expect(result.user?.identityAccounts).toEqual(['root', 'atlas', 'cms']);
+        // The new account has been added to allUsers alongside the original.
+        const accounts = result.allUsers?.map(u => u.rucioAccount);
+        expect(accounts).toEqual(expect.arrayContaining(['root', 'atlas']));
+    });
+
+    it('(#628) update({switchOidcAccount}) rejects targets not in identityAccounts', async () => {
+        const activeUser = makeSessionUser({
+            rucioAuthType: AuthType.OIDC,
+            rucioOIDCProvider: 'test-oidc',
+            rucioAuthToken: 'oidc-access-token',
+            rucioAccount: 'root',
+            identityAccounts: ['root', 'atlas'],
+        });
+
+        const result = await jwtCallback({
+            token: { user: activeUser, allUsers: [activeUser] } as any,
+            user: null as any,
+            account: null as any,
+            profile: null as any,
+            trigger: 'update',
+            session: { switchOidcAccount: 'evil-admin' } as any,
+        });
+
+        // Active user unchanged.
+        expect(result.user?.rucioAccount).toBe('root');
+        expect(result.allUsers?.length).toBe(1);
+    });
+
+    it('(#628) re-running OIDC sign-in for an identity already fully signed in preserves the active user', async () => {
+        // Identity → ['root', 'atlas'], both already in token.allUsers.
+        (getRucioAccountsForIdentity as jest.Mock).mockResolvedValue(['root', 'atlas']);
+
+        const expectedIdentity = 'SUB=user-sub, ISS=https://issuer.example.com';
+        const existingActive = makeSessionUser({
+            rucioAuthType: AuthType.OIDC,
+            rucioOIDCProvider: 'test-oidc',
+            rucioAccount: 'root',
+            rucioAuthToken: 'oidc-token',
+            rucioIdentity: expectedIdentity,
+            identityAccounts: ['root', 'atlas'],
+        });
+        const existingPeer = makeSessionUser({
+            rucioAuthType: AuthType.OIDC,
+            rucioOIDCProvider: 'test-oidc',
+            rucioAccount: 'atlas',
+            rucioAuthToken: 'oidc-token',
+            rucioIdentity: expectedIdentity,
+            identityAccounts: ['root', 'atlas'],
+        });
+
+        const accessToken = makeFakeJwt({
+            sub: 'user-sub',
+            iss: 'https://issuer.example.com',
+            aud: 'test-audience',
+            exp: Math.floor(Date.now() / 1000) + 3600,
+        });
+
+        const result = await jwtCallback({
+            // Token already has both accounts in allUsers (typical post-switch state)
+            // but no `user` set (NextAuth builds a fresh defaultToken on signIn).
+            token: { allUsers: [existingActive, existingPeer] } as any,
+            user: null as any,
+            account: {
+                type: 'oauth',
+                provider: 'test-oidc',
+                access_token: accessToken,
+                expires_at: Math.floor(Date.now() / 1000) + 3600,
+            } as any,
+            profile: { sub: 'user-sub', iss: 'https://issuer.example.com' } as any,
+            trigger: 'signIn',
+            session: null as any,
+        });
+
+        // CRUCIAL: token.user is set so middleware does not redirect to /auth/login.
+        expect(result.user).toBeDefined();
+        expect(result.user?.rucioAccount).toBe('root');
+        expect(result.user?.rucioAuthType).toBe(AuthType.OIDC);
+        // No pending-selection — the modal would show "all already signed in" and
+        // strand the user on the login page.
+        expect(result.pendingAccountSelection).toBeUndefined();
+        // identityAccounts is updated with the latest mapping.
+        expect(result.user?.identityAccounts).toEqual(['root', 'atlas']);
+    });
+
+    it('(#628) update({switchOidcAccount}) is a no-op for non-OIDC active users', async () => {
+        const activeUser = makeSessionUser({
+            rucioAuthType: AuthType.x509,
+            rucioOIDCProvider: null,
+            rucioAuthToken: 'x509-token',
+            rucioAccount: 'root',
+            identityAccounts: ['root', 'atlas'],
+        });
+
+        const result = await jwtCallback({
+            token: { user: activeUser, allUsers: [activeUser] } as any,
+            user: null as any,
+            account: null as any,
+            profile: null as any,
+            trigger: 'update',
+            session: { switchOidcAccount: 'atlas' } as any,
+        });
+
+        expect(result.user?.rucioAccount).toBe('root');
+    });
+
     it('(a) OIDC sign-in without refresh_token does not set rucioOidcRefreshToken', async () => {
         const accessToken = makeFakeJwt({
             sub: 'user-sub',

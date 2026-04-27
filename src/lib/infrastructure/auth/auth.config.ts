@@ -271,16 +271,51 @@ export const authConfig: NextAuthConfig = {
                     // Call Rucio identity API (with caching)
                     candidateAccounts = await getRucioAccountsForIdentity(rucioIdentity, rucioHost, rucioAuthToken);
 
-                    // Multiple accounts: stash a pending-selection state and return.
-                    // The login page reads session.pendingAccountSelection, shows the
-                    // MultipleAccountsModal, and finalises via update({ chosenPendingAccount }).
-                    if (candidateAccounts.length > 1) {
-                        console.log(`[OIDC] Multiple accounts (${candidateAccounts.length}) — deferring to user selection.`);
+                    // #628: filter out accounts already signed in under THIS identity
+                    // before deciding whether to defer to a modal. Matters when a
+                    // user re-runs OIDC sign-in (e.g. via "Sign in to another
+                    // account") while already authenticated as some/all of the
+                    // candidates — the modal would otherwise show "all already
+                    // signed in" and middleware would loop back to /auth/login
+                    // because token.user is left undefined.
+                    const alreadySignedIn = new Set(
+                        (token.allUsers ?? [])
+                            .filter(u => u.rucioAuthType === AuthType.OIDC && u.rucioIdentity === rucioIdentity)
+                            .map(u => u.rucioAccount),
+                    );
+                    const fresh = candidateAccounts.filter(a => !alreadySignedIn.has(a));
+
+                    if (fresh.length === 0 && alreadySignedIn.size > 0) {
+                        // The user is already signed in to every account this
+                        // identity maps to — re-auth is a no-op. Pick the
+                        // first existing entry as the active user and skip the
+                        // pending-selection modal entirely.
+                        const existing = (token.allUsers ?? []).find(
+                            u => u.rucioAuthType === AuthType.OIDC && u.rucioIdentity === rucioIdentity,
+                        );
+                        if (existing) {
+                            token.user = { ...existing, identityAccounts: candidateAccounts };
+                            // Refresh token + sessionStartedAt for the new sign-in event so the
+                            // 24-hour ceiling resets and refresh-token rotation still works.
+                            if (account.refresh_token) {
+                                token.rucioOidcRefreshToken = account.refresh_token;
+                            }
+                            token.sessionStartedAt = Math.floor(Date.now() / 1000);
+                            console.log(`[OIDC] Identity already fully authenticated — preserving active=${existing.rucioAccount}`);
+                            return token;
+                        }
+                    }
+
+                    if (fresh.length > 1) {
+                        // Multiple new accounts: defer to the modal. The page reads
+                        // session.pendingAccountSelection and finalises via
+                        // update({ chosenPendingAccount }).
+                        console.log(`[OIDC] Multiple new accounts (${fresh.length}) — deferring to user selection.`);
                         token.pendingAccountSelection = {
                             authType: 'oidc',
                             providerName,
                             rucioIdentity,
-                            accounts: candidateAccounts,
+                            accounts: fresh,
                             rucioAuthToken,
                             rucioAuthTokenExpires,
                             rucioVO: 'atl', // TODO: pull from callback URL state when VO selection is wired
@@ -291,7 +326,7 @@ export const authConfig: NextAuthConfig = {
                         return token;
                     }
 
-                    rucioAccount = selectAccountFromMultiple(candidateAccounts);
+                    rucioAccount = fresh.length === 1 ? fresh[0] : selectAccountFromMultiple(candidateAccounts);
                     console.log(`[OIDC] Successfully mapped to Rucio account: ${rucioAccount}`);
                 } catch (error) {
                     if (error instanceof IdentityNotMappedError) {
@@ -352,7 +387,7 @@ export const authConfig: NextAuthConfig = {
                     rucioIdentity: rucioIdentity,
                     rucioAccount: rucioAccount,
                     rucioAuthType: AuthType.OIDC,
-                    rucioAuthToken: rucioAuthToken, // ✅ OIDC token IS the Rucio token
+                    rucioAuthToken: rucioAuthToken, // OIDC token IS the Rucio token
                     rucioAuthTokenExpires: rucioAuthTokenExpires,
                     rucioOIDCProvider: providerName,
                     rucioVO: 'atl', // TODO: Get from callback URL state parameter or default VO
@@ -360,6 +395,11 @@ export const authConfig: NextAuthConfig = {
                     country: oidcCountry,
                     countryRole: oidcCountryRole,
                     isLoggedIn: true,
+                    // #628: every account this OIDC identity is mapped to. The dropdown
+                    // surfaces these as switch targets; OIDC tokens are identity-scoped
+                    // (not per-account) so switching is a server-side repoint via
+                    // update({ switchOidcAccount }) — see the dedicated branch below.
+                    identityAccounts: candidateAccounts,
                 };
 
                 // Store OIDC refresh token in the JWT so it can be used for session refresh
@@ -491,6 +531,10 @@ export const authConfig: NextAuthConfig = {
                         country,
                         countryRole,
                         isLoggedIn: true,
+                        // #628: full identity-mapped account list captured during the
+                        // pending-selection probe. Drives the dropdown's switch options
+                        // (see the switchOidcAccount branch below).
+                        identityAccounts: pending.accounts,
                     };
 
                     if (!token.allUsers) token.allUsers = [];
@@ -514,6 +558,61 @@ export const authConfig: NextAuthConfig = {
             if (trigger === 'update' && session?.cancelPendingAccountSelection && token.pendingAccountSelection) {
                 console.log('[OIDC] User cancelled pending account selection');
                 delete token.pendingAccountSelection;
+            }
+
+            // #628: silent OIDC account switch.
+            //
+            // Invoked via update({ switchOidcAccount: 'someAccount' }) from the
+            // AccountDropdown when the user picks an identity-mapped account that
+            // isn't already in allUsers[]. Unlike userpass and x509 the OIDC token
+            // is identity-scoped (Rucio validates the identity, not per-account),
+            // so we can reuse the existing access token and just build a new
+            // SessionUser for the chosen account — no provider round-trip needed.
+            if (
+                trigger === 'update' &&
+                session?.switchOidcAccount &&
+                token.user &&
+                token.user.rucioAuthType === AuthType.OIDC &&
+                token.user.rucioAuthToken
+            ) {
+                const target: string = session.switchOidcAccount;
+                const allowed = token.user.identityAccounts ?? [];
+                if (!allowed.includes(target)) {
+                    console.error(`[OIDC] Rejected switchOidcAccount: "${target}" not in identityAccounts ${allowed.join(',')}`);
+                } else {
+                    let role: Role = Role.USER;
+                    let country: string | undefined;
+                    let countryRole: Role | undefined;
+                    try {
+                        const accountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
+                        const accountAttrs = await accountGateway.listAccountAttributes(target, token.user.rucioAuthToken);
+                        const resolved = resolveAccountRole(accountAttrs.attributes);
+                        role = resolved.role ?? Role.USER;
+                        country = resolved.country;
+                        countryRole = resolved.countryRole;
+                    } catch (error) {
+                        console.error(`[OIDC] Failed to fetch account attributes for switch target ${target}:`, error);
+                    }
+
+                    const switchedUser: SessionUser = {
+                        ...token.user,
+                        id: `${target}@${token.user.rucioOIDCProvider ?? 'oidc'}`,
+                        rucioAccount: target,
+                        role,
+                        country,
+                        countryRole,
+                    };
+
+                    if (!token.allUsers) token.allUsers = [];
+                    const existingIndex = getSessionUserIndex(token.allUsers, switchedUser);
+                    if (existingIndex === -1) {
+                        token.allUsers.push(switchedUser);
+                    } else {
+                        token.allUsers[existingIndex] = switchedUser;
+                    }
+                    token.user = switchedUser;
+                    console.log(`[OIDC] Switched active OIDC account: ${target}`);
+                }
             }
 
             // Handle OIDC session refresh
