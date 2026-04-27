@@ -47,6 +47,79 @@ describe('Feature: UpdateRule', () => {
         expect(data.message).toBe('Rule updated successfully');
     });
 
+    it('should return 200 with status success when updating lifetime to 3600 (soft delete)', async () => {
+        fetchMock.doMock();
+        const updateRuleEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rules/${RULE_ID}`,
+            method: 'PUT',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: '',
+            },
+            requestValidator: async (req: Request) => {
+                const body = await req.json();
+                return body.options && body.options.lifetime === 3600;
+            },
+        };
+        MockRucioServerFactory.createMockRucioServer(true, [updateRuleEndpoint]);
+
+        const { res } = await createHttpMocks('/api/feature/update-rule', 'PUT', {});
+
+        const controller = appContainer.get<BaseController<UpdateRuleControllerParameters, UpdateRuleRequest>>(CONTROLLERS.UPDATE_RULE);
+        const controllerParams: UpdateRuleControllerParameters = {
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            response: res as unknown as NextApiResponse,
+            ruleId: RULE_ID,
+            options: { lifetime: 3600 },
+        };
+        await controller.execute(controllerParams);
+
+        expect(res._getStatusCode()).toBe(200);
+        const data: UpdateRuleViewModel = JSON.parse(res._getData());
+        expect(data.status).toBe('success');
+        expect(data.message).toBe('Rule updated successfully');
+    });
+
+    it('should return 200 with status success when updating lifetime to 0 (force delete, admin only)', async () => {
+        fetchMock.doMock();
+        const updateRuleEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rules/${RULE_ID}`,
+            method: 'PUT',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: '',
+            },
+            requestValidator: async (req: Request) => {
+                const body = await req.json();
+                // lifetime=0 is falsy in JS; use strict equality to confirm zero is passed through
+                return body.options && body.options.lifetime === 0;
+            },
+        };
+        MockRucioServerFactory.createMockRucioServer(true, [updateRuleEndpoint]);
+
+        const { res } = await createHttpMocks('/api/feature/update-rule', 'PUT', {});
+
+        const controller = appContainer.get<BaseController<UpdateRuleControllerParameters, UpdateRuleRequest>>(CONTROLLERS.UPDATE_RULE);
+        const controllerParams: UpdateRuleControllerParameters = {
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            response: res as unknown as NextApiResponse,
+            ruleId: RULE_ID,
+            options: { lifetime: 0 },
+        };
+        await controller.execute(controllerParams);
+
+        expect(res._getStatusCode()).toBe(200);
+        const data: UpdateRuleViewModel = JSON.parse(res._getData());
+        expect(data.status).toBe('success');
+        expect(data.message).toBe('Rule updated successfully');
+    });
+
     it('should return errorType unauthorized on 401 from gateway', async () => {
         fetchMock.doMock();
         const updateRuleEndpoint: MockEndpoint = {
