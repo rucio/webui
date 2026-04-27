@@ -1,25 +1,38 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import React from 'react';
+import { SessionProvider } from 'next-auth/react';
 import { PermixProvider } from 'permix/react';
 import { HeaderClient } from './HeaderClient';
 import { Role, User } from '@/lib/core/entity/auth-models';
 import { permix, adminRuleTemplate } from '@/lib/core/permissions';
 import { TipsProvider } from '@/lib/infrastructure/hooks/useTips';
+import { SessionMonitorContext } from '@/lib/infrastructure/auth/session-monitor';
+
+const mockSessionMonitorValue = {
+    manualSignOut: async () => {},
+};
 
 const meta: Meta<typeof HeaderClient> = {
     title: 'Features/Layout/HeaderClient',
     component: HeaderClient,
     parameters: {
         layout: 'fullscreen',
+        nextjs: {
+            appDirectory: true,
+        },
     },
     tags: ['autodocs'],
     decorators: [
         Story => (
-            <TipsProvider>
-                <PermixProvider permix={permix}>
-                    <Story />
-                </PermixProvider>
-            </TipsProvider>
+            <SessionProvider>
+                <SessionMonitorContext.Provider value={mockSessionMonitorValue}>
+                    <TipsProvider>
+                        <PermixProvider permix={permix}>
+                            <Story />
+                        </PermixProvider>
+                    </TipsProvider>
+                </SessionMonitorContext.Provider>
+            </SessionProvider>
         ),
     ],
 };

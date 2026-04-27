@@ -6,7 +6,16 @@ const mockNextAuth = jest.fn((configOrCallback) => ({
     signOut: jest.fn(() => Promise.resolve()),
 }));
 
+// next-auth/jwt exports — shared because this file also catches `next-auth/*`
+// subpaths via the moduleNameMapper.
+const getToken = jest.fn();
+const encode = jest.fn();
+const decode = jest.fn();
+
 module.exports = {
     __esModule: true,
     default: mockNextAuth,
+    getToken,
+    encode,
+    decode,
 };

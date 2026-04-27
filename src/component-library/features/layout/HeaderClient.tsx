@@ -16,6 +16,8 @@ import { motion } from 'framer-motion';
 import { useTips } from '@/lib/infrastructure/hooks/useTips';
 import { buildSubscriptionSearchUrl } from '@/lib/infrastructure/utils/navigation';
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
+import { useSessionMonitor } from '@/lib/infrastructure/auth/session-monitor';
+import { useSession } from 'next-auth/react';
 
 type TMenuItem = {
     title: string;
@@ -258,7 +260,22 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     // Build subscription URL with account parameter
     const subscriptionUrl = buildSubscriptionSearchUrl(siteHeader?.activeAccount?.rucioAccount);
 
+    const { manualSignOut } = useSessionMonitor();
+    const { update } = useSession();
     const { check, isReady } = usePermissions();
+
+    const handleSwitchAccount = async (account: string) => {
+        await update({ account });
+        // Full reload so all client state (React Query cache, component state, RSC tree)
+        // is rebuilt against the newly-active account's Rucio token.
+        window.location.reload();
+    };
+
+    const handleRemoveAccount = async (account: string) => {
+        await update({ removeAccount: account });
+        window.location.reload();
+    };
+
     const canViewApprovalQueue = isReady ? check('rule', 'viewApprovalQueue') : false;
 
     const rulesChildren: TMenuItem[] = [
@@ -288,12 +305,6 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     const logoPath = mounted && resolvedTheme === 'dark' ? '/logo_dark.svg' : '/logo_light.svg';
     const logoSize = 36;
 
-    // Gradient overlay for depth effect - subtle fade from top to bottom
-    const gradientOverlay =
-        mounted && resolvedTheme === 'dark'
-            ? 'linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 100%)'
-            : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%)';
-
     const getContent = () => {
         if (isSiteHeaderFetching) {
             return <LoadingElement context="inline" size="sm" />;
@@ -313,12 +324,12 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                                 alt="Rucio Logo"
                                 width={logoSize}
                                 height={logoSize}
-                                style={{ height: 'auto' }}
+                                className="h-auto"
                                 suppressHydrationWarning
                             />
                         </Link>
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
-                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} style={{ height: 'auto' }} />
+                            <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} className="h-auto" />
                         </a>
                         <div className="pl-1 md:block hidden">
                             <Searchbar />
@@ -330,7 +341,12 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                     <div className="flex h-full">
                         <TipsButton />
                         <ThemeSwitchButton />
-                        <AccountButton siteHeader={siteHeader} />
+                        <AccountButton
+                            siteHeader={siteHeader}
+                            onSignOut={manualSignOut}
+                            onSwitchAccount={handleSwitchAccount}
+                            onRemoveAccount={handleRemoveAccount}
+                        />
                         <MobileNavigationBar menuItems={menuItems} />
                     </div>
                 </>
@@ -359,14 +375,8 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                     'shadow-md dark:shadow-xl',
                 )}
             >
-                {/* Gradient overlay for depth - fades from top to bottom */}
-                <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                        background: gradientOverlay,
-                    }}
-                    suppressHydrationWarning
-                />
+                {/* Gradient overlay for depth - subtle fade from top to bottom */}
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/10 to-transparent dark:from-black/10 dark:to-transparent" />
                 <div className="relative z-10 flex flex-row justify-between items-center w-full">{getContent()}</div>
             </header>
         </>

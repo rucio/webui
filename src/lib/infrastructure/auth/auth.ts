@@ -35,7 +35,7 @@ async function getAuthConfigWithOIDCProviders() {
  * Note: NextAuth v5 supports passing an async function to load config dynamically.
  * This allows us to load OIDC providers from environment at runtime.
  */
-export const { handlers, auth, signIn, signOut } = NextAuth(async req => {
+export const { handlers, auth, signIn, signOut, unstable_update: update } = NextAuth(async req => {
     const config = await getAuthConfigWithOIDCProviders();
     return config;
 });
