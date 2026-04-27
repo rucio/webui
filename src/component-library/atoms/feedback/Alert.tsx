@@ -85,7 +85,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(({ className, 
     return (
         <div ref={ref} role="alert" aria-live="polite" aria-atomic="true" className={cn(alertVariants({ variant }), className)} {...props}>
             {showIcon && <Icon className={iconVariants({ variant })} aria-hidden="true" />}
-            <div className="flex-1 text-sm font-medium leading-5">{message}</div>
+            <div className="flex-1 min-w-0 text-sm font-medium leading-5 break-words">{message}</div>
             {onClose && (
                 <button
                     type="button"
