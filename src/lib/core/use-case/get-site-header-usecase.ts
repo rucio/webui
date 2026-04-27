@@ -16,6 +16,7 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
 
     async generateSiteHeader(session: RucioSession): Promise<void> {
         let projectURL: string | undefined;
+        let rucioAuthHost = '';
 
         let activeUser: User | undefined;
 
@@ -25,6 +26,12 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
             projectURL = await this.envConfigGateway.projectURL();
         } catch (error) {
             projectURL = undefined;
+        }
+
+        try {
+            rucioAuthHost = await this.envConfigGateway.rucioAuthHost();
+        } catch {
+            rucioAuthHost = '';
         }
 
         if (!session.user) {
@@ -77,6 +84,7 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
             activeUser: activeUser,
             availableUsers: allUsers,
             linkedAccountNames,
+            rucioAuthHost,
             projectURL: projectURL,
         };
 
