@@ -392,7 +392,6 @@ export const DetailsRule = ({ id }: { id: string }) => {
                 open={isDeleteOpen}
                 onOpenChange={setIsDeleteOpen}
                 ruleId={id}
-                isAdmin={userCanApproveRule}
                 onConfirm={forceDelete => deleteRuleMutation.mutate(forceDelete)}
                 loading={deleteRuleMutation.isPending}
             />

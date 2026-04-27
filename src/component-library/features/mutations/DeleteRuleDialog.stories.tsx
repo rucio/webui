@@ -25,12 +25,10 @@ export default meta;
 type Story = StoryObj<typeof DeleteRuleDialog>;
 
 const DeleteRuleWrapper = ({
-    isAdmin = false,
     loading = false,
     defaultForceDelete = false,
     openInitially = false,
 }: {
-    isAdmin?: boolean;
     loading?: boolean;
     defaultForceDelete?: boolean;
     openInitially?: boolean;
@@ -45,7 +43,6 @@ const DeleteRuleWrapper = ({
                 open={open}
                 onOpenChange={setOpen}
                 ruleId="8a7b6c5d4e3f2a1b"
-                isAdmin={isAdmin}
                 defaultForceDelete={defaultForceDelete}
                 onConfirm={(forceDelete: boolean) => {
                     alert(`Rule deleted! forceDelete=${forceDelete}`);
@@ -58,21 +55,11 @@ const DeleteRuleWrapper = ({
 };
 
 /**
- * Standard dialog for a non-admin user.
- * The force-delete checkbox is visible and defaults to unchecked (soft-delete, lifetime=3600).
- * No warning banner is shown in the default state.
+ * Standard dialog with the force-delete checkbox visible to all users.
+ * Defaults to unchecked (soft-delete, lifetime=3600). No warning banner is shown.
  */
-export const AsUser: Story = {
+export const Default: Story = {
     render: () => <DeleteRuleWrapper />,
-};
-
-/**
- * Standard dialog for an admin user.
- * The force-delete checkbox is visible and defaults to unchecked (soft-delete, lifetime=3600).
- * No warning banner is shown in the default (unchecked) state.
- */
-export const AsAdmin: Story = {
-    render: () => <DeleteRuleWrapper isAdmin />,
 };
 
 /**
@@ -82,7 +69,7 @@ export const AsAdmin: Story = {
  * The info tip also updates to reflect the immediate-deletion mode.
  */
 export const ForceDeleteChecked: Story = {
-    render: () => <DeleteRuleWrapper isAdmin defaultForceDelete openInitially />,
+    render: () => <DeleteRuleWrapper defaultForceDelete openInitially />,
 };
 
 /**
