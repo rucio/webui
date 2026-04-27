@@ -42,8 +42,8 @@ jest.mock('@/lib/core/services/resolve-account-role', () => ({
     resolveAccountRole: jest.fn(),
 }));
 
-jest.mock('@/lib/infrastructure/auth/nextauth-userpass-adapter', () => ({
-    authorizeUserPass: jest.fn(),
+jest.mock('@/lib/infrastructure/auth/nextauth-userpass-token-adapter', () => ({
+    authorizeUserPassToken: jest.fn(),
 }));
 
 jest.mock('@/lib/infrastructure/auth/nextauth-x509-adapter', () => ({

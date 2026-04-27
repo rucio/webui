@@ -60,35 +60,6 @@ export function getAuthErrorMessage(errorType: AuthErrorType): string {
 }
 
 /**
- * Custom error type for multiple accounts scenario
- * This will be thrown so NextAuth can return it to the frontend
- */
-export class MultipleAccountsError extends Error {
-    availableAccounts: string;
-    constructor(accounts: string) {
-        super('Multiple accounts available');
-        this.name = 'MultipleAccountsError';
-        this.availableAccounts = accounts;
-    }
-}
-
-/**
- * Custom error type for login failures
- * Contains detailed error information to be displayed to the user
- */
-export class LoginError extends Error {
-    type: string;
-    details?: string;
-
-    constructor(type: string, message: string, details?: string) {
-        super(message);
-        this.name = 'LoginError';
-        this.type = type;
-        this.details = details;
-    }
-}
-
-/**
  * Extracts error details from various error sources
  */
 export function extractAuthError(error: any): AuthError {
