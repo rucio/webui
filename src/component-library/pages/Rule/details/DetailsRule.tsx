@@ -165,8 +165,8 @@ export const DetailsRule = ({ id }: { id: string }) => {
     });
 
     const deleteRuleMutation = useMutation({
-        mutationFn: async () => {
-            const lifetimeSeconds = userCanApproveRule ? 3600 : 86400;
+        mutationFn: async (forceDelete: boolean) => {
+            const lifetimeSeconds = forceDelete ? 0 : 3600;
             const res = await fetch('/api/feature/update-rule', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -316,10 +316,9 @@ export const DetailsRule = ({ id }: { id: string }) => {
                             {!userCanApproveRule && ' The server may reject this request depending on the policy.'}
                         </li>
                         <li>
-                            <span className="font-medium">Delete Rule:</span> Schedule this rule for deletion
-                            {userCanApproveRule
-                                ? ' by setting the lifetime to 1 hour.'
-                                : ' by setting the lifetime to 24 hours. The server may reject this request depending on the policy.'}
+                            <span className="font-medium">Delete Rule:</span> Schedule this rule for deletion by setting the lifetime to 1 hour.
+                            {userCanApproveRule && ' Admins may also force-delete to set lifetime to 0 for immediate deletion.'}
+                            {!userCanApproveRule && ' The server may reject this request depending on the policy.'}
                         </li>
                     </ul>
                 )}
@@ -394,7 +393,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
                 onOpenChange={setIsDeleteOpen}
                 ruleId={id}
                 isAdmin={userCanApproveRule}
-                onConfirm={() => deleteRuleMutation.mutate()}
+                onConfirm={forceDelete => deleteRuleMutation.mutate(forceDelete)}
                 loading={deleteRuleMutation.isPending}
             />
             <CommentRuleDialog
