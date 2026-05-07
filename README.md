@@ -1,5 +1,7 @@
 ## Project Specification: Rucio WebUI
 
+Responsible for PR merging in [rucio/webui](https://github.com/rucio/webui/): [Mayank Sharma](https://github.com/maany)
+
 ### Overview
 
 The Rucio WebUI is the new generation of the original webui used for the last decade by the Rucio communities. This project aims to enhance user experience and scalability through a clean architecture and hexagonal design. Leveraging TypeScript, ReactJS, and NextJS, this project ensures framework independence in the dynamic Javascript ecosystem.
