@@ -24,7 +24,7 @@ jobs:
                   comment-summary-in-pr: always
 
     npm-audit:
-        if: github.event_name == 'schedule' || github.event_name == 'push'
+        if: github.event_name == 'push'
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -36,4 +36,29 @@ jobs:
               run: npm install --legacy-peer-deps
 
             - name: npm audit 🔒
+              run: npm audit --audit-level=high
+
+    npm-audit-scheduled:
+        # Scheduled workflows run only from the default branch, so each branch
+        # to be audited weekly must be checked out explicitly here.
+        if: github.event_name == 'schedule'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        strategy:
+            fail-fast: false
+            matrix:
+                branch:
+                    - main
+                    - release-38-LTS
+        steps:
+            - name: Checkout ${{ matrix.branch }} 🛎️
+              uses: actions/checkout@v6
+              with:
+                  ref: ${{ matrix.branch }}
+
+            - name: Install 🔧
+              run: npm install --legacy-peer-deps
+
+            - name: npm audit (${{ matrix.branch }}) 🔒
               run: npm audit --audit-level=high
