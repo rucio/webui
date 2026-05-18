@@ -1,6 +1,6 @@
 {
   "name": "rucio-webui",
-  "version": "38.3.3",
+  "version": "38.3.4",
   "private": true,
   "scripts": {
     "clean": "rimraf .next .swc",
@@ -126,6 +126,7 @@
     "postcss": ">=8.5.10",
     "elliptic": ">=6.6.1",
     "serialize-javascript": ">=6.0.2",
-    "uuid": ">=11.0.0"
+    "uuid": ">=11.0.0",
+    "cookie": "^0.7.2"
   }
 }
