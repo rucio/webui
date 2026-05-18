@@ -1,4 +1,4 @@
-import { DatasetReplicasDTO, FileReplicaStateDTO } from '@/lib/core/dto/replica-dto';
+import { DatasetReplicasDTO, FileReplicaStateDTO, SuspiciousReplicaDTO } from '@/lib/core/dto/replica-dto';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 
 export type TRucioFileReplica = {
@@ -41,6 +41,36 @@ export type TRucioDatasetReplica = {
     updated_at: string;
     accessed_at: string | null;
 };
+
+/**
+ * The type representing a Rucio Suspicious Replica returned by the Rucio REST API.
+ */
+export type TRucioSuspiciousReplica = {
+    scope: string;
+    name: string;
+    rse: string;
+    rse_id: string;
+    cnt: number;
+    created_at: string;
+};
+
+/**
+ * Convert a raw Rucio suspicious replica response into a SuspiciousReplicaDTO.
+ * @param data A single suspicious replica entry from the Rucio Server response.
+ * @returns A SuspiciousReplicaDTO object.
+ */
+export function convertToSuspiciousReplicaDTO(data: TRucioSuspiciousReplica): SuspiciousReplicaDTO {
+    const dto: SuspiciousReplicaDTO = {
+        status: 'success',
+        scope: data.scope,
+        name: data.name,
+        rse: data.rse,
+        rseId: data.rse_id,
+        cnt: data.cnt,
+        createdAt: data.created_at,
+    };
+    return dto;
+}
 
 function getReplicaState(state: string): ReplicaState {
     switch (state.toUpperCase()) {
