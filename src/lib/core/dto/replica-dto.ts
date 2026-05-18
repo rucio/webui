@@ -20,3 +20,33 @@ export interface FileReplicaStateDTO extends BaseDTO, FileReplicaState {}
  * that works for all communities.
  */
 export interface DatasetReplicasDTO extends BaseDTO, Omit<DIDDatasetReplicas, 'rseblocked'> {}
+
+/**
+ * Represents a single suspicious replica returned by the list suspicious replicas endpoint.
+ */
+export interface SuspiciousReplicaDTO extends BaseDTO {
+    scope: string;
+    name: string;
+    rse: string;
+    rseId: string;
+    cnt: number;
+    createdAt: string;
+}
+
+/**
+ * Data Transfer Object for the list suspicious replicas endpoint.
+ * The Rucio server returns a single JSON array, so this DTO is non-streaming
+ * and exposes the full list of {@link SuspiciousReplicaDTO} items via `replicas`.
+ */
+export interface ListSuspiciousReplicasDTO extends BaseDTO {
+    replicas: SuspiciousReplicaDTO[];
+}
+
+/**
+ * Data Transfer Object for the DeclareBadPFNs endpoint.
+ * The Rucio server returns a plain-text `Created` body on success, so the DTO
+ * only carries a `created` flag plus the standard error metadata from BaseDTO.
+ */
+export interface DeclareBadPFNsDTO extends BaseDTO {
+    created: boolean;
+}
