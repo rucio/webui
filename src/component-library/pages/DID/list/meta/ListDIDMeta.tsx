@@ -122,7 +122,7 @@ export const ListDIDMeta = ({ meta, isLoading, hasError }: ListDIDMetaProps) => 
     const showMeta = meta && !isLoading && !hasError;
 
     return (
-        <KeyValueWrapper className={cn(showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]', 'h-full overflow-auto')}>
+        <KeyValueWrapper className={cn(showMeta ? 'flex-none' : 'flex grow items-center min-h-[10rem]', 'lg:h-full overflow-auto')}>
             {showMeta ? <MetaContents meta={meta} /> : <MetaStub isLoading={isLoading} hasError={hasError} />}
         </KeyValueWrapper>
     );
