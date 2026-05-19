@@ -42,6 +42,11 @@ DESCRIPTION_FORMATTED=$(echo "$DESCRIPTION" | tr '[:upper:]' '[:lower:]' | tr ' 
 # Create branch name
 BRANCH_NAME="feature-${ISSUE_NUMBER}-${DESCRIPTION_FORMATTED}"
 
+# Base branch for all new worktrees. Worktrees are always branched from an
+# up-to-date origin/main — never from whatever branch the repo happens to be on
+# (which previously caused worktrees to start from stale `master`).
+BASE_BRANCH="main"
+
 # Define paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -73,11 +78,18 @@ if git show-ref --verify --quiet "refs/heads/${BRANCH_NAME}"; then
     exit 1
 fi
 
-# Create the worktree with a new branch
-print_info "Creating git worktree..."
-git worktree add -b "${BRANCH_NAME}" "${WORKTREE_PATH}"
+# Fetch the latest base branch so the worktree is never based on a stale ref
+print_info "Fetching latest ${BASE_BRANCH} from origin..."
+if ! git fetch origin "${BASE_BRANCH}"; then
+    print_error "Failed to fetch origin/${BASE_BRANCH}"
+    exit 1
+fi
+
+# Create the worktree with a new branch, based on the freshly fetched base branch
+print_info "Creating git worktree from origin/${BASE_BRANCH}..."
+git worktree add -b "${BRANCH_NAME}" "${WORKTREE_PATH}" "origin/${BASE_BRANCH}"
 if [ $? -eq 0 ]; then
-    print_success "Git worktree created successfully"
+    print_success "Git worktree created successfully (based on origin/${BASE_BRANCH})"
 else
     print_error "Failed to create git worktree"
     exit 1
