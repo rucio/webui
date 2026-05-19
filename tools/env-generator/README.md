@@ -35,6 +35,8 @@ The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells 
 | OIDC_PROVIDERS            | RUCIO_WEBUI_OIDC_PROVIDERS            | CSV string containing names of OIDC Providers                                              | cern, indigo                   |                    |
 | OIDC_EXPECTED_AUDIENCE_CLAIM | RUCIO_WEBUI_OIDC_EXPECTED_AUDIENCE_CLAIM | Expected audience claim value for JWT token validation. Must match 'aud' claim in tokens. | atlas-rucio-oidc-client        | rucio              |
 | RULE_ACTIVITY             | RUCIO_WEBUI_RULE_ACTIVITY             | The `Activity` to associate with rules created with WebUI                                  | User Subscriptions             | User Subscriptions |
+| FEATURE_DDM_DASHBOARD     | RUCIO_WEBUI_FEATURE_DDM_DASHBOARD     | Enable DDM Dashboard links in the Rule Locks table (true or false)                         | true                           | false              |
+| DDM_DASHBOARD_BASE_URL    | RUCIO_WEBUI_DDM_DASHBOARD_BASE_URL    | Base URL for the DDM Grafana dashboard                                                     | https://grafana.cern.ch/d/ddm/rucio-ddm |         |
 
 ### NextAuth Configuration
 
