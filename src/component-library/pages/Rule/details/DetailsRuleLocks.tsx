@@ -12,7 +12,7 @@ import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { CopyableLinkCell } from '@/component-library/features/table/cells/CopyableCell';
 import { Button } from '@/component-library/atoms/form/button';
-import { FTSLinkViewModel } from '@/lib/infrastructure/data/view-model/request';
+import { FTSLinkViewModel, DDMLinkViewModel } from '@/lib/infrastructure/data/view-model/request';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { HiExternalLink } from 'react-icons/hi';
@@ -109,6 +109,80 @@ const FTSLinkButton = (props: any) => {
     );
 };
 
+const DDMLinkButton = (props: any) => {
+    const data = props.data as ListRuleReplicaLockStatesViewModel;
+    const { toast } = useToast();
+    const [isFetching, setIsFetching] = useState(false);
+    const [hasError, setHasError] = useState(false);
+    const [viewModel, setViewModel] = useState<DDMLinkViewModel | null>(null);
+
+    const getDDMLink = async () => {
+        setIsFetching(true);
+        try {
+            const response = await fetch(
+                `/api/feature/get-ddm-link?scope=${encodeURIComponent(data.scope)}&name=${encodeURIComponent(data.name)}&rse=${encodeURIComponent(data.rse)}`,
+            );
+            const json = await response.json();
+            setViewModel(json);
+        } catch (_) {
+            setHasError(true);
+        } finally {
+            setIsFetching(false);
+        }
+    };
+
+    useEffect(() => {
+        if (hasError) {
+            toast({
+                title: 'DDM link generation failed',
+                description: 'An unknown exception occurred.',
+                variant: 'error',
+            });
+        }
+
+        if (viewModel?.status === 'error') {
+            toast({
+                title: 'DDM link generation failed',
+                description: viewModel.message,
+                variant: 'error',
+            });
+        }
+
+        if (viewModel?.status === 'success') {
+            const url = viewModel.url;
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                toast({
+                    title: 'DDM link generation failed',
+                    description: 'No URL returned from the server.',
+                    variant: 'error',
+                });
+            }
+        }
+    }, [hasError, viewModel, toast]);
+
+    if (!data.scope || !data.name || !data.rse) {
+        return;
+    }
+
+    const buttonClassName = 'my-2 h-7 w-full';
+
+    if (isFetching) {
+        return (
+            <Button className={buttonClassName} variant="neutral">
+                <LoadingSpinner className="h-5 w-5" />
+            </Button>
+        );
+    }
+    return (
+        <Button className={buttonClassName} variant="neutral" onClick={getDDMLink}>
+            <HiExternalLink className="mr-1" />
+            DDM Dashboard
+        </Button>
+    );
+};
+
 const LockStateDisplayNames: Record<LockState, string> = {
     [LockState.REPLICATING]: 'Replicating',
     [LockState.OK]: 'OK',
@@ -158,6 +232,12 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
         {
             headerName: 'FTS Monitoring',
             cellRenderer: FTSLinkButton,
+            minWidth: 200,
+            sortable: false,
+        },
+        {
+            headerName: 'DDM Dashboard',
+            cellRenderer: DDMLinkButton,
             minWidth: 200,
             sortable: false,
         },
