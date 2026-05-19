@@ -65,6 +65,7 @@ import ListRuleReplicaLockStatesFeature from '@/lib/infrastructure/ioc/features/
 import RequestGateway from '../gateway/request-gateway/request-gateway';
 import RequestGatewayOutputPort from '@/lib/core/port/secondary/request-gateway-output-port';
 import GetFTSLinkFeature from './features/get-fts-link-feature';
+import GetDDMLinkFeature from './features/get-ddm-link-feature';
 import UpdateRuleFeature from '@/lib/infrastructure/ioc/features/update-rule-feature';
 
 /**
@@ -102,6 +103,7 @@ loadFeaturesSync(appContainer, [
     new ListSubscriptionsFeature(appContainer),
     new GetRuleFeature(appContainer),
     new GetFTSLinkFeature(appContainer),
+    new GetDDMLinkFeature(appContainer),
 ]);
 
 // Features: Page RSE
