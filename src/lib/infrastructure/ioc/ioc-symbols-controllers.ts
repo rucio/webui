@@ -38,6 +38,7 @@ const CONTROLLERS = {
     GET_RULE: Symbol.for('GetRuleController'),
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesController'),
     GET_FTS_LINK: Symbol.for('GetFTSLinkController'),
+    GET_DDM_LINK: Symbol.for('GetDDMLinkController'),
     UPDATE_RULE: Symbol.for('UpdateRuleController'),
 };
 
