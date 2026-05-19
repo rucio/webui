@@ -130,14 +130,14 @@ export const ListDID = (props: ListDIDProps) => {
             </div>
 
             {/* Results Section */}
-            <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-20rem)]">
+            <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-20rem)]">
                 {/* Table */}
-                <div className="flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-full">
+                <div className="flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-full min-h-[24rem]">
                     <ListDIDTable streamingHook={streamingHook} onSelectionChanged={onSelectionChanged} onGridReady={onGridReady} />
                 </div>
 
                 {/* Metadata Panel */}
-                <div className="w-full lg:w-96 shrink-0 h-full">
+                <div className="w-full lg:w-96 shrink-0 lg:h-full">
                     <ListDIDMeta meta={meta} isLoading={isMetaFetching} hasError={metaError !== null} />
                 </div>
             </div>
