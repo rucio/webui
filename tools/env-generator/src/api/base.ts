@@ -68,6 +68,8 @@ export class WebUIEnvTemplateCompiler {
       'AUTH_TRUST_HOST': 'true',
       'AUTH_SECRET': authSecret,
       'NEXTAUTH_SECRET': authSecret,
+      'FEATURE_DDM_DASHBOARD': 'false',
+      'DDM_DASHBOARD_BASE_URL': '',
       ...this.environmentVariables,
     }
   }
