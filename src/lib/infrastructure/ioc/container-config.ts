@@ -67,6 +67,8 @@ import RequestGatewayOutputPort from '@/lib/core/port/secondary/request-gateway-
 import GetFTSLinkFeature from './features/get-fts-link-feature';
 import GetDDMLinkFeature from './features/get-ddm-link-feature';
 import UpdateRuleFeature from '@/lib/infrastructure/ioc/features/update-rule-feature';
+import ListSuspiciousReplicasFeature from '@/lib/infrastructure/ioc/features/list-suspicious-replicas-feature';
+import DeclareBadReplicasFeature from '@/lib/infrastructure/ioc/features/declare-bad-replicas-feature';
 
 /**
  * IoC Container configuration for the application.
@@ -100,6 +102,8 @@ loadFeaturesSync(appContainer, [
     new ListDIDRulesFeature(appContainer),
     new ListDatasetReplicasFeature(appContainer),
     new ListFileReplicasFeature(appContainer),
+    new ListSuspiciousReplicasFeature(appContainer),
+    new DeclareBadReplicasFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),
     new GetRuleFeature(appContainer),
     new GetFTSLinkFeature(appContainer),

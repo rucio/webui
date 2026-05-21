@@ -9,6 +9,7 @@ export enum HotBarCardType {
     RULE_LIST = 'RULE_LIST',
     RSE = 'RSE',
     RSE_LIST = 'RSE_LIST',
+    SUSPICIOUS_REPLICA_LIST = 'SUSPICIOUS_REPLICA_LIST',
 }
 
 export interface HotBarCard {

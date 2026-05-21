@@ -1,6 +1,5 @@
 /**
- * /**
- * @file ioc-symbols-input-port.ts
+ * @file ioc-symbols-controllers.ts
  * @description This file contains the symbols for the controllers. Controllers are used
  * to execute the use cases.
  */
@@ -40,6 +39,8 @@ const CONTROLLERS = {
     GET_FTS_LINK: Symbol.for('GetFTSLinkController'),
     GET_DDM_LINK: Symbol.for('GetDDMLinkController'),
     UPDATE_RULE: Symbol.for('UpdateRuleController'),
+    LIST_SUSPICIOUS_REPLICAS: Symbol.for('ListSuspiciousReplicasController'),
+    DECLARE_BAD_REPLICAS: Symbol.for('DeclareBadReplicasController'),
 };
 
 export default CONTROLLERS;

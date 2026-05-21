@@ -40,6 +40,8 @@ const USECASE_FACTORY = {
     GET_FTS_LINK: Symbol.for('Factory<GetFTSLinkUseCase>'),
     GET_DDM_LINK: Symbol.for('Factory<GetDDMLinkUseCase>'),
     UPDATE_RULE: Symbol.for('Factory<UpdateRuleUseCase>'),
+    LIST_SUSPICIOUS_REPLICAS: Symbol.for('Factory<ListSuspiciousReplicasUseCase>'),
+    DECLARE_BAD_REPLICAS: Symbol.for('Factory<DeclareBadReplicasUseCase>'),
 };
 
 export default USECASE_FACTORY;

@@ -50,3 +50,23 @@ export interface ListSuspiciousReplicasDTO extends BaseDTO {
 export interface DeclareBadPFNsDTO extends BaseDTO {
     created: boolean;
 }
+
+/**
+ * A single replica (scope, name, rse) that Rucio refused to mark bad on a
+ * `POST /replicas/bad/dids` call. Empty list on the wire == full success.
+ */
+export interface NotDeclaredReplicaDTO {
+    scope: string;
+    name: string;
+    rse: string;
+    reason?: string;
+}
+
+/**
+ * Data Transfer Object for the DeclareBadReplicas endpoint
+ * (`POST /replicas/bad/dids`). On success the body is a JSON array of replicas
+ * the server *refused* to mark bad (or an empty array on full success).
+ */
+export interface DeclareBadReplicasDTO extends BaseDTO {
+    notDeclared: NotDeclaredReplicaDTO[];
+}

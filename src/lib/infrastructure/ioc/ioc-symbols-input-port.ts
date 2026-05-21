@@ -39,6 +39,8 @@ const INPUT_PORT = {
     GET_FTS_LINK: Symbol.for('GetFTSLinkInputPort'),
     GET_DDM_LINK: Symbol.for('GetDDMLinkInputPort'),
     UPDATE_RULE: Symbol.for('UpdateRuleInputPort'),
+    LIST_SUSPICIOUS_REPLICAS: Symbol.for('ListSuspiciousReplicasInputPort'),
+    DECLARE_BAD_REPLICAS: Symbol.for('DeclareBadReplicasInputPort'),
 };
 
 export default INPUT_PORT;
