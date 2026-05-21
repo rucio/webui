@@ -22,6 +22,7 @@ type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
     isActive?: boolean;
+    featureDDMDashboard: boolean;
 };
 
 const ClickableDID = (props: { value: string[] }) => {
@@ -235,12 +236,16 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             minWidth: 200,
             sortable: false,
         },
-        {
-            headerName: 'DDM Dashboard',
-            cellRenderer: DDMLinkButton,
-            minWidth: 200,
-            sortable: false,
-        },
+        ...(props.featureDDMDashboard
+            ? [
+                  {
+                      headerName: 'DDM Dashboard',
+                      cellRenderer: DDMLinkButton,
+                      minWidth: 200,
+                      sortable: false,
+                  },
+              ]
+            : []),
     ]);
 
     const onGridReady = (event: GridReadyEvent) => {
@@ -259,7 +264,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
     return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
 };
 
-export const DetailsRuleLocks = ({ id, isActive }: { id: string; isActive?: boolean }) => {
+export const DetailsRuleLocks = ({ id, isActive, featureDDMDashboard }: { id: string; isActive?: boolean; featureDDMDashboard: boolean }) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<ListRuleReplicaLockStatesViewModel>();
 
     useEffect(() => {
@@ -269,5 +274,12 @@ export const DetailsRuleLocks = ({ id, isActive }: { id: string; isActive?: bool
         }
     }, [gridApi]);
 
-    return <DetailsRuleLocksTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
+    return (
+        <DetailsRuleLocksTable
+            streamingHook={streamingHook}
+            onGridReady={onGridReady}
+            isActive={isActive}
+            featureDDMDashboard={featureDDMDashboard}
+        />
+    );
 };
