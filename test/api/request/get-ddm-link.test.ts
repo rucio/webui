@@ -70,32 +70,34 @@ const BASE_REQUEST: AuthenticatedRequestModel<GetDDMLinkRequest> = {
 // ---------------------------------------------------------------------------
 
 describe('createDDMDashboardUrl', () => {
-    it('should build a URL with the correct Grafana variable query params', () => {
-        const url = createDDMDashboardUrl('https://grafana.example.com/d/ddm', 'test', 'file1', 'XRD1');
-        expect(url).toBe('https://grafana.example.com/d/ddm?var-scope=test&var-name=file1&var-rse=XRD1');
+    const BASE = 'https://grafana.example.com/d/anon/ddm-transfers';
+
+    it('should set var-dst_endpoint to the RSE and emit two var-enr_filters entries for name and scope', () => {
+        const url = createDDMDashboardUrl(BASE, 'test', 'file1', 'XRD1');
+        expect(url.startsWith(`${BASE}?`)).toBe(true);
+        expect(url).toContain('var-dst_endpoint=XRD1');
+        expect(url).toContain('var-enr_filters=data.name%7C%3D%7Cfile1');
+        expect(url).toContain('var-enr_filters=data.scope%7C%3D%7Ctest');
+    });
+
+    it('should use & as separator when the base URL already has a query string', () => {
+        const baseWithQuery = `${BASE}?panelId=118&orgId=17&from=now-30d&to=now`;
+        const url = createDDMDashboardUrl(baseWithQuery, 'test', 'file1', 'XRD1');
+        expect(url.startsWith(`${baseWithQuery}&var-dst_endpoint=`)).toBe(true);
+        // The pre-existing query params are preserved verbatim
+        expect(url).toContain('panelId=118');
+        expect(url).toContain('orgId=17');
     });
 
     it('should percent-encode forward slashes in scope', () => {
-        const url = createDDMDashboardUrl('https://grafana.example.com/d/ddm', 'cms/data', 'file1', 'XRD1');
-        expect(url).toContain('var-scope=cms%2Fdata');
+        const url = createDDMDashboardUrl(BASE, 'cms/data', 'file1', 'XRD1');
+        expect(url).toContain('var-enr_filters=data.scope%7C%3D%7Ccms%2Fdata');
     });
 
-    it('should encode spaces as + and special chars in name and rse', () => {
-        const url = createDDMDashboardUrl('https://grafana.example.com/d/ddm', 'test', 'my file+1', 'RSE #1');
-        // URLSearchParams encodes spaces as '+' and '#' as '%23', '+' as '%2B'
-        expect(url).toContain('var-name=my+file%2B1');
-        expect(url).toContain('var-rse=RSE+%231');
-    });
-
-    it('should include all three variable params in the output when baseUrl already has a query string', () => {
-        // When the caller passes a baseUrl with an existing query string, the
-        // implementation appends '?' unconditionally.  The test documents the
-        // current behaviour; callers are expected to supply a baseUrl without a
-        // query string.
-        const url = createDDMDashboardUrl('https://grafana.example.com/d/ddm?orgId=1', 'test', 'file1', 'XRD1');
-        expect(url).toContain('var-scope=test');
-        expect(url).toContain('var-name=file1');
-        expect(url).toContain('var-rse=XRD1');
+    it('should percent-encode special characters in name and rse', () => {
+        const url = createDDMDashboardUrl(BASE, 'test', 'my file+1', 'RSE #1');
+        expect(url).toContain('var-enr_filters=data.name%7C%3D%7Cmy%20file%2B1');
+        expect(url).toContain('var-dst_endpoint=RSE%20%231');
     });
 });
 
@@ -166,21 +168,23 @@ describe('GetDDMLinkUseCase', () => {
         expect(presenter.lastSuccess).toBeUndefined();
     });
 
-    it('should call presentSuccess with the correctly constructed URL on the happy path', async () => {
+    it('should call presentSuccess with a URL that embeds the request scope/name/rse on the happy path', async () => {
         const presenter = makePresenter();
         const envConfig = makeEnvConfig();
         const useCase = new GetDDMLinkUseCase(presenter, envConfig);
 
         await useCase.execute(BASE_REQUEST);
 
-        expect(presenter.lastSuccess).toEqual({
-            status: 'success',
-            url: 'https://grafana.example.com/d/ddm?var-scope=test&var-name=file1&var-rse=XRD1',
-        });
         expect(presenter.lastError).toBeUndefined();
+        expect(presenter.lastSuccess).toBeDefined();
+        const { url } = presenter.lastSuccess!;
+        expect(url.startsWith('https://grafana.example.com/d/ddm?')).toBe(true);
+        expect(url).toContain('var-dst_endpoint=XRD1');
+        expect(url).toContain('var-enr_filters=data.name%7C%3D%7Cfile1');
+        expect(url).toContain('var-enr_filters=data.scope%7C%3D%7Ctest');
     });
 
-    it('should URLSearchParams-encode special characters in the constructed URL', async () => {
+    it('should percent-encode special characters in the constructed URL', async () => {
         const presenter = makePresenter();
         const envConfig = makeEnvConfig();
         const useCase = new GetDDMLinkUseCase(presenter, envConfig);
@@ -194,9 +198,9 @@ describe('GetDDMLinkUseCase', () => {
 
         expect(presenter.lastSuccess).toBeDefined();
         const { url } = presenter.lastSuccess!;
-        expect(url).toContain('var-scope=cms%2Fdata');
-        expect(url).toContain('var-name=my+file');
-        expect(url).toContain('var-rse=RSE%231');
+        expect(url).toContain('var-enr_filters=data.scope%7C%3D%7Ccms%2Fdata');
+        expect(url).toContain('var-enr_filters=data.name%7C%3D%7Cmy%20file');
+        expect(url).toContain('var-dst_endpoint=RSE%231');
     });
 });
 
@@ -217,7 +221,7 @@ describe('GET DDM link API route test', () => {
 
     test('it should return a DDM Dashboard URL with correctly encoded query params', async () => {
         const { req, res } = await createHttpMocks(
-            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=CERN_DISK',
+            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK',
             'GET',
             {},
         );
@@ -231,7 +235,7 @@ describe('GET DDM link API route test', () => {
             response: res as unknown as NextApiResponse,
             scope: 'test',
             name: 'file.txt',
-            rse: 'CERN_DISK',
+            rse: 'SITE_DISK',
         };
 
         await controller.execute(controllerParameters);
@@ -239,16 +243,16 @@ describe('GET DDM link API route test', () => {
         const data: DDMLinkViewModel = res._getJSONData();
         expect(data.status).toBe('success');
         expect(data.url).toContain('https://grafana.example.com/d/ddm');
-        expect(data.url).toContain('var-scope=test');
-        expect(data.url).toContain('var-name=file.txt');
-        expect(data.url).toContain('var-rse=CERN_DISK');
+        expect(data.url).toContain('var-dst_endpoint=SITE_DISK');
+        expect(data.url).toContain('var-enr_filters=data.name%7C%3D%7Cfile.txt');
+        expect(data.url).toContain('var-enr_filters=data.scope%7C%3D%7Ctest');
     });
 
     test('it should return an error view model when the feature flag is disabled', async () => {
         process.env.FEATURE_DDM_DASHBOARD = 'false';
 
         const { req, res } = await createHttpMocks(
-            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=CERN_DISK',
+            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK',
             'GET',
             {},
         );
@@ -262,7 +266,7 @@ describe('GET DDM link API route test', () => {
             response: res as unknown as NextApiResponse,
             scope: 'test',
             name: 'file.txt',
-            rse: 'CERN_DISK',
+            rse: 'SITE_DISK',
         });
 
         const data: DDMLinkViewModel = res._getJSONData();
@@ -274,7 +278,7 @@ describe('GET DDM link API route test', () => {
         delete process.env.DDM_DASHBOARD_BASE_URL;
 
         const { req, res } = await createHttpMocks(
-            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=CERN_DISK',
+            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK',
             'GET',
             {},
         );
@@ -288,7 +292,7 @@ describe('GET DDM link API route test', () => {
             response: res as unknown as NextApiResponse,
             scope: 'test',
             name: 'file.txt',
-            rse: 'CERN_DISK',
+            rse: 'SITE_DISK',
         });
 
         const data: DDMLinkViewModel = res._getJSONData();

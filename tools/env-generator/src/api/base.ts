@@ -184,6 +184,17 @@ export class WebUIEnvTemplateCompiler {
       })
     })
 
+    // check if DDM Dashboard feature is enabled, the base URL must be set
+    if (env['FEATURE_DDM_DASHBOARD'] === 'true') {
+      const ddmBaseUrl = env['DDM_DASHBOARD_BASE_URL']
+      if (!ddmBaseUrl || ddmBaseUrl.trim() === '') {
+        errors.push({
+          type: 'error',
+          message: `FEATURE_DDM_DASHBOARD is enabled. Please set a value for ${prefix}DDM_DASHBOARD_BASE_URL (host + dashboard path of the DDM Grafana dashboard).`
+        })
+      }
+    }
+
     // check if oidc is enabled, all oidc variables are set
     if (env['OIDC_ENABLED'] === 'true') {
       // check if oidc_providers is defined
