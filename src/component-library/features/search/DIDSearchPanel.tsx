@@ -270,9 +270,11 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
             {/* Alert for invalid initial pattern */}
             {initialPatternError && <Alert variant="warning" message={initialPatternError} onClose={() => setInitialPatternError(null)} />}
 
-            {/* Main search row */}
-            <div className="flex flex-col md:items-start md:flex-row md:space-y-0 md:space-x-2">
-                <div className="flex flex-col grow sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
+            {/* Main search row.
+                Mobile (flex-col): order is inputs → filters → search button so the disclosure panel sits next to its trigger.
+                Desktop (flex-row + flex-wrap): inputs + search button share one line; filters wrap to a full-width line below. */}
+            <div className="flex flex-col md:flex-row md:flex-wrap md:items-start gap-y-4 md:gap-x-2">
+                <div className="order-1 flex flex-col md:flex-1 min-w-0 sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
                     <Select onValueChange={value => setType(value as DIDType)} defaultValue={type}>
                         <SelectTrigger className="w-full sm:w-48">
                             <SelectValue placeholder="Type" />
@@ -320,12 +322,10 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                         </Button>
                     </div>
                 </div>
-                <SearchButton className="sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
-            </div>
 
-            {/* DID filters */}
-            {isFilterExpanded && (
-                <div className="rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6 space-y-6">
+                {/* DID filters */}
+                {isFilterExpanded && (
+                    <div className="order-2 md:order-3 md:basis-full rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6 space-y-6">
                     <DIDFilterField label="Created">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
                             <Select value={createdMode} onValueChange={v => setCreatedMode(v as 'before' | 'after')}>
@@ -394,6 +394,14 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                     </div>
                 </div>
             )}
+
+                <SearchButton
+                    className="order-3 md:order-2 sm:w-full md:w-48"
+                    isRunning={props.isRunning}
+                    onStop={onStop}
+                    onSearch={onSearch}
+                />
+            </div>
         </div>
     );
 };

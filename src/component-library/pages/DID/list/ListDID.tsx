@@ -132,7 +132,7 @@ export const ListDID = (props: ListDIDProps) => {
             {/* Results Section */}
             <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-20rem)]">
                 {/* Table */}
-                <div className="flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-full min-h-[24rem]">
+                <div className="lg:flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[60vh] lg:h-full">
                     <ListDIDTable streamingHook={streamingHook} onSelectionChanged={onSelectionChanged} onGridReady={onGridReady} />
                 </div>
 

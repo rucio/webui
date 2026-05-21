@@ -2,7 +2,7 @@
 
 import { cn } from '@/component-library/utils';
 import { useTheme } from 'next-themes';
-import { HiChevronDown, HiMenu, HiMoon, HiSun, HiX, HiLightBulb } from 'react-icons/hi';
+import { HiChevronDown, HiMenu, HiMoon, HiSun, HiX, HiLightBulb, HiSearch } from 'react-icons/hi';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -18,6 +18,7 @@ import { buildSubscriptionSearchUrl } from '@/lib/infrastructure/utils/navigatio
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 import { useSessionMonitor } from '@/lib/infrastructure/auth/session-monitor';
 import { useSession } from 'next-auth/react';
+import { useCommandPalette } from '@/lib/infrastructure/hooks/useCommandPalette';
 
 type TMenuItem = {
     title: string;
@@ -67,7 +68,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
     };
 
     return (
-        <nav className="hidden md:flex items-center space-x-8 relative" aria-label="Main navigation">
+        <nav className="hidden md:flex items-center space-x-4 lg:space-x-8 relative" aria-label="Main navigation">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
                 const isActive = item.path === pathname || isChildActive(item);
@@ -75,7 +76,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
 
                 if (item.path) {
                     return (
-                        <div key={item.path} className="relative">
+                        <div key={item.path} className="relative shrink-0 whitespace-nowrap">
                             <MenuItem item={item} pathname={pathname} />
                             {isActive && (
                                 <motion.div
@@ -93,10 +94,10 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
                     );
                 } else {
                     return (
-                        <div key={key} className="relative group">
-                            <div className={cn(classes, 'cursor-pointer')}>
+                        <div key={key} className="relative group shrink-0">
+                            <div className={cn(classes, 'cursor-pointer flex items-center whitespace-nowrap')}>
                                 <span>{item.title}</span>
-                                <HiChevronDown className="inline pl-1 h-5 w-5" aria-hidden="true" />
+                                <HiChevronDown className="pl-1 h-5 w-5 shrink-0" aria-hidden="true" />
                             </div>
                             {item.children && getItemChildren(item.children)}
                             {isActive && (
@@ -152,10 +153,6 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                             <HiX className="h-6 w-6 text-neutral-900 dark:text-neutral-100" />
                         </button>
 
-                        <div className="md:hidden block">
-                            <Searchbar />
-                        </div>
-
                         <nav className="flex flex-col items-start space-y-4 text-lg" aria-label="Mobile navigation">
                             {menuItems.map(item => {
                                 if (item.path) {
@@ -171,6 +168,20 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                 </div>
             )}
         </div>
+    );
+};
+
+const CompactSearchTrigger = () => {
+    const { open } = useCommandPalette();
+
+    return (
+        <button
+            className="flex lg:hidden rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
+            onClick={open}
+            aria-label="Open command palette"
+        >
+            <HiSearch className="h-6 w-6" />
+        </button>
     );
 };
 
@@ -331,7 +342,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
                             <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} className="h-auto" />
                         </a>
-                        <div className="pl-1 md:block hidden">
+                        <div className="pl-1 lg:block hidden">
                             <Searchbar />
                         </div>
                     </div>
@@ -339,6 +350,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                         <DesktopNavigationBar menuItems={menuItems} />
                     </div>
                     <div className="flex h-full">
+                        <CompactSearchTrigger />
                         <TipsButton />
                         <ThemeSwitchButton />
                         <AccountButton
