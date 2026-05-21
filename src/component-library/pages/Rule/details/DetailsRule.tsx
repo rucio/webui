@@ -33,7 +33,7 @@ import { DenyRuleDialog } from '@/component-library/features/mutations/DenyRuleD
 import { DeleteRuleDialog } from '@/component-library/features/mutations/DeleteRuleDialog';
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 
-export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewModel }) => {
+export const DetailsRuleTabs = ({ id, meta, featureDDMDashboard }: { id: string; meta: RuleMetaViewModel; featureDDMDashboard: boolean }) => {
     const tabNames = ['Attributes', 'Locks'];
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -50,14 +50,14 @@ export const DetailsRuleTabs = ({ id, meta }: { id: string; meta: RuleMetaViewMo
             </div>
             <div className={getViewClasses(1)}>
                 <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
-                    <DetailsRuleLocks id={id} isActive={1 === activeIndex} />
+                    <DetailsRuleLocks id={id} isActive={1 === activeIndex} featureDDMDashboard={featureDDMDashboard} />
                 </div>
             </div>
         </>
     );
 };
 
-export const DetailsRule = ({ id }: { id: string }) => {
+export const DetailsRule = ({ id, featureDDMDashboard }: { id: string; featureDDMDashboard: boolean }) => {
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const validator = new BaseViewModelValidator(toast);
@@ -361,7 +361,7 @@ export const DetailsRule = ({ id }: { id: string }) => {
                     </Button>
                 )}
             </DetailActions>
-            <DetailsRuleTabs id={id} meta={meta} />
+            <DetailsRuleTabs id={id} meta={meta} featureDDMDashboard={featureDDMDashboard} />
             <UpdateLifetimeDialog
                 open={isLifetimeOpen}
                 onOpenChange={setIsLifetimeOpen}
