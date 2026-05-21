@@ -36,6 +36,7 @@ import {
 } from '@/lib/infrastructure/data/view-model/did';
 import { ApproveRuleViewModel, RuleMetaViewModel, RulePageLockEntryViewModel, RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { SuspiciousReplicaViewModel } from '@/lib/infrastructure/data/view-model/replica';
 import useStreamReader, { StreamingSettings, StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 
 export function mockUseComDOM<T extends BaseViewModel>(data: T[]): UseComDOM<T> {
@@ -466,4 +467,16 @@ export function generateSequenceArray(length: number, generator: () => any): any
         result.push(generator());
     }
     return result;
+}
+
+export function fixtureSuspiciousReplicaViewModel(): SuspiciousReplicaViewModel {
+    return {
+        ...mockBaseVM(),
+        scope: createRandomScope(),
+        name: faker.lorem.words(3).replace(/\s/g, '.'),
+        rse: createRSEName(),
+        rseId: faker.string.uuid().replace(/-/g, ''),
+        cnt: faker.number.int({ min: 1, max: 100 }),
+        createdAt: faker.date.past().toISOString(),
+    };
 }

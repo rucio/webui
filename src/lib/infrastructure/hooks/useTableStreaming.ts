@@ -30,7 +30,8 @@ export default function useTableStreaming<T extends BaseViewModel>(initialData?:
 
     useEffect(() => {
         if (gridApi && initialData) {
-            onData(initialData);
+            const validData = initialData.filter(element => validator.isValid(element));
+            gridApi.setGridOption('rowData', validData);
         }
     }, [gridApi]);
 

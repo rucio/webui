@@ -31,7 +31,7 @@ type TFullMenuItem = TMenuItem & {
 
 const MenuItem = ({ item, pathname, onClick }: { item: TMenuItem; pathname: string | null; onClick?: () => void }) => {
     const isActive = item.path === pathname;
-    const classes = `hover:text-brand-500 transition-colors duration-150 ${isActive && 'text-brand-500 font-semibold'}`;
+    const classes = `hover:text-brand-500 transition-colors duration-150 whitespace-nowrap ${isActive && 'text-brand-500 font-semibold'}`;
     return (
         <Link href={item.path ?? '/'} className={cn(classes, 'relative')} onClick={onClick}>
             {item.title}
@@ -125,7 +125,7 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <div className="flex md:hidden">
+        <div className="flex lg:hidden">
             <button
                 className="rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 items-center"
                 onClick={() => setIsMenuOpen(prevState => !prevState)}
@@ -295,9 +295,17 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
         ...(canViewApprovalQueue ? [{ title: 'Approve Rules', path: '/rules/approve?autoSearch=true' }] : []),
     ];
 
+    const didsChildren: TMenuItem[] = [
+        { title: 'List DIDs', path: '/dids' },
+        { title: 'Suspicious Replicas', path: '/suspicious-replicas' },
+    ];
+
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
-        { title: 'DIDs', path: '/dids' },
+        {
+            title: 'DIDs',
+            children: didsChildren,
+        },
         { title: 'RSEs', path: '/rses' },
         { title: 'Subscriptions', path: subscriptionUrl },
         {
@@ -330,14 +338,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                 <>
                     <div className="flex items-center">
                         <Link className="w-12 h-full stroke-white fill-white" href="/dashboard">
-                            <Image
-                                src={logoPath}
-                                alt="Rucio Logo"
-                                width={logoSize}
-                                height={logoSize}
-                                className="h-auto"
-                                suppressHydrationWarning
-                            />
+                            <Image src={logoPath} alt="Rucio Logo" width={logoSize} height={logoSize} className="h-auto" suppressHydrationWarning />
                         </Link>
                         <a className="w-12 h-full" href={siteHeader.projectUrl}>
                             <Image src="/experiment-logo.png" alt="Experiment Logo" width={logoSize} height={logoSize} className="h-auto" />

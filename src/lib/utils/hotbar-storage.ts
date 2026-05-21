@@ -16,6 +16,10 @@ export function inferCardType(url: string): HotBarCardType {
         const urlObj = new URL(url, window.location.origin);
         const pathname = urlObj.pathname;
 
+        // Suspicious-replicas is matched first because its URL contains no
+        // /did/rule/rse substrings and the default fallback below would
+        // otherwise mis-classify it as DID.
+        if (pathname.includes('/suspicious-replicas')) return HotBarCardType.SUSPICIOUS_REPLICA_LIST;
         if (pathname.includes('/dids')) return HotBarCardType.DID_LIST;
         if (pathname.includes('/did/')) return HotBarCardType.DID;
         if (pathname.includes('/rules')) return HotBarCardType.RULE_LIST;

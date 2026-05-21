@@ -1,10 +1,11 @@
-import { DeclareBadPFNsDTO, ListReplicasDTO, ListSuspiciousReplicasDTO } from '@/lib/core/dto/replica-dto';
+import { DeclareBadPFNsDTO, DeclareBadReplicasDTO, ListReplicasDTO, ListSuspiciousReplicasDTO } from '@/lib/core/dto/replica-dto';
 import ReplicaGatewayOutputPort from '@/lib/core/port/secondary/replica-gateway-output-port';
 import { injectable } from 'inversify';
 import ListDatasetReplicasEndpoint from './endpoints/list-dataset-replicas-endpoint';
 import ListFileReplicasEndpoint from './endpoints/list-file-replicas-endpoint';
 import ListSuspiciousReplicasEndpoint from './endpoints/list-suspicious-replicas-endpoint';
 import DeclareBadPFNsEndpoint from './endpoints/declare-bad-pfns-endpoint';
+import DeclareBadReplicasEndpoint from './endpoints/declare-bad-replicas-endpoint';
 
 @injectable()
 export default class ReplicaGateway implements ReplicaGatewayOutputPort {
@@ -90,6 +91,29 @@ export default class ReplicaGateway implements ReplicaGatewayOutputPort {
                 status: 'error',
                 created: false,
                 errorName: 'Exception occurred while declaring bad PFNs',
+                errorType: 'gateway_endpoint_error',
+                errorMessage: error?.toString(),
+            };
+            return Promise.resolve(errorDTO);
+        }
+    }
+
+    async declareBadReplicas(
+        rucioAuthToken: string,
+        dids: Array<{ scope: string; name: string }>,
+        rse: string,
+        reason: string,
+        expiresAt?: string | null,
+    ): Promise<DeclareBadReplicasDTO> {
+        try {
+            const endpoint = new DeclareBadReplicasEndpoint(rucioAuthToken, dids, rse, reason, expiresAt);
+            const dto: DeclareBadReplicasDTO = await endpoint.fetch();
+            return dto;
+        } catch (error) {
+            const errorDTO: DeclareBadReplicasDTO = {
+                status: 'error',
+                notDeclared: [],
+                errorName: 'Exception occurred while declaring bad replicas',
                 errorType: 'gateway_endpoint_error',
                 errorMessage: error?.toString(),
             };

@@ -26,6 +26,8 @@ function getTypeBadgeStyles(type: CardTypeEnum): string {
         case CardTypeEnum.RSE:
         case CardTypeEnum.RSE_LIST:
             return 'bg-base-warning-100 text-base-warning-900 dark:bg-base-warning-900/20 dark:text-base-warning-100';
+        case CardTypeEnum.SUSPICIOUS_REPLICA_LIST:
+            return 'bg-base-error-100 text-base-error-900 dark:bg-base-error-900/20 dark:text-base-error-100';
         default:
             return 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
     }

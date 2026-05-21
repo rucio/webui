@@ -1,6 +1,6 @@
 import { ListReplicasDTO } from '@/lib/core/dto/replica-dto';
 import { DatasetReplicasDTO } from '@/lib/core/dto/replica-dto';
-import { DeclareBadPFNsDTO, ListSuspiciousReplicasDTO } from '@/lib/core/dto/replica-dto';
+import { DeclareBadPFNsDTO, DeclareBadReplicasDTO, ListSuspiciousReplicasDTO } from '@/lib/core/dto/replica-dto';
 
 /**
  * Output port for the Replica Gateway, responsible for defining the methods that the Gateway will use to interact with the Rucio Server.
@@ -49,4 +49,22 @@ export default interface ReplicaGatewayOutputPort {
      * @returns A Promise that resolves to a DeclareBadPFNsDTO object.
      */
     declareBadPFNs(rucioAuthToken: string, pfns: string[], reason: string, state: string, expiresAt?: string | null): Promise<DeclareBadPFNsDTO>;
+
+    /**
+     * Declares replicas as bad on a given RSE via `POST /replicas/bad/dids`.
+     * Returns a DTO whose `notDeclared` array lists replicas the server refused
+     * to mark bad (empty array on full success).
+     * @param rucioAuthToken - The Rucio auth token to use for authentication.
+     * @param dids - List of {scope, name} pairs to declare bad.
+     * @param rse - The RSE on which to mark the replicas bad.
+     * @param reason - The reason for declaring the replicas as bad.
+     * @param expiresAt - Optional expiry timestamp for the declaration.
+     */
+    declareBadReplicas(
+        rucioAuthToken: string,
+        dids: Array<{ scope: string; name: string }>,
+        rse: string,
+        reason: string,
+        expiresAt?: string | null,
+    ): Promise<DeclareBadReplicasDTO>;
 }

@@ -12,6 +12,7 @@ import {
     MagnifyingGlassIcon,
     PlusIcon,
     QuestionMarkCircleIcon,
+    ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { CommandItem } from '@/lib/core/entity/command-palette';
 import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, buildSubscriptionSearchUrl, detectSearchType } from '@/lib/infrastructure/utils/navigation';
@@ -74,6 +75,15 @@ export function getNavigationCommands(account?: string, canViewApprovalQueue?: b
             icon: ServerIcon,
             url: '/rses',
             keywords: ['rse', 'storage', 'element', 'endpoint'],
+        },
+        {
+            id: 'nav-suspicious-replicas',
+            type: 'navigation',
+            title: 'Suspicious Replicas',
+            description: 'List suspicious file replicas and declare them bad',
+            icon: ExclamationTriangleIcon,
+            url: '/suspicious-replicas',
+            keywords: ['suspicious', 'bad', 'replica', 'file', 'corrupted', 'declare', 'rse'],
         },
         {
             id: 'nav-subscriptions',
