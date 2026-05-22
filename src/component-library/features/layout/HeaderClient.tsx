@@ -18,6 +18,7 @@ import { buildSubscriptionSearchUrl } from '@/lib/infrastructure/utils/navigatio
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 import { useSessionMonitor } from '@/lib/infrastructure/auth/session-monitor';
 import { useSession } from 'next-auth/react';
+import { Role } from '@/lib/core/entity/auth-models';
 import { useCommandPalette } from '@/lib/infrastructure/hooks/useCommandPalette';
 
 type TMenuItem = {
@@ -272,7 +273,8 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     const subscriptionUrl = buildSubscriptionSearchUrl(siteHeader?.activeAccount?.rucioAccount);
 
     const { manualSignOut } = useSessionMonitor();
-    const { update } = useSession();
+    const { data: session, update } = useSession();
+    const isAdmin = session?.user?.role === Role.ADMIN;
     const { check, isReady } = usePermissions();
 
     const handleSwitchAccount = async (account: string) => {
@@ -295,17 +297,22 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
         ...(canViewApprovalQueue ? [{ title: 'Approve Rules', path: '/rules/approve?autoSearch=true' }] : []),
     ];
 
-    const didsChildren: TMenuItem[] = [
-        { title: 'List DIDs', path: '/dids' },
-        { title: 'Suspicious Replicas', path: '/suspicious-replicas' },
-    ];
+    // Suspicious Replicas is an admin-only surface (the page itself redirects
+    // non-admins). For non-admins the DIDs entry has no submenu and links
+    // straight to /dids instead of rendering an empty dropdown.
+    const didsItem: TFullMenuItem = isAdmin
+        ? {
+              title: 'DIDs',
+              children: [
+                  { title: 'List DIDs', path: '/dids' },
+                  { title: 'Suspicious Replicas', path: '/suspicious-replicas' },
+              ],
+          }
+        : { title: 'DIDs', path: '/dids' };
 
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
-        {
-            title: 'DIDs',
-            children: didsChildren,
-        },
+        didsItem,
         { title: 'RSEs', path: '/rses' },
         { title: 'Subscriptions', path: subscriptionUrl },
         {

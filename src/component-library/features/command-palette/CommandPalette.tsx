@@ -22,6 +22,8 @@ import { ClockIcon, BookmarkIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
+import { useSession } from 'next-auth/react';
+import { Role } from '@/lib/core/entity/auth-models';
 
 export interface CommandPaletteProps {
     /** Whether the palette is open */
@@ -53,6 +55,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
 
     const { check, isReady } = usePermissions();
     const canViewApprovalQueue = isReady ? check('rule', 'viewApprovalQueue') : false;
+    const { data: session } = useSession();
+    const isAdmin = session?.user?.role === Role.ADMIN;
 
     // Build all sections with filtering
     const sections = useMemo<CommandSection[]>(() => {
@@ -102,7 +106,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         // Navigation Section
-        const navigationItems = getNavigationCommands(account, canViewApprovalQueue);
+        const navigationItems = getNavigationCommands(account, canViewApprovalQueue, isAdmin);
         allSections.push({
             id: 'navigation',
             title: 'Navigation',
@@ -144,7 +148,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         return allSections;
-    }, [searchQuery, account, canViewApprovalQueue]);
+    }, [searchQuery, account, canViewApprovalQueue, isAdmin]);
 
     // Calculate total items count for keyboard navigation
     const totalItems = useMemo(() => {
