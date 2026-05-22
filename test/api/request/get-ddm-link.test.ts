@@ -1,4 +1,5 @@
 import GetDDMLinkUseCase from '@/lib/core/use-case/get-ddm-link-usecase';
+import { parseBoolEnv } from '@/lib/core/utils/env-utils';
 import { GetDDMLinkOutputPort } from '@/lib/core/port/primary/get-ddm-link-ports';
 import {
     ConfigNotFoundError,
@@ -64,6 +65,23 @@ const BASE_REQUEST: AuthenticatedRequestModel<GetDDMLinkRequest> = {
     name: 'file1',
     rse: 'XRD1',
 };
+
+// ---------------------------------------------------------------------------
+// parseBoolEnv unit tests
+// ---------------------------------------------------------------------------
+
+describe('parseBoolEnv', () => {
+    const truthyValues: Array<string | undefined> = ['true', 'True', 'TRUE', '1', 'yes', 'YES', 'on', 'ON', ' true '];
+    const falsyValues: Array<string | undefined> = ['false', '0', 'no', 'off', '', undefined];
+
+    it.each(truthyValues)('should return true for %p', (value) => {
+        expect(parseBoolEnv(value)).toBe(true);
+    });
+
+    it.each(falsyValues)('should return false for %p', (value) => {
+        expect(parseBoolEnv(value)).toBe(false);
+    });
+});
 
 // ---------------------------------------------------------------------------
 // createDDMDashboardUrl unit tests
@@ -142,6 +160,38 @@ describe('GetDDMLinkUseCase', () => {
         expect(presenter.lastError).toBeUndefined();
         expect(presenter.lastSuccess).toBeDefined();
     });
+
+    const additionalTruthyFlags = ['1', 'yes', 'YES', 'on', 'ON', ' true '];
+    it.each(additionalTruthyFlags)(
+        'should treat feature flag value %p as truthy and present success',
+        async (flagValue) => {
+            const presenter = makePresenter();
+            const envConfig = makeEnvConfig({ FEATURE_DDM_DASHBOARD: flagValue });
+            const useCase = new GetDDMLinkUseCase(presenter, envConfig);
+
+            await useCase.execute(BASE_REQUEST);
+
+            expect(presenter.lastError).toBeUndefined();
+            expect(presenter.lastSuccess).toBeDefined();
+        },
+    );
+
+    const additionalFalsyFlags = ['0', 'no', 'off', 'NO', 'OFF'];
+    it.each(additionalFalsyFlags)(
+        'should treat feature flag value %p as falsy and present FeatureDisabledError',
+        async (flagValue) => {
+            const presenter = makePresenter();
+            const envConfig = makeEnvConfig({ FEATURE_DDM_DASHBOARD: flagValue });
+            const useCase = new GetDDMLinkUseCase(presenter, envConfig);
+
+            await useCase.execute(BASE_REQUEST);
+
+            expect(presenter.lastError).toBeDefined();
+            expect((presenter.lastError as FeatureDisabledError).type).toBe('FeatureDisabledError');
+            expect(presenter.lastError!.code).toBe(403);
+            expect(presenter.lastSuccess).toBeUndefined();
+        },
+    );
 
     it('should call presentError with ConfigNotFoundError (code 500) when base URL is undefined', async () => {
         const presenter = makePresenter();
