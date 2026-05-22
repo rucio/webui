@@ -26,9 +26,19 @@ type ListSuspiciousReplicasProps = {
     initialData?: SuspiciousReplicaViewModel[];
 };
 
-function FilterField({ children, label, htmlFor }: { children: React.ReactNode; label: string; htmlFor: string }) {
+function FilterField({
+    children,
+    label,
+    htmlFor,
+    className,
+}: {
+    children: React.ReactNode;
+    label: string;
+    htmlFor: string;
+    className?: string;
+}) {
     return (
-        <div className="grow flex-1">
+        <div className={cn('flex-1', className)}>
             <label htmlFor={htmlFor} className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">
                 {label}
             </label>
@@ -204,7 +214,7 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
         <div className="flex flex-col space-y-6 w-full">
             {/* Tips & suggestions — collapsible info banner. Page-local so the
                 content stays specific to suspicious-replicas workflows. */}
-            <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 text-sm text-base-info-700 dark:text-base-info-200">
+            <div className="rounded-md bg-base-info-100 dark:bg-base-info-900 text-sm text-base-info-700 dark:text-base-info-200">
                 <button
                     type="button"
                     className="flex w-full items-center gap-2 p-3 text-left"
@@ -257,11 +267,23 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
                 )}
             </div>
 
+            {/* Streaming status strip — visible only while a stream is in progress */}
+            {isRunning && (
+                <div
+                    role="status"
+                    aria-live="polite"
+                    className="flex items-center gap-2 rounded-md bg-base-info-100 dark:bg-base-info-900 text-base-info-700 dark:text-base-info-200 px-3 py-2 text-sm"
+                >
+                    <HiInformationCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <span>Loading results - data streams progressively and may take a moment to complete.</span>
+                </div>
+            )}
+
             {/* Filter Panel */}
             <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
-                <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 items-end">
+                <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 items-end">
                     <div className="flex flex-col w-full space-y-4">
-                        <div className="flex flex-col sm:flex-row w-full gap-4">
+                        <div className="flex flex-col md:flex-row w-full gap-4">
                             <FilterField label="RSE Expression" htmlFor="suspicious-rse-expression">
                                 <Input
                                     id="suspicious-rse-expression"
@@ -280,7 +302,7 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
                                     placeholder="Select date"
                                 />
                             </FilterField>
-                            <FilterField label="Min Attempts Threshold" htmlFor="suspicious-nattempts">
+                            <FilterField label="Min Attempts Threshold" htmlFor="suspicious-nattempts" className="sm:max-w-[160px]">
                                 <Input
                                     id="suspicious-nattempts"
                                     className="w-full"
