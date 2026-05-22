@@ -3,6 +3,16 @@ import { Liquid } from "liquidjs";
 import { readFileSync, writeFileSync } from "fs";
 import crypto from "crypto";
 
+/**
+ * Parses a boolean-like environment variable string.
+ * Accepts 'true', '1', 'yes', 'on' (case-insensitive, trimmed) as truthy.
+ */
+function parseBoolEnv(value: string | undefined): boolean {
+  if (!value) return false;
+  const normalised = value.trim().toLowerCase();
+  return normalised === 'true' || normalised === '1' || normalised === 'yes' || normalised === 'on';
+}
+
 
 export type TTemplateGeneratorOutput = {
   status: boolean,
@@ -185,7 +195,7 @@ export class WebUIEnvTemplateCompiler {
     })
 
     // check if DDM Dashboard feature is enabled, the base URL must be set
-    if (env['FEATURE_DDM_DASHBOARD'] === 'true') {
+    if (parseBoolEnv(env['FEATURE_DDM_DASHBOARD'])) {
       const ddmBaseUrl = env['DDM_DASHBOARD_BASE_URL']
       if (!ddmBaseUrl || ddmBaseUrl.trim() === '') {
         errors.push({
