@@ -24,9 +24,11 @@ import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, buildSubscrip
  * @param canViewApprovalQueue - Whether the current user can access the approve rules page.
  *   Must be resolved by the caller (e.g. via `usePermissions().check`) so this function
  *   remains pure and works before PermixProvider has run setup().
+ * @param isAdmin - Whether the current user has the admin role. Gates the
+ *   suspicious-replicas entry (admin-only surface).
  */
-export function getNavigationCommands(account?: string, canViewApprovalQueue?: boolean): CommandItem[] {
-    return [
+export function getNavigationCommands(account?: string, canViewApprovalQueue?: boolean, isAdmin?: boolean): CommandItem[] {
+    const commands: CommandItem[] = [
         {
             id: 'nav-dashboard',
             type: 'navigation',
@@ -77,15 +79,6 @@ export function getNavigationCommands(account?: string, canViewApprovalQueue?: b
             keywords: ['rse', 'storage', 'element', 'endpoint'],
         },
         {
-            id: 'nav-suspicious-replicas',
-            type: 'navigation',
-            title: 'Suspicious Replicas',
-            description: 'List suspicious file replicas and declare them bad',
-            icon: ExclamationTriangleIcon,
-            url: '/suspicious-replicas',
-            keywords: ['suspicious', 'bad', 'replica', 'file', 'corrupted', 'declare', 'rse'],
-        },
-        {
             id: 'nav-subscriptions',
             type: 'navigation',
             title: 'Subscriptions',
@@ -95,6 +88,21 @@ export function getNavigationCommands(account?: string, canViewApprovalQueue?: b
             keywords: ['subscription', 'subscribe', 'data'],
         },
     ];
+
+    // Admin-only navigation surfaces
+    if (isAdmin) {
+        commands.push({
+            id: 'nav-suspicious-replicas',
+            type: 'navigation',
+            title: 'Suspicious Replicas',
+            description: 'List suspicious file replicas and declare them bad',
+            icon: ExclamationTriangleIcon,
+            url: '/suspicious-replicas',
+            keywords: ['suspicious', 'bad', 'replica', 'file', 'corrupted', 'declare', 'rse'],
+        });
+    }
+
+    return commands;
 }
 
 /**
