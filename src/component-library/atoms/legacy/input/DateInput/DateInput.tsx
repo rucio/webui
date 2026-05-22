@@ -53,6 +53,7 @@ export const DateInput: React.FC<DateInputProps> = ({
                     'disabled:cursor-not-allowed disabled:opacity-50',
                     className ?? '',
                 )}
+                wrapperClassName="w-full block"
                 dateFormat={'yyyy-MM-dd'}
                 placeholderText={placeholder}
                 disabled={disabled}
