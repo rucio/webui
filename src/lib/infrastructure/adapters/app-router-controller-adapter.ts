@@ -67,6 +67,10 @@ class StreamingResponseAdapter extends Writable implements Signal {
     private _encoder = new TextEncoder();
     private _finished = false;
     private _chunkCount = 0;
+    // Chunks produced before createReadableStream() is called (e.g. when the
+    // use case's error path runs synchronously inside controller.execute() and
+    // resolves before the route can attach the readable). Flushed in start().
+    private _pendingChunks: Uint8Array[] = [];
 
     constructor() {
         super({ objectMode: true });
@@ -78,11 +82,26 @@ class StreamingResponseAdapter extends Writable implements Signal {
     }
 
     json(data: any): void {
-        // For non-streaming presenters that call json()
-        const jsonStr = JSON.stringify(data);
+        // Terminal call from streaming presenters' presentError() path: emit the
+        // JSON body and close the ReadableStream so the HTTP response completes.
+        // Without the close() the client's response.json() hangs (request shows
+        // up as "pending" in DevTools forever).
+        const encoded = this._encoder.encode(JSON.stringify(data));
         if (this._controller) {
-            this._controller.enqueue(this._encoder.encode(jsonStr));
+            try {
+                this._controller.enqueue(encoded);
+                this._controller.close();
+            } catch (error) {
+                console.error('[StreamingResponseAdapter] Error finalizing json response:', error);
+            }
+            this._controller = null;
+        } else {
+            // No controller yet (route hasn't called createReadableStream).
+            // Buffer the body; start() will flush it and then close immediately
+            // because _finished is true.
+            this._pendingChunks.push(encoded);
         }
+        this._finished = true;
     }
 
     setHeader(name: string, value: string): this {
@@ -102,14 +121,17 @@ class StreamingResponseAdapter extends Writable implements Signal {
         }
 
         this._chunkCount++;
+        const encoded = this._encoder.encode(chunkStr);
 
-        // Immediately enqueue to ReadableStream if controller is available
         if (this._controller) {
             try {
-                this._controller.enqueue(this._encoder.encode(chunkStr));
+                this._controller.enqueue(encoded);
             } catch (error) {
                 console.error('[StreamingResponseAdapter] Error enqueueing chunk:', error);
             }
+        } else {
+            // Buffer until createReadableStream() runs.
+            this._pendingChunks.push(encoded);
         }
 
         callback();
@@ -144,12 +166,27 @@ class StreamingResponseAdapter extends Writable implements Signal {
     createReadableStream(): ReadableStream<Uint8Array> {
         return new ReadableStream<Uint8Array>({
             start: controller => {
-                // Store the controller so _write() can enqueue chunks directly
                 this._controller = controller;
 
-                // If stream already finished before we created ReadableStream, close it
+                // Flush anything written before the stream was attached
+                // (most commonly the JSON body from presentError()).
+                for (const chunk of this._pendingChunks) {
+                    try {
+                        controller.enqueue(chunk);
+                    } catch (error) {
+                        console.error('[StreamingResponseAdapter] Error flushing pending chunk:', error);
+                    }
+                }
+                this._pendingChunks = [];
+
+                // If the producer already finished, close immediately.
                 if (this._finished) {
-                    controller.close();
+                    try {
+                        controller.close();
+                    } catch (error) {
+                        console.error('[StreamingResponseAdapter] Error closing controller on start:', error);
+                    }
+                    this._controller = null;
                 }
             },
 
