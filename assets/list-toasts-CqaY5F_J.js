@@ -1,0 +1,1 @@
+const t={title:"Warning",description:"Cannot start the streaming while the grid is not ready.",variant:"warning"},a={title:"Oops!",description:"Please stop the streaming before trying to search again.",variant:"info"},n={title:"Copied!",variant:"info"},e={title:"Cannot copy the text",variant:"error"};export{a,n as c,e,t as n};
