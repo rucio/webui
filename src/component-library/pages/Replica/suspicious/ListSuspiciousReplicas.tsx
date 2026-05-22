@@ -39,7 +39,7 @@ function FilterField({
 }) {
     return (
         <div className={cn('flex-1', className)}>
-            <label htmlFor={htmlFor} className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">
+            <label htmlFor={htmlFor} className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block whitespace-nowrap">
                 {label}
             </label>
             {children}
@@ -302,7 +302,7 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
                                     placeholder="Select date"
                                 />
                             </FilterField>
-                            <FilterField label="Min Attempts Threshold" htmlFor="suspicious-nattempts" className="sm:max-w-[160px]">
+                            <FilterField label="Min Attempts Threshold" htmlFor="suspicious-nattempts" className="md:max-w-[200px]">
                                 <Input
                                     id="suspicious-nattempts"
                                     className="w-full"
