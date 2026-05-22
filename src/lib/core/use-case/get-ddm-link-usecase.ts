@@ -5,6 +5,7 @@ import { GetDDMLinkRequest, GetDDMLinkResponse } from '@/lib/core/usecase-models
 import { GetDDMLinkInputPort, type GetDDMLinkOutputPort } from '@/lib/core/port/primary/get-ddm-link-ports';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import { createDDMDashboardUrl } from '@/lib/core/utils/ddm-link-utils';
+import { parseBoolEnv } from '@/lib/core/utils/env-utils';
 
 @injectable()
 export default class GetDDMLinkUseCase implements GetDDMLinkInputPort {
@@ -17,7 +18,7 @@ export default class GetDDMLinkUseCase implements GetDDMLinkInputPort {
         const { scope, name, rse } = requestModel;
 
         const featureFlag = await this.envConfigGateway.get('FEATURE_DDM_DASHBOARD');
-        if (!featureFlag || featureFlag.toLowerCase() !== 'true') {
+        if (!parseBoolEnv(featureFlag)) {
             await this.presenter.presentError({
                 status: 'error',
                 message: 'DDM Dashboard feature is disabled',

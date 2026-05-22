@@ -1,4 +1,5 @@
 import { DetailsRule } from '@/component-library/pages/Rule/details/DetailsRule';
+import { parseBoolEnv } from '@/lib/core/utils/env-utils';
 
 export const metadata = {
     title: 'Rule - Rucio',
@@ -6,7 +7,7 @@ export const metadata = {
 
 export default async function PageRule({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const featureDDMDashboard = process.env.FEATURE_DDM_DASHBOARD === 'true';
+    const featureDDMDashboard = parseBoolEnv(process.env.FEATURE_DDM_DASHBOARD);
 
     return (
         <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">
