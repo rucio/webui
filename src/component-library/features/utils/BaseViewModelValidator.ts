@@ -16,7 +16,7 @@ export class BaseViewModelValidator {
         this.toast({
             variant: 'error',
             title: `Failed to resolve ${this.invalidCount} element${plural}`,
-            description: 'Please see the console for details.',
+            description: model.message || 'Please see the console for details.',
         });
         console.error(`Invalid element\nStatus: ${model.status}\nMessage: ${model.message}`);
         return false;
