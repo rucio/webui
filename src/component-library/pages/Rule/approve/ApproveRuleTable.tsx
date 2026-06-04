@@ -134,6 +134,7 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
     const [columnDefs] = useState([
         {
             headerCheckboxSelection: true,
+            headerCheckboxSelectionFilteredOnly: true,
             checkboxSelection: true,
             width: 48,
             minWidth: 48,

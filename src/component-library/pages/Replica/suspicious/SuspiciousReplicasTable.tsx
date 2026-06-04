@@ -77,6 +77,7 @@ export const SuspiciousReplicasTable = (props: SuspiciousReplicasTableProps) => 
         () => [
             {
                 headerCheckboxSelection: true,
+                headerCheckboxSelectionFilteredOnly: true,
                 checkboxSelection: true,
                 width: 48,
                 minWidth: 48,
