@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@axe-core/react": "^4.11.0",
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.29.6",
     "@emotion/is-prop-valid": "^1.4.0",
     "@eslint/eslintrc": "^3.3.1",
     "@faker-js/faker": "^8.0.1",
@@ -88,7 +88,7 @@
     "@storybook/addon-docs": "^10.3.0",
     "@storybook/addon-links": "^10.3.0",
     "@storybook/addon-themes": "^10.3.0",
-    "@storybook/nextjs-vite": "^10.3.0",
+    "@storybook/nextjs-vite": "^10.4.6",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^16.3.0",
@@ -128,7 +128,7 @@
     "storybook": "^10.3.0",
     "style-loader": "^3.3.1",
     "ts-node": "^10.9.1",
-    "vite": "^6.4.2",
+    "vite": "^8.0.16",
     "web-streams-polyfill": "^4.0.0"
   },
   "msw": {
