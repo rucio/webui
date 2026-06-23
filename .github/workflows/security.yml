@@ -15,7 +15,7 @@ jobs:
             pull-requests: write
         steps:
             - name: Checkout 🛎️
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Dependency Review 🔍
               uses: actions/dependency-review-action@v5
@@ -30,7 +30,7 @@ jobs:
             contents: read
         steps:
             - name: Checkout 🛎️
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Install 🔧
               run: npm install --legacy-peer-deps
@@ -53,7 +53,7 @@ jobs:
                     - release-38-LTS
         steps:
             - name: Checkout ${{ matrix.branch }} 🛎️
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   ref: ${{ matrix.branch }}
 
