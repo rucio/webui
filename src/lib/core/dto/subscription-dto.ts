@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { RuleState, Subscription, SubscriptionRuleStates } from '../entity/rucio';
+import { RuleState, Subscription, SubscriptionRuleStates, SubscriptionState } from '../entity/rucio';
 
 /**
  * The Data Transfer Object for the ListSubscriptionsEndpoint which contains the stream
@@ -19,4 +19,5 @@ export interface SubscriptionRuleStateDTO extends BaseDTO {
     subscriptionName: string;
     state: RuleState;
     count: number;
+    subscriptionState: SubscriptionState;
 }

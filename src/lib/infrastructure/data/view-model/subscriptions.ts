@@ -34,6 +34,7 @@ export function generateEmptySubscriptionRuleStatesViewModel(): SubscriptionRule
     const viewModel: SubscriptionRuleStatesViewModel = {
         status: 'error',
         name: '',
+        subscriptionState: SubscriptionState.UNKNOWN,
         state_ok: 0,
         state_replicating: 0,
         state_stuck: 0,
