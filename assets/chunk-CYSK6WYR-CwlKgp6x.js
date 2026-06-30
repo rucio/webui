@@ -1,0 +1,1 @@
+import{i as e}from"./preload-helper-DID7B_--.js";var t,n,r=e((()=>{t=e=>`control-${e.replace(/\s+/g,`-`)}`,n=e=>`set-${e.replace(/\s+/g,`-`)}`}));export{n,r,t};

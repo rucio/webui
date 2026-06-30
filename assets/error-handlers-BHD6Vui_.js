@@ -1,0 +1,1 @@
+import{i as e}from"./preload-helper-DID7B_--.js";import{i as t,n,t as r}from"./core-6DIMNDHd.js";var i,a=e((()=>{r(),i=(e,r)=>t.get(e,async({request:e})=>{let{statusCode:t,message:i}=r;return n.json({message:i},{status:t})})}));export{a as n,i as t};

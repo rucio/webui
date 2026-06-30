@@ -1,0 +1,1 @@
+import{i as e}from"./preload-helper-DID7B_--.js";var t,n,r=e((()=>{t={display:`flex`},n=`flex justify-center items-center grow m-2`}));export{t as n,r,n as t};

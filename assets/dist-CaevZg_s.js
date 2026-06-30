@@ -1,0 +1,1 @@
+import{i as e,l as t}from"./preload-helper-DID7B_--.js";import{Kt as n}from"./iframe-C47sd5GD.js";import{c as r,l as i}from"./dist-C8oqe0hK.js";function a(e){let[t,n]=o.useState(s());return i(()=>{e||n(e=>e??String(c++))},[e]),e||(t?`radix-${t}`:``)}var o,s,c,l=e((()=>{o=t(n(),1),r(),s=o.useId||(()=>void 0),c=0}));export{a as n,l as t};
