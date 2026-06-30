@@ -1,6 +1,5 @@
 import { SubscriptionDTO, SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
 import { RuleState, SubscriptionReplicationRule, SubscriptionState } from '@/lib/core/entity/rucio';
-import { de } from '@faker-js/faker';
 
 /**
  * Represents the data returned by Rucio Server for a subscription.
@@ -70,14 +69,19 @@ export function parseReplicationRuleState(replicationRuleStateString: string): R
  */
 export function parseSubscriptionState(state: string): SubscriptionState {
     switch (state.toUpperCase()) {
+        case 'A':
         case 'ACTIVE':
             return SubscriptionState.ACTIVE;
+        case 'I':
         case 'INACTIVE':
             return SubscriptionState.INACTIVE;
+        case 'N':
         case 'NEW':
             return SubscriptionState.NEW;
+        case 'U':
         case 'UPDATED':
             return SubscriptionState.UPDATED;
+        case 'B':
         case 'BROKEN':
             return SubscriptionState.BROKEN;
         default:
@@ -119,6 +123,7 @@ export function convertToSubscriptionRuleStatesDTO(data: TRucioSubscriptionRuleS
         subscriptionName: data[1],
         state: parseReplicationRuleState(data[2]),
         count: data[3],
+        subscriptionState: SubscriptionState.UNKNOWN,
     };
 }
 /**
@@ -154,5 +159,6 @@ export function getEmptySubscriptionRuleStatesDTO(): SubscriptionRuleStateDTO {
         subscriptionName: '',
         state: RuleState.UNKNOWN,
         count: 0,
+        subscriptionState: SubscriptionState.UNKNOWN,
     };
 }

@@ -302,6 +302,7 @@ export type Subscription = {
 
 export type SubscriptionRuleStates = {
     name: string;
+    subscriptionState: SubscriptionState;
     state_ok: number;
     state_replicating: number;
     state_stuck: number;

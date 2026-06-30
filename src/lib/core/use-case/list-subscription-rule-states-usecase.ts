@@ -14,9 +14,9 @@ import {
 import { SubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
-import { SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
-import type RSEGatewayOutputPort from '@/lib/core/port/secondary/subscription-gateway-output-port';
-import { RuleState } from '../entity/rucio';
+import { SubscriptionDTO, SubscriptionRuleStateDTO } from '@/lib/core/dto/subscription-dto';
+import type SubscriptionGatewayOutputPort from '@/lib/core/port/secondary/subscription-gateway-output-port';
+import { RuleState, SubscriptionState } from '../entity/rucio';
 import { TransformCallback } from 'stream';
 
 @injectable()
@@ -31,9 +31,11 @@ export default class ListSubscriptionRuleStatesUseCase
     >
     implements ListSubscriptionRuleStatesInputPort
 {
+    private subscriptionStateMap: Map<string, SubscriptionState> = new Map();
+
     constructor(
         protected readonly presenter: ListSubscriptionRuleStatesOutputPort,
-        private readonly gateway: RSEGatewayOutputPort,
+        private readonly gateway: SubscriptionGatewayOutputPort,
         private responseModels: ListSubscriptionRuleStatesResponse[] = [],
         private errorModels: ListSubscriptionRuleStatesError[] = [],
     ) {
@@ -47,6 +49,19 @@ export default class ListSubscriptionRuleStatesUseCase
     async intializeRequest(
         request: AuthenticatedRequestModel<AuthenticatedRequestModel<ListSubscriptionRuleStatesRequest>>,
     ): Promise<ListSubscriptionRuleStatesError | undefined> {
+        try {
+            const listDTO = await this.gateway.list(request.rucioAuthToken, request.account);
+            if (listDTO.status === 'success' && listDTO.stream) {
+                const stream = listDTO.stream;
+                for await (const chunk of stream as AsyncIterable<SubscriptionDTO>) {
+                    if (chunk && chunk.status === 'success' && chunk.name) {
+                        this.subscriptionStateMap.set(chunk.name, chunk.state);
+                    }
+                }
+            }
+        } catch (error) {
+            // Non-fatal: proceed without subscription state enrichment — unknown states will be shown
+        }
         return undefined;
     }
 
@@ -73,6 +88,7 @@ export default class ListSubscriptionRuleStatesUseCase
         return {
             status: 'success',
             name: existingModel.name,
+            subscriptionState: existingModel.subscriptionState,
             state_ok: existingModel.state_ok + newModel.state_ok,
             state_replicating: existingModel.state_replicating + newModel.state_replicating,
             state_stuck: existingModel.state_stuck + newModel.state_stuck,
@@ -84,9 +100,11 @@ export default class ListSubscriptionRuleStatesUseCase
 
     addOrUpdateSubscriptionRuleState(ruleStateDTO: SubscriptionRuleStateDTO): ListSubscriptionRuleStatesResponse {
         const existingEntryIndex = this.responseModels.findIndex(rs => rs.name === ruleStateDTO.subscriptionName);
+        const subscriptionState = this.subscriptionStateMap.get(ruleStateDTO.subscriptionName) ?? SubscriptionState.UNKNOWN;
         const newEntry: ListSubscriptionRuleStatesResponse = {
             status: 'success',
             name: ruleStateDTO.subscriptionName,
+            subscriptionState,
             state_ok: 0,
             state_replicating: 0,
             state_stuck: 0,
@@ -131,7 +149,6 @@ export default class ListSubscriptionRuleStatesUseCase
         data: ListSubscriptionRuleStatesResponse | ListSubscriptionRuleStatesError;
         status: 'success' | 'error';
     } {
-        // TODO: process streamed data
         if (dto.status === 'error') {
             const errorModel: ListSubscriptionRuleStatesError = {
                 status: 'error',
@@ -148,16 +165,16 @@ export default class ListSubscriptionRuleStatesUseCase
         try {
             const responseModel = this.addOrUpdateSubscriptionRuleState(dto);
             return {
-                status: 'pending' as any, // intentional use of any
+                status: 'success',
                 data: responseModel,
             };
-        } catch (error: any) {
+        } catch (error: unknown) {
             return {
                 status: 'error',
                 data: {
                     status: 'error',
                     code: 500,
-                    message: error.toString(),
+                    message: error instanceof Error ? error.message : String(error),
                     name: 'Error while processing streamed data',
                 } as ListSubscriptionRuleStatesError,
             };
@@ -174,6 +191,7 @@ export default class ListSubscriptionRuleStatesUseCase
             const errorModel = data as ListSubscriptionRuleStatesError;
             // push the errors as soon as they arrive
             callback(null, errorModel);
+            return;
         }
         callback(null);
     }
