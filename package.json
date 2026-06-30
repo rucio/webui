@@ -125,7 +125,7 @@
     "sass": "^1.58.1",
     "sass-loader": "^13.2.0",
     "shadcn": "^3.5.0",
-    "storybook": "^10.3.0",
+    "storybook": "^10.4.6",
     "style-loader": "^3.3.1",
     "ts-node": "^10.9.1",
     "vite": "^8.0.16",
