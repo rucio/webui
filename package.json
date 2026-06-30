@@ -1,6 +1,6 @@
 {
   "name": "rucio-webui",
-  "version": "40.1.1",
+  "version": "40.2.0",
   "private": true,
   "scripts": {
     "clean": "rimraf .next .swc build",
