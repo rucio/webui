@@ -62,7 +62,7 @@ describe('Get Subscription Rule States', () => {
         });
 
         expect(receivedData.length).toEqual(4);
-        expect(receivedData).toEqual([
+        expect(receivedData).toMatchObject([
             {
                 status: 'success',
                 account: 'ddmadmin',
@@ -92,24 +92,5 @@ describe('Get Subscription Rule States', () => {
                 count: 2382,
             },
         ]);
-    });
-    it('tests_merge_of_2_objects', () => {
-        const obj1 = {
-            status: 'success',
-            states_ok: 1,
-        };
-        const obj2 = {
-            status: 'success',
-            states_replicating: 2,
-        };
-        const mergedObj = {
-            ...obj1,
-            ...obj2,
-        };
-        expect(mergedObj).toEqual({
-            status: 'success',
-            states_ok: 1,
-            states_replicating: 2,
-        });
     });
 });

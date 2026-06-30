@@ -411,6 +411,7 @@ export function fixtureSubscriptionRuleStatesViewModel(): SubscriptionRuleStates
         state_suspended: faker.number.int({ min: 0, max: 10 }),
         state_waiting_approval: faker.number.int({ min: 0, max: 10 }),
         state_inject: faker.number.int({ min: 0, max: 10 }),
+        subscriptionState: randomEnum<SubscriptionState>(SubscriptionState),
     };
 }
 
