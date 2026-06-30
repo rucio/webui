@@ -39,13 +39,7 @@ const ApproveRuleStoryWrapper = ({ initialData, autoSearch, ...approveRuleProps 
     };
 
     return (
-        <ApproveRule
-            streamingHook={streamingHook}
-            onGridReady={onGridReady}
-            onSearch={handleSearch}
-            onStop={stopStreaming}
-            {...approveRuleProps}
-        />
+        <ApproveRule streamingHook={streamingHook} onGridReady={onGridReady} onSearch={handleSearch} onStop={stopStreaming} {...approveRuleProps} />
     );
 };
 
@@ -85,6 +79,36 @@ export const Default: Story = {
     args: {
         initialData: Array.from({ length: 12 }, () => ({
             ...fixtureApproveRuleViewModel(),
+            state: RuleState.WAITING_APPROVAL,
+        })),
+    },
+};
+
+/**
+ * Multi-select filter test (for #789): 12 rules in WAITING_APPROVAL state,
+ * split across three accounts (5 + 4 + 3). Every other field stays faker-random
+ * so the grid looks realistic, but the Account column has only three distinct,
+ * repeated values so you can filter to an exact, countable subset.
+ *
+ * How to verify the "Select All scopes to filtered rows" fix:
+ *   1. Open the Account column filter and type "prod-transfers" so only those 5
+ *      rows remain visible.
+ *   2. Click the header checkbox (top-left of the grid).
+ *   3. The bulk toolbar should read "5 rules selected", not 12. Before the fix
+ *      the header checkbox selected every row in the dataset, including the
+ *      filtered-out ones.
+ *   4. Clear the filter: the 7 previously-hidden rows reappear unselected,
+ *      confirming Approve/Deny would only target the visible subset.
+ */
+export const MultiSelectFilterTest: Story = {
+    args: {
+        initialData: [
+            ...Array.from({ length: 5 }, () => 'prod-transfers'),
+            ...Array.from({ length: 4 }, () => 'analysis-ops'),
+            ...Array.from({ length: 3 }, () => 'data-mgmt'),
+        ].map(account => ({
+            ...fixtureApproveRuleViewModel(),
+            account,
             state: RuleState.WAITING_APPROVAL,
         })),
     },
