@@ -9,7 +9,7 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { RuleState, SubscriptionState } from '@/lib/core/entity/rucio';
 import { badgeCellClasses } from '@/component-library/features/table/cells/badge-cell';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
-import { SubscriptionStateBadge } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
+import { SubscriptionStateBadge, subscriptionStateString } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
 
 type ListSubscriptionTableProps = {
     streamingHook: UseStreamReader<SubscriptionRuleStatesViewModel>;
@@ -48,6 +48,10 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
             ),
             filter: true,
             filterParams: DefaultTextFilterParams,
+            // The cell value is the enum code (e.g. 'A'); filter against the displayed
+            // label (e.g. 'Active') so text searches match what the user sees.
+            filterValueGetter: (params: { data?: SubscriptionRuleStatesViewModel }) =>
+                subscriptionStateString[params.data?.subscriptionState ?? SubscriptionState.UNKNOWN],
         },
         {
             headerName: 'OK',

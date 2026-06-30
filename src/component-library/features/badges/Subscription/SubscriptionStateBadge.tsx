@@ -2,7 +2,7 @@ import { SubscriptionState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
 
-const stateString: Record<SubscriptionState, string> = {
+export const subscriptionStateString: Record<SubscriptionState, string> = {
     [SubscriptionState.ACTIVE]: 'Active',
     [SubscriptionState.INACTIVE]: 'Inactive',
     [SubscriptionState.NEW]: 'New',
@@ -32,5 +32,5 @@ const stateVariants: Record<SubscriptionState, 'default' | 'success' | 'error' |
 };
 
 export const SubscriptionStateBadge = (props: { value: SubscriptionState; className?: string }) => {
-    return <Badge value={stateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
+    return <Badge value={subscriptionStateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
 };
