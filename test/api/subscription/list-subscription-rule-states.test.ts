@@ -8,10 +8,50 @@ import { ListSubscriptionRuleStatesRequest } from '@/lib/core/usecase-models/lis
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { NextApiResponse } from 'next';
 import { generateEmptySubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
+import { SubscriptionState } from '@/lib/core/entity/rucio';
 
 describe('Get Subscription Rule States', () => {
     beforeEach(() => {
         fetchMock.doMock();
+
+        const makeSubscription = (name: string) =>
+            JSON.stringify({
+                id: `mock-id-${name}`,
+                name,
+                filter: '{}',
+                replication_rules: '[]',
+                policyid: 0,
+                state: 'A',
+                last_processed: 'Thu, 01 Jan 2026 00:00:00 UTC',
+                account: 'ddmadmin',
+                lifetime: 'Thu, 01 Jan 2099 00:00:00 UTC',
+                comments: null,
+                retroactive: false,
+                expired_at: null,
+                created_at: 'Thu, 01 Jan 2026 00:00:00 UTC',
+                updated_at: 'Thu, 01 Jan 2026 00:00:00 UTC',
+            });
+
+        const getSubscriptionsEndpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/ddmadmin`,
+            method: 'GET',
+            endsWith: '/subscriptions/ddmadmin',
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/x-json-stream',
+                },
+                body: Readable.from(
+                    [
+                        makeSubscription('EVNT to T0 with 1 year lifetime'),
+                        makeSubscription('group.phys-gener to CERN-PROD_PHYS-GENER'),
+                        makeSubscription('*Functional Test'),
+                        makeSubscription('T0 DESD to T1 tape'),
+                    ].join('\n'),
+                ),
+            },
+        };
+
         const getSubscriptionRuleStatesEndpoint: MockEndpoint = {
             url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/ddmadmin/rules/states`,
             method: 'GET',
@@ -32,7 +72,7 @@ describe('Get Subscription Rule States', () => {
                 ),
             },
         };
-        MockRucioServerFactory.createMockRucioServer(true, [getSubscriptionRuleStatesEndpoint]);
+        MockRucioServerFactory.createMockRucioServer(true, [getSubscriptionsEndpoint, getSubscriptionRuleStatesEndpoint]);
     });
 
     afterEach(() => {
@@ -76,24 +116,28 @@ describe('Get Subscription Rule States', () => {
                 ...generateEmptySubscriptionRuleStatesViewModel(),
                 status: 'success',
                 name: 'EVNT to T0 with 1 year lifetime',
+                subscriptionState: SubscriptionState.ACTIVE,
                 state_ok: 15464,
             },
             {
                 ...generateEmptySubscriptionRuleStatesViewModel(),
                 status: 'success',
                 name: 'group.phys-gener to CERN-PROD_PHYS-GENER',
+                subscriptionState: SubscriptionState.ACTIVE,
                 state_ok: 5344,
             },
             {
                 ...generateEmptySubscriptionRuleStatesViewModel(),
                 status: 'success',
                 name: '*Functional Test',
+                subscriptionState: SubscriptionState.ACTIVE,
                 state_ok: 95918,
             },
             {
                 ...generateEmptySubscriptionRuleStatesViewModel(),
                 status: 'success',
                 name: 'T0 DESD to T1 tape',
+                subscriptionState: SubscriptionState.ACTIVE,
                 state_ok: 2382,
                 state_stuck: 500,
             },
