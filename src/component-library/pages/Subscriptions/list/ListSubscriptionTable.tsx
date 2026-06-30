@@ -6,9 +6,10 @@ import { SubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-
 import { GridReadyEvent } from 'ag-grid-community';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
-import { RuleState } from '@/lib/core/entity/rucio';
+import { RuleState, SubscriptionState } from '@/lib/core/entity/rucio';
 import { badgeCellClasses } from '@/component-library/features/table/cells/badge-cell';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { SubscriptionStateBadge } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
 
 type ListSubscriptionTableProps = {
     streamingHook: UseStreamReader<SubscriptionRuleStatesViewModel>;
@@ -35,6 +36,16 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
             cellRendererParams: {
                 account: props.account,
             },
+            filter: true,
+            filterParams: DefaultTextFilterParams,
+        },
+        {
+            headerName: 'State',
+            field: 'subscriptionState',
+            minWidth: 140,
+            cellRenderer: (params: { value: SubscriptionState }) => (
+                <SubscriptionStateBadge value={params.value ?? SubscriptionState.UNKNOWN} className={badgeCellClasses} />
+            ),
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
