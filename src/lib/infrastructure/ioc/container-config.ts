@@ -25,7 +25,7 @@ import SetX509LoginSessionPresenter from '../presenter/set-x509-login-session-pr
 import StreamInputPort from '@/lib/core/port/primary/stream-input-port';
 import StreamUseCase from '@/lib/core/use-case/stream-usecase';
 import { RSEOld } from '@/lib/core/entity/rucio';
-import { loadFeaturesSync } from '@/lib/sdk/ioc-helpers';
+import { loadFeaturesSync, buildControllerFlagMap } from '@/lib/sdk/ioc-helpers';
 import ListDidsFeature from './features/list-dids-feature';
 import LoginConfigFeature from './features/logic-config-feature';
 import DIDMetaFeature from './features/did-meta-feature';
@@ -89,13 +89,15 @@ appContainer.bind<RuleGatewayOutputPort>(GATEWAYS.RULE).to(RuleGateway);
 appContainer.bind<RequestGatewayOutputPort>(GATEWAYS.REQUEST).to(RequestGateway);
 
 // Load Common Features
-loadFeaturesSync(appContainer, [new GetSiteHeaderFeature(appContainer)]);
+const commonFeatures = [new GetSiteHeaderFeature(appContainer)];
+loadFeaturesSync(appContainer, commonFeatures);
 
 // Load Auth Features/Usecases
-loadFeaturesSync(appContainer, [new LoginConfigFeature(appContainer)]);
+const authFeatures = [new LoginConfigFeature(appContainer)];
+loadFeaturesSync(appContainer, authFeatures);
 
 // Load Features
-loadFeaturesSync(appContainer, [
+const coreFeatures = [
     new DIDMetaFeature(appContainer),
     new DIDKeyValuePairsDataFeature(appContainer),
     new GetSubscriptionFeature(appContainer),
@@ -111,21 +113,24 @@ loadFeaturesSync(appContainer, [
     new GetRuleFeature(appContainer),
     new GetFTSLinkFeature(appContainer),
     new GetDDMLinkFeature(appContainer),
-]);
+];
+loadFeaturesSync(appContainer, coreFeatures);
 
 // Features: Page RSE
-loadFeaturesSync(appContainer, [
+const rseFeatures = [
     new GetRSEFeature(appContainer),
     new GetRSEProtocolsFeature(appContainer),
     new GetRSEAttributesFeature(appContainer),
     new GetRSEUsageFeature(appContainer),
-]);
+];
+loadFeaturesSync(appContainer, rseFeatures);
 
 // Features: List RSE
-loadFeaturesSync(appContainer, [new ListRSEsFeature(appContainer)]);
+const listRseFeatures = [new ListRSEsFeature(appContainer)];
+loadFeaturesSync(appContainer, listRseFeatures);
 
 // Features: Create Rule
-loadFeaturesSync(appContainer, [
+const createRuleFeatures = [
     new ListAllRSEsFeature(appContainer),
     new ListAccountRSEQuotasFeature(appContainer),
     new GetAccountInfoFeature(appContainer),
@@ -133,19 +138,41 @@ loadFeaturesSync(appContainer, [
     new AddDIDFeature(appContainer),
     new AttachDIDsFeature(appContainer),
     new SetDIDStatusFeature(appContainer),
-]);
+];
+loadFeaturesSync(appContainer, createRuleFeatures);
 
 //Features: List Subscriptions
-loadFeaturesSync(appContainer, [new ListSubscriptionRuleStatesFeature(appContainer)]);
+const listSubFeatures = [new ListSubscriptionRuleStatesFeature(appContainer)];
+loadFeaturesSync(appContainer, listSubFeatures);
 
 // Features: List Rules
-loadFeaturesSync(appContainer, [new ListRulesFeature(appContainer)]);
-loadFeaturesSync(appContainer, [new ListRulesPendingApprovalFeature(appContainer)]);
-loadFeaturesSync(appContainer, [new ListRuleReplicaLockStatesFeature(appContainer)]);
-loadFeaturesSync(appContainer, [new UpdateRuleFeature(appContainer)]);
+const listRulesFeatures = [new ListRulesFeature(appContainer)];
+loadFeaturesSync(appContainer, listRulesFeatures);
+const listRulesPendingApprovalFeatures = [new ListRulesPendingApprovalFeature(appContainer)];
+loadFeaturesSync(appContainer, listRulesPendingApprovalFeatures);
+const listRuleReplicaLockStatesFeatures = [new ListRuleReplicaLockStatesFeature(appContainer)];
+loadFeaturesSync(appContainer, listRuleReplicaLockStatesFeatures);
+const updateRuleFeatures = [new UpdateRuleFeature(appContainer)];
+loadFeaturesSync(appContainer, updateRuleFeatures);
 
 // Features: Dashboard
-loadFeaturesSync(appContainer, [new ListAccountRSEUsageFeature(appContainer)]);
+const dashboardFeatures = [new ListAccountRSEUsageFeature(appContainer)];
+loadFeaturesSync(appContainer, dashboardFeatures);
+
+export const CONTROLLER_FLAG_MAP = buildControllerFlagMap([
+    ...commonFeatures,
+    ...authFeatures,
+    ...coreFeatures,
+    ...rseFeatures,
+    ...listRseFeatures,
+    ...createRuleFeatures,
+    ...listSubFeatures,
+    ...listRulesFeatures,
+    ...listRulesPendingApprovalFeatures,
+    ...listRuleReplicaLockStatesFeatures,
+    ...updateRuleFeatures,
+    ...dashboardFeatures,
+]);
 
 appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionUseCase).inRequestScope();
 appContainer.bind<ISetX509LoginSessionController>(CONTROLLERS.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionController);

@@ -30,4 +30,4 @@ async function getHandler(request: NextRequest) {
     }
 }
 
-export const GET = withFeature('rses', getHandler);
+export const GET = withFeature(CONTROLLERS.GET_RSE, getHandler);

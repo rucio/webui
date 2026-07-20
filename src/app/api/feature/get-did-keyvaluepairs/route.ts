@@ -31,4 +31,4 @@ async function getHandler(request: NextRequest) {
     }
 }
 
-export const GET = withFeature('dids.metadata', getHandler);
+export const GET = withFeature(CONTROLLERS.DID_KEYVALUEPAIRS, getHandler);

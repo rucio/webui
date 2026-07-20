@@ -73,4 +73,4 @@ async function postHandler(request: NextRequest) {
     }
 }
 
-export const POST = withFeature('rules.create', postHandler);
+export const POST = withFeature(CONTROLLERS.CREATE_RULE, postHandler);

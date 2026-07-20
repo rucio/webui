@@ -22,4 +22,4 @@ async function getHandler() {
     }
 }
 
-export const GET = withFeature(['rses', 'rules.create'], getHandler);
+export const GET = withFeature(CONTROLLERS.LIST_ALL_RSES, getHandler);

@@ -33,4 +33,4 @@ async function getHandler(request: NextRequest) {
     }
 }
 
-export const GET = withFeature('rules', getHandler);
+export const GET = withFeature(CONTROLLERS.LIST_RULE_REPLICA_LOCK_STATES, getHandler);

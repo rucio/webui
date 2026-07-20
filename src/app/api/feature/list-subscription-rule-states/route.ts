@@ -41,4 +41,4 @@ async function getHandler(request: NextRequest) {
     }
 }
 
-export const GET = withFeature('subscriptions', getHandler);
+export const GET = withFeature(CONTROLLERS.LIST_SUBSCRIPTION_RULE_STATES, getHandler);

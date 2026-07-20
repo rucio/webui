@@ -32,6 +32,9 @@ export default class ListAllRSEsFeature extends BaseStreamableFeature<
             INPUT_PORT: INPUT_PORT.LIST_ALL_RSES,
         };
         const useCaseConstructorArgs = [rseGateway];
-        super('ListAllRSEs', ListAllRSEsController, ListAllRSEsUseCase, useCaseConstructorArgs, ListAllRSEsPresenter, false, symbols, 'rses');
+        super('ListAllRSEs', ListAllRSEsController, ListAllRSEsUseCase, useCaseConstructorArgs, ListAllRSEsPresenter, false, symbols, [
+            'rses',
+            'rules.create',
+        ]);
     }
 }

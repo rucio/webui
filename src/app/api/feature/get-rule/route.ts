@@ -30,4 +30,4 @@ async function getHandler(request: NextRequest) {
     }
 }
 
-export const GET = withFeature('rules', getHandler);
+export const GET = withFeature(CONTROLLERS.GET_RULE, getHandler);

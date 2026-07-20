@@ -48,4 +48,4 @@ async function postHandler(request: NextRequest) {
     }
 }
 
-export const POST = withFeature('dids.mutate', postHandler);
+export const POST = withFeature(CONTROLLERS.ADD_DID, postHandler);

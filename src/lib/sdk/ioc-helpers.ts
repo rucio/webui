@@ -23,8 +23,10 @@ export type IOCSymbols = {
  */
 export interface IFeature<TFlag extends string = string> {
     name: string;
-    /** The feature flag key that governs this slice, if any. */
-    featureFlag?: TFlag;
+    /** The feature flag key(s) that govern this slice, if any. */
+    featureFlag?: TFlag | TFlag[];
+    /** The controller symbol this feature binds, if any. */
+    controllerSymbol?: symbol;
     /**
      * Load the feature into the IoC container.
      * @param appContainer The IoC container for the application.
@@ -44,6 +46,8 @@ export interface IFeature<TFlag extends string = string> {
 export class BaseFeature<TControllerParams extends TParameters, TRequestModel, TResponseModel, TErrorModel, TViewModel, TFlag extends string = string>
     implements IFeature<TFlag>
 {
+    public controllerSymbol: symbol;
+
     /**
      * Creates a new instance of the `BaseFeature` class.
      * @template TControllerParams The type of the parameters for the controller.
@@ -67,8 +71,10 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         private Presenter: new (response: Signal<TViewModel>, session?: RucioSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
-        public featureFlag?: TFlag,
-    ) {}
+        public featureFlag?: TFlag | TFlag[],
+    ) {
+        this.controllerSymbol = symbols.CONTROLLER;
+    }
 
     /**
      * Load this feature into the IoC container.
@@ -156,6 +162,8 @@ export class BaseStreamableFeature<
     TFlag extends string = string,
 > implements IFeature<TFlag>
 {
+    public controllerSymbol: symbol;
+
     /**
      * Creates a new instance of the `BaseStreamableFeature` class.
      * @param appContainer The IoC container for the application.
@@ -178,8 +186,10 @@ export class BaseStreamableFeature<
         >,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
-        public featureFlag?: TFlag,
-    ) {}
+        public featureFlag?: TFlag | TFlag[],
+    ) {
+        this.controllerSymbol = symbols.CONTROLLER;
+    }
 
     /**
      * Load this feature into the IoC container.
@@ -266,12 +276,27 @@ export function loadFeaturesSync(appContainer: Container, features: IFeature[]) 
  * Collects declared feature-flag assignments (feature name -> flag key) from a
  * list of features. Features without a flag are omitted.
  */
-export function getFeatureFlagAssignments(features: IFeature[]): Record<string, string> {
-    const map: Record<string, string> = {};
+export function getFeatureFlagAssignments(features: IFeature[]): Record<string, string | string[]> {
+    const map: Record<string, string | string[]> = {};
     for (const feature of features) {
         if (feature.featureFlag) {
             map[feature.name] = feature.featureFlag;
         }
+    }
+    return map;
+}
+
+/**
+ * Builds a map from each feature's controller symbol to its flag key(s).
+ * Features that declare no flag (or no controller symbol) are omitted, so an
+ * unmapped controller means "ungated".
+ */
+export function buildControllerFlagMap(features: IFeature[]): Map<symbol, string[]> {
+    const map = new Map<symbol, string[]>();
+    for (const feature of features) {
+        if (!feature.featureFlag || !feature.controllerSymbol) continue;
+        const flags = Array.isArray(feature.featureFlag) ? feature.featureFlag : [feature.featureFlag];
+        map.set(feature.controllerSymbol, flags);
     }
     return map;
 }

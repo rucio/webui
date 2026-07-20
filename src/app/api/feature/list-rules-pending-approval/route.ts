@@ -68,4 +68,4 @@ async function getHandler(request: NextRequest) {
     }
 }
 
-export const GET = withFeature('rules.approve', getHandler);
+export const GET = withFeature(CONTROLLERS.LIST_RULES_PENDING_APPROVAL, getHandler);

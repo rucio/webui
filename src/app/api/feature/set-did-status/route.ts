@@ -48,4 +48,4 @@ async function putHandler(request: NextRequest) {
     }
 }
 
-export const PUT = withFeature('dids.mutate', putHandler);
+export const PUT = withFeature(CONTROLLERS.SET_DID_STATUS, putHandler);

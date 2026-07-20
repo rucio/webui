@@ -56,4 +56,4 @@ async function putHandler(request: NextRequest) {
     }
 }
 
-export const PUT = withFeature('rules.approve', putHandler);
+export const PUT = withFeature(CONTROLLERS.UPDATE_RULE, putHandler);
