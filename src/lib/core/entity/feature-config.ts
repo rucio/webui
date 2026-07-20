@@ -36,7 +36,7 @@ export function envKeyForFeature(key: FeatureKey): string {
  * else parseBoolEnv, then AND-ed with every ancestor's effective value.
  */
 export function resolveFeatureEnabled(key: FeatureKey, rawEnv: Partial<Record<FeatureKey, string | undefined>>): boolean {
-    const def = FEATURE_REGISTRY[key];
+    const def: FeatureDefinition = FEATURE_REGISTRY[key];
     const raw = rawEnv[key];
     const own = raw === undefined ? def.default : parseBoolEnv(raw);
     if (!own) return false;
