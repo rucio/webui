@@ -1,3 +1,4 @@
+import 'server-only';
 import 'reflect-metadata';
 import { notFound } from 'next/navigation';
 import appContainer from '@/lib/infrastructure/ioc/container-config';

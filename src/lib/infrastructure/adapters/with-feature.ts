@@ -1,3 +1,4 @@
+import 'server-only';
 import 'reflect-metadata';
 import { NextRequest, NextResponse } from 'next/server';
 import appContainer, { CONTROLLER_FLAG_MAP } from '@/lib/infrastructure/ioc/container-config';
