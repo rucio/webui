@@ -5,14 +5,13 @@ import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { BaseController } from '@/lib/sdk/controller';
 import { DIDMetaControllerParameters } from '@/lib/infrastructure/controller/did-meta-controller';
 import { executeAuthenticatedController, parseQueryParams } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
-import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 /**
  * GET /api/feature/get-did-meta
  * Query params: scope, name
  * Returns metadata for a specific DID (Data Identifier)
  */
-async function getHandler(request: NextRequest) {
+export async function GET(request: NextRequest) {
     try {
         const params = parseQueryParams(request);
         const scope = params.scope as string;
@@ -30,5 +29,3 @@ async function getHandler(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
-
-export const GET = withFeature('dids.metadata', getHandler);
