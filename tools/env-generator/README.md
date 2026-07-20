@@ -37,6 +37,15 @@ The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells 
 | RULE_ACTIVITY             | RUCIO_WEBUI_RULE_ACTIVITY             | The `Activity` to associate with rules created with WebUI                                  | User Subscriptions             | User Subscriptions |
 | FEATURE_DDM_DASHBOARD     | RUCIO_WEBUI_FEATURE_DDM_DASHBOARD     | Enable DDM Dashboard links in the Rule Locks table (true or false)                         | true                           | false              |
 | DDM_DASHBOARD_BASE_URL    | RUCIO_WEBUI_DDM_DASHBOARD_BASE_URL    | Base URL for the DDM Grafana dashboard. Should include the host, dashboard path, and any deployment-specific query params (panelId, orgId, var-binning, from/to, etc.). The use case appends only the row-specific filters (var-dst_endpoint and two var-enr_filters for name and scope). | https://&lt;grafana-host&gt;/d/&lt;dashboard-id&gt;/&lt;slug&gt;?panelId=&lt;n&gt;&orgId=&lt;n&gt;&from=now-30d&to=now |         |
+| FEATURE_RULES             | RUCIO_WEBUI_FEATURE_RULES             | Enable the Rules pages and API routes (list, detail, lock states). Disabling also disables its children (create, approve). | true                           | true               |
+| FEATURE_RULES_CREATE      | RUCIO_WEBUI_FEATURE_RULES_CREATE      | Enable the Create Rule page and API. Requires FEATURE_RULES.                               | true                           | true               |
+| FEATURE_RULES_APPROVE     | RUCIO_WEBUI_FEATURE_RULES_APPROVE     | Enable the Approve Rules page and API. Requires FEATURE_RULES.                             | true                           | true               |
+| FEATURE_SUBSCRIPTIONS     | RUCIO_WEBUI_FEATURE_SUBSCRIPTIONS     | Enable the Subscriptions pages and API routes.                                            | true                           | true               |
+| FEATURE_RSES              | RUCIO_WEBUI_FEATURE_RSES              | Enable the RSEs pages and API routes.                                                     | true                           | true               |
+| FEATURE_DIDS_METADATA     | RUCIO_WEBUI_FEATURE_DIDS_METADATA     | Enable the DID Attributes tab and its metadata API (get-did-keyvaluepairs). Core DID metadata stays available. | true                           | true               |
+| FEATURE_DIDS_MUTATE       | RUCIO_WEBUI_FEATURE_DIDS_MUTATE       | Enable the DID mutation APIs (add-did, attach-dids, set-did-status).                       | true                           | true               |
+
+**Feature flags** gate whole pages, in-page sections, and their API routes per deployment. Unset flags fall back to the defaults above (core features on), so existing deployments are unaffected. Flags are hierarchical: disabling a parent (e.g. `FEATURE_RULES`) also disables its children (`FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`). Disabled pages and API routes return 404.
 
 ### NextAuth Configuration
 

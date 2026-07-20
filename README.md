@@ -91,6 +91,12 @@ npm install
 
 Create a `.env.development.local` file from the template for local development. Key variables control Rucio server endpoints, authentication methods, feature toggles, and OIDC provider configuration.
 
+#### Feature Flags
+
+Deployments can enable or disable whole pages, in-page sections, and their API routes with `FEATURE_*` environment variables (or `RUCIO_WEBUI_FEATURE_*` via the env-generator). Unset flags default to enabled for core features, so existing deployments are unaffected. Flags are hierarchical (disabling `FEATURE_RULES` also disables `FEATURE_RULES_CREATE` and `FEATURE_RULES_APPROVE`), and disabled pages/routes return 404 rather than 403 so they appear nonexistent.
+
+Available flags: `FEATURE_RULES`, `FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`, `FEATURE_SUBSCRIPTIONS`, `FEATURE_RSES`, `FEATURE_DIDS_METADATA`, `FEATURE_DIDS_MUTATE`. See the [env-generator README](tools/env-generator/README.md) for the full table.
+
 To ensure `git blame` accurately reflects contributions, run:
 
 ```bash

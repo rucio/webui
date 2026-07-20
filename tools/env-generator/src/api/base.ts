@@ -80,6 +80,13 @@ export class WebUIEnvTemplateCompiler {
       'NEXTAUTH_SECRET': authSecret,
       'FEATURE_DDM_DASHBOARD': 'false',
       'DDM_DASHBOARD_BASE_URL': '',
+      'FEATURE_RULES': 'true',
+      'FEATURE_RULES_CREATE': 'true',
+      'FEATURE_RULES_APPROVE': 'true',
+      'FEATURE_SUBSCRIPTIONS': 'true',
+      'FEATURE_RSES': 'true',
+      'FEATURE_DIDS_METADATA': 'true',
+      'FEATURE_DIDS_MUTATE': 'true',
       ...this.environmentVariables,
     }
   }
