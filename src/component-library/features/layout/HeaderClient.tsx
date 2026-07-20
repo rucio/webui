@@ -20,6 +20,7 @@ import { useSessionMonitor } from '@/lib/infrastructure/auth/session-monitor';
 import { useSession } from 'next-auth/react';
 import { Role } from '@/lib/core/entity/auth-models';
 import { useCommandPalette } from '@/lib/infrastructure/hooks/useCommandPalette';
+import { useFeature } from '@/component-library/features/feature-flags/FeatureProvider';
 
 type TMenuItem = {
     title: string;
@@ -290,11 +291,16 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     };
 
     const canViewApprovalQueue = isReady ? check('rule', 'viewApprovalQueue') : false;
+    const rulesEnabled = useFeature('rules');
+    const rulesCreateEnabled = useFeature('rules.create');
+    const rulesApproveEnabled = useFeature('rules.approve');
+    const subscriptionsEnabled = useFeature('subscriptions');
+    const rsesEnabled = useFeature('rses');
 
     const rulesChildren: TMenuItem[] = [
-        { title: 'List Rules', path: '/rules' },
-        { title: 'Create a rule', path: '/rule/create' },
-        ...(canViewApprovalQueue ? [{ title: 'Approve Rules', path: '/rules/approve?autoSearch=true' }] : []),
+        ...(rulesEnabled ? [{ title: 'List Rules', path: '/rules' }] : []),
+        ...(rulesCreateEnabled ? [{ title: 'Create a rule', path: '/rule/create' }] : []),
+        ...(canViewApprovalQueue && rulesApproveEnabled ? [{ title: 'Approve Rules', path: '/rules/approve?autoSearch=true' }] : []),
     ];
 
     // Suspicious Replicas is an admin-only surface (the page itself redirects
@@ -313,12 +319,9 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     const menuItems: TFullMenuItem[] = [
         { title: 'Dashboard', path: '/dashboard' },
         didsItem,
-        { title: 'RSEs', path: '/rses' },
-        { title: 'Subscriptions', path: subscriptionUrl },
-        {
-            title: 'Rules',
-            children: rulesChildren,
-        },
+        ...(rsesEnabled ? [{ title: 'RSEs', path: '/rses' }] : []),
+        ...(subscriptionsEnabled ? [{ title: 'Subscriptions', path: subscriptionUrl }] : []),
+        ...(rulesChildren.length > 0 ? [{ title: 'Rules', children: rulesChildren }] : []),
     ];
 
     const { resolvedTheme } = useTheme();
