@@ -1,6 +1,3 @@
-import fs from 'fs';
-import https from 'https';
-
 /**
  * @description Represents the headers of a HTTP request
  */
@@ -13,20 +10,13 @@ export type HTTPRequest = {
 };
 
 /**
- * Extended RequestInit that includes Node.js-specific options
- */
-export interface NodeRequestInit extends RequestInit {
-    agent?: https.Agent;
-}
-
-/**
  * Prepares the request arguments for an HTTP request.
  * @param {HTTPRequest} request - The HTTP request to prepare arguments for.
- * @returns {{ url: string | URL; requestArgs: NodeRequestInit }} - An object containing the URL and request arguments.
+ * @returns {{ url: string | URL; requestArgs: RequestInit }} - An object containing the URL and request arguments.
  */
 export function prepareRequestArgs(request: HTTPRequest): {
     url: string | URL;
-    requestArgs: NodeRequestInit;
+    requestArgs: RequestInit;
 } {
     if (request.params) {
         const url = new URL(request.url);
@@ -36,7 +26,7 @@ export function prepareRequestArgs(request: HTTPRequest): {
         });
         request.url = url.toString();
     }
-    const requestArgs: NodeRequestInit = {
+    const requestArgs: RequestInit = {
         method: request.method || 'GET',
     };
     if (request.body) {
@@ -45,42 +35,13 @@ export function prepareRequestArgs(request: HTTPRequest): {
     if (request.headers) {
         requestArgs.headers = request.headers as HeadersInit;
     }
-    if (process.env.NODE_TLS_REJECT_UNAUTHORIZED === '1') {
-        try {
-            const caPath = process.env.NODE_EXTRA_TLS_CERTS ?? '';
-            if (caPath === '') {
-                throw new Error('NODE_EXTRA_TLS_CERTS is not set');
-            }
-            const ca = fs.readFileSync(caPath);
-            const rucioHost = extractHostname(request.url as string);
-            if (rucioHost === undefined) {
-                throw new Error('RUCIO_HOST is not set');
-            }
-
-            const agent = new https.Agent({
-                host: rucioHost,
-                port: 443,
-                path: '/',
-                rejectUnauthorized: true,
-                ca: ca,
-            });
-            requestArgs.agent = agent;
-        } catch (error) {
-            console.error('An error occurred while reading the CA path:', error);
-        }
-    }
+    // Trust for custom CAs (e.g. the Rucio server/auth server certificate) is handled
+    // globally by Node via the NODE_EXTRA_CA_CERTS env var, which is loaded into the
+    // trust store at process startup and applies to every outgoing TLS connection
+    // (including the auth/login handshake). No per-request agent is needed.
     return { url: request.url, requestArgs };
 }
 
-/**
- * Extracts the hostname from a URL.
- * @param url A string representing a URL
- * @returns The hostname of the URL
- */
-export function extractHostname(url: string): string {
-    const hostname = new URL(url).hostname;
-    return hostname;
-}
 /**
  * A type that represents an error that occurred making a {@link BaseEndpoint} request.
  */
