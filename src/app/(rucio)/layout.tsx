@@ -6,6 +6,9 @@ import { getSession } from '@/lib/infrastructure/auth/nextauth-session-utils';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import GetSiteHeaderController, { GetSiteHeaderControllerParameters } from '@/lib/infrastructure/controller/get-site-header-controller';
+import { FeatureProvider } from '@/component-library/features/feature-flags/FeatureProvider';
+import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
+import FeatureConfigGatewayOutputPort from '@/lib/core/port/secondary/feature-config-gateway-output-port';
 
 /**
  * Server component that fetches site header data and provides it to the client layout.
@@ -62,11 +65,16 @@ async function fetchSiteHeader(): Promise<{ data?: SiteHeaderViewModel; error?: 
 export default async function RucioLayout({ children }: { children: React.ReactNode }) {
     const { data: siteHeader, error: siteHeaderError } = await fetchSiteHeader();
 
+    const featureGateway = appContainer.get<FeatureConfigGatewayOutputPort>(GATEWAYS.FEATURE_CONFIG);
+    const features = await featureGateway.enabledSet();
+
     return (
         <Providers>
-            <Layout siteHeader={siteHeader} siteHeaderError={siteHeaderError}>
-                {children}
-            </Layout>
+            <FeatureProvider features={features}>
+                <Layout siteHeader={siteHeader} siteHeaderError={siteHeaderError}>
+                    {children}
+                </Layout>
+            </FeatureProvider>
         </Providers>
     );
 }
