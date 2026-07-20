@@ -6,13 +6,14 @@ import { BaseController } from '@/lib/sdk/controller';
 import { ListRuleReplicaLockStatesControllerParameters } from '@/lib/infrastructure/controller/list-rule-replica-lock-states-controller';
 import { ListRuleReplicaLockStatesRequest } from '@/lib/core/usecase-models/list-rule-replica-lock-states-usecase-models';
 import { executeAuthenticatedController, parseQueryParams } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 /**
  * GET /api/feature/list-rule-replica-lock-states
  * Query params: id (rule_id)
  * Returns the replica lock states for a given rule
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
     try {
         const params = parseQueryParams(request);
         const id = params.id as string;
@@ -31,3 +32,5 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const GET = withFeature('rules', getHandler);

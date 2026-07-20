@@ -8,6 +8,7 @@ import { ListRulesPendingApprovalControllerParameters } from '@/lib/infrastructu
 import { ListRulesPendingApprovalRequest } from '@/lib/core/usecase-models/list-rules-pending-approval-usecase-models';
 import { executeAuthenticatedController, parseQueryParams } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
 import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 const FiltersSchema = z.object({
     scope: z.string().optional(),
@@ -23,7 +24,7 @@ const FiltersSchema = z.object({
  * Query params: scope, name, updated_after, updated_before, account, activity
  * Returns a list of rules pending approval with extended metadata and DID enrichment.
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
     try {
         const sessionUser = await getSessionUser();
 
@@ -66,3 +67,5 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const GET = withFeature('rules.approve', getHandler);

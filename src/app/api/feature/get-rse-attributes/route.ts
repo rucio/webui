@@ -5,13 +5,14 @@ import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { BaseController } from '@/lib/sdk/controller';
 import { GetRSEAttributesControllerParameters } from '@/lib/infrastructure/controller/get-rse-attributes-controller';
 import { executeAuthenticatedController, parseQueryParams } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 /**
  * GET /api/feature/get-rse-attributes
  * Query params: rse
  * Returns attributes for a specific RSE
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
     try {
         const params = parseQueryParams(request);
         const rseName = (params.rse as string) || (params.rseName as string);
@@ -28,3 +29,5 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const GET = withFeature('rses', getHandler);

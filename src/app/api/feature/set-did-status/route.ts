@@ -7,6 +7,7 @@ import { BaseController } from '@/lib/sdk/controller';
 import { SetDIDStatusControllerParameters } from '@/lib/infrastructure/controller/set-did-status-controller';
 import { SetDIDStatusRequest } from '@/lib/core/usecase-models/set-did-status-usecase-models';
 import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 const SetDIDStatusSchema = z.object({
     scope: z.string().min(1),
@@ -19,7 +20,7 @@ const SetDIDStatusSchema = z.object({
  * Body: { scope, name, open: boolean }
  * Sets the status of a DID (open/closed)
  */
-export async function PUT(request: NextRequest) {
+async function putHandler(request: NextRequest) {
     try {
         const body = await parseRequestBody(request);
 
@@ -46,3 +47,5 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const PUT = withFeature('dids.mutate', putHandler);

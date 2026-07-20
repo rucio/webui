@@ -7,6 +7,7 @@ import { BaseController } from '@/lib/sdk/controller';
 import { AddDIDControllerParameters } from '@/lib/infrastructure/controller/add-did-controller';
 import { AddDIDRequest } from '@/lib/core/usecase-models/add-did-usecase-models';
 import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 const AddDIDSchema = z.object({
     scope: z.string().min(1),
@@ -19,7 +20,7 @@ const AddDIDSchema = z.object({
  * Body: { scope, name, type: 'Dataset' | 'Container' }
  * Creates a new DID (Data Identifier)
  */
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
     try {
         const body = await parseRequestBody(request);
 
@@ -46,3 +47,5 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const POST = withFeature('dids.mutate', postHandler);

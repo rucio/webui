@@ -7,6 +7,7 @@ import { BaseController } from '@/lib/sdk/controller';
 import { UpdateRuleControllerParameters } from '@/lib/infrastructure/controller/update-rule-controller';
 import { UpdateRuleRequest } from '@/lib/core/usecase-models/update-rule-usecase-models';
 import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 const UpdateRuleSchema = z.object({
     ruleId: z.string().min(1),
@@ -27,7 +28,7 @@ const UpdateRuleSchema = z.object({
  * Body: { ruleId, options: { lifetime?, approve?, comment?, priority? } }
  * Updates a replication rule's options
  */
-export async function PUT(request: NextRequest) {
+async function putHandler(request: NextRequest) {
     try {
         const body = await parseRequestBody(request);
 
@@ -54,3 +55,5 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const PUT = withFeature('rules.approve', putHandler);

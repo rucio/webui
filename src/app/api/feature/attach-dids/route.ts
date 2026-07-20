@@ -7,6 +7,7 @@ import { BaseController } from '@/lib/sdk/controller';
 import { AttachDIDsControllerParameters } from '@/lib/infrastructure/controller/attach-dids-controller';
 import { AttachDIDsRequest } from '@/lib/core/usecase-models/attach-dids-usecase-models';
 import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 const AttachDIDsSchema = z.object({
     dids: z
@@ -26,7 +27,7 @@ const AttachDIDsSchema = z.object({
  * Body: { dids: [{ scope, name }], scope, name }
  * Attaches multiple DIDs to a container or dataset
  */
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
     try {
         const body = await parseRequestBody(request);
 
@@ -53,3 +54,5 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const POST = withFeature('dids.mutate', postHandler);

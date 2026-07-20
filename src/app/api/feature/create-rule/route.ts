@@ -8,6 +8,7 @@ import { CreateRuleControllerParameters } from '@/lib/infrastructure/controller/
 import { CreateRuleRequest } from '@/lib/core/usecase-models/create-rule-usecase-models';
 import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
 import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 const CreateRuleSchema = z.object({
     dids: z
@@ -35,7 +36,7 @@ const CreateRuleSchema = z.object({
  * Body: { dids, copies, rse_expression, ... }
  * Creates a new replication rule
  */
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
     try {
         const sessionUser = await getSessionUser();
 
@@ -71,3 +72,5 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const POST = withFeature('rules.create', postHandler);

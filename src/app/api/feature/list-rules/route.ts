@@ -9,6 +9,7 @@ import { ListRulesRequest } from '@/lib/core/usecase-models/list-rules-usecase-m
 import { executeAuthenticatedController, parseQueryParams } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
 import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils';
 import { RuleState } from '@/lib/core/entity/rucio';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 const RulesFiltersSchema = z.object({
     scope: z.string().optional(),
@@ -27,7 +28,7 @@ const RulesFiltersSchema = z.object({
  * Query params: scope, name, updated_after, updated_before, state, account, activity
  * Returns a list of replication rules based on filters
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
     try {
         const sessionUser = await getSessionUser();
 
@@ -75,3 +76,5 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const GET = withFeature('rules', getHandler);

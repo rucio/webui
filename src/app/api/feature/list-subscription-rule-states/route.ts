@@ -6,13 +6,14 @@ import { BaseController } from '@/lib/sdk/controller';
 import { ListSubscriptionRuleStatesControllerParameters } from '@/lib/infrastructure/controller/list-subscription-rule-states-controller';
 import { executeAuthenticatedController } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
 import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 /**
  * GET /api/feature/list-subscription-rule-states
  * Query params: account (optional - defaults to authenticated user's account), name
  * Returns rule states for subscriptions of the specified account
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
     try {
         const sessionUser = await getSessionUser();
 
@@ -39,3 +40,5 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const GET = withFeature('subscriptions', getHandler);

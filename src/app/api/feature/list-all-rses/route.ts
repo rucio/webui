@@ -4,12 +4,13 @@ import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { BaseController } from '@/lib/sdk/controller';
 import { ListAllRSEsControllerParameters } from '@/lib/infrastructure/controller/list-all-rses-controller';
 import { executeAuthenticatedController } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 /**
  * GET /api/feature/list-all-rses
  * Returns a list of all Rucio Storage Elements (RSEs)
  */
-export async function GET() {
+async function getHandler() {
     try {
         const controller = appContainer.get<BaseController<ListAllRSEsControllerParameters, void>>(CONTROLLERS.LIST_ALL_RSES);
 
@@ -20,3 +21,5 @@ export async function GET() {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export const GET = withFeature(['rses', 'rules.create'], getHandler);
