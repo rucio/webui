@@ -4,6 +4,7 @@ import { AddDIDControllerParameters } from '@/lib/infrastructure/controller/add-
 import AddDIDController from '@/lib/infrastructure/controller/add-did-controller';
 import { AddDIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -14,7 +15,14 @@ import AddDIDUseCase from '@/lib/core/use-case/add-did-usecase';
 
 import AddDIDPresenter from '@/lib/infrastructure/presenter/add-did-presenter';
 
-export default class AddDIDFeature extends BaseFeature<AddDIDControllerParameters, AddDIDRequest, AddDIDResponse, AddDIDError, AddDIDViewModel> {
+export default class AddDIDFeature extends BaseFeature<
+    AddDIDControllerParameters,
+    AddDIDRequest,
+    AddDIDResponse,
+    AddDIDError,
+    AddDIDViewModel,
+    FeatureKey
+> {
     constructor(appContainer: Container) {
         const rucioDIDGateway = appContainer.get<DIDGatewayOutputPort>(GATEWAYS.DID);
 
@@ -24,6 +32,6 @@ export default class AddDIDFeature extends BaseFeature<AddDIDControllerParameter
             INPUT_PORT: INPUT_PORT.ADD_DID,
         };
         const useCaseConstructorArgs = [rucioDIDGateway];
-        super('AddDID', AddDIDController, AddDIDUseCase, useCaseConstructorArgs, AddDIDPresenter, false, symbols);
+        super('AddDID', AddDIDController, AddDIDUseCase, useCaseConstructorArgs, AddDIDPresenter, false, symbols, 'dids.mutate');
     }
 }

@@ -4,6 +4,7 @@ import { GetRSEUsageControllerParameters } from '@/lib/infrastructure/controller
 import GetRSEUsageController from '@/lib/infrastructure/controller/get-rse-usage-controller';
 import { RSEUsageViewModel } from '@/lib/infrastructure/data/view-model/rse-usage';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class GetRSEUsageFeature extends BaseFeature<
     GetRSEUsageRequest,
     GetRSEUsageResponse,
     GetRSEUsageError,
-    RSEUsageViewModel
+    RSEUsageViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE);
@@ -30,6 +32,6 @@ export default class GetRSEUsageFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.GET_RSE_USAGE,
         };
         const useCaseConstructorArgs = [rseGateway];
-        super('GetRSEUsage', GetRSEUsageController, GetRSEUsageUseCase, useCaseConstructorArgs, GetRSEUsagePresenter, false, symbols);
+        super('GetRSEUsage', GetRSEUsageController, GetRSEUsageUseCase, useCaseConstructorArgs, GetRSEUsagePresenter, false, symbols, 'rses');
     }
 }

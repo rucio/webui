@@ -4,6 +4,7 @@ import { ListAllRSEsControllerParameters } from '@/lib/infrastructure/controller
 import ListAllRSEsController from '@/lib/infrastructure/controller/list-all-rses-controller';
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { BaseStreamableFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class ListAllRSEsFeature extends BaseStreamableFeature<
     ListAllRSEsRequest,
     ListAllRSEsResponse,
     ListAllRSEsError,
-    RSEViewModel
+    RSEViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE);
@@ -30,6 +32,6 @@ export default class ListAllRSEsFeature extends BaseStreamableFeature<
             INPUT_PORT: INPUT_PORT.LIST_ALL_RSES,
         };
         const useCaseConstructorArgs = [rseGateway];
-        super('ListAllRSEs', ListAllRSEsController, ListAllRSEsUseCase, useCaseConstructorArgs, ListAllRSEsPresenter, false, symbols);
+        super('ListAllRSEs', ListAllRSEsController, ListAllRSEsUseCase, useCaseConstructorArgs, ListAllRSEsPresenter, false, symbols, 'rses');
     }
 }

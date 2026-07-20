@@ -4,6 +4,7 @@ import { GetRuleControllerParameters } from '@/lib/infrastructure/controller/get
 import GetRuleController from '@/lib/infrastructure/controller/get-rule-controller';
 import { GetRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class GetRuleFeature extends BaseFeature<
     GetRuleRequest,
     GetRuleResponse,
     GetRuleError,
-    GetRuleViewModel
+    GetRuleViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rucioRuleGateway = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
@@ -30,6 +32,6 @@ export default class GetRuleFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.GET_RULE,
         };
         const useCaseConstructorArgs = [rucioRuleGateway];
-        super('GetRule', GetRuleController, GetRuleUseCase, useCaseConstructorArgs, GetRulePresenter, false, symbols);
+        super('GetRule', GetRuleController, GetRuleUseCase, useCaseConstructorArgs, GetRulePresenter, false, symbols, 'rules');
     }
 }

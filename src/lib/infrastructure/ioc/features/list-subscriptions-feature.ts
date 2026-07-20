@@ -6,6 +6,7 @@ import {
     ListSubscriptionsResponse,
 } from '@/lib/core/usecase-models/list-subscriptions-usecase-models';
 import { BaseStreamableFeature } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import { Container } from 'inversify';
 import ListSubscriptionsController, { ListSubscriptionsControllerParameters } from '../../controller/list-subscriptions-controller';
 import { SubscriptionViewModel } from '../../data/view-model/subscriptions';
@@ -20,7 +21,8 @@ export default class ListSubscriptionsFeature extends BaseStreamableFeature<
     ListSubscriptionsRequest,
     ListSubscriptionsResponse,
     ListSubscriptionsError,
-    SubscriptionViewModel
+    SubscriptionViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const subscriptionGateway = appContainer.get<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION);
@@ -37,6 +39,7 @@ export default class ListSubscriptionsFeature extends BaseStreamableFeature<
             ListSubscriptionsPresenter,
             false,
             symbols,
+            'subscriptions',
         );
     }
 }

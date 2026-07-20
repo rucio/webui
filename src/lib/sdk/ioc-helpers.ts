@@ -21,8 +21,10 @@ export type IOCSymbols = {
 /**
  * A base interface for loadable features in the web application.
  */
-export interface IFeature {
+export interface IFeature<TFlag extends string = string> {
     name: string;
+    /** The feature flag key that governs this slice, if any. */
+    featureFlag?: TFlag;
     /**
      * Load the feature into the IoC container.
      * @param appContainer The IoC container for the application.
@@ -39,7 +41,9 @@ export interface IFeature {
  * @template TErrorModel The type of the error model for the use case.
  * @template TViewModel The type of the view model for the presenter.
  */
-export class BaseFeature<TControllerParams extends TParameters, TRequestModel, TResponseModel, TErrorModel, TViewModel> implements IFeature {
+export class BaseFeature<TControllerParams extends TParameters, TRequestModel, TResponseModel, TErrorModel, TViewModel, TFlag extends string = string>
+    implements IFeature<TFlag>
+{
     /**
      * Creates a new instance of the `BaseFeature` class.
      * @template TControllerParams The type of the parameters for the controller.
@@ -63,6 +67,7 @@ export class BaseFeature<TControllerParams extends TParameters, TRequestModel, T
         private Presenter: new (response: Signal<TViewModel>, session?: RucioSession) => BasePresenter<TResponseModel, TErrorModel, TViewModel>,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
+        public featureFlag?: TFlag,
     ) {}
 
     /**
@@ -148,7 +153,8 @@ export class BaseStreamableFeature<
     TResponseModel extends BaseResponseModel,
     TErrorModel extends BaseErrorResponseModel,
     TViewModel extends BaseViewModel,
-> implements IFeature
+    TFlag extends string = string,
+> implements IFeature<TFlag>
 {
     /**
      * Creates a new instance of the `BaseStreamableFeature` class.
@@ -172,6 +178,7 @@ export class BaseStreamableFeature<
         >,
         private passSessionToPresenter: boolean = false,
         private symbols: IOCSymbols,
+        public featureFlag?: TFlag,
     ) {}
 
     /**
@@ -253,4 +260,18 @@ export function loadFeaturesSync(appContainer: Container, features: IFeature[]) 
             throw error;
         }
     }
+}
+
+/**
+ * Collects declared feature-flag assignments (feature name -> flag key) from a
+ * list of features. Features without a flag are omitted.
+ */
+export function getFeatureFlagAssignments(features: IFeature[]): Record<string, string> {
+    const map: Record<string, string> = {};
+    for (const feature of features) {
+        if (feature.featureFlag) {
+            map[feature.name] = feature.featureFlag;
+        }
+    }
+    return map;
 }

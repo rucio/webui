@@ -4,6 +4,7 @@ import { CreateRuleControllerParameters } from '@/lib/infrastructure/controller/
 import CreateRuleController from '@/lib/infrastructure/controller/create-rule-controller';
 import { CreateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -21,7 +22,8 @@ export default class CreateRuleFeature extends BaseFeature<
     CreateRuleRequest,
     CreateRuleResponse,
     CreateRuleError,
-    CreateRuleViewModel
+    CreateRuleViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const ruleGateway = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
@@ -34,6 +36,6 @@ export default class CreateRuleFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.CREATE_RULE,
         };
         const useCaseConstructorArgs = [ruleGateway, accountGateway, didGateway];
-        super('CreateRule', CreateRuleController, CreateRuleUseCase, useCaseConstructorArgs, CreateRulePresenter, false, symbols);
+        super('CreateRule', CreateRuleController, CreateRuleUseCase, useCaseConstructorArgs, CreateRulePresenter, false, symbols, 'rules.create');
     }
 }

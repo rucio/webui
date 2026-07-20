@@ -4,6 +4,7 @@ import {
     DIDKeyValuePairsDataError,
 } from '@/lib/core/usecase-models/did-keyvaluepairs-usecase-models';
 import { BaseFeature } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import DIDKeyValuePairsDataController, { DIDKeyValuePairsDataControllerParameters } from '../../controller/did-keyvaluepairs-controller';
 import { DIDKeyValuePairsDataViewModel } from '../../data/view-model/did';
 import { Container } from 'inversify';
@@ -20,7 +21,8 @@ export default class DIDKeyValuePairsDataFeature extends BaseFeature<
     DIDKeyValuePairsDataRequest,
     DIDKeyValuePairsDataResponse,
     DIDKeyValuePairsDataError,
-    DIDKeyValuePairsDataViewModel
+    DIDKeyValuePairsDataViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const gateway: DIDKeyValuePairsDataOutputPort = appContainer.get(GATEWAYS.DID);
@@ -37,6 +39,7 @@ export default class DIDKeyValuePairsDataFeature extends BaseFeature<
             DIDKeyValuePairsDataPresenter,
             false,
             symbols,
+            'dids.metadata',
         );
     }
 }

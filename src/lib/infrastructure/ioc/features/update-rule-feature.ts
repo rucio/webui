@@ -4,6 +4,7 @@ import { UpdateRuleControllerParameters } from '@/lib/infrastructure/controller/
 import UpdateRuleController from '@/lib/infrastructure/controller/update-rule-controller';
 import { UpdateRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class UpdateRuleFeature extends BaseFeature<
     UpdateRuleRequest,
     UpdateRuleResponse,
     UpdateRuleError,
-    UpdateRuleViewModel
+    UpdateRuleViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rucioRuleGateway = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
@@ -30,6 +32,6 @@ export default class UpdateRuleFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.UPDATE_RULE,
         };
         const useCaseConstructorArgs = [rucioRuleGateway];
-        super('UpdateRule', UpdateRuleController, UpdateRuleUseCase, useCaseConstructorArgs, UpdateRulePresenter, false, symbols);
+        super('UpdateRule', UpdateRuleController, UpdateRuleUseCase, useCaseConstructorArgs, UpdateRulePresenter, false, symbols, 'rules.approve');
     }
 }

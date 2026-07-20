@@ -4,6 +4,7 @@ import { GetRSEControllerParameters } from '@/lib/infrastructure/controller/get-
 import GetRSEController from '@/lib/infrastructure/controller/get-rse-controller';
 import { RSEDetailsViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -14,7 +15,14 @@ import GetRSEUseCase from '@/lib/core/use-case/get-rse-usecase';
 
 import GetRSEPresenter from '@/lib/infrastructure/presenter/get-rse-presenter';
 
-export default class GetRSEFeature extends BaseFeature<GetRSEControllerParameters, GetRSERequest, GetRSEResponse, GetRSEError, RSEDetailsViewModel> {
+export default class GetRSEFeature extends BaseFeature<
+    GetRSEControllerParameters,
+    GetRSERequest,
+    GetRSEResponse,
+    GetRSEError,
+    RSEDetailsViewModel,
+    FeatureKey
+> {
     constructor(appContainer: Container) {
         const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE);
 
@@ -24,6 +32,6 @@ export default class GetRSEFeature extends BaseFeature<GetRSEControllerParameter
             INPUT_PORT: INPUT_PORT.GET_RSE,
         };
         const useCaseConstructorArgs = [rseGateway];
-        super('GetRSE', GetRSEController, GetRSEUseCase, useCaseConstructorArgs, GetRSEPresenter, false, symbols);
+        super('GetRSE', GetRSEController, GetRSEUseCase, useCaseConstructorArgs, GetRSEPresenter, false, symbols, 'rses');
     }
 }

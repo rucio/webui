@@ -2,6 +2,7 @@ import SubscriptionGatewayOutputPort from '@/lib/core/port/secondary/subscriptio
 import GetSubscriptionUseCase from '@/lib/core/use-case/get-subscription-usecase';
 import { GetSubscriptionError, GetSubscriptionRequest, GetSubscriptionResponse } from '@/lib/core/usecase-models/get-subscription-usecase-models';
 import { BaseFeature } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import { Container } from 'inversify';
 import GetSubscriptionController, { GetSubscriptionControllerParameters } from '../../controller/get-subscription-controller';
 import { SubscriptionViewModel } from '../../data/view-model/subscriptions';
@@ -16,7 +17,8 @@ export default class GetSubscriptionFeature extends BaseFeature<
     GetSubscriptionRequest,
     GetSubscriptionResponse,
     GetSubscriptionError,
-    SubscriptionViewModel
+    SubscriptionViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const gateway: SubscriptionGatewayOutputPort = appContainer.get(GATEWAYS.SUBSCRIPTION);
@@ -25,6 +27,6 @@ export default class GetSubscriptionFeature extends BaseFeature<
             USECASE_FACTORY: USECASE_FACTORY.GET_SUBSCRIPTION,
             INPUT_PORT: INPUT_PORT.GET_SUBSCRIPTION,
         };
-        super('GetSubscription', GetSubscriptionController, GetSubscriptionUseCase, [gateway], GetSubscriptionPresenter, false, symbols);
+        super('GetSubscription', GetSubscriptionController, GetSubscriptionUseCase, [gateway], GetSubscriptionPresenter, false, symbols, 'subscriptions');
     }
 }

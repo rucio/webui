@@ -4,6 +4,7 @@ import { GetRSEProtocolsControllerParameters } from '@/lib/infrastructure/contro
 import GetRSEProtocolsController from '@/lib/infrastructure/controller/get-rse-protocols-controller';
 import { RSEProtocolViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class GetRSEProtocolsFeature extends BaseFeature<
     GetRSEProtocolsRequest,
     GetRSEProtocolsResponse,
     GetRSEProtocolsError,
-    RSEProtocolViewModel
+    RSEProtocolViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE);
@@ -30,6 +32,15 @@ export default class GetRSEProtocolsFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.GET_RSE_PROTOCOLS,
         };
         const useCaseConstructorArgs = [rseGateway];
-        super('GetRSEProtocols', GetRSEProtocolsController, GetRSEProtocolsUseCase, useCaseConstructorArgs, GetRSEProtocolsPresenter, false, symbols);
+        super(
+            'GetRSEProtocols',
+            GetRSEProtocolsController,
+            GetRSEProtocolsUseCase,
+            useCaseConstructorArgs,
+            GetRSEProtocolsPresenter,
+            false,
+            symbols,
+            'rses',
+        );
     }
 }

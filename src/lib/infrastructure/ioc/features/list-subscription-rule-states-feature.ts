@@ -8,6 +8,7 @@ import { ListSubscriptionRuleStatesControllerParameters } from '@/lib/infrastruc
 import ListSubscriptionRuleStatesController from '@/lib/infrastructure/controller/list-subscription-rule-states-controller';
 import { SubscriptionRuleStatesViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 import { BaseStreamableFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -23,7 +24,8 @@ export default class ListSubscriptionRuleStatesFeature extends BaseStreamableFea
     ListSubscriptionRuleStatesRequest,
     ListSubscriptionRuleStatesResponse,
     ListSubscriptionRuleStatesError,
-    SubscriptionRuleStatesViewModel
+    SubscriptionRuleStatesViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const subscriptionGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.SUBSCRIPTION);
@@ -42,6 +44,7 @@ export default class ListSubscriptionRuleStatesFeature extends BaseStreamableFea
             ListSubscriptionRuleStatesPresenter,
             false,
             symbols,
+            'subscriptions',
         );
     }
 }

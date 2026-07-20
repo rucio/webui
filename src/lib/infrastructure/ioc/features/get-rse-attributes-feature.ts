@@ -8,6 +8,7 @@ import { GetRSEAttributesControllerParameters } from '@/lib/infrastructure/contr
 import GetRSEAttributesController from '@/lib/infrastructure/controller/get-rse-attributes-controller';
 import { RSEAttributeViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -23,7 +24,8 @@ export default class GetRSEAttributesFeature extends BaseFeature<
     GetRSEAttributesRequest,
     GetRSEAttributesResponse,
     GetRSEAttributesError,
-    RSEAttributeViewModel
+    RSEAttributeViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE);
@@ -42,6 +44,7 @@ export default class GetRSEAttributesFeature extends BaseFeature<
             GetRSEAttributesPresenter,
             false,
             symbols,
+            'rses',
         );
     }
 }

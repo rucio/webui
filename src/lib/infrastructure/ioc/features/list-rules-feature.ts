@@ -3,6 +3,7 @@ import { ListRulesError, ListRulesRequest, ListRulesResponse } from '@/lib/core/
 import { ListRulesControllerParameters } from '@/lib/infrastructure/controller/list-rules-controller';
 import ListRulesController from '@/lib/infrastructure/controller/list-rules-controller';
 import { BaseStreamableFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class ListRulesFeature extends BaseStreamableFeature<
     ListRulesRequest,
     ListRulesResponse,
     ListRulesError,
-    RuleViewModel
+    RuleViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const ruleGateway = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
@@ -30,6 +32,6 @@ export default class ListRulesFeature extends BaseStreamableFeature<
             INPUT_PORT: INPUT_PORT.LIST_RULES,
         };
         const useCaseConstructorArgs = [ruleGateway];
-        super('ListRules', ListRulesController, ListRulesUseCase, useCaseConstructorArgs, ListRulesPresenter, false, symbols);
+        super('ListRules', ListRulesController, ListRulesUseCase, useCaseConstructorArgs, ListRulesPresenter, false, symbols, 'rules');
     }
 }

@@ -8,6 +8,7 @@ import { ListRuleReplicaLockStatesControllerParameters } from '@/lib/infrastruct
 import ListRuleReplicaLockStatesController from '@/lib/infrastructure/controller/list-rule-replica-lock-states-controller';
 import { ListRuleReplicaLockStatesViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { BaseStreamableFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -23,7 +24,8 @@ export default class ListRuleReplicaLockStatesFeature extends BaseStreamableFeat
     ListRuleReplicaLockStatesRequest,
     ListRuleReplicaLockStatesResponse,
     ListRuleReplicaLockStatesError,
-    ListRuleReplicaLockStatesViewModel
+    ListRuleReplicaLockStatesViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rucioRuleGateway = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
@@ -42,6 +44,7 @@ export default class ListRuleReplicaLockStatesFeature extends BaseStreamableFeat
             ListRuleReplicaLockStatesPresenter,
             false,
             symbols,
+            'rules',
         );
     }
 }

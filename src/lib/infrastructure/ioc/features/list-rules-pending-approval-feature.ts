@@ -8,6 +8,7 @@ import {
 import { ListRulesPendingApprovalControllerParameters } from '@/lib/infrastructure/controller/list-rules-pending-approval-controller';
 import ListRulesPendingApprovalController from '@/lib/infrastructure/controller/list-rules-pending-approval-controller';
 import { BaseStreamableFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -23,7 +24,8 @@ export default class ListRulesPendingApprovalFeature extends BaseStreamableFeatu
     ListRulesPendingApprovalRequest,
     ListRulesPendingApprovalResponse,
     ListRulesPendingApprovalError,
-    ApproveRuleViewModel
+    ApproveRuleViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const ruleGateway = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
@@ -43,6 +45,7 @@ export default class ListRulesPendingApprovalFeature extends BaseStreamableFeatu
             ListRulesPendingApprovalPresenter,
             false,
             symbols,
+            'rules.approve',
         );
     }
 }

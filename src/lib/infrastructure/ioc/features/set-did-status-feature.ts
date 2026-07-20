@@ -4,6 +4,7 @@ import { SetDIDStatusControllerParameters } from '@/lib/infrastructure/controlle
 import SetDIDStatusController from '@/lib/infrastructure/controller/set-did-status-controller';
 import { SetDIDStatusViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class SetDIDStatusFeature extends BaseFeature<
     SetDIDStatusRequest,
     SetDIDStatusResponse,
     SetDIDStatusError,
-    SetDIDStatusViewModel
+    SetDIDStatusViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rucioDIDGateway = appContainer.get<DIDGatewayOutputPort>(GATEWAYS.DID);
@@ -30,6 +32,6 @@ export default class SetDIDStatusFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.SET_DID_STATUS,
         };
         const useCaseConstructorArgs = [rucioDIDGateway];
-        super('SetDIDStatus', SetDIDStatusController, SetDIDStatusUseCase, useCaseConstructorArgs, SetDIDStatusPresenter, false, symbols);
+        super('SetDIDStatus', SetDIDStatusController, SetDIDStatusUseCase, useCaseConstructorArgs, SetDIDStatusPresenter, false, symbols, 'dids.mutate');
     }
 }

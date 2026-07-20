@@ -4,6 +4,7 @@ import { AttachDIDsControllerParameters } from '@/lib/infrastructure/controller/
 import AttachDIDsController from '@/lib/infrastructure/controller/attach-dids-controller';
 import { AttachDIDsViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { BaseFeature, IOCSymbols } from '@/lib/sdk/ioc-helpers';
+import { FeatureKey } from '@/lib/core/entity/feature-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
@@ -19,7 +20,8 @@ export default class AttachDIDsFeature extends BaseFeature<
     AttachDIDsRequest,
     AttachDIDsResponse,
     AttachDIDsError,
-    AttachDIDsViewModel
+    AttachDIDsViewModel,
+    FeatureKey
 > {
     constructor(appContainer: Container) {
         const rucioDIDGateway = appContainer.get<DIDGatewayOutputPort>(GATEWAYS.DID);
@@ -30,6 +32,6 @@ export default class AttachDIDsFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.ATTACH_DIDS,
         };
         const useCaseConstructorArgs = [rucioDIDGateway];
-        super('AttachDIDs', AttachDIDsController, AttachDIDsUseCase, useCaseConstructorArgs, AttachDIDsPresenter, false, symbols);
+        super('AttachDIDs', AttachDIDsController, AttachDIDsUseCase, useCaseConstructorArgs, AttachDIDsPresenter, false, symbols, 'dids.mutate');
     }
 }
