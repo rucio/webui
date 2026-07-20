@@ -2,8 +2,10 @@ import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils
 import { Role } from '@/lib/core/entity/auth-models';
 import { redirect } from 'next/navigation';
 import { ApproveRuleClient } from './ApproveRuleClient';
+import { requireFeature } from '@/lib/infrastructure/feature-flags/require-feature';
 
 export default async function Page({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+    await requireFeature('rules.approve');
     const user = await getSessionUser();
 
     if (!user || !user.isLoggedIn) {

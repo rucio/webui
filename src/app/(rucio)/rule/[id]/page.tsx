@@ -1,11 +1,13 @@
 import { DetailsRule } from '@/component-library/pages/Rule/details/DetailsRule';
 import { parseBoolEnv } from '@/lib/core/utils/env-utils';
+import { requireFeature } from '@/lib/infrastructure/feature-flags/require-feature';
 
 export const metadata = {
     title: 'Rule - Rucio',
 };
 
 export default async function PageRule({ params }: { params: Promise<{ id: string }> }) {
+    await requireFeature('rules');
     const { id } = await params;
     const featureDDMDashboard = parseBoolEnv(process.env.FEATURE_DDM_DASHBOARD);
 

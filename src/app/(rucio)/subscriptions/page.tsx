@@ -1,6 +1,8 @@
 import { ListSubscriptionClient } from './ListSubscriptionClient';
+import { requireFeature } from '@/lib/infrastructure/feature-flags/require-feature';
 
 export default async function Page({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+    await requireFeature('subscriptions');
     const params = await searchParams;
     const accountParam = typeof params?.['account'] === 'string' ? params['account'] : undefined;
     const autoSearch = params?.['autoSearch'] === 'true';

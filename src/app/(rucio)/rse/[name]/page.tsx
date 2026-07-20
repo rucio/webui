@@ -6,8 +6,10 @@ import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factor
 import TUseCaseFactory from '@/lib/sdk/usecase-factory';
 import { getRucioAuthToken } from '@/lib/infrastructure/auth/nextauth-session-utils';
 import { MockSignal } from '@/lib/infrastructure/utils/mock-signal';
+import { requireFeature } from '@/lib/infrastructure/feature-flags/require-feature';
 
 export default async function Page({ params }: { params: Promise<{ name: string }> }) {
+    await requireFeature('rses');
     const { name: rawName } = await params;
     const name = decodeURIComponent(rawName);
     const usecaseFactory = appContainer.get<TUseCaseFactory<GetRSERequest>>(USECASE_FACTORY.GET_RSE);

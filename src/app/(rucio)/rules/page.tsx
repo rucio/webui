@@ -1,7 +1,9 @@
 import { ListRuleClient } from './ListRuleClient';
 import { RuleState } from '@/lib/core/entity/rucio';
+import { requireFeature } from '@/lib/infrastructure/feature-flags/require-feature';
 
 export default async function Page({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+    await requireFeature('rules');
     const params = await searchParams;
     const autoSearch = params?.['autoSearch'] === 'true';
 

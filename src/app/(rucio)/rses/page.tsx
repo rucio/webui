@@ -1,6 +1,8 @@
 import { ListRSE } from '@/component-library/pages/RSE/list/ListRSE';
+import { requireFeature } from '@/lib/infrastructure/feature-flags/require-feature';
 
 export default async function Page({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+    await requireFeature('rses');
     let firstExpression: string | undefined = undefined;
     const resolvedSearchParams = await searchParams;
     const searchExpression = resolvedSearchParams?.['expression'];
