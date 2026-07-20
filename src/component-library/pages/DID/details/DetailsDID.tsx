@@ -19,6 +19,7 @@ import { DetailsDIDParents } from '@/component-library/pages/DID/details/views/D
 import { DetailsDIDContents } from '@/component-library/pages/DID/details/views/DetailsDIDContents';
 import { DetailsDIDContentsReplicas } from '@/component-library/pages/DID/details/views/DetailsDIDContentsReplicas';
 import { WarningField } from '@/component-library/features/fields/WarningField';
+import { FeatureGate } from '@/component-library/features/feature-flags/FeatureGate';
 import { DetailsDIDDatasetReplicas } from './views/DetailsDIDDatasetReplicas';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 
@@ -151,7 +152,9 @@ export const DetailsDID = ({ scope, name }: DetailsDIDProps) => {
                             <CopyableHeading text={meta.scope + ':' + meta.name} />
                         </div>
                     </header>
-                    <DetailsDIDMeta meta={meta} />
+                    <FeatureGate feature="dids.metadata">
+                        <DetailsDIDMeta meta={meta} />
+                    </FeatureGate>
                     <DetailsDIDTables scope={scope} name={name} type={meta.did_type} />
                 </div>
             </div>
