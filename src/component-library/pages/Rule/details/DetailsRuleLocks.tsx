@@ -250,12 +250,12 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
 
     const onGridReady = (event: GridReadyEvent) => {
         props.onGridReady(event);
-        // Apply default sort to prioritize error/stuck locks
+        // 'asc', not 'desc': lockStateComparator already ranks most-urgent-first and AG-Grid negates a comparator for 'desc'.
         event.api.applyColumnState({
             state: [
                 {
                     colId: 'state',
-                    sort: 'desc',
+                    sort: 'asc',
                 },
             ],
         });
