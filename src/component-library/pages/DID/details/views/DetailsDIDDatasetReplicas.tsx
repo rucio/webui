@@ -10,12 +10,16 @@ import { ReplicaState } from '@/lib/core/entity/rucio';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { ValueGetterParams } from 'ag-grid-community';
+
+/** Share of the dataset's files present on the replica. Shared by the progress bar and the column's sort value. */
+export const getReplicationPercentage = (data?: DIDDatasetReplicasViewModel): number => {
+    if (!data || data.length === 0) return 0;
+    return (data.available_files / data.length) * 100;
+};
 
 const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
-    let percentage: number = 0;
-    if (data.length > 0) {
-        percentage = (data.available_files / data.length) * 100;
-    }
+    const percentage = getReplicationPercentage(data);
 
     const getPercentageText = () => {
         const baseText = `${data.available_files} files out of ${data.length}`;
@@ -92,8 +96,13 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
         },
         {
             headerName: 'Replication Progress',
+            // Explicit id: the column has no field, so it would otherwise be addressed by position.
+            colId: 'replication_progress',
             flex: 3,
-            sortable: false,
+            // Sort on the same percentage the bar renders, so the order and the bar always agree.
+            valueGetter: (params: ValueGetterParams<DIDDatasetReplicasViewModel>) => getReplicationPercentage(params.data),
+            // The value is a percentage, so filter it numerically rather than with the default text filter.
+            filter: 'agNumberColumnFilter',
             cellRenderer: ProgressBarCell,
             cellStyle: {
                 ...badgeCellWrapperStyle,
