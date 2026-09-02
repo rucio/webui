@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 import { HiChevronDown, HiMenu, HiMoon, HiSun, HiX, HiLightBulb, HiSearch } from 'react-icons/hi';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { ReadonlyURLSearchParams, usePathname, useSearchParams } from 'next/navigation';
 import { Searchbar } from '@/component-library/features/layout/Searchbar';
 import Image from 'next/image';
 import { AccountButton } from '@/component-library/features/layout/AccountDropdown';
@@ -31,8 +31,14 @@ type TFullMenuItem = TMenuItem & {
     children?: TMenuItem[];
 };
 
-const MenuItem = ({ item, pathname, onClick }: { item: TMenuItem; pathname: string | null; onClick?: () => void }) => {
-    const isActive = item.path === pathname;
+function comparePaths(itemPath: string | undefined, pathname: string | null, params: ReadonlyURLSearchParams | null) {
+    const wholePathname = params && params?.size > 0 ? pathname + '?' + params.toString() : pathname;
+    
+    return itemPath === wholePathname;
+}
+
+const MenuItem = ({ item, pathname, params, onClick }: { item: TMenuItem; pathname: string | null; params: ReadonlyURLSearchParams | null; onClick?: () => void }) => {
+    const isActive = comparePaths(item.path, pathname, params);
     const classes = `hover:text-brand-500 transition-colors duration-150 whitespace-nowrap ${isActive && 'text-brand-500 font-semibold'}`;
     return (
         <Link href={item.path ?? '/'} className={cn(classes, 'relative')} onClick={onClick}>
@@ -43,6 +49,7 @@ const MenuItem = ({ item, pathname, onClick }: { item: TMenuItem; pathname: stri
 
 const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     const pathname = usePathname();
+    const params = useSearchParams();
 
     const getItemChildren = (children: TMenuItem[]) => {
         return (
@@ -56,7 +63,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
             >
                 <div className="flex flex-col space-y-2 px-4 py-2">
                     {children.map(child => (
-                        <MenuItem key={child.path} item={child} pathname={pathname} />
+                        <MenuItem key={child.path} item={child} pathname={pathname} params={params} />
                     ))}
                 </div>
             </div>
@@ -66,20 +73,20 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
     // Check if any child of a menu item is active (for Rules dropdown)
     const isChildActive = (item: TFullMenuItem) => {
         if (!item.children) return false;
-        return item.children.some(child => child.path === pathname);
+        return item.children.some(child => comparePaths(child.path, pathname, params));
     };
 
     return (
         <nav className="hidden md:flex items-center space-x-4 lg:space-x-8 relative" aria-label="Main navigation">
             {menuItems.map(item => {
                 const key = item.title.toLowerCase();
-                const isActive = item.path === pathname || isChildActive(item);
+                const isActive = comparePaths(item.path, pathname, params) || isChildActive(item);
                 const classes = `hover:text-brand-500 transition-colors duration-150 ${isActive && 'text-brand-500 font-semibold'}`;
 
                 if (item.path) {
                     return (
                         <div key={item.path} className="relative shrink-0 whitespace-nowrap">
-                            <MenuItem item={item} pathname={pathname} />
+                            <MenuItem item={item} pathname={pathname} params={params} />
                             {isActive && (
                                 <motion.div
                                     layoutId="desktop-nav-underline"
@@ -124,6 +131,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
 
 const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
     const pathname = usePathname();
+    const params = useSearchParams();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
@@ -158,10 +166,10 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                         <nav className="flex flex-col items-start space-y-4 text-lg" aria-label="Mobile navigation">
                             {menuItems.map(item => {
                                 if (item.path) {
-                                    return <MenuItem key={item.path} item={item} pathname={pathname} onClick={() => setIsMenuOpen(false)} />;
+                                    return <MenuItem key={item.path} item={item} pathname={pathname} params={params} onClick={() => setIsMenuOpen(false)} />;
                                 } else {
                                     return item.children?.map(child => (
-                                        <MenuItem key={child.path} item={child} pathname={pathname} onClick={() => setIsMenuOpen(false)} />
+                                        <MenuItem key={child.path} item={child} pathname={pathname} params={params} onClick={() => setIsMenuOpen(false)} />
                                     ));
                                 }
                             })}

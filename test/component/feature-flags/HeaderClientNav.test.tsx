@@ -14,7 +14,7 @@ jest.mock('@/lib/infrastructure/hooks/useTips', () => ({ useTips: () => ({ openP
 jest.mock('@/lib/infrastructure/auth/session-monitor', () => ({ useSessionMonitor: () => ({ manualSignOut: jest.fn() }) }));
 jest.mock('@/lib/infrastructure/hooks/useCommandPalette', () => ({ useCommandPalette: () => ({ open: jest.fn() }) }));
 jest.mock('next-themes', () => ({ useTheme: () => ({ resolvedTheme: 'light', setTheme: jest.fn() }) }));
-jest.mock('next/navigation', () => ({ usePathname: () => '/dashboard' }));
+jest.mock('next/navigation', () => ({ usePathname: () => '/dashboard', useSearchParams: () => '' }));
 
 function renderNav(overrides: Partial<FeatureFlagMap>) {
     const map: FeatureFlagMap = {
