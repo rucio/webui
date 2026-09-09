@@ -1,7 +1,4 @@
-import {
-    ListOpenDataDIDsError,
-    ListOpenDataDIDsResponse,
-} from '@/lib/core/usecase-models/list-opendata-dids-usecase-models';
+import { ListOpenDataDIDsError, ListOpenDataDIDsResponse } from '@/lib/core/usecase-models/list-opendata-dids-usecase-models';
 import { BasePresenter } from '@/lib/sdk/presenter';
 
 export type ListOpenDataDIDsViewModel = {
@@ -13,14 +10,8 @@ export type ListOpenDataDIDsViewModel = {
     dids: ListOpenDataDIDsResponse['dids'];
 };
 
-export default class ListOpenDataDIDsPresenter extends BasePresenter<
-    ListOpenDataDIDsResponse,
-    ListOpenDataDIDsError,
-    ListOpenDataDIDsViewModel
-> {
-    convertResponseModelToViewModel(
-        responseModel: ListOpenDataDIDsResponse,
-    ): {
+export default class ListOpenDataDIDsPresenter extends BasePresenter<ListOpenDataDIDsResponse, ListOpenDataDIDsError, ListOpenDataDIDsViewModel> {
+    convertResponseModelToViewModel(responseModel: ListOpenDataDIDsResponse): {
         viewModel: ListOpenDataDIDsViewModel;
         status: number;
     } {
@@ -37,23 +28,13 @@ export default class ListOpenDataDIDsPresenter extends BasePresenter<
         };
     }
 
-    convertErrorModelToViewModel(
-        errorModel: ListOpenDataDIDsError,
-    ): {
+    convertErrorModelToViewModel(errorModel: ListOpenDataDIDsError): {
         viewModel: ListOpenDataDIDsViewModel;
         status: number;
     } {
-        const status =
-            errorModel.code ??
-            (errorModel.error === 'INVALID_AUTH'
-                ? 401
-                : errorModel.error === 'INVALID_REQUEST'
-                  ? 400
-                  : 500);
+        const status = errorModel.code ?? (errorModel.error === 'INVALID_AUTH' ? 401 : errorModel.error === 'INVALID_REQUEST' ? 400 : 500);
 
-        const message = errorModel.message
-            ? errorModel.message.toString()
-            : errorModel.error;
+        const message = errorModel.message ? errorModel.message.toString() : errorModel.error;
 
         const viewModel: ListOpenDataDIDsViewModel = {
             status: 'error',

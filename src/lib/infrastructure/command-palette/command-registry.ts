@@ -15,7 +15,13 @@ import {
     ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { CommandItem } from '@/lib/core/entity/command-palette';
-import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, buildSubscriptionSearchUrl, detectSearchType } from '@/lib/infrastructure/utils/navigation';
+import {
+    buildDIDSearchUrl,
+    buildRSESearchUrl,
+    buildRuleDetailUrl,
+    buildSubscriptionSearchUrl,
+    detectSearchType,
+} from '@/lib/infrastructure/utils/navigation';
 
 /**
  * Get static navigation commands
@@ -28,12 +34,7 @@ import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, buildSubscrip
  *   suspicious-replicas entry (admin-only surface).
  * @param openDataEnabled - Whether the OpenData feature is enabled.
  */
-export function getNavigationCommands(
-    account?: string,
-    canViewApprovalQueue?: boolean,
-    isAdmin?: boolean,
-    openDataEnabled?: boolean,
-): CommandItem[] {
+export function getNavigationCommands(account?: string, canViewApprovalQueue?: boolean, isAdmin?: boolean, openDataEnabled?: boolean): CommandItem[] {
     const commands: CommandItem[] = [
         {
             id: 'nav-dashboard',
@@ -55,22 +56,16 @@ export function getNavigationCommands(
         },
         ...(openDataEnabled
             ? [
-                {
-                    id: 'nav-opendata-dids',
-                    type: 'navigation' as const,
-                    title: 'OpenData DIDs',
-                    description: 'Browse OpenData Data Identifiers',
-                    icon: DocumentDuplicateIcon,
-                    url: '/opendata/dids',
-                    keywords: [
-                        'opendata',
-                        'open data',
-                        'did',
-                        'data',
-                        'identifier',
-                    ],
-                },
-            ]
+                  {
+                      id: 'nav-opendata-dids',
+                      type: 'navigation' as const,
+                      title: 'OpenData DIDs',
+                      description: 'Browse OpenData Data Identifiers',
+                      icon: DocumentDuplicateIcon,
+                      url: '/opendata/dids',
+                      keywords: ['opendata', 'open data', 'did', 'data', 'identifier'],
+                  },
+              ]
             : []),
         {
             id: 'nav-rules',

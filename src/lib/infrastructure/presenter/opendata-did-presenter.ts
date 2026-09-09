@@ -1,7 +1,4 @@
-import {
-    OpenDataDIDError,
-    OpenDataDIDResponse,
-} from '@/lib/core/usecase-models/opendata-did-usecase-models';
+import { OpenDataDIDError, OpenDataDIDResponse } from '@/lib/core/usecase-models/opendata-did-usecase-models';
 import { BasePresenter } from '@/lib/sdk/presenter';
 
 export type OpenDataDIDViewModel = {
@@ -18,14 +15,8 @@ export type OpenDataDIDViewModel = {
     meta: Record<string, unknown>;
 };
 
-export default class OpenDataDIDPresenter extends BasePresenter<
-    OpenDataDIDResponse,
-    OpenDataDIDError,
-    OpenDataDIDViewModel
-> {
-    convertResponseModelToViewModel(
-        responseModel: OpenDataDIDResponse,
-    ): {
+export default class OpenDataDIDPresenter extends BasePresenter<OpenDataDIDResponse, OpenDataDIDError, OpenDataDIDViewModel> {
+    convertResponseModelToViewModel(responseModel: OpenDataDIDResponse): {
         viewModel: OpenDataDIDViewModel;
         status: number;
     } {
@@ -46,16 +37,12 @@ export default class OpenDataDIDPresenter extends BasePresenter<
         };
     }
 
-    convertErrorModelToViewModel(
-        errorModel: OpenDataDIDError,
-    ): {
+    convertErrorModelToViewModel(errorModel: OpenDataDIDError): {
         viewModel: OpenDataDIDViewModel;
         status: number;
     } {
         const status = errorModel.code ?? 500;
-        const message = errorModel.message
-            ? errorModel.message.toString()
-            : errorModel.error;
+        const message = errorModel.message ? errorModel.message.toString() : errorModel.error;
 
         const viewModel: OpenDataDIDViewModel = {
             status: 'error',

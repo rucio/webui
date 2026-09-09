@@ -322,16 +322,16 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
         didsItem,
         ...(openDataEnabled
             ? [
-                {
-                    title: 'OpenData',
-                    children: [
-                        {
-                            title: 'List DIDs',
-                            path: '/opendata/dids',
-                        },
-                    ],
-                },
-            ]
+                  {
+                      title: 'OpenData',
+                      children: [
+                          {
+                              title: 'List DIDs',
+                              path: '/opendata/dids',
+                          },
+                      ],
+                  },
+              ]
             : []),
         ...(rsesEnabled ? [{ title: 'RSEs', path: '/rses' }] : []),
         ...(subscriptionsEnabled ? [{ title: 'Subscriptions', path: subscriptionUrl }] : []),

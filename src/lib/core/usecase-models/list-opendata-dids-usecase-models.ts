@@ -21,9 +21,5 @@ export interface ListOpenDataDIDsResponse extends BaseResponseModel {
 }
 
 export interface ListOpenDataDIDsError extends BaseErrorResponseModel {
-    error:
-        | 'UNKNOWN_ERROR'
-        | 'INVALID_REQUEST'
-        | 'INVALID_AUTH'
-        | 'NOT_FOUND';
+    error: 'UNKNOWN_ERROR' | 'INVALID_REQUEST' | 'INVALID_AUTH' | 'NOT_FOUND';
 }

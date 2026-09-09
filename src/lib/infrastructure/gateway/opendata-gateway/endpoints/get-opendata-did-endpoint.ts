@@ -3,11 +3,7 @@ import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 
 export default class GetOpenDataDIDEndpoint extends BaseEndpoint<OpenDataDIDDTO> {
-    constructor(
-        private rucioAuthToken: string,
-        private scope: string,
-        private name: string,
-    ) {
+    constructor(private rucioAuthToken: string, private scope: string, private name: string) {
         super();
     }
 
@@ -34,10 +30,7 @@ export default class GetOpenDataDIDEndpoint extends BaseEndpoint<OpenDataDIDDTO>
         this.initialized = true;
     }
 
-    reportErrors(
-        statusCode: number,
-        response: Response,
-    ): Promise<OpenDataDIDDTO | undefined> {
+    reportErrors(statusCode: number, response: Response): Promise<OpenDataDIDDTO | undefined> {
         return Promise.resolve(undefined);
     }
 
@@ -72,5 +65,5 @@ export default class GetOpenDataDIDEndpoint extends BaseEndpoint<OpenDataDIDDTO>
         };
 
         return dto;
-}
+    }
 }

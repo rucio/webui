@@ -2,19 +2,14 @@ import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import type OpenDataGatewayOutputPort from '@/lib/core/port/secondary/opendata-gateway-output-port';
-import {
-    ListOpenDataDIDsInputPort,
-    type ListOpenDataDIDsOutputPort,
-} from '@/lib/core/port/primary/list-opendata-dids-ports';
+import { ListOpenDataDIDsInputPort, type ListOpenDataDIDsOutputPort } from '@/lib/core/port/primary/list-opendata-dids-ports';
 import {
     ListOpenDataDIDsError,
     ListOpenDataDIDsRequest,
     ListOpenDataDIDsResponse,
 } from '@/lib/core/usecase-models/list-opendata-dids-usecase-models';
 
-type ListOpenDataDIDsDTO = Awaited<
-    ReturnType<OpenDataGatewayOutputPort['listOpenDataDIDs']>
->;
+type ListOpenDataDIDsDTO = Awaited<ReturnType<OpenDataGatewayOutputPort['listOpenDataDIDs']>>;
 
 @injectable()
 class ListOpenDataDIDsUseCase
@@ -26,16 +21,11 @@ class ListOpenDataDIDsUseCase
     >
     implements ListOpenDataDIDsInputPort
 {
-    constructor(
-        protected readonly presenter: ListOpenDataDIDsOutputPort,
-        private readonly gateway: OpenDataGatewayOutputPort,
-    ) {
+    constructor(protected readonly presenter: ListOpenDataDIDsOutputPort, private readonly gateway: OpenDataGatewayOutputPort) {
         super(presenter);
     }
 
-    validateRequestModel(
-        requestModel: AuthenticatedRequestModel<ListOpenDataDIDsRequest>,
-    ): ListOpenDataDIDsError | undefined {
+    validateRequestModel(requestModel: AuthenticatedRequestModel<ListOpenDataDIDsRequest>): ListOpenDataDIDsError | undefined {
         if (!requestModel.rucioAuthToken) {
             return {
                 status: 'error',
@@ -46,11 +36,7 @@ class ListOpenDataDIDsUseCase
             };
         }
 
-        if (
-            requestModel.limit !== undefined &&
-            (!Number.isInteger(requestModel.limit) ||
-                requestModel.limit <= 0)
-        ) {
+        if (requestModel.limit !== undefined && (!Number.isInteger(requestModel.limit) || requestModel.limit <= 0)) {
             return {
                 status: 'error',
                 code: 400,
@@ -60,11 +46,7 @@ class ListOpenDataDIDsUseCase
             };
         }
 
-        if (
-            requestModel.offset !== undefined &&
-            (!Number.isInteger(requestModel.offset) ||
-                requestModel.offset < 0)
-        ) {
+        if (requestModel.offset !== undefined && (!Number.isInteger(requestModel.offset) || requestModel.offset < 0)) {
             return {
                 status: 'error',
                 code: 400,
@@ -77,20 +59,11 @@ class ListOpenDataDIDsUseCase
         return undefined;
     }
 
-    async makeGatewayRequest(
-        requestModel: AuthenticatedRequestModel<ListOpenDataDIDsRequest>,
-    ): Promise<ListOpenDataDIDsDTO> {
-        return this.gateway.listOpenDataDIDs(
-            requestModel.rucioAuthToken,
-            requestModel.limit,
-            requestModel.offset,
-            requestModel.state,
-        );
+    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListOpenDataDIDsRequest>): Promise<ListOpenDataDIDsDTO> {
+        return this.gateway.listOpenDataDIDs(requestModel.rucioAuthToken, requestModel.limit, requestModel.offset, requestModel.state);
     }
 
-    handleGatewayError(
-        error: ListOpenDataDIDsDTO,
-    ): ListOpenDataDIDsError {
+    handleGatewayError(error: ListOpenDataDIDsDTO): ListOpenDataDIDsError {
         let errorType: ListOpenDataDIDsError['error'];
 
         switch (error.errorCode) {
@@ -121,9 +94,7 @@ class ListOpenDataDIDsUseCase
         };
     }
 
-    processDTO(
-        dto: ListOpenDataDIDsDTO,
-    ): {
+    processDTO(dto: ListOpenDataDIDsDTO): {
         data: ListOpenDataDIDsResponse | ListOpenDataDIDsError;
         status: 'success' | 'error';
     } {

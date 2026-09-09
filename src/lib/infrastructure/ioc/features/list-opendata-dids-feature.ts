@@ -7,12 +7,8 @@ import {
 import { BaseFeature } from '@/lib/sdk/ioc-helpers';
 import { FeatureKey } from '@/lib/core/entity/feature-config';
 import { Container } from 'inversify';
-import ListOpenDataDIDsController, {
-    ListOpenDataDIDsControllerParameters,
-} from '../../controller/list-opendata-dids-controller';
-import ListOpenDataDIDsPresenter, {
-    ListOpenDataDIDsViewModel,
-} from '@/lib/infrastructure/presenter/list-opendata-dids-presenter';
+import ListOpenDataDIDsController, { ListOpenDataDIDsControllerParameters } from '../../controller/list-opendata-dids-controller';
+import ListOpenDataDIDsPresenter, { ListOpenDataDIDsViewModel } from '@/lib/infrastructure/presenter/list-opendata-dids-presenter';
 import CONTROLLERS from '../ioc-symbols-controllers';
 import GATEWAYS from '../ioc-symbols-gateway';
 import INPUT_PORT from '../ioc-symbols-input-port';

@@ -91,10 +91,7 @@ export const TipsProvider: React.FC<TipsProviderProps> = ({ children }) => {
     const [activeTip, setActiveTip] = useState<Tip | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    const allTips = useMemo(
-        () => getAllTips().filter(tip => tip.category !== TipCategory.OPENDATA || openDataEnabled),
-        [openDataEnabled],
-    );
+    const allTips = useMemo(() => getAllTips().filter(tip => tip.category !== TipCategory.OPENDATA || openDataEnabled), [openDataEnabled]);
 
     // Initialize from localStorage on mount
     useEffect(() => {

@@ -1,17 +1,9 @@
-import {
-    ListOpenDataDIDsDTO,
-    OpenDataDIDListItemDTO,
-} from '@/lib/core/dto/opendata-dto';
+import { ListOpenDataDIDsDTO, OpenDataDIDListItemDTO } from '@/lib/core/dto/opendata-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 
 export default class ListOpenDataDIDsEndpoint extends BaseEndpoint<ListOpenDataDIDsDTO> {
-    constructor(
-        private rucioAuthToken: string,
-        private limit?: number,
-        private offset?: number,
-        private state?: string,
-    ) {
+    constructor(private rucioAuthToken: string, private limit?: number, private offset?: number, private state?: string) {
         super();
     }
 
@@ -51,10 +43,7 @@ export default class ListOpenDataDIDsEndpoint extends BaseEndpoint<ListOpenDataD
         this.initialized = true;
     }
 
-    reportErrors(
-        statusCode: number,
-        response: Response,
-    ): Promise<ListOpenDataDIDsDTO | undefined> {
+    reportErrors(statusCode: number, response: Response): Promise<ListOpenDataDIDsDTO | undefined> {
         return Promise.resolve(undefined);
     }
 

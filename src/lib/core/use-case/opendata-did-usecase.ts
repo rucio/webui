@@ -3,37 +3,20 @@ import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { injectable } from 'inversify';
 
 import { OpenDataDIDDTO } from '@/lib/core/dto/opendata-dto';
-import {
-    OpenDataDIDInputPort,
-    type OpenDataDIDOutputPort,
-} from '@/lib/core/port/primary/opendata-did-ports';
+import { OpenDataDIDInputPort, type OpenDataDIDOutputPort } from '@/lib/core/port/primary/opendata-did-ports';
 import type OpenDataGatewayOutputPort from '@/lib/core/port/secondary/opendata-gateway-output-port';
-import {
-    OpenDataDIDError,
-    OpenDataDIDRequest,
-    OpenDataDIDResponse,
-} from '@/lib/core/usecase-models/opendata-did-usecase-models';
+import { OpenDataDIDError, OpenDataDIDRequest, OpenDataDIDResponse } from '@/lib/core/usecase-models/opendata-did-usecase-models';
 
 @injectable()
 class OpenDataDIDUseCase
-    extends BaseSingleEndpointUseCase<
-        AuthenticatedRequestModel<OpenDataDIDRequest>,
-        OpenDataDIDResponse,
-        OpenDataDIDError,
-        OpenDataDIDDTO
-    >
+    extends BaseSingleEndpointUseCase<AuthenticatedRequestModel<OpenDataDIDRequest>, OpenDataDIDResponse, OpenDataDIDError, OpenDataDIDDTO>
     implements OpenDataDIDInputPort
 {
-    constructor(
-        protected readonly presenter: OpenDataDIDOutputPort,
-        private readonly gateway: OpenDataGatewayOutputPort,
-    ) {
+    constructor(protected readonly presenter: OpenDataDIDOutputPort, private readonly gateway: OpenDataGatewayOutputPort) {
         super(presenter);
     }
 
-    validateRequestModel(
-        requestModel: AuthenticatedRequestModel<OpenDataDIDRequest>,
-    ): OpenDataDIDError | undefined {
+    validateRequestModel(requestModel: AuthenticatedRequestModel<OpenDataDIDRequest>): OpenDataDIDError | undefined {
         if (!requestModel.scope) {
             return {
                 status: 'error',
@@ -67,14 +50,8 @@ class OpenDataDIDUseCase
         return undefined;
     }
 
-    async makeGatewayRequest(
-        requestModel: AuthenticatedRequestModel<OpenDataDIDRequest>,
-    ): Promise<OpenDataDIDDTO> {
-        return this.gateway.getOpenDataDID(
-            requestModel.rucioAuthToken,
-            requestModel.scope,
-            requestModel.did,
-        );
+    async makeGatewayRequest(requestModel: AuthenticatedRequestModel<OpenDataDIDRequest>): Promise<OpenDataDIDDTO> {
+        return this.gateway.getOpenDataDID(requestModel.rucioAuthToken, requestModel.scope, requestModel.did);
     }
 
     handleGatewayError(error: OpenDataDIDDTO): OpenDataDIDError {
@@ -108,9 +85,7 @@ class OpenDataDIDUseCase
         };
     }
 
-    processDTO(
-        dto: OpenDataDIDDTO,
-    ): {
+    processDTO(dto: OpenDataDIDDTO): {
         data: OpenDataDIDResponse | OpenDataDIDError;
         status: 'success' | 'error';
     } {

@@ -22,32 +22,19 @@ const parseDownloadLink = (url: string): DownloadLink => {
 
         return {
             url,
-            protocol:
-                separatorIndex > 0
-                    ? url.slice(0, separatorIndex).toUpperCase()
-                    : 'DOWNLOAD',
+            protocol: separatorIndex > 0 ? url.slice(0, separatorIndex).toUpperCase() : 'DOWNLOAD',
         };
     }
 };
 
-export const OpenDataDownloadMenu = ({
-    urls,
-}: OpenDataDownloadMenuProps) => {
+export const OpenDataDownloadMenu = ({ urls }: OpenDataDownloadMenuProps) => {
     if (urls.length === 0) {
-        return (
-            <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                Unavailable
-            </span>
-        );
+        return <span className="text-sm text-neutral-500 dark:text-neutral-400">Unavailable</span>;
     }
 
     const links = urls.map(parseDownloadLink);
 
-    const hosts = new Set(
-        links
-            .map(link => link.host)
-            .filter((host): host is string => Boolean(host)),
-    );
+    const hosts = new Set(links.map(link => link.host).filter((host): host is string => Boolean(host)));
 
     const showHosts = hosts.size > 1;
 
@@ -59,26 +46,18 @@ export const OpenDataDownloadMenu = ({
 
             <div className="absolute right-0 z-20 mt-1 min-w-48 overflow-hidden rounded-md border border-neutral-200 bg-neutral-0 shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
                 {links.map((link, index) => {
-                    const openInNewTab =
-                        link.protocol === 'HTTP' ||
-                        link.protocol === 'HTTPS';
+                    const openInNewTab = link.protocol === 'HTTP' || link.protocol === 'HTTPS';
 
                     return (
                         <a
                             key={`${link.url}-${index}`}
                             href={link.url}
                             target={openInNewTab ? '_blank' : undefined}
-                            rel={
-                                openInNewTab
-                                    ? 'noopener noreferrer'
-                                    : undefined
-                            }
+                            rel={openInNewTab ? 'noopener noreferrer' : undefined}
                             className="block whitespace-nowrap px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
                         >
                             Download via {link.protocol}
-                            {showHosts && link.host
-                                ? ` — ${link.host}`
-                                : ''}
+                            {showHosts && link.host ? ` — ${link.host}` : ''}
                         </a>
                     );
                 })}

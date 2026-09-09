@@ -1,31 +1,13 @@
 'use client';
 
-import {
-    FormEvent,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 
 import { AgGridReact } from 'ag-grid-react';
-import {
-    ColDef,
-    SelectionChangedEvent,
-    ValueGetterParams,
-} from 'ag-grid-community';
+import { ColDef, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
 
-import {
-    HiFilter,
-    HiOutlineChevronDoubleLeft,
-    HiOutlineChevronDoubleRight,
-    HiOutlineChevronLeft,
-    HiOutlineChevronRight,
-} from 'react-icons/hi';
+import { HiFilter, HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight, HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
-import {
-    HiChevronDown,
-    HiChevronUp,
-} from 'react-icons/hi2';
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 
 import { Button } from '@/component-library/atoms/form/button';
 import { Input } from '@/component-library/atoms/form/input';
@@ -66,37 +48,24 @@ type GetOpenDataDIDResponse = {
 
 const DEFAULT_LIMIT = 50;
 
-const OpenDataFilterField = ({
-    label,
-    children,
-}: {
-    label: string;
-    children: React.ReactNode;
-}) => (
+const OpenDataFilterField = ({ label, children }: { label: string; children: React.ReactNode }) => (
     <div className="flex flex-col grow">
-        <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            {label}
-        </label>
+        <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">{label}</label>
 
         {children}
     </div>
 );
 
 export const ListOpenDataDIDs = () => {
-    const [dids, setDids] =
-        useState<OpenDataDIDListItem[]>([]);
+    const [dids, setDids] = useState<OpenDataDIDListItem[]>([]);
 
-    const [selectedDID, setSelectedDID] =
-        useState<OpenDataDIDListItem | null>(null);
+    const [selectedDID, setSelectedDID] = useState<OpenDataDIDListItem | null>(null);
 
-    const [meta, setMeta] =
-        useState<DIDMetaViewModel>();
+    const [meta, setMeta] = useState<DIDMetaViewModel>();
 
-    const [isMetaLoading, setIsMetaLoading] =
-        useState(false);
+    const [isMetaLoading, setIsMetaLoading] = useState(false);
 
-    const [hasMetaError, setHasMetaError] =
-        useState(false);
+    const [hasMetaError, setHasMetaError] = useState(false);
 
     const [total, setTotal] = useState(0);
     const [offset, setOffset] = useState(0);
@@ -105,36 +74,24 @@ export const ListOpenDataDIDs = () => {
     const [name, setName] = useState('');
     const [state, setState] = useState('');
 
-    const [limit, setLimit] =
-        useState(String(DEFAULT_LIMIT));
+    const [limit, setLimit] = useState(String(DEFAULT_LIMIT));
 
-    const [appliedState, setAppliedState] =
-        useState('');
+    const [appliedState, setAppliedState] = useState('');
 
-    const [appliedLimit, setAppliedLimit] =
-        useState(DEFAULT_LIMIT);
+    const [appliedLimit, setAppliedLimit] = useState(DEFAULT_LIMIT);
 
-    const [isFilterExpanded, setIsFilterExpanded] =
-        useState(false);
+    const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
-    const [isLoading, setIsLoading] =
-        useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [error, setError] =
-        useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-    const tableRef =
-        useRef<AgGridReact<OpenDataDIDListItem>>(null);
+    const tableRef = useRef<AgGridReact<OpenDataDIDListItem>>(null);
 
-    const [columnDefs] = useState<
-        ColDef<OpenDataDIDListItem>[]
-    >([
+    const [columnDefs] = useState<ColDef<OpenDataDIDListItem>[]>([
         {
             headerName: 'Identifier',
-            valueGetter: (
-                params:
-                    ValueGetterParams<OpenDataDIDListItem>,
-            ) => {
+            valueGetter: (params: ValueGetterParams<OpenDataDIDListItem>) => {
                 if (!params.data) {
                     return '';
                 }
@@ -156,11 +113,7 @@ export const ListOpenDataDIDs = () => {
         },
     ]);
 
-    const loadDIDs = async (
-        requestedOffset: number,
-        requestedState: string,
-        requestedLimit: number,
-    ) => {
+    const loadDIDs = async (requestedOffset: number, requestedState: string, requestedLimit: number) => {
         setIsLoading(true);
         setError(null);
 
@@ -171,27 +124,15 @@ export const ListOpenDataDIDs = () => {
             });
 
             if (requestedState.trim()) {
-                params.set(
-                    'state',
-                    requestedState.trim(),
-                );
+                params.set('state', requestedState.trim());
             }
 
-            const response = await fetch(
-                `/api/feature/list-opendata-dids?${params.toString()}`,
-            );
+            const response = await fetch(`/api/feature/list-opendata-dids?${params.toString()}`);
 
-            const data =
-                (await response.json()) as ListOpenDataDIDsResponse;
+            const data = (await response.json()) as ListOpenDataDIDsResponse;
 
-            if (
-                !response.ok ||
-                data.status === 'error'
-            ) {
-                throw new Error(
-                    data.message ??
-                        'Failed to retrieve OpenData DIDs',
-                );
+            if (!response.ok || data.status === 'error') {
+                throw new Error(data.message ?? 'Failed to retrieve OpenData DIDs');
             }
 
             setDids(data.dids);
@@ -204,21 +145,13 @@ export const ListOpenDataDIDs = () => {
             setOffset(0);
             setSelectedDID(null);
 
-            setError(
-                error instanceof Error
-                    ? error.message
-                    : 'Failed to retrieve OpenData DIDs',
-            );
+            setError(error instanceof Error ? error.message : 'Failed to retrieve OpenData DIDs');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const loadSingleDID = async (
-        requestedScope: string,
-        requestedName: string,
-        requestedState: string,
-    ) => {
+    const loadSingleDID = async (requestedScope: string, requestedName: string, requestedState: string) => {
         setIsLoading(true);
         setError(null);
 
@@ -228,28 +161,15 @@ export const ListOpenDataDIDs = () => {
                 name: requestedName,
             });
 
-            const response = await fetch(
-                `/api/feature/get-opendata-did?${params.toString()}`,
-            );
+            const response = await fetch(`/api/feature/get-opendata-did?${params.toString()}`);
 
-            const data =
-                (await response.json()) as GetOpenDataDIDResponse;
+            const data = (await response.json()) as GetOpenDataDIDResponse;
 
-            if (
-                !response.ok ||
-                data.status === 'error'
-            ) {
-                throw new Error(
-                    data.message ??
-                        'OpenData DID not found',
-                );
+            if (!response.ok || data.status === 'error') {
+                throw new Error(data.message ?? 'OpenData DID not found');
             }
 
-            if (
-                requestedState &&
-                data.state?.toLowerCase() !==
-                    requestedState.toLowerCase()
-            ) {
+            if (requestedState && data.state?.toLowerCase() !== requestedState.toLowerCase()) {
                 setDids([]);
                 setTotal(0);
                 setOffset(0);
@@ -274,22 +194,14 @@ export const ListOpenDataDIDs = () => {
             setOffset(0);
             setSelectedDID(null);
 
-            setError(
-                error instanceof Error
-                    ? error.message
-                    : 'Failed to retrieve OpenData DID',
-            );
+            setError(error instanceof Error ? error.message : 'Failed to retrieve OpenData DID');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const onSelectionChanged = (
-        event:
-            SelectionChangedEvent<OpenDataDIDListItem>,
-    ) => {
-        const selectedRows =
-            event.api.getSelectedRows();
+    const onSelectionChanged = (event: SelectionChangedEvent<OpenDataDIDListItem>) => {
+        const selectedRows = event.api.getSelectedRows();
 
         if (selectedRows.length === 1) {
             setSelectedDID(selectedRows[0]);
@@ -313,52 +225,38 @@ export const ListOpenDataDIDs = () => {
             return;
         }
 
-        const abortController =
-            new AbortController();
+        const abortController = new AbortController();
 
         const loadMeta = async () => {
             setIsMetaLoading(true);
             setHasMetaError(false);
 
             try {
-                const params =
-                    new URLSearchParams({
-                        scope: selectedDID.scope,
-                        name: selectedDID.name,
-                    });
+                const params = new URLSearchParams({
+                    scope: selectedDID.scope,
+                    name: selectedDID.name,
+                });
 
-                const response = await fetch(
-                    `/api/feature/get-did-meta?${params.toString()}`,
-                    {
-                        signal:
-                            abortController.signal,
-                    },
-                );
+                const response = await fetch(`/api/feature/get-did-meta?${params.toString()}`, {
+                    signal: abortController.signal,
+                });
 
                 if (!response.ok) {
-                    throw new Error(
-                        response.statusText,
-                    );
+                    throw new Error(response.statusText);
                 }
 
-                const data =
-                    (await response.json()) as DIDMetaViewModel;
+                const data = (await response.json()) as DIDMetaViewModel;
 
                 setMeta(data);
             } catch (error) {
-                if (
-                    error instanceof DOMException &&
-                    error.name === 'AbortError'
-                ) {
+                if (error instanceof DOMException && error.name === 'AbortError') {
                     return;
                 }
 
                 setMeta(undefined);
                 setHasMetaError(true);
             } finally {
-                if (
-                    !abortController.signal.aborted
-                ) {
+                if (!abortController.signal.aborted) {
                     setIsMetaLoading(false);
                 }
             }
@@ -372,11 +270,7 @@ export const ListOpenDataDIDs = () => {
     }, [selectedDID]);
 
     useEffect(() => {
-        void loadDIDs(
-            0,
-            '',
-            DEFAULT_LIMIT,
-        );
+        void loadDIDs(0, '', DEFAULT_LIMIT);
     }, []);
 
     const applyFilters = () => {
@@ -384,29 +278,19 @@ export const ListOpenDataDIDs = () => {
         const requestedName = name.trim();
         const requestedState = state.trim();
 
-        const hasScope =
-            requestedScope.length > 0;
+        const hasScope = requestedScope.length > 0;
 
-        const hasName =
-            requestedName.length > 0;
+        const hasName = requestedName.length > 0;
 
         if (hasScope !== hasName) {
-            setError(
-                'Scope and name must be provided together.',
-            );
+            setError('Scope and name must be provided together.');
             return;
         }
 
-        const requestedLimit =
-            Number(limit);
+        const requestedLimit = Number(limit);
 
-        if (
-            !Number.isInteger(requestedLimit) ||
-            requestedLimit <= 0
-        ) {
-            setError(
-                'Limit must be a positive integer.',
-            );
+        if (!Number.isInteger(requestedLimit) || requestedLimit <= 0) {
+            setError('Limit must be a positive integer.');
             return;
         }
 
@@ -414,123 +298,67 @@ export const ListOpenDataDIDs = () => {
         setAppliedLimit(requestedLimit);
 
         if (hasScope && hasName) {
-            void loadSingleDID(
-                requestedScope,
-                requestedName,
-                requestedState,
-            );
+            void loadSingleDID(requestedScope, requestedName, requestedState);
 
             return;
         }
 
-        void loadDIDs(
-            0,
-            requestedState,
-            requestedLimit,
-        );
+        void loadDIDs(0, requestedState, requestedLimit);
     };
 
-    const onSearch = (
-        event: FormEvent,
-    ) => {
+    const onSearch = (event: FormEvent) => {
         event.preventDefault();
         applyFilters();
     };
 
-    const onStop = (
-        event: FormEvent,
-    ) => {
+    const onStop = (event: FormEvent) => {
         event.preventDefault();
     };
 
     const previousPage = () => {
-        const nextOffset =
-            Math.max(
-                0,
-                offset - appliedLimit,
-            );
+        const nextOffset = Math.max(0, offset - appliedLimit);
 
-        void loadDIDs(
-            nextOffset,
-            appliedState,
-            appliedLimit,
-        );
+        void loadDIDs(nextOffset, appliedState, appliedLimit);
     };
 
     const nextPage = () => {
-        void loadDIDs(
-            offset + appliedLimit,
-            appliedState,
-            appliedLimit,
-        );
+        void loadDIDs(offset + appliedLimit, appliedState, appliedLimit);
     };
 
-    const hasPreviousPage =
-        offset > 0;
+    const hasPreviousPage = offset > 0;
 
-    const hasNextPage =
-        offset + dids.length < total;
+    const hasNextPage = offset + dids.length < total;
 
-    const totalPages =
-        total === 0
-            ? 0
-            : Math.ceil(
-                  total / appliedLimit,
-              );
+    const totalPages = total === 0 ? 0 : Math.ceil(total / appliedLimit);
 
-    const currentPage =
-        total === 0
-            ? 0
-            : Math.floor(
-                  offset / appliedLimit,
-              ) + 1;
+    const currentPage = total === 0 ? 0 : Math.floor(offset / appliedLimit) + 1;
 
     const goToFirstPage = () => {
-        if (
-            !hasPreviousPage ||
-            isLoading
-        ) {
+        if (!hasPreviousPage || isLoading) {
             return;
         }
 
-        void loadDIDs(
-            0,
-            appliedState,
-            appliedLimit,
-        );
+        void loadDIDs(0, appliedState, appliedLimit);
     };
 
     const goToLastPage = () => {
-        if (
-            !hasNextPage ||
-            isLoading ||
-            total === 0
-        ) {
+        if (!hasNextPage || isLoading || total === 0) {
             return;
         }
 
-        const lastOffset =
-            Math.floor(
-                (total - 1) /
-                    appliedLimit,
-            ) * appliedLimit;
+        const lastOffset = Math.floor((total - 1) / appliedLimit) * appliedLimit;
 
-        void loadDIDs(
-            lastOffset,
-            appliedState,
-            appliedLimit,
-        );
+        void loadDIDs(lastOffset, appliedState, appliedLimit);
     };
 
-    const paginationButtonClasses =
-        [
-            'text-l',
-            'px-1',
-            'text-neutral-800',
-            'dark:text-neutral-100',
-            'disabled:text-neutral-400',
-            'disabled:dark:text-neutral-500',
-        ].join(' ');
+    const paginationButtonClasses = [
+        'text-l',
+        'px-1',
+        'text-neutral-800',
+        'dark:text-neutral-100',
+        'disabled:text-neutral-400',
+        'disabled:dark:text-neutral-500',
+    ].join(' ');
 
     return (
         <div className="flex flex-col space-y-6 w-full">
@@ -545,60 +373,24 @@ export const ListOpenDataDIDs = () => {
                                     placeholder="scope"
                                     className="max-w-[250px]"
                                     value={scope}
-                                    onChange={
-                                        event =>
-                                            setScope(
-                                                event
-                                                    .target
-                                                    .value,
-                                            )
-                                    }
-                                    onEnterKey={
-                                        onSearch
-                                    }
+                                    onChange={event => setScope(event.target.value)}
+                                    onEnterKey={onSearch}
                                 />
 
-                                <span className="text-neutral-900 dark:text-neutral-100 font-bold">
-                                    :
-                                </span>
+                                <span className="text-neutral-900 dark:text-neutral-100 font-bold">:</span>
 
-                                <Input
-                                    placeholder="name"
-                                    value={name}
-                                    onChange={
-                                        event =>
-                                            setName(
-                                                event
-                                                    .target
-                                                    .value,
-                                            )
-                                    }
-                                    onEnterKey={
-                                        onSearch
-                                    }
-                                />
+                                <Input placeholder="name" value={name} onChange={event => setName(event.target.value)} onEnterKey={onSearch} />
 
                                 <Button
                                     className="px-3"
                                     variant="neutral"
-                                    onClick={() =>
-                                        setIsFilterExpanded(
-                                            previous =>
-                                                !previous,
-                                        )
-                                    }
-                                    aria-expanded={
-                                        isFilterExpanded
-                                    }
+                                    onClick={() => setIsFilterExpanded(previous => !previous)}
+                                    aria-expanded={isFilterExpanded}
                                     aria-label="Toggle filters"
                                 >
                                     <HiFilter />
 
-                                    {isFilterExpanded ? (
-                                        <HiChevronUp className="ml-1" />
-                                    ) : (
-                                        <HiChevronDown className="ml-1" />
-                                    )}
+                                    {isFilterExpanded ? <HiChevronUp className="ml-1" /> : <HiChevronDown className="ml-1" />}
                                 </Button>
                             </div>
                         </div>
@@ -609,20 +401,9 @@ export const ListOpenDataDIDs = () => {
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <OpenDataFilterField label="State">
                                         <Input
-                                            value={
-                                                state
-                                            }
-                                            onChange={
-                                                event =>
-                                                    setState(
-                                                        event
-                                                            .target
-                                                            .value,
-                                                    )
-                                            }
-                                            onEnterKey={
-                                                onSearch
-                                            }
+                                            value={state}
+                                            onChange={event => setState(event.target.value)}
+                                            onEnterKey={onSearch}
                                             placeholder="OpenData state"
                                             className="w-full"
                                         />
@@ -631,20 +412,9 @@ export const ListOpenDataDIDs = () => {
                                     <OpenDataFilterField label="Limit">
                                         <Input
                                             type="number"
-                                            value={
-                                                limit
-                                            }
-                                            onChange={
-                                                event =>
-                                                    setLimit(
-                                                        event
-                                                            .target
-                                                            .value,
-                                                    )
-                                            }
-                                            onEnterKey={
-                                                onSearch
-                                            }
+                                            value={limit}
+                                            onChange={event => setLimit(event.target.value)}
+                                            onEnterKey={onSearch}
                                             placeholder="Maximum number of DIDs returned"
                                             className="w-full"
                                         />
@@ -653,12 +423,7 @@ export const ListOpenDataDIDs = () => {
                             </div>
                         )}
 
-                        <SearchButton
-                            className="order-3 md:order-2 sm:w-full md:w-48"
-                            isRunning={false}
-                            onStop={onStop}
-                            onSearch={onSearch}
-                        />
+                        <SearchButton className="order-3 md:order-2 sm:w-full md:w-48" isRunning={false} onStop={onStop} onSearch={onSearch} />
                     </div>
                 </div>
             </div>
@@ -686,30 +451,16 @@ export const ListOpenDataDIDs = () => {
                          */}
                         <div className="flex-1 min-h-0 [&>div>div:last-child]:hidden">
                             <RegularTable
-                                tableRef={
-                                    tableRef
-                                }
+                                tableRef={tableRef}
                                 rowData={dids}
-                                columnDefs={
-                                    columnDefs
-                                }
+                                columnDefs={columnDefs}
                                 rowSelection={{
-                                    mode:
-                                        'singleRow',
-                                    enableClickSelection:
-                                        true,
+                                    mode: 'singleRow',
+                                    enableClickSelection: true,
                                 }}
-                                onSelectionChanged={
-                                    onSelectionChanged
-                                }
-                                paginationPageSize={Math.max(
-                                    dids.length,
-                                    1,
-                                )}
-                                getRowId={
-                                    params =>
-                                        `${params.data.scope}:${params.data.name}`
-                                }
+                                onSelectionChanged={onSelectionChanged}
+                                paginationPageSize={Math.max(dids.length, 1)}
+                                getRowId={params => `${params.data.scope}:${params.data.name}`}
                             />
                         </div>
 
@@ -718,72 +469,31 @@ export const ListOpenDataDIDs = () => {
                             <div className="flex justify-center items-center">
                                 <button
                                     type="button"
-                                    disabled={
-                                        !hasPreviousPage ||
-                                        isLoading
-                                    }
-                                    onClick={
-                                        goToFirstPage
-                                    }
-                                    className={
-                                        paginationButtonClasses
-                                    }
+                                    disabled={!hasPreviousPage || isLoading}
+                                    onClick={goToFirstPage}
+                                    className={paginationButtonClasses}
                                 >
                                     <HiOutlineChevronDoubleLeft />
                                 </button>
 
                                 <button
                                     type="button"
-                                    disabled={
-                                        !hasPreviousPage ||
-                                        isLoading
-                                    }
-                                    onClick={
-                                        previousPage
-                                    }
-                                    className={
-                                        paginationButtonClasses
-                                    }
+                                    disabled={!hasPreviousPage || isLoading}
+                                    onClick={previousPage}
+                                    className={paginationButtonClasses}
                                 >
                                     <HiOutlineChevronLeft />
                                 </button>
 
                                 <span className="px-3">
-                                    Page{' '}
-                                    {currentPage}{' '}
-                                    of{' '}
-                                    {totalPages}
+                                    Page {currentPage} of {totalPages}
                                 </span>
 
-                                <button
-                                    type="button"
-                                    disabled={
-                                        !hasNextPage ||
-                                        isLoading
-                                    }
-                                    onClick={
-                                        nextPage
-                                    }
-                                    className={
-                                        paginationButtonClasses
-                                    }
-                                >
+                                <button type="button" disabled={!hasNextPage || isLoading} onClick={nextPage} className={paginationButtonClasses}>
                                     <HiOutlineChevronRight />
                                 </button>
 
-                                <button
-                                    type="button"
-                                    disabled={
-                                        !hasNextPage ||
-                                        isLoading
-                                    }
-                                    onClick={
-                                        goToLastPage
-                                    }
-                                    className={
-                                        paginationButtonClasses
-                                    }
-                                >
+                                <button type="button" disabled={!hasNextPage || isLoading} onClick={goToLastPage} className={paginationButtonClasses}>
                                     <HiOutlineChevronDoubleRight />
                                 </button>
                             </div>
@@ -793,15 +503,7 @@ export const ListOpenDataDIDs = () => {
 
                 {/* Same metadata panel used by /dids */}
                 <div className="w-full lg:w-96 shrink-0 lg:h-full">
-                    <ListDIDMeta
-                        meta={meta}
-                        isLoading={
-                            isMetaLoading
-                        }
-                        hasError={
-                            hasMetaError
-                        }
-                    />
+                    <ListDIDMeta meta={meta} isLoading={isMetaLoading} hasError={hasMetaError} />
                 </div>
             </div>
         </div>
