@@ -1,10 +1,4 @@
-import {
-    FEATURE_REGISTRY,
-    FeatureKey,
-    resolveFeatureEnabled,
-    resolveEnabledSet,
-    envKeyForFeature,
-} from '@/lib/core/entity/feature-config';
+import { FEATURE_REGISTRY, FeatureKey, resolveFeatureEnabled, resolveEnabledSet, envKeyForFeature } from '@/lib/core/entity/feature-config';
 
 describe('feature-config registry + resolution', () => {
     it('maps a dotted key to its FEATURE_ env var name', () => {
@@ -37,5 +31,15 @@ describe('feature-config registry + resolution', () => {
         const keys = Object.keys(FEATURE_REGISTRY) as FeatureKey[];
         keys.forEach(k => expect(typeof set[k]).toBe('boolean'));
         expect(Object.keys(set).sort()).toEqual(keys.sort());
+    });
+});
+
+describe('OpenData feature configuration', () => {
+    it('is disabled by default', () => {
+        expect(FEATURE_REGISTRY.opendata.default).toBe(false);
+    });
+
+    it('protects the OpenData DID page', () => {
+        expect(FEATURE_REGISTRY.opendata.pages).toContain('/opendata/dids');
     });
 });
