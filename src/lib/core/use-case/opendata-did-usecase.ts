@@ -36,23 +36,32 @@ class OpenDataDIDUseCase
     ): OpenDataDIDError | undefined {
         if (!requestModel.scope) {
             return {
+                status: 'error',
+                code: 400,
+                name: 'Invalid Request',
                 error: 'INVALID_REQUEST',
                 message: 'Scope is required',
-            } as OpenDataDIDError;
+            };
         }
 
         if (!requestModel.did) {
             return {
+                status: 'error',
+                code: 400,
+                name: 'Invalid Request',
                 error: 'INVALID_REQUEST',
                 message: 'DID is required',
-            } as OpenDataDIDError;
+            };
         }
 
         if (!requestModel.rucioAuthToken) {
             return {
+                status: 'error',
+                code: 401,
+                name: 'Authentication Error',
                 error: 'INVALID_AUTH',
                 message: 'Auth token is required',
-            } as OpenDataDIDError;
+            };
         }
 
         return undefined;
@@ -69,10 +78,34 @@ class OpenDataDIDUseCase
     }
 
     handleGatewayError(error: OpenDataDIDDTO): OpenDataDIDError {
+        let errorType: OpenDataDIDError['error'];
+
+        switch (error.errorCode) {
+            case 400:
+                errorType = 'INVALID_REQUEST';
+                break;
+
+            case 401:
+            case 403:
+                errorType = 'INVALID_AUTH';
+                break;
+
+            case 404:
+                errorType = 'NOT_FOUND';
+                break;
+
+            default:
+                errorType = 'UNKNOWN_ERROR';
+                break;
+        }
+
         return {
             status: 'error',
-            error: error.errorMessage,
-        } as OpenDataDIDError;
+            code: error.errorCode ?? 500,
+            name: error.errorName ?? 'Gateway Error',
+            error: errorType,
+            message: error.errorMessage ?? 'Unknown error',
+        };
     }
 
     processDTO(

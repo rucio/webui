@@ -208,7 +208,7 @@ export const TIPS: Tip[] = [
     {
         id: 'bookmarks',
         title: 'Bookmark Pages',
-        content: 'Bookmark frequently accessed DIDs, OpenData DIDs, rules, or RSEs in dashboard for quick access.',
+        content: 'Bookmark frequently accessed DIDs, rules, or RSEs in dashboard for quick access.',
         category: TipCategory.NAVIGATION,
         priority: 'helpful',
         variant: 'info',

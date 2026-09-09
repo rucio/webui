@@ -91,11 +91,32 @@ class ListOpenDataDIDsUseCase
     handleGatewayError(
         error: ListOpenDataDIDsDTO,
     ): ListOpenDataDIDsError {
+        let errorType: ListOpenDataDIDsError['error'];
+
+        switch (error.errorCode) {
+            case 400:
+                errorType = 'INVALID_REQUEST';
+                break;
+
+            case 401:
+            case 403:
+                errorType = 'INVALID_AUTH';
+                break;
+
+            case 404:
+                errorType = 'NOT_FOUND';
+                break;
+
+            default:
+                errorType = 'UNKNOWN_ERROR';
+                break;
+        }
+
         return {
             status: 'error',
             code: error.errorCode ?? 500,
             name: error.errorName ?? 'Gateway Error',
-            error: 'UNKNOWN_ERROR',
+            error: errorType,
             message: error.errorMessage ?? 'Unknown error',
         };
     }

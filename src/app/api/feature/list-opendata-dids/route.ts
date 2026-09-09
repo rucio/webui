@@ -8,12 +8,13 @@ import {
     parseQueryParams,
 } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
 import { ListOpenDataDIDsControllerParameters } from '@/lib/infrastructure/controller/list-opendata-dids-controller';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 /**
  * GET /api/feature/list-opendata-dids
  * Query params: limit, offset, state
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
     try {
         const params = parseQueryParams(request);
 
@@ -49,3 +50,8 @@ export async function GET(request: NextRequest) {
         );
     }
 }
+
+export const GET = withFeature(
+    CONTROLLERS.LIST_OPENDATA_DIDS,
+    getHandler,
+);

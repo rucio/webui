@@ -5,12 +5,13 @@ import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { BaseController } from '@/lib/sdk/controller';
 import { executeAuthenticatedController, parseQueryParams } from '@/lib/infrastructure/adapters/app-router-controller-adapter';
 import { OpenDataDIDControllerParameters } from '@/lib/infrastructure/controller/opendata-did-controller';
+import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 
 /**
  * GET /api/feature/get-opendata-did
  * Query params: scope, name
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
     try {
         const params = parseQueryParams(request);
         const scope = params.scope as string;
@@ -37,3 +38,8 @@ export async function GET(request: NextRequest) {
         );
     }
 }
+
+export const GET = withFeature(
+    CONTROLLERS.OPENDATA_DID,
+    getHandler,
+);

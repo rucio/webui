@@ -66,7 +66,11 @@ const getStringArray = (
     );
 };
 
-export const DetailsDIDOpenData: DetailsDIDView = ({ scope, name }) => {
+export const DetailsDIDOpenData: DetailsDIDView = ({
+    scope,
+    name,
+    isActive,
+}) => {
     const queryOpenData = async (): Promise<OpenDataResponse> => {
         const url =
             '/api/feature/get-opendata-did?' +
@@ -95,6 +99,7 @@ export const DetailsDIDOpenData: DetailsDIDView = ({ scope, name }) => {
     } = useQuery({
         queryKey: ['opendata', scope, name],
         queryFn: queryOpenData,
+        enabled: isActive === true,
         refetchOnWindowFocus: false,
         retry: false,
     });
