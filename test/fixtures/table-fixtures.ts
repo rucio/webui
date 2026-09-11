@@ -7,6 +7,7 @@ import {
     ReplicaState,
     RSEAttribute,
     RSEBlockState,
+    RSEDetailsProtocol,
     RSEProtocol,
     RSEType,
     RuleGrouping,
@@ -264,6 +265,38 @@ export function fixtureRSEProtocol(): RSEProtocol {
         },
         updated_at: faker.date.recent().toISOString(),
         created_at: faker.date.past().toISOString(),
+    };
+}
+
+export function fixtureRSEDetailsProtocol(): RSEDetailsProtocol {
+    return {
+        scheme: faker.helpers.arrayElement(['srm', 'gsiftp', 'root', 'davs', 's3', 'file']),
+        hostname: faker.internet.domainName(),
+        port: faker.number.int({ min: 0, max: 1e4 }),
+        // Deployed prefixes are deep storage paths, hence the length
+        prefix: faker.helpers.arrayElement([
+            '/tmp/rucio_rse/',
+            '/rucio/tmpdisk/rucio_tests/',
+            '/eos/atlas/atlasdatadisk/rucio/',
+            '/pnfs/rucio/disk-only/scratchdisk/',
+            '/pnfs/fnal.gov/usr/cms/WAX/11/store/',
+            '/dpm/in2p3.fr/home/cms/phedex/store/mc/RunIISummer20UL18/',
+        ]),
+        impl: 'rucio.rse.protocols.gfal.Default',
+        domains: {
+            lan: {
+                read: faker.number.int({ min: 0, max: 10 }),
+                write: faker.number.int({ min: 0, max: 10 }),
+                delete: faker.number.int({ min: 0, max: 10 }),
+            },
+            wan: {
+                read: faker.number.int({ min: 0, max: 10 }),
+                write: faker.number.int({ min: 0, max: 10 }),
+                delete: faker.number.int({ min: 0, max: 10 }),
+                third_party_copy_read: faker.number.int({ min: 0, max: 10 }),
+                third_party_copy_write: faker.number.int({ min: 0, max: 10 }),
+            },
+        },
     };
 }
 
