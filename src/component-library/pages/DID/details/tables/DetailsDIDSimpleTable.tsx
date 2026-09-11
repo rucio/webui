@@ -9,7 +9,8 @@ import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBad
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DIDType } from '@/lib/core/entity/rucio';
-import { buildDiscreteFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsDIDSimpleTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
@@ -27,16 +28,10 @@ const ClickableDID = (props: { value: string[] }) => {
     );
 };
 
-const DIDTypeDisplayNames = {
-    [DIDType.FILE]: 'File',
-    [DIDType.DATASET]: 'Dataset',
-    [DIDType.CONTAINER]: 'Container',
-    [DIDType.COLLECTION]: 'Collection',
-    [DIDType.ALL]: 'All',
-};
-
 export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
     const tableRef = useRef<AgGridReact<DIDViewModel>>(null);
+
+    const didTypeOptions = Object.values(DIDType).filter(value => value !== DIDType.ALL);
 
     const [columnDefs] = useState([
         {
@@ -59,8 +54,13 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(DIDTypeDisplayNames), Object.values(DIDType)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(didTypeOptions),
+            },
+            filterParams: {
+                options: didTypeOptions,
+            },
         },
     ]);
 
@@ -70,6 +70,7 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
             rowSelection={props.onSelectionChanged ? { mode: 'singleRow', enableClickSelection: true } : undefined}
             tableRef={tableRef}
             {...props}
+            enableFilterHandlers
         />
     );
 };

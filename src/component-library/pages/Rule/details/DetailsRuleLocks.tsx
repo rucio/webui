@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
-import { DefaultTextFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent, ValueGetterParams } from 'ag-grid-community';
 import { ListRuleReplicaLockStatesViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { LockState } from '@/lib/core/entity/rucio';
@@ -17,6 +17,7 @@ import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { HiExternalLink } from 'react-icons/hi';
 import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
@@ -194,6 +195,9 @@ const LockStateDisplayNames: Record<LockState, string> = {
 const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
     const tableRef = useRef<AgGridReact<ListRuleReplicaLockStatesViewModel>>(null);
 
+    const lockOptions = Object.values(LockState);
+    const valueFormatter = (value: LockState) => LockStateDisplayNames[value];
+
     const [columnDefs] = useState([
         {
             headerName: 'DID',
@@ -225,8 +229,14 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(LockStateDisplayNames), Object.values(LockState)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(lockOptions, valueFormatter),
+            },
+            filterParams: {
+                options: lockOptions,
+                valueFormatter: valueFormatter,
+            },
             sortable: true,
             comparator: lockStateComparator,
         },
@@ -261,7 +271,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
         });
     };
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} enableFilterHandlers />;
 };
 
 export const DetailsRuleLocks = ({ id, isActive, featureDDMDashboard }: { id: string; isActive?: boolean; featureDDMDashboard: boolean }) => {

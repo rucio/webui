@@ -4,11 +4,12 @@ import { GridReadyEvent } from 'ag-grid-community';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { buildDiscreteFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;
@@ -33,6 +34,9 @@ const ReplicaStateDisplayNames = {
 export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTableProps) => {
     const tableRef = useRef<AgGridReact<FileReplicaStateViewModel>>(null);
 
+    const replicaStateOptions = Object.values(ReplicaState);
+    const replicaStateValueFormatter = (value: ReplicaState) => ReplicaStateDisplayNames[value];
+
     const [columnDefs] = useState([
         {
             headerName: 'RSE',
@@ -51,10 +55,16 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(ReplicaStateDisplayNames), Object.values(ReplicaState)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(replicaStateOptions, replicaStateValueFormatter),
+            },
+            filterParams: {
+                options: replicaStateOptions,
+                valueFormatter: replicaStateValueFormatter,
+            },
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} enableFilterHandlers />;
 };

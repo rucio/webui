@@ -7,24 +7,18 @@ import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBad
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { RemovableCell } from '@/component-library/features/table/cells/selection-cells';
-import { buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { DIDType } from '@/lib/core/entity/rucio';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type StageDataTableProps = {
     rowData: ListDIDsViewModel[];
     removeDID: (item: ListDIDsViewModel) => void;
 };
 
-const DIDTypeDisplayNames = {
-    [DIDType.FILE]: 'File',
-    [DIDType.DATASET]: 'Dataset',
-    [DIDType.CONTAINER]: 'Container',
-    [DIDType.COLLECTION]: 'Collection',
-    [DIDType.ALL]: 'All',
-};
-
 export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => {
     const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null);
+
+    const didTypeOptions = Object.values(DIDType).filter(value => value !== DIDType.ALL);
 
     const [columnDefs] = useState([
         {
@@ -46,8 +40,13 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(DIDTypeDisplayNames), Object.values(DIDType)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(didTypeOptions),
+            },
+            filterParams: {
+                options: didTypeOptions,
+            },
         },
         {
             headerName: 'Size',
@@ -60,5 +59,5 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
         },
     ]);
 
-    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} {...props} enableFilterHandlers />;
 };
