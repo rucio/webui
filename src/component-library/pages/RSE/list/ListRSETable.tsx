@@ -6,10 +6,11 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
-import { DefaultTextFilterParams, DefaultBooleanFilterParams, buildDiscreteFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent } from 'ag-grid-community';
 import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
 import { RSEType } from '@/lib/core/entity/rucio';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type ListRSETableProps = {
     streamingHook: UseStreamReader<RSEViewModel>;
@@ -22,6 +23,10 @@ const ClickableName = (props: { value: string }) => {
 
 export const ListRSETable = (props: ListRSETableProps) => {
     const tableRef = useRef<AgGridReact<RSEViewModel>>(null);
+
+    const rseTypeOptions = Object.values(RSEType);
+    const booleanOptions = [true, false];
+    const booleanValueFormatter = (value: boolean) => value ? 'True' : 'False';
 
     const [columnDefs] = useState([
         {
@@ -45,8 +50,13 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(RSEType)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(rseTypeOptions),
+            },
+            filterParams: {
+                options: rseTypeOptions,
+            },
         },
         {
             headerName: 'Volatile',
@@ -55,8 +65,14 @@ export const ListRSETable = (props: ListRSETableProps) => {
             minWidth: 125,
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
-            filter: true,
-            filterParams: DefaultBooleanFilterParams,
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(booleanOptions, booleanValueFormatter),
+            },
+            filterParams: {
+                options: booleanOptions,
+                valueFormatter: booleanValueFormatter,
+            },
         },
         {
             headerName: 'Deterministic',
@@ -65,8 +81,14 @@ export const ListRSETable = (props: ListRSETableProps) => {
             minWidth: 175,
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
-            filter: true,
-            filterParams: DefaultBooleanFilterParams,
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(booleanOptions, booleanValueFormatter),
+            },
+            filterParams: {
+                options: booleanOptions,
+                valueFormatter: booleanValueFormatter,
+            },
         },
         {
             headerName: 'Staging',
@@ -75,10 +97,16 @@ export const ListRSETable = (props: ListRSETableProps) => {
             minWidth: 125,
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
-            filter: true,
-            filterParams: DefaultBooleanFilterParams,
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(booleanOptions, booleanValueFormatter),
+            },
+            filterParams: {
+                options: booleanOptions,
+                valueFormatter: booleanValueFormatter,
+            },
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} enableFilterHandlers />;
 };

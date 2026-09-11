@@ -5,10 +5,8 @@ import { ClickableCell } from '@/component-library/features/table/cells/Clickabl
 import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import {
-    buildDiscreteFilterParams,
     DefaultDateFilterParams,
     DefaultTextFilterParams,
-    RuleStateDisplayNames,
 } from '@/component-library/features/utils/filter-parameters';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { RuleState } from '@/lib/core/entity/rucio';
@@ -19,6 +17,7 @@ import { formatDate, formatSeconds } from '@/component-library/features/utils/te
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
@@ -44,6 +43,10 @@ const NullableRemainingLifetime = (props: { value: number }) => {
 
 export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null);
+
+    const ruleStateOptions = Object.values(RuleState);
+    const ruleStateValueFormatter = (value: RuleState) => value === RuleState.WAITING_APPROVAL ? 'Waiting Approval' : value;
+
 
     const [columnDefs] = useState([
         {
@@ -75,8 +78,14 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(ruleStateOptions, ruleStateValueFormatter),
+            },
+            filterParams: {
+                options: ruleStateOptions,
+                valueFormatter: ruleStateValueFormatter,
+            },
             sortable: true,
             comparator: ruleStateComparator,
         },
@@ -146,7 +155,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
         });
     };
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} enableFilterHandlers />;
 };
 
 export const DetailsDIDRules: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {

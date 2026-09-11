@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { buildDiscreteFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent, ICellRendererParams, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
@@ -10,6 +10,7 @@ import { SelectableCell } from '@/component-library/features/table/cells/selecti
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { DIDType } from '@/lib/core/entity/rucio';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 interface SelectableDIDViewModel extends ListDIDsViewModel {
     selected?: boolean;
@@ -23,16 +24,10 @@ type StageDataTableProps = {
     selectedItems: ListDIDsViewModel[];
 };
 
-const DIDTypeDisplayNames = {
-    [DIDType.FILE]: 'File',
-    [DIDType.DATASET]: 'Dataset',
-    [DIDType.CONTAINER]: 'Container',
-    [DIDType.COLLECTION]: 'Collection',
-    [DIDType.ALL]: 'All',
-};
-
 export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID, removeDID, selectedItems, ...props }) => {
     const tableRef = useRef<AgGridReact<SelectableDIDViewModel>>(null);
+
+    const didTypeOptions = Object.values(DIDType).filter(value => value !== DIDType.ALL);
 
     const [columnDefs] = useState([
         {
@@ -58,8 +53,13 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(DIDTypeDisplayNames), Object.values(DIDType)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(didTypeOptions),
+            },
+            filterParams: {
+                options: didTypeOptions,
+            },
         },
         {
             headerName: 'Size',
@@ -83,5 +83,5 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
         updateSelection();
     }, [selectedItems]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} onAsyncTransactionsFlushed={() => updateSelection()} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} onAsyncTransactionsFlushed={() => updateSelection()} {...props} enableFilterHandlers />;
 };

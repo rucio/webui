@@ -7,8 +7,6 @@ import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/fea
 import {
     DefaultTextFilterParams,
     DefaultDateFilterParams,
-    buildDiscreteFilterParams,
-    RuleStateDisplayNames,
 } from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent, ValueGetterParams } from 'ag-grid-community';
 import { RuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
@@ -18,6 +16,7 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { RuleState } from '@/lib/core/entity/rucio';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
@@ -51,6 +50,9 @@ const NullableRemainingLifetime = (props: { value: number }) => {
 
 export const ListRuleTable = (props: ListRuleTableProps) => {
     const tableRef = useRef<AgGridReact<RuleViewModel>>(null);
+
+    const stateOptions = Object.values(RuleState);
+    const ruleStateValueFormatter = (value: RuleState) => value === RuleState.WAITING_APPROVAL ? 'Waiting Approval' : value;
 
     const [columnDefs] = useState([
         {
@@ -95,8 +97,14 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(RuleStateDisplayNames), Object.values(RuleState)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(stateOptions, ruleStateValueFormatter),
+            },
+            filterParams: {
+                options: stateOptions,
+                valueFormatter: ruleStateValueFormatter,
+            },
             sortable: true,
             comparator: ruleStateComparator,
         },
@@ -165,5 +173,5 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
         });
     };
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} onGridReady={onGridReady} enableFilterHandlers />;
 };

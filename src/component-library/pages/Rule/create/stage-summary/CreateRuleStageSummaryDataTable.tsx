@@ -7,24 +7,19 @@ import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBad
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
-import { buildDiscreteFilterParams, DefaultTextFilterParams, DefaultBooleanFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DefaultTextFilterParams, DefaultBooleanFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { DIDType } from '@/lib/core/entity/rucio';
+import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type StageSummaryDataTableProps = {
     rowData: ListDIDsViewModel[];
     copies: number;
 };
 
-const DIDTypeDisplayNames = {
-    [DIDType.FILE]: 'File',
-    [DIDType.DATASET]: 'Dataset',
-    [DIDType.CONTAINER]: 'Container',
-    [DIDType.COLLECTION]: 'Collection',
-    [DIDType.ALL]: 'All',
-};
-
 export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProps) => {
     const tableRef = useRef<AgGridReact<ListDIDsViewModel>>(null);
+
+    const didTypeOptions = Object.values(DIDType).filter(value => value !== DIDType.ALL);
 
     const [columnDefs] = useState([
         {
@@ -45,8 +40,13 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            filter: true,
-            filterParams: buildDiscreteFilterParams(Object.values(DIDTypeDisplayNames), Object.values(DIDType)),
+            filter: {
+                component: AgMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(didTypeOptions),
+            },
+            filterParams: {
+                options: didTypeOptions,
+            },
         },
         {
             headerName: 'Copies',
@@ -95,5 +95,5 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
         },
     ]);
 
-    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} {...props} enableFilterHandlers />;
 };
