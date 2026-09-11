@@ -66,6 +66,16 @@ class ListOpenDataDIDsUseCase
     handleGatewayError(error: ListOpenDataDIDsDTO): ListOpenDataDIDsError {
         let errorType: ListOpenDataDIDsError['error'];
 
+        if (error.errorType === 'opendata_unsupported') {
+            return {
+                status: 'error',
+                code: error.errorCode ?? 404,
+                name: error.errorName ?? 'OpenData Unsupported',
+                error: 'FEATURE_UNSUPPORTED',
+                message: error.errorMessage ?? 'OpenData is not supported by this Rucio server.',
+            };
+        }
+
         switch (error.errorCode) {
             case 400:
                 errorType = 'INVALID_REQUEST';

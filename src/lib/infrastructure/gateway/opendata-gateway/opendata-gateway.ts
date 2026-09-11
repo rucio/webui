@@ -33,7 +33,22 @@ export default class RucioOpenDataGateway implements OpenDataGatewayOutputPort {
         try {
             const endpoint = new ListOpenDataDIDsEndpoint(rucioAuthToken, limit, offset, state);
 
-            return await endpoint.fetch();
+            const dto = await endpoint.fetch();
+
+            if (dto.status === 'error' && dto.errorCode === 404) {
+                return {
+                    ...dto,
+                    status: 'error',
+                    total: 0,
+                    offset: offset ?? 0,
+                    dids: [],
+                    errorName: 'OpenData Unsupported',
+                    errorType: 'opendata_unsupported',
+                    errorMessage: 'OpenData is not supported by this Rucio server.',
+                };
+            }
+
+            return dto;
         } catch (error) {
             return {
                 status: 'error',
