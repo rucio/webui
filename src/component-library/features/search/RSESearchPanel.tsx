@@ -43,7 +43,6 @@ export const RSESearchPanel = (props: SearchPanelProps) => {
         <div className="space-y-2">
             <div className="text-neutral-900 dark:text-neutral-100">
                 Expression
-                <HintLink href="https://rucio.github.io/documentation/started/concepts/rse_expressions" className="pl-2" />
             </div>
             <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-center sm:items-start">
                 <Input
