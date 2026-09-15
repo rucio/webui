@@ -1,6 +1,6 @@
 {
   "name": "rucio-webui",
-  "version": "38.3.5",
+  "version": "38.3.6",
   "private": true,
   "scripts": {
     "clean": "rimraf .next .swc",
@@ -73,7 +73,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@eslint/js": "^9.37.0",
-    "@faker-js/faker": "^8.0.1",
+    "@faker-js/faker": "^10.6.0",
     "@inrupt/jest-jsdom-polyfills": "^1.5.5",
     "@storybook/addon-actions": "7.6.23",
     "@storybook/addon-essentials": "7.6.23",
@@ -120,13 +120,15 @@
   },
   "overrides": {
     "minimatch": ">=10.2.1",
-    "tar": ">=7.5.8",
     "@tootallnate/once": ">=3.0.1",
     "esbuild": ">=0.25.0",
-    "postcss": ">=8.5.10",
+    "postcss": ">=8.5.28",
     "elliptic": ">=6.6.1",
     "serialize-javascript": ">=6.0.2",
     "uuid": ">=11.0.0",
-    "cookie": "^0.7.2"
+    "sharp": ">=0.35.4",
+    "image-size": ">=2.0.4",
+    "qs": ">=6.16.0",
+    "tar": ">=7.5.22"
   }
 }
