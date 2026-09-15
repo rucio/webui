@@ -9,7 +9,7 @@ import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did
 import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
 import { DefaultTextFilterParams, DefaultBooleanFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { DIDType } from '@/lib/core/entity/rucio';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type StageSummaryDataTableProps = {
     rowData: ListDIDsViewModel[];
@@ -41,7 +41,7 @@ export const CreateRuleStageSummaryDataTable = (props: StageSummaryDataTableProp
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(didTypeOptions),
             },
             filterParams: {

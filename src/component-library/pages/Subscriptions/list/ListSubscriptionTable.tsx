@@ -10,6 +10,7 @@ import { RuleState, SubscriptionState } from '@/lib/core/entity/rucio';
 import { badgeCellClasses } from '@/component-library/features/table/cells/badge-cell';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { SubscriptionStateBadge, subscriptionStateString } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type ListSubscriptionTableProps = {
     streamingHook: UseStreamReader<SubscriptionRuleStatesViewModel>;
@@ -21,9 +22,21 @@ const ClickableName = (props: { value: string; account: string }) => {
     return <ClickableCell href={`/subscription/${props.account}/${props.value}`}>{props.value}</ClickableCell>;
 };
 
+const SubscriptionStateDisplayName = {
+    [SubscriptionState.ACTIVE]: "Active",
+    [SubscriptionState.BROKEN]: "Broken",
+    [SubscriptionState.INACTIVE]: "Inactive",
+    [SubscriptionState.NEW]: "New",
+    [SubscriptionState.UPDATED]: "Updated",
+    [SubscriptionState.UNKNOWN]: "Unknown",
+};
+
 export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
     const tableRef = useRef<AgGridReact<SubscriptionRuleStatesViewModel>>(null);
     const stateMinWidth = 175;
+
+    const subscriptionStateOptions = Object.values(SubscriptionState);
+    const subscriptionStateValueFormatter = (value: SubscriptionState) => SubscriptionStateDisplayName[value];
 
     const [columnDefs] = useState([
         {
@@ -46,8 +59,14 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
             cellRenderer: (params: { value: SubscriptionState }) => (
                 <SubscriptionStateBadge value={params.value ?? SubscriptionState.UNKNOWN} className={badgeCellClasses} />
             ),
-            filter: true,
-            filterParams: DefaultTextFilterParams,
+            filter: {
+                component: AgGridMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(subscriptionStateOptions, subscriptionStateValueFormatter),
+            },
+            filterParams: {
+                options: subscriptionStateOptions,
+                valueFormatter: subscriptionStateValueFormatter,
+            },
             // The cell value is the enum code (e.g. 'A'); filter against the displayed
             // label (e.g. 'Active') so text searches match what the user sees.
             filterValueGetter: (params: { data?: SubscriptionRuleStatesViewModel }) =>
@@ -121,5 +140,5 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
         },
     ]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} />;
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} enableFilterHandlers />;
 };

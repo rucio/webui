@@ -9,7 +9,7 @@ import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/fea
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;
@@ -56,7 +56,7 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(replicaStateOptions, replicaStateValueFormatter),
             },
             filterParams: {

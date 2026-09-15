@@ -10,7 +10,7 @@ import { SelectableCell } from '@/component-library/features/table/cells/selecti
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { DIDType } from '@/lib/core/entity/rucio';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 interface SelectableDIDViewModel extends ListDIDsViewModel {
     selected?: boolean;
@@ -54,7 +54,7 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(didTypeOptions),
             },
             filterParams: {

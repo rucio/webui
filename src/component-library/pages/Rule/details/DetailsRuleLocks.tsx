@@ -17,7 +17,7 @@ import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { HiExternalLink } from 'react-icons/hi';
 import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
@@ -196,7 +196,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
     const tableRef = useRef<AgGridReact<ListRuleReplicaLockStatesViewModel>>(null);
 
     const lockOptions = Object.values(LockState);
-    const valueFormatter = (value: LockState) => LockStateDisplayNames[value];
+    const lockStateValueFormatter = (value: LockState) => LockStateDisplayNames[value];
 
     const [columnDefs] = useState([
         {
@@ -230,12 +230,12 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
-                handler: createMultiSelectFilterHandler(lockOptions, valueFormatter),
+                component: AgGridMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(lockOptions, lockStateValueFormatter),
             },
             filterParams: {
                 options: lockOptions,
-                valueFormatter: valueFormatter,
+                valueFormatter: lockStateValueFormatter,
             },
             sortable: true,
             comparator: lockStateComparator,

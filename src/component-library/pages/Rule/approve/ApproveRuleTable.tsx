@@ -18,7 +18,7 @@ import { ApproveRuleDialog } from '@/component-library/features/mutations/Approv
 import { DenyRuleDialog } from '@/component-library/features/mutations/DenyRuleDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { HiOutlineCheckCircle, HiOutlineBan, HiOutlineExternalLink } from 'react-icons/hi';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { DIDType } from '@/lib/core/entity/rucio';
 
 export type ApproveRuleTableProps = {
@@ -220,7 +220,7 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
             width: 80,
             minWidth: 80,
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(booleanOptions, openValueFormatter),
             },
             filterParams: {
@@ -235,7 +235,7 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
             minWidth: 110,
             cellRenderer: DIDTypeBadge,
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(didTypeOptions),
             },
             filterParams: {

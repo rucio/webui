@@ -17,7 +17,7 @@ import { formatDate, formatSeconds } from '@/component-library/features/utils/te
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
@@ -79,7 +79,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(ruleStateOptions, ruleStateValueFormatter),
             },
             filterParams: {
