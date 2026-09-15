@@ -8,7 +8,7 @@ import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/fea
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { RemovableCell } from '@/component-library/features/table/cells/selection-cells';
 import { DIDType } from '@/lib/core/entity/rucio';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type StageDataTableProps = {
     rowData: ListDIDsViewModel[];
@@ -41,7 +41,7 @@ export const CreateRuleStageDataSelectedTable = (props: StageDataTableProps) => 
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(didTypeOptions),
             },
             filterParams: {

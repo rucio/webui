@@ -1,9 +1,36 @@
 import { Checkbox } from "@/component-library/atoms/form/checkbox"
-import { CreateFilterHandlerFunc, DoesFilterPassParams, FilterDisplayParams, FilterHandler } from "ag-grid-community"
+import { CreateFilterHandlerFunc, DoesFilterPassParams, FilterDisplayParams } from "ag-grid-community"
 import { useState } from "react";
 
-type AgMultiSelectProps<T> = FilterDisplayParams<any, any, T[] | null> & { options: T[], valueFormatter?: (value: T) => string }
+/**
+ * Type containing params for `AgGridMultiSelectFilter` component
+ * @template T typeof the enum containing selectable values
+ * @param {T[]} options list of available selection options
+ * @param {function(T): string} valueFormatter if specified it is a function formatting options values for visualizing them in the floating filter
+ */
+type AgGridMultiSelectProps<T> = FilterDisplayParams<any, any, T[] | null> & {
+    options: T[];
+    valueFormatter?: (value: T) => string;
+};
 
+/**
+ * Create handler for multi-select filter component.
+ * @template T type of the enum containing selectable values
+ * @param {T[]} options list of available selection options
+ * @param {function(T): string} valueFormatter if specified it is a function formatting options values for visualizing them in the floating filter
+ * @returns {{
+ *      doesFilterPass: function(DoesFilterPassParams): boolean;
+ *      getModelAsString: funciton(T[] | null): string;
+ * }} Handler with two functions:
+ *      1. `doesFilterPass` - checks whether row in table passes the filter
+ *      2. `getModelAsString` - returns model as string value to show it in the floating filter
+ * @example
+ * ```
+ * const ruleStateOptions = Object.values(RuleState);
+ * const ruleStateValueFormatter = (value: RuleState) => value.toLowerCase();
+ * createMultiSelectFilterHandler(ruleStateOptions, ruleStateValueFormatter);
+ * ```
+ */
 export const createMultiSelectFilterHandler = <T,>(options: T[], valueFormatter?: (value: T) => string): CreateFilterHandlerFunc<any, any, any, T[], any> => {
     return () => ({
         doesFilterPass: ({ model, node, handlerParams }: DoesFilterPassParams<any, any, T[]>) => {
@@ -27,7 +54,37 @@ export const createMultiSelectFilterHandler = <T,>(options: T[], valueFormatter?
     });
 }
 
-export const AgMultiSelectFilter = <T,>({ model, onModelChange, options, valueFormatter }: AgMultiSelectProps<T>) => {
+/**
+ * Multiple-selection filter for AG Grid tables.
+ * 
+ * @example
+ * ```
+ * const [columnDefs] = useState([
+        ...
+        {
+            headerName: 'State',
+            field: 'state',
+            ...
+            filter: {
+                component: AgGridMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(
+                        replicaStateOptions,
+                        replicaStateValueFormatter
+                    ),
+            },
+            filterParams: {
+                options: replicaStateOptions,
+                valueFormatter: replicaStateValueFormatter,
+            },
+        },
+    ]);
+
+    ...
+
+    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} {...props} enableFilterHandlers />;
+ * ```
+ */
+export const AgGridMultiSelectFilter = <T,>({ model, onModelChange, options, valueFormatter }: AgGridMultiSelectProps<T>) => {
     const selectedOptions = model ?? [...options];
     const [filteredOptions, setFilteredOptions] = useState([...options]);
 
@@ -35,7 +92,7 @@ export const AgMultiSelectFilter = <T,>({ model, onModelChange, options, valueFo
         const newSelection = selectedOptions.includes(option)
             ? selectedOptions.filter((opt) => opt !== option)
             : [...selectedOptions, option]
-        
+
         if (newSelection.length === options.length)
             onModelChange(null);
         else
@@ -64,7 +121,7 @@ export const AgMultiSelectFilter = <T,>({ model, onModelChange, options, valueFo
             <input
                 type="text"
                 placeholder="Search..."
-                className="ag-input-filed-input mb-2"
+                className="ag-input-field-input mb-1"
                 onChange={event => setFilteredOptions(
                     options.filter(
                         option => valueFormatter
@@ -74,29 +131,35 @@ export const AgMultiSelectFilter = <T,>({ model, onModelChange, options, valueFo
                 )}
             />
             {filteredOptions.length > 0 ?
-                <label className="flex items-center">
+                <div className="flex items-center">
                     <Checkbox
+                        id="checkbox-all"
                         className="mr-2"
                         checked={filteredOptions.every(option => selectedOptions.includes(option))}
                         onClick={selectAllClick}
                     />
-                    (Select all)
-                </label>
+                    <label className="hover:cursor-pointer" htmlFor="checkbox-all">
+                        (Select all)
+                    </label>
+                </div>
                 :
                 <div className="p-3">
                     No matches.
                 </div>
             }
-            
+
             {filteredOptions.map(option => (
-                <label key={String(option)} className="flex items-center">
+                <div key={String(option)} className="flex items-center">
                     <Checkbox
+                        id={`checkbox-${String(option)}`}
                         className="mr-2"
                         checked={selectedOptions.includes(option)}
                         onClick={() => applySelection(option)}
                     />
-                    {valueFormatter ? valueFormatter(option) : String(option)}
-                </label>
+                    <label className="hover:cursor-pointer" htmlFor={`checkbox-${String(option)}`}>
+                        {valueFormatter ? valueFormatter(option) : String(option)}
+                    </label>
+                </div>
             ))}
         </div>
     )

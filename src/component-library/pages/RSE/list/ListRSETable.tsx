@@ -10,7 +10,7 @@ import { DefaultTextFilterParams } from '@/component-library/features/utils/filt
 import { GridReadyEvent } from 'ag-grid-community';
 import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
 import { RSEType } from '@/lib/core/entity/rucio';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type ListRSETableProps = {
     streamingHook: UseStreamReader<RSEViewModel>;
@@ -51,7 +51,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(rseTypeOptions),
             },
             filterParams: {
@@ -66,7 +66,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(booleanOptions, booleanValueFormatter),
             },
             filterParams: {
@@ -82,7 +82,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(booleanOptions, booleanValueFormatter),
             },
             filterParams: {
@@ -98,7 +98,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             cellStyle: checkboxCellWrapperStyle,
             cellRenderer: CheckboxCell,
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(booleanOptions, booleanValueFormatter),
             },
             filterParams: {

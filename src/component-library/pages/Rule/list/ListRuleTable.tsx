@@ -16,7 +16,7 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { RuleState } from '@/lib/core/entity/rucio';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
@@ -98,7 +98,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(stateOptions, ruleStateValueFormatter),
             },
             filterParams: {

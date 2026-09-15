@@ -10,7 +10,7 @@ import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/fea
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DIDType } from '@/lib/core/entity/rucio';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
-import { AgMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type DetailsDIDSimpleTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
@@ -55,7 +55,7 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
                 className: badgeCellClasses,
             },
             filter: {
-                component: AgMultiSelectFilter,
+                component: AgGridMultiSelectFilter,
                 handler: createMultiSelectFilterHandler(didTypeOptions),
             },
             filterParams: {
