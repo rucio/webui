@@ -1,0 +1,37 @@
+import{i as e,l as t}from"./preload-helper-DID7B_--.js";import{kt as n,on as r}from"./iframe-B1_WYtkJ.js";import{c as i,l as a,u as o}from"./rucio-yGyZc0Jt.js";import{g as s,p as c}from"./table-fixtures-BaN2OZRF.js";import{n as l,r as u}from"./Heading-DQSwUPQc.js";import{a as d,l as f,o as p,t as m}from"./modern-D13Hgy8v.js";import{n as ee,t as h}from"./WarningField-Xao6hyXH.js";import{n as g,t as _}from"./ToastedTemplate-BMckBuOn.js";import{a as v,c as te,n as y,o as b,s as x,t as S}from"./useTableStreaming-gelWXh0e.js";import{o as C,s as w}from"./core-CNdbxhvP.js";import{a as ne,r as re}from"./streaming-handlers-DPc-du9P.js";import{n as ie,t as T}from"./single-handlers-B_LTiodd.js";import{n as ae,t as oe}from"./InfoField-UE5Jgm0h.js";import{n as E,t as D}from"./ClickableCell-CR4dMA7B.js";import{r as O,t as k}from"./badge-cell-DKFTQIA4.js";import{n as A,r as j,t as M}from"./AgGridMultiSelectFilter-DGFhCxkX.js";import{n as N,t as P}from"./RuleStateBadge-SBc0Qchd.js";import{n as F,r as I,t as L}from"./SubscriptionStateBadge-Bjvi6S-Z.js";var R,z,B,V,H,U=e((()=>{R=n(),z=t(r()),te(),b(),N(),o(),O(),E(),F(),j(),B=e=>(0,R.jsx)(D,{href:`/subscription/${e.account}/${e.value}`,children:e.value}),V={[a.ACTIVE]:`Active`,[a.BROKEN]:`Broken`,[a.INACTIVE]:`Inactive`,[a.NEW]:`New`,[a.UPDATED]:`Updated`,[a.UNKNOWN]:`Unknown`},H=e=>{let t=(0,z.useRef)(null),n=Object.values(a),r=e=>V[e],[o]=(0,z.useState)([{headerName:`Name`,field:`name`,flex:5,minWidth:300,pinned:`left`,cellRenderer:B,cellRendererParams:{account:e.account},filter:!0,filterParams:v},{headerName:`State`,field:`subscriptionState`,minWidth:140,cellRenderer:e=>(0,R.jsx)(L,{value:e.value??a.UNKNOWN,className:k}),filter:{component:M,handler:A(n,r)},filterParams:{options:n,valueFormatter:r},filterValueGetter:e=>I[e.data?.subscriptionState??a.UNKNOWN]},{headerName:`OK`,field:`state_ok`,minWidth:175,headerComponent:P,headerComponentParams:{className:k,value:i.OK},filter:`agNumberColumnFilter`},{headerName:`Replicating`,field:`state_replicating`,minWidth:175,headerComponent:P,headerComponentParams:{className:k,value:i.REPLICATING},filter:`agNumberColumnFilter`},{headerName:`Stuck`,field:`state_stuck`,minWidth:175,headerComponent:P,headerComponentParams:{className:k,value:i.STUCK},filter:`agNumberColumnFilter`},{headerName:`Suspended`,field:`state_suspended`,minWidth:175,headerComponent:P,headerComponentParams:{className:k,value:i.SUSPENDED},filter:`agNumberColumnFilter`},{headerName:`Waiting Approval`,field:`state_waiting_approval`,minWidth:175,headerComponent:P,headerComponentParams:{className:k,value:i.WAITING_APPROVAL},filter:`agNumberColumnFilter`},{headerName:`Inject`,field:`state_inject`,minWidth:175,headerComponent:P,headerComponentParams:{className:k,value:i.INJECT},filter:`agNumberColumnFilter`}]);return(0,R.jsx)(x,{columnDefs:o,tableRef:t,...e,enableFilterHandlers:!0})},H.__docgenInfo={description:``,methods:[],displayName:`ListSubscriptionTable`,props:{streamingHook:{required:!0,tsType:{name:`UseStreamReader`,elements:[{name:`SubscriptionRuleStatesViewModel`}],raw:`UseStreamReader<SubscriptionRuleStatesViewModel>`},description:``},onGridReady:{required:!0,tsType:{name:`signature`,type:`function`,raw:`(event: GridReadyEvent) => void`,signature:{arguments:[{type:{name:`GridReadyEvent`},name:`event`}],return:{name:`void`}}},description:``},account:{required:!0,tsType:{name:`string`},description:``}}}})),W,G,K,se=e((()=>{W=n(),U(),S(),u(),G=t(r()),m(),ae(),ee(),K=e=>{let{gridApi:t,onGridReady:n,streamingHook:r,startStreaming:i}=y(e.initialData),a=(0,G.useRef)(!1),{data:o,error:s,isFetching:c}=d({queryKey:[`subscription-account`],queryFn:async()=>(await fetch(`/api/feature/get-site-header`)).json(),retry:!1,refetchOnWindowFocus:!1,enabled:!e.accountFilter}),u=e.accountFilter||o?.activeAccount?.rucioAccount;return(0,G.useEffect)(()=>{let n=e.autoSearch!==!1;!a.current&&n&&!e.initialData&&t&&u&&(a.current=!0,i(`/api/feature/list-subscription-rule-states?account=${encodeURIComponent(u)}`))},[t,u]),!e.accountFilter&&c?(0,W.jsx)(oe,{children:(0,W.jsx)(`span`,{children:`Loading account information...`})}):!e.accountFilter&&(s||!o||!o.activeAccount)?(0,W.jsx)(h,{children:(0,W.jsx)(`span`,{children:`Failed to load account information`})}):u?(0,W.jsxs)(`div`,{className:`flex flex-col space-y-3 w-full`,children:[(0,W.jsxs)(l,{size:`sm`,className:`text-neutral-600 dark:text-neutral-400`,children:[`for account `,u]}),(0,W.jsx)(`div`,{className:`rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]`,children:(0,W.jsx)(H,{streamingHook:r,onGridReady:n,account:u})})]}):(0,W.jsx)(h,{children:(0,W.jsx)(`span`,{children:`No account specified`})})},K.__docgenInfo={description:``,methods:[],displayName:`ListSubscription`,props:{initialData:{required:!1,tsType:{name:`Array`,elements:[{name:`SubscriptionRuleStatesViewModel`}],raw:`SubscriptionRuleStatesViewModel[]`},description:``},accountFilter:{required:!1,tsType:{name:`string`},description:``},autoSearch:{required:!1,tsType:{name:`boolean`},description:``}}}})),q,J,Y,X,Z,Q,$;e((()=>{q=n(),g(),s(),se(),w(),ne(),ie(),m(),J=t(r()),Y={title:`Components/Pages/Subscription/List`,component:K,parameters:{docs:{disable:!0}}},X=e=>{let t=new f,[n,r]=(0,J.useState)(!0);return(0,J.useEffect)(()=>{setTimeout(()=>{r(!1)},500)},[]),n?(0,q.jsx)(`div`,{children:`Loading the mocking engine...`}):(0,q.jsx)(p,{client:t,children:(0,q.jsx)(_,{children:(0,q.jsx)(K,{...e})})})},Z=X.bind({}),Z.args={initialData:Array.from({length:50},()=>c())},Z.decorators=[C([T(`/api/feature/get-site-header`,{getData:()=>({activeAccount:{rucioAccount:`jdoe`}})})])],Q=X.bind({}),Q.decorators=[C([re(`/api/feature/list-subscription-rule-states`,{data:Array.from({length:500},c),delay:5}),T(`/api/feature/get-site-header`,{getData:()=>({activeAccount:{rucioAccount:`jdoe`}})})])],$=[`InitialDataNoEndpoint`,`RegularStreaming`],Z.parameters={...Z.parameters,docs:{...Z.parameters?.docs,source:{originalSource:`args => {
+  const queryClient = new QueryClient();
+  const [loading, setLoading] = useState(true);
+
+  // Wait for the mocking to be enabled
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+  if (loading) {
+    return <div>Loading the mocking engine...</div>;
+  }
+  return <QueryClientProvider client={queryClient}>
+            <ToastedTemplate>
+                <ListSubscription {...args} />
+            </ToastedTemplate>
+        </QueryClientProvider>;
+}`,...Z.parameters?.docs?.source}}},Q.parameters={...Q.parameters,docs:{...Q.parameters?.docs,source:{originalSource:`args => {
+  const queryClient = new QueryClient();
+  const [loading, setLoading] = useState(true);
+
+  // Wait for the mocking to be enabled
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+  if (loading) {
+    return <div>Loading the mocking engine...</div>;
+  }
+  return <QueryClientProvider client={queryClient}>
+            <ToastedTemplate>
+                <ListSubscription {...args} />
+            </ToastedTemplate>
+        </QueryClientProvider>;
+}`,...Q.parameters?.docs?.source}}}}))();export{Z as InitialDataNoEndpoint,Q as RegularStreaming,$ as __namedExportsOrder,Y as default};
