@@ -45,7 +45,8 @@ export function parseReplicationRules(replicationRules: string): SubscriptionRep
     return rules;
 }
 
-export function parseReplicationRuleState(replicationRuleStateString: string): RuleState {
+export function parseReplicationRuleState(replicationRuleStateString: string | null | undefined): RuleState {
+    if (!replicationRuleStateString) return RuleState.UNKNOWN;
     switch (replicationRuleStateString.toUpperCase()) {
         case 'REPLICATING':
             return RuleState.REPLICATING;
@@ -67,7 +68,8 @@ export function parseReplicationRuleState(replicationRuleStateString: string): R
  * @param state represents the state of a subscription as a string
  * @returns SubscriptionState enum value
  */
-export function parseSubscriptionState(state: string): SubscriptionState {
+export function parseSubscriptionState(state: string | null | undefined): SubscriptionState {
+    if (!state) return SubscriptionState.UNKNOWN;
     switch (state.toUpperCase()) {
         case 'A':
         case 'ACTIVE':
