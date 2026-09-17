@@ -164,6 +164,35 @@ export const RegularTable = (props: RegularTableProps) => {
         onPaginationChanged();
     }, [isTableLoaded]);
 
+    const onFilterChanged = () => {
+        const gridApi = tableRef.current?.api;
+        if (gridApi) {
+            const numberOfVisibleRows = gridApi.getDisplayedRowCount();
+            const isAnyFilterPresent = gridApi.isAnyFilterPresent();
+
+            if (isAnyFilterPresent && numberOfVisibleRows === 0) {
+                gridApi.setGridOption('noRowsOverlayComponentParams', { isEmptyAfterFiltering: true });
+                gridApi.showNoRowsOverlay();
+            }
+            else if (!isAnyFilterPresent && numberOfVisibleRows === 0) {
+                gridApi.setGridOption('noRowsOverlayComponentParams', { isEmptyAfterFiltering: false });
+                gridApi.showNoRowsOverlay();
+            }
+            else
+                gridApi.hideOverlay();
+        }
+    }
+
+    const getDefaultNoRowsElement = (props: { isEmptyAfterFiltering?: boolean }) => {
+        return props?.isEmptyAfterFiltering ? (
+            <p className="text-neutral-600 dark:text-neutral-100 text-center px-4">
+                No data matches the selected filters.
+            </p>
+        ) : (
+            <NoDataYetOverlay />
+        )
+    }
+
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
     return (
@@ -179,6 +208,8 @@ export const RegularTable = (props: RegularTableProps) => {
                         paginationPageSize={paginationPageSize ?? 100}
                         ref={tableRef}
                         loadingOverlayComponent={NoDataYetOverlay}
+                        noRowsOverlayComponent={gridProps.noRowsOverlayComponent ?? getDefaultNoRowsElement}
+                        onFilterChanged={onFilterChanged}
                         onGridReady={onGridReady}
                         domLayout="normal" // Ensures the grid fits within the flex container
                         suppressPaginationPanel={true}
@@ -194,7 +225,7 @@ export const RegularTable = (props: RegularTableProps) => {
                             sortable: true, // Enable column sorting
                             resizable: true, // Enable column resizing by dragging borders
                         }}
-                        //asyncTransactionWaitMillis={500}
+                    //asyncTransactionWaitMillis={500}
                     />
                 ) : (
                     <div></div>

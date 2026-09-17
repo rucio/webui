@@ -3,11 +3,18 @@ import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner
 import React from 'react';
 import { NoDataYetOverlay } from '@/component-library/features/table/overlays/NoDataYetOverlay';
 
-export const NoLoadedRowsOverlay = (props: { error?: StreamingError; status: StreamingStatus }) => {
+export const NoLoadedRowsOverlay = (props: { error?: StreamingError; status: StreamingStatus; isEmptyAfterFiltering?: boolean }) => {
+    if (props?.isEmptyAfterFiltering) {
+        return (
+            <p className="text-neutral-600 dark:text-neutral-100 text-center px-4">
+                No data matches the selected filters.
+            </p>
+        )
+    }
     if (props.error) {
         if (props.error.type === StreamingErrorType.NOT_FOUND) {
             return (
-                <p className="text-sm text-neutral-700 dark:text-neutral-100 text-center px-4">
+                <p className="text-neutral-600 dark:text-neutral-100 text-center px-4">
                     No results found. Try adjusting your filters and searching again.
                 </p>
             );
