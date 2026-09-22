@@ -58,7 +58,7 @@ export type DIDDatasetReplicas = {
     rse: string;
     rseblocked: RSEBlockState;
     length: number;
-    availability: boolean;
+    state: ReplicaState;
     available_files: number;
     available_bytes: number;
     creation_date: DateISO;

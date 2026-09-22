@@ -10,6 +10,7 @@ import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { MockHttpStreamableResponseFactory } from 'test/fixtures/http-fixtures';
 import { NextApiResponse } from 'next';
 import { DIDDatasetReplicasViewModel } from '@/lib/infrastructure/data/view-model/did';
+import { ReplicaState } from '@/lib/core/entity/rucio';
 
 describe('List Dataset Replicas Feature Tests', () => {
     beforeEach(() => {
@@ -85,7 +86,7 @@ describe('List Dataset Replicas Feature Tests', () => {
             status: 'success',
             rseblocked: 0,
             rse: 'XRD3',
-            availability: false,
+            state: ReplicaState.UNAVAILABLE,
             length: 20,
             available_files: 10,
             available_bytes: 1000,

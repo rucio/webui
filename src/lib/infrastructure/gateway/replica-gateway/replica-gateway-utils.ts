@@ -120,7 +120,7 @@ export function convertToDatasetReplicaDTO(replica: TRucioDatasetReplica): Datas
         status: 'success',
         rse: replica.rse,
         length: replica.length,
-        availability: replica.state === 'AVAILABLE',
+        state: getReplicaState(replica.state),
         available_files: replica.available_length,
         available_bytes: replica.available_bytes, // TODO: question: What is difference between available_bytes and bytes?
         creation_date: replica.created_at,

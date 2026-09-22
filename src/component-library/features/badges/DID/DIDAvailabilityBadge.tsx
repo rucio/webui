@@ -12,10 +12,10 @@ import { Badge } from '@/component-library/atoms/misc/Badge';
  * - Unknown: Neutral (gray) - Undefined state
  */
 const typeVariants: Record<DIDAvailability, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
-    Unknown: 'neutral',
-    Available: 'success',
-    Deleted: 'error',
-    Lost: 'warning',
+    [DIDAvailability.UNKNOWN]: 'neutral',
+    [DIDAvailability.AVAILABLE]: 'success',
+    [DIDAvailability.DELETED]: 'error',
+    [DIDAvailability.LOST]: 'warning',
 };
 
 export const DIDAvailabilityBadge = (props: { value: DIDAvailability; className?: string }) => {

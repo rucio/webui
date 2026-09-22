@@ -19,10 +19,10 @@ const notificationString: Record<RuleNotification, string> = {
  * - No: Error (red) - Notifications disabled
  */
 const notificationVariants: Record<RuleNotification, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
-    Y: 'success',
-    P: 'info',
-    C: 'warning',
-    N: 'error',
+    [RuleNotification.Yes]: 'success',
+    [RuleNotification.Progress]: 'info',
+    [RuleNotification.Close]: 'warning',
+    [RuleNotification.No]: 'error',
 };
 
 export const RuleNotificationBadge = (props: { value: RuleNotification; className?: string }) => {

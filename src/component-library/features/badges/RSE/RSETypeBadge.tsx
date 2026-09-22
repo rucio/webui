@@ -11,9 +11,9 @@ import { Badge } from '@/component-library/atoms/misc/Badge';
  * - UNKNOWN: Warning (amber) - Undefined storage type
  */
 const typeVariants: Record<RSEType, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
-    DISK: 'success',
-    TAPE: 'info',
-    UNKNOWN: 'warning',
+    [RSEType.DISK]: 'success',
+    [RSEType.TAPE]: 'info',
+    [RSEType.UNKNOWN]: 'warning',
 };
 
 export const RSETypeBadge = (props: { value: RSEType; className?: string }) => {

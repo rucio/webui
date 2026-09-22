@@ -19,10 +19,10 @@ const stateString: Record<LockState, string> = {
  * - Unknown: Neutral (gray) - Undefined state
  */
 const stateVariants: Record<LockState, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
-    O: 'success',
-    R: 'warning',
-    S: 'error',
-    U: 'neutral',
+    [LockState.OK]: 'success',
+    [LockState.REPLICATING]: 'warning',
+    [LockState.STUCK]: 'error',
+    [LockState.UNKNOWN]: 'neutral',
 };
 
 export const LockStateBadge = (props: { value: LockState; className?: string }) => {

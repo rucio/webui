@@ -243,7 +243,7 @@ def datasetreplicas():
         {
             "rse": f"RSE-{fake.pystr()}",
             "rseblocked": random.choice([*[0]*4, random.randint(0,7)]),
-            "availability": fake.boolean(),
+            "availability": random.choice(["Available", "Unavailable", "Copying", "Being_Deleted", "Bad", "Temporary_Unavailable"]),
             "available_files": random.randint(0, 100),
             "available_bytes": int(random.randint(0, 1e3) * random.choice([1, 1e3, 1e6, 1e9])),
             "creation_date": fake.date_of_birth(minimum_age=2, maximum_age=8),

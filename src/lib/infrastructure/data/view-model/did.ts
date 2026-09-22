@@ -60,7 +60,7 @@ export function generateEmptyDIDDatasetReplicasViewModel(): DIDDatasetReplicasVi
     return {
         status: 'error',
         rseblocked: 0,
-        availability: false,
+        state: ReplicaState.UNKNOWN,
         available_files: 0,
         available_bytes: 0,
         creation_date: '',

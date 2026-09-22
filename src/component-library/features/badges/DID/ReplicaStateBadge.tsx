@@ -3,13 +3,13 @@ import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
 
 const stateString: Record<ReplicaState, string> = {
-    Available: 'Available',
-    Bad: 'Bad',
-    Being_Deleted: 'Being Deleted',
-    Copying: 'Copying',
-    Temporary_Unavailable: 'Temporary Unavailable',
-    Unavailable: 'Unavailable',
-    Unknown: 'Unknown',
+    [ReplicaState.AVAILABLE]: 'Available',
+    [ReplicaState.BAD]: 'Bad',
+    [ReplicaState.BEING_DELETED]: 'Being Deleted',
+    [ReplicaState.COPYING]: 'Copying',
+    [ReplicaState.TEMPORARY_UNAVAILABLE]: 'Temporary Unavailable',
+    [ReplicaState.UNAVAILABLE]: 'Unavailable',
+    [ReplicaState.UNKNOWN]: 'Unknown',
 };
 
 /**
@@ -25,13 +25,13 @@ const stateString: Record<ReplicaState, string> = {
  * - Unknown: Neutral (gray) - Undefined state
  */
 const stateVariants: Record<ReplicaState, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
-    Available: 'success',
-    Bad: 'error',
-    Being_Deleted: 'error',
-    Copying: 'info',
-    Temporary_Unavailable: 'warning',
-    Unavailable: 'warning',
-    Unknown: 'neutral',
+    [ReplicaState.AVAILABLE]: 'success',
+    [ReplicaState.BAD]: 'error',
+    [ReplicaState.BEING_DELETED]: 'error',
+    [ReplicaState.COPYING]: 'info',
+    [ReplicaState.TEMPORARY_UNAVAILABLE]: 'warning',
+    [ReplicaState.UNAVAILABLE]: 'warning',
+    [ReplicaState.UNKNOWN]: 'neutral',
 };
 
 export const ReplicaStateBadge = (props: { value: ReplicaState; className?: string }) => {

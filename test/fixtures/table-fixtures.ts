@@ -370,7 +370,7 @@ export function fixtureDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewMode
         ...mockBaseVM(),
         rse: createRSEName(),
         rseblocked: faker.number.int({ min: 0, max: 7 }) as RSEBlockState,
-        availability: faker.datatype.boolean(),
+        state: randomEnum<ReplicaState>(ReplicaState),
         available_files: faker.number.int({ min: 0, max: 1e6 }),
         available_bytes: faker.number.int({ min: 0, max: 1e12 }),
         length: faker.number.int({ min: 0, max: 1e6 }),

@@ -4,12 +4,13 @@ import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/d
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { AgGridReact } from 'ag-grid-react';
-import { buildDiscreteFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import ProgressBar from '@/component-library/atoms/misc/ProgressBar';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
     let percentage: number = 0;
@@ -33,11 +34,6 @@ const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
     );
 };
 
-const StateCell = ({ data, className }: { data: DIDDatasetReplicasViewModel; className: string }) => {
-    const state = data.availability ? ReplicaState.AVAILABLE : ReplicaState.UNAVAILABLE;
-    return <ReplicaStateBadge value={state} className={`${className} h-7`} />;
-};
-
 const ClickableRSE = (props: { value: string }) => {
     return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
@@ -45,6 +41,11 @@ const ClickableRSE = (props: { value: string }) => {
 const ReplicaStateDisplayNames = {
     [ReplicaState.AVAILABLE]: 'Available',
     [ReplicaState.UNAVAILABLE]: 'Unavailable',
+    [ReplicaState.COPYING]: 'Copying',
+    [ReplicaState.BEING_DELETED]: 'Being Deleted',
+    [ReplicaState.BAD]: 'Bad',
+    [ReplicaState.TEMPORARY_UNAVAILABLE]: 'Temporary Unavailable',
+    [ReplicaState.UNKNOWN]: 'Unknown',
 };
 
 export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
@@ -57,6 +58,9 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             startStreaming(url);
         }
     }, [gridApi]);
+
+    const replicaStateOptions = Object.values(ReplicaState);
+    const replicaStateValueFormatter = (value: ReplicaState) => ReplicaStateDisplayNames[value];
 
     const [columnDefs] = useState([
         {
@@ -74,7 +78,7 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
         },
         {
             headerName: 'State',
-            field: 'availability',
+            field: 'state',
             flex: 1,
             cellStyle: {
                 ...badgeCellWrapperStyle,
@@ -83,12 +87,15 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             cellRendererParams: {
                 className: badgeCellClasses,
             },
-            cellRenderer: StateCell,
-            filter: true,
-            filterParams: buildDiscreteFilterParams(
-                Object.values(ReplicaStateDisplayNames),
-                Object.values(ReplicaState).filter(state => state === ReplicaState.AVAILABLE || state === ReplicaState.UNAVAILABLE),
-            ),
+            cellRenderer: ReplicaStateBadge,
+            filter: {
+                component: AgGridMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(replicaStateOptions, replicaStateValueFormatter),
+            },
+            filterParams: {
+                options: replicaStateOptions,
+                valueFormatter: replicaStateValueFormatter,
+            },
         },
         {
             headerName: 'Replication Progress',
@@ -110,6 +117,7 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             streamingHook={streamingHook}
             rowHeight={75}
             isActive={isActive}
+            enableFilterHandlers
         />
     );
 };

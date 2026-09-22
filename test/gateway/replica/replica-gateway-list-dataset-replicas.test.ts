@@ -73,7 +73,7 @@ describe('Replica Gateway: List Dataset Replicas', () => {
             {
                 status: 'success',
                 rse: 'XRD3',
-                availability: false,
+                state: ReplicaState.UNAVAILABLE,
                 available_files: 10,
                 available_bytes: 1000,
                 length: 20,

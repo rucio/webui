@@ -17,9 +17,9 @@ const groupingString: Record<RuleGrouping, string> = {
  * - None: Neutral (gray) - No grouping
  */
 const groupingVariants: Record<RuleGrouping, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
-    A: 'info',
-    D: 'success',
-    N: 'neutral',
+    [RuleGrouping.ALL]: 'info',
+    [RuleGrouping.DATASET]: 'success',
+    [RuleGrouping.NONE]: 'neutral',
 };
 
 export const RuleGroupingBadge = (props: { value: RuleGrouping; className?: string }) => {

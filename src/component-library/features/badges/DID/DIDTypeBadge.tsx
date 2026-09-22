@@ -14,13 +14,13 @@ import { Badge } from '@/component-library/atoms/misc/Badge';
  * - All/Unknown: Neutral (gray) - Default/undefined states
  */
 const typeVariants: Record<DIDType, 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'> = {
-    All: 'neutral',
-    Collection: 'warning',
-    Container: 'info',
-    Dataset: 'success',
-    Derived: 'info',
-    File: 'error',
-    Unknown: 'neutral',
+    [DIDType.ALL]: 'neutral',
+    [DIDType.COLLECTION]: 'warning',
+    [DIDType.CONTAINER]: 'info',
+    [DIDType.DATASET]: 'success',
+    [DIDType.DERIVED]: 'info',
+    [DIDType.FILE]: 'error',
+    [DIDType.UNKNOWN]: 'neutral',
 };
 
 export const DIDTypeBadge = (props: { value: DIDType; className?: string }) => {
