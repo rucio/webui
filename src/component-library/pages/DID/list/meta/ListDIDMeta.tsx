@@ -13,6 +13,7 @@ import { LoadingElement } from '@/component-library/atoms/loading/LoadingElement
 import { KeyValueLinkHeader } from '@/component-library/features/key-value/headers';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
 import { KeyValueWrapper } from '@/component-library/features/key-value/KeyValueWrapper';
+import { AMITagsRow } from '@/component-library/features/ami/AMITagsRow';
 
 const MetaHeader = ({ scope, name }: { scope: string; name: string }) => {
     return (
@@ -60,6 +61,7 @@ const MetaContents = ({ meta }: { meta: DIDMetaViewModel }) => {
                 <KeyValueRow name="Type">
                     <DIDTypeBadge value={meta.did_type} />
                 </KeyValueRow>
+                <AMITagsRow name={meta.name} />
                 <KeyValueRow name="Account">
                     <Field>{meta.account}</Field>
                 </KeyValueRow>
