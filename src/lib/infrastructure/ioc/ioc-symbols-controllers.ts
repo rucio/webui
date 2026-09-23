@@ -38,6 +38,7 @@ const CONTROLLERS = {
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesController'),
     GET_FTS_LINK: Symbol.for('GetFTSLinkController'),
     GET_DDM_LINK: Symbol.for('GetDDMLinkController'),
+    GET_AMI_TAG_INFO: Symbol.for('GetAMITagInfoController'),
     UPDATE_RULE: Symbol.for('UpdateRuleController'),
     LIST_SUSPICIOUS_REPLICAS: Symbol.for('ListSuspiciousReplicasController'),
     DECLARE_BAD_REPLICAS: Symbol.for('DeclareBadReplicasController'),

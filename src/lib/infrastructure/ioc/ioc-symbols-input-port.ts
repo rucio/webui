@@ -38,6 +38,7 @@ const INPUT_PORT = {
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('ListRuleReplicaLockStatesInputPort'),
     GET_FTS_LINK: Symbol.for('GetFTSLinkInputPort'),
     GET_DDM_LINK: Symbol.for('GetDDMLinkInputPort'),
+    GET_AMI_TAG_INFO: Symbol.for('GetAMITagInfoInputPort'),
     UPDATE_RULE: Symbol.for('UpdateRuleInputPort'),
     LIST_SUSPICIOUS_REPLICAS: Symbol.for('ListSuspiciousReplicasInputPort'),
     DECLARE_BAD_REPLICAS: Symbol.for('DeclareBadReplicasInputPort'),

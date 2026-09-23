@@ -71,6 +71,10 @@ import GetDDMLinkFeature from './features/get-ddm-link-feature';
 import UpdateRuleFeature from '@/lib/infrastructure/ioc/features/update-rule-feature';
 import ListSuspiciousReplicasFeature from '@/lib/infrastructure/ioc/features/list-suspicious-replicas-feature';
 import DeclareBadReplicasFeature from '@/lib/infrastructure/ioc/features/declare-bad-replicas-feature';
+import AMIGatewayOutputPort from '@/lib/core/port/secondary/ami-gateway-output-port';
+import AMIGateway from '../gateway/ami-gateway/ami-gateway';
+import GetAMITagInfoFeature from '@/lib/infrastructure/ioc/features/get-ami-tag-info-feature';
+import { isFeatureEnabledInEnv } from '@/lib/core/entity/feature-config';
 
 /**
  * IoC Container configuration for the application.
@@ -87,6 +91,7 @@ appContainer.bind<SubscriptionGatewayOutputPort>(GATEWAYS.SUBSCRIPTION).to(Subsc
 appContainer.bind<ReplicaGatewayOutputPort>(GATEWAYS.REPLICA).to(ReplicaGateway);
 appContainer.bind<RuleGatewayOutputPort>(GATEWAYS.RULE).to(RuleGateway);
 appContainer.bind<RequestGatewayOutputPort>(GATEWAYS.REQUEST).to(RequestGateway);
+appContainer.bind<AMIGatewayOutputPort>(GATEWAYS.AMI).to(AMIGateway);
 
 // Load Common Features
 const commonFeatures = [new GetSiteHeaderFeature(appContainer)];
@@ -159,6 +164,14 @@ loadFeaturesSync(appContainer, updateRuleFeatures);
 const dashboardFeatures = [new ListAccountRSEUsageFeature(appContainer)];
 loadFeaturesSync(appContainer, dashboardFeatures);
 
+// Features: ATLAS AMI tags. Only loaded when FEATURE_DIDS_AMI_TAGS is on at
+// startup. The feature is still passed to buildControllerFlagMap so withFeature
+// answers 404 before anything tries to resolve the (unbound) controller.
+const amiTagFeatures = [new GetAMITagInfoFeature(appContainer)];
+if (isFeatureEnabledInEnv('dids.ami_tags', process.env)) {
+    loadFeaturesSync(appContainer, amiTagFeatures);
+}
+
 export const CONTROLLER_FLAG_MAP = buildControllerFlagMap([
     ...commonFeatures,
     ...authFeatures,
@@ -172,6 +185,7 @@ export const CONTROLLER_FLAG_MAP = buildControllerFlagMap([
     ...listRuleReplicaLockStatesFeatures,
     ...updateRuleFeatures,
     ...dashboardFeatures,
+    ...amiTagFeatures,
 ]);
 
 appContainer.bind<SetX509LoginSessionInputPort>(INPUT_PORT.SET_X509_LOGIN_SESSION).to(SetX509LoginSessionUseCase).inRequestScope();

@@ -39,6 +39,7 @@ const USECASE_FACTORY = {
     LIST_RULE_REPLICA_LOCK_STATES: Symbol.for('Factory<ListRuleReplicaLockStatesUseCase>'),
     GET_FTS_LINK: Symbol.for('Factory<GetFTSLinkUseCase>'),
     GET_DDM_LINK: Symbol.for('Factory<GetDDMLinkUseCase>'),
+    GET_AMI_TAG_INFO: Symbol.for('Factory<GetAMITagInfoUseCase>'),
     UPDATE_RULE: Symbol.for('Factory<UpdateRuleUseCase>'),
     LIST_SUSPICIOUS_REPLICAS: Symbol.for('Factory<ListSuspiciousReplicasUseCase>'),
     DECLARE_BAD_REPLICAS: Symbol.for('Factory<DeclareBadReplicasUseCase>'),
