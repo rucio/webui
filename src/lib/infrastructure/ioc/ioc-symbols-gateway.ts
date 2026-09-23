@@ -7,6 +7,7 @@ const GATEWAYS = {
     DID: Symbol.for('RucioDIDGateway'),
     ENV_CONFIG: Symbol.for('EnvConfigGateway'),
     FEATURE_CONFIG: Symbol.for('FeatureConfigGateway'),
+    AMI: Symbol.for('AMIGateway'),
     RSE: Symbol.for('RSEGateway'),
     STREAM: Symbol.for('StreamGateway'),
     SUBSCRIPTION: Symbol.for('SubscriptionGateway'),
