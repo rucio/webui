@@ -6,7 +6,10 @@ describe('GetAMITagInfoPresenter', () => {
 
     it('passes tags through with 200', () => {
         const tags = [{ tag: 'f1723', url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=f1723', found: null }];
-        expect(presenter.convertResponseModelToViewModel({ status: 'success', tags })).toEqual({ status: 200, viewModel: { status: 'success', tags } });
+        expect(presenter.convertResponseModelToViewModel({ status: 'success', tags })).toEqual({
+            status: 200,
+            viewModel: { status: 'success', tags },
+        });
     });
 
     it('maps InvalidTagsError to errorType invalid_tags with its code', () => {

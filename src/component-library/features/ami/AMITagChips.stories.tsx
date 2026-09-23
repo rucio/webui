@@ -64,5 +64,11 @@ export const NotFound: Story = {
 };
 
 export const AMIUnavailable: Story = {
-    args: { tags: ['f1723', 'm2281'], infos: [{ tag: 'f1723', url: url('f1723'), found: null }, { tag: 'm2281', url: url('m2281'), found: null }] },
+    args: {
+        tags: ['f1723', 'm2281'],
+        infos: [
+            { tag: 'f1723', url: url('f1723'), found: null },
+            { tag: 'm2281', url: url('m2281'), found: null },
+        ],
+    },
 };

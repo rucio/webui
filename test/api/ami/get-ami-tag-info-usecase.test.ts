@@ -47,7 +47,13 @@ describe('GetAMITagInfoUseCase', () => {
         expect(calls.success).toEqual({
             status: 'success',
             tags: [
-                { tag: 'm2281', url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=m2281', found: true, productionStep: 'merge', baseRelease: 'Athena_24.0.128' },
+                {
+                    tag: 'm2281',
+                    url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=m2281',
+                    found: true,
+                    productionStep: 'merge',
+                    baseRelease: 'Athena_24.0.128',
+                },
                 { tag: 'f9999', url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=f9999', found: false },
                 { tag: 'r1234', url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=r1234', found: null },
             ],
@@ -55,7 +61,10 @@ describe('GetAMITagInfoUseCase', () => {
     });
 
     it('treats a rejected gateway promise as unavailable', async () => {
-        const calls = await run(['f1723'], makeGateway(async () => Promise.reject(new Error('boom'))));
+        const calls = await run(
+            ['f1723'],
+            makeGateway(async () => Promise.reject(new Error('boom'))),
+        );
         expect(calls.success?.tags).toEqual([{ tag: 'f1723', url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=f1723', found: null }]);
     });
 

@@ -70,7 +70,12 @@ export const AMITagPopover: React.FC<{ info: AMITagInfo }> = ({ info }) => {
                     sideOffset={6}
                     onOpenAutoFocus={e => e.preventDefault()}
                     onCloseAutoFocus={e => e.preventDefault()}
-                    className={cn('z-50 px-3 py-2 rounded-md text-xs', 'bg-neutral-800 text-neutral-100', 'dark:bg-neutral-200 dark:text-neutral-900', 'shadow-md')}
+                    className={cn(
+                        'z-50 px-3 py-2 rounded-md text-xs',
+                        'bg-neutral-800 text-neutral-100',
+                        'dark:bg-neutral-200 dark:text-neutral-900',
+                        'shadow-md',
+                    )}
                 >
                     <AMITagDetails info={info} />
                     <Popover.Arrow className="fill-neutral-800 dark:fill-neutral-200" />
