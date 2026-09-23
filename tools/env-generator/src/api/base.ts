@@ -88,6 +88,8 @@ export class WebUIEnvTemplateCompiler {
       'FEATURE_RSES': 'true',
       'FEATURE_DIDS_METADATA': 'true',
       'FEATURE_DIDS_MUTATE': 'true',
+      'FEATURE_DIDS_AMI_TAGS': 'false',
+      'AMI_BASE_URL': 'https://atlas-ami.cern.ch',
       ...this.environmentVariables,
     }
   }
@@ -211,6 +213,15 @@ export class WebUIEnvTemplateCompiler {
           message: `FEATURE_DDM_DASHBOARD is enabled. Please set a value for ${prefix}DDM_DASHBOARD_BASE_URL (host + dashboard path of the DDM Grafana dashboard).`
         })
       }
+    }
+
+    // AMI base URL (used by the AMI tags feature) must be an http(s) URL when set
+    const amiBaseUrl = env['AMI_BASE_URL']
+    if (amiBaseUrl && amiBaseUrl.trim() !== '' && !/^https?:\/\//.test(amiBaseUrl.trim())) {
+      errors.push({
+        type: 'error',
+        message: `${prefix}AMI_BASE_URL must start with http:// or https:// (got "${amiBaseUrl}").`
+      })
     }
 
     // check if oidc is enabled, all oidc variables are set

@@ -44,6 +44,8 @@ The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells 
 | FEATURE_RSES              | RUCIO_WEBUI_FEATURE_RSES              | Enable the RSEs pages and API routes.                                                     | true                           | true               |
 | FEATURE_DIDS_METADATA     | RUCIO_WEBUI_FEATURE_DIDS_METADATA     | Enable the DID Attributes tab and its metadata API (get-did-keyvaluepairs). Core DID metadata stays available. | true                           | true               |
 | FEATURE_DIDS_MUTATE       | RUCIO_WEBUI_FEATURE_DIDS_MUTATE       | Enable the DID mutation APIs (add-did, attach-dids, set-did-status).                       | true                           | true               |
+| FEATURE_DIDS_AMI_TAGS     | RUCIO_WEBUI_FEATURE_DIDS_AMI_TAGS     | ATLAS only. Detect AMI tags in DID names, show them on the DID details and DID list side panel with links to AMI, and enable the get-ami-tag-info API. | true                           | false              |
+| AMI_BASE_URL              | RUCIO_WEBUI_AMI_BASE_URL              | Base URL of the AMI instance used for tag links (`/?subapp=tagsShow&userdata=<tag>`) and tag lookups (`/AMI2/FrontEnd`). | https://atlas-ami.cern.ch      | https://atlas-ami.cern.ch |
 
 **Feature flags** gate whole pages, in-page sections, and their API routes per deployment. Unset flags fall back to the defaults above (core features on), so existing deployments are unaffected. Flags are hierarchical: disabling a parent (e.g. `FEATURE_RULES`) also disables its children (`FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`). Disabled pages and API routes return 404.
 
