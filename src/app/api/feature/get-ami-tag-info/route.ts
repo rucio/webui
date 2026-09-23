@@ -25,6 +25,12 @@ async function getHandler(request: NextRequest) {
             );
         }
 
+        // The feature is only loaded when the flag was on at startup; if it was
+        // switched on later without a restart, answer like a disabled feature.
+        if (!appContainer.isBound(CONTROLLERS.GET_AMI_TAG_INFO)) {
+            return NextResponse.json({ error: 'Not found' }, { status: 404 });
+        }
+
         const controller = appContainer.get<BaseController<GetAMITagInfoControllerParameters, void>>(CONTROLLERS.GET_AMI_TAG_INFO);
 
         return executeAuthenticatedController(controller, { tags });

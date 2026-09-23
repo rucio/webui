@@ -31,6 +31,9 @@ const AMITagDetails = ({ info }: { info: AMITagInfo }) => {
     );
 };
 
+/** Grace period so the pointer can travel from the chip onto the popover. */
+const CLOSE_DELAY_MS = 150;
+
 /**
  * AMITagPopover renders one AMI tag as a chip that links to AMI (new tab).
  * Hovering or focusing the chip shows the AMI details in a popover. The chip
@@ -39,6 +42,18 @@ const AMITagDetails = ({ info }: { info: AMITagInfo }) => {
  */
 export const AMITagPopover: React.FC<{ info: AMITagInfo }> = ({ info }) => {
     const [open, setOpen] = React.useState(false);
+    const contentId = React.useId();
+    const closeTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+    const show = () => {
+        clearTimeout(closeTimer.current);
+        setOpen(true);
+    };
+    const hideSoon = () => {
+        clearTimeout(closeTimer.current);
+        closeTimer.current = setTimeout(() => setOpen(false), CLOSE_DELAY_MS);
+    };
+    React.useEffect(() => () => clearTimeout(closeTimer.current), []);
 
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
@@ -48,10 +63,11 @@ export const AMITagPopover: React.FC<{ info: AMITagInfo }> = ({ info }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`AMI tag ${info.tag}, opens AMI in a new tab`}
-                    onMouseEnter={() => setOpen(true)}
-                    onMouseLeave={() => setOpen(false)}
-                    onFocus={() => setOpen(true)}
-                    onBlur={() => setOpen(false)}
+                    aria-describedby={open ? contentId : undefined}
+                    onMouseEnter={show}
+                    onMouseLeave={hideSoon}
+                    onFocus={show}
+                    onBlur={hideSoon}
                     className={cn(
                         badgeVariants({ variant: info.found === false ? 'neutral' : 'info', size: 'sm', shape: 'pill' }),
                         'gap-1 font-mono no-underline hover:underline',
@@ -65,6 +81,9 @@ export const AMITagPopover: React.FC<{ info: AMITagInfo }> = ({ info }) => {
 
             <Popover.Portal>
                 <Popover.Content
+                    id={contentId}
+                    onMouseEnter={show}
+                    onMouseLeave={hideSoon}
                     side="top"
                     align="start"
                     sideOffset={6}

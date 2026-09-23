@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { AMITagChips } from '@/component-library/features/ami/AMITagChips';
 import { AMITagInfo } from '@/lib/core/usecase-models/get-ami-tag-info-usecase-models';
 
@@ -63,6 +63,47 @@ describe('AMITagChips', () => {
         render(<AMITagChips tags={['r1234']} infos={infos} />);
         fireEvent.mouseEnter(screen.getByRole('link', { name: /r1234/ }));
         expect(await screen.findByText('AMI details unavailable')).toBeInTheDocument();
+    });
+
+    it('describes the chip with the open popover for assistive technology', async () => {
+        render(<AMITagChips tags={['m2281']} infos={infos} />);
+        const link = screen.getByRole('link', { name: /m2281/ });
+        expect(link).not.toHaveAttribute('aria-describedby');
+        fireEvent.focus(link);
+        const release = await screen.findByText('Athena_24.0.128');
+        const describedBy = link.getAttribute('aria-describedby');
+        expect(describedBy).toBeTruthy();
+        expect(document.getElementById(describedBy as string)).toContainElement(release);
+    });
+
+    describe('hover grace period', () => {
+        beforeEach(() => jest.useFakeTimers());
+        afterEach(() => jest.useRealTimers());
+
+        it('stays open while the pointer moves from the chip onto the popover', () => {
+            render(<AMITagChips tags={['m2281']} infos={infos} />);
+            const link = screen.getByRole('link', { name: /m2281/ });
+            fireEvent.mouseEnter(link);
+            const release = screen.getByText('Athena_24.0.128');
+            fireEvent.mouseLeave(link);
+            fireEvent.mouseEnter(document.getElementById(link.getAttribute('aria-describedby') as string) as HTMLElement);
+            act(() => {
+                jest.advanceTimersByTime(1000);
+            });
+            expect(release).toBeInTheDocument();
+        });
+
+        it('closes once the pointer has left both chip and popover', () => {
+            render(<AMITagChips tags={['m2281']} infos={infos} />);
+            const link = screen.getByRole('link', { name: /m2281/ });
+            fireEvent.mouseEnter(link);
+            expect(screen.getByText('Athena_24.0.128')).toBeInTheDocument();
+            fireEvent.mouseLeave(link);
+            act(() => {
+                jest.advanceTimersByTime(1000);
+            });
+            expect(screen.queryByText('Athena_24.0.128')).not.toBeInTheDocument();
+        });
     });
 
     it('falls back to a plain chip for a tag missing from infos', () => {

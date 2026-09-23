@@ -31,6 +31,14 @@ describe('GET /api/feature/get-ami-tag-info', () => {
         expect(res.status).toBe(400);
     });
 
+    it('returns 404, not 500, when the flag is on at runtime but the feature was not loaded at startup', async () => {
+        // container-config was imported with the flag unset, so the controller is unbound
+        process.env.FEATURE_DIDS_AMI_TAGS = 'true';
+        const res = await GET(req('?tags=f1723'));
+        expect(res.status).toBe(404);
+        await expect(res.json()).resolves.toEqual({ error: 'Not found' });
+    });
+
     it('returns 400 for more than 10 tags when enabled', async () => {
         process.env.FEATURE_DIDS_AMI_TAGS = 'true';
         const tags = Array.from({ length: 11 }, (_, i) => `f${1000 + i}`).join(',');
