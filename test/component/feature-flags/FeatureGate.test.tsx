@@ -11,6 +11,7 @@ const baseMap: FeatureFlagMap = {
     rses: true,
     'dids.metadata': false,
     'dids.mutate': true,
+    'dids.ami_tags': false,
 };
 
 describe('FeatureGate', () => {

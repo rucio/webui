@@ -20,6 +20,8 @@ export const FEATURE_REGISTRY = {
     rses: { default: true, pages: ['/rses', '/rse/[name]'] },
     'dids.metadata': { default: true, pages: [] },
     'dids.mutate': { default: true, pages: [] },
+    // ATLAS-only: AMI tag chips on DID views + /api/feature/get-ami-tag-info
+    'dids.ami_tags': { default: false, pages: [] },
 } as const satisfies Record<string, FeatureDefinition>;
 
 export type FeatureKey = keyof typeof FEATURE_REGISTRY;
@@ -53,4 +55,21 @@ export function resolveEnabledSet(rawEnv: Partial<Record<FeatureKey, string | un
         result[key] = resolveFeatureEnabled(key, rawEnv);
     });
     return result;
+}
+
+/** Picks the FEATURE_* values for every registry key out of an env object. */
+export function readFeatureEnv(env: Record<string, string | undefined>): Partial<Record<FeatureKey, string | undefined>> {
+    const raw = {} as Partial<Record<FeatureKey, string | undefined>>;
+    (Object.keys(FEATURE_REGISTRY) as FeatureKey[]).forEach(key => {
+        raw[key] = env[envKeyForFeature(key)];
+    });
+    return raw;
+}
+
+/**
+ * Synchronous flag check for module-load-time decisions (e.g. whether to bind
+ * an IoC feature). Runtime checks should go through FeatureConfigGateway.
+ */
+export function isFeatureEnabledInEnv(key: FeatureKey, env: Record<string, string | undefined>): boolean {
+    return resolveFeatureEnabled(key, readFeatureEnv(env));
 }

@@ -1,15 +1,11 @@
 import { injectable } from 'inversify';
 import FeatureConfigGatewayOutputPort from '@/lib/core/port/secondary/feature-config-gateway-output-port';
-import { FEATURE_REGISTRY, FeatureKey, FeatureFlagMap, resolveEnabledSet, envKeyForFeature } from '@/lib/core/entity/feature-config';
+import { FeatureKey, FeatureFlagMap, resolveEnabledSet, readFeatureEnv } from '@/lib/core/entity/feature-config';
 
 @injectable()
 class FeatureConfigGateway implements FeatureConfigGatewayOutputPort {
     private readRawEnv(): Partial<Record<FeatureKey, string | undefined>> {
-        const raw = {} as Partial<Record<FeatureKey, string | undefined>>;
-        (Object.keys(FEATURE_REGISTRY) as FeatureKey[]).forEach(key => {
-            raw[key] = process.env[envKeyForFeature(key)];
-        });
-        return raw;
+        return readFeatureEnv(process.env);
     }
 
     async enabledSet(): Promise<FeatureFlagMap> {
