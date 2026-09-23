@@ -1,17 +1,11 @@
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
 import { CreateRuleParameters, CreateRuleStorage } from '@/lib/infrastructure/data/view-model/rule';
-import { cn } from '@/component-library/utils';
-import { HintLink } from '@/component-library/atoms/misc/HintLink';
-import { Input } from '@/component-library/atoms/form/input';
-import { SearchButton } from '@/component-library/features/search/SearchButton';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { CreateRuleStageStorageTable } from '@/component-library/pages/Rule/create/stage-rses/CreateRuleStageStorageTable';
-import { GridReadyEvent } from 'ag-grid-community';
 import { InfoField } from '@/component-library/features/fields/InfoField';
 import { WarningField } from '@/component-library/features/fields/WarningField';
-import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { CreateRuleTableWrapper } from '@/component-library/pages/Rule/create/CreateRuleTableWrapper';
 import { LabeledCheckbox } from '@/component-library/features/form/LabeledCheckbox';
 import { RSESearchPanel } from '@/component-library/features/search/RSESearchPanel';
@@ -28,7 +22,7 @@ type CreateRuleStageStorageProps = {
 
 export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
     const totalDataSize = props.parameters.dids.reduce((accumulator, current) => accumulator + current.bytes, 0);
-    const selectedItems = props.parameters.rses;
+    let selectedItems: RSEAccountUsageLimitViewModel[] = props.parameters.rses;
 
     const [needsApproval, setNeedsApproval] = useState<boolean>(props.parameters.needsApproval);
     const [askApproval, setAskApproval] = useState<boolean>(props.parameters.askApproval);
@@ -57,14 +51,17 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
         props.updateStorage({
             rses: [...selectedItems, rse],
         });
+        selectedItems.push(rse);
     };
 
     const removeRSE = (rse: RSEAccountUsageLimitViewModel) => {
         // Use RSE name for comparison since rse_id is undefined from the API
         const updatedRSEs = selectedItems.filter(item => item.rse !== rse.rse);
+
         props.updateStorage({
             rses: updatedRSEs,
         });
+        selectedItems = updatedRSEs;
     };
 
     useEffect(() => {
