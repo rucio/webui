@@ -17,4 +17,7 @@ export const QUERY_KEYS = {
 
     /** Paginated/streamed rule list — used by ListRule page */
     RULE_PAGE: ['rule-page'] as const,
+
+    /** AMI tag info for a DID's tags (ATLAS only) — used by AMITagsRow */
+    AMI_TAG_INFO: ['ami-tag-info'] as const,
 } as const;
