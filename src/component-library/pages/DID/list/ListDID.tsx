@@ -13,6 +13,8 @@ import { BaseViewModelValidator } from '@/component-library/features/utils/BaseV
 import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { DIDSearchPanel, DIDSearchParams } from '@/component-library/features/search/DIDSearchPanel';
+import { DIDSearchProgress } from '@/component-library/features/search/DIDSearchProgress';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface ListDIDProps {
     firstPattern?: string;
@@ -27,8 +29,13 @@ export const ListDID = (props: ListDIDProps) => {
     // A shared validator
     const validator = new BaseViewModelValidator(toast);
 
+    // Search progress trail, fed by the non-row records the All cascade emits
+    const [metaRecords, setMetaRecords] = useState<ListDIDsViewModel[]>([]);
+
     // List handling
-    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDViewModel>(props.initialData);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDViewModel>(props.initialData, {
+        onMetaRecord: record => setMetaRecords(prev => [...prev, record as unknown as ListDIDsViewModel]),
+    });
 
     // Track if auto-search has already been performed
     const hasAutoSearched = useRef(false);
@@ -43,7 +50,7 @@ export const ListDID = (props: ListDIDProps) => {
                 const [scope, name] = patternParts;
                 const params = new URLSearchParams({
                     query: props.firstPattern,
-                    type: props.initialType ?? DIDType.DATASET,
+                    type: props.initialType ?? DIDType.ALL,
                 });
                 const url = '/api/feature/list-dids?' + params;
                 startStreaming(url);
@@ -125,8 +132,12 @@ export const ListDID = (props: ListDIDProps) => {
                     initialPattern={props.firstPattern}
                     autoSearch={props.autoSearch}
                     initialType={props.initialType}
-                    onSearchStart={props.onSearchStart}
+                    onSearchStart={params => {
+                        setMetaRecords([]);
+                        props.onSearchStart?.(params);
+                    }}
                 />
+                <DIDSearchProgress records={metaRecords} />
             </div>
 
             {/* Results Section */}

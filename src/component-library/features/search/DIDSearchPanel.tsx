@@ -96,7 +96,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
     const [scope, setScope] = useState<string | null>(initialScope ?? null);
     const [name, setName] = useState<string | null>(initialName ?? null);
 
-    const [type, setType] = useState<DIDType>(props.initialType ?? DIDType.DATASET);
+    const [type, setType] = useState<DIDType>(props.initialType ?? DIDType.ALL);
     const [limit, setLimit] = useState<string>('');
     const [createdMode, setCreatedMode] = useState<'before' | 'after'>('after');
     const [createdDate, setCreatedDate] = useState<Date | undefined>(undefined);
@@ -281,6 +281,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
+                                <SelectItem value={DIDType.ALL}>All</SelectItem>
                                 <SelectItem value={DIDType.CONTAINER}>Container</SelectItem>
                                 <SelectItem value={DIDType.DATASET}>Dataset</SelectItem>
                                 <SelectItem value={DIDType.FILE}>File</SelectItem>
@@ -326,81 +327,80 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                 {/* DID filters */}
                 {isFilterExpanded && (
                     <div className="order-2 md:order-3 md:basis-full rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6 space-y-6">
-                    <DIDFilterField label="Created">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
-                            <Select value={createdMode} onValueChange={v => setCreatedMode(v as 'before' | 'after')}>
-                                <SelectTrigger className="w-full sm:w-32 flex-shrink-0">
-                                    <SelectValue placeholder="Mode" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectItem value="after">After</SelectItem>
-                                        <SelectItem value="before">Before</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                            <div className="flex flex-row flex-1 gap-2">
-                                <div className="flex-grow-[2]">
-                                    <DateInput onchange={(date: Date) => setCreatedDate(date)} initialdate={createdDate} placeholder="Select date" />
-                                </div>
-                                <div className="flex-grow">
-                                    <TimeInput
-                                        onchange={(time: string) => setCreatedTime(time)}
-                                        initialtime={createdTime}
-                                        placeholder="Select time"
-                                        showSeconds={true}
-                                    />
+                        <DIDFilterField label="Created">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+                                <Select value={createdMode} onValueChange={v => setCreatedMode(v as 'before' | 'after')}>
+                                    <SelectTrigger className="w-full sm:w-32 flex-shrink-0">
+                                        <SelectValue placeholder="Mode" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem value="after">After</SelectItem>
+                                            <SelectItem value="before">Before</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                                <div className="flex flex-row flex-1 gap-2">
+                                    <div className="flex-grow-[2]">
+                                        <DateInput
+                                            onchange={(date: Date) => setCreatedDate(date)}
+                                            initialdate={createdDate}
+                                            placeholder="Select date"
+                                        />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <TimeInput
+                                            onchange={(time: string) => setCreatedTime(time)}
+                                            initialtime={createdTime}
+                                            placeholder="Select time"
+                                            showSeconds={true}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </DIDFilterField>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        <DIDFilterField label="Limit">
-                            <Input
-                                type="number"
-                                value={limit}
-                                onChange={e => setLimit(e.target.value)}
-                                placeholder="Maximum number of DID returned"
-                                className="w-full"
-                            />
                         </DIDFilterField>
-                        {(type === DIDType.CONTAINER || type === DIDType.DATASET) && (
-                            <DIDFilterField label="Length">
-                                <div className="flex items-center gap-2">
-                                    <Select value={lengthOperator} onValueChange={v => setLengthOperator(v as DIDFilterOperator)}>
-                                        <SelectTrigger className="w-20 flex-shrink-0">
-                                            <SelectValue placeholder="=" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectItem value="=">=</SelectItem>
-                                                <SelectItem value=">">{'>'}</SelectItem>
-                                                <SelectItem value="<">{'<'}</SelectItem>
-                                                <SelectItem value=">=">≥</SelectItem>
-                                                <SelectItem value="<=">≤</SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                    <Input
-                                        type="number"
-                                        value={lengthValue}
-                                        onChange={e => setLengthValue(e.target.value)}
-                                        placeholder="Number of attached DIDs"
-                                        className="w-full"
-                                    />
-                                </div>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <DIDFilterField label="Limit">
+                                <Input
+                                    type="number"
+                                    value={limit}
+                                    onChange={e => setLimit(e.target.value)}
+                                    placeholder="Maximum number of DID returned"
+                                    className="w-full"
+                                />
                             </DIDFilterField>
-                        )}
+                            {(type === DIDType.CONTAINER || type === DIDType.DATASET) && (
+                                <DIDFilterField label="Length">
+                                    <div className="flex items-center gap-2">
+                                        <Select value={lengthOperator} onValueChange={v => setLengthOperator(v as DIDFilterOperator)}>
+                                            <SelectTrigger className="w-20 flex-shrink-0">
+                                                <SelectValue placeholder="=" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectItem value="=">=</SelectItem>
+                                                    <SelectItem value=">">{'>'}</SelectItem>
+                                                    <SelectItem value="<">{'<'}</SelectItem>
+                                                    <SelectItem value=">=">≥</SelectItem>
+                                                    <SelectItem value="<=">≤</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                        <Input
+                                            type="number"
+                                            value={lengthValue}
+                                            onChange={e => setLengthValue(e.target.value)}
+                                            placeholder="Number of attached DIDs"
+                                            className="w-full"
+                                        />
+                                    </div>
+                                </DIDFilterField>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-                <SearchButton
-                    className="order-3 md:order-2 sm:w-full md:w-48"
-                    isRunning={props.isRunning}
-                    onStop={onStop}
-                    onSearch={onSearch}
-                />
+                <SearchButton className="order-3 md:order-2 sm:w-full md:w-48" isRunning={props.isRunning} onStop={onStop} onSearch={onSearch} />
             </div>
         </div>
     );
