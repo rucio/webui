@@ -90,6 +90,8 @@ export class WebUIEnvTemplateCompiler {
       'FEATURE_DIDS_MUTATE': 'true',
       'FEATURE_DIDS_AMI_TAGS': 'false',
       'AMI_BASE_URL': 'https://atlas-ami.cern.ch',
+      'FEATURE_DIDS_PANDA_TASK': 'false',
+      'PANDA_BASE_URL': 'https://bigpanda.cern.ch',
       ...this.environmentVariables,
     }
   }
@@ -215,13 +217,15 @@ export class WebUIEnvTemplateCompiler {
       }
     }
 
-    // AMI base URL (used by the AMI tags feature) must be an http(s) URL when set
-    const amiBaseUrl = env['AMI_BASE_URL']
-    if (amiBaseUrl && amiBaseUrl.trim() !== '' && !/^https?:\/\//.test(amiBaseUrl.trim())) {
-      errors.push({
-        type: 'error',
-        message: `${prefix}AMI_BASE_URL must start with http:// or https:// (got "${amiBaseUrl}").`
-      })
+    // External base URLs used by the ATLAS DID features must be http(s) URLs when set
+    for (const key of ['AMI_BASE_URL', 'PANDA_BASE_URL']) {
+      const value = env[key]
+      if (value && value.trim() !== '' && !/^https?:\/\//.test(value.trim())) {
+        errors.push({
+          type: 'error',
+          message: `${prefix}${key} must start with http:// or https:// (got "${value}").`
+        })
+      }
     }
 
     // check if oidc is enabled, all oidc variables are set
