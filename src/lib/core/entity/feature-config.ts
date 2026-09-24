@@ -22,6 +22,8 @@ export const FEATURE_REGISTRY = {
     'dids.mutate': { default: true, pages: [] },
     // ATLAS-only: AMI tag chips on DID views + /api/feature/get-ami-tag-info
     'dids.ami_tags': { default: false, pages: [] },
+    // ATLAS-only: PanDA task link on DID views + /api/feature/get-panda-task-link
+    'dids.panda_task': { default: false, pages: [] },
 } as const satisfies Record<string, FeatureDefinition>;
 
 export type FeatureKey = keyof typeof FEATURE_REGISTRY;

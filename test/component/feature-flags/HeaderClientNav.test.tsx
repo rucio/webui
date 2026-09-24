@@ -26,6 +26,7 @@ function renderNav(overrides: Partial<FeatureFlagMap>) {
         'dids.metadata': true,
         'dids.mutate': true,
         'dids.ami_tags': false,
+        'dids.panda_task': false,
         ...overrides,
     };
     return render(

@@ -35,6 +35,7 @@ const baseMap: FeatureFlagMap = {
     'dids.metadata': true,
     'dids.mutate': true,
     'dids.ami_tags': false,
+    'dids.panda_task': false,
 };
 
 describe('dids.metadata gate on the Attributes tab', () => {
