@@ -20,4 +20,7 @@ export const QUERY_KEYS = {
 
     /** AMI tag info for a DID's tags (ATLAS only) — used by AMITagsRow */
     AMI_TAG_INFO: ['ami-tag-info'] as const,
+
+    /** BigPanDA link for a DID's PanDA task (ATLAS only), used by PandaTaskRow */
+    PANDA_TASK_LINK: ['panda-task-link'] as const,
 } as const;
