@@ -88,6 +88,18 @@ class ListDIDsUseCase
     }
 
     /**
+     * A failure on a hop after the first. The HTTP status is already committed by
+     * then, so the only honest way to report it is in the stream itself.
+     */
+    private hopErrorRecord(message: string): ListDIDsResponse {
+        return {
+            status: 'error',
+            error: 'Unknown Error',
+            message,
+        } as unknown as ListDIDsResponse;
+    }
+
+    /**
      * The client-facing response the presenter writes to, when it exposes one.
      * Used to abandon the cascade if the client goes away mid-search.
      */
@@ -155,8 +167,12 @@ class ListDIDsUseCase
             if (!out.destroyed) out.destroy();
         });
 
-        this.driveCascade(requestModel, out, containerHop.stream ?? null, datasetHop).catch(() => {
-            out.end();
+        this.driveCascade(requestModel, out, containerHop.stream ?? null, datasetHop).catch((error: Error) => {
+            // Never end silently on a failure: an empty stream reads as "nothing matched".
+            if (!out.destroyed && !out.writableEnded) {
+                out.write(this.hopErrorRecord(`The search failed while streaming results: ${error?.message ?? error}`));
+                out.end();
+            }
         });
 
         return { status: 'success', stream: out };
@@ -200,6 +216,12 @@ class ListDIDsUseCase
         datasetHop.stream?.destroy();
 
         if (!isAlive()) return;
+
+        // A hop that failed did not "find nothing", and must not be reported as such.
+        if (datasetHop.error) {
+            out.write(this.hopErrorRecord(`The dataset search failed: ${datasetHop.error.message ?? datasetHop.error.error}`));
+        }
+
         out.write(this.progressRecord(ListDIDsUseCase.COLLECTION_TYPES, 'empty'));
 
         const { name } = parseDIDString(requestModel.query);
@@ -217,7 +239,7 @@ class ListDIDsUseCase
             return;
         }
         if (fileHop.error || !fileHop.stream) {
-            out.write(this.noticeRecord('no-results', 'No DIDs matched this query.'));
+            out.write(this.hopErrorRecord(`The file search failed: ${fileHop.error?.message ?? fileHop.error?.error ?? 'no stream returned'}`));
             out.end();
             return;
         }
@@ -259,6 +281,15 @@ class ListDIDsUseCase
             return {
                 data: record,
                 status: 'success',
+            };
+        }
+
+        // The cascade reports a failing hop in-stream, because the HTTP status is
+        // already committed by the time the later hops run.
+        if ((record.status as string) === 'error') {
+            return {
+                data: record as unknown as ListDIDsError,
+                status: 'error',
             };
         }
 

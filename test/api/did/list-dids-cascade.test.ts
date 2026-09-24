@@ -209,4 +209,36 @@ describe('List DIDs cascade under the All type', () => {
 
         expect(fileHopCalled).toEqual(false);
     });
+    it('reports a failing dataset hop instead of silently searching on', async () => {
+        const brokenDatasetHop: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dids/search`,
+            method: 'GET',
+            includes: 'type=dataset',
+            response: { status: 500, headers: null, body: null },
+        };
+
+        const { received } = await runCascade('test:data1', [
+            searchHop('container', []),
+            brokenDatasetHop,
+            searchHop('file', ['file1']),
+            statusEndpoint('file1', 'FILE'),
+        ]);
+
+        expect(received.some(r => r.status === 'error')).toEqual(true);
+        expect(notices(received).map(n => n.notice.code)).not.toContain('no-results');
+    });
+
+    it('reports a failing file hop rather than claiming nothing matched', async () => {
+        const brokenFileHop: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/dids/test/dids/search`,
+            method: 'GET',
+            includes: 'type=file',
+            response: { status: 500, headers: null, body: null },
+        };
+
+        const { received } = await runCascade('test:data1', [searchHop('container', []), searchHop('dataset', []), brokenFileHop]);
+
+        expect(received.some(r => r.status === 'error')).toEqual(true);
+        expect(notices(received).map(n => n.notice.code)).not.toContain('no-results');
+    });
 });
