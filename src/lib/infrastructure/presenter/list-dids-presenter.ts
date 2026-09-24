@@ -9,8 +9,26 @@ export default class ListDIDsPresenter
     implements ListDIDsOutputPort
 {
     streamResponseModelToViewModel(responseModel: ListDIDsResponse): ListDIDsViewModel {
+        const kind = responseModel.kind ?? 'did';
+
+        if (kind === 'progress' || kind === 'notice') {
+            return {
+                status: 'success',
+                kind,
+                progress: responseModel.progress,
+                notice: responseModel.notice,
+                name: '',
+                scope: '',
+                did_type: DIDType.UNKNOWN,
+                bytes: 0,
+                length: 0,
+                open: false,
+            };
+        }
+
         const viewModel: ListDIDsViewModel = {
             status: 'success',
+            kind: 'did',
             name: responseModel.name,
             scope: responseModel.scope,
             did_type: responseModel.did_type,

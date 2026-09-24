@@ -136,6 +136,7 @@ describe('DID API Tests', () => {
             {
                 status: 'success',
                 name: 'dataset1',
+                kind: 'did',
                 scope: 'test',
                 did_type: 'Dataset',
                 bytes: 0,
@@ -145,6 +146,7 @@ describe('DID API Tests', () => {
             {
                 status: 'success',
                 name: 'dataset2',
+                kind: 'did',
                 scope: 'test',
                 did_type: 'Dataset',
                 bytes: 123,
@@ -154,6 +156,7 @@ describe('DID API Tests', () => {
             {
                 status: 'success',
                 name: 'dataset3',
+                kind: 'did',
                 scope: 'test',
                 did_type: 'Dataset',
                 bytes: 456,
@@ -258,6 +261,7 @@ describe('DID API Tests', () => {
         expect(receivedData[0]).toEqual({
             status: 'success',
             name: 'dataset1',
+            kind: 'did',
             scope: 'test',
             did_type: 'Dataset',
             bytes: 0,
@@ -268,6 +272,7 @@ describe('DID API Tests', () => {
         expect(receivedData[2]).toEqual({
             status: 'success',
             name: 'dataset3',
+            kind: 'did',
             scope: 'test',
             did_type: 'Dataset',
             bytes: 456,
