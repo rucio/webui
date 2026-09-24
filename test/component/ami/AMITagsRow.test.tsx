@@ -1,10 +1,18 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FeatureProvider } from '@/component-library/features/feature-flags/FeatureProvider';
 import { FeatureFlagMap, FEATURE_REGISTRY, FeatureKey } from '@/lib/core/entity/feature-config';
 import { AMITagsRow } from '@/component-library/features/ami/AMITagsRow';
 
 const NAME = 'data26_hi.00523138.physics_HardProbes.merge.AOD.f1723_m2281._lb0490._0003.1';
+
+const RESPONSE = JSON.stringify({
+    status: 'success',
+    tags: [
+        { tag: 'f1723', url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=f1723', found: true },
+        { tag: 'm2281', url: 'https://atlas-ami.cern.ch/?subapp=tagsShow&userdata=m2281', found: true },
+    ],
+});
 
 function flags(amiTags: boolean): FeatureFlagMap {
     const map = {} as FeatureFlagMap;
@@ -64,5 +72,31 @@ describe('AMITagsRow', () => {
         await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
         expect(screen.getByText('m2281')).toBeInTheDocument();
         expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    });
+    it('keeps the cached result for an hour after unmount, so a later remount does not refetch', async () => {
+        fetchMock.mockResponseOnce(RESPONSE);
+        const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+        const ui = (
+            <QueryClientProvider client={client}>
+                <FeatureProvider features={flags(true)}>
+                    <AMITagsRow name={NAME} />
+                </FeatureProvider>
+            </QueryClientProvider>
+        );
+        const first = render(ui);
+        await waitFor(() => expect(screen.queryAllByRole('link').length).toBeGreaterThan(0));
+        jest.useFakeTimers();
+        try {
+            first.unmount();
+            // Past React Query's default 5 minute gcTime, within our 1 hour staleTime
+            act(() => {
+                jest.advanceTimersByTime(10 * 60 * 1000);
+            });
+            render(ui);
+            expect(screen.queryAllByRole('link').length).toBeGreaterThan(0);
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+        } finally {
+            jest.useRealTimers();
+        }
     });
 });

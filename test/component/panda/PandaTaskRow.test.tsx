@@ -1,10 +1,12 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FeatureProvider } from '@/component-library/features/feature-flags/FeatureProvider';
 import { FeatureFlagMap, FEATURE_REGISTRY, FeatureKey } from '@/lib/core/entity/feature-config';
 import { PandaTaskRow } from '@/component-library/features/panda/PandaTaskRow';
 
 const NAME = 'mc20_13TeV.830072.H7EG_jetjet_Lund_JZ1.deriv.DAOD_PHYS.e8419_s3681_r13167_r13146_p5855_tid34870879_00';
+
+const RESPONSE = JSON.stringify({ status: 'success', taskId: '34870879', url: 'https://bigpanda.cern.ch/task/?jeditaskid=34870879' });
 
 function flags(pandaTask: boolean): FeatureFlagMap {
     const map = {} as FeatureFlagMap;
@@ -65,5 +67,31 @@ describe('PandaTaskRow', () => {
         await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
         expect(screen.getByText('34870879')).toBeInTheDocument();
         expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    });
+    it('keeps the cached result for an hour after unmount, so a later remount does not refetch', async () => {
+        fetchMock.mockResponseOnce(RESPONSE);
+        const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+        const ui = (
+            <QueryClientProvider client={client}>
+                <FeatureProvider features={flags(true)}>
+                    <PandaTaskRow name={NAME} />
+                </FeatureProvider>
+            </QueryClientProvider>
+        );
+        const first = render(ui);
+        await waitFor(() => expect(screen.queryAllByRole('link').length).toBeGreaterThan(0));
+        jest.useFakeTimers();
+        try {
+            first.unmount();
+            // Past React Query's default 5 minute gcTime, within our 1 hour staleTime
+            act(() => {
+                jest.advanceTimersByTime(10 * 60 * 1000);
+            });
+            render(ui);
+            expect(screen.queryAllByRole('link').length).toBeGreaterThan(0);
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+        } finally {
+            jest.useRealTimers();
+        }
     });
 });

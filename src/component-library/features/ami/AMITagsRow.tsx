@@ -32,6 +32,9 @@ export const AMITagsRow: React.FC<{ name: string }> = ({ name }) => {
         queryFn: () => fetchAMITagInfo(tags),
         enabled: enabled && tags.length > 0,
         staleTime: ONE_HOUR_MS,
+        // Keep unused entries as long as they stay fresh; the default 5 min gcTime
+        // would otherwise refetch unchanged AMI/PanDA data after navigating away.
+        gcTime: ONE_HOUR_MS,
         retry: false,
         refetchOnWindowFocus: false,
     });

@@ -32,6 +32,9 @@ export const PandaTaskRow: React.FC<{ name: string }> = ({ name }) => {
         queryFn: () => fetchPandaTaskLink(taskId as string),
         enabled: enabled && taskId !== undefined,
         staleTime: ONE_HOUR_MS,
+        // Keep unused entries as long as they stay fresh; the default 5 min gcTime
+        // would otherwise refetch unchanged AMI/PanDA data after navigating away.
+        gcTime: ONE_HOUR_MS,
         retry: false,
         refetchOnWindowFocus: false,
     });
