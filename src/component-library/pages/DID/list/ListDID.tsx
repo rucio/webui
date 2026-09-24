@@ -32,6 +32,10 @@ export const ListDID = (props: ListDIDProps) => {
     // Search progress trail, fed by the non-row records the All cascade emits
     const [metaRecords, setMetaRecords] = useState<ListDIDsViewModel[]>([]);
 
+    // The type the current results were searched with. All can return any type,
+    // so that is the only case where a type column tells the user something.
+    const [searchedType, setSearchedType] = useState<DIDType>(props.initialType ?? DIDType.ALL);
+
     // List handling
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDViewModel>(props.initialData, {
         onMetaRecord: record => setMetaRecords(prev => [...prev, record as unknown as ListDIDsViewModel]),
@@ -134,6 +138,7 @@ export const ListDID = (props: ListDIDProps) => {
                     initialType={props.initialType}
                     onSearchStart={params => {
                         setMetaRecords([]);
+                        setSearchedType(params.type);
                         props.onSearchStart?.(params);
                     }}
                 />
@@ -144,7 +149,12 @@ export const ListDID = (props: ListDIDProps) => {
             <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-20rem)]">
                 {/* Table */}
                 <div className="lg:flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[60vh] lg:h-full">
-                    <ListDIDTable streamingHook={streamingHook} onSelectionChanged={onSelectionChanged} onGridReady={onGridReady} />
+                    <ListDIDTable
+                        streamingHook={streamingHook}
+                        onSelectionChanged={onSelectionChanged}
+                        onGridReady={onGridReady}
+                        showTypeColumn={searchedType === DIDType.ALL}
+                    />
                 </div>
 
                 {/* Metadata Panel */}
