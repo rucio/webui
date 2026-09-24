@@ -25,7 +25,7 @@ describe('GET /api/feature/get-ami-tag-info', () => {
         await expect(res.json()).resolves.toEqual({ error: 'Not found' });
     });
 
-    it.each(['', '?tags=', '?tags=AOD', '?tags=f1723,v1'])('returns 400 for %p when enabled', async query => {
+    it.each(['', '?tags=', '?tags=AOD', '?tags=f1723,V1'])('returns 400 for %p when enabled', async query => {
         process.env.FEATURE_DIDS_AMI_TAGS = 'true';
         const res = await GET(req(query));
         expect(res.status).toBe(400);

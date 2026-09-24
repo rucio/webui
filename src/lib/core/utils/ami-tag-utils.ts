@@ -1,30 +1,23 @@
 /**
- * Helpers for ATLAS AMI tags embedded in DID names, e.g. the "f1723_m2281"
- * segment of data26_hi.00523138.physics_HardProbes.merge.AOD.f1723_m2281._lb0490._0003.1
+ * Helpers for ATLAS AMI tags. Tags are read from the Version field of an ATLAS
+ * DID name (see atlas-did-name.ts), e.g. r15869_p6304 in
+ * data22_13p6TeV.00437756.physics_Main.merge.AOD.r15869_p6304_tid40703687_00
  */
+import { getAtlasAmiTags } from '@/lib/core/utils/atlas-did-name';
 
 export const DEFAULT_AMI_BASE_URL = 'https://atlas-ami.cern.ch';
 export const MAX_AMI_TAGS_PER_REQUEST = 10;
 
-/** One tag: a single lowercase letter followed by at least 3 digits. */
-export const AMI_TAG_REGEX = /^[a-z]\d{3,}$/;
-/** A whole dot-separated name segment made only of tags joined by "_". */
-export const AMI_TAG_SEGMENT_REGEX = /^[a-z]\d{3,}(?:_[a-z]\d{3,})*$/;
+/** One tag: a single lowercase letter followed by digits (AMI's own rule). */
+export const AMI_TAG_REGEX = /^[a-z]\d+$/;
 
 export function isAmiTag(tag: string): boolean {
     return AMI_TAG_REGEX.test(tag);
 }
 
-/** Returns the AMI tags found in a DID name, de-duplicated, in first-seen order. */
+/** AMI tags of an ATLAS DID name, in order; empty for names without a Version field. */
 export function parseAmiTags(name: string): string[] {
-    const tags: string[] = [];
-    for (const segment of name.split('.')) {
-        if (!AMI_TAG_SEGMENT_REGEX.test(segment)) continue;
-        for (const tag of segment.split('_')) {
-            if (!tags.includes(tag)) tags.push(tag);
-        }
-    }
-    return tags;
+    return getAtlasAmiTags(name);
 }
 
 /**

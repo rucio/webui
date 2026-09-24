@@ -12,19 +12,18 @@ import {
 describe('parseAmiTags', () => {
     it.each<[string, string[]]>([
         ['data26_hi.00523138.physics_HardProbes.merge.AOD.f1723_m2281._lb0490._0003.1', ['f1723', 'm2281']],
-        ['data26_hi.00523138.physics_HardProbes.merge.AOD.f1723_m2281._lb0494._0001.1', ['f1723', 'm2281']],
+        ['data22_13p6TeV.00437756.physics_Main.merge.AOD.r15869_p6304_tid40703687_00', ['r15869', 'p6304']],
         [
             'mc23_13p6TeV.601229.PhPy8EG_A14_ttbar_hdamp258p75_SingleLep.deriv.DAOD_PHYS.e8514_s4162_r15540_p6266',
             ['e8514', 's4162', 'r15540', 'p6266'],
         ],
+        ['data25_13p6TeV.00499912.physics_TLA.merge.RAW', []],
         ['step14.87488.47741.recon.ESD.70640.58365', []],
         ['DAOD_LLP1.47616532._000665.pool.root.1', []],
-        ['HITS.51810356._018000.pool.root.1', []],
-        ['RDO.26849407._021658.pool.root.1', []],
+        ['user.jdoe.mc23_13p6TeV.601229.x.deriv.DAOD_PHYS.e8514_s4162', []],
         ['user.jdoe.mytest.v1', []],
-        ['user.jdoe.run2.data.p2', []],
-        ['x.f1723_M2281.y', []],
-        ['a.f1723.b.f1723_m2281', ['f1723', 'm2281']],
+        // Not an ATLAS name: tags are only read from the Version field now
+        ['a.f1723.b.f1723_m2281', []],
         ['', []],
     ])('%s -> %j', (name, expected) => {
         expect(parseAmiTags(name)).toEqual(expected);
@@ -32,8 +31,8 @@ describe('parseAmiTags', () => {
 });
 
 describe('isAmiTag', () => {
-    it.each(['f1723', 'r15540', 'a100'])('accepts %s', tag => expect(isAmiTag(tag)).toBe(true));
-    it.each(['v1', 'p12', 'step14', 'F1723', 'f1723_m2281', '1723', '', ' f1723'])('rejects %p', tag => expect(isAmiTag(tag)).toBe(false));
+    it.each(['f1723', 'r15540', 'v1', 'p12', 'a100'])('accepts %s', tag => expect(isAmiTag(tag)).toBe(true));
+    it.each(['step14', 'F1723', 'f1723_m2281', '1723', 'f', '', ' f1723'])('rejects %p', tag => expect(isAmiTag(tag)).toBe(false));
 });
 
 describe('parseAmiTagsParam', () => {
@@ -43,7 +42,7 @@ describe('parseAmiTagsParam', () => {
     it('joins repeated query keys', () => {
         expect(parseAmiTagsParam(['f1723', 'm2281'])).toEqual(['f1723', 'm2281']);
     });
-    it.each<[string | string[] | undefined]>([[undefined], [''], [' , '], ['AOD'], ['f1723,v1']])('returns null for %p', raw => {
+    it.each<[string | string[] | undefined]>([[undefined], [''], [' , '], ['AOD'], ['f1723,V1']])('returns null for %p', raw => {
         expect(parseAmiTagsParam(raw)).toBeNull();
     });
     it('returns null above the per-request limit', () => {
