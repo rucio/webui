@@ -39,6 +39,7 @@ const CONTROLLERS = {
     GET_FTS_LINK: Symbol.for('GetFTSLinkController'),
     GET_DDM_LINK: Symbol.for('GetDDMLinkController'),
     GET_AMI_TAG_INFO: Symbol.for('GetAMITagInfoController'),
+    GET_PANDA_TASK_LINK: Symbol.for('GetPandaTaskLinkController'),
     UPDATE_RULE: Symbol.for('UpdateRuleController'),
     LIST_SUSPICIOUS_REPLICAS: Symbol.for('ListSuspiciousReplicasController'),
     DECLARE_BAD_REPLICAS: Symbol.for('DeclareBadReplicasController'),

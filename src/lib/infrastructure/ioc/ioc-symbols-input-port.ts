@@ -39,6 +39,7 @@ const INPUT_PORT = {
     GET_FTS_LINK: Symbol.for('GetFTSLinkInputPort'),
     GET_DDM_LINK: Symbol.for('GetDDMLinkInputPort'),
     GET_AMI_TAG_INFO: Symbol.for('GetAMITagInfoInputPort'),
+    GET_PANDA_TASK_LINK: Symbol.for('GetPandaTaskLinkInputPort'),
     UPDATE_RULE: Symbol.for('UpdateRuleInputPort'),
     LIST_SUSPICIOUS_REPLICAS: Symbol.for('ListSuspiciousReplicasInputPort'),
     DECLARE_BAD_REPLICAS: Symbol.for('DeclareBadReplicasInputPort'),

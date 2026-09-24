@@ -40,6 +40,7 @@ const USECASE_FACTORY = {
     GET_FTS_LINK: Symbol.for('Factory<GetFTSLinkUseCase>'),
     GET_DDM_LINK: Symbol.for('Factory<GetDDMLinkUseCase>'),
     GET_AMI_TAG_INFO: Symbol.for('Factory<GetAMITagInfoUseCase>'),
+    GET_PANDA_TASK_LINK: Symbol.for('Factory<GetPandaTaskLinkUseCase>'),
     UPDATE_RULE: Symbol.for('Factory<UpdateRuleUseCase>'),
     LIST_SUSPICIOUS_REPLICAS: Symbol.for('Factory<ListSuspiciousReplicasUseCase>'),
     DECLARE_BAD_REPLICAS: Symbol.for('Factory<DeclareBadReplicasUseCase>'),
