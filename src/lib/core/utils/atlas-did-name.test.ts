@@ -100,7 +100,11 @@ describe('parseAtlasDIDName', () => {
 
 describe('parseAtlasVersion', () => {
     it('splits AMI tags from the PanDA suffix and drops the retry counter', () => {
-        expect(parseAtlasVersion('e8514_e8528_tid44601789_00')).toEqual({ value: 'e8514_e8528', amiTags: ['e8514', 'e8528'], pandaTaskId: '44601789' });
+        expect(parseAtlasVersion('e8514_e8528_tid44601789_00')).toEqual({
+            value: 'e8514_e8528',
+            amiTags: ['e8514', 'e8528'],
+            pandaTaskId: '44601789',
+        });
     });
     it('handles a task-only Version', () => {
         expect(parseAtlasVersion('tid123_00')).toEqual({ value: '', amiTags: [], pandaTaskId: '123' });

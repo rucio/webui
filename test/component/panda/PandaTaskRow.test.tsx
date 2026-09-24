@@ -51,7 +51,9 @@ describe('PandaTaskRow', () => {
     });
 
     it('uses the task field of ATLAS file names', async () => {
-        fetchMock.mockResponseOnce(JSON.stringify({ status: 'success', taskId: '47616532', url: 'https://bigpanda.cern.ch/task/?jeditaskid=47616532' }));
+        fetchMock.mockResponseOnce(
+            JSON.stringify({ status: 'success', taskId: '47616532', url: 'https://bigpanda.cern.ch/task/?jeditaskid=47616532' }),
+        );
         renderRow('DAOD_LLP1.47616532._000665.pool.root.1', true);
         await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
         expect(fetchMock.mock.calls[0][0]).toBe('/api/feature/get-panda-task-link?taskId=47616532');

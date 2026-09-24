@@ -7,10 +7,7 @@ import { createPandaTaskUrl, isPandaTaskId, normalizePandaBaseUrl } from '@/lib/
 
 @injectable()
 export default class GetPandaTaskLinkUseCase implements GetPandaTaskLinkInputPort {
-    constructor(
-        private readonly presenter: GetPandaTaskLinkOutputPort,
-        private readonly envConfigGateway: EnvConfigGatewayOutputPort,
-    ) {}
+    constructor(private readonly presenter: GetPandaTaskLinkOutputPort, private readonly envConfigGateway: EnvConfigGatewayOutputPort) {}
 
     async execute(requestModel: AuthenticatedRequestModel<GetPandaTaskLinkRequest>): Promise<void> {
         const { taskId } = requestModel;

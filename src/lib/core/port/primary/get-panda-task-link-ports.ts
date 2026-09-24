@@ -1,5 +1,9 @@
 import { BaseAuthenticatedInputPort, BaseOutputPort } from '@/lib/sdk/primary-ports';
-import { GetPandaTaskLinkError, GetPandaTaskLinkRequest, GetPandaTaskLinkResponse } from '@/lib/core/usecase-models/get-panda-task-link-usecase-models';
+import {
+    GetPandaTaskLinkError,
+    GetPandaTaskLinkRequest,
+    GetPandaTaskLinkResponse,
+} from '@/lib/core/usecase-models/get-panda-task-link-usecase-models';
 
 /**
  * @interface GetPandaTaskLinkInputPort representing the GetPandaTaskLink usecase.
