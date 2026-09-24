@@ -98,6 +98,23 @@ describe('parseAtlasDIDName', () => {
     });
 });
 
+describe('parseAtlasDIDName: review regressions', () => {
+    it.each([
+        // Period containers: runNumber is not a run number, grp18_v01_p6479 is not an AMI Version
+        'data18_13TeV.periodAllYear.physics_Main.PhysCont.DAOD_PHYSLITE.grp18_v01_p6479',
+        'mc16_13TeV.notANumber.Foo.deriv.DAOD_PHYS.e1_v01',
+    ])('does not treat %s as a production name', name => {
+        expect(parseAtlasDIDName(name)).toBeNull();
+        expect(getAtlasAmiTags(name)).toEqual([]);
+    });
+
+    it('ignores one trailing slash on legacy container names', () => {
+        expect(getAtlasAmiTags('mc23_13p6TeV.601229.X.deriv.DAOD_PHYS.e8514_s4162_r15540_p6266/')).toEqual(['e8514', 's4162', 'r15540', 'p6266']);
+        expect(getAtlasAmiTags('mc16_13TeV.410470.X.simul.HITS.e6337_s3126/')).toEqual(['e6337', 's3126']);
+        expect(getAtlasPandaTaskId('mc16_13TeV.410470.X.simul.HITS.e6337_s3126_tid123_00/')).toBe('123');
+    });
+});
+
 describe('parseAtlasVersion', () => {
     it('splits AMI tags from the PanDA suffix and drops the retry counter', () => {
         expect(parseAtlasVersion('e8514_e8528_tid44601789_00')).toEqual({

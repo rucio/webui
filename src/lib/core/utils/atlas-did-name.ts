@@ -89,6 +89,9 @@ export function parseAtlasVersion(field: string): AtlasVersion | undefined {
 function parseProductionName(fields: string[]): AtlasDataName | AtlasSimulationName | null {
     if (fields.length < 5) return null;
     const [project, number, description, prodStep, dataType, versionField] = fields;
+    // runNumber / datasetNumber are numeric; this rejects e.g. period containers
+    // (data18_13TeV.periodAllYear...PhysCont...grp18_v01_p6479), whose last field is not a Version
+    if (!DIGITS.test(number)) return null;
     const version = versionField === undefined ? undefined : parseAtlasVersion(versionField);
     const common: AtlasProductionFields = { project, prodStep, dataType, ...(version ? { version } : {}) };
     if (project.startsWith('data')) {
@@ -99,7 +102,8 @@ function parseProductionName(fields: string[]): AtlasDataName | AtlasSimulationN
 
 /** Parses a DID name according to the ATLAS naming conventions; null when it follows none of them. */
 export function parseAtlasDIDName(name: string): AtlasDIDName | null {
-    const fields = name.split('.');
+    // Legacy ATLAS containers end with a single "/"
+    const fields = name.replace(/\/$/, '').split('.');
     const [first, second = ''] = fields;
 
     if (first === 'user' || first === 'group') {
