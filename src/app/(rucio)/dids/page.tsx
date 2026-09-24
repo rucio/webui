@@ -35,9 +35,11 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{ 
             file: DIDType.FILE,
             dataset: DIDType.DATASET,
             container: DIDType.CONTAINER,
+            all: DIDType.ALL,
             [DIDType.FILE]: DIDType.FILE,
             [DIDType.DATASET]: DIDType.DATASET,
             [DIDType.CONTAINER]: DIDType.CONTAINER,
+            [DIDType.ALL]: DIDType.ALL,
         };
         initialType = typeMap[searchType.toLowerCase()] || typeMap[searchType];
     }

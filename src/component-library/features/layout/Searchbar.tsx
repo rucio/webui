@@ -2,6 +2,7 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Input } from '@/component-library/atoms/form/input';
 import { cn } from '@/component-library/utils';
 import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, detectSearchType, navigateToSearch } from '@/lib/infrastructure/utils/navigation';
+import { DIDType } from '@/lib/core/entity/rucio';
 
 type SearchLocation = {
     name: string;
@@ -13,7 +14,8 @@ const didLocation: SearchLocation = {
     name: 'DIDs',
     parameter: 'Pattern',
     getHref: (query: string) => {
-        return buildDIDSearchUrl({ pattern: query.length > 0 ? query : undefined });
+        // No type was chosen here, so let the All cascade work out which kind it is.
+        return buildDIDSearchUrl({ pattern: query.length > 0 ? query : undefined, type: DIDType.ALL });
     },
 };
 

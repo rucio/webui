@@ -15,7 +15,14 @@ import {
     ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { CommandItem } from '@/lib/core/entity/command-palette';
-import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, buildSubscriptionSearchUrl, detectSearchType } from '@/lib/infrastructure/utils/navigation';
+import { DIDType } from '@/lib/core/entity/rucio';
+import {
+    buildDIDSearchUrl,
+    buildRSESearchUrl,
+    buildRuleDetailUrl,
+    buildSubscriptionSearchUrl,
+    detectSearchType,
+} from '@/lib/infrastructure/utils/navigation';
 
 /**
  * Get static navigation commands
@@ -123,7 +130,9 @@ export function getActionCommands(searchQuery: string = ''): CommandItem[] {
                 title: `Search DIDs for "${searchQuery}"`,
                 description: 'Search Data Identifiers',
                 icon: MagnifyingGlassIcon,
-                url: buildDIDSearchUrl({ pattern: searchQuery }),
+                // The user typed a bare name and told us nothing about its type,
+                // which is exactly what the All cascade is for.
+                url: buildDIDSearchUrl({ pattern: searchQuery, type: DIDType.ALL }),
                 keywords: ['search', 'did', 'find'],
             });
         }
