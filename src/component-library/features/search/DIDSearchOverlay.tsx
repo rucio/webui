@@ -24,6 +24,10 @@ export const NOTICE_COPY: Record<string, { primary: string; secondary: string }>
         primary: 'No DIDs matched this query.',
         secondary: 'Containers, datasets and files were all searched.',
     },
+    'files-skipped': {
+        primary: 'Files were not searched.',
+        secondary: 'Wildcard searches on files are not supported. Search the File type directly to include them.',
+    },
 };
 
 const joinTypes = (types: DIDType[]): string => {

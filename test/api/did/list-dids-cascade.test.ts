@@ -73,17 +73,35 @@ describe('List DIDs cascade under the All type', () => {
     beforeEach(() => fetchMock.doMock());
     afterEach(() => fetchMock.dontMock());
 
-    it('stops at containers when containers match', async () => {
+    it('shows containers and datasets together when both match', async () => {
         const { received } = await runCascade('test:data1', [
             searchHop('container', ['container1']),
             searchHop('dataset', ['dataset1']),
             searchHop('file', ['file1']),
             statusEndpoint('container1', 'CONTAINER'),
+            statusEndpoint('dataset1', 'DATASET'),
         ]);
 
-        expect(dids(received).map(r => r.name)).toEqual(['container1']);
-        expect(progress(received).some(p => p.progress.state === 'found' && p.progress.types.includes('Container'))).toEqual(true);
+        expect(dids(received).map(r => r.name)).toEqual(['container1', 'dataset1']);
         expect(notices(received)).toHaveLength(0);
+    });
+
+    it('does not search files when a collection matched', async () => {
+        let fileHopCalled = false;
+        const fileHop = searchHop('file', ['file1']);
+        fileHop.requestValidator = async () => {
+            fileHopCalled = true;
+            return true;
+        };
+
+        await runCascade('test:data1', [
+            searchHop('container', ['container1']),
+            searchHop('dataset', []),
+            fileHop,
+            statusEndpoint('container1', 'CONTAINER'),
+        ]);
+
+        expect(fileHopCalled).toEqual(false);
     });
 
     it('falls through to datasets when containers are empty', async () => {
@@ -125,14 +143,26 @@ describe('List DIDs cascade under the All type', () => {
         expect(notices(received).map(n => n.notice.code)).toEqual(['refine-wildcard']);
     });
 
-    it('does not ask the user to refine a wildcard name when containers matched', async () => {
+    it('says files were skipped when a wildcard search did find collections', async () => {
         const { received } = await runCascade('test:data*', [
+            searchHop('container', ['container1']),
+            searchHop('dataset', ['dataset1']),
+            statusEndpoint('container1', 'CONTAINER'),
+            statusEndpoint('dataset1', 'DATASET'),
+        ]);
+
+        expect(dids(received).map(r => r.name)).toEqual(['container1', 'dataset1']);
+        // The user still needs to know files were left out, even though results came back.
+        expect(notices(received).map(n => n.notice.code)).toEqual(['files-skipped']);
+    });
+
+    it('does not say files were skipped when the name carries no wildcard', async () => {
+        const { received } = await runCascade('test:data1', [
             searchHop('container', ['container1']),
             searchHop('dataset', []),
             statusEndpoint('container1', 'CONTAINER'),
         ]);
 
-        expect(dids(received).map(r => r.name)).toEqual(['container1']);
         expect(notices(received)).toHaveLength(0);
     });
 
@@ -143,15 +173,16 @@ describe('List DIDs cascade under the All type', () => {
         expect(notices(received).map(n => n.notice.code)).toEqual(['no-results']);
     });
 
-    it('does not emit the losing dataset endpoint results when containers win', async () => {
+    it('orders containers before datasets so the coarser collections read first', async () => {
         const { received } = await runCascade('test:data1', [
-            searchHop('container', ['container1']),
-            searchHop('dataset', ['dataset1']),
-            statusEndpoint('container1', 'CONTAINER'),
+            searchHop('container', ['containerA', 'containerB']),
+            searchHop('dataset', ['datasetA']),
+            statusEndpoint('containerA', 'CONTAINER'),
+            statusEndpoint('containerB', 'CONTAINER'),
+            statusEndpoint('datasetA', 'DATASET'),
         ]);
 
-        expect(dids(received).map(r => r.name)).toEqual(['container1']);
-        expect(dids(received).map(r => r.name)).not.toContain('dataset1');
+        expect(dids(received).map(r => r.name)).toEqual(['containerA', 'containerB', 'datasetA']);
     });
 
     it('fails with an HTTP error rather than a stream when the container hop is unauthorized', async () => {

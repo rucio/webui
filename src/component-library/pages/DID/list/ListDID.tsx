@@ -42,13 +42,15 @@ export const ListDID = (props: ListDIDProps) => {
             const model = record as unknown as ListDIDsViewModel;
             setMetaRecords(prev => [...prev, model]);
 
-            // The wildcard notice is advice the user has to act on, not a description
-            // of the results, so it also gets a toast rather than only the empty state.
-            if (model.kind === 'notice' && model.notice?.code === 'refine-wildcard') {
+            // Wildcard notices are advice the user has to act on rather than a
+            // description of the results, so they get a toast. 'files-skipped' in
+            // particular arrives alongside rows, where the empty state never shows.
+            const code = model.kind === 'notice' ? model.notice?.code : undefined;
+            if (code === 'refine-wildcard' || code === 'files-skipped') {
                 toast({
                     variant: 'warning',
-                    title: NOTICE_COPY['refine-wildcard'].primary,
-                    description: NOTICE_COPY['refine-wildcard'].secondary,
+                    title: NOTICE_COPY[code].primary,
+                    description: NOTICE_COPY[code].secondary,
                 });
             }
         },

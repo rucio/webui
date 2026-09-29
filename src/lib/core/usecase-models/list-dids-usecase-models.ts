@@ -9,7 +9,7 @@ export interface ListDIDsRequest {
 
 export type ListDIDsRecordKind = 'did' | 'progress' | 'notice';
 export type ListDIDsProgressState = 'searching' | 'found' | 'empty';
-export type ListDIDsNoticeCode = 'refine-wildcard' | 'no-results';
+export type ListDIDsNoticeCode = 'refine-wildcard' | 'no-results' | 'files-skipped';
 
 export interface ListDIDsProgress {
     types: DIDType[];

@@ -186,36 +186,59 @@ class ListDIDsUseCase
     ): Promise<void> {
         const isAlive = () => !out.destroyed && !out.writableEnded && this.isConsumerAlive();
 
-        const win = (stream: Transform, type: DIDType, loser?: Transform | null) => {
-            loser?.destroy();
-            out.write(this.progressRecord([type], 'found'));
-            stream.pipe(out);
-        };
+        /** Forwards a source into the shared stream without ending it, so hops can be concatenated. */
+        const drainInto = (source: Transform): Promise<void> =>
+            new Promise((resolve, reject) => {
+                source.pipe(out, { end: false });
+                source.once('end', () => resolve());
+                source.once('error', reject);
+            });
+
+        const { name } = parseDIDString(requestModel.query);
+        const hasWildcard = name.includes('*');
 
         out.write(this.progressRecord(ListDIDsUseCase.COLLECTION_TYPES, 'searching'));
 
-        if (containerStream && !(await isStreamEmpty(containerStream))) {
-            if (!isAlive()) {
-                containerStream.destroy();
-                datasetHop.stream?.destroy();
-                return;
-            }
-            win(containerStream, DIDType.CONTAINER, datasetHop.stream);
+        // Containers and datasets are both collections and both cheap, so they are
+        // shown together rather than the coarser type hiding the finer one.
+        const containerEmpty = !containerStream || (await isStreamEmpty(containerStream));
+        const datasetEmpty = !datasetHop.stream || !!datasetHop.error || (await isStreamEmpty(datasetHop.stream));
+
+        if (!isAlive()) {
+            containerStream?.destroy();
+            datasetHop.stream?.destroy();
             return;
         }
+
+        if (!containerEmpty || !datasetEmpty) {
+            const found: DIDType[] = [];
+            if (!containerEmpty) found.push(DIDType.CONTAINER);
+            if (!datasetEmpty) found.push(DIDType.DATASET);
+            out.write(this.progressRecord(found, 'found'));
+
+            if (containerEmpty) containerStream?.destroy();
+            if (datasetEmpty) datasetHop.stream?.destroy();
+
+            // Containers first: the coarser collection is the more useful headline.
+            if (!containerEmpty && containerStream) await drainInto(containerStream);
+            if (!datasetEmpty && datasetHop.stream) await drainInto(datasetHop.stream);
+
+            if (datasetHop.error) {
+                out.write(this.hopErrorRecord(`The dataset search failed: ${datasetHop.error.message ?? datasetHop.error.error}`));
+            }
+
+            // Results came back, but the user still has not been told that a whole
+            // type was left out of the search.
+            if (hasWildcard) {
+                out.write(this.noticeRecord('files-skipped', 'Files were not searched, because wildcard searches on files are not supported.'));
+            }
+
+            out.end();
+            return;
+        }
+
         containerStream?.destroy();
-
-        if (datasetHop.stream && !datasetHop.error && !(await isStreamEmpty(datasetHop.stream))) {
-            if (!isAlive()) {
-                datasetHop.stream.destroy();
-                return;
-            }
-            win(datasetHop.stream, DIDType.DATASET);
-            return;
-        }
         datasetHop.stream?.destroy();
-
-        if (!isAlive()) return;
 
         // A hop that failed did not "find nothing", and must not be reported as such.
         if (datasetHop.error) {
@@ -224,8 +247,7 @@ class ListDIDsUseCase
 
         out.write(this.progressRecord(ListDIDsUseCase.COLLECTION_TYPES, 'empty'));
 
-        const { name } = parseDIDString(requestModel.query);
-        if (name.includes('*')) {
+        if (hasWildcard) {
             out.write(this.noticeRecord('refine-wildcard', 'Please refine the DID name. Wildcard searches on files are not supported.'));
             out.end();
             return;
@@ -256,7 +278,10 @@ class ListDIDsUseCase
             fileHop.stream.destroy();
             return;
         }
-        win(fileHop.stream, DIDType.FILE);
+
+        out.write(this.progressRecord([DIDType.FILE], 'found'));
+        await drainInto(fileHop.stream);
+        out.end();
     }
 
     handleGatewayError(error: ListDIDDTO): ListDIDsError {
