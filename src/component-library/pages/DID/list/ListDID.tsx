@@ -13,7 +13,7 @@ import { BaseViewModelValidator } from '@/component-library/features/utils/BaseV
 import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { DIDSearchPanel, DIDSearchParams } from '@/component-library/features/search/DIDSearchPanel';
-import { DIDSearchProgress } from '@/component-library/features/search/DIDSearchProgress';
+import { NOTICE_COPY } from '@/component-library/features/search/DIDSearchOverlay';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface ListDIDProps {
@@ -38,7 +38,20 @@ export const ListDID = (props: ListDIDProps) => {
 
     // List handling
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDViewModel>(props.initialData, {
-        onMetaRecord: record => setMetaRecords(prev => [...prev, record as unknown as ListDIDsViewModel]),
+        onMetaRecord: record => {
+            const model = record as unknown as ListDIDsViewModel;
+            setMetaRecords(prev => [...prev, model]);
+
+            // The wildcard notice is advice the user has to act on, not a description
+            // of the results, so it also gets a toast rather than only the empty state.
+            if (model.kind === 'notice' && model.notice?.code === 'refine-wildcard') {
+                toast({
+                    variant: 'warning',
+                    title: NOTICE_COPY['refine-wildcard'].primary,
+                    description: NOTICE_COPY['refine-wildcard'].secondary,
+                });
+            }
+        },
     });
 
     // Track if auto-search has already been performed
@@ -142,7 +155,6 @@ export const ListDID = (props: ListDIDProps) => {
                         props.onSearchStart?.(params);
                     }}
                 />
-                <DIDSearchProgress records={metaRecords} />
             </div>
 
             {/* Results Section */}
@@ -154,6 +166,7 @@ export const ListDID = (props: ListDIDProps) => {
                         onSelectionChanged={onSelectionChanged}
                         onGridReady={onGridReady}
                         showTypeColumn={searchedType === DIDType.ALL}
+                        searchRecords={metaRecords}
                     />
                 </div>
 
