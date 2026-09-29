@@ -1,6 +1,8 @@
 import { buildListDIDColumnDefs } from '@/component-library/pages/DID/list/ListDIDTable';
 import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
+import { AgGridMultiSelectFilter } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { DIDType } from '@/lib/core/entity/rucio';
 
 const headers = (showTypeColumn: boolean) => buildListDIDColumnDefs(showTypeColumn).map(column => column.headerName);
 
@@ -21,6 +23,18 @@ describe('ListDIDTable column definitions', () => {
     it('renders the type with the shared DID type badge, not a bespoke renderer', () => {
         const typeColumn: any = buildListDIDColumnDefs(true).find(column => column.headerName === 'Type');
         expect(typeColumn.cellRenderer).toBe(DIDTypeBadge);
+    });
+
+    it('filters the type column by enum selection, not free text', () => {
+        const typeColumn: any = buildListDIDColumnDefs(true).find(column => column.headerName === 'Type');
+        expect(typeColumn.filter.component).toBe(AgGridMultiSelectFilter);
+        expect(typeof typeColumn.filter.handler).toBe('function');
+    });
+
+    it('offers only the three types a search can return', () => {
+        const typeColumn: any = buildListDIDColumnDefs(true).find(column => column.headerName === 'Type');
+        // Filtering by a type that can never appear in the results is dead weight.
+        expect(typeColumn.filterParams.options).toEqual([DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE]);
     });
 
     it('uses the shared badge cell layout so the column matches other badge columns', () => {
