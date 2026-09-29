@@ -1,5 +1,6 @@
 import { buildListDIDColumnDefs } from '@/component-library/pages/DID/list/ListDIDTable';
-import { DIDType } from '@/lib/core/entity/rucio';
+import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBadge';
+import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 
 const headers = (showTypeColumn: boolean) => buildListDIDColumnDefs(showTypeColumn).map(column => column.headerName);
 
@@ -17,15 +18,14 @@ describe('ListDIDTable column definitions', () => {
         expect(typeColumn?.field).toEqual('did_type');
     });
 
-    it('renders a row type through the DID type tag', () => {
+    it('renders the type with the shared DID type badge, not a bespoke renderer', () => {
         const typeColumn: any = buildListDIDColumnDefs(true).find(column => column.headerName === 'Type');
-        const rendered = typeColumn.cellRenderer({ value: DIDType.CONTAINER });
-        expect(rendered.props.didtype).toEqual(DIDType.CONTAINER);
+        expect(typeColumn.cellRenderer).toBe(DIDTypeBadge);
     });
 
-    it('falls back to Unknown when a row carries no type', () => {
+    it('uses the shared badge cell layout so the column matches other badge columns', () => {
         const typeColumn: any = buildListDIDColumnDefs(true).find(column => column.headerName === 'Type');
-        const rendered = typeColumn.cellRenderer({ value: undefined });
-        expect(rendered.props.didtype).toEqual(DIDType.UNKNOWN);
+        expect(typeColumn.cellStyle).toBe(badgeCellWrapperStyle);
+        expect(typeColumn.cellRendererParams).toEqual({ className: badgeCellClasses });
     });
 });
