@@ -9,6 +9,8 @@ import { DIDTypeBadge } from '@/component-library/features/badges/DID/DIDTypeBad
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { DIDSearchOverlay } from '@/component-library/features/search/DIDSearchOverlay';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
+import { DIDType } from '@/lib/core/entity/rucio';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type ListDIDTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
@@ -27,6 +29,11 @@ type ListDIDTableProps = {
  * type. A pinned-type search gives every row the same value, so the column is noise.
  */
 export function buildListDIDColumnDefs(showTypeColumn: boolean) {
+    // Only the three types a search can actually return. ALL is a search mode rather
+    // than a value a row carries, and Collection, Derived and Unknown never appear in
+    // list-dids results, so offering them would be filtering by something impossible.
+    const didTypeOptions = [DIDType.CONTAINER, DIDType.DATASET, DIDType.FILE];
+
     const identifier = {
         headerName: 'Identifier',
         valueGetter: (params: ValueGetterParams<DIDViewModel>) => {
@@ -50,6 +57,13 @@ export function buildListDIDColumnDefs(showTypeColumn: boolean) {
             cellStyle: badgeCellWrapperStyle,
             cellRendererParams: {
                 className: badgeCellClasses,
+            },
+            filter: {
+                component: AgGridMultiSelectFilter,
+                handler: createMultiSelectFilterHandler(didTypeOptions),
+            },
+            filterParams: {
+                options: didTypeOptions,
             },
         },
     ];
@@ -85,6 +99,7 @@ export const ListDIDTable = (props: ListDIDTableProps) => {
             rowSelection={{ mode: 'singleRow', enableClickSelection: true }}
             tableRef={tableRef}
             noRowsOverlayComponent={noRowsOverlayComponent}
+            enableFilterHandlers
             {...tableProps}
         />
     );
