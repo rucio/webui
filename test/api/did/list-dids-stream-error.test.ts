@@ -135,6 +135,7 @@ describe('DID API Tests #2', () => {
             {
                 status: 'success',
                 name: 'dataset1',
+                kind: 'did',
                 scope: 'test',
                 did_type: 'Dataset',
                 bytes: 0,
@@ -144,6 +145,7 @@ describe('DID API Tests #2', () => {
             {
                 status: 'success',
                 name: 'dataset2',
+                kind: 'did',
                 scope: 'test',
                 did_type: 'Dataset',
                 bytes: 123,
@@ -153,6 +155,7 @@ describe('DID API Tests #2', () => {
             {
                 status: 'success',
                 name: 'dataset3',
+                kind: 'did',
                 scope: 'test',
                 did_type: 'Dataset',
                 bytes: 456,

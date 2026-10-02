@@ -14,6 +14,11 @@ export default class GetDIDsPipelineElement extends BaseStreamingPostProcessingP
     constructor(private didGateway: DIDGatewayOutputPort) {
         super();
     }
+
+    /** @override Only DID records carry a scope and name to look up. */
+    shouldProcess(responseModel: ListDIDsResponse): boolean {
+        return (responseModel.kind ?? 'did') === 'did';
+    }
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListDIDsRequest>, responseModel: ListDIDsResponse): Promise<DIDExtendedDTO> {
         try {
             const dto: DIDExtendedDTO = await this.didGateway.getDID(

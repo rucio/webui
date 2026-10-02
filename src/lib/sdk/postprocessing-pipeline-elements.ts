@@ -146,6 +146,16 @@ export abstract class BaseStreamingPostProcessingPipelineElement<
      */
     abstract transformResponseModel(responseModel: TResponseModel, dto: TDTO): TResponseModel | TErrorModel;
 
+    /**
+     * Whether this element should process the given response model, or forward it
+     * untouched. Elements that only understand one kind of record override this.
+     * @param responseModel The response model arriving on the stream.
+     * @returns true to process, false to forward unchanged.
+     */
+    shouldProcess(responseModel: TResponseModel): boolean {
+        return true;
+    }
+
     async _transform(
         chunk: { status: 'success' | 'error'; requestModel: TRequestModel; responseModel: TResponseModel | TErrorModel },
         encoding: BufferEncoding,
@@ -163,6 +173,14 @@ export abstract class BaseStreamingPostProcessingPipelineElement<
             });
             return;
         }
+
+        // Records this element does not own (e.g. search progress) travel the same
+        // stream and must reach the presenter untouched.
+        if (!this.shouldProcess(responseModel as TResponseModel)) {
+            callback(null, chunk);
+            return;
+        }
+
         try {
             responseModel = responseModel as TResponseModel;
             const dto = await this.makeGatewayRequest(requestModel, responseModel);

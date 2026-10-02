@@ -7,6 +7,14 @@ import { BaseViewModelValidator } from '@/component-library/features/utils/BaseV
 import { alreadyStreamingToast, noApiToast } from '@/component-library/features/utils/list-toasts';
 
 /**
+ * Whether a streamed view model represents a table row. Records tagged with any
+ * other kind (search progress, notices) are routed to onMetaRecord instead.
+ */
+export function isRowRecord(model: BaseViewModel): boolean {
+    return ((model as any).kind ?? 'did') === 'did';
+}
+
+/**
  * Custom hook to handle streaming data into an AG Grid table.
  *
  * @template T - The type of data model to be used in the grid, extending {@link BaseViewModel}.
@@ -17,7 +25,7 @@ import { alreadyStreamingToast, noApiToast } from '@/component-library/features/
  * - `startStreaming` - Function to start streaming data from a specified URL.
  * - `stopStreaming` - Function to stop the streaming of data.
  */
-export default function useTableStreaming<T extends BaseViewModel>(initialData?: T[]) {
+export default function useTableStreaming<T extends BaseViewModel>(initialData?: T[], options?: { onMetaRecord?: (record: T) => void }) {
     const streamingHook = useStreamReader<T>();
     const [gridApi, setGridApi] = useState<GridApi<T> | null>(null);
 
@@ -36,8 +44,15 @@ export default function useTableStreaming<T extends BaseViewModel>(initialData?:
     }, [gridApi]);
 
     const onData = (data: T[]) => {
-        const validData = data.filter(element => validator.isValid(element));
-        gridApi?.applyTransactionAsync({ add: validData });
+        const rows: T[] = [];
+        data.forEach(element => {
+            if (!isRowRecord(element)) {
+                options?.onMetaRecord?.(element);
+                return;
+            }
+            if (validator.isValid(element)) rows.push(element);
+        });
+        if (rows.length > 0) gridApi?.applyTransactionAsync({ add: rows });
     };
 
     const isRunning = streamingHook.status === StreamingStatus.RUNNING;

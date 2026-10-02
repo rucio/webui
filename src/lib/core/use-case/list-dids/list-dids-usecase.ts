@@ -1,14 +1,22 @@
 import { injectable } from 'inversify';
+import { PassThrough, Readable, Transform, Writable } from 'stream';
 import type { ListDIDsInputPort, ListDIDsOutputPort } from '@/lib/core/port/primary/list-dids-ports';
 import type DIDGatewayOutputPort from '@/lib/core/port/secondary/did-gateway-output-port';
 import { DIDExtendedDTO, ListDIDDTO, ListDIDsStreamData } from '../../dto/did-dto';
-import { ListDIDsError, ListDIDsRequest, ListDIDsResponse } from '../../usecase-models/list-dids-usecase-models';
+import {
+    ListDIDsError,
+    ListDIDsNoticeCode,
+    ListDIDsProgressState,
+    ListDIDsRequest,
+    ListDIDsResponse,
+} from '../../usecase-models/list-dids-usecase-models';
+import { isStreamEmpty } from '@/lib/sdk/utils';
 import { parseDIDString } from '@/lib/common/did-utils';
 import { BaseSingleEndpointPostProcessingPipelineStreamingUseCase, BaseSingleEndpointStreamingUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import GetDIDsPipelineElement from './pipeline-element-get-did';
-import { DID } from '../../entity/rucio';
+import { DID, DIDType } from '../../entity/rucio';
 
 @injectable()
 class ListDIDsUseCase
@@ -60,6 +68,222 @@ class ListDIDsUseCase
         return listDIDDTO;
     }
 
+    /** Ranked order for ALL. Containers and datasets race; files are a last resort. */
+    private static readonly COLLECTION_TYPES = [DIDType.CONTAINER, DIDType.DATASET];
+
+    private progressRecord(types: DIDType[], state: ListDIDsProgressState): ListDIDsResponse {
+        return {
+            status: 'success',
+            kind: 'progress',
+            progress: { types, state },
+        } as ListDIDsResponse;
+    }
+
+    private noticeRecord(code: ListDIDsNoticeCode, message: string): ListDIDsResponse {
+        return {
+            status: 'success',
+            kind: 'notice',
+            notice: { code, message },
+        } as ListDIDsResponse;
+    }
+
+    /**
+     * A failure on a hop after the first. The HTTP status is already committed by
+     * then, so the only honest way to report it is in the stream itself.
+     */
+    private hopErrorRecord(message: string): ListDIDsResponse {
+        return {
+            status: 'error',
+            error: 'Unknown Error',
+            message,
+        } as unknown as ListDIDsResponse;
+    }
+
+    /**
+     * The client-facing response the presenter writes to, when it exposes one.
+     * Used to abandon the cascade if the client goes away mid-search.
+     */
+    private consumerResponse(): Writable | undefined {
+        return (this.presenter as unknown as { response?: Writable }).response;
+    }
+
+    /**
+     * Whether anyone is still listening. A client that navigated away must not cost
+     * us the file query, which is the expensive hop.
+     */
+    private isConsumerAlive(): boolean {
+        const response = this.consumerResponse();
+        if (!response) return true;
+        return !response.destroyed && !response.writableEnded;
+    }
+
+    /**
+     * Fetches one typed hop. Returns the endpoint stream, or the error DTO if the
+     * request itself failed. fetch() resolves without consuming the body, so a bad
+     * status is available before any data is committed to the response.
+     */
+    private async fetchHop(
+        requestModel: AuthenticatedRequestModel<ListDIDsRequest>,
+        type: DIDType,
+    ): Promise<{ stream?: Transform | null; error?: ListDIDsError }> {
+        const { scope, name } = parseDIDString(requestModel.query);
+        const dto = await this.didGateway.listDIDs(requestModel.rucioAuthToken, scope, name, type, requestModel.filters);
+        const error = this.processGatewayResponse(dto);
+        if (error) return { error };
+        return { stream: dto.stream as Transform };
+    }
+
+    /**
+     * ALL searches containers and datasets concurrently, then files only if both
+     * miss and the name has no wildcard. The PassThrough is returned to the caller
+     * immediately so progress reaches the client while the cascade is still running.
+     */
+    async generateSourceStream(requestModel: AuthenticatedRequestModel<ListDIDsRequest>): Promise<{
+        status: 'success' | 'error';
+        stream?: Transform | Readable | PassThrough | null;
+        error?: ListDIDsError;
+    }> {
+        if (requestModel.type !== DIDType.ALL) {
+            return super.generateSourceStream(requestModel);
+        }
+
+        const [containerHop, datasetHop] = await Promise.all([
+            this.fetchHop(requestModel, DIDType.CONTAINER),
+            this.fetchHop(requestModel, DIDType.DATASET),
+        ]);
+
+        // Only the container hop's failure can still become an HTTP status, because
+        // nothing has been written to the response yet.
+        if (containerHop.error) {
+            datasetHop.stream?.destroy();
+            return { status: 'error', error: containerHop.error };
+        }
+
+        const out = new PassThrough({ objectMode: true });
+
+        // pipe() does not propagate a destroyed destination back to its source, so a
+        // client disconnect would otherwise leave the cascade running to completion.
+        this.consumerResponse()?.once('close', () => {
+            if (!out.destroyed) out.destroy();
+        });
+
+        this.driveCascade(requestModel, out, containerHop.stream ?? null, datasetHop).catch((error: Error) => {
+            // Never end silently on a failure: an empty stream reads as "nothing matched".
+            if (!out.destroyed && !out.writableEnded) {
+                out.write(this.hopErrorRecord(`The search failed while streaming results: ${error?.message ?? error}`));
+                out.end();
+            }
+        });
+
+        return { status: 'success', stream: out };
+    }
+
+    private async driveCascade(
+        requestModel: AuthenticatedRequestModel<ListDIDsRequest>,
+        out: PassThrough,
+        containerStream: Transform | null,
+        datasetHop: { stream?: Transform | null; error?: ListDIDsError },
+    ): Promise<void> {
+        const isAlive = () => !out.destroyed && !out.writableEnded && this.isConsumerAlive();
+
+        /** Forwards a source into the shared stream without ending it, so hops can be concatenated. */
+        const drainInto = (source: Transform): Promise<void> =>
+            new Promise((resolve, reject) => {
+                source.pipe(out, { end: false });
+                source.once('end', () => resolve());
+                source.once('error', reject);
+            });
+
+        const { name } = parseDIDString(requestModel.query);
+        const hasWildcard = name.includes('*');
+
+        out.write(this.progressRecord(ListDIDsUseCase.COLLECTION_TYPES, 'searching'));
+
+        // Containers and datasets are both collections and both cheap, so they are
+        // shown together rather than the coarser type hiding the finer one.
+        const containerEmpty = !containerStream || (await isStreamEmpty(containerStream));
+        const datasetEmpty = !datasetHop.stream || !!datasetHop.error || (await isStreamEmpty(datasetHop.stream));
+
+        if (!isAlive()) {
+            containerStream?.destroy();
+            datasetHop.stream?.destroy();
+            return;
+        }
+
+        if (!containerEmpty || !datasetEmpty) {
+            const found: DIDType[] = [];
+            if (!containerEmpty) found.push(DIDType.CONTAINER);
+            if (!datasetEmpty) found.push(DIDType.DATASET);
+            out.write(this.progressRecord(found, 'found'));
+
+            if (containerEmpty) containerStream?.destroy();
+            if (datasetEmpty) datasetHop.stream?.destroy();
+
+            // Containers first: the coarser collection is the more useful headline.
+            if (!containerEmpty && containerStream) await drainInto(containerStream);
+            if (!datasetEmpty && datasetHop.stream) await drainInto(datasetHop.stream);
+
+            if (datasetHop.error) {
+                out.write(this.hopErrorRecord(`The dataset search failed: ${datasetHop.error.message ?? datasetHop.error.error}`));
+            }
+
+            // Results came back, but the user still has not been told that a whole
+            // type was left out of the search.
+            if (hasWildcard) {
+                out.write(this.noticeRecord('files-skipped', 'Files were not searched, because wildcard searches on files are not supported.'));
+            }
+
+            out.end();
+            return;
+        }
+
+        containerStream?.destroy();
+        datasetHop.stream?.destroy();
+
+        // A hop that failed did not "find nothing", and must not be reported as such.
+        if (datasetHop.error) {
+            out.write(this.hopErrorRecord(`The dataset search failed: ${datasetHop.error.message ?? datasetHop.error.error}`));
+        }
+
+        out.write(this.progressRecord(ListDIDsUseCase.COLLECTION_TYPES, 'empty'));
+
+        if (hasWildcard) {
+            out.write(this.noticeRecord('refine-wildcard', 'Please refine the DID name. Wildcard searches on files are not supported.'));
+            out.end();
+            return;
+        }
+
+        out.write(this.progressRecord([DIDType.FILE], 'searching'));
+
+        const fileHop = await this.fetchHop(requestModel, DIDType.FILE);
+        if (!isAlive()) {
+            fileHop.stream?.destroy();
+            return;
+        }
+        if (fileHop.error || !fileHop.stream) {
+            out.write(this.hopErrorRecord(`The file search failed: ${fileHop.error?.message ?? fileHop.error?.error ?? 'no stream returned'}`));
+            out.end();
+            return;
+        }
+
+        if (await isStreamEmpty(fileHop.stream)) {
+            fileHop.stream.destroy();
+            out.write(this.progressRecord([DIDType.FILE], 'empty'));
+            out.write(this.noticeRecord('no-results', 'No DIDs matched this query.'));
+            out.end();
+            return;
+        }
+
+        if (!isAlive()) {
+            fileHop.stream.destroy();
+            return;
+        }
+
+        out.write(this.progressRecord([DIDType.FILE], 'found'));
+        await drainInto(fileHop.stream);
+        out.end();
+    }
+
     handleGatewayError(error: ListDIDDTO): ListDIDsError {
         let errorType = 'Unknown Error';
         const message = error.errorMessage;
@@ -75,6 +299,25 @@ class ListDIDsUseCase
     }
 
     processStreamedData(dto: DID): { data: ListDIDsResponse | ListDIDsError; status: 'success' | 'error' } {
+        // Progress and notice records are minted by the cascade driver, not by the
+        // gateway. They carry no scope or name and must travel the pipeline as they are.
+        const record = dto as unknown as ListDIDsResponse;
+        if (record.kind && record.kind !== 'did') {
+            return {
+                data: record,
+                status: 'success',
+            };
+        }
+
+        // The cascade reports a failing hop in-stream, because the HTTP status is
+        // already committed by the time the later hops run.
+        if ((record.status as string) === 'error') {
+            return {
+                data: record as unknown as ListDIDsError,
+                status: 'error',
+            };
+        }
+
         const errorModel: ListDIDsError = {
             status: 'error',
             code: 400,

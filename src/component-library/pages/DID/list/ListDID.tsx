@@ -13,6 +13,8 @@ import { BaseViewModelValidator } from '@/component-library/features/utils/BaseV
 import { ListDIDMeta } from '@/component-library/pages/DID/list/meta/ListDIDMeta';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { DIDSearchPanel, DIDSearchParams } from '@/component-library/features/search/DIDSearchPanel';
+import { NOTICE_COPY } from '@/component-library/features/search/DIDSearchOverlay';
+import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 
 export interface ListDIDProps {
     firstPattern?: string;
@@ -27,8 +29,32 @@ export const ListDID = (props: ListDIDProps) => {
     // A shared validator
     const validator = new BaseViewModelValidator(toast);
 
+    // Search progress trail, fed by the non-row records the All cascade emits
+    const [metaRecords, setMetaRecords] = useState<ListDIDsViewModel[]>([]);
+
+    // The type the current results were searched with. All can return any type,
+    // so that is the only case where a type column tells the user something.
+    const [searchedType, setSearchedType] = useState<DIDType>(props.initialType ?? DIDType.ALL);
+
     // List handling
-    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDViewModel>(props.initialData);
+    const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<DIDViewModel>(props.initialData, {
+        onMetaRecord: record => {
+            const model = record as unknown as ListDIDsViewModel;
+            setMetaRecords(prev => [...prev, model]);
+
+            // Wildcard notices are advice the user has to act on rather than a
+            // description of the results, so they get a toast. 'files-skipped' in
+            // particular arrives alongside rows, where the empty state never shows.
+            const code = model.kind === 'notice' ? model.notice?.code : undefined;
+            if (code === 'refine-wildcard' || code === 'files-skipped') {
+                toast({
+                    variant: 'warning',
+                    title: NOTICE_COPY[code].primary,
+                    description: NOTICE_COPY[code].secondary,
+                });
+            }
+        },
+    });
 
     // Track if auto-search has already been performed
     const hasAutoSearched = useRef(false);
@@ -43,7 +69,7 @@ export const ListDID = (props: ListDIDProps) => {
                 const [scope, name] = patternParts;
                 const params = new URLSearchParams({
                     query: props.firstPattern,
-                    type: props.initialType ?? DIDType.DATASET,
+                    type: props.initialType ?? DIDType.ALL,
                 });
                 const url = '/api/feature/list-dids?' + params;
                 startStreaming(url);
@@ -125,7 +151,11 @@ export const ListDID = (props: ListDIDProps) => {
                     initialPattern={props.firstPattern}
                     autoSearch={props.autoSearch}
                     initialType={props.initialType}
-                    onSearchStart={props.onSearchStart}
+                    onSearchStart={params => {
+                        setMetaRecords([]);
+                        setSearchedType(params.type);
+                        props.onSearchStart?.(params);
+                    }}
                 />
             </div>
 
@@ -133,7 +163,13 @@ export const ListDID = (props: ListDIDProps) => {
             <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-20rem)]">
                 {/* Table */}
                 <div className="lg:flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[60vh] lg:h-full">
-                    <ListDIDTable streamingHook={streamingHook} onSelectionChanged={onSelectionChanged} onGridReady={onGridReady} />
+                    <ListDIDTable
+                        streamingHook={streamingHook}
+                        onSelectionChanged={onSelectionChanged}
+                        onGridReady={onGridReady}
+                        showTypeColumn={searchedType === DIDType.ALL}
+                        searchRecords={metaRecords}
+                    />
                 </div>
 
                 {/* Metadata Panel */}

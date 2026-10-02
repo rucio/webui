@@ -2,6 +2,7 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Input } from '@/component-library/atoms/form/input';
 import { cn } from '@/component-library/utils';
 import { buildDIDSearchUrl, buildRSESearchUrl, buildRuleDetailUrl, detectSearchType, navigateToSearch } from '@/lib/infrastructure/utils/navigation';
+import { DIDType } from '@/lib/core/entity/rucio';
 
 type SearchLocation = {
     name: string;
@@ -13,7 +14,8 @@ const didLocation: SearchLocation = {
     name: 'DIDs',
     parameter: 'Pattern',
     getHref: (query: string) => {
-        return buildDIDSearchUrl({ pattern: query.length > 0 ? query : undefined });
+        // No type was chosen here, so let the All cascade work out which kind it is.
+        return buildDIDSearchUrl({ pattern: query.length > 0 ? query : undefined, type: DIDType.ALL });
     },
 };
 
@@ -41,6 +43,35 @@ const createDIDLocation = (type: string, typeName: string): SearchLocation => ({
         return buildDIDSearchUrl({ pattern: query.length > 0 ? query : undefined, type });
     },
 });
+
+/**
+ * The search destinations offered for a query, best guess first.
+ *
+ * A DID-shaped query still gets the pinned type shortcuts, but All leads, because
+ * someone typing scope:name has said nothing about the type and the cascade is
+ * what works that out for them.
+ */
+export function buildSearchLocations(query: string): SearchLocation[] {
+    if (query.length === 0) {
+        return [didLocation, rseLocation, ruleLocation];
+    }
+
+    switch (detectSearchType(query)) {
+        case 'did':
+            return [
+                didLocation,
+                createDIDLocation('dataset', 'Dataset'),
+                createDIDLocation('file', 'File'),
+                createDIDLocation('container', 'Container'),
+            ];
+        case 'rse':
+            return [rseLocation];
+        case 'rule':
+            return [ruleLocation, rseLocation, didLocation];
+        default:
+            return [rseLocation, didLocation];
+    }
+}
 
 const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; children: React.ReactNode }) => {
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -150,27 +181,8 @@ export const Searchbar = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
-        const searchType = detectSearchType(query);
 
-        if (query.length === 0) {
-            setSearchLocations([didLocation, rseLocation, ruleLocation]);
-        } else if (searchType === 'did') {
-            // DID pattern detected - show all three types
-            setSearchLocations([
-                createDIDLocation('dataset', 'Dataset'),
-                createDIDLocation('file', 'File'),
-                createDIDLocation('container', 'Container'),
-            ]);
-        } else if (searchType === 'rse') {
-            // RSE expression detected
-            setSearchLocations([rseLocation]);
-        } else if (searchType === 'rule') {
-            // Rule UUID detected
-            setSearchLocations([ruleLocation, rseLocation, didLocation]);
-        } else {
-            // Generic search
-            setSearchLocations([rseLocation, didLocation]);
-        }
+        setSearchLocations(buildSearchLocations(query));
         setHighlightedIndex(0);
         setSearchQuery(query);
     };

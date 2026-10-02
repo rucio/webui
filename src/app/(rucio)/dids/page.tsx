@@ -35,9 +35,11 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{ 
             file: DIDType.FILE,
             dataset: DIDType.DATASET,
             container: DIDType.CONTAINER,
+            all: DIDType.ALL,
             [DIDType.FILE]: DIDType.FILE,
             [DIDType.DATASET]: DIDType.DATASET,
             [DIDType.CONTAINER]: DIDType.CONTAINER,
+            [DIDType.ALL]: DIDType.ALL,
         };
         initialType = typeMap[searchType.toLowerCase()] || typeMap[searchType];
     }
@@ -48,7 +50,7 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{ 
                 <header className="mb-6">
                     <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Data Identifiers</h1>
                     <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400">
-                        Search and browse datasets, containers, and files in Rucio
+                        Search datasets, containers and files in Rucio, or let All find the right type for you
                     </p>
                 </header>
                 <section aria-label="DID Search and Results">

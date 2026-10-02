@@ -24,6 +24,9 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
         private filters: DIDFilter[] = [],
     ) {
         super(true);
+        if (type === DIDType.ALL) {
+            throw new Error('DIDType.ALL is a cascade resolved by ListDIDsUseCase and must not reach ListDIDsEndpoint');
+        }
     }
 
     /** @override */

@@ -38,7 +38,7 @@ export const TIPS: Tip[] = [
         id: 'did-search-scope',
         title: 'Searching for DIDs',
         content:
-            'Unless explicitly specified, use the scope:name format to search for DIDs. For example, "mc16_13TeV:data*" finds all data files in that scope. Wildcards (*) are supported.',
+            'Use the scope:name format to search for DIDs. For example, "mc16_13TeV:data*" finds everything matching "data*" in that scope. Wildcards (*) are supported in the name.',
         category: TipCategory.DIDS,
         priority: 'essential',
         pages: ['/dids'],
@@ -53,6 +53,16 @@ export const TIPS: Tip[] = [
         category: TipCategory.DIDS,
         priority: 'essential',
         pages: ['/dids', '/did'],
+        variant: 'info',
+    },
+    {
+        id: 'did-search-types',
+        title: 'Search Types',
+        content:
+            'All is the default. It looks for containers first, then datasets, then files, and shows you the first kind it finds, with the type of each result in the table. Picking Container, Dataset or File searches only that type. All cannot search files by wildcard, so refine the name if it asks you to.',
+        category: TipCategory.DIDS,
+        priority: 'essential',
+        pages: ['/dids'],
         variant: 'info',
     },
     {
