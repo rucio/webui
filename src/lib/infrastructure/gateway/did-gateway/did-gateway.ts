@@ -130,6 +130,7 @@ export default class RucioDIDGateway implements DIDGatewayOutputPort {
                 md5: '',
                 guid: '',
                 bytes: 0,
+                is_opendata: false,
             };
             return Promise.resolve(errorDTO);
         }
