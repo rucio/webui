@@ -5,30 +5,8 @@ import {
     createAmiTagUrl,
     isAmiTag,
     normalizeAmiBaseUrl,
-    parseAmiTags,
     parseAmiTagsParam,
 } from '@/lib/core/utils/ami-tag-utils';
-
-describe('parseAmiTags', () => {
-    it.each<[string, string[]]>([
-        ['data26_hi.00523138.physics_HardProbes.merge.AOD.f1723_m2281._lb0490._0003.1', ['f1723', 'm2281']],
-        ['data22_13p6TeV.00437756.physics_Main.merge.AOD.r15869_p6304_tid40703687_00', ['r15869', 'p6304']],
-        [
-            'mc23_13p6TeV.601229.PhPy8EG_A14_ttbar_hdamp258p75_SingleLep.deriv.DAOD_PHYS.e8514_s4162_r15540_p6266',
-            ['e8514', 's4162', 'r15540', 'p6266'],
-        ],
-        ['data25_13p6TeV.00499912.physics_TLA.merge.RAW', []],
-        ['step14.87488.47741.recon.ESD.70640.58365', []],
-        ['DAOD_LLP1.47616532._000665.pool.root.1', []],
-        ['user.jdoe.mc23_13p6TeV.601229.x.deriv.DAOD_PHYS.e8514_s4162', []],
-        ['user.jdoe.mytest.v1', []],
-        // Not an ATLAS name: tags are only read from the Version field now
-        ['a.f1723.b.f1723_m2281', []],
-        ['', []],
-    ])('%s -> %j', (name, expected) => {
-        expect(parseAmiTags(name)).toEqual(expected);
-    });
-});
 
 describe('isAmiTag', () => {
     it.each(['f1723', 'r15540', 'v1', 'p12', 'a100'])('accepts %s', tag => expect(isAmiTag(tag)).toBe(true));

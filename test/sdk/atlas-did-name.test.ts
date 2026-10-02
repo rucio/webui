@@ -44,16 +44,27 @@ describe('parseAtlasDIDName', () => {
     });
 
     it('parses a valid name as its own scheme', () => {
-        expect(parseAtlasDIDName('valid1.123456.ParticleGun_single_mu.recon.AOD.e1234_s5678_tid12345678_00')).toMatchObject({
+        expect(parseAtlasDIDName('valid1.123456.ParticleGun_single_mu.recon.AOD.e1234_s5678_tid12345678_00')).toEqual({
             scheme: 'valid',
+            project: 'valid1',
             datasetNumber: '123456',
             physicsShort: 'ParticleGun_single_mu',
-            version: { pandaTaskId: '12345678' },
+            prodStep: 'recon',
+            dataType: 'AOD',
+            version: { value: 'e1234_s5678', amiTags: ['e1234', 's5678'], pandaTaskId: '12345678' },
         });
     });
 
     it('ignores suffix fields after Version on files named after their dataset', () => {
-        expect(parseAtlasDIDName(DATA_FILE)).toMatchObject({ scheme: 'data', version: { value: 'f1723_m2281', amiTags: ['f1723', 'm2281'] } });
+        expect(parseAtlasDIDName(DATA_FILE)).toEqual({
+            scheme: 'data',
+            project: 'data26_hi',
+            runNumber: '00523138',
+            streamName: 'physics_HardProbes',
+            prodStep: 'merge',
+            dataType: 'AOD',
+            version: { value: 'f1723_m2281', amiTags: ['f1723', 'm2281'] },
+        });
     });
 
     it('parses cond names', () => {
@@ -112,6 +123,27 @@ describe('parseAtlasDIDName: review regressions', () => {
         expect(getAtlasAmiTags('mc23_13p6TeV.601229.X.deriv.DAOD_PHYS.e8514_s4162_r15540_p6266/')).toEqual(['e8514', 's4162', 'r15540', 'p6266']);
         expect(getAtlasAmiTags('mc16_13TeV.410470.X.simul.HITS.e6337_s3126/')).toEqual(['e6337', 's3126']);
         expect(getAtlasPandaTaskId('mc16_13TeV.410470.X.simul.HITS.e6337_s3126_tid123_00/')).toBe('123');
+    });
+});
+
+describe('getAtlasAmiTags (AMITagsRow input)', () => {
+    it.each<[string, string[]]>([
+        ['data26_hi.00523138.physics_HardProbes.merge.AOD.f1723_m2281._lb0490._0003.1', ['f1723', 'm2281']],
+        ['data22_13p6TeV.00437756.physics_Main.merge.AOD.r15869_p6304_tid40703687_00', ['r15869', 'p6304']],
+        [
+            'mc23_13p6TeV.601229.PhPy8EG_A14_ttbar_hdamp258p75_SingleLep.deriv.DAOD_PHYS.e8514_s4162_r15540_p6266',
+            ['e8514', 's4162', 'r15540', 'p6266'],
+        ],
+        ['data25_13p6TeV.00499912.physics_TLA.merge.RAW', []],
+        ['step14.87488.47741.recon.ESD.70640.58365', []],
+        ['DAOD_LLP1.47616532._000665.pool.root.1', []],
+        ['user.jdoe.mc23_13p6TeV.601229.x.deriv.DAOD_PHYS.e8514_s4162', []],
+        ['user.jdoe.mytest.v1', []],
+        // Not an ATLAS name: tags are only read from the Version field now
+        ['a.f1723.b.f1723_m2281', []],
+        ['', []],
+    ])('%s -> %j', (name, expected) => {
+        expect(getAtlasAmiTags(name)).toEqual(expected);
     });
 });
 

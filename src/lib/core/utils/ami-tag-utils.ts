@@ -1,9 +1,8 @@
 /**
  * Helpers for ATLAS AMI tags. Tags are read from the Version field of an ATLAS
- * DID name (see atlas-did-name.ts), e.g. r15869_p6304 in
+ * DID name by getAtlasAmiTags (atlas-did-name.ts), e.g. r15869_p6304 in
  * data22_13p6TeV.00437756.physics_Main.merge.AOD.r15869_p6304_tid40703687_00
  */
-import { getAtlasAmiTags } from '@/lib/core/utils/atlas-did-name';
 
 export const DEFAULT_AMI_BASE_URL = 'https://atlas-ami.cern.ch';
 export const MAX_AMI_TAGS_PER_REQUEST = 10;
@@ -13,11 +12,6 @@ export const AMI_TAG_REGEX = /^[a-z]\d+$/;
 
 export function isAmiTag(tag: string): boolean {
     return AMI_TAG_REGEX.test(tag);
-}
-
-/** AMI tags of an ATLAS DID name, in order; empty for names without a Version field. */
-export function parseAmiTags(name: string): string[] {
-    return getAtlasAmiTags(name);
 }
 
 /**
