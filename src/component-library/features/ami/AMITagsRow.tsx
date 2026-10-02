@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useFeature } from '@/component-library/features/feature-flags/FeatureProvider';
 import { KeyValueRow } from '@/component-library/features/key-value/KeyValueRow';
-import { parseAmiTags } from '@/lib/core/utils/ami-tag-utils';
+import { getAtlasAmiTags } from '@/lib/core/utils/atlas-did-name';
 import { QUERY_KEYS } from '@/lib/infrastructure/query/query-keys';
 import { AMITagInfoViewModel } from '@/lib/infrastructure/data/view-model/ami';
 import { AMITagChips } from './AMITagChips';
@@ -25,7 +25,7 @@ async function fetchAMITagInfo(tags: string[]): Promise<AMITagInfoViewModel> {
  */
 export const AMITagsRow: React.FC<{ name: string }> = ({ name }) => {
     const enabled = useFeature('dids.ami_tags');
-    const tags = React.useMemo(() => parseAmiTags(name), [name]);
+    const tags = React.useMemo(() => getAtlasAmiTags(name), [name]);
 
     const { data, isLoading } = useQuery<AMITagInfoViewModel>({
         queryKey: [...QUERY_KEYS.AMI_TAG_INFO, tags.join(',')],
