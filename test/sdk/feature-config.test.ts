@@ -4,6 +4,7 @@ import {
     resolveFeatureEnabled,
     resolveEnabledSet,
     envKeyForFeature,
+    isFeatureEnabledInEnv,
 } from '@/lib/core/entity/feature-config';
 
 describe('feature-config registry + resolution', () => {
@@ -37,5 +38,10 @@ describe('feature-config registry + resolution', () => {
         const keys = Object.keys(FEATURE_REGISTRY) as FeatureKey[];
         keys.forEach(k => expect(typeof set[k]).toBe('boolean'));
         expect(Object.keys(set).sort()).toEqual(keys.sort());
+    });
+
+    it('isFeatureEnabledInEnv reads FEATURE_* env names and cascades a disabled parent', () => {
+        expect(isFeatureEnabledInEnv('rules.create', { FEATURE_RULES: 'false' })).toBe(false);
+        expect(isFeatureEnabledInEnv('rules.create', {})).toBe(true);
     });
 });
