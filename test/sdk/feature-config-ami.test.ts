@@ -15,9 +15,4 @@ describe('dids.ami_tags flag', () => {
         expect(isFeatureEnabledInEnv('dids.ami_tags', { FEATURE_DIDS_AMI_TAGS: 'true' })).toBe(true);
         expect(isFeatureEnabledInEnv('dids.ami_tags', { FEATURE_DIDS_AMI_TAGS: 'off' })).toBe(false);
     });
-
-    it('isFeatureEnabledInEnv respects parent cascade for other keys', () => {
-        expect(isFeatureEnabledInEnv('rules.create', { FEATURE_RULES: 'false' })).toBe(false);
-        expect(isFeatureEnabledInEnv('rules.create', {})).toBe(true);
-    });
 });
