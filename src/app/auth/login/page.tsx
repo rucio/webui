@@ -443,8 +443,11 @@ function LoginContent() {
 
     useEffect(() => {
         if (callbackUrl) {
-            const redirectURL = decodeURIComponent(callbackUrl);
-            setRedirectURL(redirectURL);
+            // useSearchParams() has already percent-decoded the value once, which
+            // is exactly the encodeURIComponent() every producer applied.  Decoding
+            // again would strip escapes belonging to the path itself (a DID name
+            // containing "/" travels as %2F) and break the redirect.  See #794.
+            setRedirectURL(callbackUrl);
         }
 
         fetch('/api/auth/login', {
