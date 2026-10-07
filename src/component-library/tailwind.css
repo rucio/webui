@@ -38,6 +38,7 @@
     --color-neutral-1000: #000000;
 
     /* Purple - Primary brand color */
+    --color-brand-50: #f5f3ff;
     --color-brand-100: #ede9fe;
     --color-brand-200: #ddd6fe;
     --color-brand-300: #c4b5fd;
@@ -47,8 +48,10 @@
     --color-brand-700: #6d28d9;
     --color-brand-800: #5b21b6;
     --color-brand-900: #4c1d95;
+    --color-brand-950: #2e1065;
 
     /* Green */
+    --color-base-success-50: #f0fdf4;
     --color-base-success-100: #dcfce7;
     --color-base-success-200: #bbf7d0;
     --color-base-success-300: #86efac;
@@ -58,8 +61,10 @@
     --color-base-success-700: #15803d;
     --color-base-success-800: #166534;
     --color-base-success-900: #14532d;
+    --color-base-success-950: #052e16;
 
     /* Red */
+    --color-base-error-50: #fef2f2;
     --color-base-error-100: #fee2e2;
     --color-base-error-200: #fecaca;
     --color-base-error-300: #fca5a5;
@@ -69,8 +74,10 @@
     --color-base-error-700: #b91c1c;
     --color-base-error-800: #991b1b;
     --color-base-error-900: #7f1d1d;
+    --color-base-error-950: #450a0a;
 
     /* Amber */
+    --color-base-warning-50: #fffbeb;
     --color-base-warning-100: #fef3c7;
     --color-base-warning-200: #fde68a;
     --color-base-warning-300: #fcd34d;
@@ -80,8 +87,10 @@
     --color-base-warning-700: #b45309;
     --color-base-warning-800: #92400e;
     --color-base-warning-900: #78350f;
+    --color-base-warning-950: #451a03;
 
     /* Blue */
+    --color-base-info-50: #f0f9ff;
     --color-base-info-100: #e0f2fe;
     --color-base-info-200: #bae6fd;
     --color-base-info-300: #7dd3fc;
@@ -91,6 +100,7 @@
     --color-base-info-700: #0369a1;
     --color-base-info-800: #075985;
     --color-base-info-900: #0c4a6e;
+    --color-base-info-950: #082f49;
 
     --color-extra-indigo-100: #e0e7ff;
     --color-extra-indigo-200: #c7d2fe;
@@ -152,6 +162,8 @@
     --animate-fadeout: fadeout 5s linear 1;
     --animate-accordion-down: accordion-down 0.2s ease-out;
     --animate-accordion-up: accordion-up 0.2s ease-out;
+    --animate-collapsible-down: collapsible-down 0.2s ease-out;
+    --animate-collapsible-up: collapsible-up 0.2s ease-out;
     --animate-shimmer: shimmer 2s infinite;
     --animate-fadeIn: fadeIn 0.3s ease-out;
     --animate-slideIn: slideIn 0.3s ease-out;
@@ -195,6 +207,24 @@
     @keyframes accordion-up {
         from {
             height: var(--radix-accordion-content-height);
+        }
+        to {
+            height: 0;
+        }
+    }
+
+    @keyframes collapsible-down {
+        from {
+            height: 0;
+        }
+        to {
+            height: var(--radix-collapsible-content-height);
+        }
+    }
+
+    @keyframes collapsible-up {
+        from {
+            height: var(--radix-collapsible-content-height);
         }
         to {
             height: 0;
