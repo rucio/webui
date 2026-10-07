@@ -164,7 +164,7 @@ export function fixtureRulePageLockEntryViewModel(): RulePageLockEntryViewModel 
 export function fixtureRuleMetaViewModel(): RuleMetaViewModel {
     return {
         ...mockBaseVM(),
-        account: faker.internet.userName(),
+        account: faker.internet.username(),
         activity: faker.company.buzzPhrase(),
         copies: faker.number.int({ min: 1, max: 10 }),
         created_at: faker.date.past().toISOString(),
@@ -198,7 +198,7 @@ export function fixtureRSEAccountUsageLimitViewModel(): RSEAccountUsageLimitView
         ...mockBaseVM(),
         rse_id: faker.string.uuid(),
         rse: createRSEName(),
-        account: faker.internet.userName(),
+        account: faker.internet.username(),
         files: faker.number.int({ min: 0, max: 1e6 }),
         used_bytes: used_bytes,
         bytes_limit: bytes_limit,
@@ -215,7 +215,7 @@ export function fixtureRSEAccountUsageViewModel(): RSEAccountUsageViewModel {
         ...mockBaseVM(),
         rse_id: faker.string.uuid(),
         rse: createRSEName(),
-        account: faker.internet.userName(),
+        account: faker.internet.username(),
         files: faker.number.int({ min: 0, max: 1e6 }),
         used_bytes: used_bytes,
         bytes_limit: bytes_limit,
@@ -293,7 +293,7 @@ export function fixtureRuleViewModel(): RuleViewModel {
         id: faker.string.uuid().replace(/-/g, ''),
         scope: createRandomScope(),
         name: faker.lorem.words(3).replace(/\s/g, '.'),
-        account: faker.internet.userName(),
+        account: faker.internet.username(),
         rse_expression: createRSEExpression(),
         created_at: faker.date.past().toISOString(),
         remaining_lifetime: faker.number.int({ min: 0, max: 1e6 }),
@@ -323,7 +323,7 @@ export function fixtureDIDMetaViewModel(type?: DIDType): DIDMetaViewModel {
         ...mockBaseVM(),
         name: faker.lorem.words(3).replace(/\s/g, '.'),
         scope: createRandomScope(),
-        account: faker.internet.userName(),
+        account: faker.internet.username(),
         did_type: did_type,
         created_at: faker.date.past().toISOString(),
         updated_at: faker.date.recent().toISOString(),
@@ -418,7 +418,7 @@ export function fixtureSubscriptionRuleStatesViewModel(): SubscriptionRuleStates
 export function fixtureSubscriptionViewModel(): SubscriptionViewModel {
     return {
         ...mockBaseVM(),
-        account: faker.internet.userName(),
+        account: faker.internet.username(),
         created_at: faker.date.past().toISOString(),
         id: faker.string.uuid(),
         last_processed: faker.date.recent().toISOString(),
