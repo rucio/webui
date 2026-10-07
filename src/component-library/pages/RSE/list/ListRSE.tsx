@@ -72,6 +72,7 @@ export const ListRSE = (props: ListRSEProps) => {
                         <a
                             href="https://rucio.github.io/documentation/started/concepts/rse_expressions"
                             target="_blank"
+                            rel="noopener noreferrer"
                             className={cn(
                                 'pl-9 pb-3',
                                 'inline-flex items-center gap-1',
