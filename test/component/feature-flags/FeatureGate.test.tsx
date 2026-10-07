@@ -19,7 +19,9 @@ describe('FeatureGate', () => {
     it('renders children when the feature is enabled', () => {
         render(
             <FeatureProvider features={baseMap}>
-                <FeatureGate feature="rules"><span>shown</span></FeatureGate>
+                <FeatureGate feature="rules">
+                    <span>shown</span>
+                </FeatureGate>
             </FeatureProvider>,
         );
         expect(screen.getByText('shown')).toBeInTheDocument();
@@ -38,7 +40,11 @@ describe('FeatureGate', () => {
     });
 
     it('treats a missing provider as disabled', () => {
-        render(<FeatureGate feature="rules"><span>shown</span></FeatureGate>);
+        render(
+            <FeatureGate feature="rules">
+                <span>shown</span>
+            </FeatureGate>,
+        );
         expect(screen.queryByText('shown')).not.toBeInTheDocument();
     });
 });

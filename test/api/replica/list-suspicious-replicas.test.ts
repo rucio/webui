@@ -151,4 +151,3 @@ describe('Feature: ListSuspiciousReplicas (controller)', () => {
         expect(parsed.length).toBe(2);
     });
 });
-

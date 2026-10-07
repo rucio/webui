@@ -4,10 +4,7 @@ import { GridReadyEvent, ValueFormatterParams } from 'ag-grid-community';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import {
-    DefaultDateFilterParams,
-    DefaultTextFilterParams,
-} from '@/component-library/features/utils/filter-parameters';
+import { DefaultDateFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { RuleState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
@@ -45,8 +42,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null);
 
     const ruleStateOptions = Object.values(RuleState);
-    const ruleStateValueFormatter = (value: RuleState) => value === RuleState.WAITING_APPROVAL ? 'Waiting Approval' : value;
-
+    const ruleStateValueFormatter = (value: RuleState) => (value === RuleState.WAITING_APPROVAL ? 'Waiting Approval' : value);
 
     const [columnDefs] = useState([
         {

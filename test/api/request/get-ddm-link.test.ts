@@ -74,11 +74,11 @@ describe('parseBoolEnv', () => {
     const truthyValues: Array<string | undefined> = ['true', 'True', 'TRUE', '1', 'yes', 'YES', 'on', 'ON', ' true '];
     const falsyValues: Array<string | undefined> = ['false', '0', 'no', 'off', '', undefined];
 
-    it.each(truthyValues)('should return true for %p', (value) => {
+    it.each(truthyValues)('should return true for %p', value => {
         expect(parseBoolEnv(value)).toBe(true);
     });
 
-    it.each(falsyValues)('should return false for %p', (value) => {
+    it.each(falsyValues)('should return false for %p', value => {
         expect(parseBoolEnv(value)).toBe(false);
     });
 });
@@ -162,36 +162,30 @@ describe('GetDDMLinkUseCase', () => {
     });
 
     const additionalTruthyFlags = ['1', 'yes', 'YES', 'on', 'ON', ' true '];
-    it.each(additionalTruthyFlags)(
-        'should treat feature flag value %p as truthy and present success',
-        async (flagValue) => {
-            const presenter = makePresenter();
-            const envConfig = makeEnvConfig({ FEATURE_DDM_DASHBOARD: flagValue });
-            const useCase = new GetDDMLinkUseCase(presenter, envConfig);
+    it.each(additionalTruthyFlags)('should treat feature flag value %p as truthy and present success', async flagValue => {
+        const presenter = makePresenter();
+        const envConfig = makeEnvConfig({ FEATURE_DDM_DASHBOARD: flagValue });
+        const useCase = new GetDDMLinkUseCase(presenter, envConfig);
 
-            await useCase.execute(BASE_REQUEST);
+        await useCase.execute(BASE_REQUEST);
 
-            expect(presenter.lastError).toBeUndefined();
-            expect(presenter.lastSuccess).toBeDefined();
-        },
-    );
+        expect(presenter.lastError).toBeUndefined();
+        expect(presenter.lastSuccess).toBeDefined();
+    });
 
     const additionalFalsyFlags = ['0', 'no', 'off', 'NO', 'OFF'];
-    it.each(additionalFalsyFlags)(
-        'should treat feature flag value %p as falsy and present FeatureDisabledError',
-        async (flagValue) => {
-            const presenter = makePresenter();
-            const envConfig = makeEnvConfig({ FEATURE_DDM_DASHBOARD: flagValue });
-            const useCase = new GetDDMLinkUseCase(presenter, envConfig);
+    it.each(additionalFalsyFlags)('should treat feature flag value %p as falsy and present FeatureDisabledError', async flagValue => {
+        const presenter = makePresenter();
+        const envConfig = makeEnvConfig({ FEATURE_DDM_DASHBOARD: flagValue });
+        const useCase = new GetDDMLinkUseCase(presenter, envConfig);
 
-            await useCase.execute(BASE_REQUEST);
+        await useCase.execute(BASE_REQUEST);
 
-            expect(presenter.lastError).toBeDefined();
-            expect((presenter.lastError as FeatureDisabledError).type).toBe('FeatureDisabledError');
-            expect(presenter.lastError!.code).toBe(403);
-            expect(presenter.lastSuccess).toBeUndefined();
-        },
-    );
+        expect(presenter.lastError).toBeDefined();
+        expect((presenter.lastError as FeatureDisabledError).type).toBe('FeatureDisabledError');
+        expect(presenter.lastError!.code).toBe(403);
+        expect(presenter.lastSuccess).toBeUndefined();
+    });
 
     it('should call presentError with ConfigNotFoundError (code 500) when base URL is undefined', async () => {
         const presenter = makePresenter();
@@ -270,15 +264,9 @@ describe('GET DDM link API route test', () => {
     });
 
     test('it should return a DDM Dashboard URL with correctly encoded query params', async () => {
-        const { req, res } = await createHttpMocks(
-            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK',
-            'GET',
-            {},
-        );
+        const { req, res } = await createHttpMocks('/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK', 'GET', {});
 
-        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(
-            CONTROLLERS.GET_DDM_LINK,
-        );
+        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(CONTROLLERS.GET_DDM_LINK);
 
         const controllerParameters: GetDDMLinkControllerParameters = {
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
@@ -301,15 +289,9 @@ describe('GET DDM link API route test', () => {
     test('it should return an error view model when the feature flag is disabled', async () => {
         process.env.FEATURE_DDM_DASHBOARD = 'false';
 
-        const { req, res } = await createHttpMocks(
-            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK',
-            'GET',
-            {},
-        );
+        const { req, res } = await createHttpMocks('/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK', 'GET', {});
 
-        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(
-            CONTROLLERS.GET_DDM_LINK,
-        );
+        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(CONTROLLERS.GET_DDM_LINK);
 
         await controller.execute({
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
@@ -327,15 +309,9 @@ describe('GET DDM link API route test', () => {
     test('it should return an error view model when the base URL env var is not set', async () => {
         delete process.env.DDM_DASHBOARD_BASE_URL;
 
-        const { req, res } = await createHttpMocks(
-            '/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK',
-            'GET',
-            {},
-        );
+        const { req, res } = await createHttpMocks('/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK', 'GET', {});
 
-        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(
-            CONTROLLERS.GET_DDM_LINK,
-        );
+        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(CONTROLLERS.GET_DDM_LINK);
 
         await controller.execute({
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
@@ -357,9 +333,7 @@ describe('GET DDM link API route test', () => {
         // confirms the route-level guard is the correct place to enforce presence.
         const { req, res } = await createHttpMocks('/api/feature/get-ddm-link', 'GET', {});
 
-        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(
-            CONTROLLERS.GET_DDM_LINK,
-        );
+        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(CONTROLLERS.GET_DDM_LINK);
 
         await controller.execute({
             rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,

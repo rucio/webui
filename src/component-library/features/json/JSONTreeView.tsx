@@ -32,7 +32,7 @@ const JSONNode: React.FC<JSONNodeProps> = ({ data, keyName, level, expandDepth, 
     const [isExpanded, setIsExpanded] = useState(level < expandDepth);
 
     const toggleExpand = useCallback(() => {
-        setIsExpanded((prev) => !prev);
+        setIsExpanded(prev => !prev);
     }, []);
 
     // Render primitive values (string, number, boolean, null)
@@ -104,13 +104,25 @@ const JSONNode: React.FC<JSONNodeProps> = ({ data, keyName, level, expandDepth, 
                 {isExpanded && !isEmpty && (
                     <div className="pl-4 border-l border-neutral-200 dark:border-neutral-700 ml-2">
                         {keys.map((key, index) => (
-                            <JSONNode key={key} data={data[key]} keyName={key} level={level + 1} expandDepth={expandDepth} isLast={index === keys.length - 1} />
+                            <JSONNode
+                                key={key}
+                                data={data[key]}
+                                keyName={key}
+                                level={level + 1}
+                                expandDepth={expandDepth}
+                                isLast={index === keys.length - 1}
+                            />
                         ))}
                     </div>
                 )}
 
                 {/* Closing brace */}
-                {isExpanded && !isEmpty && <div className="text-neutral-900 dark:text-neutral-100">{'}'}{!isLast && ','}</div>}
+                {isExpanded && !isEmpty && (
+                    <div className="text-neutral-900 dark:text-neutral-100">
+                        {'}'}
+                        {!isLast && ','}
+                    </div>
+                )}
             </div>
         );
     }
@@ -171,7 +183,12 @@ const JSONNode: React.FC<JSONNodeProps> = ({ data, keyName, level, expandDepth, 
                 )}
 
                 {/* Closing bracket */}
-                {isExpanded && !isEmpty && <div className="text-neutral-900 dark:text-neutral-100">{']'}{!isLast && ','}</div>}
+                {isExpanded && !isEmpty && (
+                    <div className="text-neutral-900 dark:text-neutral-100">
+                        {']'}
+                        {!isLast && ','}
+                    </div>
+                )}
             </div>
         );
     }
@@ -285,10 +302,7 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
         'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600',
     );
 
-    const treeWrapperClasses = twMerge(
-        'overflow-auto p-3 font-mono text-sm leading-relaxed',
-        isFlexFill && 'flex-1 min-h-0',
-    );
+    const treeWrapperClasses = twMerge('overflow-auto p-3 font-mono text-sm leading-relaxed', isFlexFill && 'flex-1 min-h-0');
 
     const warningBadgeClasses =
         'inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700';
@@ -314,12 +328,7 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
                     <div className="text-xs text-neutral-600 dark:text-neutral-400">Interactive Tree View</div>
                     <div className="flex items-center gap-2">
                         {showExpandButton && onExpand && (
-                            <button
-                                type="button"
-                                onClick={onExpand}
-                                className={expandButtonClasses}
-                                aria-label="Expand to full screen"
-                            >
+                            <button type="button" onClick={onExpand} className={expandButtonClasses} aria-label="Expand to full screen">
                                 <HiArrowsPointingOut className="w-4 h-4" />
                                 <span>Expand</span>
                             </button>

@@ -26,7 +26,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
 
     const rseTypeOptions = Object.values(RSEType);
     const booleanOptions = [true, false];
-    const booleanValueFormatter = (value: boolean) => value ? 'True' : 'False';
+    const booleanValueFormatter = (value: boolean) => (value ? 'True' : 'False');
 
     const [columnDefs] = useState([
         {

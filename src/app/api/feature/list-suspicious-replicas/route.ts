@@ -20,9 +20,7 @@ export async function GET(request: NextRequest) {
         const nattemptsRaw = params.nattempts as string | undefined;
         const nattempts = nattemptsRaw !== undefined ? parseInt(nattemptsRaw, 10) : undefined;
 
-        const controller = appContainer.get<BaseController<ListSuspiciousReplicasControllerParameters, void>>(
-            CONTROLLERS.LIST_SUSPICIOUS_REPLICAS,
-        );
+        const controller = appContainer.get<BaseController<ListSuspiciousReplicasControllerParameters, void>>(CONTROLLERS.LIST_SUSPICIOUS_REPLICAS);
 
         return executeAuthenticatedController(
             controller,

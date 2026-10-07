@@ -28,12 +28,14 @@ const DenyRuleWrapper = ({ loading = false }: { loading?: boolean }) => {
     const [open, setOpen] = useState(false);
     return (
         <>
-            <Button variant="error" onClick={() => setOpen(true)}>Deny Rule</Button>
+            <Button variant="error" onClick={() => setOpen(true)}>
+                Deny Rule
+            </Button>
             <DenyRuleDialog
                 open={open}
                 onOpenChange={setOpen}
                 ruleId="8a7b6c5d4e3f2a1b"
-                onConfirm={(comment) => {
+                onConfirm={comment => {
                     alert(`Rule denied!${comment ? ` Comment: ${comment}` : ''}`);
                     setOpen(false);
                 }}

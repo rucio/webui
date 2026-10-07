@@ -58,8 +58,8 @@ export const DenyRuleDialog: React.FC<DenyRuleDialogProps> = ({ open, onOpenChan
                 <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 p-3 text-sm text-base-info-700 dark:text-base-info-200 flex gap-2 items-start">
                     <HiInformationCircle className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
                     <p>
-                        Tips: Denying a rule rejects the replication request. This action is only available to administrators.
-                        You may optionally provide a reason for the denial.
+                        Tips: Denying a rule rejects the replication request. This action is only available to administrators. You may optionally
+                        provide a reason for the denial.
                     </p>
                 </div>
 
@@ -84,12 +84,7 @@ export const DenyRuleDialog: React.FC<DenyRuleDialogProps> = ({ open, onOpenChan
                     <label htmlFor="deny-rule-comment" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">
                         Comment <span className="text-neutral-400 dark:text-neutral-500 font-normal">(optional)</span>
                     </label>
-                    <Textarea
-                        id="deny-rule-comment"
-                        value={comment}
-                        onChange={e => setComment(e.target.value)}
-                        placeholder="Reason for denial..."
-                    />
+                    <Textarea id="deny-rule-comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Reason for denial..." />
                 </div>
             </div>
         </MutationDialog>

@@ -23,9 +23,7 @@ class ListRulesPendingApprovalController extends BaseController<
     ) {
         super(listRulesPendingApprovalUseCaseFactory);
     }
-    prepareRequestModel(
-        parameters: ListRulesPendingApprovalControllerParameters,
-    ): AuthenticatedRequestModel<ListRulesPendingApprovalRequest> {
+    prepareRequestModel(parameters: ListRulesPendingApprovalControllerParameters): AuthenticatedRequestModel<ListRulesPendingApprovalRequest> {
         return {
             rucioAuthToken: parameters.rucioAuthToken,
             filters: parameters.filters,

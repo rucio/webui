@@ -117,7 +117,9 @@ export const ShortLifetimeWarning: Story = {
         const now = new Date();
         const target = new Date(now.getTime() + 45 * 60 * 1000);
         const pad = (n: number) => String(n).padStart(2, '0');
-        const localStr = `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}T${pad(target.getHours())}:${pad(target.getMinutes())}`;
+        const localStr = `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}T${pad(target.getHours())}:${pad(
+            target.getMinutes(),
+        )}`;
         const dateInput = canvas.getByLabelText(/Expiry date/);
         await userEvent.clear(dateInput);
         await userEvent.type(dateInput, localStr);

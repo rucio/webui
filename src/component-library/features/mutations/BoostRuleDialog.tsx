@@ -29,14 +29,7 @@ export interface BoostRuleDialogProps {
  * />
  * ```
  */
-export const BoostRuleDialog: React.FC<BoostRuleDialogProps> = ({
-    open,
-    onOpenChange,
-    ruleId,
-    currentLifetime,
-    onConfirm,
-    loading = false,
-}) => {
+export const BoostRuleDialog: React.FC<BoostRuleDialogProps> = ({ open, onOpenChange, ruleId, currentLifetime, onConfirm, loading = false }) => {
     const [days, setDays] = useState('');
     const [error, setError] = useState<string | undefined>();
 
@@ -104,9 +97,7 @@ export const BoostRuleDialog: React.FC<BoostRuleDialogProps> = ({
                 {days && !error && (
                     <div className="text-sm text-neutral-600 dark:text-neutral-400">
                         New lifetime:{' '}
-                        <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                            {(currentLifetime || 0) + parseInt(days, 10)} days
-                        </span>
+                        <span className="font-medium text-neutral-900 dark:text-neutral-100">{(currentLifetime || 0) + parseInt(days, 10)} days</span>
                     </div>
                 )}
             </div>

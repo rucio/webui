@@ -47,7 +47,9 @@ export const Default: Story = {
             onSubmit={() => alert('Submitted!')}
             submitLabel="Confirm"
         >
-            <p className="text-sm text-neutral-700 dark:text-neutral-300">This is the dialog content area. You can place any form fields or messages here.</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                This is the dialog content area. You can place any form fields or messages here.
+            </p>
         </DialogWrapper>
     ),
 };
@@ -121,7 +123,7 @@ export const DarkMode: Story = {
     ),
     globals: {
         backgrounds: {
-            value: "dark"
-        }
+            value: 'dark',
+        },
     },
 };

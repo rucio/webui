@@ -14,11 +14,7 @@ import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gat
  *
  * Failures are non-fatal; the primary login still succeeds with an empty list.
  */
-async function getIdentityAccountNames(
-    username: string,
-    rucioAuthToken: string,
-    accountGateway: AccountGatewayOutputPort,
-): Promise<string[]> {
+async function getIdentityAccountNames(username: string, rucioAuthToken: string, accountGateway: AccountGatewayOutputPort): Promise<string[]> {
     const result = await accountGateway.listAccountsForIdentity(username, 'userpass', rucioAuthToken);
     if (result.status !== 'success') {
         return [];

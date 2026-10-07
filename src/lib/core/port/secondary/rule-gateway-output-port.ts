@@ -1,5 +1,14 @@
 import { BaseStreamableDTO } from '@/lib/sdk/dto';
-import { CreateRuleDTO, DeleteRuleDTO, ListRulesDTO, RuleAnalysisDTO, RuleDTO, RuleExtendedDTO, RuleMetaDTO, UpdateRuleDTO } from '../../dto/rule-dto';
+import {
+    CreateRuleDTO,
+    DeleteRuleDTO,
+    ListRulesDTO,
+    RuleAnalysisDTO,
+    RuleDTO,
+    RuleExtendedDTO,
+    RuleMetaDTO,
+    UpdateRuleDTO,
+} from '../../dto/rule-dto';
 import { ListRulesFilter } from '@/lib/infrastructure/gateway/rule-gateway/rule-gateway-utils';
 import { RuleCreationParameters, RuleUpdateOptions } from '@/lib/core/entity/rucio';
 

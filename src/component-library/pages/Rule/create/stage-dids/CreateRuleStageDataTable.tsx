@@ -83,5 +83,13 @@ export const CreateRuleStageDataTable: React.FC<StageDataTableProps> = ({ addDID
         updateSelection();
     }, [selectedItems]);
 
-    return <StreamedTable columnDefs={columnDefs} tableRef={tableRef} onAsyncTransactionsFlushed={() => updateSelection()} {...props} enableFilterHandlers />;
+    return (
+        <StreamedTable
+            columnDefs={columnDefs}
+            tableRef={tableRef}
+            onAsyncTransactionsFlushed={() => updateSelection()}
+            {...props}
+            enableFilterHandlers
+        />
+    );
 };

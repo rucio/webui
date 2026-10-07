@@ -84,7 +84,10 @@ test.describe('Approve Rules – admin access', () => {
 
     test('clicking Approve button opens ApproveRuleDialog', async ({ page }) => {
         // Wait for at least one Approve button in a row
-        const approveBtn = page.locator('button').filter({ hasText: /^Approve$/ }).first();
+        const approveBtn = page
+            .locator('button')
+            .filter({ hasText: /^Approve$/ })
+            .first();
 
         // Only run if there are rows with waiting rules
         const hasBtns = await approveBtn.isVisible({ timeout: 10000 }).catch(() => false);
@@ -102,7 +105,10 @@ test.describe('Approve Rules – admin access', () => {
 
     test('clicking Deny button opens DenyRuleDialog', async ({ page }) => {
         // Wait for at least one Deny button in a row
-        const denyBtn = page.locator('button').filter({ hasText: /^Deny$/ }).first();
+        const denyBtn = page
+            .locator('button')
+            .filter({ hasText: /^Deny$/ })
+            .first();
 
         const hasBtns = await denyBtn.isVisible({ timeout: 10000 }).catch(() => false);
         if (!hasBtns) {

@@ -173,25 +173,20 @@ export const RegularTable = (props: RegularTableProps) => {
             if (isAnyFilterPresent && numberOfVisibleRows === 0) {
                 gridApi.setGridOption('noRowsOverlayComponentParams', { isEmptyAfterFiltering: true });
                 gridApi.showNoRowsOverlay();
-            }
-            else if (!isAnyFilterPresent && numberOfVisibleRows === 0) {
+            } else if (!isAnyFilterPresent && numberOfVisibleRows === 0) {
                 gridApi.setGridOption('noRowsOverlayComponentParams', { isEmptyAfterFiltering: false });
                 gridApi.showNoRowsOverlay();
-            }
-            else
-                gridApi.hideOverlay();
+            } else gridApi.hideOverlay();
         }
-    }
+    };
 
     const getDefaultNoRowsElement = (props: { isEmptyAfterFiltering?: boolean }) => {
         return props?.isEmptyAfterFiltering ? (
-            <p className="text-neutral-600 dark:text-neutral-100 text-center px-4">
-                No data matches the selected filters.
-            </p>
+            <p className="text-neutral-600 dark:text-neutral-100 text-center px-4">No data matches the selected filters.</p>
         ) : (
             <NoDataYetOverlay />
-        )
-    }
+        );
+    };
 
     /* loadingOverlayComponent is shown when the loading hasn't begun yet,
         whereas noRowsOverlayComponent is shown when the loading has started without data transactions */
@@ -225,7 +220,7 @@ export const RegularTable = (props: RegularTableProps) => {
                             sortable: true, // Enable column sorting
                             resizable: true, // Enable column resizing by dragging borders
                         }}
-                    //asyncTransactionWaitMillis={500}
+                        //asyncTransactionWaitMillis={500}
                     />
                 ) : (
                     <div></div>

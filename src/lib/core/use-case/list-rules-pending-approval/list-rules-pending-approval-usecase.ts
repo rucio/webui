@@ -40,9 +40,7 @@ export default class ListRulesPendingApprovalUseCase
         super(presenter, [getDIDPipelineElement]);
     }
 
-    validateRequestModel(
-        requestModel: AuthenticatedRequestModel<ListRulesPendingApprovalRequest>,
-    ): ListRulesPendingApprovalError | undefined {
+    validateRequestModel(requestModel: AuthenticatedRequestModel<ListRulesPendingApprovalRequest>): ListRulesPendingApprovalError | undefined {
         return undefined;
     }
 
@@ -62,9 +60,10 @@ export default class ListRulesPendingApprovalUseCase
         };
     }
 
-    processStreamedData(
-        dto: RuleExtendedDTO,
-    ): { data: ListRulesPendingApprovalResponse | ListRulesPendingApprovalError; status: 'success' | 'error' } {
+    processStreamedData(dto: RuleExtendedDTO): {
+        data: ListRulesPendingApprovalResponse | ListRulesPendingApprovalError;
+        status: 'success' | 'error';
+    } {
         if (dto.status === 'error') {
             const errorModel: ListRulesPendingApprovalError = {
                 status: 'error',

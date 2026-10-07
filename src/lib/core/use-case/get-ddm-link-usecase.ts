@@ -9,10 +9,7 @@ import { parseBoolEnv } from '@/lib/core/utils/env-utils';
 
 @injectable()
 export default class GetDDMLinkUseCase implements GetDDMLinkInputPort {
-    constructor(
-        private readonly presenter: GetDDMLinkOutputPort,
-        private readonly envConfigGateway: EnvConfigGatewayOutputPort,
-    ) {}
+    constructor(private readonly presenter: GetDDMLinkOutputPort, private readonly envConfigGateway: EnvConfigGatewayOutputPort) {}
 
     async execute(requestModel: AuthenticatedRequestModel<GetDDMLinkRequest>): Promise<void> {
         const { scope, name, rse } = requestModel;

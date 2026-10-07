@@ -196,7 +196,9 @@ export async function getIssuerFromEnv(providerName: string): Promise<string> {
             return issuer;
         }
 
-        console.warn(`[OIDC] Could not find issuer for provider: ${providerName}. Expected env var: OIDC_PROVIDER_${providerName.toUpperCase()}_ISSUER`);
+        console.warn(
+            `[OIDC] Could not find issuer for provider: ${providerName}. Expected env var: OIDC_PROVIDER_${providerName.toUpperCase()}_ISSUER`,
+        );
         return '';
     } catch (error) {
         console.error(`[OIDC] Error getting issuer for provider ${providerName}:`, error);

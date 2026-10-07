@@ -41,9 +41,7 @@ export const RSESearchPanel = (props: SearchPanelProps) => {
 
     return (
         <div className="space-y-2">
-            <div className="text-neutral-900 dark:text-neutral-100">
-                Expression
-            </div>
+            <div className="text-neutral-900 dark:text-neutral-100">Expression</div>
             <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-center sm:items-start">
                 <Input
                     className="w-full sm:flex-grow"

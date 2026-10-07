@@ -238,13 +238,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
 
                                 {/* Modal Content */}
                                 <div className="flex-1 overflow-hidden p-6">
-                                    <JSONTreeView
-                                        value={value}
-                                        expandDepth={expandDepth}
-                                        showCopyButton={true}
-                                        maxHeight="100%"
-                                        className="h-full"
-                                    />
+                                    <JSONTreeView value={value} expandDepth={expandDepth} showCopyButton={true} maxHeight="100%" className="h-full" />
                                 </div>
                             </Dialog.Content>
                         </Dialog.Portal>
@@ -335,9 +329,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                         >
                             {/* Modal Header */}
                             <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-700">
-                                <Dialog.Title className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-                                    {expandTitle}
-                                </Dialog.Title>
+                                <Dialog.Title className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{expandTitle}</Dialog.Title>
                                 <Dialog.Close asChild>
                                     <button
                                         className="
@@ -361,7 +353,9 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                                     {isValidJSON && isFormatted ? (
                                         <Highlight className="language-json">{displayValue}</Highlight>
                                     ) : (
-                                        <pre className="text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-words m-0">{displayValue}</pre>
+                                        <pre className="text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-words m-0">
+                                            {displayValue}
+                                        </pre>
                                     )}
                                 </div>
                             </div>

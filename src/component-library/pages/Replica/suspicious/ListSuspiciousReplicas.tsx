@@ -26,17 +26,7 @@ type ListSuspiciousReplicasProps = {
     initialData?: SuspiciousReplicaViewModel[];
 };
 
-function FilterField({
-    children,
-    label,
-    htmlFor,
-    className,
-}: {
-    children: React.ReactNode;
-    label: string;
-    htmlFor: string;
-    className?: string;
-}) {
+function FilterField({ children, label, htmlFor, className }: { children: React.ReactNode; label: string; htmlFor: string; className?: string }) {
     return (
         <div className={cn('flex-1', className)}>
             <label htmlFor={htmlFor} className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block whitespace-nowrap">
@@ -161,12 +151,7 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
                 toast({
                     variant: 'success',
                     title: requested === 1 ? 'Replica declared bad' : `${accepted} replicas declared bad`,
-                    description:
-                        rseCount > 1
-                            ? `Across ${rseCount} RSEs.`
-                            : results[0]
-                              ? `On ${results[0].rse}.`
-                              : undefined,
+                    description: rseCount > 1 ? `Across ${rseCount} RSEs.` : results[0] ? `On ${results[0].rse}.` : undefined,
                 });
             } else {
                 toast({
@@ -232,36 +217,33 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
                 {isTipsOpen && (
                     <ul id="suspicious-replicas-tips" className="list-disc list-inside space-y-1 px-3 pb-3 pl-10">
                         <li>
-                            <span className="font-medium">Suspicious vs. bad:</span>  A replica is &quot;suspicious&quot; when Rucio has
-                            recorded one or more failed access attempts against it. Declaring it bad transitions Rucio to schedule
-                            re-transfer or removal.
+                            <span className="font-medium">Suspicious vs. bad:</span> A replica is &quot;suspicious&quot; when Rucio has recorded one
+                            or more failed access attempts against it. Declaring it bad transitions Rucio to schedule re-transfer or removal.
                         </li>
                         <li>
-                            <span className="font-medium">Min Attempts Threshold:</span> Rucio applies this filter strictly. A replica
-                            with <code className="font-mono">cnt = 3</code> is returned only when the threshold is{' '}
-                            <code className="font-mono">0</code>, <code className="font-mono">1</code>, or{' '}
-                            <code className="font-mono">2</code>. Set the threshold to <code className="font-mono">0</code> to see every
-                            recorded suspicion.
+                            <span className="font-medium">Min Attempts Threshold:</span> Rucio applies this filter strictly. A replica with{' '}
+                            <code className="font-mono">cnt = 3</code> is returned only when the threshold is <code className="font-mono">0</code>,{' '}
+                            <code className="font-mono">1</code>, or <code className="font-mono">2</code>. Set the threshold to{' '}
+                            <code className="font-mono">0</code> to see every recorded suspicion.
                         </li>
                         <li>
                             <span className="font-medium">RSE Expression:</span> accepts Rucio expressions such as{' '}
                             <code className="font-mono">tier=1</code> or a literal RSE name to narrow results.
                         </li>
                         <li>
-                            <span className="font-medium">Bulk Declare Bad:</span>  Tick checkboxes on multiple rows to enable the bulk
-                            toolbar.
+                            <span className="font-medium">Bulk Declare Bad:</span> Tick checkboxes on multiple rows to enable the bulk toolbar.
                         </li>
                         <li>
-                            <span className="font-medium">Irreversible from the UI:</span> declaring a replica bad cannot be undone here;
-                            it can only be reverted server-side by an administrator.
+                            <span className="font-medium">Irreversible from the UI:</span> declaring a replica bad cannot be undone here; it can only
+                            be reverted server-side by an administrator.
                         </li>
                         <li>
-                            <span className="font-medium">Navigation:</span> click an <span className="font-medium">RSE</span> cell to
-                            open its detail page, or a <span className="font-medium">Name</span> cell to open the DID.
+                            <span className="font-medium">Navigation:</span> click an <span className="font-medium">RSE</span> cell to open its detail
+                            page, or a <span className="font-medium">Name</span> cell to open the DID.
                         </li>
                         <li>
-                            <span className="font-medium">Refresh:</span> the page re-fetches automatically after each successful
-                            declare-bad. To pick up new server-side suspicions, click the search button.
+                            <span className="font-medium">Refresh:</span> the page re-fetches automatically after each successful declare-bad. To pick
+                            up new server-side suspicions, click the search button.
                         </li>
                     </ul>
                 )}

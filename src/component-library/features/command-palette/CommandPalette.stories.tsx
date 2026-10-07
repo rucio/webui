@@ -100,7 +100,7 @@ export const DarkMode: Story = {
             description: {
                 story: 'The command palette in dark mode with proper contrast and color adaptation.',
             },
-        }
+        },
     },
 
     decorators: [
@@ -113,9 +113,9 @@ export const DarkMode: Story = {
 
     globals: {
         backgrounds: {
-            value: "dark"
-        }
-    }
+            value: 'dark',
+        },
+    },
 };
 
 /**

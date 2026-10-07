@@ -49,10 +49,7 @@ describe('RuleGateway Delete Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [deleteRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: DeleteRuleDTO = await ruleGateway.deleteRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            '657c2650725d432fab3f1dc14128e9fb',
-        );
+        const dto: DeleteRuleDTO = await ruleGateway.deleteRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, '657c2650725d432fab3f1dc14128e9fb');
         expect(dto.status).toEqual('success');
         // Explicitly assert the gateway sent a body without a lifetime field.
         // This produces a clear failure message if the implementation accidentally includes it.
@@ -78,10 +75,7 @@ describe('RuleGateway Delete Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [deleteRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: DeleteRuleDTO = await ruleGateway.deleteRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            'nonexistent',
-        );
+        const dto: DeleteRuleDTO = await ruleGateway.deleteRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'nonexistent');
         expect(dto.status).toEqual('error');
     });
 
@@ -102,10 +96,7 @@ describe('RuleGateway Delete Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [deleteRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: DeleteRuleDTO = await ruleGateway.deleteRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            '657c2650725d432fab3f1dc14128e9fb',
-        );
+        const dto: DeleteRuleDTO = await ruleGateway.deleteRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, '657c2650725d432fab3f1dc14128e9fb');
         expect(dto.status).toEqual('error');
     });
 });

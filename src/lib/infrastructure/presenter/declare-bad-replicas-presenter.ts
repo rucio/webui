@@ -1,8 +1,5 @@
 import { BasePresenter } from '@/lib/sdk/presenter';
-import {
-    DeclareBadReplicasError,
-    DeclareBadReplicasResponse,
-} from '@/lib/core/usecase-models/declare-bad-replicas-usecase-models';
+import { DeclareBadReplicasError, DeclareBadReplicasResponse } from '@/lib/core/usecase-models/declare-bad-replicas-usecase-models';
 import { DeclareBadReplicasViewModel, getEmptyDeclareBadReplicasViewModel } from '@/lib/infrastructure/data/view-model/replica';
 
 export default class DeclareBadReplicasPresenter extends BasePresenter<

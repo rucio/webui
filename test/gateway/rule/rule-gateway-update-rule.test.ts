@@ -30,11 +30,9 @@ describe('RuleGateway Update Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            'fdc8ae7f04894bf5bf328bf610e21315',
-            { lifetime: 172800 },
-        );
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'fdc8ae7f04894bf5bf328bf610e21315', {
+            lifetime: 172800,
+        });
         expect(dto.status).toEqual('success');
     });
 
@@ -59,11 +57,9 @@ describe('RuleGateway Update Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            'fdf8493ce00c421496e4aed30f2f0d64',
-            { lifetime: null },
-        );
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'fdf8493ce00c421496e4aed30f2f0d64', {
+            lifetime: null,
+        });
         expect(dto.status).toEqual('success');
     });
 
@@ -88,11 +84,9 @@ describe('RuleGateway Update Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            'fdf8493ce00c421496e4aed30f2f0d64',
-            { approve: true },
-        );
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'fdf8493ce00c421496e4aed30f2f0d64', {
+            approve: true,
+        });
         expect(dto.status).toEqual('success');
     });
 
@@ -117,11 +111,9 @@ describe('RuleGateway Update Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            'fdf8493ce00c421496e4aed30f2f0d64',
-            { priority: 5 },
-        );
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'fdf8493ce00c421496e4aed30f2f0d64', {
+            priority: 5,
+        });
         expect(dto.status).toEqual('success');
     });
 
@@ -146,11 +138,9 @@ describe('RuleGateway Update Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            '657c2650725d432fab3f1dc14128e9fb',
-            { lifetime: 3600 },
-        );
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, '657c2650725d432fab3f1dc14128e9fb', {
+            lifetime: 3600,
+        });
         expect(dto.status).toEqual('success');
     });
 
@@ -176,11 +166,9 @@ describe('RuleGateway Update Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [updateRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: UpdateRuleDTO = await ruleGateway.updateRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            '657c2650725d432fab3f1dc14128e9fb',
-            { lifetime: 0 },
-        );
+        const dto: UpdateRuleDTO = await ruleGateway.updateRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, '657c2650725d432fab3f1dc14128e9fb', {
+            lifetime: 0,
+        });
         expect(dto.status).toEqual('success');
     });
 

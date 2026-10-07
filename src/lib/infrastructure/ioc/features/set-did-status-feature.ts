@@ -32,6 +32,15 @@ export default class SetDIDStatusFeature extends BaseFeature<
             INPUT_PORT: INPUT_PORT.SET_DID_STATUS,
         };
         const useCaseConstructorArgs = [rucioDIDGateway];
-        super('SetDIDStatus', SetDIDStatusController, SetDIDStatusUseCase, useCaseConstructorArgs, SetDIDStatusPresenter, false, symbols, 'dids.mutate');
+        super(
+            'SetDIDStatus',
+            SetDIDStatusController,
+            SetDIDStatusUseCase,
+            useCaseConstructorArgs,
+            SetDIDStatusPresenter,
+            false,
+            symbols,
+            'dids.mutate',
+        );
     }
 }

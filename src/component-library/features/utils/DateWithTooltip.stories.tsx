@@ -108,8 +108,7 @@ export const HoverToShowTooltip: Story = {
     parameters: {
         docs: {
             description: {
-                story:
-                    'Hover (or focus via keyboard Tab) over the date to reveal the full timestamp tooltip. The tooltip remains open while the pointer is over either the trigger or the popover content.',
+                story: 'Hover (or focus via keyboard Tab) over the date to reveal the full timestamp tooltip. The tooltip remains open while the pointer is over either the trigger or the popover content.',
             },
         },
     },
@@ -127,7 +126,7 @@ export const MidnightUTC: Story = {
     parameters: {
         docs: {
             description: {
-                story: 'Midnight UTC — the short date and the tooltip date should agree regardless of the viewer\'s local timezone.',
+                story: "Midnight UTC — the short date and the tooltip date should agree regardless of the viewer's local timezone.",
             },
         },
     },
