@@ -33,11 +33,21 @@ type TFullMenuItem = TMenuItem & {
 
 function comparePaths(itemPath: string | undefined, pathname: string | null, params: ReadonlyURLSearchParams | null) {
     const wholePathname = params && params?.size > 0 ? pathname + '?' + params.toString() : pathname;
-    
+
     return itemPath === wholePathname;
 }
 
-const MenuItem = ({ item, pathname, params, onClick }: { item: TMenuItem; pathname: string | null; params: ReadonlyURLSearchParams | null; onClick?: () => void }) => {
+const MenuItem = ({
+    item,
+    pathname,
+    params,
+    onClick,
+}: {
+    item: TMenuItem;
+    pathname: string | null;
+    params: ReadonlyURLSearchParams | null;
+    onClick?: () => void;
+}) => {
     const isActive = comparePaths(item.path, pathname, params);
     const classes = `hover:text-brand-500 transition-colors duration-150 whitespace-nowrap ${isActive && 'text-brand-500 font-semibold'}`;
     return (
@@ -166,10 +176,24 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                         <nav className="flex flex-col items-start space-y-4 text-lg" aria-label="Mobile navigation">
                             {menuItems.map(item => {
                                 if (item.path) {
-                                    return <MenuItem key={item.path} item={item} pathname={pathname} params={params} onClick={() => setIsMenuOpen(false)} />;
+                                    return (
+                                        <MenuItem
+                                            key={item.path}
+                                            item={item}
+                                            pathname={pathname}
+                                            params={params}
+                                            onClick={() => setIsMenuOpen(false)}
+                                        />
+                                    );
                                 } else {
                                     return item.children?.map(child => (
-                                        <MenuItem key={child.path} item={child} pathname={pathname} params={params} onClick={() => setIsMenuOpen(false)} />
+                                        <MenuItem
+                                            key={child.path}
+                                            item={child}
+                                            pathname={pathname}
+                                            params={params}
+                                            onClick={() => setIsMenuOpen(false)}
+                                        />
                                     ));
                                 }
                             })}

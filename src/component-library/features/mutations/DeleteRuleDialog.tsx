@@ -31,7 +31,14 @@ export interface DeleteRuleDialogProps {
  * />
  * ```
  */
-export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({ open, onOpenChange, ruleId, onConfirm, loading = false, defaultForceDelete = false }) => {
+export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({
+    open,
+    onOpenChange,
+    ruleId,
+    onConfirm,
+    loading = false,
+    defaultForceDelete = false,
+}) => {
     const [forceDelete, setForceDelete] = React.useState(defaultForceDelete);
 
     // Reset checkbox state when the dialog closes
@@ -75,7 +82,10 @@ export const DeleteRuleDialog: React.FC<DeleteRuleDialogProps> = ({ open, onOpen
                         onCheckedChange={checked => setForceDelete(checked === true)}
                         aria-describedby={forceDelete ? 'force-delete-warning' : undefined}
                     />
-                    <label htmlFor="force-delete-checkbox" className="text-sm font-medium text-neutral-900 dark:text-neutral-100 cursor-pointer select-none">
+                    <label
+                        htmlFor="force-delete-checkbox"
+                        className="text-sm font-medium text-neutral-900 dark:text-neutral-100 cursor-pointer select-none"
+                    >
                         Force delete
                     </label>
                 </div>

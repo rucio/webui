@@ -255,7 +255,11 @@ describe('SessionMonitorProvider', () => {
 
         render(
             <SessionMonitorProvider>
-                <ManualSignOutConsumer onReady={fn => { capturedManualSignOut = fn; }} />
+                <ManualSignOutConsumer
+                    onReady={fn => {
+                        capturedManualSignOut = fn;
+                    }}
+                />
             </SessionMonitorProvider>,
         );
 

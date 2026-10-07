@@ -53,9 +53,7 @@ export const DeleteRSEAttributeDialog: React.FC<DeleteRSEAttributeDialogProps> =
             <div className="space-y-4">
                 <div className="flex items-start gap-3 rounded-md bg-base-error-50 dark:bg-base-error-950 border border-base-error-200 dark:border-base-error-800 p-3">
                     <HiExclamationCircle className="h-5 w-5 shrink-0 text-base-error-600 dark:text-base-error-400 mt-0.5" aria-hidden="true" />
-                    <p className="text-sm text-base-error-900 dark:text-base-error-100">
-                        This will permanently remove this attribute from the RSE.
-                    </p>
+                    <p className="text-sm text-base-error-900 dark:text-base-error-100">This will permanently remove this attribute from the RSE.</p>
                 </div>
                 <div className="rounded-md bg-neutral-100 dark:bg-neutral-800 p-3 space-y-2">
                     <div className="flex items-center justify-between">

@@ -22,10 +22,7 @@ export const ListSubscriptionClient = (props: ListSubscriptionClientProps) => {
         return res.json();
     };
 
-    const {
-        data: siteHeader,
-        isFetching: isSiteHeaderFetching,
-    } = useQuery<SiteHeaderViewModel>({
+    const { data: siteHeader, isFetching: isSiteHeaderFetching } = useQuery<SiteHeaderViewModel>({
         queryKey: ['subscription-account-client'],
         queryFn: querySiteHeader,
         retry: false,

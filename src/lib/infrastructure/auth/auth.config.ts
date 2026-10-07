@@ -290,9 +290,7 @@ export const authConfig: NextAuthConfig = {
                         // identity maps to; re-auth is a no-op. Pick the
                         // first existing entry as the active user and skip the
                         // pending-selection modal entirely.
-                        const existing = (token.allUsers ?? []).find(
-                            u => u.rucioAuthType === AuthType.OIDC && u.rucioIdentity === rucioIdentity,
-                        );
+                        const existing = (token.allUsers ?? []).find(u => u.rucioAuthType === AuthType.OIDC && u.rucioIdentity === rucioIdentity);
                         if (existing) {
                             token.user = { ...existing, identityAccounts: candidateAccounts };
                             // Refresh token + sessionStartedAt for the new sign-in event so the

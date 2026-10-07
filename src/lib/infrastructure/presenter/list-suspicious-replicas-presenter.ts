@@ -1,7 +1,4 @@
-import {
-    ListSuspiciousReplicasError,
-    ListSuspiciousReplicasResponse,
-} from '@/lib/core/usecase-models/list-suspicious-replicas-usecase-models';
+import { ListSuspiciousReplicasError, ListSuspiciousReplicasResponse } from '@/lib/core/usecase-models/list-suspicious-replicas-usecase-models';
 import { SuspiciousReplicaViewModel, generateEmptySuspiciousReplicaViewModel } from '@/lib/infrastructure/data/view-model/replica';
 import { BaseStreamingPresenter } from '@/lib/sdk/presenter';
 import { ListSuspiciousReplicasOutputPort } from '@/lib/core/port/primary/list-suspicious-replicas-ports';

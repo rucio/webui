@@ -16,13 +16,13 @@ function getMaxDepth(obj: any, currentDepth: number = 0): number {
 
     if (Array.isArray(obj)) {
         if (obj.length === 0) return currentDepth + 1;
-        return Math.max(...obj.map((item) => getMaxDepth(item, currentDepth + 1)));
+        return Math.max(...obj.map(item => getMaxDepth(item, currentDepth + 1)));
     }
 
     const keys = Object.keys(obj);
     if (keys.length === 0) return currentDepth + 1;
 
-    return Math.max(...keys.map((key) => getMaxDepth(obj[key], currentDepth + 1)));
+    return Math.max(...keys.map(key => getMaxDepth(obj[key], currentDepth + 1)));
 }
 
 /**

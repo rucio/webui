@@ -5,11 +5,7 @@ import { NoDataYetOverlay } from '@/component-library/features/table/overlays/No
 
 export const NoLoadedRowsOverlay = (props: { error?: StreamingError; status: StreamingStatus; isEmptyAfterFiltering?: boolean }) => {
     if (props?.isEmptyAfterFiltering) {
-        return (
-            <p className="text-neutral-600 dark:text-neutral-100 text-center px-4">
-                No data matches the selected filters.
-            </p>
-        )
+        return <p className="text-neutral-600 dark:text-neutral-100 text-center px-4">No data matches the selected filters.</p>;
     }
     if (props.error) {
         if (props.error.type === StreamingErrorType.NOT_FOUND) {
@@ -28,9 +24,7 @@ export const NoLoadedRowsOverlay = (props: { error?: StreamingError; status: Str
             const serverMessage = props.error.message?.trim();
             const hasServerMessage = !!serverMessage;
             const primary = hasServerMessage ? serverMessage : 'Something went wrong while loading data.';
-            const secondary = hasServerMessage
-                ? 'Adjust your filters and search again.'
-                : 'Check your network connection and try searching again.';
+            const secondary = hasServerMessage ? 'Adjust your filters and search again.' : 'Check your network connection and try searching again.';
             return (
                 <div className="flex flex-col items-center gap-1 text-center px-4">
                     <p className="text-sm font-medium text-neutral-700 dark:text-neutral-100">{primary}</p>

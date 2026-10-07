@@ -31,8 +31,7 @@ export default class GetDIDForRulePipelineElement extends BaseStreamingPostProce
             // For datasets and containers, use dynamic_depth=FILE to compute
             // accurate bytes/length by resolving through child DIDs.
             // For files, dynamic_depth is a no-op so we skip it.
-            const dynamicDepth =
-                responseModel.did_type === DIDType.FILE ? undefined : DIDType.FILE;
+            const dynamicDepth = responseModel.did_type === DIDType.FILE ? undefined : DIDType.FILE;
 
             const dto: DIDExtendedDTO = await this.didGateway.getDID(
                 requestModel.rucioAuthToken,

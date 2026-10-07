@@ -4,10 +4,7 @@ import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 
 export default class ExamineRuleEndpoint extends BaseEndpoint<RuleAnalysisDTO> {
-    constructor(
-        private readonly rucioAuthToken: string,
-        private readonly ruleId: string,
-    ) {
+    constructor(private readonly rucioAuthToken: string, private readonly ruleId: string) {
         super();
     }
 

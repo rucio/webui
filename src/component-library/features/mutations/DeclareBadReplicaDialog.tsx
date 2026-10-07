@@ -33,13 +33,7 @@ export interface DeclareBadReplicaDialogProps {
  * one POST per RSE group (Rucio's `/replicas/bad/dids` takes a single RSE
  * per call); the dialog itself just collects the shared reason + expiry.
  */
-export const DeclareBadReplicaDialog: React.FC<DeclareBadReplicaDialogProps> = ({
-    open,
-    onOpenChange,
-    targets,
-    onConfirm,
-    loading = false,
-}) => {
+export const DeclareBadReplicaDialog: React.FC<DeclareBadReplicaDialogProps> = ({ open, onOpenChange, targets, onConfirm, loading = false }) => {
     const [reason, setReason] = React.useState('');
     const [expiresAt, setExpiresAt] = React.useState<Date | null>(null);
 
@@ -101,10 +95,7 @@ export const DeclareBadReplicaDialog: React.FC<DeclareBadReplicaDialogProps> = (
         >
             <div className="space-y-4">
                 <div className="flex items-start gap-3 rounded-md bg-base-error-50 dark:bg-base-error-950 border border-base-error-200 dark:border-base-error-800 p-3">
-                    <HiExclamationCircle
-                        className="h-5 w-5 shrink-0 text-base-error-600 dark:text-base-error-400 mt-0.5"
-                        aria-hidden="true"
-                    />
+                    <HiExclamationCircle className="h-5 w-5 shrink-0 text-base-error-600 dark:text-base-error-400 mt-0.5" aria-hidden="true" />
                     <p className="text-sm text-base-error-900 dark:text-base-error-100">
                         {isBulk
                             ? 'Each replica will be marked bad on its RSE. Rucio will treat them as unavailable and may schedule re-transfer or deletion. This cannot be undone from the UI.'
@@ -152,10 +143,7 @@ export const DeclareBadReplicaDialog: React.FC<DeclareBadReplicaDialogProps> = (
                 )}
 
                 <div>
-                    <label
-                        htmlFor="declare-bad-reason"
-                        className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block"
-                    >
+                    <label htmlFor="declare-bad-reason" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">
                         Reason <span className="text-base-error-600">*</span>
                     </label>
                     <Input
@@ -171,10 +159,7 @@ export const DeclareBadReplicaDialog: React.FC<DeclareBadReplicaDialogProps> = (
 
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <label
-                            htmlFor="declare-bad-expires-at"
-                            className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-                        >
+                        <label htmlFor="declare-bad-expires-at" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                             Expires at <span className="text-neutral-500">(optional)</span>
                         </label>
                         {expiresAt && (

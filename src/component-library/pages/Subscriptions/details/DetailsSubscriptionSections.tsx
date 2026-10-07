@@ -14,9 +14,7 @@ export const DetailsSubscriptionSections = ({ account, name, meta }: DetailsSubs
             {/* Filter Section */}
             <section className="col-span-12 lg:col-span-5">
                 <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg shadow p-6 flex flex-col h-[calc(100vh-28rem)]">
-                    <h3 className="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
-                        Filter
-                    </h3>
+                    <h3 className="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">Filter</h3>
                     <div className="flex-1 min-h-0">
                         <DetailsSubscriptionFilter account={account} name={name} meta={meta} />
                     </div>
@@ -26,9 +24,7 @@ export const DetailsSubscriptionSections = ({ account, name, meta }: DetailsSubs
             {/* Rules Section */}
             <section className="col-span-12 lg:col-span-7">
                 <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg shadow p-6 flex flex-col h-[calc(100vh-28rem)]">
-                    <h3 className="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
-                        Replication Rules
-                    </h3>
+                    <h3 className="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">Replication Rules</h3>
                     <div className="flex-1 min-h-0">
                         <DetailsSubscriptionRules account={account} name={name} meta={meta} />
                     </div>

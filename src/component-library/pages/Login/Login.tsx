@@ -551,8 +551,8 @@ export const Login = ({
                                           await oidcPendingFinalizeHandler(account);
                                       }
                                     : lastAuthMethod === 'x509'
-                                      ? submitX509
-                                      : submitUserPass
+                                    ? submitX509
+                                    : submitUserPass
                             }
                             availableAccounts={availableAccounts}
                             onClose={async () => {

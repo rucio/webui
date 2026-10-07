@@ -29,10 +29,7 @@ describe('RuleGateway Examine Rule Endpoint Tests', () => {
         MockRucioServerFactory.createMockRucioServer(true, [examineRuleMockEndpoint]);
 
         const ruleGateway: RuleGatewayOutputPort = appContainer.get<RuleGatewayOutputPort>(GATEWAYS.RULE);
-        const dto: RuleAnalysisDTO = await ruleGateway.examineRule(
-            MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            'fdf8493ce00c421496e4aed30f2f0d64',
-        );
+        const dto: RuleAnalysisDTO = await ruleGateway.examineRule(MockRucioServerFactory.VALID_RUCIO_TOKEN, 'fdf8493ce00c421496e4aed30f2f0d64');
         expect(dto.status).toEqual('success');
         expect(dto.rule_error).toEqual('This replication rule is currently REPLICATING');
         expect(dto.transfers).toEqual([]);

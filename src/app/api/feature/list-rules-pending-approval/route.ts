@@ -47,9 +47,9 @@ async function getHandler(request: NextRequest) {
 
         const filters = validationResult.data;
 
-        const controller = appContainer.get<
-            BaseController<ListRulesPendingApprovalControllerParameters, ListRulesPendingApprovalRequest>
-        >(CONTROLLERS.LIST_RULES_PENDING_APPROVAL);
+        const controller = appContainer.get<BaseController<ListRulesPendingApprovalControllerParameters, ListRulesPendingApprovalRequest>>(
+            CONTROLLERS.LIST_RULES_PENDING_APPROVAL,
+        );
 
         return executeAuthenticatedController(
             controller,

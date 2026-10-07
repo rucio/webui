@@ -81,7 +81,10 @@ const ActionsCell = ({ value: ruleId, onApprove, onDeny, approvingRuleId, denyin
             <Button
                 size="sm"
                 variant="success"
-                onClick={e => { e.stopPropagation(); setApproveOpen(true); }}
+                onClick={e => {
+                    e.stopPropagation();
+                    setApproveOpen(true);
+                }}
                 className="h-7 px-2 text-xs"
             >
                 <HiOutlineCheckCircle className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
@@ -90,7 +93,10 @@ const ActionsCell = ({ value: ruleId, onApprove, onDeny, approvingRuleId, denyin
             <Button
                 size="sm"
                 variant="error"
-                onClick={e => { e.stopPropagation(); setDenyOpen(true); }}
+                onClick={e => {
+                    e.stopPropagation();
+                    setDenyOpen(true);
+                }}
                 className="h-7 px-2 text-xs"
             >
                 <HiOutlineBan className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
@@ -99,7 +105,10 @@ const ActionsCell = ({ value: ruleId, onApprove, onDeny, approvingRuleId, denyin
             <Button
                 size="sm"
                 variant="neutral"
-                onClick={e => { e.stopPropagation(); window.open(`/rule/${ruleId}`, '_blank'); }}
+                onClick={e => {
+                    e.stopPropagation();
+                    window.open(`/rule/${ruleId}`, '_blank');
+                }}
                 className="h-7 px-2 text-xs"
             >
                 <HiOutlineExternalLink className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
@@ -135,7 +144,7 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
 
     const didTypeOptions = Object.values(DIDType).filter(value => value !== DIDType.ALL);
     const booleanOptions = [true, false];
-    const openValueFormatter = (value: boolean) => value ? 'Yes' : 'No';
+    const openValueFormatter = (value: boolean) => (value ? 'Yes' : 'No');
 
     const [columnDefs] = useState([
         {
@@ -226,7 +235,7 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
             filterParams: {
                 options: booleanOptions,
                 valueFormatter: openValueFormatter,
-            }
+            },
         },
         {
             headerName: 'DID Type',

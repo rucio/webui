@@ -22,10 +22,7 @@ function reLogin(request: NextRequest, publicHost: string) {
     // cookie in the same response.  Routing through GET /api/auth/signout does
     // NOT clear the cookie (only a POST does), so the login page would still
     // see an active session — causing the "Already authenticated" loop.
-    const loginPage = new URL(
-        `/auth/login?expired=true&callbackUrl=${encodeURIComponent(request.nextUrl.pathname)}`,
-        publicHost,
-    );
+    const loginPage = new URL(`/auth/login?expired=true&callbackUrl=${encodeURIComponent(request.nextUrl.pathname)}`, publicHost);
     const response = NextResponse.redirect(loginPage);
     // JWT strategy has no server-side session; deleting the cookie is sufficient.
     response.cookies.delete(getSessionCookieName());

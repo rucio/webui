@@ -75,13 +75,9 @@ export const MutationDialog: React.FC<MutationDialogProps> = ({
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex-1 pr-4">
-                            <Dialog.Title className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-                                {title}
-                            </Dialog.Title>
+                            <Dialog.Title className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{title}</Dialog.Title>
                             {description && (
-                                <Dialog.Description className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-                                    {description}
-                                </Dialog.Description>
+                                <Dialog.Description className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{description}</Dialog.Description>
                             )}
                         </div>
                         <Dialog.Close asChild>

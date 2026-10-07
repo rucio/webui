@@ -253,8 +253,8 @@ export const DarkMode: Story = {
     ],
     globals: {
         backgrounds: {
-            value: "dark"
-        }
+            value: 'dark',
+        },
     },
 };
 
@@ -598,8 +598,8 @@ export const InteractiveDarkMode: Story = {
     ],
     globals: {
         backgrounds: {
-            value: "dark"
-        }
+            value: 'dark',
+        },
     },
 };
 

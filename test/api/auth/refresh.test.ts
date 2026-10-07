@@ -44,9 +44,7 @@ if (typeof (global.Response as any).json !== 'function') {
             ...init,
             headers: {
                 'content-type': 'application/json',
-                ...(init?.headers instanceof Headers
-                    ? Object.fromEntries((init.headers as Headers).entries())
-                    : (init?.headers ?? {})),
+                ...(init?.headers instanceof Headers ? Object.fromEntries((init.headers as Headers).entries()) : init?.headers ?? {}),
             },
         });
     };

@@ -224,8 +224,8 @@ export const DarkMode: Story = {
     ),
     globals: {
         backgrounds: {
-            value: "dark"
-        }
+            value: 'dark',
+        },
     },
 };
 

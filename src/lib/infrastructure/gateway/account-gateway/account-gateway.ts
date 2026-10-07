@@ -77,9 +77,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
             return { status: 'error', accounts: [], message: 'Failed to parse response' };
         }
 
-        const accounts: string[] = Array.isArray(data)
-            ? data.map(item => (typeof item === 'string' ? item : item.account)).filter(Boolean)
-            : [];
+        const accounts: string[] = Array.isArray(data) ? data.map(item => (typeof item === 'string' ? item : item.account)).filter(Boolean) : [];
         return { status: 'success', accounts };
     }
 

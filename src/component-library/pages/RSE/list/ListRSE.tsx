@@ -43,11 +43,12 @@ export const ListRSE = (props: ListRSEProps) => {
                         aria-hidden="true"
                     />
                 </button>
-                {isTipsOpen &&
+                {isTipsOpen && (
                     <div>
                         <ul className="list-disc list-inside space-y-1 px-3 pl-10 pb-2">
                             <li>
-                                <span className="font-medium">Purpose:</span> Allows to select a set of RSEs, by providing one or more terms which can be a single RSE name or a condition over the RSE attributes.
+                                <span className="font-medium">Purpose:</span> Allows to select a set of RSEs, by providing one or more terms which can
+                                be a single RSE name or a condition over the RSE attributes.
                             </li>
                             <li>
                                 <span className="font-medium">Simple expressions:</span>
@@ -64,7 +65,8 @@ export const ListRSE = (props: ListRSEProps) => {
                                 </ul>
                             </li>
                             <li>
-                                <span className="font-medium">Operators:</span> Allows to connect terms via union |, intersection & or complementing \.
+                                <span className="font-medium">Operators:</span> Allows to connect terms via union |, intersection & or complementing
+                                \.
                             </li>
                         </ul>
                         <a
@@ -83,7 +85,7 @@ export const ListRSE = (props: ListRSEProps) => {
                         </a>
                         about RSEs expressions.
                     </div>
-                }
+                )}
             </div>
 
             {/* Search Panel */}

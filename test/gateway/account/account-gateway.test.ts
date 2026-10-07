@@ -93,11 +93,7 @@ describe('Account Gateway - listAccountsForIdentity', () => {
         });
 
         const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
-        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
-            'ddmlab',
-            'userpass',
-            'rucio-ddmlab-askdjljioj',
-        );
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity('ddmlab', 'userpass', 'rucio-ddmlab-askdjljioj');
         expect(result.status).toBe('success');
         expect(result.accounts).toEqual(['root', 'atlas']);
     });
@@ -112,11 +108,7 @@ describe('Account Gateway - listAccountsForIdentity', () => {
         });
 
         const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
-        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
-            'unknown-user',
-            'userpass',
-            'some-token',
-        );
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity('unknown-user', 'userpass', 'some-token');
         expect(result.status).toBe('error');
         expect(result.accounts).toEqual([]);
         expect(result.message).toContain('404');
@@ -132,11 +124,7 @@ describe('Account Gateway - listAccountsForIdentity', () => {
         });
 
         const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
-        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
-            'ddmlab',
-            'userpass',
-            'rucio-ddmlab-askdjljioj',
-        );
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity('ddmlab', 'userpass', 'rucio-ddmlab-askdjljioj');
         expect(result.status).toBe('error');
         expect(result.message).toContain('Network error');
     });
@@ -155,11 +143,7 @@ describe('Account Gateway - listAccountsForIdentity', () => {
         });
 
         const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
-        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity(
-            'ddmlab',
-            'userpass',
-            'rucio-ddmlab-askdjljioj',
-        );
+        const result: ListAccountsForIdentityDTO = await rucioAccountGateway.listAccountsForIdentity('ddmlab', 'userpass', 'rucio-ddmlab-askdjljioj');
         expect(result.status).toBe('error');
         expect(result.message).toBe('Failed to parse response');
     });

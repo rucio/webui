@@ -27,6 +27,15 @@ export default class GetSubscriptionFeature extends BaseFeature<
             USECASE_FACTORY: USECASE_FACTORY.GET_SUBSCRIPTION,
             INPUT_PORT: INPUT_PORT.GET_SUBSCRIPTION,
         };
-        super('GetSubscription', GetSubscriptionController, GetSubscriptionUseCase, [gateway], GetSubscriptionPresenter, false, symbols, 'subscriptions');
+        super(
+            'GetSubscription',
+            GetSubscriptionController,
+            GetSubscriptionUseCase,
+            [gateway],
+            GetSubscriptionPresenter,
+            false,
+            symbols,
+            'subscriptions',
+        );
     }
 }

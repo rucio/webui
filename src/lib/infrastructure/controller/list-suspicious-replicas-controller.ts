@@ -26,9 +26,7 @@ class ListSuspiciousReplicasController extends BaseController<
         super(listSuspiciousReplicasUseCaseFactory);
     }
 
-    prepareRequestModel(
-        parameters: ListSuspiciousReplicasControllerParameters,
-    ): AuthenticatedRequestModel<ListSuspiciousReplicasRequest> {
+    prepareRequestModel(parameters: ListSuspiciousReplicasControllerParameters): AuthenticatedRequestModel<ListSuspiciousReplicasRequest> {
         return {
             rucioAuthToken: parameters.rucioAuthToken,
             rseExpression: parameters.rseExpression,

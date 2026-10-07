@@ -476,8 +476,8 @@ function LoginContent() {
                     isSessionExpired
                         ? 'Your session has expired. Please log in again.'
                         : isSignedOut
-                          ? 'You have been signed out successfully.'
-                          : undefined
+                        ? 'You have been signed out successfully.'
+                        : undefined
                 }
             />
         );

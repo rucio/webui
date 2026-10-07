@@ -11,7 +11,13 @@ import GATEWAYS from '../ioc-symbols-gateway';
 import INPUT_PORT from '../ioc-symbols-input-port';
 import USECASE_FACTORY from '../ioc-symbols-usecase-factory';
 
-export default class DIDMetaFeature extends BaseFeature<DIDMetaControllerParameters, DIDMetaRequest, DIDMetaResponse, DIDMetaError, DIDMetaViewModel> {
+export default class DIDMetaFeature extends BaseFeature<
+    DIDMetaControllerParameters,
+    DIDMetaRequest,
+    DIDMetaResponse,
+    DIDMetaError,
+    DIDMetaViewModel
+> {
     constructor(appContainer: Container) {
         const gateway: DIDGatewayOutputPort = appContainer.get(GATEWAYS.DID);
         const symbols = {

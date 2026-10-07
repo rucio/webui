@@ -122,7 +122,9 @@ const DDMLinkButton = (props: any) => {
         setIsFetching(true);
         try {
             const response = await fetch(
-                `/api/feature/get-ddm-link?scope=${encodeURIComponent(data.scope)}&name=${encodeURIComponent(data.name)}&rse=${encodeURIComponent(data.rse)}`,
+                `/api/feature/get-ddm-link?scope=${encodeURIComponent(data.scope)}&name=${encodeURIComponent(data.name)}&rse=${encodeURIComponent(
+                    data.rse,
+                )}`,
             );
             const json = await response.json();
             setViewModel(json);

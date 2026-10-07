@@ -32,7 +32,15 @@ export interface CommentRuleDialogProps {
  * />
  * ```
  */
-export const CommentRuleDialog: React.FC<CommentRuleDialogProps> = ({ open, onOpenChange, ruleId, onConfirm, loading = false, initialComment = '', isAdmin = false }) => {
+export const CommentRuleDialog: React.FC<CommentRuleDialogProps> = ({
+    open,
+    onOpenChange,
+    ruleId,
+    onConfirm,
+    loading = false,
+    initialComment = '',
+    isAdmin = false,
+}) => {
     const [comment, setComment] = useState('');
     const [error, setError] = useState<string | undefined>();
 
@@ -78,7 +86,10 @@ export const CommentRuleDialog: React.FC<CommentRuleDialogProps> = ({ open, onOp
                 {/* Policy warning for non-admins */}
                 {!isAdmin && (
                     <div className="flex items-start gap-3 rounded-md bg-base-warning-50 dark:bg-base-warning-950 border border-base-warning-200 dark:border-base-warning-800 p-3">
-                        <HiInformationCircle className="h-5 w-5 shrink-0 text-base-warning-600 dark:text-base-warning-400 mt-0.5" aria-hidden="true" />
+                        <HiInformationCircle
+                            className="h-5 w-5 shrink-0 text-base-warning-600 dark:text-base-warning-400 mt-0.5"
+                            aria-hidden="true"
+                        />
                         <p className="text-sm text-base-warning-900 dark:text-base-warning-100">
                             The server may reject this request depending on the policy configured by your administrator.
                         </p>

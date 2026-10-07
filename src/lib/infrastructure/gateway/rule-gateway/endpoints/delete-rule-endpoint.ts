@@ -3,10 +3,7 @@ import { BaseEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 
 export default class DeleteRuleEndpoint extends BaseEndpoint<DeleteRuleDTO> {
-    constructor(
-        private readonly rucioAuthToken: string,
-        private readonly ruleId: string,
-    ) {
+    constructor(private readonly rucioAuthToken: string, private readonly ruleId: string) {
         super(true);
     }
 

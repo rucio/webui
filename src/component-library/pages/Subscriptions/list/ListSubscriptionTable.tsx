@@ -23,12 +23,12 @@ const ClickableName = (props: { value: string; account: string }) => {
 };
 
 const SubscriptionStateDisplayName = {
-    [SubscriptionState.ACTIVE]: "Active",
-    [SubscriptionState.BROKEN]: "Broken",
-    [SubscriptionState.INACTIVE]: "Inactive",
-    [SubscriptionState.NEW]: "New",
-    [SubscriptionState.UPDATED]: "Updated",
-    [SubscriptionState.UNKNOWN]: "Unknown",
+    [SubscriptionState.ACTIVE]: 'Active',
+    [SubscriptionState.BROKEN]: 'Broken',
+    [SubscriptionState.INACTIVE]: 'Inactive',
+    [SubscriptionState.NEW]: 'New',
+    [SubscriptionState.UPDATED]: 'Updated',
+    [SubscriptionState.UNKNOWN]: 'Unknown',
 };
 
 export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
