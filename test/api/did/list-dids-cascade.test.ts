@@ -156,6 +156,32 @@ describe('List DIDs cascade under the All type', () => {
         expect(notices(received).map(n => n.notice.code)).toEqual(['files-skipped']);
     });
 
+    it('treats % as a wildcard too, so it cannot slip past the file gate', async () => {
+        let fileHopCalled = false;
+        const fileHop = searchHop('file', ['file1']);
+        fileHop.requestValidator = async () => {
+            fileHopCalled = true;
+            return true;
+        };
+
+        // Rucio treats % exactly like *, and the page tips tell users so.
+        const { received } = await runCascade('test:data%', [searchHop('container', []), searchHop('dataset', []), fileHop]);
+
+        expect(fileHopCalled).toEqual(false);
+        expect(notices(received).map(n => n.notice.code)).toEqual(['refine-wildcard']);
+    });
+
+    it('says files were skipped for a % wildcard that did find collections', async () => {
+        const { received } = await runCascade('test:data%', [
+            searchHop('container', ['container1']),
+            searchHop('dataset', []),
+            statusEndpoint('container1', 'CONTAINER'),
+        ]);
+
+        expect(dids(received).map(r => r.name)).toEqual(['container1']);
+        expect(notices(received).map(n => n.notice.code)).toEqual(['files-skipped']);
+    });
+
     it('does not say files were skipped when the name carries no wildcard', async () => {
         const { received } = await runCascade('test:data1', [
             searchHop('container', ['container1']),

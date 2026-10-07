@@ -71,6 +71,13 @@ class ListDIDsUseCase
     /** Ranked order for ALL. Containers and datasets race; files are a last resort. */
     private static readonly COLLECTION_TYPES = [DIDType.CONTAINER, DIDType.DATASET];
 
+    /**
+     * Rucio accepts both * and % as name wildcards, and they behave identically.
+     * Matching only * would let a % query slip past the file gate into exactly the
+     * unbounded file search the gate exists to prevent.
+     */
+    private static readonly WILDCARDS = /[*%]/;
+
     private progressRecord(types: DIDType[], state: ListDIDsProgressState): ListDIDsResponse {
         return {
             status: 'success',
@@ -195,7 +202,7 @@ class ListDIDsUseCase
             });
 
         const { name } = parseDIDString(requestModel.query);
-        const hasWildcard = name.includes('*');
+        const hasWildcard = ListDIDsUseCase.WILDCARDS.test(name);
 
         out.write(this.progressRecord(ListDIDsUseCase.COLLECTION_TYPES, 'searching'));
 
