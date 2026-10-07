@@ -126,6 +126,7 @@ describe('List DIDs cascade under the All type', () => {
 
         expect(dids(received).map(r => r.name)).toEqual(['file1']);
         expect(progress(received).some(p => p.progress.state === 'searching' && p.progress.types.includes('File'))).toEqual(true);
+        expect(progress(received).some(p => p.progress.state === 'found' && p.progress.types.includes('File'))).toEqual(true);
     });
 
     it('asks the user to refine a wildcard name instead of searching files', async () => {
@@ -202,9 +203,9 @@ describe('List DIDs cascade under the All type', () => {
     it('orders containers before datasets so the coarser collections read first', async () => {
         const { received } = await runCascade('test:data1', [
             searchHop('container', ['containerA', 'containerB']),
-            searchHop('dataset', ['datasetA']),
             statusEndpoint('containerA', 'CONTAINER'),
             statusEndpoint('containerB', 'CONTAINER'),
+            searchHop('dataset', ['datasetA']),
             statusEndpoint('datasetA', 'DATASET'),
         ]);
 
@@ -258,8 +259,10 @@ describe('List DIDs cascade under the All type', () => {
             filters: [],
         } as ListDIDsControllerParameters);
 
-        // What Next.js emits when the client goes away. The collection hops are
-        // already in flight; the file hop must never be issued.
+        // What Next.js emits when the client goes away. This has to fire here, after
+        // execute() resolves but before the wait below: execute() returns as soon as the
+        // PassThrough is handed back, so the cascade is still mid-flight. Waiting first
+        // would let it reach the file hop and the test would prove nothing.
         res.emit('close');
 
         await new Promise(resolve => setTimeout(resolve, 50));

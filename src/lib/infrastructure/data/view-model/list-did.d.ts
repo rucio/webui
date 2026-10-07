@@ -1,11 +1,7 @@
 import { BaseViewModel } from '@/lib/sdk/view-models';
-import { ListDIDsNotice, ListDIDsProgress, ListDIDsRecordKind } from '@/lib/core/usecase-models/list-dids-usecase-models';
+import { ListDIDsRecordEnvelope } from '@/lib/core/usecase-models/list-dids-usecase-models';
 import { DIDLong } from '@/lib/core/entity/rucio';
 
-export interface ListDIDsViewModel extends DIDLong, BaseViewModel {
+export interface ListDIDsViewModel extends DIDLong, BaseViewModel, ListDIDsRecordEnvelope {
     open: boolean;
-    /** Absent means 'did'. Only ALL searches emit the other kinds. */
-    kind?: ListDIDsRecordKind;
-    progress?: ListDIDsProgress;
-    notice?: ListDIDsNotice;
 }

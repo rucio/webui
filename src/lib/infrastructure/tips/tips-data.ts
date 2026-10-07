@@ -59,7 +59,7 @@ export const TIPS: Tip[] = [
         id: 'did-search-types',
         title: 'Search Types',
         content:
-            'All is the default. It looks for containers first, then datasets, then files, and shows you the first kind it finds, with the type of each result in the table. Picking Container, Dataset or File searches only that type. All cannot search files by wildcard, so refine the name if it asks you to.',
+            '"All" is the default: it searches containers and datasets together and shows the type of each result. If neither matches, it looks for files. "Container", "Dataset" and "File" search that one type only. Files are excluded from wildcard searches under "All", so search the "File" type directly to include them.',
         category: TipCategory.DIDS,
         priority: 'essential',
         pages: ['/dids'],
