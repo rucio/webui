@@ -3,12 +3,12 @@ import { DIDSearchOverlay } from '@/component-library/features/search/DIDSearchO
 import { DIDType } from '@/lib/core/entity/rucio';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
 import { StreamingErrorType, StreamingStatus } from '@/lib/infrastructure/hooks/useStreamReader';
+import { ListDIDsNoticeCode, ListDIDsProgressState } from '@/lib/core/usecase-models/list-dids-usecase-models';
 
-const progressRecord = (types: DIDType[], state: 'searching' | 'found' | 'empty') =>
+const progressRecord = (types: DIDType[], state: ListDIDsProgressState) =>
     ({ status: 'success', kind: 'progress', progress: { types, state } } as ListDIDsViewModel);
 
-const noticeRecord = (code: 'refine-wildcard' | 'no-results') =>
-    ({ status: 'success', kind: 'notice', notice: { code, message: '' } } as ListDIDsViewModel);
+const noticeRecord = (code: ListDIDsNoticeCode) => ({ status: 'success', kind: 'notice', notice: { code, message: '' } } as ListDIDsViewModel);
 
 describe('DIDSearchOverlay', () => {
     it('names the types being searched while the search is running', () => {

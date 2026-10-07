@@ -10,17 +10,11 @@ describe('isRowRecord', () => {
         expect(isRowRecord({ status: 'success', name: 'container1' } as any)).toEqual(true);
     });
 
-    it('rejects a progress record', () => {
-        expect(isRowRecord({ status: 'success', kind: 'progress', progress: { types: [DIDType.CONTAINER], state: 'searching' } } as any)).toEqual(
-            false,
-        );
-    });
-
     it('rejects a notice record', () => {
         expect(isRowRecord({ status: 'success', kind: 'notice', notice: { code: 'no-results', message: '' } } as any)).toEqual(false);
     });
 
-    it('rejects a progress record even though the validator would accept it', () => {
+    it('rejects a progress record, which the validator alone would let through', () => {
         // BaseViewModelValidator.isValid passes anything with status 'success',
         // so this predicate is the only thing keeping blank rows out of the grid.
         const progress = { status: 'success', kind: 'progress', progress: { types: [DIDType.FILE], state: 'empty' } } as any;

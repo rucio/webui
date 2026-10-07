@@ -98,12 +98,14 @@ class ListDIDsUseCase
      * A failure on a hop after the first. The HTTP status is already committed by
      * then, so the only honest way to report it is in the stream itself.
      */
-    private hopErrorRecord(message: string): ListDIDsResponse {
+    private hopErrorRecord(message: string): ListDIDsError {
         return {
             status: 'error',
+            name: '',
+            code: 500,
             error: 'Unknown Error',
             message,
-        } as unknown as ListDIDsResponse;
+        };
     }
 
     /**

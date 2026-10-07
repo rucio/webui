@@ -21,14 +21,22 @@ export interface ListDIDsNotice {
     message: string;
 }
 
-export interface ListDIDsResponse extends DID, BaseResponseModel {
-    bytes: number;
-    length: number;
-    open: boolean;
-    /** Absent means 'did'. Only ALL requests emit the other kinds. */
+/**
+ * The envelope an ALL search adds to the stream so progress and notices can travel
+ * alongside the DIDs. Shared by the response model and the view model so the two
+ * cannot drift apart.
+ */
+export interface ListDIDsRecordEnvelope {
+    /** Absent means 'did'. Only ALL searches emit the other kinds. */
     kind?: ListDIDsRecordKind;
     progress?: ListDIDsProgress;
     notice?: ListDIDsNotice;
+}
+
+export interface ListDIDsResponse extends DID, BaseResponseModel, ListDIDsRecordEnvelope {
+    bytes: number;
+    length: number;
+    open: boolean;
 }
 
 export interface ListDIDsError extends BaseErrorResponseModel {

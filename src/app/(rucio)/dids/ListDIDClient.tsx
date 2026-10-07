@@ -72,11 +72,7 @@ export const ListDIDClient = (props: ListDIDClientProps) => {
                     <span className="font-medium flex flex-1">Tips</span>
                     <HiChevronDown className={cn('w-4 h-4 transition-transform duration-200', isTipsOpen && 'rotate-180')} />
                 </button>
-                {isTipsOpen && (
-                    <div>
-                        <ListDIDTips />
-                    </div>
-                )}
+                {isTipsOpen && <ListDIDTips />}
             </div>
             <ListDID
                 firstPattern={props.firstPattern}
