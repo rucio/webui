@@ -16,7 +16,7 @@ export const FileSize: React.FC<ByteProps> = ({ bytesNumber, decimalPlaces, ...p
             <span
                 className={twMerge(
                     className ?? '',
-                    'text-base-warning-500 text-bold', // placed here to override all other classes for Infinity
+                    'text-base-warning-500 font-bold', // placed here to override all other classes for Infinity
                 )}
                 {...otherprops}
             >
@@ -28,7 +28,7 @@ export const FileSize: React.FC<ByteProps> = ({ bytesNumber, decimalPlaces, ...p
             <span
                 className={twMerge(
                     className ?? '',
-                    'text-base-error-500 text-bold', // placed here to override all other classes for NaN
+                    'text-base-error-500 font-bold', // placed here to override all other classes for NaN
                 )}
                 {...otherprops}
             >

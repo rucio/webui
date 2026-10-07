@@ -24,7 +24,7 @@ export function TableBody<T>(
                             selected ? 'dark:bg-brand-500 odd:dark:bg-brand-500' : 'dark:bg-neutral-700 dark:odd:bg-neutral-800', // bg dark
                             selected ? 'hover:bg-brand-300  dark:hover:bg-brand-600' : 'hover:bg-neutral-200 dark:hover:bg-neutral-900', // hover (dark and light)
                             selected ? 'border-brand-400 dark:border-brand-700 border' : '', // handle border when selected
-                            row.getCanSelect() ? 'hover:cursor-pointer' : 'hover:cursor-normal', // handle cursor when selectable
+                            row.getCanSelect() ? 'hover:cursor-pointer' : 'hover:cursor-default', // handle cursor when selectable
                             props.tablestyling?.tableBodyRowStyle ?? '',
                         )}
                         onClick={e => {

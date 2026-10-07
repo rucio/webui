@@ -21,7 +21,7 @@ export const BasicStatusTag: React.FC<
             case 'info':
                 return 'bg-base-info-300 dark:bg-base-info-600';
             default:
-                return 'bg-base-success-300 dark:bg-base-sucess-600';
+                return 'bg-base-success-300 dark:bg-base-success-600';
         }
     };
     const [color, setColor] = useState<string>();

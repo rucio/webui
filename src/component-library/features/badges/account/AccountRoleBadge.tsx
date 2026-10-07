@@ -6,7 +6,7 @@ import { Role } from '@/lib/core/entity/auth-models';
 
 const stateColorClasses: Record<Role, string> = {
     [Role.ADMIN]: 'bg-base-success-500',
-    [Role.USER]: 'bg-base-neutral-0 dark:bg-base-neutral-900',
+    [Role.USER]: 'bg-neutral-0 dark:bg-neutral-900',
 };
 
 export const AccountRoleBadge = (props: { value: Role; className?: string }) => {
