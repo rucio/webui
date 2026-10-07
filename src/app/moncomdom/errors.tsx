@@ -33,7 +33,7 @@ export default function ErrorList({ errors, resolve, resolveAllErrors }: ErrorLi
     return (
         // wrap in a box
         <div className="border-b border-gray-700">
-            <h3 className="text-xl text-zinc-500 text-color-red text-center">Errors</h3>
+            <h3 className="text-xl text-base-error-500 text-center">Errors</h3>
             <br></br>
             <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
                 <button

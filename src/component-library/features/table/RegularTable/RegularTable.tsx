@@ -29,7 +29,7 @@ export const SimplePaginationPanel = (props: {
 }) => {
     const enabledTextClasses = 'text-neutral-800 dark:text-neutral-100';
     const disabledTextClasses = 'disabled:text-neutral-400 disabled:dark:text-neutral-500';
-    const buttonClasses = twMerge('text-l', 'px-1', enabledTextClasses, disabledTextClasses);
+    const buttonClasses = twMerge('text-lg', 'px-1', enabledTextClasses, disabledTextClasses);
 
     return (
         <div
