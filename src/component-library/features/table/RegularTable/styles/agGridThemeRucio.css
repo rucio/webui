@@ -12,9 +12,9 @@
 
 :where(.ag-root-wrapper, .ag-measurement-container, .ag-apply-theme-variables, .ag-popup) {
 	--ag-text-color: var(--ag-inherited-text-color, var(--ag-foreground-color));
-	/* Equals to tailwind's brand.500 */
-	--ag-accent-color: var(--ag-inherited-accent-color, #8B5CF6);
-	--ag-invalid-color: var(--ag-inherited-invalid-color, #e02525);
+	/* Design tokens from src/component-library/tailwind.css */
+	--ag-accent-color: var(--ag-inherited-accent-color, var(--color-brand-500));
+	--ag-invalid-color: var(--ag-inherited-invalid-color, var(--color-base-error-600));
 	--ag-border-color: var(--ag-inherited-border-color, color-mix(in srgb, transparent, var(--ag-foreground-color) 15%));
 	--ag-wrapper-border: var(--ag-inherited-wrapper-border, solid 1px var(--ag-border-color));
 	--ag-row-border: var(--ag-inherited-row-border, solid 1px var(--ag-border-color));
@@ -27,13 +27,13 @@
 	--ag-pinned-column-border: var(--ag-inherited-pinned-column-border, solid 1px var(--ag-border-color));
 	--ag-pinned-row-border: var(--ag-inherited-pinned-row-border, solid 1px var(--ag-border-color));
 	--ag-side-panel-border: var(--ag-inherited-side-panel-border, solid 1px var(--ag-border-color));
-	--ag-font-family: var(--font-inter), 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--ag-font-family: var(--font-sans);
 	--ag-chrome-background-color: var(--ag-inherited-chrome-background-color, color-mix(in srgb, var(--ag-background-color), var(--ag-foreground-color) 7%));
-	--ag-header-background-color: var(--ag-inherited-header-background-color, #334155);
+	--ag-header-background-color: var(--ag-inherited-header-background-color, var(--color-neutral-700));
 	--ag-header-font-family: var(--ag-inherited-header-font-family, var(--ag-font-family));
 	--ag-header-font-weight: var(--ag-inherited-header-font-weight, 600);
 	--ag-header-font-size: var(--ag-inherited-header-font-size, 15px);
-	--ag-header-text-color: var(--ag-inherited-header-text-color, #FFFFFF);
+	--ag-header-text-color: var(--ag-inherited-header-text-color, var(--color-neutral-0));
 	--ag-header-cell-hover-background-color: var(--ag-inherited-header-cell-hover-background-color, transparent);
 	--ag-header-cell-hover-background-transition-duration: var(--ag-inherited-header-cell-hover-background-transition-duration, 0.2s);
 	--ag-cell-text-color: var(--ag-inherited-cell-text-color, var(--ag-text-color));
@@ -55,8 +55,8 @@
 	--ag-cell-widget-spacing: var(--ag-inherited-cell-widget-spacing, calc(var(--ag-grid-size) * 1.5));
 	--ag-cell-horizontal-padding-scale: var(--ag-inherited-cell-horizontal-padding-scale, 1);
 	--ag-row-group-indent-size: var(--ag-inherited-row-group-indent-size, calc(var(--ag-cell-widget-spacing) + var(--ag-icon-size)));
-	--ag-value-change-delta-up-color: var(--ag-inherited-value-change-delta-up-color, #43a047);
-	--ag-value-change-delta-down-color: var(--ag-inherited-value-change-delta-down-color, #e53935);
+	--ag-value-change-delta-up-color: var(--ag-inherited-value-change-delta-up-color, var(--color-base-success-600));
+	--ag-value-change-delta-down-color: var(--ag-inherited-value-change-delta-down-color, var(--color-base-error-600));
 	--ag-value-change-value-highlight-background-color: var(--ag-inherited-value-change-value-highlight-background-color, #16a08580);
 	--ag-grid-size: var(--ag-inherited-grid-size, 8px);
 	--ag-font-size: var(--ag-inherited-font-size, 16px);
