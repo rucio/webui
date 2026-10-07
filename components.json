@@ -4,7 +4,7 @@
   "rsc": true,
   "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.js",
+    "config": "",
     "css": "src/component-library/tailwind.css",
     "baseColor": "slate",
     "cssVariables": false,
