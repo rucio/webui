@@ -1,4 +1,5 @@
 /* DateInput - Design System Compliant Styles */
+@reference "../../../../tailwind.css";
 /* Overrides for react-datepicker to match Rucio WebUI Design System */
 
 /* Calendar Container */

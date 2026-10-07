@@ -30,9 +30,6 @@
       "@/*": [
         "./src/*"
       ],
-      "@/tailwind": [
-        "./tailwind.config.js"
-      ],
       "@/test/*": [
         "./test/*"
       ],

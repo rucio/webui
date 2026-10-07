@@ -4,7 +4,6 @@
     "baseUrl": "..",
     "paths": {
       "@/*": ["./src/*"],
-      "@/tailwind": ["./tailwind.config.js"],
       "@/test/*": ["./test/*"],
       "test/*": ["./test/*"]
     }
