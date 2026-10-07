@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withThemeByClassName } from '@storybook/addon-themes';
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider, useTheme } from 'next-themes';
 import '../src/app/globals.css';
 // Register AG Grid community modules (AG Grid v33+ renders nothing without this).
 // The app does this in src/app/layout.tsx via <AgGridSetup />; Storybook has no
@@ -18,6 +18,18 @@ const withBackground = (Story, context) => {
     return <Story />;
 };
 
+// `forcedTheme` only controls the class on <html>; `useTheme().resolvedTheme`
+// still reports the stored theme. Keep that state in sync with the toolbar so
+// components that branch on resolvedTheme (AG Grid theme, charts, logos)
+// follow the selected Storybook theme.
+const SyncNextTheme = ({ theme }) => {
+    const { setTheme } = useTheme();
+    useEffect(() => {
+        setTheme(theme);
+    }, [theme, setTheme]);
+    return null;
+};
+
 // Provide a next-themes context. RegularTable only mounts AG Grid once
 // `useTheme().resolvedTheme` is defined; without this provider the grid (and
 // therefore every table story) renders blank. The app supplies this in
@@ -25,7 +37,8 @@ const withBackground = (Story, context) => {
 const withNextThemes = (Story, context) => {
     const theme = context.globals.theme || 'light';
     return (
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} forcedTheme={theme}>
+        <ThemeProvider attribute="class" defaultTheme={theme} enableSystem={false} forcedTheme={theme}>
+            <SyncNextTheme theme={theme} />
             <Story />
         </ThemeProvider>
     );
