@@ -12,7 +12,7 @@ interface CustomLegendProps {
 }
 
 const CustomLegend: React.FC<CustomLegendProps> = ({ legendOptions }) => {
-    const commonCircleClasses = 'bg-opacity-70 h-6 w-6';
+    const commonCircleClasses = 'h-6 w-6';
 
     return (
         <div className="flex space-x-10 text-sm text-neutral-900 dark:text-neutral-100 py-3">

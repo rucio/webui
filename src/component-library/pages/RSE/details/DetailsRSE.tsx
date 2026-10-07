@@ -41,7 +41,7 @@ const RSESectionDivider = () => (
 
 const DetailsRSEKeyValues = ({ meta }: { meta: RSEDetailsViewModel }) => {
     return (
-        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
+        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden">
             <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
                 <div className="w-full flex flex-col lg:flex-row lg:gap-8">
                     <div className="flex flex-col flex-1">
@@ -84,7 +84,7 @@ const DetailsRSEAttributes = ({ attributes }: { attributes: RSEAttributeViewMode
                 )}
             </div>
             {attributes.attributes.length !== 0 ? (
-                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[calc(100vh-20rem)]">
                     <DetailsRSEAttributesTable viewModel={attributes} />
                 </div>
             ) : (
@@ -104,7 +104,7 @@ const DetailsRSEProtocols = ({ protocols }: { protocols: RSEDetailsProtocol[] })
                 {protocols.length > 0 && <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">{protocols.length}</span>}
             </div>
             {protocols.length !== 0 ? (
-                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-80">
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-80">
                     <DetailsRSEProtocolsTable rowData={protocols} />
                 </div>
             ) : (

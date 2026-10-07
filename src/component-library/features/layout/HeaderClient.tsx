@@ -68,7 +68,7 @@ const DesktopNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => 
                     'absolute left-0 w-max',
                     'hidden group-hover:block',
                     'bg-neutral-100 dark:bg-neutral-800',
-                    'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                    'rounded-md border border-neutral-900/10 dark:border-neutral-100/10',
                 )}
             >
                 <div className="flex flex-col space-y-2 px-4 py-2">
@@ -158,7 +158,7 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
             {isMenuOpen && (
                 <div className="fixed inset-x-0 top-0 h-screen w-screen z-50" role="dialog" aria-modal="true">
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-neutral-1000 bg-opacity-50" onClick={() => setIsMenuOpen(false)} aria-hidden="true" />
+                    <div className="absolute inset-0 bg-neutral-1000/50" onClick={() => setIsMenuOpen(false)} aria-hidden="true" />
 
                     {/* Menu Panel - slides in from right */}
                     <div
@@ -167,7 +167,7 @@ const MobileNavigationBar = ({ menuItems }: { menuItems: TFullMenuItem[] }) => {
                     >
                         <button
                             onClick={() => setIsMenuOpen(false)}
-                            className="self-end p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            className="self-end p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-hidden focus:ring-2 focus:ring-brand-500"
                             aria-label="Close mobile menu"
                         >
                             <HiX className="h-6 w-6 text-neutral-900 dark:text-neutral-100" />
@@ -414,7 +414,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
             {/* Skip to main content link for accessibility */}
             <a
                 href="#main-content"
-                className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded focus:shadow-lg"
+                className="sr-only focus:not-sr-only focus:absolute focus:z-200 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded focus:shadow-lg"
             >
                 Skip to main content
             </a>
@@ -431,7 +431,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
                 )}
             >
                 {/* Gradient overlay for depth - subtle fade from top to bottom */}
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/10 to-transparent dark:from-black/10 dark:to-transparent" />
+                <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-white/10 to-transparent dark:from-black/10 dark:to-transparent" />
                 <div className="relative z-10 flex flex-row justify-between items-center w-full">{getContent()}</div>
             </header>
         </>

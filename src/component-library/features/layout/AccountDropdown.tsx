@@ -161,7 +161,7 @@ const SignOutOfAllButton = ({ onSignOut }: { onSignOut?: () => Promise<void> }) 
     return (
         <button
             className={cn(
-                'text-neutral-800 hover:bg-base-error-500 hover:bg-opacity-40 hover:cursor-pointer',
+                'text-neutral-800 hover:bg-base-error-500/40 hover:cursor-pointer',
                 'dark:text-neutral-100',
                 'flex items-center justify-between py-2 px-1 space-x-4 w-full',
                 'text-right',
@@ -181,7 +181,7 @@ const SignIntoButton = () => {
     return (
         <Link
             className={cn(
-                'text-neutral-800 hover:bg-base-success-500 hover:bg-opacity-40 hover:cursor-pointer',
+                'text-neutral-800 hover:bg-base-success-500/40 hover:cursor-pointer',
                 'dark:text-neutral-100',
                 'flex items-center justify-between py-2 px-1 space-x-4',
                 'text-right',
@@ -246,9 +246,9 @@ export const AccountDropdown = (props: {
                 'divide-y divide-neutral-300 dark:divide-neutral-700',
                 'w-64 sm:w-fit p-2',
                 'absolute top-[52px] right-2',
-                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                'rounded-md border border-neutral-900/10 dark:border-neutral-100/10',
                 'bg-neutral-100 dark:bg-neutral-800',
-                'z-[100]',
+                'z-100',
             )}
             onMouseEnter={e => e.preventDefault()}
             ref={props.menuRef}
@@ -266,10 +266,7 @@ export const AccountDropdown = (props: {
                     <b className="text-neutral-900 dark:text-neutral-100">{props.accountActive}</b>!
                 </span>
                 <button
-                    className={cn(
-                        'bg-neutral-200 dark:bg-neutral-700 hover:bg-base-error-500 hover:bg-opacity-40 dark:hover:bg-base-error-500 dark:hover:bg-opacity-40',
-                        'p-1 rounded-md',
-                    )}
+                    className={cn('bg-neutral-200 dark:bg-neutral-700 hover:bg-base-error-500/40 dark:hover:bg-base-error-500/40', 'p-1 rounded-md')}
                     onClick={handleSingleSignOut}
                     title="Sign out of this account"
                 >

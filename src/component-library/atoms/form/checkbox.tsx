@@ -25,14 +25,12 @@ const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root
             ref={ref}
             className={cn(
                 'peer h-5 w-5 shrink-0 rounded border',
-                'border-neutral-900 dark:border-neutral-100 border-opacity-20 dark:border-opacity-20',
+                'border-neutral-900/20 dark:border-neutral-100/20',
                 'bg-neutral-200 dark:bg-neutral-900',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500',
+                'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500',
                 'disabled:cursor-not-allowed disabled:opacity-50',
-                'data-[state=checked]:bg-base-success-600 data-[state=checked]:border-base-success-600',
-                'data-[state=checked]:bg-opacity-80 dark:data-[state=checked]:bg-opacity-60',
-                'data-[state=indeterminate]:bg-brand-600 data-[state=indeterminate]:border-brand-600',
-                'data-[state=indeterminate]:bg-opacity-80 dark:data-[state=indeterminate]:bg-opacity-60',
+                'data-[state=checked]:bg-base-success-600/80 dark:data-[state=checked]:bg-base-success-600/60 data-[state=checked]:border-base-success-600',
+                'data-[state=indeterminate]:bg-brand-600/80 dark:data-[state=indeterminate]:bg-brand-600/60 data-[state=indeterminate]:border-brand-600',
                 'transition-colors',
                 className,
             )}

@@ -85,7 +85,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(({ className, 
     return (
         <div ref={ref} role="alert" aria-live="polite" aria-atomic="true" className={cn(alertVariants({ variant }), className)} {...props}>
             {showIcon && <Icon className={iconVariants({ variant })} aria-hidden="true" />}
-            <div className="flex-1 min-w-0 text-sm font-medium leading-5 break-words">{message}</div>
+            <div className="flex-1 min-w-0 text-sm font-medium leading-5 wrap-break-word">{message}</div>
             {onClose && (
                 <button
                     type="button"
@@ -93,7 +93,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(({ className, 
                     className={cn(
                         'shrink-0 rounded p-1',
                         'hover:bg-neutral-900/10 dark:hover:bg-neutral-100/10',
-                        'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                        'focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
                         'transition-colors duration-150',
                     )}
                     aria-label="Close alert"

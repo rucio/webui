@@ -18,7 +18,7 @@ const Filter = (props: React.ComponentPropsWithoutRef<'input'> & { column: Colum
             value={(column.getFilterValue() as string) ?? ''}
             onChange={e => column.setFilterValue(e.target.value)}
             className={twMerge(
-                'w-full border dark:border-neutral-400 rounded-sm px-2 pt-2 dark:bg-neutral-800 bg-neutral-0 dark:text-neutral-0 text-neutral-1000 h-8',
+                'w-full border dark:border-neutral-400 rounded-xs px-2 pt-2 dark:bg-neutral-800 bg-neutral-0 dark:text-neutral-0 text-neutral-1000 h-8',
                 className ?? '',
             )}
             {...otherprops}

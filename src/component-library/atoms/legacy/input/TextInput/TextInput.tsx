@@ -12,7 +12,7 @@ export const TextInput: React.FC<TextInputProps> = ({ onEnterkey, ...props }) =>
             className={twMerge(
                 'w-full h-8 px-2 pt-2 ',
                 'dark:border-neutral-400 dark:bg-neutral-800 bg-neutral-0 text-neutral-1000 dark:text-neutral-0 ',
-                'border rounded-sm',
+                'border rounded-xs',
                 'dark:border-2 dark:border-neutral-0',
                 props.className ?? '',
             )}

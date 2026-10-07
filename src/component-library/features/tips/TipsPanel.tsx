@@ -115,7 +115,7 @@ export const TipsPanel: React.FC<TipsPanelProps> = ({ open, onOpenChange, tips, 
                         'flex flex-col',
                         'animate-in slide-in-from-right duration-300',
                         'data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right',
-                        'focus:outline-none',
+                        'focus:outline-hidden',
                     )}
                 >
                     {/* Header */}
@@ -142,7 +142,7 @@ export const TipsPanel: React.FC<TipsPanelProps> = ({ open, onOpenChange, tips, 
                                     'p-2 rounded-lg',
                                     'text-neutral-500 dark:text-neutral-400',
                                     'hover:bg-neutral-100 dark:hover:bg-neutral-800',
-                                    'focus:outline-none focus:ring-2 focus:ring-brand-500',
+                                    'focus:outline-hidden focus:ring-2 focus:ring-brand-500',
                                     'transition-colors duration-150',
                                 )}
                                 aria-label="Close tips panel"
@@ -168,7 +168,7 @@ export const TipsPanel: React.FC<TipsPanelProps> = ({ open, onOpenChange, tips, 
                                     'rounded-lg',
                                     'text-sm text-neutral-900 dark:text-neutral-100',
                                     'placeholder:text-neutral-500',
-                                    'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent',
+                                    'focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:border-transparent',
                                     'transition-colors duration-150',
                                 )}
                             />
@@ -253,7 +253,7 @@ export const TipsPanel: React.FC<TipsPanelProps> = ({ open, onOpenChange, tips, 
                                     ? 'bg-base-warning-100 dark:bg-base-warning-900/50 text-base-warning-700 dark:text-base-warning-300'
                                     : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300',
                                 'hover:bg-neutral-200 dark:hover:bg-neutral-700',
-                                'focus:outline-none focus:ring-2 focus:ring-brand-500',
+                                'focus:outline-hidden focus:ring-2 focus:ring-brand-500',
                                 'transition-colors duration-150',
                                 dismissedCount === 0 && 'opacity-50 cursor-not-allowed',
                             )}

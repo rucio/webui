@@ -69,7 +69,7 @@ export const MutationDialog: React.FC<MutationDialogProps> = ({
                         'rounded-lg shadow-lg',
                         'w-full max-w-md',
                         'p-6 z-50',
-                        'focus:outline-none',
+                        'focus:outline-hidden',
                     )}
                 >
                     {/* Header */}
@@ -85,7 +85,7 @@ export const MutationDialog: React.FC<MutationDialogProps> = ({
                                 className={cn(
                                     'p-1 rounded shrink-0',
                                     'hover:bg-neutral-100 dark:hover:bg-neutral-800',
-                                    'focus:outline-none focus:ring-2 focus:ring-brand-500',
+                                    'focus:outline-hidden focus:ring-2 focus:ring-brand-500',
                                     'transition-colors duration-150',
                                 )}
                                 aria-label="Close"

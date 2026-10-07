@@ -260,7 +260,7 @@ export const DashboardWidgetLoading: Story = {
     },
     decorators: [
         Story => (
-            <div className="w-96 h-64 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+            <div className="w-96 h-64 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
                 <Story />
             </div>
         ),

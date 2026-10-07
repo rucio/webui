@@ -37,9 +37,9 @@ export const DateWithTooltip: React.FC<DateWithTooltipProps> = ({ date, classNam
                     type="button"
                     className={cn(
                         'inline-block cursor-pointer bg-transparent border-0 p-0 m-0',
-                        'font-[inherit] text-[inherit]',
+                        'font-[inherit] text-inherit',
                         'underline decoration-dotted underline-offset-2',
-                        'outline-none focus-visible:ring-1 focus-visible:ring-neutral-500',
+                        'outline-hidden focus-visible:ring-1 focus-visible:ring-neutral-500',
                         className,
                     )}
                     aria-label={fullDateTime}

@@ -25,7 +25,7 @@ const ToggleHeader: React.FC<ToggleHeaderProps> = ({ text, isOpen, onClick }) =>
                 'flex w-full justify-between items-center',
                 'cursor-pointer select-none',
                 'px-3 py-2',
-                'rounded-md border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                'rounded-md border border-neutral-900/10 dark:border-neutral-100/10',
                 'text-neutral-900 dark:text-neutral-100',
             )}
             onClick={onClick}

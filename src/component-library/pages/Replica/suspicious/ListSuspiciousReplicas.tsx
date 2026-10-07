@@ -262,7 +262,7 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
             )}
 
             {/* Filter Panel */}
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
                 <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 items-end">
                     <div className="flex flex-col w-full space-y-4">
                         <div className="flex flex-col md:flex-row w-full gap-4">
@@ -319,7 +319,7 @@ export const ListSuspiciousReplicas = (props: ListSuspiciousReplicasProps) => {
             )}
 
             {/* Results Table */}
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-24rem)]">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[calc(100vh-24rem)]">
                 <SuspiciousReplicasTable
                     streamingHook={streamingHook}
                     onGridReady={onGridReady}

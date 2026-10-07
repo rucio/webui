@@ -71,7 +71,7 @@ export const CopyableCell = ({ text, children, className, showIcon = true }: Cop
             tabIndex={0}
         >
             {showIcon && (
-                <HiOutlineClipboardCopy className="flex-shrink-0 h-4 w-4 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200" />
+                <HiOutlineClipboardCopy className="shrink-0 h-4 w-4 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200" />
             )}
             {children || <span>{text}</span>}
         </div>
@@ -144,7 +144,7 @@ export const CopyableLinkCell = ({ text, href, children, className, showIcon = t
         <div className={cn('flex items-center gap-1', className)}>
             {showIcon && (
                 <HiOutlineClipboardCopy
-                    className="flex-shrink-0 h-4 w-4 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer"
+                    className="shrink-0 h-4 w-4 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer"
                     onClick={handleCopy}
                     onKeyDown={handleCopyKeyDown}
                     role="button"

@@ -86,7 +86,7 @@ const LocationLink = (props: { onMouseDown: () => void; isHighlighted: boolean; 
             className={cn(
                 'w-full py-1 px-3 hover:cursor-pointer',
                 props.isHighlighted
-                    ? 'md:bg-brand-500 md:bg-opacity-25 md:hover:bg-opacity-40 md:text-neutral-900 md:dark:text-neutral-100 md:font-normal text-brand-500 font-bold'
+                    ? 'md:bg-brand-500/25 md:hover:bg-brand-500/40 md:text-neutral-900 md:dark:text-neutral-100 md:font-normal text-brand-500 font-bold'
                     : 'md:hover:bg-neutral-200 md:dark:bg-neutral-800 md:hover:dark:bg-neutral-600 hover:text-brand-500 md:hover:text-neutral-900 md:hover:dark:text-neutral-100',
             )}
             onMouseDown={props.onMouseDown}
@@ -113,9 +113,9 @@ const SearchDropdown = forwardRef(function SearchDropdown(
             className={cn(
                 'md:w-[36rem] w-full flex flex-col md:text-left text-center',
                 'md:absolute relative md:mt-2 mt-4',
-                'md:rounded-md md:border md:border-neutral-900 md:dark:border-neutral-100 md:border-opacity-10 md:dark:border-opacity-10',
+                'md:rounded-md md:border md:border-neutral-900/10 md:dark:border-neutral-100/10',
                 'md:bg-neutral-100 md:dark:bg-neutral-800',
-                'z-[100]',
+                'z-100',
             )}
         >
             <nav className="w-full h-full flex flex-col items-start">
@@ -127,8 +127,8 @@ const SearchDropdown = forwardRef(function SearchDropdown(
                             isHighlighted={props.highlightedIndex === index}
                         >
                             <span className="flex items-center min-w-0">
-                                <span className="flex-shrink-0">{location.parameter}</span> <i className="truncate mx-1">{props.searchQuery}</i>{' '}
-                                <span className="flex-shrink-0">in {location.name}</span>
+                                <span className="shrink-0">{location.parameter}</span> <i className="truncate mx-1">{props.searchQuery}</i>{' '}
+                                <span className="shrink-0">in {location.name}</span>
                             </span>
                         </LocationLink>
                     );

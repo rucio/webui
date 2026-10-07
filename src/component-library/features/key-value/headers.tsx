@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 const headerCommonClasses = cn(
     'h-[52px] px-4 py-2 space-x-2',
     'bg-neutral-200 dark:bg-neutral-700',
-    'border-b border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+    'border-b border-neutral-900/10 dark:border-neutral-100/10',
     'text-neutral-700 dark:text-neutral-300 font-medium',
     'flex grow items-center w-full',
     'whitespace-nowrap',

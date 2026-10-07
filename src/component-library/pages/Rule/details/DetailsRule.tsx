@@ -49,7 +49,7 @@ export const DetailsRuleTabs = ({ id, meta, featureDDMDashboard }: { id: string;
                 <DetailsRuleMeta meta={meta} />
             </div>
             <div className={getViewClasses(1)}>
-                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[calc(100vh-20rem)]">
                     <DetailsRuleLocks id={id} isActive={1 === activeIndex} featureDDMDashboard={featureDDMDashboard} />
                 </div>
             </div>

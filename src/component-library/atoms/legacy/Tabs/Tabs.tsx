@@ -62,7 +62,7 @@ export const Tabs: React.FC<
                             'flex-1 p-4 hover:cursor-pointer',
                             'border-b-4 border-brand-500',
                             'text-brand-500 hover:bg-neutral-100 dark:hover:bg-transparent',
-                            'dark:rounded-b-sm',
+                            'dark:rounded-b-xs',
                         )}
                         key={index.toString()} // required by react
                         role="tab"

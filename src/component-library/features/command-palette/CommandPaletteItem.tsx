@@ -46,7 +46,7 @@ export const CommandPaletteItem: React.FC<CommandPaletteItemProps> = ({ item, is
             <div className="flex items-center gap-3">
                 {/* Icon */}
                 {Icon && (
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                         <Icon className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
                     </div>
                 )}
@@ -58,7 +58,7 @@ export const CommandPaletteItem: React.FC<CommandPaletteItemProps> = ({ item, is
 
                         {/* Badge */}
                         {item.badge && (
-                            <span className="text-xs px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 flex-shrink-0">
+                            <span className="text-xs px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 shrink-0">
                                 {item.badge}
                             </span>
                         )}
@@ -70,7 +70,7 @@ export const CommandPaletteItem: React.FC<CommandPaletteItemProps> = ({ item, is
 
                 {/* Keyboard Shortcut */}
                 {item.shortcut && (
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                         <kbd className="text-xs px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 font-mono">
                             {item.shortcut}
                         </kbd>

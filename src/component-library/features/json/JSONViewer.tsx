@@ -202,7 +202,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                 {showExpandButton && (
                     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
                         <Dialog.Portal>
-                            <Dialog.Overlay className="fixed inset-0 bg-neutral-900/80 backdrop-blur-sm z-50" />
+                            <Dialog.Overlay className="fixed inset-0 bg-neutral-900/80 backdrop-blur-xs z-50" />
                             <Dialog.Content
                                 className="
                                     fixed inset-4 md:inset-8
@@ -211,7 +211,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                                     rounded-lg
                                     shadow-lg
                                     z-50
-                                    focus:outline-none
+                                    focus:outline-hidden
                                     flex flex-col
                                 "
                             >
@@ -226,7 +226,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                                                 p-1.5
                                                 rounded
                                                 hover:bg-neutral-100 dark:hover:bg-neutral-800
-                                                focus:outline-none focus:ring-2 focus:ring-brand-500
+                                                focus:outline-hidden focus:ring-2 focus:ring-brand-500
                                                 transition-colors duration-150
                                             "
                                             aria-label="Close"
@@ -305,7 +305,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                     {isValidJSON && isFormatted ? (
                         <Highlight className="language-json">{displayValue}</Highlight>
                     ) : (
-                        <pre className="text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-words m-0">{displayValue}</pre>
+                        <pre className="text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap wrap-break-word m-0">{displayValue}</pre>
                     )}
                 </div>
             </div>
@@ -314,7 +314,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
             {showExpandButton && (
                 <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
                     <Dialog.Portal>
-                        <Dialog.Overlay className="fixed inset-0 bg-neutral-900/80 backdrop-blur-sm z-50" />
+                        <Dialog.Overlay className="fixed inset-0 bg-neutral-900/80 backdrop-blur-xs z-50" />
                         <Dialog.Content
                             className="
                                 fixed inset-4 md:inset-8
@@ -323,7 +323,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                                 rounded-lg
                                 shadow-lg
                                 z-50
-                                focus:outline-none
+                                focus:outline-hidden
                                 flex flex-col
                             "
                         >
@@ -336,7 +336,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                                             p-1.5
                                             rounded
                                             hover:bg-neutral-100 dark:hover:bg-neutral-800
-                                            focus:outline-none focus:ring-2 focus:ring-brand-500
+                                            focus:outline-hidden focus:ring-2 focus:ring-brand-500
                                             transition-colors duration-150
                                         "
                                         aria-label="Close"
@@ -353,7 +353,7 @@ export const JSONViewer: React.FC<JSONViewerProps> = ({
                                     {isValidJSON && isFormatted ? (
                                         <Highlight className="language-json">{displayValue}</Highlight>
                                     ) : (
-                                        <pre className="text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-words m-0">
+                                        <pre className="text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap wrap-break-word m-0">
                                             {displayValue}
                                         </pre>
                                     )}

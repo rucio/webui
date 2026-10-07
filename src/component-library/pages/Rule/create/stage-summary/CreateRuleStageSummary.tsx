@@ -102,7 +102,7 @@ export const CreateRuleStageSummary = ({ parameters }: CreateRuleStageSummaryPro
     };
 
     return (
-        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm">
+        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs">
             <div className="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-700">
                 {/* DIDs Section */}
                 <div className="p-6 space-y-4">

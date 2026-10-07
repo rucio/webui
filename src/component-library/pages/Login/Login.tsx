@@ -82,13 +82,13 @@ const MultipleAccountsModal = ({ submit, availableAccounts, onClose }: MultipleA
                 onClose();
             }}
             ariaHideApp={false}
-            overlayClassName="fixed inset-0 z-40 flex items-center justify-center bg-neutral-900/50 dark:bg-neutral-900/70 backdrop-blur-sm"
+            overlayClassName="fixed inset-0 z-40 flex items-center justify-center bg-neutral-900/50 dark:bg-neutral-900/70 backdrop-blur-xs"
             className={cn(
                 'mx-2 max-w-md w-full rounded-lg shadow-lg z-50',
                 'border border-neutral-200 dark:border-neutral-700',
                 'bg-neutral-0 dark:bg-neutral-800',
                 'flex flex-col space-y-4 p-6',
-                'justify-center items-center overflow-y-visible outline-none focus:outline-none',
+                'justify-center items-center overflow-y-visible outline-hidden focus:outline-hidden',
             )}
             contentLabel="Select Account"
         >
@@ -417,7 +417,7 @@ export const Login = ({
                             'text-sm text-neutral-700 dark:text-neutral-300',
                             'hover:text-neutral-900 dark:hover:text-neutral-100',
                             'transition-colors duration-150',
-                            'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                            'focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
                             'rounded px-2 py-1',
                         )}
                         aria-label="Back to login methods"

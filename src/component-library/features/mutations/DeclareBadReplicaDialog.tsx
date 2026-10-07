@@ -166,7 +166,7 @@ export const DeclareBadReplicaDialog: React.FC<DeclareBadReplicaDialogProps> = (
                             <button
                                 type="button"
                                 onClick={() => setExpiresAt(null)}
-                                className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded"
+                                className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline focus:outline-hidden focus:ring-2 focus:ring-brand-500 rounded"
                             >
                                 Clear
                             </button>

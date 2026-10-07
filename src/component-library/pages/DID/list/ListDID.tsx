@@ -143,7 +143,7 @@ export const ListDID = (props: ListDIDProps) => {
     return (
         <div className="flex flex-col space-y-6 w-full">
             {/* Search Panel */}
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
                 <DIDSearchPanel
                     isRunning={streamingHook.status === StreamingStatus.RUNNING}
                     startStreaming={startStreaming}
@@ -162,7 +162,7 @@ export const ListDID = (props: ListDIDProps) => {
             {/* Results Section */}
             <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-20rem)]">
                 {/* Table */}
-                <div className="lg:flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[60vh] lg:h-full">
+                <div className="lg:flex-1 rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[60vh] lg:h-full">
                     <ListDIDTable
                         streamingHook={streamingHook}
                         onSelectionChanged={onSelectionChanged}

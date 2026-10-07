@@ -6,7 +6,7 @@ const CircleWithText = ({ text, className, onClick }: { text: string; onClick?: 
         'flex items-center justify-center',
         'w-12 h-12 rounded-full',
         'text-neutral-100',
-        'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+        'border border-neutral-900/10 dark:border-neutral-100/10',
         className,
         onClick ? 'cursor-pointer' : '',
     );

@@ -237,7 +237,7 @@ export const Overlay: Story = {
                 <h3 className="text-lg font-medium mb-2">Content</h3>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Some content that is being loaded...</p>
             </div>
-            <div className="absolute inset-0 bg-neutral-0 dark:bg-neutral-900 bg-opacity-50 dark:bg-opacity-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-neutral-0/50 dark:bg-neutral-900/50 flex items-center justify-center">
                 <LoadingSpinner size="lg" />
             </div>
         </div>

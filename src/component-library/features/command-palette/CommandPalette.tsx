@@ -242,7 +242,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
                 {/* Backdrop Overlay */}
                 <Dialog.Overlay asChild>
                     <motion.div
-                        className="fixed inset-0 bg-neutral-900/50 dark:bg-neutral-900/80 backdrop-blur-sm z-40"
+                        className="fixed inset-0 bg-neutral-900/50 dark:bg-neutral-900/80 backdrop-blur-xs z-40"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -271,13 +271,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
                         >
                             {/* Search Input */}
                             <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
-                                <MagnifyingGlassIcon className="w-5 h-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0" />
+                                <MagnifyingGlassIcon className="w-5 h-5 text-neutral-500 dark:text-neutral-400 shrink-0" />
                                 <input
                                     type="text"
                                     placeholder="Search commands, pages, and more..."
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
-                                    className="flex-1 bg-transparent text-base text-neutral-900 dark:text-neutral-0 placeholder:text-neutral-500 focus:outline-none"
+                                    className="flex-1 bg-transparent text-base text-neutral-900 dark:text-neutral-0 placeholder:text-neutral-500 focus:outline-hidden"
                                     // eslint-disable-next-line jsx-a11y/no-autofocus
                                     autoFocus
                                     role="combobox"
@@ -286,7 +286,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
                                 />
                                 <button
                                     onClick={() => onOpenChange(false)}
-                                    className="flex-shrink-0 p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded transition-colors duration-150"
+                                    className="shrink-0 p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded transition-colors duration-150"
                                     aria-label="Close command palette"
                                 >
                                     <XMarkIcon className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />

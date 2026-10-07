@@ -88,7 +88,7 @@ export const HotBarCard: React.FC<HotBarCardProps> = ({ card, onEdit, onDelete, 
                 border border-neutral-200 dark:border-neutral-700
                 rounded-lg
                 p-4
-                shadow-sm hover:shadow-md
+                shadow-xs hover:shadow-md
                 transition-all duration-150
                 cursor-pointer
                 hover:bg-neutral-200 dark:hover:bg-neutral-700
@@ -115,7 +115,7 @@ export const HotBarCard: React.FC<HotBarCardProps> = ({ card, onEdit, onDelete, 
                         rounded
                         hover:bg-base-info-50 dark:hover:bg-base-info-900/20
                         hover:border-base-info-500
-                        focus:outline-none focus:ring-2 focus:ring-base-info-500
+                        focus:outline-hidden focus:ring-2 focus:ring-base-info-500
                         transition-colors duration-150
                     "
                     aria-label="Copy link to clipboard"
@@ -131,7 +131,7 @@ export const HotBarCard: React.FC<HotBarCardProps> = ({ card, onEdit, onDelete, 
                         rounded
                         hover:bg-brand-50 dark:hover:bg-brand-900/20
                         hover:border-brand-500
-                        focus:outline-none focus:ring-2 focus:ring-brand-500
+                        focus:outline-hidden focus:ring-2 focus:ring-brand-500
                         transition-colors duration-150
                     "
                     aria-label="Edit bookmark"
@@ -147,7 +147,7 @@ export const HotBarCard: React.FC<HotBarCardProps> = ({ card, onEdit, onDelete, 
                         rounded
                         hover:bg-base-error-50 dark:hover:bg-base-error-900/20
                         hover:border-base-error-500
-                        focus:outline-none focus:ring-2 focus:ring-base-error-500
+                        focus:outline-hidden focus:ring-2 focus:ring-base-error-500
                         transition-colors duration-150
                     "
                     aria-label="Delete bookmark"
