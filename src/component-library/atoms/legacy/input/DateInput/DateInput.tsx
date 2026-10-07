@@ -36,7 +36,7 @@ export const DateInput: React.FC<DateInputProps> = ({
                 className={cn(
                     // Base styles
                     'flex w-full rounded-md',
-                    'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                    'border border-neutral-900/10 dark:border-neutral-100/10',
                     'px-3 py-2 h-10',
                     // Background colors (design system tokens)
                     'bg-neutral-100 dark:bg-neutral-800',
@@ -44,7 +44,7 @@ export const DateInput: React.FC<DateInputProps> = ({
                     'text-neutral-900 dark:text-neutral-100',
                     'placeholder:text-neutral-500',
                     // Focus states (brand colors)
-                    'focus:ring-0 focus:outline-none',
+                    'focus:ring-0 focus:outline-hidden',
                     'focus:shadow-brand focus:border-brand-500',
                     'dark:focus:border-brand-500',
                     // Transitions

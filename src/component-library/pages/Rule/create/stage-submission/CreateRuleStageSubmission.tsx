@@ -185,7 +185,7 @@ export const CreateRuleStageSubmission = ({ parameters, removeSaved }: CreateRul
                 </motion.div>
 
                 <motion.div
-                    className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6 w-full"
+                    className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6 w-full"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1, duration: 0.4 }}

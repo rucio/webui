@@ -44,7 +44,7 @@ export const CreateRuleStageData = (props: CreateRuleStageDataProps) => {
         <div className={cn('flex flex-col space-y-6 w-full', props.visible ? 'visible' : 'hidden')}>
             <ToggleHeader text="Search" isOpen={isSearchOpen} onClick={() => setIsSearchOpen(prevState => !prevState)} />
             <div className={`space-y-6 ${isSearchOpen ? 'visible' : 'hidden'}`}>
-                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
                     <DIDSearchPanel
                         startStreaming={startStreaming}
                         stopStreaming={stopStreaming}

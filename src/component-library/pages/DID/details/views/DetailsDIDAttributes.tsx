@@ -64,7 +64,7 @@ export const DetailsDIDAttributesTable = (props: DetailsDIDAttributesTableProps)
         <div className="flex flex-col grow">
             <div className="flex items-center justify-end px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 rounded-t-lg">
                 <div
-                    className="flex space-x-2 items-center cursor-pointer rounded px-2 py-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-neutral-100 dark:focus:ring-offset-neutral-800 transition-colors"
+                    className="flex space-x-2 items-center cursor-pointer rounded px-2 py-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-neutral-100 dark:focus:ring-offset-neutral-800 transition-colors"
                     onClick={handleExcludeNullChange}
                     onKeyDown={handleKeyDown}
                     role="checkbox"

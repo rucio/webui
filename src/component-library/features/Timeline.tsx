@@ -16,11 +16,11 @@ const Timeline = ({ steps, activeIndex, onSwitch }: TimelineProps) => {
                 const indexStr = (index + 1).toString();
                 let color: string;
                 if (index === activeIndex) {
-                    color = 'bg-brand-500';
+                    color = 'bg-brand-500/80';
                 } else if (index < activeIndex) {
-                    color = 'bg-base-success-500';
+                    color = 'bg-base-success-500/80';
                 } else {
-                    color = 'bg-neutral-0 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100';
+                    color = 'bg-neutral-0/80 dark:bg-neutral-900/80 text-neutral-900 dark:text-neutral-100';
                 }
 
                 const isClickable = index < activeIndex && onSwitch;
@@ -29,7 +29,7 @@ const Timeline = ({ steps, activeIndex, onSwitch }: TimelineProps) => {
                     <React.Fragment key={step}>
                         <div className="flex flex-row items-center space-x-2">
                             <CircleWithText
-                                className={cn('bg-opacity-80 font-semibold', color)}
+                                className={cn('font-semibold', color)}
                                 text={indexStr}
                                 onClick={isClickable ? () => onSwitch(index) : undefined}
                             />

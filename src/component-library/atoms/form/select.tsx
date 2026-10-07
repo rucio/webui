@@ -26,9 +26,9 @@ const SelectTrigger = React.forwardRef<
             'text-neutral-900 dark:text-neutral-100',
             'placeholder:text-neutral-200',
             'rounded-md',
-            'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+            'border border-neutral-900/10 dark:border-neutral-100/10',
             'focus:ring-0 focus:shadow-brand',
-            'focus:outline-none focus:border-1 focus:border-brand-500',
+            'focus:outline-hidden focus:border focus:border-brand-500',
             'disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
             className,
         )}
@@ -73,7 +73,7 @@ const SelectContent = React.forwardRef<
                 'relative z-50 overflow-hidden',
                 'max-h-96 min-w-[8rem]',
                 'rounded-md',
-                'border border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                'border border-neutral-900/10 dark:border-neutral-100/10',
                 'bg-neutral-200 dark:bg-neutral-700',
                 'text-neutral-900 dark:text-neutral-100',
                 'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
@@ -86,7 +86,7 @@ const SelectContent = React.forwardRef<
         >
             <SelectScrollUpButton />
             <SelectPrimitive.Viewport
-                className={cn(position === 'popper' && 'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]')}
+                className={cn(position === 'popper' && 'h-(--radix-select-trigger-height) w-full min-w-(--radix-select-trigger-width)')}
             >
                 {children}
             </SelectPrimitive.Viewport>
@@ -101,12 +101,12 @@ const SelectItem = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Item
         <SelectPrimitive.Item
             ref={ref}
             className={cn(
-                'relative w-full data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+                'relative w-full data-disabled:pointer-events-none data-disabled:opacity-50',
                 'flex items-center',
                 'py-1.5 pl-8 pr-2',
                 'cursor-default select-none',
                 'text-neutral-900 dark:text-neutral-100',
-                'focus:bg-opacity-20 focus:bg-brand-500 focus:outline-none',
+                'focus:bg-brand-500/20 focus:outline-hidden',
                 className,
             )}
             {...props}

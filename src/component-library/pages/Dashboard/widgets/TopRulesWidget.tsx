@@ -157,9 +157,9 @@ const RuleBarChart = ({ rules }: { rules: RuleViewModel[] }) => {
 };
 
 const legendOptions: LegendOption[] = [
-    { label: 'OK', color: 'bg-base-success-500' },
-    { label: 'Replicating', color: 'bg-base-warning-400' },
-    { label: 'Error', color: 'bg-base-error-500' },
+    { label: 'OK', color: 'bg-base-success-500/70' },
+    { label: 'Replicating', color: 'bg-base-warning-400/70' },
+    { label: 'Error', color: 'bg-base-error-500/70' },
 ];
 
 interface TopRulesWidgetProps {

@@ -7,19 +7,19 @@ import { cn } from '@/component-library/utils';
 const buttonVariants = cva(
     cn(
         'inline-flex items-center justify-center whitespace-nowrap',
-        'rounded-md border border-neutral-900 border-opacity-10 dark:border-none',
+        'rounded-md border border-neutral-900/10 dark:border-none',
         'font-medium transition-colors disabled:pointer-events-none disabled:opacity-50',
-        'bg-opacity-90 dark:bg-opacity-70 hover:bg-opacity-90 dark:hover:bg-opacity-70',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
+        'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
     ),
     {
         variants: {
             variant: {
-                default: 'bg-opacity-80 bg-brand-600 text-neutral-100 hover:bg-brand-700 dark:hover:bg-brand-500',
-                success: 'bg-base-success-600 text-neutral-100 hover:bg-base-success-700 dark:hover:bg-base-success-500',
-                error: 'bg-base-error-600 text-neutral-100 hover:bg-base-error-700 dark:hover:bg-base-error-500',
+                default: 'bg-brand-600/80 dark:bg-brand-600/70 text-neutral-100 hover:bg-brand-700/90 dark:hover:bg-brand-500/70',
+                success:
+                    'bg-base-success-600/90 dark:bg-base-success-600/70 text-neutral-100 hover:bg-base-success-700/90 dark:hover:bg-base-success-500/70',
+                error: 'bg-base-error-600/90 dark:bg-base-error-600/70 text-neutral-100 hover:bg-base-error-700/90 dark:hover:bg-base-error-500/70',
                 neutral:
-                    'bg-neutral-300 text-neutral-900 dark:bg-opacity-90 dark:bg-neutral-700 dark:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-800',
+                    'bg-neutral-300/90 text-neutral-900 dark:bg-neutral-700/90 dark:text-neutral-100 hover:bg-neutral-200/90 dark:hover:bg-neutral-800/70',
             },
             size: {
                 default: 'h-10 px-4 py-2',

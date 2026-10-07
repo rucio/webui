@@ -23,7 +23,7 @@ const tabContainerVariants = cva('relative flex w-full', {
 });
 
 const tabItemVariants = cva(
-    'relative cursor-pointer flex items-center justify-center px-4 py-3 text-sm font-medium transition-all duration-150 whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-0 dark:focus-visible:ring-offset-neutral-900 motion-reduce:transition-none',
+    'relative cursor-pointer flex items-center justify-center px-4 py-3 text-sm font-medium transition-all duration-150 whitespace-nowrap focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-0 dark:focus-visible:ring-offset-neutral-900 motion-reduce:transition-none',
     {
         variants: {
             active: {

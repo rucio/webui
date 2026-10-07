@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/component-library/utils';
 
 const progressBarVariants = cva(
-    'rounded-full w-full bg-neutral-100 dark:bg-neutral-700 border border-neutral-900 border-opacity-10 dark:border-none overflow-hidden',
+    'rounded-full w-full bg-neutral-100 dark:bg-neutral-700 border border-neutral-900/10 dark:border-none overflow-hidden',
     {
         variants: {
             size: {
@@ -21,10 +21,10 @@ const progressBarVariants = cva(
 const progressFillVariants = cva('h-full rounded-full transition-all duration-300 ease-in-out', {
     variants: {
         variant: {
-            default: 'bg-brand-600 bg-opacity-80 dark:bg-opacity-60',
-            success: 'bg-base-success-600 bg-opacity-80 dark:bg-opacity-60',
-            error: 'bg-base-error-600 bg-opacity-80 dark:bg-opacity-60',
-            warning: 'bg-base-warning-600 bg-opacity-80 dark:bg-opacity-60',
+            default: 'bg-brand-600/80 dark:bg-brand-600/60',
+            success: 'bg-base-success-600/80 dark:bg-base-success-600/60',
+            error: 'bg-base-error-600/80 dark:bg-base-error-600/60',
+            warning: 'bg-base-warning-600/80 dark:bg-base-warning-600/60',
         },
         indeterminate: {
             true: 'animate-pulse',

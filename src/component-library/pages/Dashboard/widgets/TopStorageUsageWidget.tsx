@@ -61,7 +61,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
                 href={`/rses?expression=${rse}&autoSearch=true`}
                 className="flex space-x-2 justify-center items-center text-neutral-900 dark:text-neutral-100 hover:text-brand-500 dark:hover:text-brand-500 font-medium"
             >
-                <HiExternalLink className="flex-shrink-0" />
+                <HiExternalLink className="shrink-0" />
                 <span className="truncate">{rse}</span>
             </Link>
             {isInfiniteWithoutUsage && (
@@ -79,7 +79,7 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
                     <PieChart>
                         <Pie data={pieData} dataKey="value" nameKey="name" stroke={borderColor}>
                             {pieData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="outline-none" />
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="outline-hidden" />
                             ))}
                         </Pie>
                         <Tooltip content={<CustomTooltip totalBytes={bytes_limit} />} />
@@ -97,8 +97,8 @@ const UsagePieChart = ({ usage }: { usage: RSEAccountUsageViewModel }) => {
 };
 
 const legendOptions: LegendOption[] = [
-    { label: 'Used', color: 'bg-base-warning-500' },
-    { label: 'Remaining', color: 'bg-base-success-500' },
+    { label: 'Used', color: 'bg-base-warning-500/70' },
+    { label: 'Remaining', color: 'bg-base-success-500/70' },
 ];
 
 interface TopStorageUsageWidgetProps {
@@ -148,9 +148,9 @@ export const TopStorageUsageWidget = ({ usages, isLoading, errorMessage }: TopSt
                             <Link
                                 key={rse.rse_id}
                                 href={`/rses?expression=${rse.rse}&autoSearch=true`}
-                                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:border-brand-500 dark:hover:border-brand-500 hover:shadow-sm transition-all text-neutral-900 dark:text-neutral-100 group"
+                                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:border-brand-500 dark:hover:border-brand-500 hover:shadow-xs transition-all text-neutral-900 dark:text-neutral-100 group"
                             >
-                                <HiExternalLink className="text-sm flex-shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-brand-500" />
+                                <HiExternalLink className="text-sm shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-brand-500" />
                                 <span className="text-sm font-medium">{rse.rse}</span>
                             </Link>
                         ))}

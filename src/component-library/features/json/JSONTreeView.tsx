@@ -314,7 +314,7 @@ export const JSONTreeView: React.FC<JSONTreeViewProps> = ({
                     <span className={warningBadgeClasses}>Invalid JSON - cannot display tree view</span>
                 </div>
                 <div className="p-3 text-sm font-mono text-neutral-900 dark:text-neutral-100">
-                    <pre className="whitespace-pre-wrap break-words m-0">{value}</pre>
+                    <pre className="whitespace-pre-wrap wrap-break-word m-0">{value}</pre>
                 </div>
             </div>
         );

@@ -57,7 +57,7 @@ export function Dropdown<T>(props: DropdownProps<T>): React.ReactElement {
                 ref={divref}
                 className={twMerge(
                     isActive ? 'flex' : 'hidden',
-                    'absolute right-0 mt-1 w-full rounded border dark:border-2 z-[100]',
+                    'absolute right-0 mt-1 w-full rounded border dark:border-2 z-100',
                     'p-1 flex-col bg-neutral-0 dark:bg-neutral-700',
                 )}
             >

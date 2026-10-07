@@ -77,7 +77,7 @@ export const ListRSE = (props: ListRSEProps) => {
                                 'inline-flex items-center gap-1',
                                 'font-medium underline underline-offset-2',
                                 'hover:opacity-80 transition-opacity',
-                                'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 rounded',
+                                'focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 rounded',
                             )}
                         >
                             Learn more
@@ -89,7 +89,7 @@ export const ListRSE = (props: ListRSEProps) => {
             </div>
 
             {/* Search Panel */}
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
                 <RSESearchPanel
                     onSearch={onSearch}
                     stopStreaming={stopStreaming}
@@ -101,7 +101,7 @@ export const ListRSE = (props: ListRSEProps) => {
             </div>
 
             {/* Results Section */}
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-20rem)]">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[calc(100vh-20rem)]">
                 <ListRSETable streamingHook={streamingHook} onGridReady={onGridReady} />
             </div>
         </div>

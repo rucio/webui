@@ -32,10 +32,10 @@ export function AnimatedTabs({ tabs, activeIndex, onTabChange, className, ariaLa
 
     return (
         <div className={cn('w-full', className)} role="tablist" aria-label={ariaLabel || 'Select Virtual Organisation'}>
-            <div className="relative flex items-center gap-2 p-1 bg-neutral-200/50 dark:bg-neutral-800/50 rounded-lg backdrop-blur-sm">
+            <div className="relative flex items-center gap-2 p-1 bg-neutral-200/50 dark:bg-neutral-800/50 rounded-lg backdrop-blur-xs">
                 {/* Animated indicator */}
                 <motion.div
-                    className="absolute h-[calc(100%-8px)] bg-neutral-0 dark:bg-neutral-700 rounded-md shadow-sm"
+                    className="absolute h-[calc(100%-8px)] bg-neutral-0 dark:bg-neutral-700 rounded-md shadow-xs"
                     initial={false}
                     animate={{
                         left: indicatorStyle.left,
@@ -82,7 +82,7 @@ export function AnimatedTabs({ tabs, activeIndex, onTabChange, className, ariaLa
                             }}
                             className={cn(
                                 'relative z-10 flex-1 px-4 py-2 text-sm font-medium rounded-md transition-colors',
-                                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
+                                'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
                                 'dark:focus-visible:ring-offset-neutral-900',
                                 isActive
                                     ? 'text-neutral-900 dark:text-neutral-100'

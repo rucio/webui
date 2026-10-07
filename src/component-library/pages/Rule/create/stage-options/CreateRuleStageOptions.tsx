@@ -249,7 +249,7 @@ export const CreateRuleStageOptions = ({ parameters, updateOptionValue, errors }
     const defaultCopies = isNaN(parameters.copies) ? '' : parameters.copies;
 
     return (
-        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+        <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
             <div className="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-700">
                 {/* Basic Configuration Section */}
                 <div className="space-y-4 pb-6">

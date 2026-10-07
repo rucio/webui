@@ -330,7 +330,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                         <DIDFilterField label="Created">
                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
                                 <Select value={createdMode} onValueChange={v => setCreatedMode(v as 'before' | 'after')}>
-                                    <SelectTrigger className="w-full sm:w-32 flex-shrink-0">
+                                    <SelectTrigger className="w-full sm:w-32 shrink-0">
                                         <SelectValue placeholder="Mode" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -341,14 +341,14 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                                     </SelectContent>
                                 </Select>
                                 <div className="flex flex-row flex-1 gap-2">
-                                    <div className="flex-grow-[2]">
+                                    <div className="grow-2">
                                         <DateInput
                                             onchange={(date: Date) => setCreatedDate(date)}
                                             initialdate={createdDate}
                                             placeholder="Select date"
                                         />
                                     </div>
-                                    <div className="flex-grow">
+                                    <div className="grow">
                                         <TimeInput
                                             onchange={(time: string) => setCreatedTime(time)}
                                             initialtime={createdTime}
@@ -373,7 +373,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                                 <DIDFilterField label="Length">
                                     <div className="flex items-center gap-2">
                                         <Select value={lengthOperator} onValueChange={v => setLengthOperator(v as DIDFilterOperator)}>
-                                            <SelectTrigger className="w-20 flex-shrink-0">
+                                            <SelectTrigger className="w-20 shrink-0">
                                                 <SelectValue placeholder="=" />
                                             </SelectTrigger>
                                             <SelectContent>

@@ -39,8 +39,7 @@ export const SimplePaginationPanel = (props: {
                 'py-2 !m-0',
                 'bg-neutral-200 dark:bg-neutral-700',
                 'border border-solid',
-                'border-neutral-900 dark:border-neutral-100',
-                'border-opacity-10 dark:border-opacity-10',
+                'border-neutral-900/10 dark:border-neutral-100/10',
                 'rounded-b-md',
             )}
         >

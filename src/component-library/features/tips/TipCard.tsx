@@ -122,7 +122,7 @@ export const TipCard = React.forwardRef<HTMLDivElement, TipCardProps>(
                                 compact ? 'text-xs' : 'text-sm',
                                 'font-medium underline underline-offset-2',
                                 'hover:opacity-80 transition-opacity',
-                                'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 rounded',
+                                'focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 rounded',
                             )}
                         >
                             Learn more
@@ -138,7 +138,7 @@ export const TipCard = React.forwardRef<HTMLDivElement, TipCardProps>(
                         className={cn(
                             'shrink-0 rounded p-1',
                             'hover:bg-neutral-900/10 dark:hover:bg-neutral-100/10',
-                            'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1',
+                            'focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-1',
                             'transition-colors duration-150',
                         )}
                         aria-label={`Dismiss tip: ${tip.title}`}

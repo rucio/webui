@@ -48,9 +48,9 @@ const AccountHeading = () => {
     }
 
     return (
-        <div className="bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-900 dark:to-brand-800 rounded-lg shadow-sm border border-brand-200 dark:border-brand-700 p-6 sm:p-8 transition-all duration-200 hover:shadow-md">
+        <div className="bg-linear-to-br from-brand-50 to-brand-100 dark:from-brand-900 dark:to-brand-800 rounded-lg shadow-xs border border-brand-200 dark:border-brand-700 p-6 sm:p-8 transition-all duration-200 hover:shadow-md">
             <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-brand-600 dark:bg-brand-500 text-neutral-0 shadow-sm flex-shrink-0">
+                <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-brand-600 dark:bg-brand-500 text-neutral-0 shadow-xs shrink-0">
                     <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path
                             strokeLinecap="round"

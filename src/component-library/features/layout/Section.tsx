@@ -8,7 +8,7 @@ const sectionVariants = cva('w-full', {
             default: '',
             subtle: 'bg-neutral-50 dark:bg-neutral-900',
             bordered: 'border border-neutral-200 dark:border-neutral-800 rounded-lg',
-            elevated: 'bg-neutral-100 dark:bg-neutral-800 rounded-lg shadow-sm',
+            elevated: 'bg-neutral-100 dark:bg-neutral-800 rounded-lg shadow-xs',
         },
         spacing: {
             none: '',

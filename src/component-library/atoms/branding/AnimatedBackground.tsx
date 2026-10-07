@@ -100,12 +100,12 @@ export function AnimatedBackground() {
     if (shouldReduceMotion) {
         // Static gradient background when reduced motion is preferred
         return (
-            <div className="fixed inset-0 -z-10 bg-gradient-to-br from-neutral-50 via-brand-50/30 to-neutral-100 dark:from-neutral-950 dark:via-brand-950/20 dark:to-neutral-950" />
+            <div className="fixed inset-0 -z-10 bg-linear-to-br from-neutral-50 via-brand-50/30 to-neutral-100 dark:from-neutral-950 dark:via-brand-950/20 dark:to-neutral-950" />
         );
     }
 
     return (
-        <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-50 dark:from-black dark:via-neutral-950 dark:to-neutral-900">
+        <div className="fixed inset-0 -z-10 overflow-hidden bg-linear-to-br from-neutral-50 via-neutral-100 to-neutral-50 dark:from-black dark:via-neutral-950 dark:to-neutral-900">
             {/* Animated Grid Pattern */}
             <motion.div
                 className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
@@ -165,7 +165,7 @@ export function AnimatedBackground() {
             {orbs.map((orb, index) => (
                 <motion.div
                     key={`orb-${index}`}
-                    className={`absolute rounded-full blur-3xl bg-gradient-to-br ${orb.color}`}
+                    className={`absolute rounded-full blur-3xl bg-linear-to-br ${orb.color}`}
                     style={{
                         width: orb.size,
                         height: orb.size,

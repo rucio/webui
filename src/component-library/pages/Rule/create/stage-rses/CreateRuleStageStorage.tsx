@@ -113,7 +113,7 @@ export const CreateRuleStageStorage = (props: CreateRuleStageStorageProps) => {
 
     return (
         <div className="flex flex-col space-y-6 w-full">
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
                 <RSESearchPanel
                     onSearch={onSearch}
                     stopStreaming={stopStreaming}

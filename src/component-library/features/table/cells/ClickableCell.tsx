@@ -23,7 +23,7 @@ export const ClickableCell = (props: { href: string; children: React.ReactNode; 
             role="button"
             tabIndex={0}
         >
-            <HiExternalLink className="flex-shrink-0 text-lg mr-1 text-neutral-900 dark:text-neutral-100" />
+            <HiExternalLink className="shrink-0 text-lg mr-1 text-neutral-900 dark:text-neutral-100" />
             {props.children}
         </div>
     );

@@ -197,7 +197,7 @@ const SearchForm = ({ filters, onFiltersChange, onSearch, onStop, isRunning }: S
     return (
         <div className="flex flex-col space-y-6 w-full">
             {/* Search Panel */}
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm p-6">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs p-6">
                 <label htmlFor="account-input" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">
                     Account
                 </label>
@@ -312,7 +312,7 @@ export const ListRule = (props: ListRuleProps) => {
             />
 
             {/* Results Section */}
-            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden h-[calc(100vh-24rem)]">
+            <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[calc(100vh-24rem)]">
                 <ListRuleTable streamingHook={streamingHook} onGridReady={onGridReady} />
             </div>
         </div>

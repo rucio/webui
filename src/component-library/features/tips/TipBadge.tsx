@@ -18,7 +18,7 @@ const tipBadgeVariants = cva(
     cn(
         'inline-flex items-center justify-center rounded-full',
         'cursor-pointer transition-colors duration-150',
-        'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+        'focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
         'dark:focus:ring-offset-neutral-900',
     ),
     {

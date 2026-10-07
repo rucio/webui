@@ -11,7 +11,7 @@ const skeletonVariants = cva('bg-neutral-100 dark:bg-neutral-800', {
         shape: {
             rectangle: 'rounded-md',
             circle: 'rounded-full',
-            text: 'rounded-sm',
+            text: 'rounded-xs',
         },
     },
     defaultVariants: {

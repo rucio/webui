@@ -71,7 +71,7 @@ export const AMITagPopover: React.FC<{ info: AMITagInfo }> = ({ info }) => {
                     className={cn(
                         badgeVariants({ variant: info.found === false ? 'neutral' : 'info', size: 'sm', shape: 'pill' }),
                         'gap-1 font-mono no-underline hover:underline',
-                        'outline-none focus-visible:ring-1 focus-visible:ring-neutral-500',
+                        'outline-hidden focus-visible:ring-1 focus-visible:ring-neutral-500',
                     )}
                 >
                     {info.tag}

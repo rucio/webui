@@ -11,7 +11,7 @@ const inputVariants = cva(
         'text-neutral-900 dark:text-neutral-100',
         'placeholder:text-neutral-500',
         'focus:ring-0',
-        'focus:outline-none',
+        'focus:outline-hidden',
         'transition-colors',
         'disabled:cursor-not-allowed disabled:opacity-50',
         // Fix date/time picker icon alignment
@@ -25,11 +25,11 @@ const inputVariants = cva(
         variants: {
             variant: {
                 default: cn(
-                    'border-neutral-900 dark:border-neutral-100 border-opacity-10 dark:border-opacity-10',
+                    'border-neutral-900/10 dark:border-neutral-100/10',
                     'bg-neutral-100 dark:bg-neutral-800',
                     'focus:shadow-brand',
-                    'focus:border-1 focus:border-brand-500',
-                    'dark:focus:border-1 dark:focus:border-brand-500',
+                    'focus:border focus:border-brand-500',
+                    'dark:focus:border dark:focus:border-brand-500',
                 ),
                 error: cn(
                     'border-base-error-600 dark:border-base-error-500',

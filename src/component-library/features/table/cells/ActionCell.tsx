@@ -77,7 +77,7 @@ export const ActionCell: React.FC<ActionCellProps> = ({ actions }) => {
                             'rounded px-2 py-1',
                             'text-xs font-medium',
                             'transition-colors duration-150',
-                            'focus:outline-none focus:ring-2 focus:ring-brand-500',
+                            'focus:outline-hidden focus:ring-2 focus:ring-brand-500',
                             'disabled:opacity-50 disabled:pointer-events-none',
                             variantClasses[variant],
                         )}
