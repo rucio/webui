@@ -11,6 +11,7 @@ import { ClickableCell } from '@/component-library/features/table/cells/Clickabl
 import { Button } from '@/component-library/atoms/form/button';
 import { HiOutlineBan, HiOutlineExternalLink } from 'react-icons/hi';
 import { SuspiciousReplicaViewModel } from '@/lib/infrastructure/data/view-model/replica';
+import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type SuspiciousReplicasTableProps = {
     streamingHook: UseStreamReader<SuspiciousReplicaViewModel>;
@@ -64,11 +65,6 @@ const ClickableDIDName = (props: { data: SuspiciousReplicaViewModel | undefined 
     return <ClickableCell href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>{name}</ClickableCell>;
 };
 
-const ClickableRSE = (props: { value: string }) => {
-    if (!props.value) return null;
-    return <ClickableCell href={`/rse/${encodeURIComponent(props.value)}`}>{props.value}</ClickableCell>;
-};
-
 export const SuspiciousReplicasTable = (props: SuspiciousReplicasTableProps) => {
     const { onDeclareBad, onSelectionChanged, ...tableProps } = props;
     const tableRef = useRef<AgGridReact<SuspiciousReplicaViewModel>>(null);
@@ -114,7 +110,7 @@ export const SuspiciousReplicasTable = (props: SuspiciousReplicasTableProps) => 
                 filter: true,
                 filterParams: DefaultTextFilterParams,
                 sortable: true,
-                cellRenderer: ClickableRSE,
+                cellRenderer: ClickableRSECell,
             },
             {
                 headerName: 'Created At',

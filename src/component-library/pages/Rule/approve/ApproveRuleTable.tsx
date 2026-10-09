@@ -5,7 +5,6 @@ import { AgGridReact } from 'ag-grid-react';
 import { GridReadyEvent, SelectionChangedEvent, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { DefaultTextFilterParams, DefaultDateFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { ApproveRuleViewModel } from '@/lib/infrastructure/data/view-model/rule';
 import { formatFileSize, formatSeconds } from '@/component-library/features/utils/text-formatters';
@@ -20,6 +19,7 @@ import { Button } from '@/component-library/atoms/form/button';
 import { HiOutlineCheckCircle, HiOutlineBan, HiOutlineExternalLink } from 'react-icons/hi';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { DIDType } from '@/lib/core/entity/rucio';
+import { ClickableDIDCell, ClickableRSEExpressionCell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 export type ApproveRuleTableProps = {
     streamingHook: UseStreamReader<ApproveRuleViewModel>;
@@ -32,19 +32,6 @@ export type ApproveRuleTableProps = {
 };
 
 // ── Cell renderers ────────────────────────────────────────────────────────────
-
-const ClickableDID = (props: { value: string[] }) => {
-    const [scope, name] = props.value;
-    return (
-        <ClickableCell href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
-            {scope}:{name}
-        </ClickableCell>
-    );
-};
-
-const ClickableRSEExpression = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
-};
 
 const NullableRemainingLifetime = (props: { value: number }) => {
     const timeString = formatSeconds(props.value);
@@ -168,14 +155,14 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
             flex: 2,
             filter: true,
             filterParams: DefaultTextFilterParams,
-            cellRenderer: ClickableDID,
+            cellRenderer: ClickableDIDCell,
         },
         {
             headerName: 'RSE Expression',
             field: 'rse_expression',
             minWidth: 160,
             flex: 1,
-            cellRenderer: ClickableRSEExpression,
+            cellRenderer: ClickableRSEExpressionCell,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },

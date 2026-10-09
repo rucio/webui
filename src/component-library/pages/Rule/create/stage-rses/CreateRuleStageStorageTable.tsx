@@ -6,7 +6,6 @@ import { ColSpanParams, GridReadyEvent, ICellRendererParams, ValueFormatterParam
 import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { RSEAccountUsageLimitViewModel, RSEAccountUsageViewModel } from '@/lib/infrastructure/data/view-model/rse';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { SelectableCell } from '@/component-library/features/table/cells/selection-cells';
 
 interface SelectableRSEViewModel extends RSEAccountUsageLimitViewModel {
@@ -25,10 +24,6 @@ type StageStorageTableProps = {
 const WarningCell = (props: { value: string; warn: boolean }) => {
     const textColor = props.warn ? 'text-base-error-500 font-semibold' : '';
     return <span className={textColor}>{props.value}</span>;
-};
-
-const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ addRSE, removeRSE, selectedItems, ...props }) => {

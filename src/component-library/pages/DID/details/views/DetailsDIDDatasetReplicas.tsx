@@ -9,8 +9,8 @@ import ProgressBar from '@/component-library/atoms/misc/ProgressBar';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
     let percentage: number = 0;
@@ -32,10 +32,6 @@ const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
             <span className="text-ellipsis text-sm text-neutral-900 dark:text-neutral-100">{getPercentageText()}</span>
         </div>
     );
-};
-
-const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const ReplicaStateDisplayNames = {
@@ -68,7 +64,7 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             field: 'rse',
             flex: 3,
             pinned: 'left' as const,
-            cellRenderer: ClickableRSE,
+            cellRenderer: ClickableRSECell,
             filter: true,
             filterParams: DefaultTextFilterParams,
             cellStyle: {
