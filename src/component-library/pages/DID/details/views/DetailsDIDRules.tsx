@@ -1,7 +1,6 @@
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { DIDRulesViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, ValueFormatterParams } from 'ag-grid-community';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { DefaultDateFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
@@ -15,19 +14,12 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { ClickableRSEExpressionCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
     isActive?: boolean;
-};
-
-const ClickableId = (props: { value: string }) => {
-    return <ClickableCell href={`/rule/${props.value}`}>{props.value}</ClickableCell>;
-};
-
-const ClickableRSEExpression = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const NullableRemainingLifetime = (props: { value: number }) => {
@@ -50,7 +42,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             field: 'id',
             width: 350,
             pinned: 'left' as const,
-            cellRenderer: ClickableId,
+            cellRenderer: ClickableRuleIdCell,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
@@ -60,7 +52,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
             minWidth: 250,
             flex: 2,
             pinned: 'left' as const,
-            cellRenderer: ClickableRSEExpression,
+            cellRenderer: ClickableRSEExpressionCell,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },

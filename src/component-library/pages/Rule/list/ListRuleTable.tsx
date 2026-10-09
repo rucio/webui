@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { DefaultTextFilterParams, DefaultDateFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { GridReadyEvent, ValueGetterParams } from 'ag-grid-community';
@@ -14,27 +13,11 @@ import { RuleState } from '@/lib/core/entity/rucio';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { ClickableRSEExpressionCell, ClickableDIDCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
-};
-
-const ClickableId = (props: { value: string }) => {
-    return <ClickableCell href={`/rule/${props.value}`}>{props.value}</ClickableCell>;
-};
-
-const ClickableDID = (props: { value: string[] }) => {
-    const [scope, name] = props.value;
-    return (
-        <ClickableCell href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
-            {scope}:{name}
-        </ClickableCell>
-    );
-};
-
-const ClickableRSEExpression = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${encodeURIComponent(props.value)}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const NullableRemainingLifetime = (props: { value: number }) => {
@@ -61,7 +44,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             flex: 2,
             filter: true,
             filterParams: DefaultTextFilterParams,
-            cellRenderer: ClickableDID,
+            cellRenderer: ClickableDIDCell,
             pinned: 'left' as const,
         },
         {
@@ -70,7 +53,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             width: 50,
             minWidth: 100,
             flex: 1,
-            cellRenderer: ClickableId,
+            cellRenderer: ClickableRuleIdCell,
             pinned: 'left' as const,
             filter: true,
             filterParams: DefaultTextFilterParams,
@@ -80,7 +63,7 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
             field: 'rse_expression',
             minWidth: 160,
             flex: 1,
-            cellRenderer: ClickableRSEExpression,
+            cellRenderer: ClickableRSEExpressionCell,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
