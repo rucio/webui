@@ -1,7 +1,6 @@
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { DIDViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent, SelectionChangedEvent, ValueGetterParams } from 'ag-grid-community';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ListDIDsViewModel } from '@/lib/infrastructure/data/view-model/list-did';
@@ -11,21 +10,13 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 import { DIDType } from '@/lib/core/entity/rucio';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { ClickableDIDCell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type DetailsDIDSimpleTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;
     onSelectionChanged?: (event: SelectionChangedEvent) => void;
     onGridReady: (event: GridReadyEvent) => void;
     isActive?: boolean;
-};
-
-const ClickableDID = (props: { value: string[] }) => {
-    const [scope, name] = props.value;
-    return (
-        <ClickableCell href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
-            {scope}:{name}
-        </ClickableCell>
-    );
 };
 
 export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
@@ -40,7 +31,7 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
                 return [params.data?.scope, params.data?.name];
             },
-            cellRenderer: ClickableDID,
+            cellRenderer: ClickableDIDCell,
             minWidth: 450,
             filter: true,
             filterParams: DefaultTextFilterParams,

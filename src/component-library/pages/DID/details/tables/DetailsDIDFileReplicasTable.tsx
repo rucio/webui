@@ -1,7 +1,6 @@
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { FileReplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
 import { GridReadyEvent } from 'ag-grid-community';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import React, { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
@@ -10,15 +9,12 @@ import { ReplicaStateBadge } from '@/component-library/features/badges/DID/Repli
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
     isActive?: boolean;
-};
-
-const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const ReplicaStateDisplayNames = {
@@ -42,7 +38,7 @@ export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTablePr
             headerName: 'RSE',
             field: 'rse',
             width: 300,
-            cellRenderer: ClickableRSE,
+            cellRenderer: ClickableRSECell,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },

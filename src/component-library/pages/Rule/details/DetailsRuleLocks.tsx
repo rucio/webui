@@ -9,8 +9,6 @@ import { ListRuleReplicaLockStatesViewModel } from '@/lib/infrastructure/data/vi
 import { LockState } from '@/lib/core/entity/rucio';
 import { LockStateBadge } from '@/component-library/features/badges/Rule/LockStateBadge';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
-import { CopyableLinkCell } from '@/component-library/features/table/cells/CopyableCell';
 import { Button } from '@/component-library/atoms/form/button';
 import { FTSLinkViewModel, DDMLinkViewModel } from '@/lib/infrastructure/data/view-model/request';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
@@ -18,26 +16,13 @@ import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner
 import { HiExternalLink } from 'react-icons/hi';
 import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { ClickableRSECell, ClickableDIDCell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
     isActive?: boolean;
     featureDDMDashboard: boolean;
-};
-
-const ClickableDID = (props: { value: string[] }) => {
-    const [scope, name] = props.value;
-    const didString = `${scope}:${name}`;
-    return (
-        <CopyableLinkCell text={didString} href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>
-            {didString}
-        </CopyableLinkCell>
-    );
-};
-
-const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 const FTSLinkButton = (props: any) => {
@@ -211,7 +196,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             pinned: 'left' as const,
             filter: true,
             filterParams: DefaultTextFilterParams,
-            cellRenderer: ClickableDID,
+            cellRenderer: ClickableDIDCell,
         },
         {
             headerName: 'RSE',
@@ -220,7 +205,7 @@ const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
             flex: 1,
             filter: true,
             filterParams: DefaultTextFilterParams,
-            cellRenderer: ClickableRSE,
+            cellRenderer: ClickableRSECell,
         },
         {
             headerName: 'State',

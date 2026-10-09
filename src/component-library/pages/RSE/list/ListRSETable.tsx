@@ -3,7 +3,6 @@ import { AgGridReact } from 'ag-grid-react';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { RSEViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { CheckboxCell, checkboxCellWrapperStyle } from '@/component-library/features/table/cells/CheckboxCell';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
@@ -11,14 +10,11 @@ import { GridReadyEvent } from 'ag-grid-community';
 import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
 import { RSEType } from '@/lib/core/entity/rucio';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type ListRSETableProps = {
     streamingHook: UseStreamReader<RSEViewModel>;
     onGridReady: (event: GridReadyEvent) => void;
-};
-
-const ClickableName = (props: { value: string }) => {
-    return <ClickableCell href={`/rse/${props.value}`}>{props.value}</ClickableCell>;
 };
 
 export const ListRSETable = (props: ListRSETableProps) => {
@@ -35,7 +31,7 @@ export const ListRSETable = (props: ListRSETableProps) => {
             flex: 4,
             minWidth: 250,
             pinned: 'left' as const,
-            cellRenderer: ClickableName,
+            cellRenderer: ClickableRSECell,
             filter: true,
             filterParams: DefaultTextFilterParams,
             sort: 'asc' as const,

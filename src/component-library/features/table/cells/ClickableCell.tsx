@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { HiExternalLink } from 'react-icons/hi';
 import { cn } from '@/component-library/utils';
 

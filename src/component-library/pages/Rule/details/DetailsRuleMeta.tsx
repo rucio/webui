@@ -11,7 +11,6 @@ import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleGroupingBadge } from '@/component-library/features/badges/Rule/RuleGroupingBadge';
 import { RuleNotificationBadge } from '@/component-library/features/badges/Rule/RuleNotificationBadge';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { CopyableLinkCell } from '@/component-library/features/table/cells/CopyableCell';
 
 /**

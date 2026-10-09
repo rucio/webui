@@ -5,7 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
 
 type StageSummaryStageTableProps = {
     rowData: RSEAccountUsageLimitViewModel[];
@@ -14,10 +14,6 @@ type StageSummaryStageTableProps = {
 const WarningCell = (props: { value: string; warn: boolean }) => {
     const textColor = props.warn ? 'text-base-error-500 font-semibold' : '';
     return <span className={textColor}>{props.value}</span>;
-};
-
-const ClickableRSE = (props: { value: string }) => {
-    return <ClickableCell href={`/rses?expression=${props.value}&autoSearch=true`}>{props.value}</ClickableCell>;
 };
 
 export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTableProps> = ({ ...props }) => {
@@ -31,7 +27,7 @@ export const CreateRuleStageSummaryStorageTable: React.FC<StageSummaryStageTable
             minWidth: 250,
             flex: 1,
             pinned: 'left' as const,
-            cellRenderer: ClickableRSE,
+            cellRenderer: ClickableRSECell,
             filter: true,
             filterParams: DefaultTextFilterParams,
         },
