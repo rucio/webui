@@ -27,6 +27,11 @@ export type BaseDTO = {
      * An optional string that provides the type of the error that occurred. Usually contains the name and src of the error
      */
     errorType?: 'gateway_endpoint_error' | string;
+
+    /**
+     * Rucio's ExceptionClass (e.g. AccessDenied, Duplicate, AccountNotFound), when the server sent one.
+     */
+    errorClass?: string;
 };
 
 /**

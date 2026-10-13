@@ -251,7 +251,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
  * @returns A promise that resolves to the API response as a data transfer object (DTO) containing the error,
  * or `undefined` if the error could not be identified clearly.
  */
-async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCode: number, response: Response): Promise<TDTO | undefined> {
+export async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCode: number, response: Response): Promise<TDTO | undefined> {
     const dto: TDTO = {
         status: 'error',
         errorName: BaseHttpErrorTypes.UNKNOWN_ERROR.errorName,
@@ -283,9 +283,11 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
             break;
     }
 
+    dto.errorClass = response.headers.get('ExceptionClass') ?? undefined;
     try {
         const jsonResponse = await response.json();
-        dto.errorMessage = jsonResponse.ExceptionMessage;
+        dto.errorMessage = jsonResponse.ExceptionMessage ?? dto.errorMessage;
+        dto.errorClass = jsonResponse.ExceptionClass ?? dto.errorClass;
     } catch (error) {}
 
     return dto;
