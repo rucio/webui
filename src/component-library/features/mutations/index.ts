@@ -19,7 +19,6 @@ export type { AddAttributeDialogProps } from './attributes/AddAttributeDialog';
 export { DeleteAttributeDialog } from './attributes/DeleteAttributeDialog';
 export type { DeleteAttributeDialogProps } from './attributes/DeleteAttributeDialog';
 
-
 export { UpdateLifetimeDialog } from './UpdateLifetimeDialog';
 export type { UpdateLifetimeDialogProps } from './UpdateLifetimeDialog';
 
@@ -31,3 +30,5 @@ export type { DenyRuleDialogProps } from './DenyRuleDialog';
 
 export { CommentRuleDialog } from './CommentRuleDialog';
 export type { CommentRuleDialogProps } from './CommentRuleDialog';
+
+export * from './account';
