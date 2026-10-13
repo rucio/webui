@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 const EM_DASH = String.fromCharCode(0x2014);
 const noEmDash = () => expect(document.body.textContent).not.toContain(EM_DASH);
 
-import { AddAttributeDialog } from '@/component-library/features/mutations/attributes/AddAttributeDialog';
-import { EditAttributeDialog } from '@/component-library/features/mutations/attributes/EditAttributeDialog';
-import { DeleteAttributeDialog } from '@/component-library/features/mutations/attributes/DeleteAttributeDialog';
+import { AddAccountAttributeDialog } from '@/component-library/features/mutations/account-attributes/AddAccountAttributeDialog';
+import { EditAccountAttributeDialog } from '@/component-library/features/mutations/account-attributes/EditAccountAttributeDialog';
+import { DeleteAccountAttributeDialog } from '@/component-library/features/mutations/account-attributes/DeleteAccountAttributeDialog';
 import { isValidAccountAttribute } from '@/lib/core/utils/account-validation';
 
 const change = (label: string | RegExp, value: string) => fireEvent.change(screen.getByLabelText(label), { target: { value } });
@@ -15,21 +15,12 @@ const accountValidators = {
     validateValue: (v: string) => (isValidAccountAttribute(v) ? undefined : 'Invalid value'),
 };
 
-describe('AddAttributeDialog', () => {
-    it('RSE variant: titles, duplicate key, confirm', () => {
+describe('AddAccountAttributeDialog', () => {
+    it('titles, duplicate key, confirm', () => {
         const onConfirm = jest.fn();
-        render(
-            <AddAttributeDialog
-                open
-                onOpenChange={jest.fn()}
-                entityLabel="RSE"
-                entityName="CERN-DISK"
-                existingKeys={['fts']}
-                onConfirm={onConfirm}
-            />,
-        );
-        expect(screen.getByText('Add RSE attribute')).toBeInTheDocument();
-        change(/Key/, 'fts');
+        render(<AddAccountAttributeDialog open onOpenChange={jest.fn()} entityName="jdoe" existingKeys={['country']} onConfirm={onConfirm} />);
+        expect(screen.getByText('Add account attribute')).toBeInTheDocument();
+        change(/Key/, 'country');
         change(/Value/, 'x');
         expect(screen.getByText('This attribute key already exists')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Add attribute' })).toBeDisabled();
@@ -39,10 +30,8 @@ describe('AddAttributeDialog', () => {
         noEmDash();
     });
 
-    it('account variant: regex errors for key and value with aria-describedby', () => {
-        render(
-            <AddAttributeDialog open onOpenChange={jest.fn()} entityLabel="account" entityName="jdoe" onConfirm={jest.fn()} {...accountValidators} />,
-        );
+    it('regex errors for key and value with aria-describedby', () => {
+        render(<AddAccountAttributeDialog open onOpenChange={jest.fn()} entityName="jdoe" onConfirm={jest.fn()} {...accountValidators} />);
         expect(screen.getByText('Add account attribute')).toBeInTheDocument();
         change(/Key/, 'bad key!');
         change(/Value/, 'ok');
@@ -58,10 +47,9 @@ describe('AddAttributeDialog', () => {
 
     it('renders the warning slot for admin only', () => {
         render(
-            <AddAttributeDialog
+            <AddAccountAttributeDialog
                 open
                 onOpenChange={jest.fn()}
-                entityLabel="account"
                 entityName="jdoe"
                 onConfirm={jest.fn()}
                 warning={({ key }) => (key === 'admin' ? <p>Grants admin rights</p> : null)}
@@ -74,30 +62,26 @@ describe('AddAttributeDialog', () => {
     });
 
     it('renders the server error', () => {
-        render(<AddAttributeDialog open onOpenChange={jest.fn()} entityLabel="RSE" entityName="X" onConfirm={jest.fn()} error="Denied" />);
+        render(<AddAccountAttributeDialog open onOpenChange={jest.fn()} entityName="jdoe" onConfirm={jest.fn()} error="Denied" />);
         expect(screen.getByRole('alert')).toHaveTextContent('Denied');
     });
 });
 
-describe('DeleteAttributeDialog', () => {
-    it.each([
-        ['RSE', 'Delete RSE attribute'],
-        ['account', 'Delete account attribute'],
-    ] as const)('%s variant', (entityLabel, title) => {
+describe('DeleteAccountAttributeDialog', () => {
+    it('renders title, warning and confirms', () => {
         const onConfirm = jest.fn();
         render(
-            <DeleteAttributeDialog
+            <DeleteAccountAttributeDialog
                 open
                 onOpenChange={jest.fn()}
-                entityLabel={entityLabel}
-                entityName="thing"
+                entityName="jdoe"
                 attributeKey="k"
                 attributeValue="v"
                 warning={<p>Careful</p>}
                 onConfirm={onConfirm}
             />,
         );
-        expect(screen.getByText(title)).toBeInTheDocument();
+        expect(screen.getByText('Delete account attribute')).toBeInTheDocument();
         expect(screen.getByText('Careful')).toBeInTheDocument();
         fireEvent.click(screen.getByRole('button', { name: 'Delete attribute' }));
         expect(onConfirm).toHaveBeenCalled();
@@ -105,11 +89,11 @@ describe('DeleteAttributeDialog', () => {
     });
 });
 
-describe('EditAttributeDialog', () => {
-    const renderEdit = (props: Partial<React.ComponentProps<typeof EditAttributeDialog>> = {}) => {
+describe('EditAccountAttributeDialog', () => {
+    const renderEdit = (props: Partial<React.ComponentProps<typeof EditAccountAttributeDialog>> = {}) => {
         const onConfirm = jest.fn();
         render(
-            <EditAttributeDialog
+            <EditAccountAttributeDialog
                 open
                 onOpenChange={jest.fn()}
                 entityName="jdoe"

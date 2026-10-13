@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
-import { EditAttributeDialog, EditAttributeDialogProps } from './EditAttributeDialog';
+import { EditAccountAttributeDialog, EditAccountAttributeDialogProps } from './EditAccountAttributeDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
 import { isValidAccountAttribute } from '@/lib/core/utils/account-validation';
 
-const meta: Meta<typeof EditAttributeDialog> = {
-    title: 'Features/Mutations/Attributes/EditAttributeDialog',
-    component: EditAttributeDialog,
+const meta: Meta<typeof EditAccountAttributeDialog> = {
+    title: 'Features/Mutations/AccountAttributes/EditAccountAttributeDialog',
+    component: EditAccountAttributeDialog,
     parameters: {
         layout: 'centered',
     },
@@ -24,16 +24,16 @@ const meta: Meta<typeof EditAttributeDialog> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof EditAttributeDialog>;
+type Story = StoryObj<typeof EditAccountAttributeDialog>;
 
-type WrapperProps = Partial<Omit<EditAttributeDialogProps, 'open' | 'onOpenChange'>>;
+type WrapperProps = Partial<Omit<EditAccountAttributeDialogProps, 'open' | 'onOpenChange'>>;
 
 const Wrapper = (props: WrapperProps) => {
     const [open, setOpen] = useState(true);
     return (
         <>
             <Button onClick={() => setOpen(true)}>Edit attribute</Button>
-            <EditAttributeDialog
+            <EditAccountAttributeDialog
                 entityName="jdoe"
                 attributeKey="country-ch"
                 currentValue="user"

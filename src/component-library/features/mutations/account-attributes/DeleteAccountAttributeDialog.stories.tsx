@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
-import { DeleteAttributeDialog, DeleteAttributeDialogProps } from './DeleteAttributeDialog';
+import { DeleteAccountAttributeDialog, DeleteAccountAttributeDialogProps } from './DeleteAccountAttributeDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
 
-const meta: Meta<typeof DeleteAttributeDialog> = {
-    title: 'Features/Mutations/Attributes/DeleteAttributeDialog',
-    component: DeleteAttributeDialog,
+const meta: Meta<typeof DeleteAccountAttributeDialog> = {
+    title: 'Features/Mutations/AccountAttributes/DeleteAccountAttributeDialog',
+    component: DeleteAccountAttributeDialog,
     parameters: {
         layout: 'centered',
     },
@@ -23,9 +23,9 @@ const meta: Meta<typeof DeleteAttributeDialog> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof DeleteAttributeDialog>;
+type Story = StoryObj<typeof DeleteAccountAttributeDialog>;
 
-type WrapperProps = Partial<Omit<DeleteAttributeDialogProps, 'open' | 'onOpenChange'>>;
+type WrapperProps = Partial<Omit<DeleteAccountAttributeDialogProps, 'open' | 'onOpenChange'>>;
 
 const Wrapper = (props: WrapperProps) => {
     const [open, setOpen] = useState(false);
@@ -34,10 +34,9 @@ const Wrapper = (props: WrapperProps) => {
             <Button variant="error" onClick={() => setOpen(true)}>
                 Delete attribute
             </Button>
-            <DeleteAttributeDialog
-                entityLabel="RSE"
-                entityName="CERN-DISK"
-                attributeKey="fts"
+            <DeleteAccountAttributeDialog
+                entityName="jdoe"
+                attributeKey="country"
                 onConfirm={() => setOpen(false)}
                 {...props}
                 open={open}
@@ -47,27 +46,21 @@ const Wrapper = (props: WrapperProps) => {
     );
 };
 
-export const RSE: Story = {
-    render: () => <Wrapper attributeValue="https://fts3.cern.ch:8446" />,
+export const Default: Story = {
+    render: () => <Wrapper attributeValue="CH" />,
 };
 
-export const RSEWithoutValue: Story = {
+export const WithoutValue: Story = {
     render: () => <Wrapper />,
 };
 
-export const RSELongValue: Story = {
-    render: () => <Wrapper attributeKey="endpoint_url" attributeValue="https://very-long-hostname.subdomain.example.cern.ch:8446/api/v1/transfers" />,
-};
-
-export const Account: Story = {
-    render: () => <Wrapper entityLabel="account" entityName="jdoe" attributeKey="country" attributeValue="CH" />,
+export const LongValue: Story = {
+    render: () => <Wrapper attributeKey="affiliation" attributeValue="a-very-long-value-with_many-parts/and/slashes.x" />,
 };
 
 export const AccountAdminAttribute: Story = {
     render: () => (
         <Wrapper
-            entityLabel="account"
-            entityName="jdoe"
             attributeKey="admin"
             attributeValue="True"
             warning={<Alert variant="warning" message="Removing the admin attribute takes away administrator rights from this account." />}
@@ -76,9 +69,9 @@ export const AccountAdminAttribute: Story = {
 };
 
 export const Loading: Story = {
-    render: () => <Wrapper attributeValue="https://fts3.cern.ch:8446" loading />,
+    render: () => <Wrapper attributeValue="CH" loading />,
 };
 
 export const ServerError: Story = {
-    render: () => <Wrapper attributeValue="https://fts3.cern.ch:8446" error="This attribute no longer exists." />,
+    render: () => <Wrapper attributeValue="CH" error="This attribute no longer exists." />,
 };
