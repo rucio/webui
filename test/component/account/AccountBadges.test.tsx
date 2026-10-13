@@ -53,12 +53,12 @@ describe('AccountTypeBadge', () => {
 
 describe('IdentityTypeBadge', () => {
     const cases: [IdentityType, string, V][] = [
-        [IdentityType.X509, 'X509', 'default'],
+        [IdentityType.X509, 'X509', 'info'],
         [IdentityType.GSS, 'GSS', 'default'],
-        [IdentityType.USERPASS, 'Userpass', 'default'],
-        [IdentityType.SSH, 'SSH', 'default'],
-        [IdentityType.SAML, 'SAML', 'default'],
-        [IdentityType.OIDC, 'OIDC', 'default'],
+        [IdentityType.USERPASS, 'Userpass', 'warning'],
+        [IdentityType.SSH, 'SSH', 'neutral'],
+        [IdentityType.SAML, 'SAML', 'neutral'],
+        [IdentityType.OIDC, 'OIDC', 'success'],
         [IdentityType.UNKNOWN, 'Unknown', 'neutral'],
     ];
     it.each(cases)('renders %s', (value, label, variant) => {

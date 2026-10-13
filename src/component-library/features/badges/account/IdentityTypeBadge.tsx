@@ -5,12 +5,12 @@ import { IdentityType } from '@/lib/core/entity/account';
 type Variant = NonNullable<BadgeProps['variant']>;
 
 export const IDENTITY_TYPE_BADGES: Record<IdentityType, { label: string; variant: Variant }> = {
-    [IdentityType.X509]: { label: 'X509', variant: 'default' },
+    [IdentityType.X509]: { label: 'X509', variant: 'info' },
     [IdentityType.GSS]: { label: 'GSS', variant: 'default' },
-    [IdentityType.USERPASS]: { label: 'Userpass', variant: 'default' },
-    [IdentityType.SSH]: { label: 'SSH', variant: 'default' },
-    [IdentityType.SAML]: { label: 'SAML', variant: 'default' },
-    [IdentityType.OIDC]: { label: 'OIDC', variant: 'default' },
+    [IdentityType.USERPASS]: { label: 'Userpass', variant: 'warning' },
+    [IdentityType.SSH]: { label: 'SSH', variant: 'neutral' },
+    [IdentityType.SAML]: { label: 'SAML', variant: 'neutral' },
+    [IdentityType.OIDC]: { label: 'OIDC', variant: 'success' },
     [IdentityType.UNKNOWN]: { label: 'Unknown', variant: 'neutral' },
 };
 
