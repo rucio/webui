@@ -17,6 +17,7 @@ const CONTROLLERS = {
     LIST_ACCOUNT_IDENTITIES: Symbol.for('ListAccountIdentitiesController'),
     LIST_ACCOUNT_ATTRIBUTES: Symbol.for('ListAccountAttributesController'),
     CREATE_ACCOUNT: Symbol.for('CreateAccountController'),
+    DELETE_ACCOUNT: Symbol.for('DeleteAccountController'),
     UPDATE_ACCOUNT: Symbol.for('UpdateAccountController'),
     LIST_ALL_RSES: Symbol.for('ListAllRSEsController'),
     LIST_DIDS: Symbol.for('ListDIDsController'),
