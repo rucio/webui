@@ -1,4 +1,5 @@
 import React from 'react';
+import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { render, screen } from '@testing-library/react';
 import { AccountEmailCell, AccountNameCell, accountHref } from '@/component-library/pages/Account/list/ListAccountsTable';
 
@@ -21,5 +22,12 @@ describe('ListAccountsTable cells', () => {
         expect(open).toHaveBeenCalledWith('/account/jdoe', '_blank', 'noopener,noreferrer');
         expect(accountHref('a b')).toBe('/account/a%20b');
         open.mockRestore();
+    });
+});
+
+describe('NullBadge', () => {
+    it('still renders "null" without a label', () => {
+        render(<NullBadge />);
+        expect(screen.getByText('null')).toBeInTheDocument();
     });
 });
