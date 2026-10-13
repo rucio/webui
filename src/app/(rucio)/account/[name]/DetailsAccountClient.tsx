@@ -7,6 +7,7 @@ import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanst
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { DetailsAccount, DetailsAccountLoadError } from '@/component-library/pages/Account/details/DetailsAccount';
+import { fetchViewModel, sendMutation } from '@/component-library/pages/Account/account-fetch';
 import {
     AccountLimitTarget,
     AccountLoadError,
@@ -44,27 +45,6 @@ import {
     AccountMutationViewModel,
     AccountQuotasViewModel,
 } from '@/lib/infrastructure/data/view-model/account';
-
-/** Fetches a JSON view model and throws it when the request or the view model failed. */
-const fetchViewModel = async <T extends { status: string }>(url: string, init?: RequestInit): Promise<T> => {
-    const res = await fetch(url, init);
-    let vm: T;
-    try {
-        vm = await res.json();
-    } catch {
-        // e.g. a Rucio 500 text/html page
-        throw { status: 'error', errorType: 'unknown', message: res.statusText || 'The server returned an invalid response.' };
-    }
-    if (!res.ok || vm.status !== 'success') throw vm;
-    return vm;
-};
-
-const sendMutation = (path: string, method: 'POST' | 'PUT' | 'DELETE', body: unknown) =>
-    fetchViewModel<AccountMutationViewModel>(`/api/feature/${path}`, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-    });
 
 /** RSE names for the quota dialog's RSE select, read from the streaming list-rses endpoint (NDJSON). */
 const fetchRseNames = async (): Promise<string[]> => {

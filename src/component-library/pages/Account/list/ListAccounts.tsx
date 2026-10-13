@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
 import { HiChevronDown, HiInformationCircle } from 'react-icons/hi2';
 import { HiPlus } from 'react-icons/hi';
 import { cn } from '@/component-library/utils';
@@ -21,6 +22,7 @@ import { isValidAccountName } from '@/lib/core/utils/account-validation';
 import { ListAccountsTable, accountHref } from './ListAccountsTable';
 import { ListAccountsFilters, AccountFilters, ALL_TYPES } from './ListAccountsFilters';
 import { ListAccountsTips } from './ListAccountsTips';
+import { sendMutation } from '../account-fetch';
 
 const PATH = '/accounts';
 
@@ -54,6 +56,7 @@ export const ListAccounts = () => {
     const pathname = usePathname() ?? PATH;
     const searchParams = useSearchParams();
     const { toast } = useToast();
+    const { update: updateSession } = useSession();
     const { check } = usePermissions();
     const manageEnabled = useFeature('accounts.manage');
     const canCreate = check('account', 'lifecycle') && manageEnabled;
@@ -115,13 +118,7 @@ export const ListAccounts = () => {
 
     const createMutation = useMutation({
         mutationFn: async (values: CreateAccountValues) => {
-            const res = await fetch('/api/feature/create-account', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(values),
-            });
-            const vm: CreateAccountViewModel = await res.json();
-            if (!res.ok || vm.status !== 'success') throw vm;
+            await sendMutation<CreateAccountViewModel>('create-account', 'POST', values);
             return values.account;
         },
         onSuccess: account => {
@@ -131,6 +128,8 @@ export const ListAccounts = () => {
         },
         onError: (vm: CreateAccountViewModel) => {
             setCreateError(vm?.message || 'The Rucio server rejected the request.');
+            // A stale admin role in the session corrects itself.
+            if (vm?.errorType === 'permission_denied') void updateSession();
         },
     });
 
