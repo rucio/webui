@@ -108,5 +108,25 @@ describe('account routes: guards', () => {
             const response = await handler(request(name, 'GET', '?account=jdoe'));
             expect(response.status).toBe(200);
         });
+
+        // get-account-info is not flagged by design (the auth flow and the session use it).
+        const FLAGGED_READ_ROUTES = [...ADMIN_ONLY_READ_ROUTES, ...ACCOUNT_READ_ROUTES.filter(([name]) => name !== 'get-account-info')];
+
+        it.each(FLAGGED_READ_ROUTES)('%s returns 404 when accounts is off', async (name, handler) => {
+            asAdmin();
+            isAnyEnabled.mockImplementation(async flags => !flags.includes('accounts'));
+            const response = await handler(request(name, 'GET', '?account=root'));
+            expect(response.status).toBe(404);
+            expect(isAnyEnabled).toHaveBeenCalledWith(expect.arrayContaining(['accounts']));
+            expect(mockExecute).not.toHaveBeenCalled();
+        });
+
+        it('get-account-info stays available when accounts is off', async () => {
+            asAdmin();
+            isAnyEnabled.mockImplementation(async flags => !flags.includes('accounts'));
+            const [, handler] = ACCOUNT_READ_ROUTES.find(([name]) => name === 'get-account-info')!;
+            const response = await handler(request('get-account-info', 'GET', '?account=root'));
+            expect(response.status).toBe(200);
+        });
     });
 });
