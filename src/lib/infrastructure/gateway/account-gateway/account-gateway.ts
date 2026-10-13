@@ -1,20 +1,34 @@
 import {
     AccountAttributeErrorTypesDTO,
+    AccountAttributeListDTO,
     AccountAttributesDTO,
+    AccountGlobalLimitDTO,
+    AccountGlobalUsageDTO,
+    AccountIdentityListDTO,
     AccountInfoDTO,
+    AccountMutationDTO,
     AccountRSELimitDTO,
-    AccountRSEUsageDTO,
     ListAccountRSEUsageDTO,
+    ListAccountsDTO,
     ListAccountsForIdentityDTO,
     TAccountAttributes,
 } from '@/lib/core/dto/account-dto';
+import { AccountLimitLocality, AccountListFilter, AccountUpdateOptions, IdentityType } from '@/lib/core/entity/account';
+import { AccountType } from '@/lib/core/entity/rucio';
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import { inject, injectable } from 'inversify';
 import GATEWAYS from '../../ioc/ioc-symbols-gateway';
+import GetAccountAttributesEndpoint from './endpoints/get-account-attributes-endpoint';
+import GetAccountGlobalLimitsEndpoint from './endpoints/get-account-global-limits-endpoint';
 import GetAccountInfoEndpoint from './endpoints/get-account-info-endpoint';
 import GetAccountRSELimits from './endpoints/get-account-rse-limits-endpoint';
+import ListAccountGlobalUsageEndpoint from './endpoints/list-account-global-usage-endpoint';
+import ListAccountIdentitiesEndpoint from './endpoints/list-account-identities-endpoint';
 import ListAccountRSEUsageEndpoint from './endpoints/list-account-rse-usage-endpoint';
+import ListAccountsEndpoint from './endpoints/list-accounts-endpoint';
+
+const NOT_IMPLEMENTED = 'not implemented';
 
 @injectable()
 export default class RucioAccountGateway implements AccountGatewayOutputPort {
@@ -43,6 +57,107 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
             };
         }
         return errorDTO;
+    }
+
+    async listAccounts(rucioAuthToken: string, filter: AccountListFilter): Promise<ListAccountsDTO> {
+        try {
+            const endpoint: ListAccountsEndpoint = new ListAccountsEndpoint(rucioAuthToken, filter);
+            const errorDTO = await endpoint.fetch();
+            if (!errorDTO) {
+                return { status: 'success', stream: endpoint };
+            }
+            return errorDTO;
+        } catch (error) {
+            return { status: 'error', errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async getAccountAttributes(rucioAuthToken: string, account: string): Promise<AccountAttributeListDTO> {
+        try {
+            return await new GetAccountAttributesEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, attributes: [], errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async listAccountIdentities(rucioAuthToken: string, account: string): Promise<AccountIdentityListDTO> {
+        try {
+            return await new ListAccountIdentitiesEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, identities: [], errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async getAccountGlobalLimits(rucioAuthToken: string, account: string): Promise<AccountGlobalLimitDTO> {
+        try {
+            return await new GetAccountGlobalLimitsEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, limits: {}, errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async listAccountGlobalUsage(rucioAuthToken: string, account: string): Promise<AccountGlobalUsageDTO> {
+        try {
+            return await new ListAccountGlobalUsageEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, usage: [], errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    // Mutations: implemented in a follow-up task.
+    async createAccount(rucioAuthToken: string, account: string, accountType: AccountType, email: string | null): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async updateAccount(rucioAuthToken: string, account: string, options: AccountUpdateOptions): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async deleteAccount(rucioAuthToken: string, account: string): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async addAccountAttribute(rucioAuthToken: string, account: string, key: string, value: string): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async deleteAccountAttribute(rucioAuthToken: string, account: string, key: string): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async addAccountIdentity(
+        rucioAuthToken: string,
+        account: string,
+        identity: string,
+        type: IdentityType,
+        email: string,
+        password?: string,
+        isDefault?: boolean,
+    ): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async deleteAccountIdentity(rucioAuthToken: string, account: string, identity: string, type: IdentityType): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async setAccountLimit(
+        rucioAuthToken: string,
+        account: string,
+        locality: AccountLimitLocality,
+        rseExpression: string,
+        bytes: number,
+    ): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
+    }
+
+    async deleteAccountLimit(
+        rucioAuthToken: string,
+        account: string,
+        locality: AccountLimitLocality,
+        rseExpression: string,
+    ): Promise<AccountMutationDTO> {
+        throw new Error(NOT_IMPLEMENTED);
     }
 
     async listAccountsForIdentity(identity: string, identityType: string, rucioAuthToken: string): Promise<ListAccountsForIdentityDTO> {
@@ -100,7 +215,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
             return Promise.reject(this.generateErrorResponse(AccountAttributeErrorTypesDTO.RUCIO_HOST_NOT_CONFIGURED, account, error.message));
         }
 
-        const accountEndpoint = '/accounts/' + account + '/attr';
+        const accountEndpoint = '/accounts/' + account + '/attr/';
         const url = rucioHost + accountEndpoint;
 
         let response = null;

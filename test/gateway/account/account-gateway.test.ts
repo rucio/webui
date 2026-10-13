@@ -9,7 +9,7 @@ describe('Account Gateway Tests', () => {
     beforeEach(() => {
         fetchMock.doMock();
         fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, req => {
-            if (req.url.endsWith('/accounts/ddmadmin/attr')) {
+            if (req.url.endsWith('/accounts/ddmadmin/attr/')) {
                 const rucioToken = req.headers.get('X-Rucio-Auth-Token');
                 if (rucioToken !== 'rucio-ddmlab-askdjljioj') {
                     return Promise.resolve({
