@@ -23,6 +23,7 @@ const CONTROLLERS = {
     DELETE_ACCOUNT_ATTRIBUTE: Symbol.for('DeleteAccountAttributeController'),
     ADD_ACCOUNT_IDENTITY: Symbol.for('AddAccountIdentityController'),
     DELETE_ACCOUNT_IDENTITY: Symbol.for('DeleteAccountIdentityController'),
+    SET_ACCOUNT_LIMIT: Symbol.for('SetAccountLimitController'),
     LIST_ALL_RSES: Symbol.for('ListAllRSEsController'),
     LIST_DIDS: Symbol.for('ListDIDsController'),
     LIST_DID_CONTENTS: Symbol.for('ListDIDContentsController'),
