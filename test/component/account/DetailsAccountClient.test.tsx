@@ -167,16 +167,55 @@ describe('DetailsAccountClient', () => {
         expect(calls('get-account-info')).toHaveLength(0);
     });
 
-    it('invalidates the whole account scope after a suspend', async () => {
+    it('fetches no identities, attributes or quotas after a suspend', async () => {
+        params = new URLSearchParams('tab=quotas');
         const { client } = renderClient();
+        await waitFor(() => expect(calls('get-account-quotas')).toHaveLength(1));
+        await waitFor(() => expect(calls('list-account-identities')).toHaveLength(1));
+        expect(calls('list-account-attributes')).toHaveLength(1);
+        const remove = jest.spyOn(client, 'removeQueries');
         const invalidate = jest.spyOn(client, 'invalidateQueries');
+
+        routes['get-account-info'] = { body: info(AccountStatus.SUSPENDED) };
         fireEvent.click(within(screen.getByRole('toolbar')).getByRole('button', { name: /Suspend/ }));
         fireEvent.click(await screen.findByRole('button', { name: 'Suspend account' }));
 
-        await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ['account', 'jdoe'] }));
+        expect(await screen.findByText(/This account is suspended/)).toBeInTheDocument();
+        await waitFor(() => expect(toast).toHaveBeenCalledWith(expect.objectContaining({ variant: 'success', title: 'Account suspended' })));
+        await new Promise(r => setTimeout(r, 50));
+        // Rucio answers 404 for the sub-resources of a suspended account: none may be refetched.
+        expect(calls('list-account-identities')).toHaveLength(1);
+        expect(calls('list-account-attributes')).toHaveLength(1);
+        expect(calls('get-account-quotas')).toHaveLength(1);
+        expect(calls('get-account-info')).toHaveLength(1);
+        expect(invalidate).toHaveBeenCalledWith({ queryKey: ['account', 'jdoe', 'info'] });
+        expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ['account', 'jdoe'] });
+        expect(remove).toHaveBeenCalledWith({ queryKey: ['account', 'jdoe', 'identities'] });
+        expect(remove).toHaveBeenCalledWith({ queryKey: ['account', 'jdoe', 'attributes'] });
+        expect(remove).toHaveBeenCalledWith({ queryKey: ['account', 'jdoe', 'quotas'] });
         const [, init] = calls('update-account')[0];
         expect(JSON.parse((init as RequestInit).body as string)).toEqual({ account: 'jdoe', options: { status: 'SUSPENDED' } });
-        expect(toast).toHaveBeenCalledWith(expect.objectContaining({ variant: 'success' }));
+
+        // Reactivating loads the removed sub-resources again.
+        routes['get-account-info'] = { body: info() };
+        fireEvent.click(within(screen.getByRole('toolbar')).getByRole('button', { name: /Reactivate/ }));
+        fireEvent.click(await screen.findByRole('button', { name: 'Reactivate account' }));
+        await waitFor(() => expect(calls('list-account-identities')).toHaveLength(2));
+        await waitFor(() => expect(calls('list-account-attributes')).toHaveLength(2));
+    });
+
+    it('loads the identities and attributes again after a reactivate', async () => {
+        const { client } = renderClient({ initialInfo: info(AccountStatus.SUSPENDED) });
+        expect(await screen.findByText(/This account is suspended/)).toBeInTheDocument();
+        const invalidate = jest.spyOn(client, 'invalidateQueries');
+
+        fireEvent.click(within(screen.getByRole('toolbar')).getByRole('button', { name: /Reactivate/ }));
+        fireEvent.click(await screen.findByRole('button', { name: 'Reactivate account' }));
+
+        await waitFor(() => expect(calls('list-account-identities')).toHaveLength(1));
+        await waitFor(() => expect(calls('list-account-attributes')).toHaveLength(1));
+        expect(invalidate).toHaveBeenCalledWith({ queryKey: ['account', 'jdoe'] });
+        expect(toast).toHaveBeenCalledWith(expect.objectContaining({ variant: 'success', title: 'Account reactivated' }));
     });
 
     it('keeps the dialog open with the server message and refreshes the session on permission_denied', async () => {

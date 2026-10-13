@@ -32,12 +32,37 @@ describe('invalidateForMutation', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('update-account invalidates info for email/type changes and the whole account for status changes', () => {
+    it('update-account invalidates info for email/type changes and for a suspend', () => {
         const { queryClient, spy } = setup();
         invalidateForMutation(queryClient, 'update-account', { account: 'jdoe', options: { email: 'a@b.c' } });
         expect(spy).toHaveBeenLastCalledWith({ queryKey: ['account', 'jdoe', 'info'] });
+        // The sub-resource queries must not be invalidated on suspend: they are still enabled and would
+        // refetch, and Rucio answers 404 for them once the account is suspended.
         invalidateForMutation(queryClient, 'update-account', { account: 'jdoe', options: { status: 'SUSPENDED' } });
-        expect(spy).toHaveBeenLastCalledWith({ queryKey: ['account', 'jdoe'] });
+        expect(spy).toHaveBeenLastCalledWith({ queryKey: ['account', 'jdoe', 'info'] });
+        expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('update-account invalidates the whole account for a reactivate', () => {
+        const { queryClient, spy } = setup();
+        invalidateForMutation(queryClient, 'update-account', { account: 'jdoe', options: { status: 'ACTIVE' } });
+        expect(spy).toHaveBeenCalledWith({ queryKey: ['account', 'jdoe'] });
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('resolves once the invalidations have settled', async () => {
+        const { queryClient, spy } = setup();
+        let settle: () => void = () => {};
+        spy.mockImplementationOnce(() => new Promise<void>(r => (settle = r)));
+        let done = false;
+        const pending = invalidateForMutation(queryClient, 'update-account', { account: 'jdoe', options: { status: 'SUSPENDED' } }).then(() => {
+            done = true;
+        });
+        await Promise.resolve();
+        expect(done).toBe(false);
+        settle();
+        await pending;
+        expect(done).toBe(true);
     });
 
     it.each([
