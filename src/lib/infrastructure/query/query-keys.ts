@@ -23,4 +23,20 @@ export const QUERY_KEYS = {
 
     /** BigPanDA link for a DID's PanDA task (ATLAS only), used by PandaTaskRow */
     PANDA_TASK_LINK: ['panda-task-link'] as const,
+
+    /** Root of every account query (info, attributes, identities, quotas); see `accountKeys` */
+    ACCOUNT: ['account'] as const,
 } as const;
+
+/**
+ * Account query keys. They nest, so React Query prefix matching gives the scopes:
+ * `detail(a)` covers all of one account's data, `all` covers every account.
+ */
+export const accountKeys = {
+    all: QUERY_KEYS.ACCOUNT,
+    detail: (account: string) => [...QUERY_KEYS.ACCOUNT, account] as const,
+    info: (account: string) => [...QUERY_KEYS.ACCOUNT, account, 'info'] as const,
+    attributes: (account: string) => [...QUERY_KEYS.ACCOUNT, account, 'attributes'] as const,
+    identities: (account: string) => [...QUERY_KEYS.ACCOUNT, account, 'identities'] as const,
+    quotas: (account: string) => [...QUERY_KEYS.ACCOUNT, account, 'quotas'] as const,
+};
