@@ -8,7 +8,7 @@ import { FieldSelect } from '@/component-library/features/mutations/FieldSelect'
 import { Input, Textarea } from '@/component-library/atoms/form/input';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
-import { IdentityType } from '@/lib/core/entity/account';
+import { IdentityType, IDENTITY_TYPES } from '@/lib/core/entity/account';
 import { IDENTITY_TYPE_HINTS, isValidEmail } from '@/lib/core/utils/account-validation';
 
 type SelectableIdentityType = keyof typeof IDENTITY_TYPE_HINTS;
@@ -32,7 +32,7 @@ export interface AddIdentityDialogProps {
     error?: string;
 }
 
-const TYPES = Object.keys(IDENTITY_TYPE_HINTS) as SelectableIdentityType[];
+const TYPES: readonly SelectableIdentityType[] = IDENTITY_TYPES;
 
 /** Dialog for linking a new identity to an account. */
 export const AddIdentityDialog: React.FC<AddIdentityDialogProps> = ({ open, onOpenChange, account, onSubmit, loading = false, error }) => {

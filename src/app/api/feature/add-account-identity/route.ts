@@ -9,13 +9,13 @@ import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastr
 import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 import { withAdmin } from '@/lib/infrastructure/adapters/with-admin';
 import { ACCOUNT_NAME_REGEX, isValidEmail } from '@/lib/core/utils/account-validation';
-import { IdentityType } from '@/lib/core/entity/account';
+import { IdentityType, IDENTITY_TYPES } from '@/lib/core/entity/account';
 
 const BodySchema = z
     .object({
         account: z.string().regex(ACCOUNT_NAME_REGEX, 'Invalid account name'),
         identity: z.string().trim().min(1, 'Identity is required').max(4096),
-        authType: z.enum(['X509', 'GSS', 'USERPASS', 'SSH', 'SAML', 'OIDC']),
+        authType: z.enum(IDENTITY_TYPES),
         email: z.string().refine(isValidEmail, 'Invalid email'),
         password: z.string().min(1).optional(),
         isDefault: z.boolean().optional(),
