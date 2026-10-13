@@ -27,6 +27,10 @@ export interface SetAccountLimitDialogProps {
     account: string;
     /** RSE options for local limits. */
     rses: string[];
+    /** The RSE options are still loading. */
+    rsesLoading?: boolean;
+    /** Why the RSE options could not be loaded. */
+    rsesError?: string;
     /** Edit mode: locality and RSE are locked. */
     initial?: SetAccountLimitValues;
     onSubmit: (values: SetAccountLimitValues) => void;
@@ -49,6 +53,8 @@ export const SetAccountLimitDialog: React.FC<SetAccountLimitDialogProps> = ({
     onOpenChange,
     account,
     rses,
+    rsesLoading = false,
+    rsesError,
     initial,
     onSubmit,
     loading = false,
@@ -85,6 +91,8 @@ export const SetAccountLimitDialog: React.FC<SetAccountLimitDialogProps> = ({
     const numeric = Number(amount);
     const amountError = !unlimited && amount !== '' && (!Number.isFinite(numeric) || numeric < 0) ? 'Enter a number of zero or more' : undefined;
     const invalid = !rseExpression.trim() || !!amountError || (!unlimited && amount === '');
+    // Explain an empty RSE select instead of leaving it silently empty.
+    const rseHint = isEdit || rsesError ? undefined : rsesLoading ? 'Loading RSEs...' : rses.length === 0 ? 'No RSEs found.' : undefined;
 
     const handleSubmit = () => {
         if (invalid) return;
@@ -138,9 +146,10 @@ export const SetAccountLimitDialog: React.FC<SetAccountLimitDialogProps> = ({
                     </div>
                 </fieldset>
                 {locality === 'local' ? (
-                    <FormField id="limit-rse" label="RSE" required>
+                    <FormField id="limit-rse" label="RSE" required hint={rseHint} error={isEdit ? undefined : rsesError}>
                         <FieldSelect
                             id="limit-rse"
+                            aria-describedby={describedBy('limit-rse', { hint: rseHint, error: isEdit ? undefined : rsesError })}
                             value={rseExpression}
                             disabled={isEdit}
                             onValueChange={setRseExpression}

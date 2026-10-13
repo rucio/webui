@@ -65,3 +65,11 @@ export const ValidationErrors: Story = {
 export const Loading: Story = { render: () => <Wrapper loading /> };
 
 export const ServerError: Story = { render: () => <Wrapper error="This RSE expression matches no RSE." /> };
+
+export const RsesLoading: Story = { render: () => <Wrapper rses={[]} rsesLoading openInitially /> };
+
+export const RsesError: Story = {
+    render: () => (
+        <Wrapper rses={[]} rsesError="Could not load the RSE list. Try again later, or set a global limit with an RSE expression." openInitially />
+    ),
+};
