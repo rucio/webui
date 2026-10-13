@@ -17,7 +17,8 @@ const json = (status: number, body: unknown = '', exceptionClass?: string) => ({
     headers: { 'Content-Type': 'application/json', ...(exceptionClass ? { ExceptionClass: exceptionClass } : {}) },
     body: typeof body === 'string' ? body : JSON.stringify(body),
 });
-const failure = (status: number, exceptionClass: string) => json(status, { ExceptionMessage: 'nope', ExceptionClass: exceptionClass }, exceptionClass);
+const failure = (status: number, exceptionClass: string) =>
+    json(status, { ExceptionMessage: 'nope', ExceptionClass: exceptionClass }, exceptionClass);
 
 describe('Feature: UpdateAccountAttribute', () => {
     beforeEach(() => {
