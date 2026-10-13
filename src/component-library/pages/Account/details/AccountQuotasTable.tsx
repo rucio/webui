@@ -183,6 +183,7 @@ export const AccountQuotasTable = ({ locality, quotas, canManage, onEdit, onDele
                                           {
                                               label: 'Edit',
                                               icon: 'edit',
+                                              variant: 'neutral',
                                               disabled: busy,
                                               onClick: () => handlers.current.onEdit?.({ ...target, bytes: row.bytesLimit as number }),
                                           },
