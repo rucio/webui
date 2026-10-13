@@ -18,6 +18,7 @@ const USECASE_FACTORY = {
     LIST_ACCOUNT_IDENTITIES: Symbol.for('Factory<ListAccountIdentitiesUseCase>'),
     LIST_ACCOUNT_ATTRIBUTES: Symbol.for('Factory<ListAccountAttributesUseCase>'),
     CREATE_ACCOUNT: Symbol.for('Factory<CreateAccountUseCase>'),
+    DELETE_ACCOUNT: Symbol.for('Factory<DeleteAccountUseCase>'),
     UPDATE_ACCOUNT: Symbol.for('Factory<UpdateAccountUseCase>'),
     LIST_ALL_RSES: Symbol.for('Factory<ListAllRSEsUseCase>'),
     LIST_DIDS: Symbol.for('Factory<ListDIDsUseCase>'),
