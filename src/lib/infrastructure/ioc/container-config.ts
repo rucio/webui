@@ -62,6 +62,7 @@ import CreateAccountFeature from './features/create-account-feature';
 import DeleteAccountFeature from './features/delete-account-feature';
 import UpdateAccountFeature from './features/update-account-feature';
 import AddAccountAttributeFeature from './features/add-account-attribute-feature';
+import DeleteAccountAttributeFeature from './features/delete-account-attribute-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
 import ListRulesPendingApprovalFeature from '@/lib/infrastructure/ioc/features/list-rules-pending-approval-feature';
@@ -179,6 +180,7 @@ const accountManagementFeatures = [
     new DeleteAccountFeature(appContainer),
     new UpdateAccountFeature(appContainer),
     new AddAccountAttributeFeature(appContainer),
+    new DeleteAccountAttributeFeature(appContainer),
 ];
 loadFeaturesSync(appContainer, accountManagementFeatures);
 
