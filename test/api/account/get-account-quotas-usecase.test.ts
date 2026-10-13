@@ -81,14 +81,19 @@ describe('GetAccountQuotasUseCase', () => {
         ]);
     });
 
-    it('returns the error of a failing call and no partial data', async () => {
+    it('returns the error of a failing call and no partial data, and releases the usage stream', async () => {
+        const usage = usageDTO([usageRow('XRD1', 5)]);
+        const destroy = jest.spyOn(usage.stream as Readable, 'destroy');
         const { responses, errors } = await run({
             limits: limitsDTO({ XRD1: 10 }),
+            usage,
             globalLimits: { status: 'error', account: 'jdoe', limits: {}, errorCode: 404, errorName: 'Not Found', errorMessage: 'no such account' },
         });
         expect(responses).toHaveLength(0);
         expect(errors).toHaveLength(1);
         expect(errors[0]).toMatchObject({ status: 'error', code: 404 });
+        // the already-opened usage stream is never consumed, so it must be destroyed
+        expect(destroy).toHaveBeenCalled();
     });
 
     it('returns an error when the usage stream fails', async () => {
