@@ -23,4 +23,10 @@ describe('DeleteAccountDialog', () => {
         expect(screen.getByText(/soft deleted/)).toBeInTheDocument();
         noEmDash();
     });
+
+    it('states that existing sessions keep working until their tokens expire', () => {
+        render(<DeleteAccountDialog open onOpenChange={jest.fn()} account="jdoe" onSubmit={jest.fn()} />);
+        expect(screen.getByText(/Existing sessions are not ended and keep working until their tokens expire/)).toBeInTheDocument();
+        noEmDash();
+    });
 });
