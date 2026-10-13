@@ -54,6 +54,7 @@ export const DetailsAccountQuotas = ({ quotas, canManage, busy = false, onSetLim
                                             canManage={canManage}
                                             onEdit={onSetLimit}
                                             onDelete={onDeleteLimit}
+                                            busy={busy}
                                         />
                                     </div>
                                 )}

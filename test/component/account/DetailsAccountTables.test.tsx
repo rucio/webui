@@ -57,11 +57,13 @@ describe('quota cells', () => {
     });
 
     it('shows what is left, or how far over the quota the account is', () => {
-        const { rerender } = render(<QuotaRemainingCell data={{ bytesLimit: 2e12, bytesRemaining: 1e12 }} />);
+        const { rerender } = render(<QuotaRemainingCell data={{ bytesLimit: 2e12, bytesUsed: 1e12, bytesRemaining: 1e12 }} />);
         expect(screen.getByText('1 TB')).toBeInTheDocument();
-        rerender(<QuotaRemainingCell data={{ bytesLimit: 1e12, bytesRemaining: -2e11 }} />);
+        rerender(<QuotaRemainingCell data={{ bytesLimit: 1e12, bytesUsed: 1.2e12, bytesRemaining: -2e11 }} />);
         expect(screen.getByText('Over by 200 GB')).toBeInTheDocument();
-        rerender(<QuotaRemainingCell data={{ bytesLimit: -1, bytesRemaining: null }} />);
+        rerender(<QuotaRemainingCell data={{ bytesLimit: 2e12, bytesUsed: 5e11, bytesRemaining: null }} />);
+        expect(screen.getByText('1.5 TB')).toBeInTheDocument();
+        rerender(<QuotaRemainingCell data={{ bytesLimit: -1, bytesUsed: 0, bytesRemaining: null }} />);
         expect(screen.getByText('Unlimited')).toBeInTheDocument();
     });
 

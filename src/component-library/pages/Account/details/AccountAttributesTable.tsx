@@ -32,10 +32,12 @@ export interface AccountAttributesTableProps {
     /** Show the Delete action (admins with accounts.manage). */
     canManage: boolean;
     onDelete?: (attribute: AccountAttribute) => void;
+    /** A mutation is running: row actions are disabled. */
+    busy?: boolean;
 }
 
 /** Account attributes, modelled on DetailsRSEAttributesTable, plus a Delete action. */
-export const AccountAttributesTable = ({ attributes, canManage, onDelete }: AccountAttributesTableProps) => {
+export const AccountAttributesTable = ({ attributes, canManage, onDelete, busy = false }: AccountAttributesTableProps) => {
     const tableRef = useRef<AgGridReact<AccountAttribute>>(null);
     // Keep the column definitions stable while the callback changes identity on every render.
     const onDeleteRef = useRef(onDelete);
@@ -76,6 +78,7 @@ export const AccountAttributesTable = ({ attributes, canManage, onDelete }: Acco
                                           label: 'Delete',
                                           icon: 'delete',
                                           variant: 'error',
+                                          disabled: busy,
                                           onClick: () => params.data && onDeleteRef.current?.(params.data),
                                       },
                                   ]}
@@ -85,7 +88,8 @@ export const AccountAttributesTable = ({ attributes, canManage, onDelete }: Acco
                   ]
                 : []),
         ],
-        [canManage],
+        // busy is a dependency so AG Grid re-renders the action cells when it changes
+        [canManage, busy],
     );
 
     return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={attributes} />;
