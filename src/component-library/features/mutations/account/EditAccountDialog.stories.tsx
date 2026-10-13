@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { within, userEvent } from 'storybook/test';
 import { EditAccountDialog, EditAccountDialogProps } from './EditAccountDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
@@ -25,8 +26,8 @@ type Story = StoryObj<typeof EditAccountDialog>;
 
 type WrapperProps = Partial<Omit<EditAccountDialogProps, 'open' | 'onOpenChange'>>;
 
-const Wrapper = (props: WrapperProps) => {
-    const [open, setOpen] = useState(false);
+const Wrapper = ({ openInitially = false, ...props }: WrapperProps & { openInitially?: boolean }) => {
+    const [open, setOpen] = useState(openInitially);
     return (
         <>
             <Button variant="default" onClick={() => setOpen(true)}>
@@ -45,8 +46,16 @@ const Wrapper = (props: WrapperProps) => {
 };
 export const Default: Story = { render: () => <Wrapper /> };
 
-// Enter an invalid email such as "nope" to see the inline error.
-export const ValidationErrors: Story = { render: () => <Wrapper /> };
+/** The play function enters invalid input so the inline error is visible. */
+export const ValidationErrors: Story = {
+    render: () => <Wrapper openInitially />,
+    play: async () => {
+        const body = within(document.body);
+        const email = await body.findByLabelText(/Email/);
+        await userEvent.clear(email);
+        await userEvent.type(email, 'nope');
+    },
+};
 
 export const Loading: Story = { render: () => <Wrapper loading /> };
 

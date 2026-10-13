@@ -4,6 +4,7 @@ const EM_DASH = String.fromCharCode(0x2014);
 const noEmDash = () => expect(document.body.textContent).not.toContain(EM_DASH);
 
 import { EditAccountDialog } from '@/component-library/features/mutations/account/EditAccountDialog';
+import { pick } from './radix-select';
 import { AccountType } from '@/lib/core/entity/rucio';
 
 const setup = () => {
@@ -31,6 +32,7 @@ describe('EditAccountDialog', () => {
     it('submits only changed fields', () => {
         const onSubmit = setup();
         fireEvent.change(screen.getByLabelText(/Email/), { target: { value: 'new@b.org' } });
+        expect(screen.getByText('Email: old@b.org -> new@b.org')).toBeInTheDocument();
         fireEvent.click(save());
         expect(onSubmit).toHaveBeenCalledWith({ email: 'new@b.org' });
     });
@@ -42,9 +44,10 @@ describe('EditAccountDialog', () => {
         expect(onSubmit).toHaveBeenCalledWith({ email: null });
     });
 
-    it('submits a changed type', () => {
+    it('submits a changed type and shows the summary', async () => {
         const onSubmit = setup();
-        fireEvent.change(screen.getByLabelText(/Type/), { target: { value: AccountType.SERVICE } });
+        await pick(/Type/, 'Service');
+        expect(screen.getByText('Type: User -> Service')).toBeInTheDocument();
         fireEvent.click(save());
         expect(onSubmit).toHaveBeenCalledWith({ accountType: AccountType.SERVICE });
     });

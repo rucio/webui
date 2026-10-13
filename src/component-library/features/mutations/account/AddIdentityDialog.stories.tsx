@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { within, userEvent } from 'storybook/test';
 import { AddIdentityDialog, AddIdentityDialogProps } from './AddIdentityDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
@@ -24,8 +25,8 @@ type Story = StoryObj<typeof AddIdentityDialog>;
 
 type WrapperProps = Partial<Omit<AddIdentityDialogProps, 'open' | 'onOpenChange'>>;
 
-const Wrapper = (props: WrapperProps) => {
-    const [open, setOpen] = useState(false);
+const Wrapper = ({ openInitially = false, ...props }: WrapperProps & { openInitially?: boolean }) => {
+    const [open, setOpen] = useState(openInitially);
     return (
         <>
             <Button variant="default" onClick={() => setOpen(true)}>
@@ -37,8 +38,18 @@ const Wrapper = (props: WrapperProps) => {
 };
 export const Default: Story = { render: () => <Wrapper /> };
 
-// Choose "Username and password" and enter different passwords to see the mismatch error.
-export const UserpassMismatch: Story = { render: () => <Wrapper /> };
+/** The play function enters invalid input so the inline error is visible. */
+export const UserpassMismatch: Story = {
+    render: () => <Wrapper openInitially />,
+    play: async () => {
+        const body = within(document.body);
+        await userEvent.click(await body.findByLabelText(/^Type/));
+        await userEvent.click(await body.findByRole('option', { name: 'Username and password' }));
+        await userEvent.type(body.getByLabelText(/^Identity/), 'jdoe');
+        await userEvent.type(body.getByLabelText(/^Password/), 'fake-password');
+        await userEvent.type(body.getByLabelText(/Confirm password/), 'different');
+    },
+};
 
 // Choose "SSH key" to get the multi-line field.
 export const SshKey: Story = { render: () => <Wrapper /> };

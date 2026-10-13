@@ -34,13 +34,3 @@ export const FormField: React.FC<FormFieldProps> = ({ id, label, required, error
         )}
     </div>
 );
-
-/** Native select styled like the Input atom; keeps dialogs simple and fully keyboard and test friendly. */
-export const selectClassName = [
-    'flex w-full h-10 rounded-md border px-3 py-2',
-    'border-neutral-900/10 dark:border-neutral-100/10',
-    'bg-neutral-100 dark:bg-neutral-800',
-    'text-neutral-900 dark:text-neutral-100',
-    'focus:outline-hidden focus:border-brand-500 focus:shadow-brand',
-    'disabled:cursor-not-allowed disabled:opacity-50',
-].join(' ');

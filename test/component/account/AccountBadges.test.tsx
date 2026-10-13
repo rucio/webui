@@ -40,9 +40,9 @@ describe('AccountStatusBadge', () => {
 
 describe('AccountTypeBadge', () => {
     const cases: [AccountType, string, V][] = [
-        [AccountType.USER, 'User', 'default'],
-        [AccountType.GROUP, 'Group', 'info'],
-        [AccountType.SERVICE, 'Service', 'warning'],
+        [AccountType.USER, 'User', 'info'],
+        [AccountType.GROUP, 'Group', 'neutral'],
+        [AccountType.SERVICE, 'Service', 'default'],
         [AccountType.UNKNOWN, 'Unknown', 'neutral'],
     ];
     it.each(cases)('renders %s', (value, label, variant) => {

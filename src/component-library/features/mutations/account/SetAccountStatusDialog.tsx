@@ -46,8 +46,8 @@ export const SetAccountStatusDialog: React.FC<SetAccountStatusDialogProps> = ({
                 {error && <Alert variant="error" message={error} />}
                 <p className="text-sm text-neutral-900 dark:text-neutral-100">
                     {suspend
-                        ? 'A suspended account cannot authenticate or make changes. Its data and rules are kept.'
-                        : 'The account will be able to authenticate and make changes again.'}
+                        ? 'Suspending hides the identities, attributes and quotas of this account. Existing sessions keep working until their tokens expire.'
+                        : 'The identities, attributes and quotas of this account become visible again.'}
                 </p>
             </div>
         </MutationDialog>

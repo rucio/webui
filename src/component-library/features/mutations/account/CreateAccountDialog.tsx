@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MutationDialog } from '@/component-library/features/mutations/MutationDialog';
-import { FormField, describedBy, selectClassName } from '@/component-library/features/mutations/FormField';
+import { FormField, describedBy } from '@/component-library/features/mutations/FormField';
+import { FieldSelect } from '@/component-library/features/mutations/FieldSelect';
 import { Input } from '@/component-library/atoms/form/input';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { AccountType } from '@/lib/core/entity/rucio';
@@ -76,18 +77,12 @@ export const CreateAccountDialog: React.FC<CreateAccountDialogProps> = ({ open, 
                     />
                 </FormField>
                 <FormField id="create-account-type" label="Type" required>
-                    <select
+                    <FieldSelect
                         id="create-account-type"
-                        className={selectClassName}
                         value={accountType}
-                        onChange={e => setAccountType(e.target.value as AccountType)}
-                    >
-                        {CREATABLE_ACCOUNT_TYPES.map(t => (
-                            <option key={t} value={t}>
-                                {t.charAt(0) + t.slice(1).toLowerCase()}
-                            </option>
-                        ))}
-                    </select>
+                        onValueChange={v => setAccountType(v as AccountType)}
+                        options={CREATABLE_ACCOUNT_TYPES.map(t => ({ value: t, label: t.charAt(0) + t.slice(1).toLowerCase() }))}
+                    />
                 </FormField>
                 <FormField id="create-account-email" label="Email" error={emailError}>
                     <Input

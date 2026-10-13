@@ -5,9 +5,9 @@ import { AccountType } from '@/lib/core/entity/rucio';
 type Variant = NonNullable<BadgeProps['variant']>;
 
 export const ACCOUNT_TYPE_BADGES: Record<AccountType, { label: string; variant: Variant }> = {
-    [AccountType.USER]: { label: 'User', variant: 'default' },
-    [AccountType.GROUP]: { label: 'Group', variant: 'info' },
-    [AccountType.SERVICE]: { label: 'Service', variant: 'warning' },
+    [AccountType.USER]: { label: 'User', variant: 'info' },
+    [AccountType.GROUP]: { label: 'Group', variant: 'neutral' },
+    [AccountType.SERVICE]: { label: 'Service', variant: 'default' },
     [AccountType.UNKNOWN]: { label: 'Unknown', variant: 'neutral' },
 };
 

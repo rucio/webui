@@ -4,6 +4,7 @@ const EM_DASH = String.fromCharCode(0x2014);
 const noEmDash = () => expect(document.body.textContent).not.toContain(EM_DASH);
 
 import { CreateAccountDialog } from '@/component-library/features/mutations/account/CreateAccountDialog';
+import { pick } from './radix-select';
 import { AccountType } from '@/lib/core/entity/rucio';
 
 const setup = (props = {}) => {
@@ -33,10 +34,10 @@ describe('CreateAccountDialog', () => {
         expect(onSubmit).toHaveBeenCalledWith({ account: 'jdoe', accountType: AccountType.USER, email: null });
     });
 
-    it('submits the chosen type and email', () => {
+    it('submits the chosen type and email', async () => {
         const onSubmit = setup();
         type('Name', 'grp');
-        type('Type', AccountType.GROUP);
+        await pick(/Type/, 'Group');
         type('Email', 'a@b.org');
         fireEvent.click(submit());
         expect(onSubmit).toHaveBeenCalledWith({ account: 'grp', accountType: AccountType.GROUP, email: 'a@b.org' });
