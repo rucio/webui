@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { within, userEvent } from 'storybook/test';
 import { SetAccountLimitDialog, SetAccountLimitDialogProps } from './SetAccountLimitDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
@@ -24,8 +25,8 @@ type Story = StoryObj<typeof SetAccountLimitDialog>;
 
 type WrapperProps = Partial<Omit<SetAccountLimitDialogProps, 'open' | 'onOpenChange'>>;
 
-const Wrapper = (props: WrapperProps) => {
-    const [open, setOpen] = useState(false);
+const Wrapper = ({ openInitially = false, ...props }: WrapperProps & { openInitially?: boolean }) => {
+    const [open, setOpen] = useState(openInitially);
     return (
         <>
             <Button variant="default" onClick={() => setOpen(true)}>
@@ -52,8 +53,14 @@ export const EditUnlimited: Story = {
     render: () => <Wrapper initial={{ locality: 'global', rseExpression: 'tier=1', bytes: -1 }} />,
 };
 
-// Enter a negative amount to see the inline error.
-export const ValidationErrors: Story = { render: () => <Wrapper /> };
+/** The play function enters invalid input so the inline error is visible. */
+export const ValidationErrors: Story = {
+    render: () => <Wrapper openInitially />,
+    play: async () => {
+        const body = within(document.body);
+        await userEvent.type(await body.findByLabelText(/^Limit/), '-5');
+    },
+};
 
 export const Loading: Story = { render: () => <Wrapper loading /> };
 

@@ -20,6 +20,7 @@ describe('DeleteAccountDialog', () => {
         expect(btn).toBeEnabled();
         fireEvent.click(btn);
         expect(onSubmit).toHaveBeenCalledWith({ account: 'jdoe' });
+        expect(screen.getByText(/soft deleted/)).toBeInTheDocument();
         noEmDash();
     });
 });

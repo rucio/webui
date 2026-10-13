@@ -45,7 +45,7 @@ export const DeleteAccountLimitDialog: React.FC<DeleteAccountLimitDialogProps> =
     >
         <div className="space-y-4">
             {error && <Alert variant="error" message={error} />}
-            <Alert variant="warning" message="The account will fall back to having no quota here." />
+            <Alert variant="warning" message="Usage is kept. Only the quota is removed." />
             <div className="rounded-md bg-neutral-100 dark:bg-neutral-800 p-3 space-y-2">
                 <div className="flex items-center justify-between">
                     <span className="text-sm text-neutral-600 dark:text-neutral-400">Scope</span>
