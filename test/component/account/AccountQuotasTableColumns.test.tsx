@@ -6,7 +6,7 @@ import {
     quotaState,
     quotaUsagePercentage,
 } from '@/component-library/pages/Account/details/AccountQuotasTable';
-import { byteSizeComparator, byteSizeFilterParams } from '@/component-library/features/table/utils/byte-size';
+import { byteSizeComparator, byteSizeFilterParams, normalizedByteSizeComparator } from '@/component-library/features/table/utils/byte-size';
 
 const handlers = { current: {} };
 const cols = (locality: 'local' | 'global', canManage = true) => buildQuotaColumnDefs({ locality, canManage, busy: false, handlers }) as any[];
@@ -59,9 +59,10 @@ describe('byte size columns', () => {
 
     it('uses the shared comparator and byte size filter params on Quota, Used and Remaining', () => {
         for (const name of ['Quota', 'Used', 'Remaining']) {
-            expect(byName(defs, name).comparator).toBe(byteSizeComparator);
             expect(byName(defs, name).filterParams).toBe(byteSizeFilterParams);
         }
+        expect(byName(defs, 'Quota').comparator).toBe(byteSizeComparator);
+        expect(byName(defs, 'Remaining').comparator).toBe(normalizedByteSizeComparator);
     });
 
     it('sorts Quota with Unlimited largest and No quota last, in both directions', () => {
@@ -78,6 +79,17 @@ describe('byte size columns', () => {
         const pick = (r: any) => getter(col, r);
         expect(sortAsc(col, rows, pick).map(r => getter(col, r))).toEqual([-30, 70, Infinity, null]);
         expect(sortDesc(col, rows, pick).map(r => getter(col, r))).toEqual([Infinity, 70, -30, null]);
+    });
+
+    it('keeps over by 1 byte distinct from Unlimited on Remaining', () => {
+        const col = byName(defs, 'Remaining');
+        const overByOne = mk(100, 101, -1);
+        expect(col.filterValueGetter({ data: overByOne })).toBe(-1);
+        expect(col.filterValueGetter({ data: mk(100, 101, null) })).toBe(-1);
+        const rows = [mk(null), overByOne, mk(-1), mk(100, 50, 50)];
+        const pick = (r: any) => getter(col, r);
+        expect(sortAsc(col, rows, pick).map(pick)).toEqual([-1, 50, Infinity, null]);
+        expect(sortDesc(col, rows, pick).map(pick)).toEqual([Infinity, 50, -1, null]);
     });
 
     it('sorts Used in both directions', () => {

@@ -68,6 +68,15 @@ export const byteSizeComparator = (
     isDescending = false,
 ): number => compareNullsLast(byteSizeValue(a), byteSizeValue(b), isDescending);
 
+/** Comparator for values that are already comparable (Infinity for unlimited, negative numbers allowed): null last in both directions. */
+export const normalizedByteSizeComparator = (
+    a: number | null | undefined,
+    b: number | null | undefined,
+    _nodeA?: unknown,
+    _nodeB?: unknown,
+    isDescending = false,
+): number => compareNullsLast(a, b, isDescending);
+
 /** Params for agNumberColumnFilter on a byte column: users type "1 TB" instead of 1000000000000. */
 export const byteSizeFilterParams: INumberFilterParams = {
     numberParser: (text: string | null) => (text === null ? null : parseByteSize(text)),
@@ -80,10 +89,11 @@ export const byteSizeFilterParams: INumberFilterParams = {
 
 interface ByteSizeColumnOptions<T> {
     headerName: string;
-    /** Raw bytes of a row: -1 is Unlimited, null is not applicable. */
+    /** Raw bytes of a row: -1 is Unlimited, null is not applicable. With `normalized`, the value is used as is (Infinity for unlimited, negatives allowed). */
     getValue: (row: T | undefined) => number | null | undefined;
     cellRenderer?: any;
     valueFormatter?: (params: { value: number | null }) => string;
+    normalized?: boolean;
     colId?: string;
     flex?: number;
     minWidth?: number;
@@ -95,6 +105,7 @@ export const byteSizeColumn = <T>({
     getValue,
     cellRenderer,
     valueFormatter,
+    normalized = false,
     colId,
     flex = 1,
     minWidth = 110,
@@ -106,8 +117,8 @@ export const byteSizeColumn = <T>({
     cellRenderer,
     valueFormatter,
     valueGetter: (p: { data?: T }) => getValue(p.data) ?? null,
-    comparator: byteSizeComparator,
-    filterValueGetter: (p: { data?: T }) => byteSizeValue(getValue(p.data)),
+    comparator: normalized ? normalizedByteSizeComparator : byteSizeComparator,
+    filterValueGetter: (p: { data?: T }) => (normalized ? getValue(p.data) ?? null : byteSizeValue(getValue(p.data))),
     filter: 'agNumberColumnFilter',
     filterParams: byteSizeFilterParams,
 });
