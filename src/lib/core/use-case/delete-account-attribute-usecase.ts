@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { checkAccountName, checkAttribute, toValidationError } from '@/lib/core/utils/account-validation';
 
 import {
     DeleteAccountAttributeError,
@@ -27,7 +28,8 @@ export default class DeleteAccountAttributeUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<DeleteAccountAttributeRequest>): DeleteAccountAttributeError | undefined {
-        return undefined;
+        const { account, key } = requestModel;
+        return toValidationError<DeleteAccountAttributeError>(checkAccountName(account), checkAttribute('key', key));
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<DeleteAccountAttributeRequest>): Promise<AccountMutationDTO> {

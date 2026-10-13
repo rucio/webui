@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { checkAccountName, checkUpdateOptions, toValidationError } from '@/lib/core/utils/account-validation';
 
 import { UpdateAccountError, UpdateAccountRequest, UpdateAccountResponse } from '@/lib/core/usecase-models/update-account-usecase-models';
 import { UpdateAccountInputPort, type UpdateAccountOutputPort } from '@/lib/core/port/primary/update-account-ports';
@@ -18,7 +19,7 @@ export default class UpdateAccountUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<UpdateAccountRequest>): UpdateAccountError | undefined {
-        return undefined;
+        return toValidationError<UpdateAccountError>(checkAccountName(requestModel.account), checkUpdateOptions(requestModel.options));
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<UpdateAccountRequest>): Promise<AccountMutationDTO> {

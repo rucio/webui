@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { checkAccountName, checkAccountType, checkOptionalEmail, toValidationError } from '@/lib/core/utils/account-validation';
 
 import { CreateAccountError, CreateAccountRequest, CreateAccountResponse } from '@/lib/core/usecase-models/create-account-usecase-models';
 import { CreateAccountInputPort, type CreateAccountOutputPort } from '@/lib/core/port/primary/create-account-ports';
@@ -21,7 +22,8 @@ export default class CreateAccountUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<CreateAccountRequest>): CreateAccountError | undefined {
-        return undefined;
+        const { account, accountType, email } = requestModel;
+        return toValidationError<CreateAccountError>(checkAccountName(account), checkAccountType(accountType), checkOptionalEmail(email));
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<CreateAccountRequest>): Promise<CreateAccountDTO> {
