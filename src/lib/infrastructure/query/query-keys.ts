@@ -24,6 +24,9 @@ export const QUERY_KEYS = {
     /** BigPanDA link for a DID's PanDA task (ATLAS only), used by PandaTaskRow */
     PANDA_TASK_LINK: ['panda-task-link'] as const,
 
+    /** Names of every RSE, loaded when the account quota dialog opens */
+    RSE_NAMES: ['rse-names'] as const,
+
     /** Root of every account query (info, attributes, identities, quotas); see `accountKeys` */
     ACCOUNT: ['account'] as const,
 } as const;
