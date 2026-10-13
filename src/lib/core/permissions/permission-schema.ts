@@ -31,8 +31,9 @@ export type RucioPermissions = {
          * Actions on the account resource:
          * - list: access the admin-only accounts list page
          * - view: view an account page (admins any account, users only their own)
-         * - manage: edit account attributes, identities and quotas
-         * - lifecycle: create, suspend, reactivate and delete accounts
+         * - manage: edit an account (email, type), suspend and reactivate it, and manage its
+         *   attributes, identities and quotas
+         * - lifecycle: create and delete accounts
          */
         action: 'list' | 'view' | 'manage' | 'lifecycle';
     };
