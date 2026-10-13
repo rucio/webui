@@ -13,6 +13,12 @@ jest.mock('next/navigation', () => ({
     useSearchParams: () => params,
 }));
 
+const updateSession = jest.fn();
+jest.mock('next-auth/react', () => ({
+    __esModule: true,
+    useSession: () => ({ data: { user: { rucioAccount: 'root' } }, status: 'authenticated', update: updateSession }),
+}));
+
 const toast = jest.fn();
 jest.mock('@/lib/infrastructure/hooks/useToast', () => ({ useToast: () => ({ toast, dismiss: jest.fn() }) }));
 
@@ -175,5 +181,41 @@ describe('ListAccounts', () => {
         fireEvent.click(screen.getAllByRole('button', { name: 'Create account' }).pop()!);
         expect(await screen.findByText('Name taken')).toBeInTheDocument();
         expect(push).not.toHaveBeenCalled();
+    });
+
+    it('shows a readable error when the server answers with a non-JSON body', async () => {
+        (global.fetch as any) = jest.fn().mockResolvedValue({
+            ok: false,
+            status: 500,
+            statusText: 'Internal Server Error',
+            json: async () => {
+                throw new SyntaxError('Unexpected token < in JSON');
+            },
+        });
+        renderPage();
+        fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
+        fireEvent.change(screen.getByLabelText(/Name/, { selector: '#create-account-name' }), { target: { value: 'newacc' } });
+        fireEvent.click(screen.getAllByRole('button', { name: 'Create account' }).pop()!);
+        expect(await screen.findByText('Internal Server Error')).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+        expect(push).not.toHaveBeenCalled();
+    });
+
+    it('refreshes the session on permission_denied', async () => {
+        (global.fetch as any) = jest.fn().mockResolvedValue({
+            ok: false,
+            status: 401,
+            json: async () => ({
+                status: 'error',
+                errorType: 'permission_denied',
+                message: 'Only the root account can create or delete accounts on this Rucio server.',
+            }),
+        });
+        renderPage();
+        fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
+        fireEvent.change(screen.getByLabelText(/Name/, { selector: '#create-account-name' }), { target: { value: 'newacc' } });
+        fireEvent.click(screen.getAllByRole('button', { name: 'Create account' }).pop()!);
+        expect(await screen.findByText(/Only the root account can create/)).toBeInTheDocument();
+        expect(updateSession).toHaveBeenCalled();
     });
 });
