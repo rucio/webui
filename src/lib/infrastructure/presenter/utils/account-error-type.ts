@@ -27,6 +27,10 @@ export type AccountOperation =
 
 /** User-facing message; falls back to the Rucio message. No em dashes. */
 export function toAccountErrorMessage(type: AccountErrorType, op: AccountOperation, fallback: string): string {
+    // The update use case words the rollback outcome itself; keep it even for a permission error on the add.
+    if (op === 'update-account-attribute' && (fallback.includes('previous value was restored') || fallback.includes('is now missing'))) {
+        return fallback;
+    }
     if (type === 'permission_denied' && (op === 'create-account' || op === 'delete-account')) {
         return 'Only the root account can create or delete accounts on this Rucio server.';
     }

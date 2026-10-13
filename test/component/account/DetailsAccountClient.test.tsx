@@ -372,6 +372,8 @@ describe('DetailsAccountClient', () => {
             fireEvent.click(dialog.getByRole('button', { name: 'Save' }));
             expect(await screen.findByText('The new value could not be saved. The previous value was restored.')).toBeInTheDocument();
             expect(screen.getByRole('dialog')).toBeInTheDocument();
+            // the delete may have gone through, so the attributes are fetched again
+            await waitFor(() => expect(calls('list-account-attributes')).toHaveLength(2));
         });
 
         it('has no Edit button for a non-admin', async () => {
