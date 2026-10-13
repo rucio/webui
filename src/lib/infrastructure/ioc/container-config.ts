@@ -58,6 +58,7 @@ import ListAccountsFeature from './features/list-accounts-feature';
 import GetAccountQuotasFeature from './features/get-account-quotas-feature';
 import ListAccountIdentitiesFeature from './features/list-account-identities-feature';
 import ListAccountAttributesFeature from './features/list-account-attributes-feature';
+import CreateAccountFeature from './features/create-account-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
 import ListRulesPendingApprovalFeature from '@/lib/infrastructure/ioc/features/list-rules-pending-approval-feature';
@@ -171,6 +172,7 @@ const accountManagementFeatures = [
     new ListAccountAttributesFeature(appContainer),
     new ListAccountIdentitiesFeature(appContainer),
     new GetAccountQuotasFeature(appContainer),
+    new CreateAccountFeature(appContainer),
 ];
 loadFeaturesSync(appContainer, accountManagementFeatures);
 
