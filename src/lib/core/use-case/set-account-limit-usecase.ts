@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { checkAccountName, checkRseExpression, checkBytes, toValidationError } from '@/lib/core/utils/account-validation';
 
 import { SetAccountLimitError, SetAccountLimitRequest, SetAccountLimitResponse } from '@/lib/core/usecase-models/set-account-limit-usecase-models';
 import { SetAccountLimitInputPort, type SetAccountLimitOutputPort } from '@/lib/core/port/primary/set-account-limit-ports';
@@ -23,7 +24,8 @@ export default class SetAccountLimitUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<SetAccountLimitRequest>): SetAccountLimitError | undefined {
-        return undefined;
+        const { account, rseExpression, bytes } = requestModel;
+        return toValidationError<SetAccountLimitError>(checkAccountName(account), checkRseExpression(rseExpression), checkBytes(bytes));
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<SetAccountLimitRequest>): Promise<AccountMutationDTO> {

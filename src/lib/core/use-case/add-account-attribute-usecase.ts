@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { checkAccountName, checkAttribute, toValidationError } from '@/lib/core/utils/account-validation';
 
 import {
     AddAccountAttributeError,
@@ -27,7 +28,8 @@ export default class AddAccountAttributeUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<AddAccountAttributeRequest>): AddAccountAttributeError | undefined {
-        return undefined;
+        const { account, key, value } = requestModel;
+        return toValidationError<AddAccountAttributeError>(checkAccountName(account), checkAttribute('key', key), checkAttribute('value', value));
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<AddAccountAttributeRequest>): Promise<AccountMutationDTO> {

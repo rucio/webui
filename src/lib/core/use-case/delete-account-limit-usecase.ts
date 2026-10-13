@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { checkAccountName, checkRseExpression, toValidationError } from '@/lib/core/utils/account-validation';
 
 import {
     DeleteAccountLimitError,
@@ -27,7 +28,8 @@ export default class DeleteAccountLimitUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<DeleteAccountLimitRequest>): DeleteAccountLimitError | undefined {
-        return undefined;
+        const { account, rseExpression } = requestModel;
+        return toValidationError<DeleteAccountLimitError>(checkAccountName(account), checkRseExpression(rseExpression));
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<DeleteAccountLimitRequest>): Promise<AccountMutationDTO> {

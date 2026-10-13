@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
+import { checkAccountName, checkIdentity, checkEmail, toValidationError } from '@/lib/core/utils/account-validation';
 
 import {
     AddAccountIdentityError,
@@ -27,7 +28,9 @@ export default class AddAccountIdentityUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<AddAccountIdentityRequest>): AddAccountIdentityError | undefined {
-        return undefined;
+        // No password check: a USERPASS identity whose username already exists in Rucio needs none.
+        const { account, identity, authType, email } = requestModel;
+        return toValidationError<AddAccountIdentityError>(checkAccountName(account), checkIdentity(identity, authType), checkEmail(email));
     }
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<AddAccountIdentityRequest>): Promise<AccountMutationDTO> {
