@@ -121,4 +121,12 @@ describe('UpdateAccountAttributeUseCase', () => {
         expect(errors[0]).toMatchObject({ code: 403, name: 'AccessDenied', message: 'boom' });
         expect(gateway.addAccountAttribute).not.toHaveBeenCalled();
     });
+
+    it('restores the previous value when the add throws', async () => {
+        const add = jest.fn().mockRejectedValueOnce(new Error('network')).mockResolvedValueOnce(ok);
+        const { errors, run } = setup({ addAccountAttribute: add });
+        await run();
+        expect(add).toHaveBeenNthCalledWith(2, 't', 'jdoe', 'k1', 'old');
+        expect(errors[0].message).toContain('previous value was restored');
+    });
 });

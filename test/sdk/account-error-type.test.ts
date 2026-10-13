@@ -46,6 +46,14 @@ describe('toAccountErrorMessage', () => {
         expect(message).not.toContain(EM_DASH);
     });
 
+    it.each([
+        'The new value could not be saved. The previous value was restored.',
+        'The new value could not be saved and the previous value could not be restored. The attribute k1 is now missing.',
+    ])('keeps the rollback outcome for a permission error on the add: %s', message => {
+        expect(toAccountErrorMessage('permission_denied', 'update-account-attribute', message)).toBe(message);
+        expect(toAccountErrorMessage('unauthorized', 'update-account-attribute', message)).toBe(message);
+    });
+
     it('uses a generic message when the fallback is empty', () => {
         expect(toAccountErrorMessage('unknown', 'read', '')).toBe('Something went wrong. Please try again.');
     });
