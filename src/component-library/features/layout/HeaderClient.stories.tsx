@@ -4,7 +4,7 @@ import { SessionProvider } from 'next-auth/react';
 import { PermixProvider } from 'permix/react';
 import { HeaderClient } from './HeaderClient';
 import { Role, User } from '@/lib/core/entity/auth-models';
-import { permix, adminRuleTemplate } from '@/lib/core/permissions';
+import { permix, adminTemplate } from '@/lib/core/permissions';
 import { TipsProvider } from '@/lib/infrastructure/hooks/useTips';
 import { SessionMonitorContext } from '@/lib/infrastructure/auth/session-monitor';
 
@@ -142,7 +142,7 @@ export const WithMainContent: Story = {
 
 /**
  * AdminRole — demonstrates the 'Approve Rules' nav entry that is only visible
- * to admin users. The `loaders` hook calls permix.setup(adminRuleTemplate())
+ * to admin users. The `loaders` hook calls permix.setup(adminTemplate())
  * before the story renders so the PermixProvider reflects admin permissions
  * without mutating the singleton during render (which could cause cross-story
  * state bleed if story order changes).
@@ -150,7 +150,7 @@ export const WithMainContent: Story = {
 export const AdminRole: Story = {
     loaders: [
         async () => {
-            permix.setup(adminRuleTemplate());
+            permix.setup(adminTemplate());
             return {};
         },
     ],

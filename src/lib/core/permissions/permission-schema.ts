@@ -25,6 +25,17 @@ export type RucioPermissions = {
          */
         action: 'approve' | 'update' | 'comment' | 'set_infinite_lifetime' | 'viewApprovalQueue';
     };
+    account: {
+        dataType: { account: string };
+        /**
+         * Actions on the account resource:
+         * - list: access the admin-only accounts list page
+         * - view: view an account page (admins any account, users only their own)
+         * - manage: edit account attributes, identities and quotas
+         * - lifecycle: create, suspend, reactivate and delete accounts
+         */
+        action: 'list' | 'view' | 'manage' | 'lifecycle';
+    };
 };
 
 /**
@@ -32,3 +43,6 @@ export type RucioPermissions = {
  * Created once at module level; configured at runtime via permix.setup().
  */
 export const permissionSchema = createPermix<RucioPermissions>();
+
+/** Full rule set accepted by permix.setup(); per-entity templates return a slice of it. */
+export type PermissionRules = Parameters<typeof permissionSchema.setup>[0];
