@@ -421,6 +421,12 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                         onOpenChange={onSetOpenChange}
                         account={account}
                         rses={rseNamesQuery.data ?? []}
+                        rsesLoading={rseNamesQuery.isLoading}
+                        rsesError={
+                            rseNamesQuery.isError
+                                ? 'Could not load the RSE list. Try again later, or set a global limit with an RSE expression.'
+                                : undefined
+                        }
                         initial={dialog?.kind === 'set-limit' ? dialog.initial : undefined}
                         onSubmit={values => setLimitMutation.mutate({ account, ...values })}
                         loading={setLimitMutation.isPending}
