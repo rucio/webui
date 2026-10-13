@@ -16,7 +16,7 @@ async function globalSetup(config: FullConfig) {
 
     // Launch browser
     const browser = await chromium.launch();
-    const context = await browser.newContext();
+    const context = await browser.newContext({ baseURL });
     const page = await context.newPage();
 
     try {

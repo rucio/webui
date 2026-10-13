@@ -19,7 +19,7 @@ export async function login(page: Page, credentials: LoginCredentials): Promise<
     await page.goto('/auth/login');
 
     // Wait for the login form to be visible
-    await expect(page.locator('text=Rucio')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('button:has-text("Userpass")')).toBeVisible({ timeout: 15000 });
 
     // Click on the "Userpass" button to show the login form
     await page.locator('button:has-text("Userpass")').click();

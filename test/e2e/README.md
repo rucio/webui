@@ -53,6 +53,11 @@ npm run test:e2e:report   # Show test report
 - Create new rules with form validation
 - View rule details
 
+### Accounts (account/)
+- Admin: list and filter accounts, command palette entries, create/suspend/reactivate/delete an account, identities, attributes and quotas (each run creates and deletes a throwaway `e2e-acct-*` account)
+- Non-admin: read-only own account page, redirects and 403 on mutations
+- Needs an admin and a non-admin user: set `E2E_ADMIN_USERNAME`/`E2E_ADMIN_PASSWORD`/`E2E_ADMIN_ACCOUNT` and `E2E_NONADMIN_USERNAME`/`E2E_NONADMIN_PASSWORD`/`E2E_NONADMIN_ACCOUNT` (the admin falls back to `E2E_TEST_*`)
+
 ## Configuration
 
 Tests are configured in `playwright.config.ts`:
