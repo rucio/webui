@@ -108,7 +108,10 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
                         {isActive ? 'Suspend' : 'Reactivate'}
                     </Button>
                 )}
-                <Link href={`/rules?account=${encodeURIComponent(info.account)}`} className={buttonVariants({ variant: 'neutral', size: 'sm' })}>
+                <Link
+                    href={`/rules?account=${encodeURIComponent(info.account)}&autoSearch=true`}
+                    className={buttonVariants({ variant: 'neutral', size: 'sm' })}
+                >
                     View rules
                     <HiOutlineExternalLink className="ml-1.5 h-4 w-4" aria-hidden="true" />
                 </Link>
