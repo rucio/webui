@@ -10,6 +10,7 @@ const baseMap: FeatureFlagMap = {
     subscriptions: true,
     rses: true,
     accounts: true,
+    'accounts.manage': true,
     'dids.metadata': false,
     'dids.mutate': true,
     'dids.ami_tags': false,
