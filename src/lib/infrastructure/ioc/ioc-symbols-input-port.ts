@@ -22,6 +22,7 @@ const INPUT_PORT = {
     DELETE_ACCOUNT_ATTRIBUTE: Symbol.for('DeleteAccountAttributeInputPort'),
     ADD_ACCOUNT_IDENTITY: Symbol.for('AddAccountIdentityInputPort'),
     DELETE_ACCOUNT_IDENTITY: Symbol.for('DeleteAccountIdentityInputPort'),
+    DELETE_ACCOUNT_LIMIT: Symbol.for('DeleteAccountLimitInputPort'),
     SET_ACCOUNT_LIMIT: Symbol.for('SetAccountLimitInputPort'),
     LIST_ALL_RSES: Symbol.for('ListAllRSEsInputPort'),
     LIST_DIDS: Symbol.for('ListDIDsInputPort'),

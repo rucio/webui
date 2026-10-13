@@ -24,6 +24,7 @@ const USECASE_FACTORY = {
     DELETE_ACCOUNT_ATTRIBUTE: Symbol.for('Factory<DeleteAccountAttributeUseCase>'),
     ADD_ACCOUNT_IDENTITY: Symbol.for('Factory<AddAccountIdentityUseCase>'),
     DELETE_ACCOUNT_IDENTITY: Symbol.for('Factory<DeleteAccountIdentityUseCase>'),
+    DELETE_ACCOUNT_LIMIT: Symbol.for('Factory<DeleteAccountLimitUseCase>'),
     SET_ACCOUNT_LIMIT: Symbol.for('Factory<SetAccountLimitUseCase>'),
     LIST_ALL_RSES: Symbol.for('Factory<ListAllRSEsUseCase>'),
     LIST_DIDS: Symbol.for('Factory<ListDIDsUseCase>'),
