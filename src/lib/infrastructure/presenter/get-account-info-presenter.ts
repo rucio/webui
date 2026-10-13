@@ -18,6 +18,7 @@ export default class GetAccountInfoPresenter extends BasePresenter<GetAccountInf
         const viewModel: AccountInfoViewModel = generateEmptyAccountInfoViewModel();
         // gateway errors
         const errorCode = errorModel.code || 500;
+        // name carries Rucio's ExceptionClass via handleCommonGatewayErrors
         const errorType = toAccountErrorType(errorCode, errorModel.name);
         viewModel.errorType = errorType;
         viewModel.message = toAccountErrorMessage(errorType, 'read', errorModel.message || errorModel.name);
