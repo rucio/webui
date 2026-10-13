@@ -515,6 +515,24 @@ Based on an **8px grid system** for consistency and alignment:
 </div>
 ```
 
+### **Table container heights**
+
+Tables size to the viewport so they use the available space on any screen. The grid fills its container (`RegularTable` and `StreamedTable` use AG Grid `domLayout: "normal"`), so the container sets the height.
+
+| Context | Container height | Reference |
+| --- | --- | --- |
+| List pages | `h-[calc(100vh-24rem)]` | `ListRule.tsx`, `ListAccounts.tsx` |
+| Detail pages and detail tabs | `h-[calc(100vh-20rem)]` | `DetailsRule.tsx`, `DetailsRSE.tsx`, `DetailsAccountIdentities.tsx` |
+| Secondary table stacked under a primary one | `h-[calc(50vh-10rem)]` plus a min height | `DetailsAccountQuotas.tsx` (global quotas) |
+
+```tsx
+// Primary table on a detail page
+<div className="rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden h-[calc(100vh-20rem)]">
+
+// Secondary table stacked below it
+<div className="rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden h-[calc(50vh-10rem)] min-h-48">
+```
+
 ### **Padding & Margin Guidelines**
 
 **Component Padding**
