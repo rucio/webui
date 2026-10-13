@@ -13,7 +13,7 @@ describe('X509Login API Test', () => {
         fetchMock.doMock();
 
         fetchMock.mockIf(/^https?:\/\/rucio-host.com.*$/, req => {
-            if (req.url.endsWith('/accounts/root/attr')) {
+            if (req.url.endsWith('/accounts/root/attr/')) {
                 const rucioToken = req.headers.get('X-Rucio-Auth-Token');
                 if (rucioToken !== 'rucio-/C=GB/O=Isode Limited/CN=Steve Kille-askdjljioj') {
                     return Promise.resolve({
