@@ -1,6 +1,8 @@
 import { isValidAccountName, isValidAccountAttribute, isValidEmail, toAttributeValueString, IDENTITY_TYPE_HINTS } from './account-validation';
 import { IdentityType } from '@/lib/core/entity/account';
 
+const EM_DASH = String.fromCharCode(0x2014);
+
 describe('account validation', () => {
     it.each(['jdoe', 'j-doe_2', 'a', 'a'.repeat(25)])('accepts account name %s', n => expect(isValidAccountName(n)).toBe(true));
     it.each(['JDoe', 'j.doe', '', 'a'.repeat(26), 'j doe'])('rejects account name "%s"', n => expect(isValidAccountName(n)).toBe(false));
@@ -32,7 +34,7 @@ describe('account validation', () => {
         ];
         REAL_TYPES.forEach(t => {
             expect(IDENTITY_TYPE_HINTS[t]).toBeDefined();
-            expect(JSON.stringify(IDENTITY_TYPE_HINTS[t])).not.toContain('—');
+            expect(JSON.stringify(IDENTITY_TYPE_HINTS[t])).not.toContain(EM_DASH);
         });
     });
 });
