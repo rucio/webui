@@ -44,6 +44,7 @@ export const formatFileSize = (bytes: number): string => {
 /**
  * Formats a size in base 10 (1 TB = 10^12 bytes), the convention Rucio uses for quotas
  * and the one the quota dialogs use for input. `formatFileSize` is base 2.
+ * Temporary until rucio/webui#856 switches the shared formatter to base 10.
  */
 export const formatDecimalFileSize = (bytes: number): string => {
     if (isNaN(bytes)) return DEFAULT_VALUE;
