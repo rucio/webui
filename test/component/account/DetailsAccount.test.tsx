@@ -47,7 +47,7 @@ describe('DetailsAccount', () => {
         expect(bar.getByRole('button', { name: /Edit/ })).toBeInTheDocument();
         expect(bar.getByRole('button', { name: /Suspend/ })).toBeInTheDocument();
         expect(bar.getByRole('button', { name: /Delete/ })).toBeInTheDocument();
-        expect(bar.getByRole('link', { name: /View rules/ })).toHaveAttribute('href', '/rules?account=jdoe');
+        expect(bar.getByRole('link', { name: /View rules/ })).toHaveAttribute('href', '/rules?account=jdoe&autoSearch=true');
         const tabs = screen.getAllByRole('tab').map(t => t.textContent);
         expect(tabs).toEqual(['Overview', 'Identities (2)', 'Attributes (2)', 'Quotas and usage']);
     });
