@@ -7,6 +7,15 @@ import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 import { IdentityType } from '@/lib/core/entity/account';
 import { pick } from './radix-select';
 
+// AG Grid does not render in jsdom: render the actions column of each row instead.
+type ActionColumn = { colId?: string; cellRenderer?: (params: { data: unknown }) => React.ReactNode };
+jest.mock('@/component-library/features/table/RegularTable/RegularTable', () => ({
+    RegularTable: (props: { columnDefs: ActionColumn[]; rowData: unknown[] }) => {
+        const actions = props.columnDefs.find(c => c.colId === 'actions');
+        return <>{actions?.cellRenderer && props.rowData.map((data, i) => <div key={i}>{actions.cellRenderer!({ data })}</div>)}</>;
+    },
+}));
+
 const replace = jest.fn();
 const push = jest.fn();
 let params = new URLSearchParams();
@@ -81,6 +90,7 @@ beforeEach(() => {
         'list-account-attributes': { body: { status: 'success', attributes: [{ key: 'country-ch', value: 'user' }] } },
         'get-account-quotas': { body: { status: 'success', local: [], global: [] } },
         'update-account': { body: { status: 'success' } },
+        'update-account-attribute': { body: { status: 'success' } },
         'delete-account': { body: { status: 'success' } },
     };
     (global as unknown as { fetch: unknown }).fetch = fetchMock;
@@ -310,6 +320,67 @@ describe('DetailsAccountClient', () => {
         fetchMock.mockImplementationOnce(() => new Promise(() => {})); // list-rses stays pending
         fireEvent.click(await screen.findByRole('button', { name: /Set quota/ }));
         expect(await screen.findByText('Loading RSEs...')).toBeInTheDocument();
+    });
+
+    describe('editing an attribute', () => {
+        const openEdit = async () => {
+            params = new URLSearchParams('tab=attributes');
+            renderClient();
+            await waitFor(() => expect(calls('list-account-attributes')).toHaveLength(1));
+            // the toolbar has an account level Edit too
+            const rowEdit = await waitFor(() => {
+                const found = screen.getAllByRole('button', { name: 'Edit' }).filter(b => !screen.getByRole('toolbar').contains(b));
+                expect(found).toHaveLength(1);
+                return found[0];
+            });
+            fireEvent.click(rowEdit);
+            return within(await screen.findByRole('dialog'));
+        };
+
+        it('shows the delete and create warning and the locked key, prefilled with the current value', async () => {
+            const dialog = await openEdit();
+            expect(dialog.getByText(/Saving deletes the attribute and creates it again/)).toBeInTheDocument();
+            expect(dialog.getByLabelText('Key')).toHaveValue('country-ch');
+            expect(dialog.getByLabelText('Key')).toBeDisabled();
+            expect(dialog.getByLabelText(/^Value/)).toHaveValue('user');
+            expect(dialog.getByRole('button', { name: 'Save' })).toBeDisabled();
+        });
+
+        it('sends PUT update-account-attribute, then toasts and refetches the attributes', async () => {
+            const dialog = await openEdit();
+            fireEvent.change(dialog.getByLabelText(/^Value/), { target: { value: 'group' } });
+            fireEvent.click(dialog.getByRole('button', { name: 'Save' }));
+            await waitFor(() => expect(calls('update-account-attribute')).toHaveLength(1));
+            const [, init] = calls('update-account-attribute')[0] as unknown as [string, RequestInit];
+            expect(init.method).toBe('PUT');
+            expect(JSON.parse(init.body as string)).toEqual({ account: 'jdoe', key: 'country-ch', value: 'group' });
+            await waitFor(() => expect(toast).toHaveBeenCalledWith(expect.objectContaining({ title: 'Attribute updated' })));
+            await waitFor(() => expect(calls('list-account-attributes')).toHaveLength(2));
+        });
+
+        it('keeps the dialog open with the server message when the update fails', async () => {
+            routes['update-account-attribute'] = {
+                status: 500,
+                body: {
+                    status: 'error',
+                    errorType: 'unknown',
+                    message: 'The new value could not be saved. The previous value was restored.',
+                },
+            };
+            const dialog = await openEdit();
+            fireEvent.change(dialog.getByLabelText(/^Value/), { target: { value: 'group' } });
+            fireEvent.click(dialog.getByRole('button', { name: 'Save' }));
+            expect(await screen.findByText('The new value could not be saved. The previous value was restored.')).toBeInTheDocument();
+            expect(screen.getByRole('dialog')).toBeInTheDocument();
+        });
+
+        it('has no Edit button for a non-admin', async () => {
+            isAdmin = false;
+            params = new URLSearchParams('tab=attributes');
+            renderClient({ sessionAccount: 'jdoe' });
+            await waitFor(() => expect(calls('list-account-attributes')).toHaveLength(1));
+            expect(screen.queryByRole('button', { name: 'Edit' })).not.toBeInTheDocument();
+        });
     });
 
     it('shows no mutation actions to a non-admin', async () => {
