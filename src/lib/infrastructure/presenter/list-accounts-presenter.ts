@@ -30,6 +30,7 @@ export default class ListAccountsPresenter
 
     private errorViewModel(errorModel: ListAccountsError): AccountListItemViewModel {
         const viewModel = generateEmptyAccountListItemViewModel();
+        // name carries Rucio's ExceptionClass via handleCommonGatewayErrors
         const errorType = toAccountErrorType(errorModel.code ? errorModel.code : 500, errorModel.name);
         viewModel.errorType = errorType;
         viewModel.message = toAccountErrorMessage(errorType, 'read', errorModel.message ? errorModel.message.toString() : errorModel.name);
