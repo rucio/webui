@@ -201,6 +201,8 @@ export const buildQuotaColumnDefs = ({ locality, canManage, busy, handlers }: Qu
         headerName: 'Remaining',
         colId: 'remaining',
         getValue: quotaRemainingBytes,
+        // Negative remaining is over quota, so -1 must not be read as Unlimited.
+        normalized: true,
         cellRenderer: QuotaRemainingCell,
         minWidth: 130,
     }),
