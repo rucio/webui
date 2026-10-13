@@ -13,6 +13,7 @@ export enum TipCategory {
     RULES = 'rules',
     RSES = 'rses',
     SUBSCRIPTIONS = 'subscriptions',
+    ACCOUNTS = 'accounts',
     NAVIGATION = 'navigation',
     ADVANCED = 'advanced',
 }
@@ -26,6 +27,7 @@ export const TipCategoryLabels: Record<TipCategory, string> = {
     [TipCategory.RULES]: 'Rules',
     [TipCategory.RSES]: 'Storage Elements (RSEs)',
     [TipCategory.SUBSCRIPTIONS]: 'Subscriptions',
+    [TipCategory.ACCOUNTS]: 'Accounts',
     [TipCategory.NAVIGATION]: 'Navigation',
     [TipCategory.ADVANCED]: 'Advanced',
 };

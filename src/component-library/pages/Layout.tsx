@@ -28,6 +28,8 @@ function getPageTitle(pathname: string): string {
     // Map common routes to titles
     const routeMap: Record<string, string> = {
         dashboard: 'Dashboard',
+        accounts: 'Accounts',
+        account: 'Account',
         did: 'DIDs',
         rule: 'Rules',
         rse: 'RSEs',
