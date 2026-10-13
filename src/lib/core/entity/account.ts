@@ -10,6 +10,16 @@ export enum IdentityType {
     UNKNOWN = 'UNKNOWN',
 }
 
+/** The identity types Rucio accepts (mirrors IdentityType in lib/rucio/db/sqla/constants.py), without UNKNOWN. */
+export const IDENTITY_TYPES = [
+    IdentityType.X509,
+    IdentityType.GSS,
+    IdentityType.USERPASS,
+    IdentityType.SSH,
+    IdentityType.SAML,
+    IdentityType.OIDC,
+] as const;
+
 export interface AccountListItem {
     account: string;
     accountType: AccountType;
