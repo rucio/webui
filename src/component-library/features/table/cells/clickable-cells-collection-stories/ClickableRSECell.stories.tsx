@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ClickableRSECell } from '../DifferentClickableCells';
+import { ClickableRSECell } from '../ClickableCellsCollection';
 
 const meta: Meta<typeof ClickableRSECell> = {
     title: 'Components/Table/ClickableRSECell',

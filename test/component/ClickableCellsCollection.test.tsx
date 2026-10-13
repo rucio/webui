@@ -3,7 +3,7 @@ import {
     ClickableRSECell,
     ClickableRSEExpressionCell,
     ClickableRuleIdCell,
-} from '@/component-library/features/table/cells/DifferentClickableCells';
+} from '@/component-library/features/table/cells/ClickableCellsCollection';
 import { render, screen } from '@testing-library/react';
 
 const spy = jest.spyOn(window, 'open').mockImplementation(() => null);

@@ -16,7 +16,7 @@ import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner
 import { HiExternalLink } from 'react-icons/hi';
 import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { ClickableRSECell, ClickableDIDCell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSECell, ClickableDIDCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;

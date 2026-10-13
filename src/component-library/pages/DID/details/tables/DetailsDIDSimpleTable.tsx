@@ -10,7 +10,7 @@ import { StreamedTable } from '@/component-library/features/table/StreamedTable/
 import { DIDType } from '@/lib/core/entity/rucio';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { ClickableDIDCell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableDIDCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type DetailsDIDSimpleTableProps = {
     streamingHook: UseStreamReader<DIDViewModel>;

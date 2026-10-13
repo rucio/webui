@@ -10,7 +10,7 @@ import { ReplicaState } from '@/lib/core/entity/rucio';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
     let percentage: number = 0;

@@ -5,7 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { RSEAccountUsageLimitViewModel } from '@/lib/infrastructure/data/view-model/rse';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
-import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type StageSummaryStageTableProps = {
     rowData: RSEAccountUsageLimitViewModel[];

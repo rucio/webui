@@ -10,7 +10,7 @@ import { GridReadyEvent } from 'ag-grid-community';
 import { RSETypeBadge } from '@/component-library/features/badges/RSE/RSETypeBadge';
 import { RSEType } from '@/lib/core/entity/rucio';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type ListRSETableProps = {
     streamingHook: UseStreamReader<RSEViewModel>;

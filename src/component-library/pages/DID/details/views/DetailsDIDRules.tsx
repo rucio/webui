@@ -14,7 +14,7 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { ClickableRSEExpressionCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSEExpressionCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;

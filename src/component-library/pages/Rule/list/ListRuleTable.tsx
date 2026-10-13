@@ -13,7 +13,7 @@ import { RuleState } from '@/lib/core/entity/rucio';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { ClickableRSEExpressionCell, ClickableDIDCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSEExpressionCell, ClickableDIDCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
