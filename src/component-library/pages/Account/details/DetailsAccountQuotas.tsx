@@ -17,9 +17,9 @@ export interface DetailsAccountQuotasProps {
     onDeleteLimit?: (target: AccountLimitTarget) => void;
 }
 
-const SECTIONS: { locality: AccountLimitLocality; title: string; empty: string }[] = [
-    { locality: 'local', title: 'Local (per RSE)', empty: 'No local quotas or usage.' },
-    { locality: 'global', title: 'Global (per RSE expression)', empty: 'No global quotas.' },
+const SECTIONS: { locality: AccountLimitLocality; title: string; empty: string; height: string }[] = [
+    { locality: 'local', title: 'Local (per RSE)', empty: 'No local quotas or usage.', height: 'h-[calc(100vh-20rem)]' },
+    { locality: 'global', title: 'Global (per RSE expression)', empty: 'No global quotas.', height: 'h-[calc(50vh-10rem)] min-h-48' },
 ];
 
 export const DetailsAccountQuotas = ({ quotas, canManage, busy = false, onSetLimit, onDeleteLimit }: DetailsAccountQuotasProps) => {
@@ -37,7 +37,7 @@ export const DetailsAccountQuotas = ({ quotas, canManage, busy = false, onSetLim
             <AccountResourceState resource={quotas} label="quotas" />
             {data && (
                 <>
-                    {SECTIONS.map(({ locality, title, empty }) => {
+                    {SECTIONS.map(({ locality, title, empty, height }) => {
                         const rows = data[locality];
                         return (
                             <section key={locality} className="flex flex-col gap-3" aria-label={title}>
@@ -47,7 +47,9 @@ export const DetailsAccountQuotas = ({ quotas, canManage, busy = false, onSetLim
                                         <span>{empty}</span>
                                     </InfoField>
                                 ) : (
-                                    <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-80">
+                                    <div
+                                        className={`rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden ${height}`}
+                                    >
                                         <AccountQuotasTable
                                             locality={locality}
                                             quotas={rows}

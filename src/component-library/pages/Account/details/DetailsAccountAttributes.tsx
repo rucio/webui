@@ -34,7 +34,7 @@ export const DetailsAccountAttributes = ({ attributes, canManage, busy = false, 
                     <span>No attributes.</span>
                 </InfoField>
             ) : (
-                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[28rem]">
+                <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[calc(100vh-20rem)]">
                     <AccountAttributesTable attributes={attributes.data} canManage={canManage} onEdit={onEdit} onDelete={onDelete} busy={busy} />
                 </div>
             ))}
