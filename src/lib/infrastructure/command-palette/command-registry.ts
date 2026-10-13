@@ -13,8 +13,11 @@ import {
     PlusIcon,
     QuestionMarkCircleIcon,
     ExclamationTriangleIcon,
+    UserCircleIcon,
+    UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { CommandItem } from '@/lib/core/entity/command-palette';
+import { ACCOUNT_NAME_REGEX } from '@/lib/core/utils/account-validation';
 import { DIDType } from '@/lib/core/entity/rucio';
 import {
     buildDIDSearchUrl,
@@ -32,9 +35,11 @@ import {
  *   Must be resolved by the caller (e.g. via `usePermissions().check`) so this function
  *   remains pure and works before PermixProvider has run setup().
  * @param isAdmin - Whether the current user has the admin role. Gates the
- *   suspicious-replicas entry (admin-only surface).
+ *   suspicious-replicas and accounts entries (admin-only surfaces).
+ * @param accountsEnabled - Whether the `accounts` feature flag is on. Gates the
+ *   accounts and my-account entries.
  */
-export function getNavigationCommands(account?: string, canViewApprovalQueue?: boolean, isAdmin?: boolean): CommandItem[] {
+export function getNavigationCommands(account?: string, canViewApprovalQueue?: boolean, isAdmin?: boolean, accountsEnabled?: boolean): CommandItem[] {
     const commands: CommandItem[] = [
         {
             id: 'nav-dashboard',
@@ -96,7 +101,31 @@ export function getNavigationCommands(account?: string, canViewApprovalQueue?: b
         },
     ];
 
+    if (accountsEnabled && account) {
+        commands.push({
+            id: 'nav-my-account',
+            type: 'navigation',
+            title: 'My account',
+            description: 'View your account, identities, attributes and quotas',
+            icon: UserCircleIcon,
+            url: `/account/${encodeURIComponent(account)}`,
+            keywords: ['my', 'account', 'profile', 'identity', 'attribute', 'quota'],
+        });
+    }
+
     // Admin-only navigation surfaces
+    if (isAdmin && accountsEnabled) {
+        commands.push({
+            id: 'nav-accounts',
+            type: 'navigation',
+            title: 'Accounts',
+            description: 'Browse and manage Rucio accounts',
+            icon: UserGroupIcon,
+            url: '/accounts',
+            keywords: ['account', 'identity', 'user', 'attribute', 'quota', 'admin'],
+        });
+    }
+
     if (isAdmin) {
         commands.push({
             id: 'nav-suspicious-replicas',
@@ -115,8 +144,10 @@ export function getNavigationCommands(account?: string, canViewApprovalQueue?: b
 /**
  * Get action commands
  * These are contextual actions that may adapt based on search query
+ * @param options.isAdmin - Whether the current user is an admin (gates "Open account")
+ * @param options.accountsEnabled - Whether the `accounts` feature flag is on
  */
-export function getActionCommands(searchQuery: string = ''): CommandItem[] {
+export function getActionCommands(searchQuery: string = '', options: { isAdmin?: boolean; accountsEnabled?: boolean } = {}): CommandItem[] {
     const actions: CommandItem[] = [];
 
     const searchType = detectSearchType(searchQuery);
@@ -194,6 +225,18 @@ export function getActionCommands(searchQuery: string = ''): CommandItem[] {
         url: '/rule/create',
         keywords: ['create', 'new', 'rule', 'replicate'],
     });
+
+    if (options.isAdmin && options.accountsEnabled && ACCOUNT_NAME_REGEX.test(searchQuery)) {
+        actions.push({
+            id: 'action-open-account',
+            type: 'action',
+            title: `Open account '${searchQuery}'`,
+            description: 'Navigate to account details',
+            icon: UserCircleIcon,
+            url: `/account/${encodeURIComponent(searchQuery)}`,
+            keywords: ['account', 'open', 'goto', 'view'],
+        });
+    }
 
     return actions;
 }
