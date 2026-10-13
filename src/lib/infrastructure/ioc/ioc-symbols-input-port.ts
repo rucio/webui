@@ -20,6 +20,7 @@ const INPUT_PORT = {
     UPDATE_ACCOUNT: Symbol.for('UpdateAccountInputPort'),
     ADD_ACCOUNT_ATTRIBUTE: Symbol.for('AddAccountAttributeInputPort'),
     DELETE_ACCOUNT_ATTRIBUTE: Symbol.for('DeleteAccountAttributeInputPort'),
+    ADD_ACCOUNT_IDENTITY: Symbol.for('AddAccountIdentityInputPort'),
     LIST_ALL_RSES: Symbol.for('ListAllRSEsInputPort'),
     LIST_DIDS: Symbol.for('ListDIDsInputPort'),
     LIST_DID_CONTENTS: Symbol.for('ListDIDContentsInputPort'),
