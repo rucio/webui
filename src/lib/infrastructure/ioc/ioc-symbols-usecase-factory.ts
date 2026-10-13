@@ -22,6 +22,7 @@ const USECASE_FACTORY = {
     UPDATE_ACCOUNT: Symbol.for('Factory<UpdateAccountUseCase>'),
     ADD_ACCOUNT_ATTRIBUTE: Symbol.for('Factory<AddAccountAttributeUseCase>'),
     DELETE_ACCOUNT_ATTRIBUTE: Symbol.for('Factory<DeleteAccountAttributeUseCase>'),
+    ADD_ACCOUNT_IDENTITY: Symbol.for('Factory<AddAccountIdentityUseCase>'),
     LIST_ALL_RSES: Symbol.for('Factory<ListAllRSEsUseCase>'),
     LIST_DIDS: Symbol.for('Factory<ListDIDsUseCase>'),
     LIST_DID_CONTENTS: Symbol.for('Factory<ListDIDContentsUseCase>'),
