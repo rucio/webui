@@ -1,11 +1,12 @@
 import React from 'react';
 import { HiOutlineTrash, HiOutlinePencil } from 'react-icons/hi';
-import { cn } from '@/component-library/utils';
+import { Button, ButtonProps } from '@/component-library/atoms/form/button';
 
 export interface ActionCellButton {
     label: string;
     icon?: 'delete' | 'edit';
-    variant?: 'default' | 'error';
+    /** Button colour; defaults to neutral. Use success for confirm, error for destructive actions. */
+    variant?: NonNullable<ButtonProps['variant']>;
     onClick: () => void;
     disabled?: boolean;
 }
@@ -17,19 +18,6 @@ export interface ActionCellProps {
 const iconMap = {
     delete: HiOutlineTrash,
     edit: HiOutlinePencil,
-};
-
-const variantClasses = {
-    default: cn(
-        'text-neutral-600 dark:text-neutral-400',
-        'hover:text-brand-600 dark:hover:text-brand-400',
-        'hover:bg-brand-100 dark:hover:bg-brand-900/30',
-    ),
-    error: cn(
-        'text-neutral-600 dark:text-neutral-400',
-        'hover:text-base-error-600 dark:hover:text-base-error-400',
-        'hover:bg-base-error-100 dark:hover:bg-base-error-900/30',
-    ),
 };
 
 /**
@@ -54,39 +42,25 @@ export const ActionCell: React.FC<ActionCellProps> = ({ actions }) => {
         <div className="flex items-center gap-1 h-full">
             {actions.map(action => {
                 const Icon = action.icon ? iconMap[action.icon] : null;
-                const variant = action.variant || 'default';
 
                 return (
-                    <button
+                    <Button
                         key={action.label}
                         type="button"
+                        size="sm"
+                        variant={action.variant ?? 'neutral'}
                         onClick={e => {
                             e.stopPropagation();
                             action.onClick();
                         }}
-                        onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                action.onClick();
-                            }
-                        }}
                         disabled={action.disabled}
-                        className={cn(
-                            'inline-flex items-center gap-1',
-                            'rounded px-2 py-1',
-                            'text-xs font-medium',
-                            'transition-colors duration-150',
-                            'focus:outline-hidden focus:ring-2 focus:ring-brand-500',
-                            'disabled:opacity-50 disabled:pointer-events-none',
-                            variantClasses[variant],
-                        )}
+                        className="h-7 px-2 text-xs"
                         aria-label={action.label}
                         title={action.label}
                     >
-                        {Icon && <Icon className="h-3.5 w-3.5" aria-hidden="true" />}
-                        <span>{action.label}</span>
-                    </button>
+                        {Icon && <Icon className="mr-1 h-3.5 w-3.5" aria-hidden="true" />}
+                        {action.label}
+                    </Button>
                 );
             })}
         </div>
