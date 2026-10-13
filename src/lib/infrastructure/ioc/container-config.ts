@@ -54,6 +54,7 @@ import RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output
 import RuleGateway from '../gateway/rule-gateway/rule-gateway';
 import ListAccountRSEQuotasFeature from './features/list-account-rse-quotas-feature';
 import GetAccountInfoFeature from './features/get-account-info-feature';
+import ListAccountsFeature from './features/list-accounts-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
 import ListRulesPendingApprovalFeature from '@/lib/infrastructure/ioc/features/list-rules-pending-approval-feature';
@@ -161,6 +162,10 @@ loadFeaturesSync(appContainer, listRuleReplicaLockStatesFeatures);
 const updateRuleFeatures = [new UpdateRuleFeature(appContainer)];
 loadFeaturesSync(appContainer, updateRuleFeatures);
 
+// Features: Account management
+const accountManagementFeatures = [new ListAccountsFeature(appContainer)];
+loadFeaturesSync(appContainer, accountManagementFeatures);
+
 // Features: Dashboard
 const dashboardFeatures = [new ListAccountRSEUsageFeature(appContainer)];
 loadFeaturesSync(appContainer, dashboardFeatures);
@@ -191,6 +196,7 @@ export const CONTROLLER_FLAG_MAP = buildControllerFlagMap([
     ...listRulesPendingApprovalFeatures,
     ...listRuleReplicaLockStatesFeatures,
     ...updateRuleFeatures,
+    ...accountManagementFeatures,
     ...dashboardFeatures,
     ...amiTagFeatures,
     ...pandaTaskFeatures,

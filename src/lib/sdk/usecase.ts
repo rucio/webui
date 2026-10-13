@@ -601,6 +601,7 @@ export function handleCommonGatewayErrors<TDTO extends BaseDTO>(error: TDTO): Ba
         status: 'error',
         code: error.errorCode,
         message: error.errorMessage,
-        name: error.errorName,
+        // Rucio's ExceptionClass (e.g. AccessDenied) is more specific than the generic HTTP error name
+        name: error.errorClass ?? error.errorName,
     } as BaseErrorResponseModel;
 }
