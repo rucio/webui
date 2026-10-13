@@ -30,6 +30,7 @@ import {
     SetAccountStatusValues,
 } from '@/component-library/features/mutations/account';
 import { AddAttributeDialog } from '@/component-library/features/mutations/attributes/AddAttributeDialog';
+import { EditAttributeDialog } from '@/component-library/features/mutations/attributes/EditAttributeDialog';
 import { DeleteAttributeDialog } from '@/component-library/features/mutations/attributes/DeleteAttributeDialog';
 import { useFeature } from '@/component-library/features/feature-flags/FeatureProvider';
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
@@ -74,6 +75,7 @@ type DialogState =
     | { kind: 'add-identity' }
     | { kind: 'delete-identity'; identity: AccountIdentity }
     | { kind: 'add-attribute' }
+    | { kind: 'edit-attribute'; attribute: AccountAttribute }
     | { kind: 'delete-attribute'; attribute: AccountAttribute }
     | { kind: 'set-limit'; initial?: SetAccountLimitValues }
     | { kind: 'delete-limit'; target: AccountLimitTarget };
@@ -259,6 +261,15 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
         onMutate: clearDialogError,
         onError: onMutationError,
     });
+    const updateAttributeMutation = useMutation({
+        mutationFn: (vars: { account: string; key: string; value: string }) => sendMutation('update-account-attribute', 'PUT', vars),
+        onSuccess: (_, vars) => {
+            succeed('update-account-attribute', vars, 'Attribute updated', vars.key === 'admin' ? ROLE_NOTE : undefined);
+            afterAdminChange(vars.key);
+        },
+        onMutate: clearDialogError,
+        onError: onMutationError,
+    });
     const deleteAttributeMutation = useMutation({
         mutationFn: (vars: { account: string; key: string }) => sendMutation('delete-account-attribute', 'DELETE', vars),
         onSuccess: (_, vars) => {
@@ -288,6 +299,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
         addIdentityMutation,
         deleteIdentityMutation,
         addAttributeMutation,
+        updateAttributeMutation,
         deleteAttributeMutation,
         setLimitMutation,
         deleteLimitMutation,
@@ -337,6 +349,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                 onAddIdentity={() => openDialog({ kind: 'add-identity' })}
                 onDeleteIdentity={identity => openDialog({ kind: 'delete-identity', identity })}
                 onAddAttribute={() => openDialog({ kind: 'add-attribute' })}
+                onEditAttribute={attribute => openDialog({ kind: 'edit-attribute', attribute })}
                 onDeleteAttribute={attribute => openDialog({ kind: 'delete-attribute', attribute })}
                 onSetLimit={initial => openDialog({ kind: 'set-limit', initial })}
                 onDeleteLimit={target => openDialog({ kind: 'delete-limit', target })}
@@ -402,6 +415,20 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                         loading={addAttributeMutation.isPending}
                         error={dialogError}
                     />
+                    {dialog?.kind === 'edit-attribute' && (
+                        <EditAttributeDialog
+                            open={dialogOpen}
+                            onOpenChange={onSetOpenChange}
+                            entityName={account}
+                            attributeKey={dialog.attribute.key}
+                            currentValue={toAttributeValueString(dialog.attribute.value)}
+                            validateValue={validateAttribute}
+                            warning={dialog.attribute.key === 'admin' ? roleNote : undefined}
+                            onConfirm={value => updateAttributeMutation.mutate({ account, key: dialog.attribute.key, value })}
+                            loading={updateAttributeMutation.isPending}
+                            error={dialogError}
+                        />
+                    )}
                     {dialog?.kind === 'delete-attribute' && (
                         <DeleteAttributeDialog
                             open={dialogOpen}

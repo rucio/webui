@@ -42,6 +42,7 @@ export interface DetailsAccountProps {
     onAddIdentity?: () => void;
     onDeleteIdentity?: (identity: AccountIdentity) => void;
     onAddAttribute?: () => void;
+    onEditAttribute?: (attribute: AccountAttribute) => void;
     onDeleteAttribute?: (attribute: AccountAttribute) => void;
     onSetLimit?: (initial?: AccountLimitTarget & { bytes: number }) => void;
     onDeleteLimit?: (target: AccountLimitTarget) => void;
@@ -158,6 +159,7 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
                     canManage={canManage}
                     busy={busy}
                     onAdd={props.onAddAttribute}
+                    onEdit={props.onEditAttribute}
                     onDelete={props.onDeleteAttribute}
                 />
             )}
