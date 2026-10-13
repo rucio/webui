@@ -20,7 +20,8 @@ function setup(overrides: Record<string, jest.Mock> = {}, attributes: { key: str
         presentError: async (e: BaseErrorResponseModel) => void errors.push(e),
     };
     const useCase = new UpdateAccountAttributeUseCase(presenter as never, gateway as never);
-    const run = (req: Record<string, unknown> = {}) => useCase.execute({ rucioAuthToken: 't', account: 'jdoe', key: 'k1', value: 'new', ...req } as never);
+    const run = (req: Record<string, unknown> = {}) =>
+        useCase.execute({ rucioAuthToken: 't', account: 'jdoe', key: 'k1', value: 'new', ...req } as never);
     return { gateway, errors, successes, run, calls };
 }
 
