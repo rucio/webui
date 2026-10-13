@@ -69,4 +69,28 @@ describe('SetAccountLimitDialog', () => {
         change('Limit *', '-5');
         expect(submit()).toBeDisabled();
     });
+
+    it('shows a loading hint while the RSEs load', () => {
+        setup({ rses: [], rsesLoading: true });
+        expect(screen.getByText('Loading RSEs...')).toBeInTheDocument();
+    });
+
+    it('shows why the RSE select is empty when loading the RSEs failed', () => {
+        setup({ rses: [], rsesError: 'Could not load the RSE list.' });
+        expect(screen.getByText('Could not load the RSE list.')).toBeInTheDocument();
+        noEmDash();
+    });
+
+    it('says so when there are no RSEs', () => {
+        setup({ rses: [] });
+        expect(screen.getByText(/No RSEs found/)).toBeInTheDocument();
+        noEmDash();
+    });
+
+    it('shows no RSE hint once the RSEs are loaded, or for a global limit', () => {
+        setup({ rsesLoading: false });
+        expect(screen.queryByText(/Loading RSEs|No RSEs found/)).not.toBeInTheDocument();
+        fireEvent.click(screen.getByRole('radio', { name: 'Global (per RSE expression)' }));
+        expect(screen.queryByText(/Loading RSEs|No RSEs found/)).not.toBeInTheDocument();
+    });
 });

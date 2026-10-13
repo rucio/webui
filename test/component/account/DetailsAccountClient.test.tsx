@@ -294,6 +294,24 @@ describe('DetailsAccountClient', () => {
         });
     });
 
+    it('explains an empty RSE select when the RSE list cannot be loaded', async () => {
+        params = new URLSearchParams('tab=quotas');
+        routes['list-rses'] = { status: 500, body: {} };
+        renderClient();
+        fireEvent.click(await screen.findByRole('button', { name: /Set quota/ }));
+        expect(await screen.findByText(/Could not load the RSE list/)).toBeInTheDocument();
+    });
+
+    it('shows a loading hint while the RSE list loads', async () => {
+        params = new URLSearchParams('tab=quotas');
+        routes['list-rses'] = { body: {} };
+        renderClient();
+        await waitFor(() => expect(calls('get-account-quotas')).toHaveLength(1));
+        fetchMock.mockImplementationOnce(() => new Promise(() => {})); // list-rses stays pending
+        fireEvent.click(await screen.findByRole('button', { name: /Set quota/ }));
+        expect(await screen.findByText('Loading RSEs...')).toBeInTheDocument();
+    });
+
     it('shows no mutation actions to a non-admin', async () => {
         isAdmin = false;
         renderClient({ sessionAccount: 'jdoe' });
