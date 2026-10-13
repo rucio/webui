@@ -12,6 +12,7 @@ const INPUT_PORT = {
     GET_SUBSCRIPTION: Symbol.for('GetSubscriptionInputPort'),
     LIST_ACCOUNT_RSE_QUOTAS: Symbol.for('ListAccountRSEQuotasInputPort'),
     LIST_ACCOUNTS: Symbol.for('ListAccountsInputPort'),
+    LIST_ACCOUNT_IDENTITIES: Symbol.for('ListAccountIdentitiesInputPort'),
     LIST_ACCOUNT_ATTRIBUTES: Symbol.for('ListAccountAttributesInputPort'),
     LIST_ALL_RSES: Symbol.for('ListAllRSEsInputPort'),
     LIST_DIDS: Symbol.for('ListDIDsInputPort'),
