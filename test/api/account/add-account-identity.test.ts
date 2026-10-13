@@ -150,4 +150,32 @@ describe('Route: POST /api/feature/add-account-identity', () => {
         expect(((await response.json()) as { errorType: string }).errorType).toBe('validation_error');
         expect(execute).not.toHaveBeenCalled();
     });
+
+    it('returns 400 for a non-boolean isDefault', async () => {
+        const { response, execute } = await call({ account: 'jdoe', identity: 'jdoe', authType: 'USERPASS', email: 'a@b.org', isDefault: 'yes' });
+        expect(response.status).toBe(400);
+        expect(execute).not.toHaveBeenCalled();
+    });
+
+    it('does not log the body when the JSON is malformed', async () => {
+        const spies = [jest.spyOn(console, 'error'), jest.spyOn(console, 'log'), jest.spyOn(console, 'warn')].map(spy =>
+            spy.mockImplementation(() => {}),
+        );
+        const { route, execute } = loadRoute<typeof import('@/app/api/feature/add-account-identity/route')>(
+            '@/app/api/feature/add-account-identity/route',
+        );
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { NextRequest: Request } = require('next/server') as typeof import('next/server');
+        const request = new Request('http://localhost/api/feature/test', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: '{"password":s3cr3t-xyz}',
+        });
+        const response = (await route.POST(request)) as Response;
+        expect(response.status).toBe(400);
+        expect(execute).not.toHaveBeenCalled();
+        const logged = spies.flatMap(spy => spy.mock.calls.flat()).map(arg => (arg instanceof Error ? `${arg.name} ${arg.message}` : String(arg)));
+        expect(logged.some(entry => entry.includes('s3cr3t-xyz'))).toBe(false);
+        jest.restoreAllMocks();
+    });
 });
