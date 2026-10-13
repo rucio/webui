@@ -78,7 +78,7 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
         <div className="flex flex-col space-y-6 w-full min-w-0">
             <header className="flex flex-col gap-2">
                 <div className="flex flex-wrap items-center gap-3">
-                    <div className="overflow-x-auto">
+                    <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
                         <CopyableHeading text={info.account} />
                     </div>
                     <AccountTypeBadge value={info.accountType} />
