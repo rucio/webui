@@ -328,6 +328,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
     const rulesApproveEnabled = useFeature('rules.approve');
     const subscriptionsEnabled = useFeature('subscriptions');
     const rsesEnabled = useFeature('rses');
+    const accountsEnabled = useFeature('accounts');
 
     const rulesChildren: TMenuItem[] = [
         ...(rulesEnabled ? [{ title: 'List Rules', path: '/rules' }] : []),
@@ -354,6 +355,7 @@ export const HeaderClient = ({ siteHeader, siteHeaderError, isSiteHeaderFetching
         ...(rsesEnabled ? [{ title: 'RSEs', path: '/rses' }] : []),
         ...(subscriptionsEnabled ? [{ title: 'Subscriptions', path: subscriptionUrl }] : []),
         ...(rulesChildren.length > 0 ? [{ title: 'Rules', children: rulesChildren }] : []),
+        ...(isAdmin && accountsEnabled ? [{ title: 'Accounts', path: '/accounts' }] : []),
     ];
 
     const { resolvedTheme } = useTheme();

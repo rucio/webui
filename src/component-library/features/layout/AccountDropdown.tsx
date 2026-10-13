@@ -5,6 +5,7 @@ import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { HiSwitchHorizontal, HiLogout, HiUserAdd, HiLockClosed } from 'react-icons/hi';
 import Link from 'next/link';
 import { HiUserCircle } from 'react-icons/hi2';
+import { useFeature } from '@/component-library/features/feature-flags/FeatureProvider';
 import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-header';
 import { cn } from '@/component-library/utils';
 import { signOut, useSession } from 'next-auth/react';
@@ -177,6 +178,23 @@ const SignOutOfAllButton = ({ onSignOut }: { onSignOut?: () => Promise<void> }) 
     );
 };
 
+const MyAccountLink = ({ account }: { account: string }) => {
+    return (
+        <Link
+            className={cn(
+                'text-neutral-800 hover:bg-neutral-200 hover:cursor-pointer',
+                'dark:text-neutral-100 dark:hover:bg-neutral-600',
+                'flex items-center justify-between py-2 px-1 space-x-4',
+                'text-right',
+            )}
+            href={`/account/${encodeURIComponent(account)}`}
+        >
+            <span>My account</span>
+            <HiUserCircle className="dark:text-neutral-100 text-2xl text-neutral-900 shrink-0" />
+        </Link>
+    );
+};
+
 const SignIntoButton = () => {
     return (
         <Link
@@ -212,6 +230,7 @@ export const AccountDropdown = (props: {
     onLinkedSwitchClick?: (account: string) => void;
 }) => {
     const hasAccountChoice = props.switchEntries.length > 0;
+    const accountsEnabled = useFeature('accounts');
 
     const handleSingleSignOut = async () => {
         try {
@@ -273,6 +292,7 @@ export const AccountDropdown = (props: {
                     <HiLogout className="text-2xl text-neutral-900 dark:text-neutral-100 shrink-0" />
                 </button>
             </div>
+            {accountsEnabled && props.accountActive && <MyAccountLink account={props.accountActive} />}
             {hasAccountChoice && (
                 <AccountList
                     entries={props.switchEntries}
