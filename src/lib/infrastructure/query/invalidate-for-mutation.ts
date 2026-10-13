@@ -3,6 +3,7 @@ import { INVALIDATION_MAP } from './invalidation-map';
 
 /**
  * Invalidates all queries associated with a mutation.
+ * Function entries in the map receive `vars` (the mutation variables) to scope the key.
  * Call this in `useMutation.onSuccess` to keep the UI fresh.
  *
  * @example
@@ -14,11 +15,12 @@ import { INVALIDATION_MAP } from './invalidation-map';
  * });
  * ```
  */
-export function invalidateForMutation(queryClient: QueryClient, mutationName: string) {
-    const queryKeys = INVALIDATION_MAP[mutationName];
-    if (!queryKeys) return;
+export function invalidateForMutation(queryClient: QueryClient, mutationName: string, vars?: unknown) {
+    const entries = INVALIDATION_MAP[mutationName];
+    if (!entries) return;
 
-    queryKeys.forEach(queryKey => {
+    entries.forEach(entry => {
+        const queryKey = typeof entry === 'function' ? entry(vars) : entry;
         queryClient.invalidateQueries({ queryKey: [...queryKey] });
     });
 }
