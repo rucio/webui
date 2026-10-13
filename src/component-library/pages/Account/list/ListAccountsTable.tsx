@@ -5,7 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { GridReadyEvent } from 'ag-grid-community';
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { AccountListItemViewModel } from '@/lib/infrastructure/data/view-model/account';
-import { AccountType } from '@/lib/core/entity/rucio';
+import { ACCOUNT_TYPES } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { CopyableCell } from '@/component-library/features/table/cells/CopyableCell';
@@ -29,7 +29,7 @@ export interface ListAccountsTableProps {
 
 export const ListAccountsTable = (props: ListAccountsTableProps) => {
     const tableRef = useRef<AgGridReact<AccountListItemViewModel>>(null);
-    const typeOptions = [AccountType.USER, AccountType.GROUP, AccountType.SERVICE];
+    const typeOptions = [...ACCOUNT_TYPES];
 
     const [columnDefs] = useState([
         {

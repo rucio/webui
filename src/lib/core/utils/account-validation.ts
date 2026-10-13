@@ -1,5 +1,5 @@
 import { AccountUpdateOptions, IdentityType } from '@/lib/core/entity/account';
-import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
+import { AccountStatus, isKnownAccountType } from '@/lib/core/entity/rucio';
 import type { BaseErrorResponseModel } from '@/lib/sdk/usecase-models';
 
 export const ACCOUNT_NAME_REGEX = /^[a-z0-9-_]{1,25}$/;
@@ -17,7 +17,6 @@ export const toAttributeValueString = (v: string | boolean): string => (typeof v
  * cases repeat them to protect other callers. Each check returns a message, or undefined when valid.
  */
 
-const ACCOUNT_TYPES: string[] = [AccountType.USER, AccountType.GROUP, AccountType.SERVICE];
 const IDENTITY_TYPES: string[] = Object.values(IdentityType).filter(t => t !== IdentityType.UNKNOWN);
 const UPDATE_STATUSES: string[] = [AccountStatus.ACTIVE, AccountStatus.SUSPENDED];
 const UPDATE_OPTION_KEYS = ['email', 'status', 'accountType'];
@@ -27,7 +26,7 @@ export const checkAccountName = (account: string): string | undefined =>
     typeof account === 'string' && isValidAccountName(account) ? undefined : 'Invalid account name';
 
 export const checkAccountType = (accountType: string): string | undefined =>
-    ACCOUNT_TYPES.includes(accountType) ? undefined : 'Account type must be USER, GROUP or SERVICE';
+    isKnownAccountType(accountType) ? undefined : 'Account type must be USER, GROUP or SERVICE';
 
 export const checkEmail = (email: string): string | undefined => (typeof email === 'string' && isValidEmail(email) ? undefined : 'Invalid email');
 

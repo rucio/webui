@@ -4,7 +4,7 @@ import React from 'react';
 import { Input } from '@/component-library/atoms/form/input';
 import { FieldSelect } from '@/component-library/features/mutations/FieldSelect';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
-import { AccountType } from '@/lib/core/entity/rucio';
+import { ACCOUNT_TYPES, ACCOUNT_TYPE_LABELS } from '@/lib/core/entity/rucio';
 import { ACCOUNT_NAME_PATTERN_REGEX } from '@/lib/core/utils/account-validation';
 
 export const ALL_TYPES = 'ALL';
@@ -20,12 +20,7 @@ export const EMPTY_FILTERS: AccountFilters = { account: '', type: ALL_TYPES, ide
 
 export const isValidNameFilter = (account: string): boolean => account === '' || ACCOUNT_NAME_PATTERN_REGEX.test(account);
 
-const TYPE_OPTIONS = [
-    { value: ALL_TYPES, label: 'All' },
-    { value: AccountType.USER, label: 'User' },
-    { value: AccountType.GROUP, label: 'Group' },
-    { value: AccountType.SERVICE, label: 'Service' },
-];
+const TYPE_OPTIONS = [{ value: ALL_TYPES, label: 'All' }, ...ACCOUNT_TYPES.map(t => ({ value: t as string, label: ACCOUNT_TYPE_LABELS[t] }))];
 
 export interface ListAccountsFiltersProps {
     filters: AccountFilters;
