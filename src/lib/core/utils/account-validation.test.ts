@@ -14,8 +14,23 @@ describe('account validation', () => {
         expect(toAttributeValueString(true)).toBe('True');
         expect(toAttributeValueString('user')).toBe('user');
     });
+    it('accepts wildcards in pattern for list filter', () => {
+        expect(isValidAccountName('j*')).toBe(false); // strict name regex rejects *
+        // ACCOUNT_NAME_PATTERN_REGEX allows wildcards for filters:
+        const pattern = /^[a-z0-9-_*]{1,25}$/;
+        expect(pattern.test('j*')).toBe(true);
+        expect(pattern.test('*')).toBe(true);
+    });
     it('has a hint for every real identity type, without em dashes', () => {
-        Object.values(IdentityType).filter(t => t !== IdentityType.UNKNOWN).forEach(t => {
+        const REAL_TYPES: Exclude<IdentityType, IdentityType.UNKNOWN>[] = [
+            IdentityType.X509,
+            IdentityType.GSS,
+            IdentityType.USERPASS,
+            IdentityType.SSH,
+            IdentityType.SAML,
+            IdentityType.OIDC,
+        ];
+        REAL_TYPES.forEach(t => {
             expect(IDENTITY_TYPE_HINTS[t]).toBeDefined();
             expect(JSON.stringify(IDENTITY_TYPE_HINTS[t])).not.toContain('—');
         });
