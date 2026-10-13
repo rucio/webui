@@ -219,8 +219,21 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
     });
     const statusMutation = useMutation({
         mutationFn: (vars: { account: string; options: SetAccountStatusValues }) => sendMutation('update-account', 'PUT', vars),
-        onSuccess: (_, vars) =>
-            succeed('update-account', vars, vars.options.status === AccountStatus.SUSPENDED ? 'Account suspended' : 'Account reactivated'),
+        onSuccess: async (_, vars) => {
+            if (vars.options.status !== AccountStatus.SUSPENDED) {
+                succeed('update-account', vars, 'Account reactivated');
+                return;
+            }
+            // Suspend: wait for the refreshed info first. Its new status disables the identity, attribute
+            // and quota queries, which can then be dropped without a refetch (Rucio answers 404 for the
+            // sub-resources of a suspended account). Reactivate invalidates the whole account instead.
+            await invalidateForMutation(queryClient, 'update-account', vars);
+            [accountKeys.identities(account), accountKeys.attributes(account), accountKeys.quotas(account)].forEach(queryKey =>
+                queryClient.removeQueries({ queryKey }),
+            );
+            toast({ variant: 'success', title: 'Account suspended' });
+            closeDialog();
+        },
         onMutate: clearDialogError,
         onError: onMutationError,
     });

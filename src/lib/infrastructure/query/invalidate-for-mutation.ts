@@ -4,7 +4,8 @@ import { INVALIDATION_MAP } from './invalidation-map';
 /**
  * Invalidates all queries associated with a mutation.
  * Function entries in the map receive `vars` (the mutation variables) to scope the key.
- * Call this in `useMutation.onSuccess` to keep the UI fresh.
+ * Call this in `useMutation.onSuccess` to keep the UI fresh. The returned promise resolves once the
+ * active queries among them have refetched.
  *
  * @example
  * ```ts
@@ -15,12 +16,14 @@ import { INVALIDATION_MAP } from './invalidation-map';
  * });
  * ```
  */
-export function invalidateForMutation(queryClient: QueryClient, mutationName: string, vars?: unknown) {
+export async function invalidateForMutation(queryClient: QueryClient, mutationName: string, vars?: unknown): Promise<void> {
     const entries = INVALIDATION_MAP[mutationName];
     if (!entries) return;
 
-    entries.forEach(entry => {
-        const queryKey = typeof entry === 'function' ? entry(vars) : entry;
-        queryClient.invalidateQueries({ queryKey: [...queryKey] });
-    });
+    await Promise.all(
+        entries.map(entry => {
+            const queryKey = typeof entry === 'function' ? entry(vars) : entry;
+            return queryClient.invalidateQueries({ queryKey: [...queryKey] });
+        }),
+    );
 }
