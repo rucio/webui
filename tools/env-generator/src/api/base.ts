@@ -86,6 +86,8 @@ export class WebUIEnvTemplateCompiler {
       'FEATURE_RULES_APPROVE': 'true',
       'FEATURE_SUBSCRIPTIONS': 'true',
       'FEATURE_RSES': 'true',
+      'FEATURE_ACCOUNTS': 'true',
+      'FEATURE_ACCOUNTS_MANAGE': 'true',
       'FEATURE_DIDS_METADATA': 'true',
       'FEATURE_DIDS_MUTATE': 'true',
       'FEATURE_DIDS_AMI_TAGS': 'false',
