@@ -5,6 +5,7 @@ import { DetailsAccountClient } from '@/app/(rucio)/account/[name]/DetailsAccoun
 import { AccountInfoViewModel } from '@/lib/infrastructure/data/view-model/account';
 import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 import { IdentityType } from '@/lib/core/entity/account';
+import { pick } from './radix-select';
 
 const replace = jest.fn();
 const push = jest.fn();
@@ -150,6 +151,22 @@ describe('DetailsAccountClient', () => {
         expect(init).toMatchObject({ method: 'DELETE', body: JSON.stringify({ account: 'jdoe' }) });
     });
 
+    it('fetches nothing for the deleted account after a delete', async () => {
+        renderClient();
+        await waitFor(() => expect(calls('list-account-identities')).toHaveLength(1));
+        expect(calls('list-account-attributes')).toHaveLength(1);
+        fireEvent.click(within(screen.getByRole('toolbar')).getByRole('button', { name: /Delete/ }));
+        fireEvent.change(await screen.findByLabelText(/Type jdoe to confirm/), { target: { value: 'jdoe' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Delete account' }));
+
+        await waitFor(() => expect(push).toHaveBeenCalledWith('/accounts'));
+        await new Promise(r => setTimeout(r, 50));
+        expect(calls('list-account-identities')).toHaveLength(1);
+        expect(calls('list-account-attributes')).toHaveLength(1);
+        expect(calls('get-account-quotas')).toHaveLength(0);
+        expect(calls('get-account-info')).toHaveLength(0);
+    });
+
     it('invalidates the whole account scope after a suspend', async () => {
         const { client } = renderClient();
         const invalidate = jest.spyOn(client, 'invalidateQueries');
@@ -174,6 +191,68 @@ describe('DetailsAccountClient', () => {
         expect(await screen.findByText('You are not allowed to do this.')).toBeInTheDocument();
         expect(screen.getByRole('dialog')).toBeInTheDocument();
         expect(updateSession).toHaveBeenCalled();
+    });
+
+    it('clears the previous error when the request is resubmitted', async () => {
+        routes['update-account'] = { status: 500, body: { status: 'error', errorType: 'unknown', message: 'Rucio failed.' } };
+        renderClient();
+        fireEvent.click(within(screen.getByRole('toolbar')).getByRole('button', { name: /Suspend/ }));
+        fireEvent.click(await screen.findByRole('button', { name: 'Suspend account' }));
+        expect(await screen.findByText('Rucio failed.')).toBeInTheDocument();
+
+        fetchMock.mockImplementationOnce(() => new Promise(() => {})); // the retry stays pending
+        fireEvent.click(screen.getByRole('button', { name: 'Suspend account' }));
+        await waitFor(() => expect(screen.queryByText('Rucio failed.')).not.toBeInTheDocument());
+    });
+
+    describe('adding a USERPASS identity', () => {
+        const PASSWORD = 'fake-secret-pass';
+        const hasPassword = (client: QueryClient) =>
+            client
+                .getMutationCache()
+                .getAll()
+                .some(m => JSON.stringify(m.state.variables ?? null).includes(PASSWORD));
+
+        const fillUserpass = async () => {
+            fireEvent.click(await screen.findByRole('button', { name: /Add identity/ }));
+            await pick(/^Type/, 'Username and password');
+            fireEvent.change(screen.getByLabelText(/^Identity/), { target: { value: 'newuser' } });
+            fireEvent.change(screen.getByLabelText(/^Email/), { target: { value: 'new@example.org' } });
+            fireEvent.change(screen.getByLabelText(/^Password/), { target: { value: PASSWORD } });
+            fireEvent.change(screen.getByLabelText(/Confirm password/), { target: { value: PASSWORD } });
+            fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Add identity' }));
+        };
+
+        beforeEach(() => {
+            params = new URLSearchParams('tab=identities');
+        });
+
+        it('drops the password from the mutation and the form when the dialog is closed after an error', async () => {
+            routes['add-account-identity'] = { status: 409, body: { status: 'error', errorType: 'conflict', message: 'Identity exists.' } };
+            const { client } = renderClient();
+            await fillUserpass();
+            expect(await screen.findByText('Identity exists.')).toBeInTheDocument();
+            expect(hasPassword(client)).toBe(true);
+
+            fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+            await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+            await waitFor(() => expect(hasPassword(client)).toBe(false));
+
+            fireEvent.click(screen.getByRole('button', { name: /Add identity/ }));
+            await pick(/^Type/, 'Username and password');
+            expect(screen.getByLabelText(/^Password/)).toHaveValue('');
+            expect(screen.getByLabelText(/Confirm password/)).toHaveValue('');
+        });
+
+        it('drops the password from the mutation after a successful add', async () => {
+            routes['add-account-identity'] = { body: { status: 'success' } };
+            const { client } = renderClient();
+            await fillUserpass();
+            await waitFor(() => expect(toast).toHaveBeenCalledWith(expect.objectContaining({ title: 'Identity added' })));
+            await waitFor(() => expect(hasPassword(client)).toBe(false));
+            const [, init] = calls('add-account-identity')[0];
+            expect(JSON.parse((init as RequestInit).body as string)).toMatchObject({ account: 'jdoe', authType: 'USERPASS', password: PASSWORD });
+        });
     });
 
     it('shows no mutation actions to a non-admin', async () => {

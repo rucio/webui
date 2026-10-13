@@ -3,7 +3,7 @@
 import React, { useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/component-library/atoms/loading/LoadingSpinner';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { DetailsAccount, DetailsAccountLoadError } from '@/component-library/pages/Account/details/DetailsAccount';
@@ -135,17 +135,22 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
         router.replace(next === 'overview' ? pathname : `${pathname}?tab=${next}`);
     };
 
+    // Set first thing after a successful delete: removeQueries drops queries that still have mounted
+    // observers, and the re-render before navigation would recreate and refetch them.
+    const [deleted, setDeleted] = useState(false);
+
     // A failed server prefetch is not used as data: the client query then fetches and shows the error.
-    const initialData = initialInfo?.status === 'success' ? initialInfo : undefined;
+    const initialData = initialInfo?.status === 'success' && !deleted ? initialInfo : undefined;
     const infoQuery = useQuery<AccountInfoViewModel, AccountLoadError>({
         queryKey: accountKeys.info(account),
         queryFn: () => fetchViewModel<AccountInfoViewModel>(`/api/feature/get-account-info?account=${encoded}`),
         initialData,
         initialDataUpdatedAt: initialData ? initialInfoUpdatedAt : undefined,
+        enabled: !deleted,
         ...accountQueryDefaults,
     });
     const info = infoQuery.data;
-    const isActive = info?.accountStatus === AccountStatus.ACTIVE;
+    const isActive = !deleted && info?.accountStatus === AccountStatus.ACTIVE;
 
     const identitiesQuery = useQuery<AccountIdentity[], AccountLoadError>({
         queryKey: accountKeys.identities(account),
@@ -179,6 +184,8 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
         setDialogOpen(true);
     };
     const closeDialog = () => setDialogOpen(false);
+    // A resubmit must not show the error of the previous attempt.
+    const clearDialogError = () => setDialogError(undefined);
     const isOpen = (kind: DialogState['kind']) => dialogOpen && dialog?.kind === kind;
 
     const rseNamesQuery = useQuery<string[]>({
@@ -207,33 +214,47 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
     const editMutation = useMutation({
         mutationFn: (vars: { account: string; options: EditAccountValues }) => sendMutation('update-account', 'PUT', vars),
         onSuccess: (_, vars) => succeed('update-account', vars, 'Account updated'),
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
     const statusMutation = useMutation({
         mutationFn: (vars: { account: string; options: SetAccountStatusValues }) => sendMutation('update-account', 'PUT', vars),
         onSuccess: (_, vars) =>
             succeed('update-account', vars, vars.options.status === AccountStatus.SUSPENDED ? 'Account suspended' : 'Account reactivated'),
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
     const deleteMutation = useMutation({
         mutationFn: (vars: { account: string }) => sendMutation('delete-account', 'DELETE', vars),
         onSuccess: () => {
-            closeDialog();
-            toast({ variant: 'success', title: 'Account deleted' });
+            // Disable every account query before removing them, so nothing refetches the deleted account.
+            setDeleted(true);
             // Remove rather than invalidate: no refetch of the deleted account and no flash of 404.
             queryClient.removeQueries({ queryKey: accountKeys.detail(account) });
             router.push('/accounts');
+            closeDialog();
+            toast({ variant: 'success', title: 'Account deleted' });
         },
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
-    const addIdentityMutation = useMutation({
-        mutationFn: (vars: AddIdentityValues & { account: string }) => sendMutation('add-account-identity', 'POST', vars),
-        onSuccess: (_, vars) => succeed('add-account-identity', vars, 'Identity added'),
-        onError: onMutationError,
-    });
+    // The variables can hold a password: never keep them in the mutation cache (gcTime 0) and reset
+    // the mutation on success and on close.
+    const addIdentityMutation: UseMutationResult<AccountMutationViewModel, AccountMutationViewModel, AddIdentityValues & { account: string }> =
+        useMutation({
+            mutationFn: (vars: AddIdentityValues & { account: string }) => sendMutation('add-account-identity', 'POST', vars),
+            gcTime: 0,
+            onMutate: clearDialogError,
+            onSuccess: (_, vars) => {
+                succeed('add-account-identity', { account: vars.account }, 'Identity added');
+                addIdentityMutation.reset();
+            },
+            onError: onMutationError,
+        });
     const deleteIdentityMutation = useMutation({
         mutationFn: (vars: { account: string; identity: string; authType: string }) => sendMutation('delete-account-identity', 'DELETE', vars),
         onSuccess: (_, vars) => succeed('delete-account-identity', vars, 'Identity removed'),
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
     const addAttributeMutation = useMutation({
@@ -242,6 +263,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
             succeed('add-account-attribute', vars, 'Attribute added', vars.key === 'admin' ? ROLE_NOTE : undefined);
             afterAdminChange(vars.key);
         },
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
     const deleteAttributeMutation = useMutation({
@@ -250,16 +272,19 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
             succeed('delete-account-attribute', vars, 'Attribute deleted', vars.key === 'admin' ? ROLE_NOTE : undefined);
             afterAdminChange(vars.key);
         },
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
     const setLimitMutation = useMutation({
         mutationFn: (vars: SetAccountLimitValues & { account: string }) => sendMutation('set-account-limit', 'PUT', vars),
         onSuccess: (_, vars) => succeed('set-account-limit', vars, 'Quota saved'),
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
     const deleteLimitMutation = useMutation({
         mutationFn: (vars: AccountLimitTarget & { account: string }) => sendMutation('delete-account-limit', 'DELETE', vars),
         onSuccess: (_, vars) => succeed('delete-account-limit', vars, 'Quota removed'),
+        onMutate: clearDialogError,
         onError: onMutationError,
     });
 
@@ -274,6 +299,10 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
         setLimitMutation,
         deleteLimitMutation,
     ].some(m => m.isPending);
+
+    if (deleted) {
+        return <p className="py-6 text-sm text-neutral-600 dark:text-neutral-400">Account deleted. Returning to the accounts list...</p>;
+    }
 
     if (!info) {
         if (infoQuery.error) return <DetailsAccountLoadError account={account} error={infoQuery.error} onRetry={() => infoQuery.refetch()} />;
@@ -342,7 +371,10 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                     />
                     <AddIdentityDialog
                         open={isOpen('add-identity')}
-                        onOpenChange={onSetOpenChange}
+                        onOpenChange={open => {
+                            onSetOpenChange(open);
+                            if (!open) addIdentityMutation.reset();
+                        }}
                         account={account}
                         onSubmit={values => addIdentityMutation.mutate({ account, ...values })}
                         loading={addIdentityMutation.isPending}
