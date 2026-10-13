@@ -11,7 +11,7 @@ import { ClickableCell } from '@/component-library/features/table/cells/Clickabl
 import { Button } from '@/component-library/atoms/form/button';
 import { HiOutlineBan, HiOutlineExternalLink } from 'react-icons/hi';
 import { SuspiciousReplicaViewModel } from '@/lib/infrastructure/data/view-model/replica';
-import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type SuspiciousReplicasTableProps = {
     streamingHook: UseStreamReader<SuspiciousReplicaViewModel>;

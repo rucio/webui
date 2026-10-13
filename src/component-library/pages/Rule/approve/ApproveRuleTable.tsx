@@ -19,7 +19,7 @@ import { Button } from '@/component-library/atoms/form/button';
 import { HiOutlineCheckCircle, HiOutlineBan, HiOutlineExternalLink } from 'react-icons/hi';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { DIDType } from '@/lib/core/entity/rucio';
-import { ClickableDIDCell, ClickableRSEExpressionCell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableDIDCell, ClickableRSEExpressionCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 export type ApproveRuleTableProps = {
     streamingHook: UseStreamReader<ApproveRuleViewModel>;

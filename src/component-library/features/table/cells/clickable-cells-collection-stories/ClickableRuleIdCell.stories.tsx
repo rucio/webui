@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ClickableRuleIdCell } from '../DifferentClickableCells';
+import { ClickableRuleIdCell } from '../ClickableCellsCollection';
 
 const meta: Meta<typeof ClickableRuleIdCell> = {
     title: 'Components/Table/ClickableRuleId',

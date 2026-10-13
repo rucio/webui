@@ -9,7 +9,7 @@ import { ReplicaStateBadge } from '@/component-library/features/badges/DID/Repli
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { ClickableRSECell } from '@/component-library/features/table/cells/DifferentClickableCells';
+import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;
