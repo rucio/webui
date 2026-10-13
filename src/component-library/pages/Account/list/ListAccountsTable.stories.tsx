@@ -42,7 +42,7 @@ type Story = StoryObj<typeof ListAccountsTable>;
 
 export const Default: Story = { args: { streamingHook: hook(), onGridReady: fill(rows) } };
 export const Empty: Story = { args: { streamingHook: hook(), onGridReady: fill([]) } };
-export const Error: Story = {
+export const StreamError: Story = {
     args: {
         streamingHook: hook({ error: { type: StreamingErrorType.NETWORK_ERROR, message: 'Could not reach the Rucio server.' } }),
         onGridReady: fill([]),
