@@ -29,9 +29,9 @@ import {
     SetAccountStatusDialog,
     SetAccountStatusValues,
 } from '@/component-library/features/mutations/account';
-import { AddAttributeDialog } from '@/component-library/features/mutations/attributes/AddAttributeDialog';
-import { EditAttributeDialog } from '@/component-library/features/mutations/attributes/EditAttributeDialog';
-import { DeleteAttributeDialog } from '@/component-library/features/mutations/attributes/DeleteAttributeDialog';
+import { AddAccountAttributeDialog } from '@/component-library/features/mutations/account-attributes/AddAccountAttributeDialog';
+import { EditAccountAttributeDialog } from '@/component-library/features/mutations/account-attributes/EditAccountAttributeDialog';
+import { DeleteAccountAttributeDialog } from '@/component-library/features/mutations/account-attributes/DeleteAccountAttributeDialog';
 import { useFeature } from '@/component-library/features/feature-flags/FeatureProvider';
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
@@ -405,10 +405,9 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                             error={dialogError}
                         />
                     )}
-                    <AddAttributeDialog
+                    <AddAccountAttributeDialog
                         open={isOpen('add-attribute')}
                         onOpenChange={onSetOpenChange}
-                        entityLabel="account"
                         entityName={account}
                         existingKeys={attributesQuery.data?.map(a => a.key)}
                         validateKey={validateAttribute}
@@ -421,7 +420,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                         error={dialogError}
                     />
                     {dialog?.kind === 'edit-attribute' && (
-                        <EditAttributeDialog
+                        <EditAccountAttributeDialog
                             open={dialogOpen}
                             onOpenChange={onSetOpenChange}
                             entityName={account}
@@ -435,10 +434,9 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                         />
                     )}
                     {dialog?.kind === 'delete-attribute' && (
-                        <DeleteAttributeDialog
+                        <DeleteAccountAttributeDialog
                             open={dialogOpen}
                             onOpenChange={onSetOpenChange}
-                            entityLabel="account"
                             entityName={account}
                             attributeKey={dialog.attribute.key}
                             attributeValue={toAttributeValueString(dialog.attribute.value)}

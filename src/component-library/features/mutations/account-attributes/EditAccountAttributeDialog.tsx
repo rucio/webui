@@ -10,7 +10,7 @@ import { Alert } from '@/component-library/atoms/feedback/Alert';
 export const EDIT_ATTRIBUTE_WARNING =
     'Rucio cannot update attributes in place. Saving deletes the attribute and creates it again with the new value. If the second step fails, the WebUI tries to restore the previous value.';
 
-export interface EditAttributeDialogProps {
+export interface EditAccountAttributeDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     entityName: string;
@@ -32,7 +32,7 @@ export interface EditAttributeDialogProps {
  * Dialog for changing the value of an existing account attribute. Rucio has no update endpoint, so the
  * dialog always warns that saving is a delete followed by a create.
  */
-export const EditAttributeDialog: React.FC<EditAttributeDialogProps> = ({
+export const EditAccountAttributeDialog: React.FC<EditAccountAttributeDialogProps> = ({
     open,
     onOpenChange,
     entityName,
