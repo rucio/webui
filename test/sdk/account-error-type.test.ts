@@ -32,7 +32,11 @@ describe('toAccountErrorMessage', () => {
         ['not_found', 'delete-account-attribute', 'The account was not found or is not active.'],
         ['not_found', 'update-account-attribute', 'raw message'],
         ['conflict', 'update-account-attribute', 'raw message'],
-        ['permission_denied', 'update-account-attribute', 'You do not have permission to do this. Your admin role may have changed; try signing in again.'],
+        [
+            'permission_denied',
+            'update-account-attribute',
+            'You do not have permission to do this. Your admin role may have changed; try signing in again.',
+        ],
         ['not_found', 'read', 'raw message'],
         ['validation_error', 'create-account', 'raw message'],
         ['unknown', 'read', 'raw message'],
