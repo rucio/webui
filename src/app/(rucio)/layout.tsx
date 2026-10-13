@@ -68,13 +68,15 @@ export default async function RucioLayout({ children }: { children: React.ReactN
     const featureGateway = appContainer.get<FeatureConfigGatewayOutputPort>(GATEWAYS.FEATURE_CONFIG);
     const features = await featureGateway.enabledSet();
 
+    // FeatureProvider wraps Providers so the client widgets mounted there (command
+    // palette, tips panel) can read the feature flags too.
     return (
-        <Providers>
-            <FeatureProvider features={features}>
+        <FeatureProvider features={features}>
+            <Providers>
                 <Layout siteHeader={siteHeader} siteHeaderError={siteHeaderError}>
                     {children}
                 </Layout>
-            </FeatureProvider>
-        </Providers>
+            </Providers>
+        </FeatureProvider>
     );
 }
