@@ -44,12 +44,13 @@ export const AddIdentityDialog: React.FC<AddIdentityDialogProps> = ({ open, onOp
     const [isDefault, setIsDefault] = useState(false);
 
     useEffect(() => {
+        // Never keep a password in state while the dialog is closed.
+        setPassword('');
+        setConfirm('');
         if (open) {
             setAuthType(IdentityType.X509);
             setIdentity('');
             setEmail('');
-            setPassword('');
-            setConfirm('');
             setIsDefault(false);
         }
     }, [open]);

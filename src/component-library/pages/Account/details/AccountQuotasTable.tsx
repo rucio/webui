@@ -46,10 +46,10 @@ export const QuotaLimitCell = ({ value }: { value: number | null }) => {
     return <span>{formatDecimalFileSize(value)}</span>;
 };
 
-export const QuotaRemainingCell = ({ data }: { data?: Pick<QuotaRow, 'bytesLimit' | 'bytesRemaining'> }) => {
+export const QuotaRemainingCell = ({ data }: { data?: Pick<QuotaRow, 'bytesLimit' | 'bytesUsed' | 'bytesRemaining'> }) => {
     if (!data || data.bytesLimit === null) return <NullBadge label="none" />;
     if (isUnlimited(data.bytesLimit)) return <span>Unlimited</span>;
-    const remaining = data.bytesRemaining ?? data.bytesLimit;
+    const remaining = data.bytesRemaining ?? data.bytesLimit - data.bytesUsed;
     if (remaining < 0) return <span className="text-base-error-600 dark:text-base-error-400">Over by {formatDecimalFileSize(-remaining)}</span>;
     return <span>{formatDecimalFileSize(remaining)}</span>;
 };
@@ -114,10 +114,12 @@ export interface AccountQuotasTableProps {
     /** Edit an existing quota: the dialog is prefilled with these values. */
     onEdit?: (values: AccountLimitTarget & { bytes: number }) => void;
     onDelete?: (target: AccountLimitTarget) => void;
+    /** A mutation is running: row actions are disabled. */
+    busy?: boolean;
 }
 
 /** Quotas and usage of one locality: per RSE (local) or per RSE expression (global). */
-export const AccountQuotasTable = ({ locality, quotas, canManage, onEdit, onDelete }: AccountQuotasTableProps) => {
+export const AccountQuotasTable = ({ locality, quotas, canManage, onEdit, onDelete, busy = false }: AccountQuotasTableProps) => {
     const tableRef = useRef<AgGridReact<QuotaRow>>(null);
     // Keep the column definitions stable while the callbacks change identity on every render.
     const handlers = useRef({ onEdit, onDelete });
@@ -181,9 +183,16 @@ export const AccountQuotasTable = ({ locality, quotas, canManage, onEdit, onDele
                                           {
                                               label: 'Edit',
                                               icon: 'edit',
+                                              disabled: busy,
                                               onClick: () => handlers.current.onEdit?.({ ...target, bytes: row.bytesLimit as number }),
                                           },
-                                          { label: 'Remove', icon: 'delete', variant: 'error', onClick: () => handlers.current.onDelete?.(target) },
+                                          {
+                                              label: 'Remove',
+                                              icon: 'delete',
+                                              variant: 'error',
+                                              disabled: busy,
+                                              onClick: () => handlers.current.onDelete?.(target),
+                                          },
                                       ]}
                                   />
                               );
@@ -192,7 +201,8 @@ export const AccountQuotasTable = ({ locality, quotas, canManage, onEdit, onDele
                   ]
                 : []),
         ],
-        [locality, canManage],
+        // busy is a dependency so AG Grid re-renders the action cells when it changes
+        [locality, canManage, busy],
     );
 
     return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={rows} />;
