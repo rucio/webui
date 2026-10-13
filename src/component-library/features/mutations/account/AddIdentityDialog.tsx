@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MutationDialog } from '@/component-library/features/mutations/MutationDialog';
-import { FormField, describedBy, selectClassName } from '@/component-library/features/mutations/FormField';
+import { FormField, describedBy } from '@/component-library/features/mutations/FormField';
+import { FieldSelect } from '@/component-library/features/mutations/FieldSelect';
 import { Input, Textarea } from '@/component-library/atoms/form/input';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
@@ -87,22 +88,16 @@ export const AddIdentityDialog: React.FC<AddIdentityDialogProps> = ({ open, onOp
             <div className="space-y-4">
                 {error && <Alert variant="error" message={error} />}
                 <FormField id="add-identity-type" label="Type" required>
-                    <select
+                    <FieldSelect
                         id="add-identity-type"
-                        className={selectClassName}
                         value={authType}
-                        onChange={e => {
-                            setAuthType(e.target.value as SelectableIdentityType);
+                        onValueChange={v => {
+                            setAuthType(v as SelectableIdentityType);
                             setPassword('');
                             setConfirm('');
                         }}
-                    >
-                        {TYPES.map(t => (
-                            <option key={t} value={t}>
-                                {IDENTITY_TYPE_HINTS[t].label}
-                            </option>
-                        ))}
-                    </select>
+                        options={TYPES.map(t => ({ value: t, label: IDENTITY_TYPE_HINTS[t].label }))}
+                    />
                 </FormField>
                 <FormField id="add-identity-value" label="Identity" required hint={hints.help}>
                     {hints.multiline ? (
@@ -147,6 +142,9 @@ export const AddIdentityDialog: React.FC<AddIdentityDialogProps> = ({ open, onOp
                                 aria-describedby={describedBy('add-identity-confirm', { error: confirmError })}
                             />
                         </FormField>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                            Only used if this username does not exist in Rucio yet. Passwords cannot be changed from the WebUI.
+                        </p>
                     </>
                 )}
                 <FormField id="add-identity-email" label="Email" required error={emailError}>
@@ -163,7 +161,7 @@ export const AddIdentityDialog: React.FC<AddIdentityDialogProps> = ({ open, onOp
                 <div className="flex items-center gap-2">
                     <Checkbox id="add-identity-default" checked={isDefault} onCheckedChange={v => setIsDefault(v === true)} />
                     <label htmlFor="add-identity-default" className="text-sm text-neutral-900 dark:text-neutral-100">
-                        Use as the default identity for this account
+                        Default account for this identity
                     </label>
                 </div>
             </div>

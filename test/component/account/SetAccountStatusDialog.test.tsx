@@ -18,6 +18,13 @@ describe('SetAccountStatusDialog', () => {
         noEmDash();
     });
 
+    it('describes the effect', () => {
+        const { rerender } = render(<SetAccountStatusDialog open onOpenChange={jest.fn()} account="jdoe" mode="suspend" onSubmit={jest.fn()} />);
+        expect(screen.getByText(/Existing sessions keep working until their tokens expire/)).toBeInTheDocument();
+        rerender(<SetAccountStatusDialog open onOpenChange={jest.fn()} account="jdoe" mode="reactivate" onSubmit={jest.fn()} />);
+        expect(screen.getByText(/become visible again/)).toBeInTheDocument();
+    });
+
     it('renders the server error', () => {
         render(<SetAccountStatusDialog open onOpenChange={jest.fn()} account="jdoe" mode="suspend" onSubmit={jest.fn()} error="Not allowed" />);
         expect(screen.getByRole('alert')).toHaveTextContent('Not allowed');

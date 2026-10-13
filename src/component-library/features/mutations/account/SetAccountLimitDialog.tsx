@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MutationDialog } from '@/component-library/features/mutations/MutationDialog';
-import { FormField, describedBy, selectClassName } from '@/component-library/features/mutations/FormField';
+import { FormField, describedBy } from '@/component-library/features/mutations/FormField';
+import { FieldSelect } from '@/component-library/features/mutations/FieldSelect';
 import { Input } from '@/component-library/atoms/form/input';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
@@ -107,37 +108,48 @@ export const SetAccountLimitDialog: React.FC<SetAccountLimitDialogProps> = ({
         >
             <div className="space-y-4">
                 {error && <Alert variant="error" message={error} />}
-                <FormField id="limit-locality" label="Scope" required>
-                    <select
-                        id="limit-locality"
-                        className={selectClassName}
-                        value={locality}
-                        disabled={isEdit}
-                        onChange={e => {
-                            setLocality(e.target.value as AccountLimitLocality);
-                            setRseExpression('');
-                        }}
-                    >
-                        <option value="local">Local (one RSE)</option>
-                        <option value="global">Global (RSE expression)</option>
-                    </select>
-                </FormField>
+                <fieldset>
+                    <legend className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">
+                        Scope <span className="text-base-error-600">*</span>
+                    </legend>
+                    <div className="flex gap-4">
+                        {(
+                            [
+                                ['local', 'Local (per RSE)'],
+                                ['global', 'Global (per RSE expression)'],
+                            ] as const
+                        ).map(([value, label]) => (
+                            <label key={value} className="flex items-center gap-2 cursor-pointer select-none">
+                                <input
+                                    type="radio"
+                                    name="limit-locality"
+                                    value={value}
+                                    checked={locality === value}
+                                    disabled={isEdit}
+                                    onChange={() => {
+                                        setLocality(value);
+                                        setRseExpression('');
+                                    }}
+                                    className="text-brand-500 focus:ring-brand-500"
+                                />
+                                <span className="text-sm text-neutral-900 dark:text-neutral-100">{label}</span>
+                            </label>
+                        ))}
+                    </div>
+                </fieldset>
                 {locality === 'local' ? (
                     <FormField id="limit-rse" label="RSE" required>
-                        <select
+                        <FieldSelect
                             id="limit-rse"
-                            className={selectClassName}
                             value={rseExpression}
                             disabled={isEdit}
-                            onChange={e => setRseExpression(e.target.value)}
-                        >
-                            <option value="">Select an RSE</option>
-                            {(rses.includes(rseExpression) || !rseExpression ? rses : [rseExpression, ...rses]).map(r => (
-                                <option key={r} value={r}>
-                                    {r}
-                                </option>
-                            ))}
-                        </select>
+                            onValueChange={setRseExpression}
+                            placeholder="Select an RSE"
+                            options={(rses.includes(rseExpression) || !rseExpression ? rses : [rseExpression, ...rses]).map(r => ({
+                                value: r,
+                                label: r,
+                            }))}
+                        />
                     </FormField>
                 ) : (
                     <FormField id="limit-rse" label="RSE expression" required hint="For example tier=1&type=DATADISK">
@@ -167,19 +179,15 @@ export const SetAccountLimitDialog: React.FC<SetAccountLimitDialogProps> = ({
                             />
                         </FormField>
                     </div>
-                    <select
+                    <FieldSelect
+                        id="limit-unit"
                         aria-label="Unit"
-                        className={`${selectClassName} w-24`}
+                        className="w-24"
                         value={unit}
                         disabled={unlimited}
-                        onChange={e => setUnit(e.target.value as LimitUnit)}
-                    >
-                        {Object.keys(LIMIT_UNITS).map(u => (
-                            <option key={u} value={u}>
-                                {u}
-                            </option>
-                        ))}
-                    </select>
+                        onValueChange={v => setUnit(v as LimitUnit)}
+                        options={Object.keys(LIMIT_UNITS).map(u => ({ value: u, label: u }))}
+                    />
                 </div>
                 <div className="flex items-center gap-2">
                     <Checkbox id="limit-unlimited" checked={unlimited} onCheckedChange={v => setUnlimited(v === true)} />

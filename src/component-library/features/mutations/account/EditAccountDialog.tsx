@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MutationDialog } from '@/component-library/features/mutations/MutationDialog';
-import { FormField, describedBy, selectClassName } from '@/component-library/features/mutations/FormField';
+import { FormField, describedBy } from '@/component-library/features/mutations/FormField';
+import { FieldSelect } from '@/component-library/features/mutations/FieldSelect';
 import { CREATABLE_ACCOUNT_TYPES } from '@/component-library/features/mutations/account/CreateAccountDialog';
 import { Input } from '@/component-library/atoms/form/input';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
@@ -26,6 +27,8 @@ export interface EditAccountDialogProps {
     /** Server error, rendered inside the dialog. The dialog stays open. */
     error?: string;
 }
+
+const typeLabel = (t: string) => t.charAt(0) + t.slice(1).toLowerCase();
 
 /** Dialog for editing the type and email of an account. */
 export const EditAccountDialog: React.FC<EditAccountDialogProps> = ({ open, onOpenChange, account, initial, onSubmit, loading = false, error }) => {
@@ -54,6 +57,10 @@ export const EditAccountDialog: React.FC<EditAccountDialogProps> = ({ open, onOp
         onSubmit(values);
     };
 
+    const changes: string[] = [];
+    if (typeChanged) changes.push(`Type: ${typeLabel(initial.accountType)} -> ${typeLabel(accountType)}`);
+    if (emailChanged) changes.push(`Email: ${initial.email || 'none'} -> ${trimmedEmail || 'none'}`);
+
     const typeOptions = CREATABLE_ACCOUNT_TYPES.includes(initial.accountType as (typeof CREATABLE_ACCOUNT_TYPES)[number])
         ? CREATABLE_ACCOUNT_TYPES
         : [initial.accountType, ...CREATABLE_ACCOUNT_TYPES];
@@ -72,18 +79,12 @@ export const EditAccountDialog: React.FC<EditAccountDialogProps> = ({ open, onOp
             <div className="space-y-4">
                 {error && <Alert variant="error" message={error} />}
                 <FormField id="edit-account-type" label="Type" required>
-                    <select
+                    <FieldSelect
                         id="edit-account-type"
-                        className={selectClassName}
                         value={accountType}
-                        onChange={e => setAccountType(e.target.value as AccountType)}
-                    >
-                        {typeOptions.map(t => (
-                            <option key={t} value={t}>
-                                {t.charAt(0) + t.slice(1).toLowerCase()}
-                            </option>
-                        ))}
-                    </select>
+                        onValueChange={v => setAccountType(v as AccountType)}
+                        options={typeOptions.map(t => ({ value: t, label: typeLabel(t) }))}
+                    />
                 </FormField>
                 <FormField id="edit-account-email" label="Email" error={emailError} hint="Leave empty to remove the email">
                     <Input
@@ -95,6 +96,16 @@ export const EditAccountDialog: React.FC<EditAccountDialogProps> = ({ open, onOp
                         aria-describedby={describedBy('edit-account-email', { error: emailError, hint: true })}
                     />
                 </FormField>
+                {changes.length > 0 && (
+                    <div className="rounded-md bg-neutral-100 dark:bg-neutral-800 p-3 text-sm text-neutral-900 dark:text-neutral-100">
+                        <p className="font-medium mb-1">Changes</p>
+                        <ul className="space-y-1">
+                            {changes.map(c => (
+                                <li key={c}>{c}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
         </MutationDialog>
     );

@@ -14,6 +14,7 @@ describe('DeleteAccountLimitDialog', () => {
         expect(screen.getByText('tier=1')).toBeInTheDocument();
         fireEvent.click(screen.getByRole('button', { name: 'Delete limit' }));
         expect(onSubmit).toHaveBeenCalledWith({ locality: 'global', rseExpression: 'tier=1' });
+        expect(screen.getByText(/Usage is kept/)).toBeInTheDocument();
         noEmDash();
     });
 });

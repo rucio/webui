@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { within, userEvent } from 'storybook/test';
 import { DeleteAccountDialog, DeleteAccountDialogProps } from './DeleteAccountDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
@@ -24,8 +25,8 @@ type Story = StoryObj<typeof DeleteAccountDialog>;
 
 type WrapperProps = Partial<Omit<DeleteAccountDialogProps, 'open' | 'onOpenChange'>>;
 
-const Wrapper = (props: WrapperProps) => {
-    const [open, setOpen] = useState(false);
+const Wrapper = ({ openInitially = false, ...props }: WrapperProps & { openInitially?: boolean }) => {
+    const [open, setOpen] = useState(openInitially);
     return (
         <>
             <Button variant="error" onClick={() => setOpen(true)}>
@@ -37,8 +38,14 @@ const Wrapper = (props: WrapperProps) => {
 };
 export const Default: Story = { render: () => <Wrapper /> };
 
-// Type a name that does not match exactly to keep the button disabled.
-export const ValidationErrors: Story = { render: () => <Wrapper /> };
+/** The play function enters invalid input so the inline error is visible. */
+export const ValidationErrors: Story = {
+    render: () => <Wrapper openInitially />,
+    play: async () => {
+        const body = within(document.body);
+        await userEvent.type(await body.findByLabelText(/Type jdoe to confirm/), 'jd');
+    },
+};
 
 export const Loading: Story = { render: () => <Wrapper loading /> };
 
