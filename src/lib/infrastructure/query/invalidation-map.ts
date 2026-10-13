@@ -35,6 +35,7 @@ export const INVALIDATION_MAP: Record<string, readonly InvalidationEntry[]> = {
     // which avoids refetching the deleted account (and a flash of 404), so there is nothing to invalidate.
     'delete-account': [],
     'add-account-attribute': [(vars: AccountVars) => accountKeys.attributes(vars.account)],
+    'update-account-attribute': [(vars: AccountVars) => accountKeys.attributes(vars.account)],
     'delete-account-attribute': [(vars: AccountVars) => accountKeys.attributes(vars.account)],
     'add-account-identity': [(vars: AccountVars) => accountKeys.identities(vars.account)],
     'delete-account-identity': [(vars: AccountVars) => accountKeys.identities(vars.account)],

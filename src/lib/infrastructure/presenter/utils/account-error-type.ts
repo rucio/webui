@@ -17,6 +17,7 @@ export type AccountOperation =
     | 'update-account'
     | 'delete-account'
     | 'add-account-attribute'
+    | 'update-account-attribute'
     | 'delete-account-attribute'
     | 'add-account-identity'
     | 'delete-account-identity'
@@ -31,6 +32,8 @@ export function toAccountErrorMessage(type: AccountErrorType, op: AccountOperati
     }
     if (type === 'permission_denied') return 'You do not have permission to do this. Your admin role may have changed; try signing in again.';
     if (type === 'unauthorized') return 'Your session has expired. Please sign in again.';
+    // The update use case words its own errors (missing attribute, rollback outcome), so its message is kept.
+    if (op === 'update-account-attribute') return fallback || 'Something went wrong. Please try again.';
     if (type === 'conflict' && op === 'create-account')
         return 'An account with this name exists or existed before. Deleted account names cannot be reused.';
     if (type === 'conflict' && op === 'add-account-attribute') return 'This attribute already exists. Delete it first to change its value.';

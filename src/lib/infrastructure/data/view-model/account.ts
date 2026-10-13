@@ -75,6 +75,7 @@ export interface CreateAccountViewModel extends AccountMutationViewModel {
 export type UpdateAccountViewModel = AccountMutationViewModel;
 export type DeleteAccountViewModel = AccountMutationViewModel;
 export type AddAccountAttributeViewModel = AccountMutationViewModel;
+export type UpdateAccountAttributeViewModel = AccountMutationViewModel;
 export type DeleteAccountAttributeViewModel = AccountMutationViewModel;
 export type AddAccountIdentityViewModel = AccountMutationViewModel;
 export type DeleteAccountIdentityViewModel = AccountMutationViewModel;
@@ -87,6 +88,7 @@ export function generateEmptyCreateAccountViewModel(): CreateAccountViewModel {
 export const generateEmptyUpdateAccountViewModel = generateEmptyAccountMutationViewModel;
 export const generateEmptyDeleteAccountViewModel = generateEmptyAccountMutationViewModel;
 export const generateEmptyAddAccountAttributeViewModel = generateEmptyAccountMutationViewModel;
+export const generateEmptyUpdateAccountAttributeViewModel = generateEmptyAccountMutationViewModel;
 export const generateEmptyDeleteAccountAttributeViewModel = generateEmptyAccountMutationViewModel;
 export const generateEmptyAddAccountIdentityViewModel = generateEmptyAccountMutationViewModel;
 export const generateEmptyDeleteAccountIdentityViewModel = generateEmptyAccountMutationViewModel;

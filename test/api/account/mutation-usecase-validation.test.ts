@@ -3,6 +3,7 @@ import UpdateAccountUseCase from '@/lib/core/use-case/update-account-usecase';
 import DeleteAccountUseCase from '@/lib/core/use-case/delete-account-usecase';
 import AddAccountAttributeUseCase from '@/lib/core/use-case/add-account-attribute-usecase';
 import DeleteAccountAttributeUseCase from '@/lib/core/use-case/delete-account-attribute-usecase';
+import UpdateAccountAttributeUseCase from '@/lib/core/use-case/update-account-attribute-usecase';
 import AddAccountIdentityUseCase from '@/lib/core/use-case/add-account-identity-usecase';
 import DeleteAccountIdentityUseCase from '@/lib/core/use-case/delete-account-identity-usecase';
 import SetAccountLimitUseCase from '@/lib/core/use-case/set-account-limit-usecase';
@@ -49,6 +50,7 @@ const invalid: [string, UseCaseClass, Record<string, unknown>, RegExp][] = [
     ['AddAccountAttribute rejects an invalid key', AddAccountAttributeUseCase, { account: 'jdoe', key: 'a b', value: 'x' }, /key/i],
     ['AddAccountAttribute rejects an invalid value', AddAccountAttributeUseCase, { account: 'jdoe', key: 'admin', value: '' }, /value/i],
     ['DeleteAccountAttribute rejects an invalid key', DeleteAccountAttributeUseCase, { account: 'jdoe', key: 'a'.repeat(31) }, /key/i],
+    ['UpdateAccountAttribute rejects an invalid value', UpdateAccountAttributeUseCase, { account: 'jdoe', key: 'k1', value: 'a b' }, /value/i],
     [
         'AddAccountIdentity rejects an empty identity',
         AddAccountIdentityUseCase,

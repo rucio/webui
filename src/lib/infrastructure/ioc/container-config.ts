@@ -62,6 +62,7 @@ import CreateAccountFeature from './features/create-account-feature';
 import DeleteAccountFeature from './features/delete-account-feature';
 import UpdateAccountFeature from './features/update-account-feature';
 import AddAccountAttributeFeature from './features/add-account-attribute-feature';
+import UpdateAccountAttributeFeature from './features/update-account-attribute-feature';
 import DeleteAccountAttributeFeature from './features/delete-account-attribute-feature';
 import AddAccountIdentityFeature from './features/add-account-identity-feature';
 import DeleteAccountIdentityFeature from './features/delete-account-identity-feature';
@@ -184,6 +185,7 @@ const accountManagementFeatures = [
     new DeleteAccountFeature(appContainer),
     new UpdateAccountFeature(appContainer),
     new AddAccountAttributeFeature(appContainer),
+    new UpdateAccountAttributeFeature(appContainer),
     new DeleteAccountAttributeFeature(appContainer),
     new AddAccountIdentityFeature(appContainer),
     new DeleteAccountIdentityFeature(appContainer),
