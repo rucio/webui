@@ -9,7 +9,7 @@ import { AccountListItemViewModel } from '@/lib/infrastructure/data/view-model/a
 import { AccountListItemDTO, ListAccountsDTO } from '@/lib/core/dto/account-dto';
 import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import { ACCOUNT_NAME_PATTERN_REGEX } from '@/lib/core/utils/account-validation';
-import { AccountType } from '@/lib/core/entity/rucio';
+import { isKnownAccountType } from '@/lib/core/entity/rucio';
 
 const MAX_IDENTITY_LENGTH = 1024;
 
@@ -34,7 +34,7 @@ export default class ListAccountsUseCase
         let message: string | undefined;
         if (account !== undefined && !ACCOUNT_NAME_PATTERN_REGEX.test(account)) {
             message = 'Invalid account name filter';
-        } else if (accountType !== undefined && ![AccountType.USER, AccountType.GROUP, AccountType.SERVICE].includes(accountType)) {
+        } else if (accountType !== undefined && !isKnownAccountType(accountType)) {
             message = 'Invalid account type filter';
         } else if (identity !== undefined && identity.length > MAX_IDENTITY_LENGTH) {
             message = 'Identity filter is too long';

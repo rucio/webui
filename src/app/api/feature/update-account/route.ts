@@ -9,6 +9,7 @@ import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastr
 import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 import { withAdmin } from '@/lib/infrastructure/adapters/with-admin';
 import { ACCOUNT_NAME_REGEX, isValidEmail } from '@/lib/core/utils/account-validation';
+import { ACCOUNT_TYPES } from '@/lib/core/entity/rucio';
 import { AccountUpdateOptions } from '@/lib/core/entity/account';
 
 const BodySchema = z
@@ -19,7 +20,7 @@ const BodySchema = z
                 email: z.string().refine(isValidEmail, 'Invalid email').nullable().optional(),
                 // DELETED is not accepted: accounts are deleted through the delete-account feature
                 status: z.enum(['ACTIVE', 'SUSPENDED']).optional(),
-                accountType: z.enum(['USER', 'GROUP', 'SERVICE']).optional(),
+                accountType: z.enum(ACCOUNT_TYPES).optional(),
             })
             .strict()
             .refine(options => Object.keys(options).length > 0, { message: 'At least one update option must be provided' }),

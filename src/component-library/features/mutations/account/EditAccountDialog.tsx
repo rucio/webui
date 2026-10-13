@@ -5,10 +5,9 @@ import { useState, useEffect } from 'react';
 import { MutationDialog } from '@/component-library/features/mutations/MutationDialog';
 import { FormField, describedBy } from '@/component-library/features/mutations/FormField';
 import { FieldSelect } from '@/component-library/features/mutations/FieldSelect';
-import { CREATABLE_ACCOUNT_TYPES } from '@/component-library/features/mutations/account/CreateAccountDialog';
 import { Input } from '@/component-library/atoms/form/input';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
-import { AccountType } from '@/lib/core/entity/rucio';
+import { AccountType, ACCOUNT_TYPES, ACCOUNT_TYPE_LABELS, isKnownAccountType } from '@/lib/core/entity/rucio';
 import { isValidEmail } from '@/lib/core/utils/account-validation';
 
 /** Only the fields that changed. `email: null` clears the email. */
@@ -28,7 +27,7 @@ export interface EditAccountDialogProps {
     error?: string;
 }
 
-const typeLabel = (t: string) => t.charAt(0) + t.slice(1).toLowerCase();
+const typeLabel = (t: string) => (isKnownAccountType(t) ? ACCOUNT_TYPE_LABELS[t] : t.charAt(0) + t.slice(1).toLowerCase());
 
 /** Dialog for editing the type and email of an account. */
 export const EditAccountDialog: React.FC<EditAccountDialogProps> = ({ open, onOpenChange, account, initial, onSubmit, loading = false, error }) => {
@@ -61,9 +60,7 @@ export const EditAccountDialog: React.FC<EditAccountDialogProps> = ({ open, onOp
     if (typeChanged) changes.push(`Type: ${typeLabel(initial.accountType)} -> ${typeLabel(accountType)}`);
     if (emailChanged) changes.push(`Email: ${initial.email || 'none'} -> ${trimmedEmail || 'none'}`);
 
-    const typeOptions = CREATABLE_ACCOUNT_TYPES.includes(initial.accountType as (typeof CREATABLE_ACCOUNT_TYPES)[number])
-        ? CREATABLE_ACCOUNT_TYPES
-        : [initial.accountType, ...CREATABLE_ACCOUNT_TYPES];
+    const typeOptions = isKnownAccountType(initial.accountType) ? ACCOUNT_TYPES : [initial.accountType, ...ACCOUNT_TYPES];
 
     return (
         <MutationDialog

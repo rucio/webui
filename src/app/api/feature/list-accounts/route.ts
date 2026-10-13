@@ -9,12 +9,12 @@ import { executeAuthenticatedController } from '@/lib/infrastructure/adapters/ap
 import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 import { withAdmin } from '@/lib/infrastructure/adapters/with-admin';
 import { ACCOUNT_NAME_PATTERN_REGEX } from '@/lib/core/utils/account-validation';
-import { AccountType } from '@/lib/core/entity/rucio';
+import { ACCOUNT_TYPES } from '@/lib/core/entity/rucio';
 import { AccountListFilter } from '@/lib/core/entity/account';
 
 const QuerySchema = z.object({
     account: z.string().regex(ACCOUNT_NAME_PATTERN_REGEX).optional(),
-    accountType: z.enum([AccountType.USER, AccountType.GROUP, AccountType.SERVICE]).optional(),
+    accountType: z.enum(ACCOUNT_TYPES).optional(),
     identity: z.string().max(1024).optional(),
 });
 
