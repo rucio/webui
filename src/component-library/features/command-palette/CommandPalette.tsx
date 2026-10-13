@@ -174,6 +174,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         setSelectedIndex(0);
     }, [searchQuery]);
 
+    // Keep the keyboard-selected item visible inside the scrollable results list
+    useEffect(() => {
+        if (!open) return;
+        const selected = document.getElementById('command-palette-results')?.querySelector('[aria-selected="true"]');
+        if (selected && typeof selected.scrollIntoView === 'function') {
+            selected.scrollIntoView({ block: 'nearest' });
+        }
+    }, [selectedIndex, open, sections]);
+
     // Reset state when palette closes
     useEffect(() => {
         if (!open) {
