@@ -55,6 +55,7 @@ import RuleGateway from '../gateway/rule-gateway/rule-gateway';
 import ListAccountRSEQuotasFeature from './features/list-account-rse-quotas-feature';
 import GetAccountInfoFeature from './features/get-account-info-feature';
 import ListAccountsFeature from './features/list-accounts-feature';
+import GetAccountQuotasFeature from './features/get-account-quotas-feature';
 import ListAccountIdentitiesFeature from './features/list-account-identities-feature';
 import ListAccountAttributesFeature from './features/list-account-attributes-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
@@ -169,6 +170,7 @@ const accountManagementFeatures = [
     new ListAccountsFeature(appContainer),
     new ListAccountAttributesFeature(appContainer),
     new ListAccountIdentitiesFeature(appContainer),
+    new GetAccountQuotasFeature(appContainer),
 ];
 loadFeaturesSync(appContainer, accountManagementFeatures);
 

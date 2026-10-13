@@ -1,5 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
-import { AccountAttribute, AccountIdentity, AccountListItem } from '../entity/account';
+import { AccountAttribute, AccountGlobalQuota, AccountIdentity, AccountListItem, AccountLocalQuota } from '../entity/account';
 import { AccountInfo, RSEAccountUsage } from '../entity/rucio';
 
 type TAccountAttribute = {
@@ -110,3 +110,13 @@ export interface AccountGlobalUsageDTO extends BaseDTO {
  * DTO for account mutations (create/update/delete/add/del/set). Rucio returns `Created` text or an empty body.
  */
 export interface AccountMutationDTO extends BaseDTO {}
+
+/**
+ * Synthetic DTO assembled by the GetAccountQuotas use case from the local limits, local usage,
+ * global limits and global usage endpoints.
+ */
+export interface AccountQuotasDTO extends BaseDTO {
+    account: string;
+    local: AccountLocalQuota[];
+    global: AccountGlobalQuota[];
+}
