@@ -107,6 +107,8 @@ export default class GetAccountQuotasUseCase
 
         for (const dto of [limitsDTO, usageDTO, globalLimitsDTO, globalUsageDTO]) {
             if (dto.status === 'error') {
+                // The usage stream is already open and will not be consumed: release it.
+                usageDTO.stream?.destroy?.();
                 return { ...dto, account, local: [], global: [] };
             }
         }
