@@ -268,7 +268,12 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
             afterAdminChange(vars.key);
         },
         onMutate: clearDialogError,
-        onError: onMutationError,
+        onError: (vm, vars) => {
+            onMutationError(vm as unknown as AccountMutationViewModel);
+            // The delete may have succeeded even though the update failed: refresh the list and the role.
+            void invalidateForMutation(queryClient, 'update-account-attribute', vars);
+            afterAdminChange(vars.key);
+        },
     });
     const deleteAttributeMutation = useMutation({
         mutationFn: (vars: { account: string; key: string }) => sendMutation('delete-account-attribute', 'DELETE', vars),

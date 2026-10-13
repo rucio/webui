@@ -77,7 +77,14 @@ export default class UpdateAccountAttributeUseCase
                 return;
             }
 
-            const added = await this.gateway.addAccountAttribute(rucioAuthToken, account, key, value);
+            let added: AccountMutationDTO;
+            try {
+                added = await this.gateway.addAccountAttribute(rucioAuthToken, account, key, value);
+            } catch (thrown) {
+                added = thrown as AccountMutationDTO;
+                if (!added || added.status !== 'error')
+                    added = { status: 'error', errorMessage: String(thrown), errorCode: 500 } as AccountMutationDTO;
+            }
             if (added.status !== 'success') {
                 const error = this.toError(added);
                 const restored = await this.restore(rucioAuthToken, account, key, previous);

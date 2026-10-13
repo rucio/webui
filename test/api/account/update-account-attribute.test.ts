@@ -73,6 +73,15 @@ describe('Feature: UpdateAccountAttribute', () => {
         expect(data.message).not.toContain(EM_DASH);
     });
 
+    it('keeps the rollback outcome when the add is refused after the delete', async () => {
+        mockRucio({ add: failure(401, 'AccessDenied') });
+        const res = await run();
+        expect(res._getStatusCode()).toBe(401);
+        const data: UpdateAccountAttributeViewModel = await res._getJSONData();
+        expect(data.errorType).toBe('permission_denied');
+        expect(data.message).toContain('is now missing');
+    });
+
     it('reports a missing attribute as not_found', async () => {
         mockRucio({ existing: [{ key: 'other', value: 'x' }] });
         const res = await run();
