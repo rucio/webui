@@ -5,10 +5,9 @@ import { MutationDialog } from '@/component-library/features/mutations/MutationD
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { HiExclamationCircle } from 'react-icons/hi';
 
-export interface DeleteAttributeDialogProps {
+export interface DeleteAccountAttributeDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    entityLabel: 'RSE' | 'account';
     entityName: string;
     attributeKey: string;
     attributeValue?: string;
@@ -21,26 +20,24 @@ export interface DeleteAttributeDialogProps {
 }
 
 /**
- * Confirmation dialog for deleting an RSE or account attribute.
+ * Confirmation dialog for deleting an account attribute.
  * Displays the attribute key and value being deleted.
  *
  * @example
  * ```tsx
- * <DeleteAttributeDialog
+ * <DeleteAccountAttributeDialog
  *     open={isOpen}
  *     onOpenChange={setIsOpen}
- *     entityLabel="RSE"
- *     entityName="CERN-DISK"
- *     attributeKey="fts"
- *     attributeValue="https://fts3.cern.ch:8446"
+ *     entityName="jdoe"
+ *     attributeKey="country"
+ *     attributeValue="CH"
  *     onConfirm={handleDelete}
  * />
  * ```
  */
-export const DeleteAttributeDialog: React.FC<DeleteAttributeDialogProps> = ({
+export const DeleteAccountAttributeDialog: React.FC<DeleteAccountAttributeDialogProps> = ({
     open,
     onOpenChange,
-    entityLabel,
     entityName,
     attributeKey,
     attributeValue,
@@ -53,7 +50,7 @@ export const DeleteAttributeDialog: React.FC<DeleteAttributeDialogProps> = ({
         <MutationDialog
             open={open}
             onOpenChange={onOpenChange}
-            title={`Delete ${entityLabel} attribute`}
+            title="Delete account attribute"
             description={`Remove an attribute from ${entityName}.`}
             onSubmit={onConfirm}
             submitLabel="Delete attribute"
@@ -65,7 +62,7 @@ export const DeleteAttributeDialog: React.FC<DeleteAttributeDialogProps> = ({
                 <div className="flex items-start gap-3 rounded-md bg-base-error-50 dark:bg-base-error-950 border border-base-error-200 dark:border-base-error-800 p-3">
                     <HiExclamationCircle className="h-5 w-5 shrink-0 text-base-error-600 dark:text-base-error-400 mt-0.5" aria-hidden="true" />
                     <p className="text-sm text-base-error-900 dark:text-base-error-100">
-                        This will permanently remove this attribute from the {entityLabel}.
+                        This will permanently remove this attribute from the account.
                     </p>
                 </div>
                 {warning}

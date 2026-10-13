@@ -7,10 +7,9 @@ import { FormField, describedBy } from '@/component-library/features/mutations/F
 import { Input } from '@/component-library/atoms/form/input';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 
-export interface AddAttributeDialogProps {
+export interface AddAccountAttributeDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    entityLabel: 'RSE' | 'account';
     entityName: string;
     existingKeys?: string[];
     /** Return an error message for an invalid key, or undefined when valid. Runs on non-empty input. */
@@ -28,26 +27,24 @@ export interface AddAttributeDialogProps {
 }
 
 /**
- * Dialog for adding a new attribute to an RSE or an account.
+ * Dialog for adding a new attribute to an account.
  * Validates that key and value are non-empty, the key is not a duplicate,
  * and any caller supplied rules.
  *
  * @example
  * ```tsx
- * <AddAttributeDialog
+ * <AddAccountAttributeDialog
  *     open={isOpen}
  *     onOpenChange={setIsOpen}
- *     entityLabel="RSE"
- *     entityName="CERN-DISK"
- *     existingKeys={['fts', 'site']}
+ *     entityName="jdoe"
+ *     existingKeys={['country', 'nickname']}
  *     onConfirm={(key, value) => handleAdd(key, value)}
  * />
  * ```
  */
-export const AddAttributeDialog: React.FC<AddAttributeDialogProps> = ({
+export const AddAccountAttributeDialog: React.FC<AddAccountAttributeDialogProps> = ({
     open,
     onOpenChange,
-    entityLabel,
     entityName,
     existingKeys = [],
     validateKey,
@@ -56,8 +53,8 @@ export const AddAttributeDialog: React.FC<AddAttributeDialogProps> = ({
     onConfirm,
     loading = false,
     error,
-    keyPlaceholder = 'e.g., fts',
-    valuePlaceholder = 'e.g., https://fts3.cern.ch:8446',
+    keyPlaceholder = 'e.g., country',
+    valuePlaceholder = 'e.g., CH',
 }) => {
     const [key, setKey] = useState('');
     const [value, setValue] = useState('');
@@ -85,7 +82,7 @@ export const AddAttributeDialog: React.FC<AddAttributeDialogProps> = ({
         <MutationDialog
             open={open}
             onOpenChange={onOpenChange}
-            title={`Add ${entityLabel} attribute`}
+            title="Add account attribute"
             description={`Add a new attribute to ${entityName}.`}
             onSubmit={handleSubmit}
             submitLabel="Add attribute"

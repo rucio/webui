@@ -13,11 +13,20 @@ export type { BoostRuleDialogProps } from './BoostRuleDialog';
 export { UpdatePriorityDialog } from './UpdatePriorityDialog';
 export type { UpdatePriorityDialogProps } from './UpdatePriorityDialog';
 
-export { AddAttributeDialog } from './attributes/AddAttributeDialog';
-export type { AddAttributeDialogProps } from './attributes/AddAttributeDialog';
+export { AddRSEAttributeDialog } from './AddRSEAttributeDialog';
+export type { AddRSEAttributeDialogProps } from './AddRSEAttributeDialog';
 
-export { DeleteAttributeDialog } from './attributes/DeleteAttributeDialog';
-export type { DeleteAttributeDialogProps } from './attributes/DeleteAttributeDialog';
+export { DeleteRSEAttributeDialog } from './DeleteRSEAttributeDialog';
+export type { DeleteRSEAttributeDialogProps } from './DeleteRSEAttributeDialog';
+
+export { AddAccountAttributeDialog } from './account-attributes/AddAccountAttributeDialog';
+export type { AddAccountAttributeDialogProps } from './account-attributes/AddAccountAttributeDialog';
+
+export { EditAccountAttributeDialog } from './account-attributes/EditAccountAttributeDialog';
+export type { EditAccountAttributeDialogProps } from './account-attributes/EditAccountAttributeDialog';
+
+export { DeleteAccountAttributeDialog } from './account-attributes/DeleteAccountAttributeDialog';
+export type { DeleteAccountAttributeDialogProps } from './account-attributes/DeleteAccountAttributeDialog';
 
 export { UpdateLifetimeDialog } from './UpdateLifetimeDialog';
 export type { UpdateLifetimeDialogProps } from './UpdateLifetimeDialog';
