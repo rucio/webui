@@ -533,6 +533,8 @@ Tables size to the viewport so they use the available space on any screen. The g
 <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden h-[calc(50vh-10rem)] min-h-48">
 ```
 
+**Byte size columns.** Columns that hold byte counts (quotas, usage, file sizes) use `byteSizeColumn` from `src/component-library/features/table/utils/byte-size.ts`, or its parts: `byteSizeFilterParams` with a `filterValueGetter` returning `byteSizeValue(...)`, and `byteSizeComparator`. Users can then filter with "1 TB" or "500 MB" instead of raw bytes, Unlimited (-1) counts as the largest value, and empty values sort last in both directions and are excluded from range filters. Do not hand-write byte comparators or use a plain `agNumberColumnFilter` on bytes.
+
 ### **Padding & Margin Guidelines**
 
 **Component Padding**

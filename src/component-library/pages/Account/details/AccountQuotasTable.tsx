@@ -11,6 +11,7 @@ import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/compo
 import { formatDecimalFileSize } from '@/component-library/features/utils/text-formatters';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import ProgressBar from '@/component-library/atoms/misc/ProgressBar';
+import { byteSizeColumn, compareNullsLast } from '@/component-library/features/table/utils/byte-size';
 import { cn } from '@/component-library/utils';
 import { AccountGlobalQuota, AccountLimitLocality, AccountLocalQuota, UNLIMITED_BYTES } from '@/lib/core/entity/account';
 import { AccountLimitTarget } from './details-account-types';
@@ -51,36 +52,15 @@ export const quotaState = (bytesLimit: number | null): QuotaState =>
 export const quotaUsagePercentage = (row?: Pick<QuotaRow, 'bytesUsed' | 'bytesLimit'>): number | null =>
     row ? quotaUsage(row.bytesUsed, row.bytesLimit)?.percentage ?? null : null;
 
-/** Quota in bytes for filtering. Only a set quota has a number: Unlimited and No quota are covered by the quota type filter. */
-export const quotaLimitFilterValue = (row?: Pick<QuotaRow, 'bytesLimit'>): number | null =>
-    row && row.bytesLimit !== null && !isUnlimited(row.bytesLimit) ? row.bytesLimit : null;
-
-/** Quota sort key: a number, Infinity for Unlimited (largest), null for No quota. */
-export const quotaLimitSortKey = (bytesLimit: number | null): number | null =>
-    bytesLimit === null ? null : isUnlimited(bytesLimit) ? Infinity : bytesLimit;
+/** Remaining bytes for sorting and filtering: Infinity for Unlimited, null for No quota. */
+export const quotaRemainingBytes = (row?: Pick<QuotaRow, 'bytesLimit' | 'bytesUsed' | 'bytesRemaining'>): number | null =>
+    row && row.bytesLimit !== null && isUnlimited(row.bytesLimit) ? Infinity : quotaRemainingValue(row);
 
 /** Remaining bytes of a set quota (negative when over). Null for Unlimited and No quota. */
 export const quotaRemainingValue = (row?: Pick<QuotaRow, 'bytesLimit' | 'bytesUsed' | 'bytesRemaining'>): number | null => {
     if (!row || row.bytesLimit === null || isUnlimited(row.bytesLimit)) return null;
     return row.bytesRemaining ?? row.bytesLimit - row.bytesUsed;
 };
-
-/** Remaining sort key: Unlimited counts as the largest, No quota (null) sorts last. */
-export const quotaRemainingSortKey = (row?: Pick<QuotaRow, 'bytesLimit' | 'bytesUsed' | 'bytesRemaining'>): number | null =>
-    row && row.bytesLimit !== null && isUnlimited(row.bytesLimit) ? Infinity : quotaRemainingValue(row);
-
-/**
- * Ascending number comparison with nulls last. AG Grid negates the result for a descending sort,
- * so nulls are flipped there to stay last in both directions.
- */
-export const compareNullsLast = (a: number | null | undefined, b: number | null | undefined, isDescending = false): number => {
-    if (a === null || a === undefined) return b === null || b === undefined ? 0 : isDescending ? -1 : 1;
-    if (b === null || b === undefined) return isDescending ? 1 : -1;
-    return a === b ? 0 : a < b ? -1 : 1;
-};
-
-export const quotaLimitComparator = (a: number | null, b: number | null, _nodeA?: unknown, _nodeB?: unknown, isDescending = false) =>
-    compareNullsLast(quotaLimitSortKey(a), quotaLimitSortKey(b), isDescending);
 
 export const QuotaLimitCell = ({ value }: { value: number | null }) => {
     if (value === null) return <NullBadge label="No quota" />;
@@ -197,16 +177,12 @@ export const buildQuotaColumnDefs = ({ locality, canManage, busy, handlers }: Qu
               // Match the RSEs the expression resolves to as well as the expression itself.
               filterValueGetter: searchText,
           },
-    {
+    byteSizeColumn<QuotaRow>({
         headerName: 'Quota',
-        field: 'bytesLimit' as const,
-        flex: 1,
-        minWidth: 120,
+        getValue: row => row?.bytesLimit,
         cellRenderer: QuotaLimitCell,
-        comparator: quotaLimitComparator,
-        filterValueGetter: (p: { data?: QuotaRow }) => quotaLimitFilterValue(p.data),
-        ...numberColumn,
-    },
+        minWidth: 120,
+    }),
     {
         headerName: 'Quota type',
         colId: 'quotaState',
@@ -216,25 +192,18 @@ export const buildQuotaColumnDefs = ({ locality, canManage, busy, handlers }: Qu
         filter: { component: AgGridMultiSelectFilter, handler: createMultiSelectFilterHandler<QuotaState>(QUOTA_STATES) },
         filterParams: { options: QUOTA_STATES },
     },
-    {
+    byteSizeColumn<QuotaRow>({
         headerName: 'Used',
-        field: 'bytesUsed' as const,
-        flex: 1,
-        minWidth: 110,
-        valueFormatter: (p: { value: number }) => formatDecimalFileSize(p.value),
-        ...numberColumn,
-    },
-    {
+        getValue: row => row?.bytesUsed,
+        valueFormatter: p => (p.value === null ? '' : formatDecimalFileSize(p.value)),
+    }),
+    byteSizeColumn<QuotaRow>({
         headerName: 'Remaining',
         colId: 'remaining',
-        flex: 1,
-        minWidth: 130,
+        getValue: quotaRemainingBytes,
         cellRenderer: QuotaRemainingCell,
-        valueGetter: (p: { data?: QuotaRow }) => quotaRemainingValue(p.data),
-        comparator: (_a: unknown, _b: unknown, nodeA: { data?: QuotaRow }, nodeB: { data?: QuotaRow }, isDescending: boolean) =>
-            compareNullsLast(quotaRemainingSortKey(nodeA.data), quotaRemainingSortKey(nodeB.data), isDescending),
-        ...numberColumn,
-    },
+        minWidth: 130,
+    }),
     { headerName: 'Files', field: 'files' as const, flex: 1, minWidth: 90, ...numberColumn },
     {
         headerName: 'Usage (%)',
