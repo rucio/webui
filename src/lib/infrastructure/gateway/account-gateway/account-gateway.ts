@@ -25,6 +25,10 @@ import UpdateAccountEndpoint from './endpoints/update-account-endpoint';
 import DeleteAccountEndpoint from './endpoints/delete-account-endpoint';
 import AddAccountAttributeEndpoint from './endpoints/add-account-attribute-endpoint';
 import DeleteAccountAttributeEndpoint from './endpoints/delete-account-attribute-endpoint';
+import AddAccountIdentityEndpoint from './endpoints/add-account-identity-endpoint';
+import DeleteAccountIdentityEndpoint from './endpoints/delete-account-identity-endpoint';
+import SetAccountLimitEndpoint from './endpoints/set-account-limit-endpoint';
+import DeleteAccountLimitEndpoint from './endpoints/delete-account-limit-endpoint';
 import GetAccountAttributesEndpoint from './endpoints/get-account-attributes-endpoint';
 import GetAccountGlobalLimitsEndpoint from './endpoints/get-account-global-limits-endpoint';
 import GetAccountInfoEndpoint from './endpoints/get-account-info-endpoint';
@@ -137,11 +141,11 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         password?: string,
         isDefault?: boolean,
     ): Promise<AccountMutationDTO> {
-        throw new Error('not implemented');
+        return this.mutate(() => new AddAccountIdentityEndpoint(rucioAuthToken, account, identity, type, email, password, isDefault));
     }
 
     async deleteAccountIdentity(rucioAuthToken: string, account: string, identity: string, type: IdentityType): Promise<AccountMutationDTO> {
-        throw new Error('not implemented');
+        return this.mutate(() => new DeleteAccountIdentityEndpoint(rucioAuthToken, account, identity, type));
     }
 
     async setAccountLimit(
@@ -151,7 +155,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         rseExpression: string,
         bytes: number,
     ): Promise<AccountMutationDTO> {
-        throw new Error('not implemented');
+        return this.mutate(() => new SetAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression, bytes));
     }
 
     async deleteAccountLimit(
@@ -160,7 +164,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         locality: AccountLimitLocality,
         rseExpression: string,
     ): Promise<AccountMutationDTO> {
-        throw new Error('not implemented');
+        return this.mutate(() => new DeleteAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression));
     }
 
     /** Runs a mutation endpoint. Errors are reported without request details because identity bodies can contain passwords. */
