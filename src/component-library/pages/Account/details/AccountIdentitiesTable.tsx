@@ -1,0 +1,93 @@
+'use client';
+
+import React, { useMemo, useRef } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { ICellRendererParams } from 'ag-grid-community';
+import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
+import { CopyableCell } from '@/component-library/features/table/cells/CopyableCell';
+import { ActionCell } from '@/component-library/features/table/cells/ActionCell';
+import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
+import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
+import { IdentityTypeBadge } from '@/component-library/features/badges/account/IdentityTypeBadge';
+import { AccountIdentity } from '@/lib/core/entity/account';
+
+/** Identity strings can be long (SSH keys, DNs): truncated, monospace, full value in the tooltip, click to copy. */
+export const IdentityCell = ({ value }: { value: string }) => (
+    <CopyableCell text={value} className="min-w-0">
+        <span className="font-mono truncate" title={value}>
+            {value}
+        </span>
+    </CopyableCell>
+);
+
+export interface AccountIdentitiesTableProps {
+    identities: AccountIdentity[];
+    /** Show the Delete action (admins with accounts.manage). */
+    canManage: boolean;
+    onDelete?: (identity: AccountIdentity) => void;
+}
+
+export const AccountIdentitiesTable = ({ identities, canManage, onDelete }: AccountIdentitiesTableProps) => {
+    const tableRef = useRef<AgGridReact<AccountIdentity>>(null);
+    // Keep the column definitions stable while the callback changes identity on every render.
+    const onDeleteRef = useRef(onDelete);
+    onDeleteRef.current = onDelete;
+
+    const columnDefs = useMemo(
+        () => [
+            {
+                headerName: 'Identity',
+                field: 'identity' as const,
+                flex: 3,
+                minWidth: 260,
+                cellRenderer: IdentityCell,
+                filterParams: DefaultTextFilterParams,
+            },
+            {
+                headerName: 'Type',
+                field: 'type' as const,
+                flex: 1,
+                minWidth: 120,
+                cellStyle: badgeCellWrapperStyle,
+                cellRenderer: IdentityTypeBadge,
+                cellRendererParams: { className: badgeCellClasses },
+                filterParams: DefaultTextFilterParams,
+            },
+            {
+                headerName: 'Email',
+                field: 'email' as const,
+                flex: 2,
+                minWidth: 200,
+                filterParams: DefaultTextFilterParams,
+            },
+            ...(canManage
+                ? [
+                      {
+                          headerName: '',
+                          colId: 'actions',
+                          width: 110,
+                          flex: 0,
+                          sortable: false,
+                          filter: false,
+                          floatingFilter: false,
+                          cellRenderer: (params: ICellRendererParams<AccountIdentity>) => (
+                              <ActionCell
+                                  actions={[
+                                      {
+                                          label: 'Delete',
+                                          icon: 'delete',
+                                          variant: 'error',
+                                          onClick: () => params.data && onDeleteRef.current?.(params.data),
+                                      },
+                                  ]}
+                              />
+                          ),
+                      },
+                  ]
+                : []),
+        ],
+        [canManage],
+    );
+
+    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={identities} />;
+};

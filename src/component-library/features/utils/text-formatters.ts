@@ -41,6 +41,23 @@ export const formatFileSize = (bytes: number): string => {
     return `${sign}${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 };
 
+/**
+ * Formats a size in base 10 (1 TB = 10^12 bytes), the convention Rucio uses for quotas
+ * and the one the quota dialogs use for input. `formatFileSize` is base 2.
+ */
+export const formatDecimalFileSize = (bytes: number): string => {
+    if (isNaN(bytes)) return DEFAULT_VALUE;
+    if (bytes === 0) return '0 Bytes';
+
+    const sign = bytes < 0 ? '-' : '';
+    bytes = Math.abs(bytes);
+
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.min(Math.max(Math.floor(Math.log10(bytes) / 3), 0), sizes.length - 1);
+
+    return `${sign}${parseFloat((bytes / Math.pow(1000, i)).toFixed(2))} ${sizes[i]}`;
+};
+
 export const formatSeconds = (seconds: number): string | undefined => {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
