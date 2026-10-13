@@ -4,7 +4,9 @@ import { BaseViewModel } from '@/lib/sdk/view-models';
 
 export type AccountErrorType = 'unauthorized' | 'permission_denied' | 'not_found' | 'conflict' | 'validation_error' | 'unknown';
 
-export interface AccountListItemViewModel extends BaseViewModel, AccountListItem {}
+export interface AccountListItemViewModel extends BaseViewModel, AccountListItem {
+    errorType?: AccountErrorType;
+}
 
 export function generateEmptyAccountListItemViewModel(): AccountListItemViewModel {
     return {
