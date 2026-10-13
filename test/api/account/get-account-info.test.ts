@@ -57,4 +57,71 @@ describe('Get Account Info', () => {
 
         expect(data.accountType).toBe(AccountType.SERVICE);
     });
+
+    it('should read an account other than the session account', async () => {
+        fetchMock.doMock();
+        const endpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/accounts/jdoe`,
+            method: 'GET',
+            includes: 'accounts/jdoe',
+            response: {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    status: 'ACTIVE',
+                    email: 'j@example.org',
+                    account_type: 'USER',
+                    account: 'jdoe',
+                    created_at: '2023-11-27T17:54:04',
+                    updated_at: '2023-11-27T17:54:04',
+                }),
+            },
+        };
+        MockRucioServerFactory.createMockRucioServer(true, [endpoint]);
+        const { res } = await createHttpMocks('/api/feature/get-account-info?account=jdoe', 'GET', {});
+
+        const controller = appContainer.get<BaseController<GetAccountInfoControllerParameters, GetAccountInfoRequest>>(CONTROLLERS.GET_ACCOUNT_INFO);
+        await controller.execute({
+            response: res as unknown as NextApiResponse,
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            account: 'jdoe',
+        });
+
+        expect(res._getStatusCode()).toBe(200);
+        const data: AccountInfoViewModel = await res._getJSONData();
+        expect(data.account).toBe('jdoe');
+        expect(data.accountType).toBe(AccountType.USER);
+    });
+
+    it.each([
+        [404, undefined, 'not_found'],
+        [401, 'AccessDenied', 'permission_denied'],
+        [401, undefined, 'unauthorized'],
+    ])('should map gateway status %s (%s) to errorType %s', async (status, exceptionClass, errorType) => {
+        fetchMock.doMock();
+        const endpoint: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/accounts/ghost`,
+            method: 'GET',
+            includes: 'accounts/ghost',
+            response: {
+                status,
+                headers: { 'Content-Type': 'application/json', ...(exceptionClass ? { ExceptionClass: exceptionClass } : {}) },
+                body: JSON.stringify({ ExceptionMessage: 'nope', ...(exceptionClass ? { ExceptionClass: exceptionClass } : {}) }),
+            },
+        };
+        MockRucioServerFactory.createMockRucioServer(true, [endpoint]);
+        const { res } = await createHttpMocks('/api/feature/get-account-info?account=ghost', 'GET', {});
+
+        const controller = appContainer.get<BaseController<GetAccountInfoControllerParameters, GetAccountInfoRequest>>(CONTROLLERS.GET_ACCOUNT_INFO);
+        await controller.execute({
+            response: res as unknown as NextApiResponse,
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            account: 'ghost',
+        });
+
+        expect(res._getStatusCode()).toBe(status);
+        const data: AccountInfoViewModel = await res._getJSONData();
+        expect(data.status).toBe('error');
+        expect(data.errorType).toBe(errorType);
+    });
 });
