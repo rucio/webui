@@ -9,12 +9,12 @@ import { executeAuthenticatedController, parseRequestBody } from '@/lib/infrastr
 import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 import { withAdmin } from '@/lib/infrastructure/adapters/with-admin';
 import { ACCOUNT_NAME_REGEX, isValidEmail } from '@/lib/core/utils/account-validation';
-import { AccountType } from '@/lib/core/entity/rucio';
+import { AccountType, ACCOUNT_TYPES } from '@/lib/core/entity/rucio';
 
 const BodySchema = z
     .object({
         account: z.string().regex(ACCOUNT_NAME_REGEX, 'Invalid account name'),
-        accountType: z.enum(['USER', 'GROUP', 'SERVICE']),
+        accountType: z.enum(ACCOUNT_TYPES),
         email: z.string().refine(isValidEmail, 'Invalid email').nullable(),
     })
     .strict();

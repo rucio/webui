@@ -1,6 +1,6 @@
 import { AccountInfoDTO, AccountListItemDTO, AccountRSEUsageDTO } from '@/lib/core/dto/account-dto';
 import { IdentityType } from '@/lib/core/entity/account';
-import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
+import { AccountStatus, AccountType, isKnownAccountType } from '@/lib/core/entity/rucio';
 
 /**
  * Represents the Rucio response for {@link ListAccountRSEUsageEndpoint}
@@ -80,16 +80,7 @@ export function convertToAccountRSEUsageDTO(data: TRucioAccountRSEUsage, account
 
 export function getAccountType(accountType: string): AccountType {
     const cleanedAccountType = accountType.toUpperCase().trim();
-    switch (cleanedAccountType) {
-        case 'USER':
-            return AccountType.USER;
-        case 'GROUP':
-            return AccountType.GROUP;
-        case 'SERVICE':
-            return AccountType.SERVICE;
-        default:
-            return AccountType.UNKNOWN;
-    }
+    return isKnownAccountType(cleanedAccountType) ? cleanedAccountType : AccountType.UNKNOWN;
 }
 
 function getAccountStatus(accountStatus: string): AccountStatus {

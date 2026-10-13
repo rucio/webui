@@ -7,10 +7,8 @@ import { FormField, describedBy } from '@/component-library/features/mutations/F
 import { FieldSelect } from '@/component-library/features/mutations/FieldSelect';
 import { Input } from '@/component-library/atoms/form/input';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
-import { AccountType } from '@/lib/core/entity/rucio';
+import { AccountType, ACCOUNT_TYPES, ACCOUNT_TYPE_LABELS } from '@/lib/core/entity/rucio';
 import { isValidAccountName, isValidEmail } from '@/lib/core/utils/account-validation';
-
-export const CREATABLE_ACCOUNT_TYPES = [AccountType.USER, AccountType.GROUP, AccountType.SERVICE] as const;
 
 export interface CreateAccountValues {
     account: string;
@@ -81,7 +79,7 @@ export const CreateAccountDialog: React.FC<CreateAccountDialogProps> = ({ open, 
                         id="create-account-type"
                         value={accountType}
                         onValueChange={v => setAccountType(v as AccountType)}
-                        options={CREATABLE_ACCOUNT_TYPES.map(t => ({ value: t, label: t.charAt(0) + t.slice(1).toLowerCase() }))}
+                        options={ACCOUNT_TYPES.map(t => ({ value: t, label: ACCOUNT_TYPE_LABELS[t] }))}
                     />
                 </FormField>
                 <FormField id="create-account-email" label="Email" error={emailError}>
