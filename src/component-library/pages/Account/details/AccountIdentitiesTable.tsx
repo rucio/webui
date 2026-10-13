@@ -8,8 +8,12 @@ import { CopyableCell } from '@/component-library/features/table/cells/CopyableC
 import { ActionCell } from '@/component-library/features/table/cells/ActionCell';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
-import { IdentityTypeBadge } from '@/component-library/features/badges/account/IdentityTypeBadge';
-import { AccountIdentity } from '@/lib/core/entity/account';
+import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { IdentityTypeBadge, IDENTITY_TYPE_BADGES } from '@/component-library/features/badges/account/IdentityTypeBadge';
+import { AccountIdentity, IDENTITY_TYPES, IdentityType } from '@/lib/core/entity/account';
+
+const typeOptions: IdentityType[] = [...IDENTITY_TYPES];
+const typeValueFormatter = (value: IdentityType) => IDENTITY_TYPE_BADGES[value].label;
 
 /** Identity strings can be long (SSH keys, DNs): truncated, monospace, full value in the tooltip, click to copy. */
 export const IdentityCell = ({ value }: { value: string }) => (
@@ -53,7 +57,11 @@ export const AccountIdentitiesTable = ({ identities, canManage, onDelete, busy =
                 cellStyle: badgeCellWrapperStyle,
                 cellRenderer: IdentityTypeBadge,
                 cellRendererParams: { className: badgeCellClasses },
-                filterParams: DefaultTextFilterParams,
+                filter: {
+                    component: AgGridMultiSelectFilter,
+                    handler: createMultiSelectFilterHandler(typeOptions, typeValueFormatter),
+                },
+                filterParams: { options: typeOptions, valueFormatter: typeValueFormatter },
             },
             {
                 headerName: 'Email',
