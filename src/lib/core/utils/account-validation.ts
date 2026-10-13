@@ -1,4 +1,4 @@
-import { AccountUpdateOptions, IdentityType } from '@/lib/core/entity/account';
+import { AccountUpdateOptions, IdentityType, IDENTITY_TYPES } from '@/lib/core/entity/account';
 import { AccountStatus, isKnownAccountType } from '@/lib/core/entity/rucio';
 import type { BaseErrorResponseModel } from '@/lib/sdk/usecase-models';
 
@@ -17,7 +17,6 @@ export const toAttributeValueString = (v: string | boolean): string => (typeof v
  * cases repeat them to protect other callers. Each check returns a message, or undefined when valid.
  */
 
-const IDENTITY_TYPES: string[] = Object.values(IdentityType).filter(t => t !== IdentityType.UNKNOWN);
 const UPDATE_STATUSES: string[] = [AccountStatus.ACTIVE, AccountStatus.SUSPENDED];
 const UPDATE_OPTION_KEYS = ['email', 'status', 'accountType'];
 
@@ -39,7 +38,7 @@ export const checkAttribute = (part: 'key' | 'value', s: string): string | undef
 
 export const checkIdentity = (identity: string, authType: string): string | undefined => {
     if (typeof identity !== 'string' || !identity.trim()) return 'Identity is required';
-    return IDENTITY_TYPES.includes(authType) ? undefined : 'Invalid identity type';
+    return (IDENTITY_TYPES as readonly string[]).includes(authType) ? undefined : 'Invalid identity type';
 };
 
 export const checkRseExpression = (rseExpression: string): string | undefined =>

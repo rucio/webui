@@ -1,5 +1,5 @@
 import { isValidAccountName, isValidAccountAttribute, isValidEmail, toAttributeValueString, IDENTITY_TYPE_HINTS } from './account-validation';
-import { IdentityType } from '@/lib/core/entity/account';
+import { IDENTITY_TYPES } from '@/lib/core/entity/account';
 
 const EM_DASH = String.fromCharCode(0x2014);
 
@@ -24,15 +24,7 @@ describe('account validation', () => {
         expect(pattern.test('*')).toBe(true);
     });
     it('has a hint for every real identity type, without em dashes', () => {
-        const REAL_TYPES: Exclude<IdentityType, IdentityType.UNKNOWN>[] = [
-            IdentityType.X509,
-            IdentityType.GSS,
-            IdentityType.USERPASS,
-            IdentityType.SSH,
-            IdentityType.SAML,
-            IdentityType.OIDC,
-        ];
-        REAL_TYPES.forEach(t => {
+        IDENTITY_TYPES.forEach(t => {
             expect(IDENTITY_TYPE_HINTS[t]).toBeDefined();
             expect(JSON.stringify(IDENTITY_TYPE_HINTS[t])).not.toContain(EM_DASH);
         });
