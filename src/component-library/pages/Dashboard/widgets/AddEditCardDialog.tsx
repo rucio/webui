@@ -29,6 +29,9 @@ function getTypeBadgeStyles(type: HotBarCardType): string {
         case HotBarCardType.RSE:
         case HotBarCardType.RSE_LIST:
             return 'bg-base-warning-100 text-base-warning-900 dark:bg-base-warning-900/20 dark:text-base-warning-100';
+        case HotBarCardType.ACCOUNT:
+        case HotBarCardType.ACCOUNT_LIST:
+            return 'bg-neutral-200 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100';
         default:
             return 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
     }
