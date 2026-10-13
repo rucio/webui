@@ -101,6 +101,41 @@ describe('ListAccounts', () => {
         expect(screen.queryByText(/directly/)).not.toBeInTheDocument();
     });
 
+    const finish = (rerender: (ui: React.ReactElement) => void, error?: any) => {
+        hook = { ...hook, status: StreamingStatus.STOPPED, error };
+        rerender(
+            <QueryClientProvider client={new QueryClient()}>
+                <ListAccounts />
+            </QueryClientProvider>,
+        );
+    };
+
+    it('offers the hint when the stream ends with NOT_FOUND for an exact name', () => {
+        params = new URLSearchParams('account=gone');
+        hook = { ...hook, status: StreamingStatus.RUNNING };
+        const { rerender } = renderPage();
+        finish(rerender, { type: StreamingErrorType.NOT_FOUND, message: 'none' });
+        expect(screen.getByRole('link', { name: 'Open gone directly' })).toBeInTheDocument();
+    });
+
+    it('does not offer the hint when rows exist', () => {
+        params = new URLSearchParams('account=jdoe');
+        gridApi.getDisplayedRowCount.mockReturnValue(1);
+        hook = { ...hook, status: StreamingStatus.RUNNING };
+        const { rerender } = renderPage();
+        finish(rerender);
+        expect(screen.queryByText(/directly/)).not.toBeInTheDocument();
+    });
+
+    it('does not offer the hint after a manual stop with zero rows', () => {
+        params = new URLSearchParams('account=jdoe');
+        hook = { ...hook, status: StreamingStatus.RUNNING };
+        const { rerender } = renderPage();
+        fireEvent.click(screen.getByRole('button', { name: 'Stop' }));
+        finish(rerender);
+        expect(screen.queryByText(/directly/)).not.toBeInTheDocument();
+    });
+
     it('shows a warning with Retry when the stream fails', () => {
         hook = { ...hook, error: { type: StreamingErrorType.NETWORK_ERROR, message: 'Boom' } };
         renderPage();

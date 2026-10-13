@@ -69,6 +69,12 @@ export const ListAccounts = () => {
     const { status, error } = streamingHook;
     const isRunning = status === StreamingStatus.RUNNING;
 
+    const userStopped = useRef(false);
+    const onStop = () => {
+        userStopped.current = true;
+        stopStreaming();
+    };
+
     const search = (f: AccountFilters, updateUrl: boolean) => {
         if (updateUrl) {
             const q = pageQuery(f);
@@ -76,6 +82,7 @@ export const ListAccounts = () => {
         }
         setSearched(f);
         setFinishedEmpty(false);
+        userStopped.current = false;
         startStreaming(streamUrl(f));
     };
 
@@ -97,6 +104,10 @@ export const ListAccounts = () => {
         }
         if (!wasRunning.current) return;
         wasRunning.current = false;
+        // A manual stop leaves a partial (possibly empty) grid, not a finished search.
+        if (userStopped.current) return;
+        // BAD_METHOD_CALL only means a start was attempted while a stream was already
+        // running (useTableStreaming also toasts that), so the running stream is unaffected.
         if (error && error.type !== StreamingErrorType.NOT_FOUND) return;
         gridApi?.flushAsyncTransactions();
         setFinishedEmpty((gridApi?.getDisplayedRowCount() ?? 0) === 0);
@@ -165,7 +176,7 @@ export const ListAccounts = () => {
                     filters={filters}
                     onChange={setFilters}
                     onSearch={() => search(filters, true)}
-                    onStop={stopStreaming}
+                    onStop={onStop}
                     isRunning={isRunning}
                 />
             </div>
