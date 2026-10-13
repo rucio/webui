@@ -29,17 +29,20 @@ export const AttributeKeyCell = ({ value }: { value: string }) => {
 
 export interface AccountAttributesTableProps {
     attributes: AccountAttribute[];
-    /** Show the Delete action (admins with accounts.manage). */
+    /** Show the Edit and Delete actions (admins with accounts.manage). */
     canManage: boolean;
+    onEdit?: (attribute: AccountAttribute) => void;
     onDelete?: (attribute: AccountAttribute) => void;
     /** A mutation is running: row actions are disabled. */
     busy?: boolean;
 }
 
-/** Account attributes, modelled on DetailsRSEAttributesTable, plus a Delete action. */
-export const AccountAttributesTable = ({ attributes, canManage, onDelete, busy = false }: AccountAttributesTableProps) => {
+/** Account attributes, modelled on DetailsRSEAttributesTable, plus Edit and Delete actions. */
+export const AccountAttributesTable = ({ attributes, canManage, onEdit, onDelete, busy = false }: AccountAttributesTableProps) => {
     const tableRef = useRef<AgGridReact<AccountAttribute>>(null);
     // Keep the column definitions stable while the callback changes identity on every render.
+    const onEditRef = useRef(onEdit);
+    onEditRef.current = onEdit;
     const onDeleteRef = useRef(onDelete);
     onDeleteRef.current = onDelete;
 
@@ -66,7 +69,7 @@ export const AccountAttributesTable = ({ attributes, canManage, onDelete, busy =
                       {
                           headerName: '',
                           colId: 'actions',
-                          width: 110,
+                          width: 190,
                           flex: 0,
                           sortable: false,
                           filter: false,
@@ -74,6 +77,13 @@ export const AccountAttributesTable = ({ attributes, canManage, onDelete, busy =
                           cellRenderer: (params: ICellRendererParams<AccountAttribute>) => (
                               <ActionCell
                                   actions={[
+                                      {
+                                          label: 'Edit',
+                                          icon: 'edit',
+                                          variant: 'neutral',
+                                          disabled: busy,
+                                          onClick: () => params.data && onEditRef.current?.(params.data),
+                                      },
                                       {
                                           label: 'Delete',
                                           icon: 'delete',

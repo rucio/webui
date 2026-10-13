@@ -12,10 +12,11 @@ export interface DetailsAccountAttributesProps {
     canManage: boolean;
     busy?: boolean;
     onAdd?: () => void;
+    onEdit?: (attribute: AccountAttribute) => void;
     onDelete?: (attribute: AccountAttribute) => void;
 }
 
-export const DetailsAccountAttributes = ({ attributes, canManage, busy = false, onAdd, onDelete }: DetailsAccountAttributesProps) => (
+export const DetailsAccountAttributes = ({ attributes, canManage, busy = false, onAdd, onEdit, onDelete }: DetailsAccountAttributesProps) => (
     <div className="flex flex-col gap-4">
         {canManage && (
             <div className="flex justify-end">
@@ -34,7 +35,7 @@ export const DetailsAccountAttributes = ({ attributes, canManage, busy = false, 
                 </InfoField>
             ) : (
                 <div className="rounded-lg bg-neutral-0 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-xs overflow-hidden h-[28rem]">
-                    <AccountAttributesTable attributes={attributes.data} canManage={canManage} onDelete={onDelete} busy={busy} />
+                    <AccountAttributesTable attributes={attributes.data} canManage={canManage} onEdit={onEdit} onDelete={onDelete} busy={busy} />
                 </div>
             ))}
     </div>

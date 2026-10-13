@@ -34,7 +34,7 @@ const tables = [
         'attributes',
         (canManage: boolean, busy = false) => <AccountAttributesTable attributes={[attribute]} canManage={canManage} busy={busy} />,
         attribute,
-        ['Delete'],
+        ['Edit', 'Delete'],
     ],
     [
         'quotas',
