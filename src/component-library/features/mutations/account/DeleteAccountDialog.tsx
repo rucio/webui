@@ -45,7 +45,10 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({ open, 
         >
             <div className="space-y-4">
                 {error && <Alert variant="error" message={error} />}
-                <Alert variant="warning" message="The account is soft deleted. Its name can never be reused, but it can be reactivated later." />
+                <Alert
+                    variant="warning"
+                    message="The account is soft deleted. Its name can never be reused, but it can be reactivated later. Existing sessions are not ended and keep working until their tokens expire."
+                />
                 <FormField id="delete-account-confirm" label={`Type ${account} to confirm`} hint="The name must match exactly">
                     <Input
                         id="delete-account-confirm"
