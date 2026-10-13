@@ -14,6 +14,7 @@ const USECASE_FACTORY = {
     GET_SUBSCRIPTION: Symbol.for('Factory<GetSubscriptionUseCase>'),
     LIST_ACCOUNT_RSE_QUOTAS: Symbol.for('Factory<ListAccountRSEQuotasUseCase>'),
     LIST_ACCOUNTS: Symbol.for('Factory<ListAccountsUseCase>'),
+    LIST_ACCOUNT_ATTRIBUTES: Symbol.for('Factory<ListAccountAttributesUseCase>'),
     LIST_ALL_RSES: Symbol.for('Factory<ListAllRSEsUseCase>'),
     LIST_DIDS: Symbol.for('Factory<ListDIDsUseCase>'),
     LIST_DID_CONTENTS: Symbol.for('Factory<ListDIDContentsUseCase>'),

@@ -55,6 +55,7 @@ import RuleGateway from '../gateway/rule-gateway/rule-gateway';
 import ListAccountRSEQuotasFeature from './features/list-account-rse-quotas-feature';
 import GetAccountInfoFeature from './features/get-account-info-feature';
 import ListAccountsFeature from './features/list-accounts-feature';
+import ListAccountAttributesFeature from './features/list-account-attributes-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
 import ListRulesPendingApprovalFeature from '@/lib/infrastructure/ioc/features/list-rules-pending-approval-feature';
@@ -163,7 +164,10 @@ const updateRuleFeatures = [new UpdateRuleFeature(appContainer)];
 loadFeaturesSync(appContainer, updateRuleFeatures);
 
 // Features: Account management
-const accountManagementFeatures = [new ListAccountsFeature(appContainer)];
+const accountManagementFeatures = [
+    new ListAccountsFeature(appContainer),
+    new ListAccountAttributesFeature(appContainer),
+];
 loadFeaturesSync(appContainer, accountManagementFeatures);
 
 // Features: Dashboard
