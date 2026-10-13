@@ -26,6 +26,7 @@ const MUTATION_ROUTES: [string, string, Handler][] = [
     ['update-account', 'PUT', (r: NextRequest) => require('@/app/api/feature/update-account/route').PUT(r)],
     ['delete-account', 'DELETE', (r: NextRequest) => require('@/app/api/feature/delete-account/route').DELETE(r)],
     ['add-account-attribute', 'POST', (r: NextRequest) => require('@/app/api/feature/add-account-attribute/route').POST(r)],
+    ['update-account-attribute', 'PUT', (r: NextRequest) => require('@/app/api/feature/update-account-attribute/route').PUT(r)],
     ['delete-account-attribute', 'DELETE', (r: NextRequest) => require('@/app/api/feature/delete-account-attribute/route').DELETE(r)],
     ['add-account-identity', 'POST', (r: NextRequest) => require('@/app/api/feature/add-account-identity/route').POST(r)],
     ['delete-account-identity', 'DELETE', (r: NextRequest) => require('@/app/api/feature/delete-account-identity/route').DELETE(r)],
