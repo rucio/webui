@@ -5,8 +5,9 @@ import { HeaderClient } from '@/component-library/features/layout/HeaderClient';
 
 // Controllable approval-queue permission (drives canViewApprovalQueue in HeaderClient).
 let canViewApprovalQueue = false;
+let sessionRole = 'user';
 
-jest.mock('next-auth/react', () => ({ useSession: () => ({ data: { user: { role: 'user' } }, update: jest.fn() }) }));
+jest.mock('next-auth/react', () => ({ useSession: () => ({ data: { user: { role: sessionRole } }, update: jest.fn() }) }));
 jest.mock('@/lib/infrastructure/hooks/usePermissions', () => ({
     usePermissions: () => ({ check: () => canViewApprovalQueue, isReady: true }),
 }));
@@ -45,6 +46,7 @@ const count = (label: string) => screen.queryAllByText(label).length;
 describe('HeaderClient nav gating', () => {
     beforeEach(() => {
         canViewApprovalQueue = false;
+        sessionRole = 'user';
     });
 
     it('shows RSEs when enabled', () => {
@@ -92,5 +94,25 @@ describe('HeaderClient nav gating', () => {
         canViewApprovalQueue = false;
         renderNav({ 'rules.approve': true });
         expect(count('Approve Rules')).toBe(0);
+    });
+
+    it('shows Accounts linking to /accounts for an admin when accounts is enabled', () => {
+        sessionRole = 'admin';
+        renderNav({ accounts: true });
+        const links = screen.getAllByText('Accounts').map(el => el.closest('a'));
+        expect(links.length).toBeGreaterThan(0);
+        links.forEach(a => expect(a).toHaveAttribute('href', '/accounts'));
+    });
+
+    it('hides Accounts for a non-admin even when accounts is enabled', () => {
+        sessionRole = 'user';
+        renderNav({ accounts: true });
+        expect(count('Accounts')).toBe(0);
+    });
+
+    it('hides Accounts for an admin when accounts is disabled', () => {
+        sessionRole = 'admin';
+        renderNav({ accounts: false });
+        expect(count('Accounts')).toBe(0);
     });
 });
