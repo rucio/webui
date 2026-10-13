@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
-import { DeleteRSEAttributeDialog } from './DeleteRSEAttributeDialog';
+import { DeleteAttributeDialog, DeleteAttributeDialogProps } from './DeleteAttributeDialog';
 import { Button } from '@/component-library/atoms/form/button';
+import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
 
-const meta: Meta<typeof DeleteRSEAttributeDialog> = {
-    title: 'Features/Mutations/DeleteRSEAttributeDialog',
-    component: DeleteRSEAttributeDialog,
+const meta: Meta<typeof DeleteAttributeDialog> = {
+    title: 'Features/Mutations/Attributes/DeleteAttributeDialog',
+    component: DeleteAttributeDialog,
     parameters: {
         layout: 'centered',
     },
@@ -22,56 +23,62 @@ const meta: Meta<typeof DeleteRSEAttributeDialog> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof DeleteRSEAttributeDialog>;
+type Story = StoryObj<typeof DeleteAttributeDialog>;
 
-const DeleteAttributeWrapper = ({
-    attributeKey = 'fts',
-    attributeValue,
-    loading = false,
-}: {
-    attributeKey?: string;
-    attributeValue?: string;
-    loading?: boolean;
-}) => {
+type WrapperProps = Partial<Omit<DeleteAttributeDialogProps, 'open' | 'onOpenChange'>>;
+
+const Wrapper = (props: WrapperProps) => {
     const [open, setOpen] = useState(false);
     return (
         <>
             <Button variant="error" onClick={() => setOpen(true)}>
-                Delete Attribute
+                Delete attribute
             </Button>
-            <DeleteRSEAttributeDialog
+            <DeleteAttributeDialog
+                entityLabel="RSE"
+                entityName="CERN-DISK"
+                attributeKey="fts"
+                onConfirm={() => setOpen(false)}
+                {...props}
                 open={open}
                 onOpenChange={setOpen}
-                rseName="CERN-DISK"
-                attributeKey={attributeKey}
-                attributeValue={attributeValue}
-                onConfirm={() => {
-                    alert(`Attribute '${attributeKey}' deleted!`);
-                    setOpen(false);
-                }}
-                loading={loading}
             />
         </>
     );
 };
 
-export const Default: Story = {
-    render: () => <DeleteAttributeWrapper attributeValue="https://fts3.cern.ch:8446" />,
+export const RSE: Story = {
+    render: () => <Wrapper attributeValue="https://fts3.cern.ch:8446" />,
 };
 
-export const WithoutValue: Story = {
-    render: () => <DeleteAttributeWrapper />,
+export const RSEWithoutValue: Story = {
+    render: () => <Wrapper />,
 };
 
-export const LongValue: Story = {
+export const RSELongValue: Story = {
+    render: () => <Wrapper attributeKey="endpoint_url" attributeValue="https://very-long-hostname.subdomain.example.cern.ch:8446/api/v1/transfers" />,
+};
+
+export const Account: Story = {
+    render: () => <Wrapper entityLabel="account" entityName="jdoe" attributeKey="country" attributeValue="CH" />,
+};
+
+export const AccountAdminAttribute: Story = {
     render: () => (
-        <DeleteAttributeWrapper
-            attributeKey="endpoint_url"
-            attributeValue="https://very-long-hostname.subdomain.example.cern.ch:8446/api/v1/transfers"
+        <Wrapper
+            entityLabel="account"
+            entityName="jdoe"
+            attributeKey="admin"
+            attributeValue="True"
+            warning={<Alert variant="warning" message="Removing the admin attribute takes away administrator rights from this account." />}
         />
     ),
 };
 
 export const Loading: Story = {
-    render: () => <DeleteAttributeWrapper attributeValue="https://fts3.cern.ch:8446" loading />,
+    render: () => <Wrapper attributeValue="https://fts3.cern.ch:8446" loading />,
+};
+
+export const ServerError: Story = {
+    render: () => <Wrapper attributeValue="https://fts3.cern.ch:8446" error="This attribute no longer exists." />,
 };

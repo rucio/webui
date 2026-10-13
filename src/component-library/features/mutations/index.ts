@@ -13,11 +13,12 @@ export type { BoostRuleDialogProps } from './BoostRuleDialog';
 export { UpdatePriorityDialog } from './UpdatePriorityDialog';
 export type { UpdatePriorityDialogProps } from './UpdatePriorityDialog';
 
-export { AddRSEAttributeDialog } from './AddRSEAttributeDialog';
-export type { AddRSEAttributeDialogProps } from './AddRSEAttributeDialog';
+export { AddAttributeDialog } from './attributes/AddAttributeDialog';
+export type { AddAttributeDialogProps } from './attributes/AddAttributeDialog';
 
-export { DeleteRSEAttributeDialog } from './DeleteRSEAttributeDialog';
-export type { DeleteRSEAttributeDialogProps } from './DeleteRSEAttributeDialog';
+export { DeleteAttributeDialog } from './attributes/DeleteAttributeDialog';
+export type { DeleteAttributeDialogProps } from './attributes/DeleteAttributeDialog';
+
 
 export { UpdateLifetimeDialog } from './UpdateLifetimeDialog';
 export type { UpdateLifetimeDialogProps } from './UpdateLifetimeDialog';
