@@ -4,7 +4,8 @@ import { getSessionUser } from '@/lib/infrastructure/auth/nextauth-session-utils
 import { Role, SessionUser } from '@/lib/core/entity/auth-models';
 import type { RouteHandler } from './with-feature';
 
-const forbidden = () => NextResponse.json({ status: 'error', errorType: 'permission_denied', message: 'Administrator role required' }, { status: 403 });
+const forbidden = () =>
+    NextResponse.json({ status: 'error', errorType: 'permission_denied', message: 'Administrator role required' }, { status: 403 });
 const unauthorized = () => NextResponse.json({ status: 'error', errorType: 'unauthorized', message: 'Not logged in' }, { status: 401 });
 
 async function loggedInUser(): Promise<SessionUser | undefined> {
