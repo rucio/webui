@@ -25,7 +25,7 @@ export function createMockSession(): MockSession {
  * @param body The request body.
  * @returns An object containing the mock request, response, and session objects.
  */
-export async function createHttpMocks(url?: string, method?: 'GET' | 'POST' | 'PUT', body: any = {}) {
+export async function createHttpMocks(url?: string, method?: 'GET' | 'POST' | 'PUT' | 'DELETE', body: any = {}) {
     const { req, res } = createMocks({
         url: url ? url : 'http://testhost:3000/',
         method: method ? method : 'GET',

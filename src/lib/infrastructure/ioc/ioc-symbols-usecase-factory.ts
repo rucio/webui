@@ -17,6 +17,7 @@ const USECASE_FACTORY = {
     GET_ACCOUNT_QUOTAS: Symbol.for('Factory<GetAccountQuotasUseCase>'),
     LIST_ACCOUNT_IDENTITIES: Symbol.for('Factory<ListAccountIdentitiesUseCase>'),
     LIST_ACCOUNT_ATTRIBUTES: Symbol.for('Factory<ListAccountAttributesUseCase>'),
+    CREATE_ACCOUNT: Symbol.for('Factory<CreateAccountUseCase>'),
     LIST_ALL_RSES: Symbol.for('Factory<ListAllRSEsUseCase>'),
     LIST_DIDS: Symbol.for('Factory<ListDIDsUseCase>'),
     LIST_DID_CONTENTS: Symbol.for('Factory<ListDIDContentsUseCase>'),
