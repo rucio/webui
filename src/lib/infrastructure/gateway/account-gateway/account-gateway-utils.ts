@@ -1,4 +1,5 @@
-import { AccountInfoDTO, AccountRSEUsageDTO } from '@/lib/core/dto/account-dto';
+import { AccountInfoDTO, AccountListItemDTO, AccountRSEUsageDTO } from '@/lib/core/dto/account-dto';
+import { IdentityType } from '@/lib/core/entity/account';
 import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 
 /**
@@ -24,6 +25,40 @@ export type TRucioAccountInfo = {
     suspended_at: null | string;
 };
 
+export type TRucioAccountListItem = { account: string; type: string; email: string | null };
+export type TRucioAccountIdentity = { type: string; identity: string; email: string };
+export type TRucioGlobalLimits = Record<string, { resolved_rses: string[]; resolved_rse_ids: string[]; limit: number }>;
+export type TRucioGlobalUsage = { rse_expression: string; bytes: number; files: number; bytes_limit: number; bytes_remaining: number };
+
+/**
+ * Parses an NDJSON body into objects. Blank lines are skipped and Rucio's non-standard `Infinity` becomes -1.
+ */
+export function parseNDJSON<T>(text: string): T[] {
+    return text
+        .split('\n')
+        .map(l => l.trim())
+        .filter(Boolean)
+        .map(l => JSON.parse(l.replace(/\bInfinity\b/g, '-1')) as T);
+}
+
+/**
+ * Parses one chunk emitted by the NDJSON stream parser. The parser forwards each line as a JSON string literal
+ * wrapping the line, so the chunk is unwrapped first and the line parsed second.
+ */
+export function parseStreamedLine<T>(chunk: Buffer | string): T {
+    const parsed = JSON.parse(chunk.toString());
+    return (typeof parsed === 'string' ? JSON.parse(parsed) : parsed) as T;
+}
+
+export function convertToIdentityType(identityType: string): IdentityType {
+    const key = identityType.toUpperCase().trim();
+    return Object.values(IdentityType).includes(key as IdentityType) ? (key as IdentityType) : IdentityType.UNKNOWN;
+}
+
+export function convertToAccountListItemDTO(data: TRucioAccountListItem): AccountListItemDTO {
+    return { status: 'success', account: data.account, accountType: getAccountType(data.type), email: data.email ?? null };
+}
+
 /**
  * Converts the {@link TRucioAccountRSEUsage} object returned by Rucio Server to {@link AccountRSEUsageDTO} object
  * @param data The {@link TRucioAccountRSEUsage} object returned by Rucio Server
@@ -43,7 +78,7 @@ export function convertToAccountRSEUsageDTO(data: TRucioAccountRSEUsage, account
     return dto;
 }
 
-function getAccountType(accountType: string): AccountType {
+export function getAccountType(accountType: string): AccountType {
     const cleanedAccountType = accountType.toUpperCase().trim();
     switch (cleanedAccountType) {
         case 'USER':

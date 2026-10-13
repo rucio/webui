@@ -1,4 +1,5 @@
 import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
+import { AccountAttribute, AccountIdentity, AccountListItem } from '../entity/account';
 import { AccountInfo, RSEAccountUsage } from '../entity/rucio';
 
 type TAccountAttribute = {
@@ -61,3 +62,51 @@ export type ListAccountsForIdentityDTO = {
     accounts: string[];
     message?: string;
 };
+
+/**
+ * A single account streamed from GET /accounts/
+ */
+export interface AccountListItemDTO extends BaseDTO, AccountListItem {}
+
+/**
+ * DTO for storing the response from GET /accounts/ (streamed)
+ */
+export interface ListAccountsDTO extends BaseStreamableDTO {}
+
+/**
+ * DTO for storing the response from GET /accounts/<account>/attr/
+ */
+export interface AccountAttributeListDTO extends BaseDTO {
+    account: string;
+    attributes: AccountAttribute[];
+}
+
+/**
+ * DTO for storing the response from GET /accounts/<account>/identities
+ */
+export interface AccountIdentityListDTO extends BaseDTO {
+    account: string;
+    identities: AccountIdentity[];
+}
+
+/**
+ * DTO for storing the response from GET /accounts/<account>/limits/global.
+ * Keyed by RSE expression. A limit of -1 means unlimited.
+ */
+export interface AccountGlobalLimitDTO extends BaseDTO {
+    account: string;
+    limits: Record<string, { resolvedRses: string[]; limit: number }>;
+}
+
+/**
+ * DTO for storing the response from GET /accounts/<account>/usage/global. A bytesLimit of -1 means unlimited.
+ */
+export interface AccountGlobalUsageDTO extends BaseDTO {
+    account: string;
+    usage: { rseExpression: string; bytes: number; files: number; bytesLimit: number; bytesRemaining: number }[];
+}
+
+/**
+ * DTO for account mutations (create/update/delete/add/del/set). Rucio returns `Created` text or an empty body.
+ */
+export interface AccountMutationDTO extends BaseDTO {}
