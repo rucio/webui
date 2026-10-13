@@ -4,9 +4,10 @@ import { AccountIdentitiesTable } from '@/component-library/pages/Account/detail
 import { AccountAttributesTable } from '@/component-library/pages/Account/details/AccountAttributesTable';
 import { AccountQuotasTable } from '@/component-library/pages/Account/details/AccountQuotasTable';
 import { IdentityType } from '@/lib/core/entity/account';
+import { AgGridMultiSelectFilter } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 // AG Grid does not render in jsdom, so capture the column definitions the tables pass to RegularTable.
-type Col = { colId?: string; cellRenderer?: (params: { data: unknown }) => React.ReactNode };
+type Col = { colId?: string; headerName?: string; filter?: any; filterParams?: any; cellRenderer?: (params: { data: unknown }) => React.ReactNode };
 let columns: Col[] = [];
 jest.mock('@/component-library/features/table/RegularTable/RegularTable', () => ({
     RegularTable: (props: { columnDefs: Col[] }) => {
@@ -72,5 +73,34 @@ describe('quota row actions', () => {
         render(<AccountQuotasTable locality="local" quotas={[{ ...quota, bytesLimit: null, bytesRemaining: null }]} canManage />);
         const { container } = renderActions({ ...quota, rseExpression: quota.rse, bytesLimit: null });
         expect(container).toBeEmptyDOMElement();
+    });
+});
+
+describe('identities type filter', () => {
+    beforeEach(() => {
+        columns = [];
+    });
+
+    it('is a multi-select over exactly the six real identity types, labelled like the badge', () => {
+        render(<AccountIdentitiesTable identities={[identity]} canManage={false} />);
+        const typeColumn = columns.find(c => c.headerName === 'Type')!;
+        expect(typeColumn.filter.component).toBe(AgGridMultiSelectFilter);
+        expect(typeof typeColumn.filter.handler).toBe('function');
+        expect(typeColumn.filterParams.options).toEqual([
+            IdentityType.X509,
+            IdentityType.GSS,
+            IdentityType.USERPASS,
+            IdentityType.SSH,
+            IdentityType.SAML,
+            IdentityType.OIDC,
+        ]);
+        expect(typeColumn.filterParams.options.map(typeColumn.filterParams.valueFormatter)).toEqual([
+            'X509',
+            'GSS',
+            'Userpass',
+            'SSH',
+            'SAML',
+            'OIDC',
+        ]);
     });
 });
