@@ -20,6 +20,7 @@ const CONTROLLERS = {
     DELETE_ACCOUNT: Symbol.for('DeleteAccountController'),
     UPDATE_ACCOUNT: Symbol.for('UpdateAccountController'),
     ADD_ACCOUNT_ATTRIBUTE: Symbol.for('AddAccountAttributeController'),
+    UPDATE_ACCOUNT_ATTRIBUTE: Symbol.for('UpdateAccountAttributeController'),
     DELETE_ACCOUNT_ATTRIBUTE: Symbol.for('DeleteAccountAttributeController'),
     ADD_ACCOUNT_IDENTITY: Symbol.for('AddAccountIdentityController'),
     DELETE_ACCOUNT_IDENTITY: Symbol.for('DeleteAccountIdentityController'),

@@ -67,6 +67,7 @@ describe('invalidateForMutation', () => {
 
     it.each([
         ['add-account-attribute', 'attributes'],
+        ['update-account-attribute', 'attributes'],
         ['delete-account-attribute', 'attributes'],
         ['add-account-identity', 'identities'],
         ['delete-account-identity', 'identities'],
@@ -84,6 +85,7 @@ describe('invalidateForMutation', () => {
             'update-account',
             'delete-account',
             'add-account-attribute',
+            'update-account-attribute',
             'delete-account-attribute',
             'add-account-identity',
             'delete-account-identity',
