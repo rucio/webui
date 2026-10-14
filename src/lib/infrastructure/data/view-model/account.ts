@@ -54,6 +54,8 @@ export function generateEmptyAccountIdentitiesViewModel(): AccountIdentitiesView
 export interface AccountQuotasViewModel extends BaseViewModel {
     local: AccountLocalQuota[];
     global: AccountGlobalQuota[];
+    /** User-facing message when Rucio could not list the global quotas; global is then empty. */
+    globalError?: string;
     errorType?: AccountErrorType;
 }
 

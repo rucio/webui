@@ -96,6 +96,30 @@ describe('GetAccountQuotasUseCase', () => {
         expect(destroy).toHaveBeenCalled();
     });
 
+    it('keeps the local quotas when Rucio cannot resolve a stored global expression', async () => {
+        const invalid = {
+            errorCode: 500,
+            errorName: 'Unknown Error',
+            errorClass: 'InvalidRSEExpression',
+            errorMessage: 'RSE Expression resulted in an empty set.',
+        };
+        const { responses, errors } = await run({
+            limits: limitsDTO({ XRD1: 10 }),
+            usage: usageDTO([usageRow('XRD1', 4)]),
+            globalLimits: { status: 'error', account: 'jdoe', limits: {}, ...invalid },
+            globalUsage: { status: 'error', account: 'jdoe', usage: [], ...invalid },
+        });
+        expect(errors).toHaveLength(0);
+        expect(responses[0].local).toEqual([{ rse: 'XRD1', rseId: 'id-XRD1', bytesLimit: 10, bytesUsed: 4, files: 1, bytesRemaining: 6 }]);
+        expect(responses[0].global).toEqual([]);
+        expect(responses[0].globalError).toBe('RSE Expression resulted in an empty set.');
+    });
+
+    it('sets no globalError when the global quotas load', async () => {
+        const { responses } = await run({});
+        expect(responses[0]).not.toHaveProperty('globalError');
+    });
+
     it('returns an error when the usage stream fails', async () => {
         const failing = new Readable({
             objectMode: true,

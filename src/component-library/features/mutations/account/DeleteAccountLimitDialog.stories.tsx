@@ -47,6 +47,9 @@ export const Local: Story = { render: () => <Wrapper /> };
 
 export const Global: Story = { render: () => <Wrapper locality="global" rseExpression="tier=1" /> };
 
+/** Rucio could not list the global quotas, so the expression is typed in. */
+export const GlobalByExpression: Story = { render: () => <Wrapper locality="global" rseExpression="" editable /> };
+
 export const Loading: Story = { render: () => <Wrapper loading /> };
 
 export const ServerError: Story = { render: () => <Wrapper error="This limit no longer exists." /> };

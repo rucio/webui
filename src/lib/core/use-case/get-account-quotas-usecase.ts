@@ -95,6 +95,8 @@ export default class GetAccountQuotasUseCase
 
     /**
      * Fans out to the four quota endpoints. Returns the first error DTO (no partial data), else a synthetic success DTO.
+     * The exception: when Rucio cannot resolve a stored global expression (InvalidRSEExpression), both global calls fail
+     * for the whole account. The local quotas are still returned, with the global ones replaced by globalError.
      */
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<GetAccountQuotasRequest>): Promise<AccountQuotasDTO> {
         const { rucioAuthToken, account } = requestModel;
@@ -105,7 +107,10 @@ export default class GetAccountQuotasUseCase
             this.gateway.listAccountGlobalUsage(rucioAuthToken, account),
         ]);
 
-        for (const dto of [limitsDTO, usageDTO, globalLimitsDTO, globalUsageDTO]) {
+        const globalFailure = [globalLimitsDTO, globalUsageDTO].find(dto => dto.status === 'error');
+        const globalError = globalFailure?.errorClass === 'InvalidRSEExpression' ? globalFailure.errorMessage ?? 'Invalid RSE expression' : undefined;
+
+        for (const dto of [limitsDTO, usageDTO, ...(globalError === undefined ? [globalLimitsDTO, globalUsageDTO] : [])]) {
             if (dto.status === 'error') {
                 // The usage stream is already open and will not be consumed: release it.
                 usageDTO.stream?.destroy?.();
@@ -139,7 +144,8 @@ export default class GetAccountQuotasUseCase
             status: 'success',
             account,
             local: mergeLocalQuotas(limitsDTO.limits, usage),
-            global: mergeGlobalQuotas(globalLimitsDTO.limits, globalUsageDTO.usage),
+            global: globalError === undefined ? mergeGlobalQuotas(globalLimitsDTO.limits, globalUsageDTO.usage) : [],
+            ...(globalError === undefined ? {} : { globalError }),
         };
     }
 
@@ -158,6 +164,7 @@ export default class GetAccountQuotasUseCase
             account: dto.account,
             local: dto.local,
             global: dto.global,
+            ...(dto.globalError === undefined ? {} : { globalError: dto.globalError }),
         };
         return { status: 'success', data: responseModel };
     }

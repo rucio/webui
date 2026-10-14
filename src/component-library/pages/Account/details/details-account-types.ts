@@ -23,6 +23,8 @@ export interface AccountResource<T> {
 export interface AccountQuotas {
     local: AccountLocalQuota[];
     global: AccountGlobalQuota[];
+    /** Rucio could not list the global quotas; global is then empty. */
+    globalError?: string;
 }
 
 export interface AccountLimitTarget {
