@@ -5,10 +5,13 @@ import { generateEmptyAccountQuotasViewModel, AccountQuotasViewModel } from '@/l
 
 export default class GetAccountQuotasPresenter extends BasePresenter<GetAccountQuotasResponse, GetAccountQuotasError, AccountQuotasViewModel> {
     convertResponseModelToViewModel(responseModel: GetAccountQuotasResponse): { viewModel: AccountQuotasViewModel; status: number } {
-        return {
-            status: 200,
-            viewModel: { status: 'success', local: responseModel.local, global: responseModel.global },
-        };
+        const viewModel: AccountQuotasViewModel = { status: 'success', local: responseModel.local, global: responseModel.global };
+        if (responseModel.globalError !== undefined) {
+            viewModel.globalError =
+                `Rucio could not list the global quotas: ${responseModel.globalError} ` +
+                'One of them uses an RSE expression that no longer matches any RSE. Remove it by its expression to list the others again.';
+        }
+        return { status: 200, viewModel };
     }
 
     convertErrorModelToViewModel(errorModel: GetAccountQuotasError): { viewModel: AccountQuotasViewModel; status: number } {

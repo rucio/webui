@@ -114,6 +114,23 @@ export const QuotasEdgeCases: Story = {
     args: { ...base, activeTab: 'quotas' },
 };
 
+/** A stored global expression matches no RSEs, so Rucio cannot list the global quotas. */
+export const QuotasGlobalUnavailable: Story = {
+    args: {
+        ...base,
+        activeTab: 'quotas',
+        quotas: {
+            isLoading: false,
+            data: {
+                ...quotas,
+                global: [],
+                globalError:
+                    'Rucio could not list the global quotas: RSE Expression resulted in an empty set. One of them uses an RSE expression that no longer matches any RSE. Remove it by its expression to list the others again.',
+            },
+        },
+    },
+};
+
 export const TabErrors: Story = {
     args: {
         ...base,

@@ -3,6 +3,7 @@ import { HiPlus } from 'react-icons/hi';
 import { Button } from '@/component-library/atoms/form/button';
 import { Heading } from '@/component-library/atoms/misc/Heading';
 import { InfoField } from '@/component-library/features/fields/InfoField';
+import { WarningField } from '@/component-library/features/fields/WarningField';
 import { AccountLimitLocality } from '@/lib/core/entity/account';
 import { AccountLimitTarget, AccountQuotas, AccountResource } from './details-account-types';
 import { AccountResourceState } from './AccountResourceState';
@@ -14,6 +15,7 @@ export interface DetailsAccountQuotasProps {
     busy?: boolean;
     /** Open the quota dialog: empty for a new quota, prefilled to edit one. */
     onSetLimit?: (initial?: AccountLimitTarget & { bytes: number }) => void;
+    /** An empty rseExpression asks for the expression to be typed in (Rucio could not list the global quotas). */
     onDeleteLimit?: (target: AccountLimitTarget) => void;
 }
 
@@ -39,10 +41,25 @@ export const DetailsAccountQuotas = ({ quotas, canManage, busy = false, onSetLim
                 <>
                     {SECTIONS.map(({ locality, title, empty, height }) => {
                         const rows = data[locality];
+                        const failed = locality === 'global' ? data.globalError : undefined;
                         return (
                             <section key={locality} className="flex flex-col gap-3" aria-label={title}>
                                 <Heading text={title} size="sm" level="h2" />
-                                {rows.length === 0 ? (
+                                {failed ? (
+                                    <WarningField>
+                                        <span className="flex-1">{failed}</span>
+                                        {canManage && (
+                                            <Button
+                                                variant="neutral"
+                                                size="sm"
+                                                onClick={() => onDeleteLimit?.({ locality: 'global', rseExpression: '' })}
+                                                disabled={busy}
+                                            >
+                                                Remove by expression
+                                            </Button>
+                                        )}
+                                    </WarningField>
+                                ) : rows.length === 0 ? (
                                     <InfoField>
                                         <span>{empty}</span>
                                     </InfoField>

@@ -1,4 +1,5 @@
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
+import RSEGatewayOutputPort from '@/lib/core/port/secondary/rse-gateway-output-port';
 import { SetAccountLimitError, SetAccountLimitRequest, SetAccountLimitResponse } from '@/lib/core/usecase-models/set-account-limit-usecase-models';
 import { SetAccountLimitControllerParameters } from '@/lib/infrastructure/controller/set-account-limit-controller';
 import SetAccountLimitController from '@/lib/infrastructure/controller/set-account-limit-controller';
@@ -24,13 +25,14 @@ export default class SetAccountLimitFeature extends BaseFeature<
 > {
     constructor(appContainer: Container) {
         const accountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
+        const rseGateway = appContainer.get<RSEGatewayOutputPort>(GATEWAYS.RSE);
 
         const symbols: IOCSymbols = {
             CONTROLLER: CONTROLLERS.SET_ACCOUNT_LIMIT,
             USECASE_FACTORY: USECASE_FACTORY.SET_ACCOUNT_LIMIT,
             INPUT_PORT: INPUT_PORT.SET_ACCOUNT_LIMIT,
         };
-        const useCaseConstructorArgs = [accountGateway];
+        const useCaseConstructorArgs = [accountGateway, rseGateway];
         super(
             'SetAccountLimit',
             SetAccountLimitController,
