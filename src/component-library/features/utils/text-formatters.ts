@@ -1,9 +1,9 @@
 const DEFAULT_VALUE = 'N/A';
 
 export const formatDateTime = (input: Date | string | undefined | null): string => {
-    if (input === null || input === undefined) return 'N/A';
+    if (input === null || input === undefined) return DEFAULT_VALUE;
     const date = input instanceof Date ? input : new Date(input as string);
-    if (isNaN(date.getTime())) return 'N/A';
+    if (isNaN(date.getTime())) return DEFAULT_VALUE;
 
     const year = date.getUTCFullYear();
     const month = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -36,9 +36,9 @@ export const formatFileSize = (bytes: number): string => {
     bytes = Math.abs(bytes); // Use the absolute value of the bytes
 
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    const i = Math.floor(Math.log(bytes) / Math.log(1000));
 
-    return `${sign}${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
+    return `${sign}${parseFloat((bytes / Math.pow(1000, i)).toFixed(2))} ${sizes[i]}`;
 };
 
 /**
