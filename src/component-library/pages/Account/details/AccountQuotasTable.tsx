@@ -270,5 +270,5 @@ export const AccountQuotasTable = ({ locality, quotas, canManage, onEdit, onDele
 
     const columnDefs = useMemo(() => buildQuotaColumnDefs({ locality, canManage, busy, handlers }), [locality, canManage, busy]);
 
-    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={rows} />;
+    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={rows} enableFilterHandlers />;
 };

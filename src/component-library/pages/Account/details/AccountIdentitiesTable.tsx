@@ -101,5 +101,5 @@ export const AccountIdentitiesTable = ({ identities, canManage, onDelete, busy =
         [canManage, busy],
     );
 
-    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={identities} />;
+    return <RegularTable columnDefs={columnDefs} tableRef={tableRef} rowData={identities} enableFilterHandlers />;
 };
