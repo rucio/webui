@@ -57,9 +57,10 @@ export const ListAccounts = () => {
     const searchParams = useSearchParams();
     const { toast } = useToast();
     const { update: updateSession } = useSession();
-    const { check } = usePermissions();
+    // Permissions are set up after the session loads: until then, hide Create instead of checking too early.
+    const { check, isReady } = usePermissions();
     const manageEnabled = useFeature('accounts.manage');
-    const canCreate = check('account', 'lifecycle') && manageEnabled;
+    const canCreate = isReady && manageEnabled && check('account', 'lifecycle');
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<AccountListItemViewModel>();
     const [filters, setFilters] = useState<AccountFilters>(() => filtersFromParams(searchParams ?? new URLSearchParams()));

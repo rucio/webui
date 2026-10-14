@@ -100,10 +100,11 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
     const queryClient = useQueryClient();
     const { toast } = useToast();
     const { data: session, update: updateSession } = useSession();
-    const { check } = usePermissions();
+    // Permissions are set up after the session loads: until then, show no actions instead of checking too early.
+    const { check, isReady } = usePermissions();
     const manageEnabled = useFeature('accounts.manage');
-    const canManage = check('account', 'manage', { account }) && manageEnabled;
-    const canLifecycle = check('account', 'lifecycle') && manageEnabled;
+    const canManage = isReady && manageEnabled && check('account', 'manage', { account });
+    const canLifecycle = isReady && manageEnabled && check('account', 'lifecycle');
     const encoded = encodeURIComponent(account);
 
     // Tab state: initialised from ?tab=, mirrored to the URL on every switch.
