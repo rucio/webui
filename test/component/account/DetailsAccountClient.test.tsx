@@ -35,7 +35,17 @@ const toast = jest.fn();
 jest.mock('@/lib/infrastructure/hooks/useToast', () => ({ useToast: () => ({ toast, dismiss: jest.fn() }) }));
 
 let isAdmin = true;
-jest.mock('@/lib/infrastructure/hooks/usePermissions', () => ({ usePermissions: () => ({ check: () => isAdmin, isReady: true }) }));
+let permissionsReady = true;
+// Like Permix, check must not be relied on before the permissions are set up: here it throws to catch early calls.
+jest.mock('@/lib/infrastructure/hooks/usePermissions', () => ({
+    usePermissions: () => ({
+        check: () => {
+            if (!permissionsReady) throw new Error("[Permix]: Rules wasn't provided");
+            return isAdmin;
+        },
+        isReady: permissionsReady,
+    }),
+}));
 jest.mock('@/component-library/features/feature-flags/FeatureProvider', () => ({ useFeature: () => true }));
 
 const info = (status: AccountStatus = AccountStatus.ACTIVE): AccountInfoViewModel => ({
@@ -82,6 +92,7 @@ beforeEach(() => {
     jest.clearAllMocks();
     params = new URLSearchParams();
     isAdmin = true;
+    permissionsReady = true;
     routes = {
         'get-account-info': { body: info() },
         'list-account-identities': {
@@ -119,6 +130,17 @@ describe('DetailsAccountClient', () => {
         renderClient();
         await waitFor(() => expect(calls('get-account-quotas')).toHaveLength(1));
         expect(screen.getByRole('tab', { name: 'Quotas and usage' })).toHaveAttribute('aria-selected', 'true');
+    });
+
+    it('renders the attributes tab without actions until the permissions are ready', async () => {
+        permissionsReady = false;
+        params = new URLSearchParams('tab=attributes');
+        renderClient();
+        expect(screen.getByRole('tab', { name: /Attributes/ })).toHaveAttribute('aria-selected', 'true');
+        await waitFor(() => expect(calls('list-account-attributes')).toHaveLength(1));
+        expect(screen.queryByRole('button', { name: /Add attribute/ })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /Suspend/ })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Edit' })).not.toBeInTheDocument();
     });
 
     it('selects the tab from ?tab=identities', async () => {

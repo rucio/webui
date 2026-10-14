@@ -24,7 +24,17 @@ jest.mock('@/lib/infrastructure/hooks/useToast', () => ({ useToast: () => ({ toa
 
 let canCreate = true;
 let manage = true;
-jest.mock('@/lib/infrastructure/hooks/usePermissions', () => ({ usePermissions: () => ({ check: () => canCreate, isReady: true }) }));
+let permissionsReady = true;
+// Like Permix, check must not be relied on before the permissions are set up: here it throws to catch early calls.
+jest.mock('@/lib/infrastructure/hooks/usePermissions', () => ({
+    usePermissions: () => ({
+        check: () => {
+            if (!permissionsReady) throw new Error("[Permix]: Rules wasn't provided");
+            return canCreate;
+        },
+        isReady: permissionsReady,
+    }),
+}));
 jest.mock('@/component-library/features/feature-flags/FeatureProvider', () => ({ useFeature: () => manage }));
 
 const startStreaming = jest.fn();
@@ -50,6 +60,7 @@ beforeEach(() => {
     jest.clearAllMocks();
     params = new URLSearchParams();
     canCreate = true;
+    permissionsReady = true;
     manage = true;
     hook = { status: StreamingStatus.STOPPED, error: undefined, start: jest.fn(), stop: jest.fn() };
     gridApi.getDisplayedRowCount.mockReturnValue(0);
@@ -158,6 +169,12 @@ describe('ListAccounts', () => {
         unmount();
         canCreate = true;
         manage = false;
+        renderPage();
+        expect(screen.queryByRole('button', { name: 'Create account' })).not.toBeInTheDocument();
+    });
+
+    it('hides Create account until the permissions are ready', () => {
+        permissionsReady = false;
         renderPage();
         expect(screen.queryByRole('button', { name: 'Create account' })).not.toBeInTheDocument();
     });
