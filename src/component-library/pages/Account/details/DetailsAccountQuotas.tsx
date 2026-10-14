@@ -80,7 +80,10 @@ export const DetailsAccountQuotas = ({ quotas, canManage, busy = false, onSetLim
                             </section>
                         );
                     })}
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">A local quota on an RSE overrides a global quota that covers it.</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                        Each RSE needs a local quota. Global quotas add a shared cap across the RSEs their expression matches. Accounts with the admin
+                        attribute are not limited by quotas.
+                    </p>
                 </>
             )}
         </div>

@@ -182,7 +182,11 @@ describe('DetailsAccount', () => {
     it('shows Set quota for admins and the precedence footnote on the quotas tab', () => {
         const onSetLimit = jest.fn();
         render(<DetailsAccount {...makeProps({ activeTab: 'quotas', quotas: ok({ local: [], global: [] }), onSetLimit })} />);
-        expect(screen.getByText('A local quota on an RSE overrides a global quota that covers it.')).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'Each RSE needs a local quota. Global quotas add a shared cap across the RSEs their expression matches. Accounts with the admin attribute are not limited by quotas.',
+            ),
+        ).toBeInTheDocument();
         fireEvent.click(screen.getByRole('button', { name: /Set quota/ }));
         expect(onSetLimit).toHaveBeenCalledWith(undefined);
     });

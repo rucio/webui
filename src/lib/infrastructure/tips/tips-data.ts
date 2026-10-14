@@ -239,8 +239,9 @@ export const TIPS: Tip[] = [
     },
     {
         id: 'account-quota-precedence',
-        title: 'Quota precedence',
-        content: 'A local limit on an RSE overrides the global limit for the same RSE expression. A limit of -1 means unlimited.',
+        title: 'How quotas combine',
+        content:
+            'Data can only be placed on an RSE with a local quota left. Global quotas cap the combined usage of all RSEs their expression matches, on top of the local quotas. Accounts with the admin attribute are not limited by quotas.',
         category: TipCategory.ACCOUNTS,
         priority: 'helpful',
         pages: ['/account/'],
