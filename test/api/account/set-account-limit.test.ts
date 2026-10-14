@@ -96,6 +96,90 @@ describe('Feature: SetAccountLimit', () => {
     });
 });
 
+describe('Feature: SetAccountLimit (global expression check)', () => {
+    beforeEach(() => {
+        fetchMock.doMock();
+    });
+
+    afterEach(() => {
+        fetchMock.dontMock();
+        jest.restoreAllMocks();
+    });
+
+    const EXPRESSION = 'tier=1';
+
+    /** Mocks GET /rses/?expression= (the check) and the global POST, and records whether the POST was sent. */
+    const mockRucio = (rses: { status: number; message?: string }) => {
+        const sent = { post: false };
+        const listRSEs: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/rses/?expression=${encodeURIComponent(EXPRESSION)}`,
+            method: 'GET',
+            includes: '/rses/?expression=',
+            response:
+                rses.status < 300
+                    ? { status: 200, headers: { 'Content-Type': 'application/x-json-stream' }, body: JSON.stringify({ rse: 'XRD1' }) + '\n' }
+                    : {
+                          status: rses.status,
+                          headers: { 'Content-Type': 'application/json', ExceptionClass: 'InvalidRSEExpression' },
+                          body: JSON.stringify({ ExceptionClass: 'InvalidRSEExpression', ExceptionMessage: rses.message }),
+                      },
+        };
+        const setLimit: MockEndpoint = {
+            url: `${MockRucioServerFactory.RUCIO_HOST}/accounts/jdoe/limits/global/${encodeURIComponent(EXPRESSION)}`,
+            method: 'POST',
+            response: { status: 201, headers: { 'Content-Type': 'application/json' }, body: '' },
+            requestValidator: async () => {
+                sent.post = true;
+                return true;
+            },
+        };
+        MockRucioServerFactory.createMockRucioServer(true, [listRSEs, setLimit]);
+        return sent;
+    };
+
+    const run = async () => {
+        const { res } = await createHttpMocks('/api/feature/set-account-limit', 'POST', {});
+        const controller = appContainer.get<BaseController<SetAccountLimitControllerParameters, SetAccountLimitRequest>>(
+            CONTROLLERS.SET_ACCOUNT_LIMIT,
+        );
+        await controller.execute({
+            response: res as unknown as NextApiResponse,
+            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
+            account: 'jdoe',
+            locality: 'global',
+            rseExpression: EXPRESSION,
+            bytes: 1000,
+        });
+        return res;
+    };
+
+    it('sets a global limit whose expression matches RSEs', async () => {
+        const sent = mockRucio({ status: 200 });
+        const res = await run();
+        expect(res._getStatusCode()).toBe(200);
+        expect(sent.post).toBe(true);
+    });
+
+    it('rejects an expression that matches no RSEs without setting the limit', async () => {
+        const sent = mockRucio({ status: 400, message: 'RSE Expression resulted in an empty set.' });
+        const res = await run();
+        expect(res._getStatusCode()).toBe(400);
+        const data: SetAccountLimitViewModel = await res._getJSONData();
+        expect(data.errorType).toBe('validation_error');
+        expect(data.message).toBe('The RSE expression matches no RSEs. A global quota needs an expression that matches at least one RSE.');
+        expect(sent.post).toBe(false);
+    });
+
+    it('rejects an expression with invalid syntax without setting the limit', async () => {
+        const sent = mockRucio({ status: 400, message: 'Expression does not comply to RSE Expression syntax' });
+        const res = await run();
+        expect(res._getStatusCode()).toBe(400);
+        const data: SetAccountLimitViewModel = await res._getJSONData();
+        expect(data.message).toBe('The RSE expression is not valid. Check its syntax and try again.');
+        expect(sent.post).toBe(false);
+    });
+});
+
 describe('Route: PUT /api/feature/set-account-limit', () => {
     const valid = { account: 'jdoe', locality: 'local', rseExpression: 'MOCK', bytes: 1000 };
 

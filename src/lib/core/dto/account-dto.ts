@@ -119,4 +119,6 @@ export interface AccountQuotasDTO extends BaseDTO {
     account: string;
     local: AccountLocalQuota[];
     global: AccountGlobalQuota[];
+    /** Set when Rucio could not list the global quotas (a stored expression matches no RSEs); global is then empty. */
+    globalError?: string;
 }

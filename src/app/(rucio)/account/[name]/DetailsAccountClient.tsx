@@ -150,8 +150,8 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
     const quotasQuery = useQuery<AccountQuotas, AccountLoadError>({
         queryKey: accountKeys.quotas(account),
         queryFn: async () => {
-            const { local, global } = await fetchViewModel<AccountQuotasViewModel>(`/api/feature/get-account-quotas?account=${encoded}`);
-            return { local, global };
+            const { local, global, globalError } = await fetchViewModel<AccountQuotasViewModel>(`/api/feature/get-account-quotas?account=${encoded}`);
+            return { local, global, globalError };
         },
         enabled: isActive && quotasTabVisited.current,
         ...accountQueryDefaults,
@@ -470,6 +470,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                             account={account}
                             locality={dialog.target.locality}
                             rseExpression={dialog.target.rseExpression}
+                            editable={!dialog.target.rseExpression}
                             onSubmit={values => deleteLimitMutation.mutate({ account, ...values })}
                             loading={deleteLimitMutation.isPending}
                             error={dialogError}
