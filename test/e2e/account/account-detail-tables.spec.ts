@@ -9,6 +9,7 @@ test.describe('Account detail tables (admin)', () => {
     let context: BrowserContext;
     let page: Page;
     const pageErrors: string[] = [];
+    const consoleErrors: string[] = [];
     const accountPath = `/account/${encodeURIComponent(adminUser.account)}`;
 
     const cells = (colId: string) => page.locator(`.ag-center-cols-container .ag-row [col-id="${colId}"]`);
@@ -26,6 +27,9 @@ test.describe('Account detail tables (admin)', () => {
     test.beforeAll(async ({ browser }) => {
         ({ context, page } = await loginInNewContext(browser, adminUser));
         page.on('pageerror', error => pageErrors.push(error.message));
+        page.on('console', message => {
+            if (message.type() === 'error') consoleErrors.push(message.text());
+        });
     });
 
     test.afterAll(async () => {
@@ -34,6 +38,16 @@ test.describe('Account detail tables (admin)', () => {
 
     test.beforeEach(() => {
         pageErrors.length = 0;
+        consoleErrors.length = 0;
+    });
+
+    test('loads the attributes tab directly without errors', async () => {
+        await page.goto(`${accountPath}?tab=attributes`);
+        await expect(page.getByRole('tab', { name: /Attributes/ })).toHaveAttribute('aria-selected', 'true');
+        // Admin actions appear once the permissions are set up, which is when early checks used to fail.
+        await expect(page.getByRole('button', { name: /Add attribute/ })).toBeVisible({ timeout: 20000 });
+        expect(pageErrors).toEqual([]);
+        expect(consoleErrors.filter(message => message.includes('[Permix]'))).toEqual([]);
     });
 
     test('filters identities by type and identity', async () => {
