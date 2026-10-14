@@ -189,6 +189,66 @@ export const TIPS: Tip[] = [
     },
 
     // ============================================
+    // ACCOUNTS
+    // ============================================
+    {
+        id: 'accounts-only-active',
+        title: 'Only active accounts are listed',
+        content: 'Suspended and deleted accounts are not listed. To open one, go to its page directly by name, for example /account/<name>.',
+        category: TipCategory.ACCOUNTS,
+        priority: 'helpful',
+        pages: ['/accounts'],
+        variant: 'info',
+    },
+    {
+        id: 'accounts-wildcard',
+        title: 'Filtering accounts',
+        content: 'Use * in the name filter to match several accounts at once. For example, "atlas*" finds every account starting with "atlas".',
+        category: TipCategory.ACCOUNTS,
+        priority: 'helpful',
+        pages: ['/accounts'],
+        variant: 'info',
+    },
+    {
+        id: 'account-identity-formats',
+        title: 'Identity formats',
+        content:
+            'X509 identities are certificate DNs, and Rucio compares them exactly, so you may need to add both the CN=...,DC=... and the /DC=.../CN=... forms. OIDC identities use the format SUB=<subject>, ISS=<issuer>, and a trailing slash on the issuer makes it a different identity.',
+        category: TipCategory.ACCOUNTS,
+        priority: 'helpful',
+        pages: ['/account/'],
+        variant: 'info',
+    },
+    {
+        id: 'account-userpass-password',
+        title: 'UserPass passwords',
+        content: 'Passwords of UserPass identities cannot be changed here. A password is only used when the username does not exist in Rucio yet.',
+        category: TipCategory.ACCOUNTS,
+        priority: 'helpful',
+        pages: ['/account/'],
+        variant: 'warning',
+    },
+    {
+        id: 'account-admin-relogin',
+        title: 'Admin role changes',
+        content: 'Changing the admin attribute of an account applies after that user signs in again. Existing sessions keep their old role.',
+        category: TipCategory.ACCOUNTS,
+        priority: 'helpful',
+        pages: ['/account/'],
+        variant: 'warning',
+    },
+    {
+        id: 'account-quota-precedence',
+        title: 'How quotas combine',
+        content:
+            'Data can only be placed on an RSE with a local quota left. Global quotas cap the combined usage of all RSEs their expression matches, on top of the local quotas. Accounts with the admin attribute are not limited by quotas.',
+        category: TipCategory.ACCOUNTS,
+        priority: 'helpful',
+        pages: ['/account/'],
+        variant: 'info',
+    },
+
+    // ============================================
     // NAVIGATION & ADVANCED
     // ============================================
     {

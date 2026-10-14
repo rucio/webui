@@ -1,10 +1,10 @@
-import { permissionSchema } from './permission-schema';
+import type { PermissionRules } from './permission-schema';
 import type { SessionUser } from '@/lib/core/entity/auth-models';
 
 /**
  * Admin template: full access to all rule actions.
  */
-export const adminRuleTemplate = permissionSchema.template({
+export const adminRuleTemplate = (): Pick<PermissionRules, 'rule'> => ({
     rule: {
         approve: true,
         update: true,
@@ -23,7 +23,7 @@ export const adminRuleTemplate = permissionSchema.template({
  * - comment: true only if the rule's account matches the session user
  *
  */
-export const userRuleTemplate = permissionSchema.template((user: SessionUser) => ({
+export const userRuleTemplate = (user: SessionUser): Pick<PermissionRules, 'rule'> => ({
     rule: {
         approve: false,
         // TODO: enforce ownership — should be `rule => rule.account === user.rucioAccount`.
@@ -35,4 +35,4 @@ export const userRuleTemplate = permissionSchema.template((user: SessionUser) =>
         // Non-admins cannot access the approve rules page; it is a global-admin-only surface.
         viewApprovalQueue: false,
     },
-}));
+});

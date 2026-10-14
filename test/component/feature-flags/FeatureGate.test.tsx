@@ -9,6 +9,8 @@ const baseMap: FeatureFlagMap = {
     'rules.approve': true,
     subscriptions: true,
     rses: true,
+    accounts: true,
+    'accounts.manage': true,
     'dids.metadata': false,
     'dids.mutate': true,
     'dids.ami_tags': false,

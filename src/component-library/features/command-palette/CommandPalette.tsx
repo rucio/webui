@@ -24,6 +24,7 @@ import { SiteHeaderViewModel } from '@/lib/infrastructure/data/view-model/site-h
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 import { useSession } from 'next-auth/react';
 import { Role } from '@/lib/core/entity/auth-models';
+import { useFeature } from '@/component-library/features/feature-flags/FeatureProvider';
 
 export interface CommandPaletteProps {
     /** Whether the palette is open */
@@ -57,6 +58,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
     const canViewApprovalQueue = isReady ? check('rule', 'viewApprovalQueue') : false;
     const { data: session } = useSession();
     const isAdmin = session?.user?.role === Role.ADMIN;
+    const accountsEnabled = useFeature('accounts');
 
     // Build all sections with filtering
     const sections = useMemo<CommandSection[]>(() => {
@@ -106,7 +108,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         // Navigation Section
-        const navigationItems = getNavigationCommands(account, canViewApprovalQueue, isAdmin);
+        const navigationItems = getNavigationCommands(account, canViewApprovalQueue, isAdmin, accountsEnabled);
         allSections.push({
             id: 'navigation',
             title: 'Navigation',
@@ -114,7 +116,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         });
 
         // Actions Section (adapts to search query)
-        const actionItems = getActionCommands(searchQuery);
+        const actionItems = getActionCommands(searchQuery, { isAdmin, accountsEnabled });
         allSections.push({
             id: 'actions',
             title: 'Actions',
@@ -148,7 +150,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
         }
 
         return allSections;
-    }, [searchQuery, account, canViewApprovalQueue, isAdmin]);
+    }, [searchQuery, account, canViewApprovalQueue, isAdmin, accountsEnabled]);
 
     // Calculate total items count for keyboard navigation
     const totalItems = useMemo(() => {
@@ -171,6 +173,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChan
     useEffect(() => {
         setSelectedIndex(0);
     }, [searchQuery]);
+
+    // Keep the keyboard-selected item visible inside the scrollable results list
+    useEffect(() => {
+        if (!open) return;
+        const selected = document.getElementById('command-palette-results')?.querySelector('[aria-selected="true"]');
+        if (selected && typeof selected.scrollIntoView === 'function') {
+            selected.scrollIntoView({ block: 'nearest' });
+        }
+    }, [selectedIndex, open, sections]);
 
     // Reset state when palette closes
     useEffect(() => {

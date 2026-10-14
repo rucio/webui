@@ -20,6 +20,10 @@ export function inferCardType(url: string): HotBarCardType {
         // /did/rule/rse substrings and the default fallback below would
         // otherwise mis-classify it as DID.
         if (pathname.includes('/suspicious-replicas')) return HotBarCardType.SUSPICIOUS_REPLICA_LIST;
+        // Account routes are anchored at the start of the path: a substring match would also catch
+        // DID names such as /did/page/scope/accounts.log.
+        if (pathname === '/accounts' || pathname.startsWith('/accounts/')) return HotBarCardType.ACCOUNT_LIST;
+        if (pathname.startsWith('/account/')) return HotBarCardType.ACCOUNT;
         if (pathname.includes('/dids')) return HotBarCardType.DID_LIST;
         if (pathname.includes('/did/')) return HotBarCardType.DID;
         if (pathname.includes('/rules')) return HotBarCardType.RULE_LIST;
