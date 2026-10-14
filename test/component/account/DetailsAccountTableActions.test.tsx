@@ -9,9 +9,11 @@ import { AgGridMultiSelectFilter } from '@/component-library/features/table/filt
 // AG Grid does not render in jsdom, so capture the column definitions the tables pass to RegularTable.
 type Col = { colId?: string; headerName?: string; filter?: any; filterParams?: any; cellRenderer?: (params: { data: unknown }) => React.ReactNode };
 let columns: Col[] = [];
+let filterHandlersEnabled: boolean | undefined;
 jest.mock('@/component-library/features/table/RegularTable/RegularTable', () => ({
-    RegularTable: (props: { columnDefs: Col[] }) => {
+    RegularTable: (props: { columnDefs: Col[]; enableFilterHandlers?: boolean }) => {
         columns = props.columnDefs;
+        filterHandlersEnabled = props.enableFilterHandlers;
         return null;
     },
 }));
@@ -102,5 +104,23 @@ describe('identities type filter', () => {
             'SAML',
             'OIDC',
         ]);
+    });
+});
+
+// AG Grid only runs a column's `filter.handler` when the grid has enableFilterHandlers set.
+// Without it, selecting a type throws "reading 'doesFilterPass'" and no rows are filtered.
+describe('multi-select column filters', () => {
+    beforeEach(() => {
+        filterHandlersEnabled = undefined;
+    });
+
+    it('enables filter handlers on the identities table', () => {
+        render(<AccountIdentitiesTable identities={[identity]} canManage={false} />);
+        expect(filterHandlersEnabled).toBe(true);
+    });
+
+    it('enables filter handlers on the quotas table', () => {
+        render(<AccountQuotasTable locality="local" quotas={[quota]} canManage={false} />);
+        expect(filterHandlersEnabled).toBe(true);
     });
 });
