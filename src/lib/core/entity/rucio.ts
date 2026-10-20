@@ -56,13 +56,16 @@ export enum DIDAvailability {
 
 export type DIDDatasetReplicas = {
     rse: string;
+    rse_id: string;
     rseblocked: RSEBlockState;
+    bytes: number;
     length: number;
     state: ReplicaState;
-    available_files: number;
+    available_length: number;
     available_bytes: number;
-    creation_date: DateISO;
-    last_accessed: DateISO;
+    created_at: DateISO;
+    updated_at: DateISO;
+    accessed_at: DateISO;
 };
 
 // these are general key-value pairs including the metadata

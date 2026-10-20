@@ -1,5 +1,4 @@
-import { RuleState } from '@/lib/core/entity/rucio';
-import { ITextFilterParams, IFilterOptionDef } from 'ag-grid-community';
+import { ITextFilterParams } from 'ag-grid-community';
 
 export const DefaultBooleanFilterParams: ITextFilterParams = {
     filterOptions: [
@@ -24,25 +23,6 @@ export const DefaultTextFilterParams: ITextFilterParams = {
     filterOptions: ['contains'],
     buttons: ['reset'],
     maxNumConditions: 1,
-};
-
-export const buildDiscreteFilterParams = (values: string[], keys?: string[]): ITextFilterParams => {
-    return {
-        filterOptions: [
-            'empty',
-            ...values.map((value, index) => {
-                const key = keys ? keys[index] : value;
-                return {
-                    numberOfInputs: 0,
-                    displayKey: key.toLowerCase(),
-                    displayName: value,
-                    predicate: (_: any[], cellValue: any) => cellValue === key,
-                } as IFilterOptionDef;
-            }),
-        ],
-        maxNumConditions: 1,
-        buttons: ['reset'],
-    };
 };
 
 /**
@@ -82,12 +62,14 @@ export const DefaultDateFilterParams = {
     buttons: ['reset'],
 };
 
-export const RuleStateDisplayNames = {
-    [RuleState.REPLICATING]: 'Replicating',
-    [RuleState.OK]: 'OK',
-    [RuleState.STUCK]: 'Stuck',
-    [RuleState.SUSPENDED]: 'Suspended',
-    [RuleState.WAITING_APPROVAL]: 'Waiting Approval',
-    [RuleState.INJECT]: 'Inject',
-    [RuleState.UNKNOWN]: 'Unknown',
+export const ProgressBarFilterParams = {
+    maxNumConditions: 1,
+    buttons: ['reset'],
+};
+
+export const progressBarValueGetter = (available: number | undefined, all: number | undefined): number => {
+    if (!available || !all) return 0;
+    if (all === 0) return 0;
+
+    return available / all;
 };

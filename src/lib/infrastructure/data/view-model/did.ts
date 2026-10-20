@@ -59,12 +59,17 @@ export function generateEmptyFilereplicaStateViewModel(): FileReplicaStateViewMo
 export function generateEmptyDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewModel {
     return {
         status: 'error',
+        rse: '',
+        rse_id: '',
         rseblocked: 0,
         state: ReplicaState.UNKNOWN,
-        available_files: 0,
+        available_length: 0,
         available_bytes: 0,
-        creation_date: '',
-        last_accessed: '',
+        length: 0,
+        bytes: 0,
+        created_at: '',
+        updated_at: '',
+        accessed_at: '',
     } as DIDDatasetReplicasViewModel;
 }
 

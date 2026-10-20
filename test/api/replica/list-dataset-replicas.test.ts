@@ -31,7 +31,7 @@ describe('List Dataset Replicas Feature Tests', () => {
                             name: 'dataset1',
                             rse: 'XRD3',
                             rse_id: '28e77f4f2c864f7d949eb602d6f05985',
-                            bytes: 0,
+                            bytes: 1000,
                             length: 20,
                             available_bytes: 1000,
                             available_length: 10,
@@ -86,12 +86,15 @@ describe('List Dataset Replicas Feature Tests', () => {
             status: 'success',
             rseblocked: 0,
             rse: 'XRD3',
+            rse_id: '28e77f4f2c864f7d949eb602d6f05985',
             state: ReplicaState.UNAVAILABLE,
+            bytes: 1000,
             length: 20,
-            available_files: 10,
+            available_length: 10,
             available_bytes: 1000,
-            creation_date: 'Tue, 12 Sep 2023 09:12:11 UTC',
-            last_accessed: '',
+            created_at: 'Tue, 12 Sep 2023 09:12:11 UTC',
+            updated_at: 'Tue, 12 Sep 2023 09:12:11 UTC',
+            accessed_at: '',
         } as DIDDatasetReplicasViewModel);
     });
 });
