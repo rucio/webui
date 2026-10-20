@@ -4,35 +4,22 @@ import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/d
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { AgGridReact } from 'ag-grid-react';
-import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
-import ProgressBar from '@/component-library/atoms/misc/ProgressBar';
+import {
+    DefaultDateFilterParams,
+    DefaultTextFilterParams,
+    ProgressBarFilterParams,
+    progressBarValueGetter,
+} from '@/component-library/features/utils/filter-parameters';
+import { ProgressBarCell, ProgressBarParams } from '@/component-library/features/table/cells/ProgressBarCell';
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import { ReplicaStateBadge } from '@/component-library/features/badges/DID/ReplicaStateBadge';
 import { badgeCellClasses, badgeCellWrapperStyle } from '@/component-library/features/table/cells/badge-cell';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
-
-const ProgressBarCell = ({ data }: { data: DIDDatasetReplicasViewModel }) => {
-    let percentage: number = 0;
-    if (data.length > 0) {
-        percentage = (data.available_files / data.length) * 100;
-    }
-
-    const getPercentageText = () => {
-        const baseText = `${data.available_files} files out of ${data.length}`;
-        if (data.length === 0) {
-            return baseText;
-        }
-        return `${baseText} (${percentage.toFixed(2)}%)`;
-    };
-
-    return (
-        <div className="flex flex-col w-full h-full justify-center space-y-2">
-            <ProgressBar percentage={percentage} />
-            <span className="text-ellipsis text-sm text-neutral-900 dark:text-neutral-100">{getPercentageText()}</span>
-        </div>
-    );
-};
+import { DateCellRenderer } from '@/component-library/features/utils/DateWithTooltip';
+import { formatFileSize } from '@/component-library/features/utils/text-formatters';
+import { ICellRendererParams, ValueGetterParams } from 'ag-grid-community';
+import { textCellWrapperStyle } from '@/component-library/features/table/cells/text-cell';
 
 const ReplicaStateDisplayNames = {
     [ReplicaState.AVAILABLE]: 'Available',
@@ -63,19 +50,18 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             headerName: 'RSE',
             field: 'rse',
             flex: 3,
+            minWidth: 250,
             pinned: 'left' as const,
             cellRenderer: ClickableRSECell,
             filter: true,
             filterParams: DefaultTextFilterParams,
-            cellStyle: {
-                ...badgeCellWrapperStyle,
-                alignItems: 'center',
-            },
+            cellStyle: textCellWrapperStyle,
         },
         {
             headerName: 'State',
             field: 'state',
             flex: 1,
+            minWidth: 200,
             cellStyle: {
                 ...badgeCellWrapperStyle,
                 alignItems: 'center',
@@ -94,14 +80,79 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             },
         },
         {
-            headerName: 'Replication Progress',
+            headerName: 'Replication Progress - Files',
             flex: 3,
-            sortable: false,
+            minWidth: 300,
+            sortable: true,
             cellRenderer: ProgressBarCell,
+            cellRendererParams: (params: ICellRendererParams<DIDDatasetReplicasViewModel>) =>
+                ({
+                    available: params.data?.available_length,
+                    all: params.data?.length,
+                    keyword: 'files',
+                } as ProgressBarParams),
             cellStyle: {
                 ...badgeCellWrapperStyle,
                 alignItems: 'center',
             },
+            filter: 'agNumberColumnFilter',
+            filterParams: ProgressBarFilterParams,
+            filterValueGetter: (params: ValueGetterParams<DIDDatasetReplicasViewModel>) =>
+                progressBarValueGetter(params.data?.available_length, params.data?.length),
+        },
+        {
+            headerName: 'Replication Progress - Bytes',
+            flex: 3,
+            minWidth: 300,
+            sortable: false,
+            cellRenderer: ProgressBarCell,
+            cellRendererParams: (params: ICellRendererParams<DIDDatasetReplicasViewModel>) => ({
+                    available: params.data ? params.data.available_bytes : 0,
+                    all: params.data ? params.data.bytes : 0,
+                    keyword: '',
+                    valueFormatter: formatFileSize,
+                } as ProgressBarParams),
+            cellStyle: {
+                ...badgeCellWrapperStyle,
+                alignItems: 'center',
+            },
+            filter: 'agNumberColumnFilter',
+            filterParams: ProgressBarFilterParams,
+            filterValueGetter: (params: ValueGetterParams<DIDDatasetReplicasViewModel>) =>
+                progressBarValueGetter(params.data?.available_bytes, params.data?.bytes),
+        },
+        {
+            headerName: 'Created At',
+            field: 'created_at',
+            flex: 1,
+            minWidth: 220,
+            sortable: true,
+            cellRenderer: DateCellRenderer,
+            cellStyle: textCellWrapperStyle,
+            filter: 'agDateColumnFilter',
+            filterParams: DefaultDateFilterParams,
+        },
+        {
+            headerName: 'Updated At',
+            field: 'updated_at',
+            flex: 1,
+            minWidth: 220,
+            sortable: true,
+            cellRenderer: DateCellRenderer,
+            cellStyle: textCellWrapperStyle,
+            filter: 'agDateColumnFilter',
+            filterParams: DefaultDateFilterParams,
+        },
+        {
+            headerName: 'Last Accessed',
+            field: 'accessed_at',
+            flex: 1,
+            minWidth: 220,
+            sortable: true,
+            cellRenderer: DateCellRenderer,
+            cellStyle: textCellWrapperStyle,
+            filter: 'agDateColumnFilter',
+            filterParams: DefaultDateFilterParams,
         },
     ]);
 

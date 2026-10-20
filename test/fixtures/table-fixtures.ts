@@ -187,6 +187,7 @@ export function fixtureRuleMetaViewModel(): RuleMetaViewModel {
         split_container: faker.datatype.boolean(),
         state: randomEnum<RuleState>(RuleState),
         updated_at: faker.date.recent().toISOString(),
+        comments: null,
     };
 }
 
@@ -369,13 +370,16 @@ export function fixtureDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewMode
     return {
         ...mockBaseVM(),
         rse: createRSEName(),
+        rse_id: faker.string.alphanumeric({ length: 32 }),
         rseblocked: faker.number.int({ min: 0, max: 7 }) as RSEBlockState,
         state: randomEnum<ReplicaState>(ReplicaState),
-        available_files: faker.number.int({ min: 0, max: 1e6 }),
+        available_length: faker.number.int({ min: 0, max: 1e6 }),
         available_bytes: faker.number.int({ min: 0, max: 1e12 }),
         length: faker.number.int({ min: 0, max: 1e6 }),
-        creation_date: faker.date.past().toISOString(),
-        last_accessed: faker.date.recent().toISOString(),
+        bytes: faker.number.int({ min: 0, max: 1e6 }),
+        created_at: faker.date.past().toISOString(),
+        updated_at: faker.date.past().toISOString(),
+        accessed_at: faker.date.recent().toISOString(),
     };
 }
 

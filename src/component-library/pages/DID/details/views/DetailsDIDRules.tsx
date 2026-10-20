@@ -1,6 +1,6 @@
 import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { DIDRulesViewModel } from '@/lib/infrastructure/data/view-model/did';
-import { GridReadyEvent, ValueFormatterParams } from 'ag-grid-community';
+import { GridReadyEvent } from 'ag-grid-community';
 import React, { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { DefaultDateFilterParams, DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
@@ -9,12 +9,14 @@ import { RuleState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
 import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
-import { formatDate, formatSeconds } from '@/component-library/features/utils/text-formatters';
+import { formatSeconds } from '@/component-library/features/utils/text-formatters';
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { ClickableRSEExpressionCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
+import { DateCellRenderer } from '@/component-library/features/utils/DateWithTooltip';
+import { textCellWrapperStyle } from '@/component-library/features/table/cells/text-cell';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
@@ -111,11 +113,10 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
         {
             headerName: 'Created At',
             field: 'created_at',
-            minWidth: 300,
+            minWidth: 220,
             width: 350,
-            valueFormatter: (params: ValueFormatterParams) => {
-                return formatDate(params.value);
-            },
+            cellRenderer: DateCellRenderer,
+            cellStyle: textCellWrapperStyle,
             filter: 'agDateColumnFilter',
             filterParams: DefaultDateFilterParams,
         },

@@ -119,12 +119,15 @@ export function convertToDatasetReplicaDTO(replica: TRucioDatasetReplica): Datas
     const dto: DatasetReplicasDTO = {
         status: 'success',
         rse: replica.rse,
+        rse_id: replica.rse_id,
+        bytes: replica.bytes,
         length: replica.length,
         state: getReplicaState(replica.state),
-        available_files: replica.available_length,
-        available_bytes: replica.available_bytes, // TODO: question: What is difference between available_bytes and bytes?
-        creation_date: replica.created_at,
-        last_accessed: replica.accessed_at ? replica.accessed_at : '',
+        available_length: replica.available_length,
+        available_bytes: replica.available_bytes,
+        created_at: replica.created_at,
+        updated_at: replica.updated_at ?? '',
+        accessed_at: replica.accessed_at ?? '',
     };
     return dto;
 }
