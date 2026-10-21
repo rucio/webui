@@ -130,7 +130,7 @@
     "storybook": "^10.4.6",
     "style-loader": "^3.3.1",
     "ts-node": "^10.9.1",
-    "vite": "^8.0.16",
+    "vite": "^8.3.5",
     "web-streams-polyfill": "^4.0.0"
   },
   "msw": {
