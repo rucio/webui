@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { HiPlus } from 'react-icons/hi';
+import { within, userEvent } from 'storybook/test';
 import { AddAccountAttributeDialog, AddAccountAttributeDialogProps } from './AddAccountAttributeDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
@@ -28,11 +30,14 @@ type Story = StoryObj<typeof AddAccountAttributeDialog>;
 
 type WrapperProps = Partial<Omit<AddAccountAttributeDialogProps, 'open' | 'onOpenChange'>>;
 
-const Wrapper = (props: WrapperProps) => {
-    const [open, setOpen] = useState(false);
+const Wrapper = ({ openInitially = false, ...props }: WrapperProps & { openInitially?: boolean }) => {
+    const [open, setOpen] = useState(openInitially);
     return (
         <>
-            <Button onClick={() => setOpen(true)}>Add attribute</Button>
+            <Button onClick={() => setOpen(true)}>
+                <HiPlus className="mr-1 h-4 w-4" aria-hidden="true" />
+                Add attribute
+            </Button>
             <AddAccountAttributeDialog
                 entityName="jdoe"
                 existingKeys={['country']}
@@ -58,8 +63,14 @@ export const Default: Story = {
     render: () => <Wrapper {...accountProps} />,
 };
 
-export const NoExistingKeys: Story = {
-    render: () => <Wrapper {...accountProps} existingKeys={[]} />,
+/** The account already has these keys; the play function enters one of them to show the duplicate error. */
+export const DuplicateKey: Story = {
+    render: () => <Wrapper {...accountProps} existingKeys={['admin', 'country', 'group']} openInitially />,
+    play: async () => {
+        const body = within(document.body);
+        await userEvent.type(await body.findByLabelText(/^Key/), 'country');
+        await userEvent.type(body.getByLabelText(/^Value/), 'CH');
+    },
 };
 
 export const Loading: Story = {

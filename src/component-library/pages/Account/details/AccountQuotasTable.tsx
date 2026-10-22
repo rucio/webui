@@ -6,6 +6,8 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { HiChevronDown } from 'react-icons/hi';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
 import { ActionCell } from '@/component-library/features/table/cells/ActionCell';
+import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
+import { ClickableRSECell, ClickableRSEExpressionCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { formatDecimalFileSize } from '@/component-library/features/utils/text-formatters';
@@ -95,7 +97,7 @@ export const ResolvedRsesCell = ({ data }: { data?: Pick<QuotaRow, 'rseExpressio
     const rses = data.resolvedRses ?? [];
     return (
         <div className="flex flex-col gap-1 py-2 leading-normal">
-            <span className="font-mono break-all">{data.rseExpression}</span>
+            <ClickableRSEExpressionCell value={data.rseExpression} />
             {rses.length > 0 && (
                 <button
                     type="button"
@@ -110,11 +112,13 @@ export const ResolvedRsesCell = ({ data }: { data?: Pick<QuotaRow, 'rseExpressio
             {open && (
                 <ul className="flex flex-wrap gap-1">
                     {rses.map(rse => (
-                        <li
-                            key={rse}
-                            className="rounded-full bg-neutral-200 dark:bg-neutral-700 px-2 py-0.5 text-xs font-mono text-neutral-900 dark:text-neutral-100"
-                        >
-                            {rse}
+                        <li key={rse}>
+                            <ClickableCell
+                                href={`/rse/${encodeURIComponent(rse)}`}
+                                className="rounded-full bg-neutral-200 dark:bg-neutral-700 px-2 py-0.5 text-xs font-mono text-neutral-900 dark:text-neutral-100"
+                            >
+                                {rse}
+                            </ClickableCell>
                         </li>
                     ))}
                 </ul>
@@ -160,6 +164,7 @@ export const buildQuotaColumnDefs = ({ locality, canManage, busy, handlers }: Qu
               minWidth: 180,
               pinned: 'left' as const,
               sort: 'asc' as const,
+              cellRenderer: ClickableRSECell,
               filter: true,
               filterParams: DefaultTextFilterParams,
           }

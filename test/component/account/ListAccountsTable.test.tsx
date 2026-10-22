@@ -1,7 +1,8 @@
 import React from 'react';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { render, screen } from '@testing-library/react';
-import { AccountEmailCell, AccountNameCell, accountHref } from '@/component-library/pages/Account/list/ListAccountsTable';
+import { AccountEmailCell } from '@/component-library/pages/Account/list/ListAccountsTable';
+import { ClickableAccountCell, accountHref } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 describe('ListAccountsTable cells', () => {
     it('renders "none" for a null email, never "null"', () => {
@@ -17,7 +18,7 @@ describe('ListAccountsTable cells', () => {
 
     it('links the account cell to /account/<name>', () => {
         const open = jest.spyOn(window, 'open').mockImplementation(() => null);
-        render(<AccountNameCell value="jdoe" />);
+        render(<ClickableAccountCell value="jdoe" />);
         screen.getByRole('button').click();
         expect(open).toHaveBeenCalledWith('/account/jdoe', '_blank', 'noopener,noreferrer');
         expect(accountHref('a b')).toBe('/account/a%20b');
