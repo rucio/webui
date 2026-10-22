@@ -97,7 +97,7 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             },
             filter: 'agNumberColumnFilter',
             filterParams: ProgressBarFilterParams,
-            filterValueGetter: (params: ValueGetterParams<DIDDatasetReplicasViewModel>) =>
+            valueGetter: (params: ValueGetterParams<DIDDatasetReplicasViewModel>) =>
                 progressBarValueGetter(params.data?.available_length, params.data?.length),
         },
         {
@@ -106,7 +106,8 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             minWidth: 300,
             sortable: false,
             cellRenderer: ProgressBarCell,
-            cellRendererParams: (params: ICellRendererParams<DIDDatasetReplicasViewModel>) => ({
+            cellRendererParams: (params: ICellRendererParams<DIDDatasetReplicasViewModel>) =>
+                ({
                     available: params.data ? params.data.available_bytes : 0,
                     all: params.data ? params.data.bytes : 0,
                     keyword: '',
@@ -118,7 +119,7 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
             },
             filter: 'agNumberColumnFilter',
             filterParams: ProgressBarFilterParams,
-            filterValueGetter: (params: ValueGetterParams<DIDDatasetReplicasViewModel>) =>
+            valueGetter: (params: ValueGetterParams<DIDDatasetReplicasViewModel>) =>
                 progressBarValueGetter(params.data?.available_bytes, params.data?.bytes),
         },
         {

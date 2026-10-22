@@ -1,22 +1,20 @@
 import { ProgressBar } from '@/component-library/atoms/misc/ProgressBar';
 
 export type ProgressBarParams = {
-    available: number,
-    all: number,
-    keyword: string,
-    valueFormatter?: (value: number) => string,
+    available: number;
+    all: number;
+    keyword: string;
+    valueFormatter?: (value: number) => string;
 };
 
 export const ProgressBarCell = ({ available, all, keyword, valueFormatter }: ProgressBarParams) => {
     let percentage: number = 0;
-    if (all > 0)
-        percentage = (available / all) * 100;
+    if (all > 0) percentage = (available / all) * 100;
 
     const getPercentageText = () => {
-        const baseText = valueFormatter ? 
-            `${valueFormatter(available)} ${keyword} out of ${valueFormatter(all)}`
-            : `${available} ${keyword} out of ${all}`;
-        
+        const format = valueFormatter ?? ((value: number) => `${value}`);
+        const baseText = [format(available), keyword, 'out of', format(all)].filter(Boolean).join(' ');
+
         return `${baseText}${all > 0 ? ` (${percentage.toFixed(2)}%)` : ''}`;
     };
 
