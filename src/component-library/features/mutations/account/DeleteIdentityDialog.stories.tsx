@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { HiOutlineTrash } from 'react-icons/hi';
 import { DeleteIdentityDialog, DeleteIdentityDialogProps } from './DeleteIdentityDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
@@ -30,6 +31,7 @@ const Wrapper = (props: WrapperProps) => {
     return (
         <>
             <Button variant="error" onClick={() => setOpen(true)}>
+                <HiOutlineTrash className="mr-1.5 h-4 w-4" aria-hidden="true" />
                 Remove identity
             </Button>
             <DeleteIdentityDialog

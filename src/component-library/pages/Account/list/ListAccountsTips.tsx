@@ -1,4 +1,5 @@
 import React from 'react';
+import { ACCOUNT_TYPES, ACCOUNT_TYPE_LABELS } from '@/lib/core/entity/rucio';
 
 /** The guidance shown under the accounts list page's Tips disclosure. */
 export const ListAccountsTips = () => (
@@ -18,7 +19,14 @@ export const ListAccountsTips = () => (
             <span className="font-medium">Identity:</span> Lists the accounts a given identity can log in as, such as a username or a certificate DN.
         </li>
         <li>
-            <span className="font-medium">Type:</span> Narrow the list to user, group or service accounts.
+            <span className="font-medium">Type:</span> Narrow the list to one account type:{' '}
+            {ACCOUNT_TYPES.map((type, i) => (
+                <React.Fragment key={type}>
+                    {i > 0 && (i === ACCOUNT_TYPES.length - 1 ? ' or ' : ', ')}
+                    <em>{ACCOUNT_TYPE_LABELS[type]}</em>
+                </React.Fragment>
+            ))}
+            .
         </li>
     </ul>
 );

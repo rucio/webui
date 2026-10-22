@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { HiOutlineTrash } from 'react-icons/hi';
 import { within, userEvent } from 'storybook/test';
 import { DeleteAccountDialog, DeleteAccountDialogProps } from './DeleteAccountDialog';
 import { Button } from '@/component-library/atoms/form/button';
@@ -30,6 +31,7 @@ const Wrapper = ({ openInitially = false, ...props }: WrapperProps & { openIniti
     return (
         <>
             <Button variant="error" onClick={() => setOpen(true)}>
+                <HiOutlineTrash className="mr-1.5 h-4 w-4" aria-hidden="true" />
                 Delete account
             </Button>
             <DeleteAccountDialog account="jdoe" onSubmit={() => setOpen(false)} {...props} open={open} onOpenChange={setOpen} />

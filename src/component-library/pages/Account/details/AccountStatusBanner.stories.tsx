@@ -5,7 +5,7 @@ import { AccountStatus } from '@/lib/core/entity/rucio';
 const meta: Meta<typeof AccountStatusBanner> = {
     title: 'Components/Pages/Account/Details/AccountStatusBanner',
     component: AccountStatusBanner,
-    parameters: { docs: { disable: true } },
+    tags: ['autodocs'],
 };
 export default meta;
 type Story = StoryObj<typeof AccountStatusBanner>;

@@ -115,7 +115,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
     const onTabChange = (next: AccountTab) => {
         if (next === 'quotas') quotasTabVisited.current = true;
         setTab(next);
-        router.replace(next === 'overview' ? pathname : `${pathname}?tab=${next}`);
+        router.replace(next === 'overview' ? pathname : `${pathname}?tab=${next}`, { scroll: false });
     };
 
     // Set first thing after a successful delete: removeQueries drops queries that still have mounted
