@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   distDir: 'build',
+  experimental: {
+    agentUpgrade: 'security',
+  },
   // typescript: {
   //   // Ignore TypeScript errors during production builds
   //   // Story files and test files are type-checked separately
