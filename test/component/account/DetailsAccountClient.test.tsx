@@ -68,7 +68,7 @@ const json = (reply: Reply) => ({
     json: async () => reply.body,
 });
 
-const fetchMock = jest.fn(async (url: string) => {
+const fetchMock = jest.fn(async (url: string, _init?: RequestInit) => {
     const path = url.split('?')[0].replace('/api/feature/', '');
     const reply = routes[path];
     if (!reply) throw new Error(`unexpected fetch ${url}`);
@@ -117,7 +117,7 @@ describe('DetailsAccountClient', () => {
 
         fireEvent.click(screen.getByRole('tab', { name: 'Quotas and usage' }));
         await waitFor(() => expect(calls('get-account-quotas')).toHaveLength(1));
-        expect(replace).toHaveBeenCalledWith('/account/jdoe?tab=quotas');
+        expect(replace).toHaveBeenCalledWith('/account/jdoe?tab=quotas', { scroll: false });
 
         // going back to another tab keeps the query enabled and cached
         fireEvent.click(screen.getByRole('tab', { name: /Overview/ }));
@@ -148,7 +148,7 @@ describe('DetailsAccountClient', () => {
         renderClient();
         expect(screen.getByRole('tab', { name: /Identities/ })).toHaveAttribute('aria-selected', 'true');
         fireEvent.click(screen.getByRole('tab', { name: /Overview/ }));
-        expect(replace).toHaveBeenCalledWith('/account/jdoe');
+        expect(replace).toHaveBeenCalledWith('/account/jdoe', { scroll: false });
     });
 
     it('issues no identity, attribute or quota requests for a suspended account', async () => {

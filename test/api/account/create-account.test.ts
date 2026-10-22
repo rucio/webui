@@ -102,9 +102,10 @@ describe('Feature: CreateAccount', () => {
 });
 
 describe('Route: POST /api/feature/create-account', () => {
-    const post = (body: unknown) => {
+    const post = async (body: unknown) => {
         const { route, execute } = loadRoute<typeof import('@/app/api/feature/create-account/route')>('@/app/api/feature/create-account/route');
-        return route.POST(jsonRequest('POST', body)).then(response => ({ response: response as Response, execute }));
+        const response = await route.POST(jsonRequest('POST', body));
+        return { response: response as Response, execute };
     };
 
     it('passes valid params to the controller', async () => {

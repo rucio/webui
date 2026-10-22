@@ -24,14 +24,14 @@ type Story = StoryObj<typeof SetAccountStatusDialog>;
 
 type WrapperProps = Partial<Omit<SetAccountStatusDialogProps, 'open' | 'onOpenChange'>>;
 
-const Wrapper = (props: WrapperProps) => {
+const Wrapper = ({ mode = 'suspend', ...props }: WrapperProps) => {
     const [open, setOpen] = useState(false);
     return (
         <>
             <Button variant="default" onClick={() => setOpen(true)}>
                 Change status
             </Button>
-            <SetAccountStatusDialog account="jdoe" onSubmit={() => setOpen(false)} {...props} open={open} onOpenChange={setOpen} />
+            <SetAccountStatusDialog account="jdoe" onSubmit={() => setOpen(false)} {...props} mode={mode} open={open} onOpenChange={setOpen} />
         </>
     );
 };
