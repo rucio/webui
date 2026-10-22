@@ -9,6 +9,22 @@ import { BaseDTO, BaseStreamableDTO } from '@/lib/sdk/dto';
 export interface ListReplicasDTO extends BaseStreamableDTO {}
 
 /**
+ * Optional parameters of `POST /replicas/list`, mirroring the options of `rucio replica list file`.
+ */
+export interface ListFileReplicasOptions {
+    /** Only build PFNs for these schemes (`--protocols`). */
+    schemes?: string[];
+    /** Force the network door (`--domain`). Rucio picks one from the client location when omitted. */
+    domain?: 'wan' | 'lan' | 'all';
+    /** Only list replicas on RSEs matching this expression (`--rses`). */
+    rseExpression?: string;
+    /** Include replicas in every state (`--all-states`). Defaults to true. */
+    allStates?: boolean;
+    /** IP of the end user, sent as X-Forwarded-For so Rucio picks PFNs for their location. */
+    clientIp?: string;
+}
+
+/**
  * Represents file replica state.
  */
 export interface FileReplicaStateDTO extends BaseDTO, FileReplicaState {}

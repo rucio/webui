@@ -1,4 +1,10 @@
-import { DeclareBadPFNsDTO, DeclareBadReplicasDTO, ListReplicasDTO, ListSuspiciousReplicasDTO } from '@/lib/core/dto/replica-dto';
+import {
+    DeclareBadPFNsDTO,
+    DeclareBadReplicasDTO,
+    ListFileReplicasOptions,
+    ListReplicasDTO,
+    ListSuspiciousReplicasDTO,
+} from '@/lib/core/dto/replica-dto';
 import ReplicaGatewayOutputPort from '@/lib/core/port/secondary/replica-gateway-output-port';
 import { injectable } from 'inversify';
 import ListDatasetReplicasEndpoint from './endpoints/list-dataset-replicas-endpoint';
@@ -9,9 +15,9 @@ import DeclareBadReplicasEndpoint from './endpoints/declare-bad-replicas-endpoin
 
 @injectable()
 export default class ReplicaGateway implements ReplicaGatewayOutputPort {
-    async listFileReplicas(rucioAuthToken: string, scope: string, name: string): Promise<ListReplicasDTO> {
+    async listFileReplicas(rucioAuthToken: string, scope: string, name: string, options: ListFileReplicasOptions = {}): Promise<ListReplicasDTO> {
         try {
-            const endpoint = new ListFileReplicasEndpoint(rucioAuthToken, scope, name);
+            const endpoint = new ListFileReplicasEndpoint(rucioAuthToken, scope, name, options);
             const errorDTO: ListReplicasDTO | undefined = await endpoint.fetch();
             if (!errorDTO) {
                 return {

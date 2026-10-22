@@ -1,13 +1,14 @@
-import { FileReplicaStateDTO, ListReplicasDTO } from '@/lib/core/dto/replica-dto';
+import { FileReplicaStateDTO, ListFileReplicasOptions, ListReplicasDTO } from '@/lib/core/dto/replica-dto';
 import { BaseStreamableEndpoint, extractErrorMessage } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { convertToFileReplicaStateDTOs, TRucioFileReplica } from '../replica-gateway-utils';
 
 /**
- * Lists replicas for a given File DID via Streaming
+ * Lists replicas for a given DID via Streaming, one element per PFN.
+ * Collections are expanded to their files by Rucio.
  */
 export default class ListFileReplicasEndpoint extends BaseStreamableEndpoint<ListReplicasDTO, FileReplicaStateDTO> {
-    constructor(private rucioAuthToken: string, private scope: string, private name: string) {
+    constructor(private rucioAuthToken: string, private scope: string, private name: string, private options: ListFileReplicasOptions = {}) {
         super(true);
     }
     /**
@@ -17,12 +18,15 @@ export default class ListFileReplicasEndpoint extends BaseStreamableEndpoint<Lis
         await super.initialize();
         const rucioHost = await this.envConfigGateway.rucioHost();
         const endpoint = `${rucioHost}/replicas/list`;
+        const { schemes, domain, rseExpression, allStates, clientIp } = this.options;
         const request: HTTPRequest = {
             method: 'POST',
             url: endpoint,
             headers: {
                 'X-Rucio-Auth-Token': this.rucioAuthToken,
                 'Content-Type': 'application/x-json-stream',
+                // Rucio reads the client location from this header, not from the body
+                ...(clientIp ? { 'X-Forwarded-For': clientIp } : {}),
             },
             body: {
                 dids: [
@@ -31,8 +35,11 @@ export default class ListFileReplicasEndpoint extends BaseStreamableEndpoint<Lis
                         name: this.name,
                     },
                 ],
-                all_states: true,
+                all_states: allStates ?? true,
                 ignore_availability: true,
+                ...(schemes && schemes.length > 0 ? { schemes } : {}),
+                ...(domain ? { domain } : {}),
+                ...(rseExpression ? { rse_expression: rseExpression } : {}),
             },
             params: undefined,
         };

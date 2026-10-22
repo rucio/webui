@@ -18,7 +18,11 @@ export type TRucioFileReplica = {
             client_extract: boolean;
         };
     };
-    rses: {};
+    // RSE name -> PFNs. Only RSEs where Rucio could build at least one PFN appear here.
+    rses: {
+        [key: string]: string[];
+    };
+    // RSE name -> replica state, for every replica of the file
     states: {
         [key: string]: string;
     };
@@ -91,21 +95,56 @@ function getReplicaState(state: string): ReplicaState {
     }
 }
 
+const PFN_DOMAINS = ['lan', 'wan', 'zip'] as const;
+
+function getPFNDomain(domain: string): FileReplicaStateDTO['domain'] {
+    return (PFN_DOMAINS as readonly string[]).includes(domain) ? (domain as FileReplicaStateDTO['domain']) : null;
+}
+
 /**
- * Get a list of FileReplicaStateDTO objects from a Rucio Server response.
- * @param replica The response from Rucio Server containing the file replica states.
- * @returns A list of FileReplicaStateDTO objects.
+ * Get a list of FileReplicaStateDTO objects from a Rucio Server response, one per PFN like `rucio replica list file`.
+ * Replicas without a PFN (no readable protocol, or filtered out by schemes) still get one row with null PFN fields,
+ * because Rucio lists them in `states` but not in `pfns`.
+ * @param replica The response from Rucio Server containing the file replicas.
+ * @returns A list of FileReplicaStateDTO objects, in server priority order followed by replicas without a PFN.
  */
 export function convertToFileReplicaStateDTOs(replica: TRucioFileReplica): FileReplicaStateDTO[] {
-    const dtoList: FileReplicaStateDTO[] = [];
-    for (const rse in replica.rses) {
-        const state: ReplicaState = getReplicaState(replica.states[rse]);
-        const replicaStateDTO: FileReplicaStateDTO = {
+    const states = replica.states ?? {};
+    const fileFields = {
+        scope: replica.scope,
+        name: replica.name,
+        bytes: replica.bytes,
+        adler32: replica.adler32,
+    };
+    const toDTO = (rse: string, pfnFields: Pick<FileReplicaStateDTO, 'pfn' | 'protocol' | 'domain' | 'priority' | 'rseType'>) => {
+        const state: ReplicaState = getReplicaState(states[rse] ?? '');
+        const dto: FileReplicaStateDTO = {
             status: state === ReplicaState.UNKNOWN ? 'error' : 'success',
+            ...fileFields,
             rse: rse,
             state: state,
+            ...pfnFields,
         };
-        dtoList.push(replicaStateDTO);
+        return dto;
+    };
+
+    const dtoList: FileReplicaStateDTO[] = [];
+    const rsesWithPFN = new Set<string>();
+    for (const [pfn, info] of Object.entries(replica.pfns ?? {})) {
+        rsesWithPFN.add(info.rse);
+        dtoList.push(
+            toDTO(info.rse, {
+                pfn: pfn,
+                protocol: pfn.includes('://') ? pfn.split('://')[0] : null,
+                domain: getPFNDomain(info.domain),
+                priority: info.priority,
+                rseType: info.type,
+            }),
+        );
+    }
+    for (const rse of Object.keys(states)) {
+        if (rsesWithPFN.has(rse)) continue;
+        dtoList.push(toDTO(rse, { pfn: null, protocol: null, domain: null, priority: null, rseType: null }));
     }
     return dtoList;
 }

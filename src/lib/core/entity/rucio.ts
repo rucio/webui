@@ -122,10 +122,24 @@ export type DIDRules = {
     last_modified: DateISO;
 };
 
-// File replica states for file DIDs
+// One row of `rucio replica list file`: a single PFN of a file replica.
+// A replica without a readable PFN still gets one row, with the PFN fields set to null.
 export type FileReplicaState = {
+    scope: string;
+    name: string;
+    bytes: number;
+    adler32: string;
     rse: string;
     state: ReplicaState;
+    pfn: string | null;
+    // scheme of the PFN, e.g. root or davs
+    protocol: string | null;
+    // network door Rucio picked; zip for files read from inside an archive
+    domain: 'lan' | 'wan' | 'zip' | null;
+    // server priority across all PFNs of the file, 1 is best
+    priority: number | null;
+    // DISK or TAPE
+    rseType: string | null;
 };
 
 // File replica states for dataset DIDs
