@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { HiOutlineTrash } from 'react-icons/hi';
 import { DeleteAccountAttributeDialog, DeleteAccountAttributeDialogProps } from './DeleteAccountAttributeDialog';
 import { Button } from '@/component-library/atoms/form/button';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
@@ -32,6 +33,7 @@ const Wrapper = (props: WrapperProps) => {
     return (
         <>
             <Button variant="error" onClick={() => setOpen(true)}>
+                <HiOutlineTrash className="mr-1.5 h-4 w-4" aria-hidden="true" />
                 Delete attribute
             </Button>
             <DeleteAccountAttributeDialog

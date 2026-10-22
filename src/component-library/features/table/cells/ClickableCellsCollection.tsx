@@ -2,9 +2,9 @@ import { ClickableCell } from './ClickableCell';
 
 /**
  * Creates a clickable component for RSE which redirects to its own page.
- * 
+ *
  * @param {string} props.value name of the RSE.
- * 
+ *
  * @returns Clickable component for RSE or `null` if name of the RSE is an empty string.
  */
 export const ClickableRSECell = (props: { value: string }) => {
@@ -16,9 +16,9 @@ export const ClickableRSECell = (props: { value: string }) => {
  * Creates a clickable component for RSE expression, which checks whether the expression:
  * * is a single RSE name - then it redirects to RSE's own page,
  * * is the real expression with operators, wildcards etc. - then it redirects to RSE search panel with already filtered RSEs based on the expression.
- * 
+ *
  * @param {string} props.value RSE expression.
- * 
+ *
  * @returns Clickable component for RSE expression or `null`if RSE expression is an empty string.
  */
 export const ClickableRSEExpressionCell = (props: { value: string }) => {
@@ -34,9 +34,9 @@ export const ClickableRSEExpressionCell = (props: { value: string }) => {
 
 /**
  * Creates a clickable component for DID which redirects to its own page.
- * 
+ *
  * @param {string[]} props.value an array which stores `scope` and `name` of the DID, it should look like that: `[scope, name]`.
- * 
+ *
  * @returns Clickable component for DID or `null` if either `scope` or `name` is an empty string.
  */
 export const ClickableDIDCell = (props: { value: string[] }) => {
@@ -54,12 +54,27 @@ export const ClickableDIDCell = (props: { value: string[] }) => {
 
 /**
  * Creates a clickable component for Rule which redirects to its own page.
- * 
+ *
  * @param {string} props.value ID of a rule.
- * 
+ *
  * @returns Clickable component for Rule or `null` if rule's ID is an empty string.
  */
 export const ClickableRuleIdCell = (props: { value: string }) => {
     if (!props.value) return null;
     return <ClickableCell href={`/rule/${props.value}`}>{props.value}</ClickableCell>;
+};
+
+/** The URL of an account's own page. */
+export const accountHref = (name: string) => `/account/${encodeURIComponent(name)}`;
+
+/**
+ * Creates a clickable component for an account which redirects to its own page.
+ *
+ * @param {string} props.value name of the account.
+ *
+ * @returns Clickable component for the account or `null` if the name is an empty string.
+ */
+export const ClickableAccountCell = (props: { value: string }) => {
+    if (!props.value) return null;
+    return <ClickableCell href={accountHref(props.value)}>{props.value}</ClickableCell>;
 };

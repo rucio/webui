@@ -19,7 +19,8 @@ import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
 import { usePermissions } from '@/lib/infrastructure/hooks/usePermissions';
 import { useToast } from '@/lib/infrastructure/hooks/useToast';
 import { isValidAccountName } from '@/lib/core/utils/account-validation';
-import { ListAccountsTable, accountHref } from './ListAccountsTable';
+import { ListAccountsTable } from './ListAccountsTable';
+import { accountHref } from '@/component-library/features/table/cells/ClickableCellsCollection';
 import { ListAccountsFilters, AccountFilters, ALL_TYPES } from './ListAccountsFilters';
 import { ListAccountsTips } from './ListAccountsTips';
 import { sendMutation } from '../account-fetch';
@@ -82,7 +83,8 @@ export const ListAccounts = () => {
     const search = (f: AccountFilters, updateUrl: boolean) => {
         if (updateUrl) {
             const q = pageQuery(f);
-            router.replace(q ? `${pathname}?${q}` : pathname);
+            // scroll: false keeps the page where it is, as the URL only records the filters.
+            router.replace(q ? `${pathname}?${q}` : pathname, { scroll: false });
         }
         setSearched(f);
         setFinishedEmpty(false);
@@ -140,9 +142,14 @@ export const ListAccounts = () => {
 
     return (
         <div className="flex flex-col space-y-6 w-full">
-            {canCreate && (
-                <div className="flex justify-end">
+            <header className="mb-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Accounts</h1>
+                    <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400">Browse and manage Rucio accounts</p>
+                </div>
+                {canCreate && (
                     <Button
+                        className="shrink-0"
                         onClick={() => {
                             setCreateError(undefined);
                             setCreateOpen(true);
@@ -151,8 +158,8 @@ export const ListAccounts = () => {
                         <HiPlus className="mr-1 h-4 w-4" aria-hidden="true" />
                         Create account
                     </Button>
-                </div>
-            )}
+                )}
+            </header>
 
             <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 text-sm text-base-info-700 dark:text-base-info-200">
                 <button

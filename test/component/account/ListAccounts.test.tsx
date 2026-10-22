@@ -46,7 +46,6 @@ jest.mock('@/lib/infrastructure/hooks/useTableStreaming', () => ({
 }));
 jest.mock('@/component-library/pages/Account/list/ListAccountsTable', () => ({
     ListAccountsTable: () => <div data-testid="table" />,
-    accountHref: (n: string) => `/account/${encodeURIComponent(n)}`,
 }));
 
 const renderPage = () =>
@@ -87,7 +86,7 @@ describe('ListAccounts', () => {
         renderPage();
         fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'ab' } });
         fireEvent.click(screen.getByRole('button', { name: 'Search' }));
-        expect(replace).toHaveBeenCalledWith('/accounts?account=ab');
+        expect(replace).toHaveBeenCalledWith('/accounts?account=ab', { scroll: false });
         expect(startStreaming).toHaveBeenLastCalledWith('/api/feature/list-accounts?account=ab');
     });
 

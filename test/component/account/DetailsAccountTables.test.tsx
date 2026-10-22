@@ -75,6 +75,17 @@ describe('quota cells', () => {
         expect(screen.getByText('CERN-DISK')).toBeInTheDocument();
         expect(screen.getByText('BNL-DISK')).toBeInTheDocument();
     });
+
+    it('links the expression to the RSE search and each resolved RSE to its page', () => {
+        const open = jest.spyOn(window, 'open').mockImplementation(() => null);
+        render(<ResolvedRsesCell data={{ rseExpression: 'tier=1', resolvedRses: ['CERN-DISK'] }} />);
+        fireEvent.click(screen.getByText('tier=1'));
+        expect(open).toHaveBeenLastCalledWith('/rses?expression=tier%3D1&autoSearch=true', '_blank', 'noopener,noreferrer');
+        fireEvent.click(screen.getByRole('button', { name: /1 RSE/ }));
+        fireEvent.click(screen.getByText('CERN-DISK'));
+        expect(open).toHaveBeenLastCalledWith('/rse/CERN-DISK', '_blank', 'noopener,noreferrer');
+        open.mockRestore();
+    });
 });
 
 describe('AttributeKeyCell', () => {

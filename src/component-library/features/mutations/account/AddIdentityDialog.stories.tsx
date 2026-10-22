@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+import { HiPlus } from 'react-icons/hi';
 import { within, userEvent } from 'storybook/test';
 import { AddIdentityDialog, AddIdentityDialogProps } from './AddIdentityDialog';
 import { Button } from '@/component-library/atoms/form/button';
@@ -30,6 +31,7 @@ const Wrapper = ({ openInitially = false, ...props }: WrapperProps & { openIniti
     return (
         <>
             <Button variant="default" onClick={() => setOpen(true)}>
+                <HiPlus className="mr-1 h-4 w-4" aria-hidden="true" />
                 Add identity
             </Button>
             <AddIdentityDialog account="jdoe" onSubmit={() => setOpen(false)} {...props} open={open} onOpenChange={setOpen} />
@@ -51,8 +53,15 @@ export const UserpassMismatch: Story = {
     },
 };
 
-// Choose "SSH key" to get the multi-line field.
-export const SshKey: Story = { render: () => <Wrapper /> };
+/** Opens with the SSH key type selected, which shows the multi-line field. */
+export const SshKey: Story = {
+    render: () => <Wrapper openInitially />,
+    play: async () => {
+        const body = within(document.body);
+        await userEvent.click(await body.findByLabelText(/^Type/));
+        await userEvent.click(await body.findByRole('option', { name: 'SSH key' }));
+    },
+};
 
 export const Loading: Story = { render: () => <Wrapper loading /> };
 

@@ -10,7 +10,7 @@ const Wrapper = ({ initial = EMPTY_FILTERS, isRunning = false }: { initial?: Acc
 const meta: Meta<typeof Wrapper> = {
     title: 'Components/Pages/Account/List/ListAccountsFilters',
     component: Wrapper,
-    parameters: { docs: { disable: true } },
+    tags: ['autodocs'],
 };
 export default meta;
 type Story = StoryObj<typeof Wrapper>;
