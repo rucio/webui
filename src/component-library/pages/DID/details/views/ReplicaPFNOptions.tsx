@@ -3,6 +3,7 @@ import { Input } from '@/component-library/atoms/form/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/component-library/atoms/form/select';
 import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { Button } from '@/component-library/atoms/form/button';
+import { cn } from '@/component-library/utils';
 
 export type ReplicaPFNDomain = 'auto' | 'wan' | 'lan' | 'all';
 
@@ -71,7 +72,7 @@ function OptionCheckbox(props: { id: string; label: string; checked: boolean; di
     return (
         <label
             htmlFor={props.id}
-            className={`flex items-center gap-2 h-10 select-none ${props.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+            className={cn('flex items-center gap-2 h-10 select-none', props.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer')}
         >
             <Checkbox id={props.id} checked={props.checked} disabled={props.disabled} onCheckedChange={checked => props.onChange(checked === true)} />
             <span className="text-sm text-neutral-900 dark:text-neutral-100 whitespace-nowrap">{props.label}</span>
@@ -97,17 +98,19 @@ export type ReplicaPFNOptionsProps = {
  */
 export const ReplicaPFNOptions = ({ idPrefix, value, onApply, onCopyPFNs, onDownloadMetalink, isDownloading, disabled }: ReplicaPFNOptionsProps) => {
     const [draft, setDraft] = useState<ReplicaPFNOptionsValue>(value);
+    const [showOptions, setShowOptions] = useState(false);
     const update = (changes: Partial<ReplicaPFNOptionsValue>) => setDraft(previous => ({ ...previous, ...changes }));
     const hasRSEExpression = draft.rseExpression.trim() !== '';
     const apply = () => onApply({ ...draft, missingOnly: draft.missingOnly && hasRSEExpression });
 
     return (
         <div className="flex flex-col lg:flex-row lg:flex-wrap lg:items-end gap-2 p-2 rounded-md border border-neutral-200 dark:border-neutral-700 bg-neutral-0 dark:bg-neutral-800">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 lg:flex-1 min-w-0">
+            {/* On phones the fields fold behind the Options toggle so the table keeps its height */}
+            <div className={cn('grid-cols-1 sm:grid sm:grid-cols-3 gap-2 lg:flex-1 min-w-0', showOptions ? 'grid' : 'hidden')}>
                 <OptionField label="Protocols" htmlFor={`${idPrefix}-protocols`}>
                     <Input
                         id={`${idPrefix}-protocols`}
-                        placeholder="Default, e.g. root, davs"
+                        placeholder="e.g. root, davs"
                         value={draft.protocols}
                         onChange={event => update({ protocols: event.target.value })}
                         onEnterKey={apply}
@@ -138,22 +141,33 @@ export const ReplicaPFNOptions = ({ idPrefix, value, onApply, onCopyPFNs, onDown
                 </OptionField>
             </div>
             <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-                <OptionCheckbox
-                    id={`${idPrefix}-include-unavailable`}
-                    label="Include unavailable"
-                    checked={draft.includeUnavailable || (draft.missingOnly && hasRSEExpression)}
-                    disabled={draft.missingOnly && hasRSEExpression}
-                    onChange={includeUnavailable => update({ includeUnavailable })}
-                />
-                <OptionCheckbox
-                    id={`${idPrefix}-missing-only`}
-                    label="Missing only"
-                    checked={draft.missingOnly && hasRSEExpression}
-                    disabled={!hasRSEExpression}
-                    onChange={missingOnly => update({ missingOnly })}
-                />
-                <Button size="default" onClick={apply} disabled={disabled}>
-                    Apply
+                <div className={cn('sm:flex flex-wrap items-end gap-x-4 gap-y-2', showOptions ? 'flex' : 'hidden')}>
+                    <OptionCheckbox
+                        id={`${idPrefix}-include-unavailable`}
+                        label="Include unavailable"
+                        checked={draft.includeUnavailable || (draft.missingOnly && hasRSEExpression)}
+                        disabled={draft.missingOnly && hasRSEExpression}
+                        onChange={includeUnavailable => update({ includeUnavailable })}
+                    />
+                    <OptionCheckbox
+                        id={`${idPrefix}-missing-only`}
+                        label="Missing only"
+                        checked={draft.missingOnly && hasRSEExpression}
+                        disabled={!hasRSEExpression}
+                        onChange={missingOnly => update({ missingOnly })}
+                    />
+                    <Button size="default" onClick={apply} disabled={disabled}>
+                        Apply
+                    </Button>
+                </div>
+                <Button
+                    size="default"
+                    variant="neutral"
+                    className="sm:hidden"
+                    aria-expanded={showOptions}
+                    onClick={() => setShowOptions(previous => !previous)}
+                >
+                    {showOptions ? 'Hide options' : 'Options'}
                 </Button>
                 <Button size="default" variant="neutral" onClick={onCopyPFNs} disabled={disabled}>
                     Copy PFNs

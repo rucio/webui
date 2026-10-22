@@ -34,7 +34,7 @@ export const DetailsDIDContentsReplicas: DetailsDIDView = ({ scope, name, isActi
 
     return (
         <div className="flex flex-col lg:flex-row grow gap-2">
-            <div className="flex flex-col grow">
+            <div className="flex flex-col grow basis-0 min-w-0">
                 <DetailsDIDSimpleTable
                     streamingHook={contentsStreamingHook}
                     onGridReady={onContentsGridReady}
@@ -42,7 +42,7 @@ export const DetailsDIDContentsReplicas: DetailsDIDView = ({ scope, name, isActi
                     isActive={isActive}
                 />
             </div>
-            <div className="flex flex-col grow">
+            <div className="flex flex-col grow basis-0 min-w-0">
                 <FileReplicasPFNPanel scope={selectedContent?.scope} name={selectedContent?.name} isActive={isActive} idPrefix="contents-replicas" />
             </div>
         </div>
