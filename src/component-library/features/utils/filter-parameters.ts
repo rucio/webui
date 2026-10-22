@@ -69,7 +69,7 @@ export const ProgressBarFilterParams = {
 
 export const progressBarValueGetter = (available: number | undefined, all: number | undefined): number => {
     if (!available || !all) return 0;
-    if (all === 0) return 0;
 
-    return available / all;
+    // Percentage, so number filters match the value shown in the cell
+    return (available / all) * 100;
 };
