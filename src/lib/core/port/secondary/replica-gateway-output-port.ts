@@ -1,4 +1,4 @@
-import { ListFileReplicasOptions, ListReplicasDTO } from '@/lib/core/dto/replica-dto';
+import { FileReplicasMetalinkDTO, ListFileReplicasOptions, ListReplicasDTO } from '@/lib/core/dto/replica-dto';
 import { DatasetReplicasDTO } from '@/lib/core/dto/replica-dto';
 import { DeclareBadPFNsDTO, DeclareBadReplicasDTO, ListSuspiciousReplicasDTO } from '@/lib/core/dto/replica-dto';
 
@@ -15,6 +15,16 @@ export default interface ReplicaGatewayOutputPort {
      * @returns A Promise that resolves to a ListReplicasDTO object.
      */
     listFileReplicas(rucioAuthToken: string, scope: string, name: string, options?: ListFileReplicasOptions): Promise<ListReplicasDTO>;
+
+    /**
+     * Gets the metalink4 document listing the PFNs of every file replica of a DID.
+     * @param rucioAuthToken - The Rucio auth token to use for authentication.
+     * @param scope - The scope of the DID.
+     * @param name - The name of the DID.
+     * @param options - Optional filters, see {@link ListFileReplicasOptions}.
+     * @returns A Promise that resolves to a FileReplicasMetalinkDTO object.
+     */
+    getFileReplicasMetalink(rucioAuthToken: string, scope: string, name: string, options?: ListFileReplicasOptions): Promise<FileReplicasMetalinkDTO>;
 
     /**
      * Lists dataset replicas for a given  DID. Each stream element is of type {@link DatasetReplicasDTO}

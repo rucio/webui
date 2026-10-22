@@ -25,6 +25,14 @@ export interface ListFileReplicasOptions {
 }
 
 /**
+ * The metalink4 document Rucio returns for `POST /replicas/list` with `Accept: application/metalink4+xml`
+ * (what `rucio replica list file --metalink` prints).
+ */
+export interface FileReplicasMetalinkDTO extends BaseDTO {
+    xml: string;
+}
+
+/**
  * Represents file replica state.
  */
 export interface FileReplicaStateDTO extends BaseDTO, FileReplicaState {}

@@ -18,6 +18,7 @@ const INPUT_PORT = {
     LIST_DID_RULES: Symbol.for('ListDIDRulesInputPort'),
     LIST_DATASET_REPLICAS: Symbol.for('ListDatasetReplicasInputPort'),
     LIST_FILE_REPLICAS: Symbol.for('ListFileReplicasInputPort'),
+    GET_FILE_REPLICAS_METALINK: Symbol.for('GetFileReplicasMetalinkInputPort'),
     LIST_RSES: Symbol.for('ListRSEsInputPort'),
     LIST_SUBSCRIPTIONS: Symbol.for('ListSubscriptionsInputPort'),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for('ListSubscriptionRuleStatesInputPort'),

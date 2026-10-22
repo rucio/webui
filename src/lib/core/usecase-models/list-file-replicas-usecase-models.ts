@@ -1,5 +1,6 @@
 import { FileReplicaState } from '../entity/rucio';
 import { BaseErrorResponseModel, BaseResponseModel } from '@/lib/sdk/usecase-models';
+import { FileReplicasErrorType } from '@/lib/core/utils/file-replicas-utils';
 
 /**
  * @interface ListFileReplicasRequest represents the RequestModel for list_file_replicas usecase.
@@ -20,7 +21,7 @@ export interface ListFileReplicasRequest {
  */
 export interface ListFileReplicasResponse extends FileReplicaState, BaseResponseModel {}
 
-export type ListFileReplicasErrorType = 'unauthorized' | 'invalid_rse_expression' | 'invalid_domain' | 'invalid_scheme' | 'server_busy' | 'unknown';
+export type ListFileReplicasErrorType = FileReplicasErrorType;
 
 /**
  * @interface ListFileReplicasError represents the ErrorModel for list_file_replicas usecase
