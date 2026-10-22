@@ -74,7 +74,7 @@ describe('Feature: ListAccountRSEUsage', () => {
                 res.off('data', onData);
                 resolve();
             });
-            res.on('error', err => {
+            res.on('error', (err: Error) => {
                 res.off('data', onData);
                 reject(err);
             });

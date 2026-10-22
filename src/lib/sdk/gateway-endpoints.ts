@@ -283,9 +283,11 @@ async function handleCommonGatewayEndpointErrors<TDTO extends BaseDTO>(statusCod
             break;
     }
 
+    dto.errorClass = response.headers.get('ExceptionClass') ?? undefined;
     try {
         const jsonResponse = await response.json();
-        dto.errorMessage = jsonResponse.ExceptionMessage;
+        dto.errorMessage = jsonResponse.ExceptionMessage ?? dto.errorMessage;
+        dto.errorClass = jsonResponse.ExceptionClass ?? dto.errorClass;
     } catch (error) {}
 
     return dto;

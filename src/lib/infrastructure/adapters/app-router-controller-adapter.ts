@@ -394,7 +394,8 @@ export async function parseRequestBody(request: Request): Promise<any> {
         }
         return null;
     } catch (error) {
-        console.error('Error parsing request body:', error);
+        // Log a static message only: the error text can embed a snippet of the body (e.g. a password)
+        console.error('Error parsing request body');
         return null;
     }
 }

@@ -18,6 +18,10 @@ export const FEATURE_REGISTRY = {
     'rules.approve': { default: true, parent: 'rules', pages: ['/rules/approve'] },
     subscriptions: { default: true, pages: ['/subscriptions', '/subscription/[account]/[name]'] },
     rses: { default: true, pages: ['/rses', '/rse/[name]'] },
+    // Admin account list and account detail pages; read endpoints under /api/feature/*account*
+    accounts: { default: true, pages: ['/accounts', '/account/[name]'] },
+    // Mutations on the account pages; off for deployments that manage accounts elsewhere (e.g. synced from CRIC)
+    'accounts.manage': { default: true, parent: 'accounts', pages: [] },
     'dids.metadata': { default: true, pages: [] },
     'dids.mutate': { default: true, pages: [] },
     // ATLAS-only: AMI tag chips on DID views + /api/feature/get-ami-tag-info

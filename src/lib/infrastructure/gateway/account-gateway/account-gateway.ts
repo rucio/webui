@@ -1,20 +1,42 @@
 import {
     AccountAttributeErrorTypesDTO,
+    AccountAttributeListDTO,
     AccountAttributesDTO,
+    AccountGlobalLimitDTO,
+    AccountGlobalUsageDTO,
+    AccountIdentityListDTO,
     AccountInfoDTO,
+    AccountMutationDTO,
     AccountRSELimitDTO,
-    AccountRSEUsageDTO,
     ListAccountRSEUsageDTO,
+    ListAccountsDTO,
     ListAccountsForIdentityDTO,
     TAccountAttributes,
 } from '@/lib/core/dto/account-dto';
+import { AccountLimitLocality, AccountListFilter, AccountUpdateOptions, IdentityType } from '@/lib/core/entity/account';
+import { AccountType } from '@/lib/core/entity/rucio';
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { inject, injectable } from 'inversify';
 import GATEWAYS from '../../ioc/ioc-symbols-gateway';
+import CreateAccountEndpoint from './endpoints/create-account-endpoint';
+import UpdateAccountEndpoint from './endpoints/update-account-endpoint';
+import DeleteAccountEndpoint from './endpoints/delete-account-endpoint';
+import AddAccountAttributeEndpoint from './endpoints/add-account-attribute-endpoint';
+import DeleteAccountAttributeEndpoint from './endpoints/delete-account-attribute-endpoint';
+import AddAccountIdentityEndpoint from './endpoints/add-account-identity-endpoint';
+import DeleteAccountIdentityEndpoint from './endpoints/delete-account-identity-endpoint';
+import SetAccountLimitEndpoint from './endpoints/set-account-limit-endpoint';
+import DeleteAccountLimitEndpoint from './endpoints/delete-account-limit-endpoint';
+import GetAccountAttributesEndpoint from './endpoints/get-account-attributes-endpoint';
+import GetAccountGlobalLimitsEndpoint from './endpoints/get-account-global-limits-endpoint';
 import GetAccountInfoEndpoint from './endpoints/get-account-info-endpoint';
 import GetAccountRSELimits from './endpoints/get-account-rse-limits-endpoint';
+import ListAccountGlobalUsageEndpoint from './endpoints/list-account-global-usage-endpoint';
+import ListAccountIdentitiesEndpoint from './endpoints/list-account-identities-endpoint';
 import ListAccountRSEUsageEndpoint from './endpoints/list-account-rse-usage-endpoint';
+import ListAccountsEndpoint from './endpoints/list-accounts-endpoint';
 
 @injectable()
 export default class RucioAccountGateway implements AccountGatewayOutputPort {
@@ -43,6 +65,115 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
             };
         }
         return errorDTO;
+    }
+
+    async listAccounts(rucioAuthToken: string, filter: AccountListFilter): Promise<ListAccountsDTO> {
+        try {
+            const endpoint: ListAccountsEndpoint = new ListAccountsEndpoint(rucioAuthToken, filter);
+            const errorDTO = await endpoint.fetch();
+            if (!errorDTO) {
+                return { status: 'success', stream: endpoint };
+            }
+            return errorDTO;
+        } catch (error) {
+            return { status: 'error', errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async getAccountAttributes(rucioAuthToken: string, account: string): Promise<AccountAttributeListDTO> {
+        try {
+            return await new GetAccountAttributesEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, attributes: [], errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async listAccountIdentities(rucioAuthToken: string, account: string): Promise<AccountIdentityListDTO> {
+        try {
+            return await new ListAccountIdentitiesEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, identities: [], errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async getAccountGlobalLimits(rucioAuthToken: string, account: string): Promise<AccountGlobalLimitDTO> {
+        try {
+            return await new GetAccountGlobalLimitsEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, limits: {}, errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async listAccountGlobalUsage(rucioAuthToken: string, account: string): Promise<AccountGlobalUsageDTO> {
+        try {
+            return await new ListAccountGlobalUsageEndpoint(rucioAuthToken, account).fetch();
+        } catch (error) {
+            return { status: 'error', account, usage: [], errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
+    }
+
+    async createAccount(rucioAuthToken: string, account: string, accountType: AccountType, email: string | null): Promise<AccountMutationDTO> {
+        return this.mutate(() => new CreateAccountEndpoint(rucioAuthToken, account, accountType, email));
+    }
+
+    async updateAccount(rucioAuthToken: string, account: string, options: AccountUpdateOptions): Promise<AccountMutationDTO> {
+        return this.mutate(() => new UpdateAccountEndpoint(rucioAuthToken, account, options));
+    }
+
+    async deleteAccount(rucioAuthToken: string, account: string): Promise<AccountMutationDTO> {
+        return this.mutate(() => new DeleteAccountEndpoint(rucioAuthToken, account));
+    }
+
+    async addAccountAttribute(rucioAuthToken: string, account: string, key: string, value: string): Promise<AccountMutationDTO> {
+        return this.mutate(() => new AddAccountAttributeEndpoint(rucioAuthToken, account, key, value));
+    }
+
+    async deleteAccountAttribute(rucioAuthToken: string, account: string, key: string): Promise<AccountMutationDTO> {
+        return this.mutate(() => new DeleteAccountAttributeEndpoint(rucioAuthToken, account, key));
+    }
+
+    async addAccountIdentity(
+        rucioAuthToken: string,
+        account: string,
+        identity: string,
+        type: IdentityType,
+        email: string,
+        password?: string,
+        isDefault?: boolean,
+    ): Promise<AccountMutationDTO> {
+        return this.mutate(() => new AddAccountIdentityEndpoint(rucioAuthToken, account, identity, type, email, password, isDefault));
+    }
+
+    async deleteAccountIdentity(rucioAuthToken: string, account: string, identity: string, type: IdentityType): Promise<AccountMutationDTO> {
+        return this.mutate(() => new DeleteAccountIdentityEndpoint(rucioAuthToken, account, identity, type));
+    }
+
+    async setAccountLimit(
+        rucioAuthToken: string,
+        account: string,
+        locality: AccountLimitLocality,
+        rseExpression: string,
+        bytes: number,
+    ): Promise<AccountMutationDTO> {
+        return this.mutate(() => new SetAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression, bytes));
+    }
+
+    async deleteAccountLimit(
+        rucioAuthToken: string,
+        account: string,
+        locality: AccountLimitLocality,
+        rseExpression: string,
+    ): Promise<AccountMutationDTO> {
+        return this.mutate(() => new DeleteAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression));
+    }
+
+    /** Runs a mutation endpoint. Errors are reported without request details because identity bodies can contain passwords. */
+    private async mutate(createEndpoint: () => BaseEndpoint<AccountMutationDTO>): Promise<AccountMutationDTO> {
+        try {
+            return await createEndpoint().fetch();
+        } catch (error) {
+            return { status: 'error', errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
+        }
     }
 
     async listAccountsForIdentity(identity: string, identityType: string, rucioAuthToken: string): Promise<ListAccountsForIdentityDTO> {
@@ -100,7 +231,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
             return Promise.reject(this.generateErrorResponse(AccountAttributeErrorTypesDTO.RUCIO_HOST_NOT_CONFIGURED, account, error.message));
         }
 
-        const accountEndpoint = '/accounts/' + account + '/attr';
+        const accountEndpoint = '/accounts/' + account + '/attr/';
         const url = rucioHost + accountEndpoint;
 
         let response = null;

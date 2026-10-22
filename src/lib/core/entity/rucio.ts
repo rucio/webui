@@ -20,6 +20,22 @@ export enum AccountType {
     UNKNOWN = 'UNKNOWN',
 }
 
+/**
+ * The real, assignable account types. UNKNOWN is only a read-side fallback and is excluded.
+ * Mirrors Rucio's AccountType (lib/rucio/db/sqla/constants.py); Rucio exposes no endpoint for it.
+ */
+export const ACCOUNT_TYPES = [AccountType.USER, AccountType.GROUP, AccountType.SERVICE] as const;
+export type KnownAccountType = (typeof ACCOUNT_TYPES)[number];
+
+export const ACCOUNT_TYPE_LABELS: Record<KnownAccountType, string> = {
+    [AccountType.USER]: 'User',
+    [AccountType.GROUP]: 'Group',
+    [AccountType.SERVICE]: 'Service',
+};
+
+export const isKnownAccountType = (value: unknown): value is KnownAccountType =>
+    typeof value === 'string' && (ACCOUNT_TYPES as readonly string[]).includes(value);
+
 export type AccountInfo = {
     account: string;
     accountType: AccountType;

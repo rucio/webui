@@ -54,6 +54,20 @@ import RuleGatewayOutputPort from '@/lib/core/port/secondary/rule-gateway-output
 import RuleGateway from '../gateway/rule-gateway/rule-gateway';
 import ListAccountRSEQuotasFeature from './features/list-account-rse-quotas-feature';
 import GetAccountInfoFeature from './features/get-account-info-feature';
+import ListAccountsFeature from './features/list-accounts-feature';
+import GetAccountQuotasFeature from './features/get-account-quotas-feature';
+import ListAccountIdentitiesFeature from './features/list-account-identities-feature';
+import ListAccountAttributesFeature from './features/list-account-attributes-feature';
+import CreateAccountFeature from './features/create-account-feature';
+import DeleteAccountFeature from './features/delete-account-feature';
+import UpdateAccountFeature from './features/update-account-feature';
+import AddAccountAttributeFeature from './features/add-account-attribute-feature';
+import UpdateAccountAttributeFeature from './features/update-account-attribute-feature';
+import DeleteAccountAttributeFeature from './features/delete-account-attribute-feature';
+import AddAccountIdentityFeature from './features/add-account-identity-feature';
+import DeleteAccountIdentityFeature from './features/delete-account-identity-feature';
+import DeleteAccountLimitFeature from './features/delete-account-limit-feature';
+import SetAccountLimitFeature from './features/set-account-limit-feature';
 import GetRSEUsageFeature from '@/lib/infrastructure/ioc/features/get-rse-usage-feature';
 import ListRulesFeature from '@/lib/infrastructure/ioc/features/list-rules-feature';
 import ListRulesPendingApprovalFeature from '@/lib/infrastructure/ioc/features/list-rules-pending-approval-feature';
@@ -161,6 +175,25 @@ loadFeaturesSync(appContainer, listRuleReplicaLockStatesFeatures);
 const updateRuleFeatures = [new UpdateRuleFeature(appContainer)];
 loadFeaturesSync(appContainer, updateRuleFeatures);
 
+// Features: Account management
+const accountManagementFeatures = [
+    new ListAccountsFeature(appContainer),
+    new ListAccountAttributesFeature(appContainer),
+    new ListAccountIdentitiesFeature(appContainer),
+    new GetAccountQuotasFeature(appContainer),
+    new CreateAccountFeature(appContainer),
+    new DeleteAccountFeature(appContainer),
+    new UpdateAccountFeature(appContainer),
+    new AddAccountAttributeFeature(appContainer),
+    new UpdateAccountAttributeFeature(appContainer),
+    new DeleteAccountAttributeFeature(appContainer),
+    new AddAccountIdentityFeature(appContainer),
+    new DeleteAccountIdentityFeature(appContainer),
+    new DeleteAccountLimitFeature(appContainer),
+    new SetAccountLimitFeature(appContainer),
+];
+loadFeaturesSync(appContainer, accountManagementFeatures);
+
 // Features: Dashboard
 const dashboardFeatures = [new ListAccountRSEUsageFeature(appContainer)];
 loadFeaturesSync(appContainer, dashboardFeatures);
@@ -191,6 +224,7 @@ export const CONTROLLER_FLAG_MAP = buildControllerFlagMap([
     ...listRulesPendingApprovalFeatures,
     ...listRuleReplicaLockStatesFeatures,
     ...updateRuleFeatures,
+    ...accountManagementFeatures,
     ...dashboardFeatures,
     ...amiTagFeatures,
     ...pandaTaskFeatures,

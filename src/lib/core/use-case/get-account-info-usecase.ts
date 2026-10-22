@@ -30,7 +30,7 @@ export default class GetAccountInfoUseCase
         return {
             status: 'error',
             message: error.errorMessage ? error.errorMessage : 'Gateway Error',
-            name: `Gateway Error`,
+            name: error.errorClass ?? error.errorName,
             code: error.errorCode,
         } as GetAccountInfoError;
     }

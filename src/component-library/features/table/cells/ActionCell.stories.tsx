@@ -21,14 +21,14 @@ export const SingleDeleteAction: Story = {
 
 export const SingleEditAction: Story = {
     args: {
-        actions: [{ label: 'Edit', icon: 'edit', variant: 'default', onClick: () => alert('Edit clicked!') }],
+        actions: [{ label: 'Edit', icon: 'edit', variant: 'neutral', onClick: () => alert('Edit clicked!') }],
     },
 };
 
 export const MultipleActions: Story = {
     args: {
         actions: [
-            { label: 'Edit', icon: 'edit', variant: 'default', onClick: () => alert('Edit clicked!') },
+            { label: 'Edit', icon: 'edit', variant: 'neutral', onClick: () => alert('Edit clicked!') },
             { label: 'Delete', icon: 'delete', variant: 'error', onClick: () => alert('Delete clicked!') },
         ],
     },
@@ -37,7 +37,7 @@ export const MultipleActions: Story = {
 export const DisabledAction: Story = {
     args: {
         actions: [
-            { label: 'Edit', icon: 'edit', variant: 'default', onClick: () => {}, disabled: true },
+            { label: 'Edit', icon: 'edit', variant: 'neutral', onClick: () => {}, disabled: true },
             { label: 'Delete', icon: 'delete', variant: 'error', onClick: () => alert('Delete clicked!') },
         ],
     },
@@ -89,8 +89,8 @@ export const DarkMode: Story = {
         <div className="dark p-4 bg-neutral-900 rounded-lg">
             <div className="flex gap-8">
                 <div>
-                    <p className="text-xs text-neutral-400 mb-2">Default</p>
-                    <ActionCell actions={[{ label: 'Edit', icon: 'edit', variant: 'default', onClick: () => {} }]} />
+                    <p className="text-xs text-neutral-400 mb-2">Neutral</p>
+                    <ActionCell actions={[{ label: 'Edit', icon: 'edit', variant: 'neutral', onClick: () => {} }]} />
                 </div>
                 <div>
                     <p className="text-xs text-neutral-400 mb-2">Error</p>
@@ -100,7 +100,7 @@ export const DarkMode: Story = {
                     <p className="text-xs text-neutral-400 mb-2">Multiple</p>
                     <ActionCell
                         actions={[
-                            { label: 'Edit', icon: 'edit', variant: 'default', onClick: () => {} },
+                            { label: 'Edit', icon: 'edit', variant: 'neutral', onClick: () => {} },
                             { label: 'Delete', icon: 'delete', variant: 'error', onClick: () => {} },
                         ]}
                     />
