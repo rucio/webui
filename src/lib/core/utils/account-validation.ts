@@ -18,7 +18,7 @@ export const toAttributeValueString = (v: string | boolean): string => (typeof v
  */
 
 const UPDATE_STATUSES: string[] = [AccountStatus.ACTIVE, AccountStatus.SUSPENDED];
-const UPDATE_OPTION_KEYS = ['email', 'status', 'accountType'];
+const UPDATE_OPTION_KEYS: string[] = ['email', 'status', 'accountType'];
 
 // typeof guards: RegExp.test coerces undefined to the string 'undefined', which would pass.
 export const checkAccountName = (account: string): string | undefined =>

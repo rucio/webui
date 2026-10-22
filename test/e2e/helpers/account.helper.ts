@@ -10,13 +10,13 @@ export const expect = baseExpect.configure({ timeout: 15000 });
  * The admin user must be allowed to manage accounts, the non-admin user must not.
  * Both default to the generic E2E users and can be overridden per environment.
  */
-export const adminUser: LoginCredentials = {
+export const adminUser: Required<LoginCredentials> = {
     username: process.env.E2E_ADMIN_USERNAME || process.env.E2E_TEST_USERNAME || 'testuser',
     password: process.env.E2E_ADMIN_PASSWORD || process.env.E2E_TEST_PASSWORD || 'testpassword',
     account: process.env.E2E_ADMIN_ACCOUNT || process.env.E2E_TEST_ACCOUNT || 'testaccount',
 };
 
-export const nonAdminUser: LoginCredentials = {
+export const nonAdminUser: Required<LoginCredentials> = {
     username: process.env.E2E_NONADMIN_USERNAME || process.env.E2E_TEST_USERNAME_2 || 'testuser2',
     password: process.env.E2E_NONADMIN_PASSWORD || process.env.E2E_TEST_PASSWORD_2 || 'testpassword2',
     account: process.env.E2E_NONADMIN_ACCOUNT || process.env.E2E_TEST_ACCOUNT_2 || 'testaccount2',
