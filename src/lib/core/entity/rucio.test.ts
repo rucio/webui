@@ -7,7 +7,7 @@ describe('account types', () => {
         expect([...ACCOUNT_TYPES]).toEqual(['USER', 'GROUP', 'SERVICE']);
     });
 
-    it.each(['USER', 'GROUP', 'SERVICE'])('accepts %s', value => {
+    it.each(['USER', 'GROUP', 'SERVICE', AccountType.USER, AccountType.GROUP, AccountType.SERVICE])('accepts %s', value => {
         expect(isKnownAccountType(value)).toBe(true);
     });
 
@@ -15,8 +15,7 @@ describe('account types', () => {
         expect(isKnownAccountType(value)).toBe(false);
     });
 
-    it('rejects non-strings', () => {
-        expect(isKnownAccountType(undefined)).toBe(false);
-        expect(isKnownAccountType(1)).toBe(false);
+    it.each([undefined, null, 1, true, {}, [], ['USER']])('rejects the non-string %p', value => {
+        expect(isKnownAccountType(value)).toBe(false);
     });
 });

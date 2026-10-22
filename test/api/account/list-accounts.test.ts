@@ -19,7 +19,7 @@ function collect(res: ReturnType<typeof MockHttpStreamableResponseFactory.getMoc
             res.off('data', onData);
             resolve(received);
         });
-        res.on('error', err => {
+        res.on('error', (err: Error) => {
             res.off('data', onData);
             reject(err);
         });

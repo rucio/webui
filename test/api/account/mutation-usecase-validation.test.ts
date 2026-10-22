@@ -16,9 +16,10 @@ import { NextApiResponse } from 'next';
 // The mutation use cases re-check the domain rules that zod enforces at the routes, so callers that
 // bypass the routes get a ValidationError (400) and Rucio is never called.
 
-type UseCaseClass = new (presenter: any, gateway: any) => { execute: (request: any) => Promise<void> };
+// SetAccountLimit also takes the RSE gateway; every gateway argument gets the same stub.
+type UseCaseClass = new (presenter: any, gateway: any, rseGateway?: any) => { execute: (request: any) => Promise<void> };
 
-const gatewayStub = () =>
+const gatewayStub = (): any =>
     new Proxy({} as Record<string, jest.Mock>, {
         get: (target, prop: string) => (target[prop] ??= jest.fn().mockResolvedValue({ status: 'success' })),
     });
@@ -31,7 +32,7 @@ async function run(UseCase: UseCaseClass, request: Record<string, unknown>) {
         presentError: async (e: BaseErrorResponseModel) => void errors.push(e),
     };
     const gateway = gatewayStub();
-    await new UseCase(presenter, gateway).execute({ rucioAuthToken: 'token', ...request });
+    await new UseCase(presenter, gateway, gateway).execute({ rucioAuthToken: 'token', ...request });
     const gatewayCalls = Object.values(gateway as Record<string, jest.Mock>).reduce((n, fn) => n + fn.mock.calls.length, 0);
     return { errors, successes, gatewayCalls };
 }
