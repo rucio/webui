@@ -13,6 +13,7 @@ import { FileReplicaStateViewModel } from '@/lib/infrastructure/data/view-model/
 import { ListReplicasDTO } from '@/lib/core/dto/replica-dto';
 import { FileReplicaStateDTO } from '@/lib/core/dto/replica-dto';
 import type ReplicaGatewayOutputPort from '@/lib/core/port/secondary/replica-gateway-output-port';
+import { normalizeFileReplicasOptions, toFileReplicasError, validateFileReplicasOptions } from '@/lib/core/utils/file-replicas-utils';
 
 @injectable()
 export default class ListFileReplicasUseCase
@@ -31,7 +32,8 @@ export default class ListFileReplicasUseCase
     }
 
     validateRequestModel(requestModel: AuthenticatedRequestModel<ListFileReplicasRequest>): ListFileReplicasError | undefined {
-        return undefined;
+        const error = validateFileReplicasOptions(requestModel);
+        return error ? { status: 'error', ...error } : undefined;
     }
 
     async intializeRequest(
@@ -42,18 +44,23 @@ export default class ListFileReplicasUseCase
 
     async makeGatewayRequest(requestModel: AuthenticatedRequestModel<ListFileReplicasRequest>): Promise<ListReplicasDTO> {
         const { rucioAuthToken, scope, name } = requestModel;
-        const dto: ListReplicasDTO = await this.gateway.listFileReplicas(rucioAuthToken, scope, name);
+        const dto: ListReplicasDTO = await this.gateway.listFileReplicas(rucioAuthToken, scope, name, normalizeFileReplicasOptions(requestModel));
         return dto;
     }
 
+    /**
+     * Route every gateway error through {@link handleGatewayError}, so 401 and 500 responses
+     * (normally handled generically) get a typed errorType too.
+     */
+    processGatewayResponse(response: ListReplicasDTO): ListFileReplicasError | undefined {
+        if (response.status !== 'success') {
+            return this.handleGatewayError(response);
+        }
+        return super.processGatewayResponse(response);
+    }
+
     handleGatewayError(error: ListReplicasDTO): ListFileReplicasError {
-        return {
-            status: 'error',
-            error: `Gateway retuned with ${error.errorCode}: ${error.errorMessage}`,
-            message: error.errorMessage ? error.errorMessage : 'Gateway Error',
-            name: `Gateway Error`,
-            code: error.errorCode,
-        } as ListFileReplicasError;
+        return { status: 'error', ...toFileReplicasError(error) };
     }
 
     processStreamedData(dto: FileReplicaStateDTO): { data: ListFileReplicasResponse | ListFileReplicasError; status: 'success' | 'error' } {

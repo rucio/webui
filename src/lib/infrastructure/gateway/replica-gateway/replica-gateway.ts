@@ -1,17 +1,25 @@
-import { DeclareBadPFNsDTO, DeclareBadReplicasDTO, ListReplicasDTO, ListSuspiciousReplicasDTO } from '@/lib/core/dto/replica-dto';
+import {
+    DeclareBadPFNsDTO,
+    DeclareBadReplicasDTO,
+    FileReplicasMetalinkDTO,
+    ListFileReplicasOptions,
+    ListReplicasDTO,
+    ListSuspiciousReplicasDTO,
+} from '@/lib/core/dto/replica-dto';
 import ReplicaGatewayOutputPort from '@/lib/core/port/secondary/replica-gateway-output-port';
 import { injectable } from 'inversify';
 import ListDatasetReplicasEndpoint from './endpoints/list-dataset-replicas-endpoint';
 import ListFileReplicasEndpoint from './endpoints/list-file-replicas-endpoint';
+import GetFileReplicasMetalinkEndpoint from './endpoints/get-file-replicas-metalink-endpoint';
 import ListSuspiciousReplicasEndpoint from './endpoints/list-suspicious-replicas-endpoint';
 import DeclareBadPFNsEndpoint from './endpoints/declare-bad-pfns-endpoint';
 import DeclareBadReplicasEndpoint from './endpoints/declare-bad-replicas-endpoint';
 
 @injectable()
 export default class ReplicaGateway implements ReplicaGatewayOutputPort {
-    async listFileReplicas(rucioAuthToken: string, scope: string, name: string): Promise<ListReplicasDTO> {
+    async listFileReplicas(rucioAuthToken: string, scope: string, name: string, options: ListFileReplicasOptions = {}): Promise<ListReplicasDTO> {
         try {
-            const endpoint = new ListFileReplicasEndpoint(rucioAuthToken, scope, name);
+            const endpoint = new ListFileReplicasEndpoint(rucioAuthToken, scope, name, options);
             const errorDTO: ListReplicasDTO | undefined = await endpoint.fetch();
             if (!errorDTO) {
                 return {
@@ -24,6 +32,28 @@ export default class ReplicaGateway implements ReplicaGatewayOutputPort {
             const errorDTO: ListReplicasDTO = {
                 status: 'error',
                 errorName: 'Exception occurred while fetching file replicas',
+                errorType: 'gateway_endpoint_error',
+                errorMessage: error?.toString(),
+            };
+            return Promise.resolve(errorDTO);
+        }
+    }
+
+    async getFileReplicasMetalink(
+        rucioAuthToken: string,
+        scope: string,
+        name: string,
+        options: ListFileReplicasOptions = {},
+    ): Promise<FileReplicasMetalinkDTO> {
+        try {
+            const endpoint = new GetFileReplicasMetalinkEndpoint(rucioAuthToken, scope, name, options);
+            const dto: FileReplicasMetalinkDTO = await endpoint.fetch();
+            return dto;
+        } catch (error) {
+            const errorDTO: FileReplicasMetalinkDTO = {
+                status: 'error',
+                xml: '',
+                errorName: 'Exception occurred while fetching the replicas metalink',
                 errorType: 'gateway_endpoint_error',
                 errorMessage: error?.toString(),
             };

@@ -1,18 +1,7 @@
-import React, { useEffect } from 'react';
-import { FileReplicaStateViewModel } from '@/lib/infrastructure/data/view-model/did';
+import React from 'react';
 import { DetailsDIDView, DetailsDIDProps } from '@/component-library/pages/DID/details/views/DetailsDIDView';
-import useTableStreaming from '@/lib/infrastructure/hooks/useTableStreaming';
-import { DetailsDIDFileReplicasTable } from '@/component-library/pages/DID/details/tables/DetailsDIDFileReplicasTable';
+import { FileReplicasPFNPanel } from '@/component-library/pages/DID/details/views/FileReplicasPFNPanel';
 
 export const DetailsDIDFileReplicas: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
-    const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<FileReplicaStateViewModel>();
-
-    useEffect(() => {
-        if (gridApi) {
-            const url = '/api/feature/list-file-replicas?' + new URLSearchParams({ scope, name });
-            startStreaming(url);
-        }
-    }, [gridApi]);
-
-    return <DetailsDIDFileReplicasTable streamingHook={streamingHook} onGridReady={onGridReady} isActive={isActive} />;
+    return <FileReplicasPFNPanel scope={scope} name={name} isActive={isActive} idPrefix="file-replicas" />;
 };

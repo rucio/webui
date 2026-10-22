@@ -20,6 +20,7 @@ const USECASE_FACTORY = {
     LIST_DID_RULES: Symbol.for('Factory<ListDIDRulesUseCase>'),
     LIST_DATASET_REPLICAS: Symbol.for('Factory<ListDatasetReplicasUseCase>'),
     LIST_FILE_REPLICAS: Symbol.for('Factory<ListFileReplicasUseCase>'),
+    GET_FILE_REPLICAS_METALINK: Symbol.for('Factory<GetFileReplicasMetalinkUseCase>'),
     LIST_RSES: Symbol.for('Factory<ListRSEsUseCase>'),
     LIST_SUBSCRIPTIONS: Symbol.for('Factory<ListSubscriptionsUseCase>'),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for('Factory<ListSubscriptionRuleStatesUseCase>'),

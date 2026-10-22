@@ -384,10 +384,27 @@ export function fixtureDIDDatasetReplicasViewModel(): DIDDatasetReplicasViewMode
 }
 
 export function fixtureFilereplicaStateViewModel(): FileReplicaStateViewModel {
+    const rse = createRSEName();
+    const scope = createRandomScope();
+    const name = faker.system.fileName();
+    // about one replica in five has no readable PFN, like a tape RSE without a read protocol
+    const hasPFN = faker.number.int({ min: 1, max: 5 }) > 1;
+    const protocol = faker.helpers.arrayElement(['root', 'davs', 'https']);
     return {
         ...mockBaseVM(),
-        rse: createRSEName(),
+        scope: scope,
+        name: name,
+        bytes: faker.number.int({ min: 0, max: 1e10 }),
+        adler32: faker.string.hexadecimal({ length: 8, prefix: '' }).toLowerCase(),
+        rse: rse,
         state: randomEnum<ReplicaState>(ReplicaState),
+        pfn: hasPFN
+            ? `${protocol}://${rse.toLowerCase()}.example.org:1094//rucio/${scope}/${faker.string.hexadecimal({ length: 2, prefix: '' })}/${name}`
+            : null,
+        protocol: hasPFN ? protocol : null,
+        domain: hasPFN ? faker.helpers.arrayElement(['wan', 'lan'] as const) : null,
+        priority: hasPFN ? faker.number.int({ min: 1, max: 10 }) : null,
+        rseType: hasPFN ? faker.helpers.arrayElement(['DISK', 'TAPE']) : null,
     };
 }
 
