@@ -1,0 +1,6 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{t}from"./jsx-runtime-CndCZlyt.js";import{n,t as r}from"./utils-DIvWIhxb.js";import{_ as i,rt as a}from"./index.esm-31rhhOZl.js";var o,s;function c(){return(c=e((()=>{o=t(),a(),n(),s=e=>{let t=()=>{window.open(e.href,`_blank`,`noopener,noreferrer`)};return(0,o.jsxs)(`div`,{className:r(`flex items-center cursor-pointer`,e.className),onClick:t,onKeyDown:e=>{(e.key===`Enter`||e.key===` `)&&(e.preventDefault(),t())},role:`button`,tabIndex:0,children:[(0,o.jsx)(i,{className:`shrink-0 text-lg mr-1 text-neutral-900 dark:text-neutral-100`}),e.children]})},s.__docgenInfo={description:`Component which may be used as an AG Grid cell renderer.
+It creates a clickable component which opens the specified URL in a new browser tab.
+@param {string} props.href specified URL which opens after clicking the component.
+@param {React.ReactNode} props.children the content displayed inside the clickable component.
+@param {string} props.className optional additional styling of the component.
+@returns Clickable component.`,methods:[],displayName:`ClickableCell`,props:{href:{required:!0,tsType:{name:`string`},description:``},children:{required:!0,tsType:{name:`ReactReactNode`,raw:`React.ReactNode`},description:``},className:{required:!1,tsType:{name:`string`},description:``}}}})))()}export{c as n,s as t};
