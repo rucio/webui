@@ -19,7 +19,7 @@ export default class ListRulesEndpoint extends BaseStreamableEndpoint<BaseStream
 
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/rules/`;
 
         const params: any = {

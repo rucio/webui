@@ -13,7 +13,7 @@ export default class ListAccountRSEUsageEndpoint extends BaseStreamableEndpoint<
 
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/accounts/${this.account}/usage`;
         const request: HTTPRequest = {
             method: 'GET',

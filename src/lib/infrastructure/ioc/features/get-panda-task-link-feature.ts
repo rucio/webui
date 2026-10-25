@@ -10,8 +10,7 @@ import GetPandaTaskLinkController, { GetPandaTaskLinkControllerParameters } from
 import GetPandaTaskLinkUseCase from '@/lib/core/use-case/get-panda-task-link-usecase';
 import GetPandaTaskLinkPresenter from '@/lib/infrastructure/presenter/get-panda-task-link-presenter';
 import { PandaTaskLinkViewModel } from '@/lib/infrastructure/data/view-model/panda';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
-import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
+import { pandaBaseUrl } from '@/lib/infrastructure/config/config-readers';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
 import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory';
@@ -25,7 +24,6 @@ export default class GetPandaTaskLinkFeature extends BaseFeature<
     FeatureKey
 > {
     constructor(appContainer: Container) {
-        const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
         const symbols: IOCSymbols = {
             CONTROLLER: CONTROLLERS.GET_PANDA_TASK_LINK,
             USECASE_FACTORY: USECASE_FACTORY.GET_PANDA_TASK_LINK,
@@ -35,7 +33,7 @@ export default class GetPandaTaskLinkFeature extends BaseFeature<
             'GetPandaTaskLink',
             GetPandaTaskLinkController,
             GetPandaTaskLinkUseCase,
-            [envConfigGateway],
+            [pandaBaseUrl],
             GetPandaTaskLinkPresenter,
             false,
             symbols,

@@ -3,7 +3,7 @@ import { HTTPRequest, prepareRequestArgs } from '@/lib/sdk/http';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import type StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 import { BaseDTO, BaseStreamableDTO } from './dto';
 import { BaseHttpErrorTypes } from './http';
 import { PassThrough } from 'node:stream';
@@ -31,10 +31,6 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
      */
     protected streamingGateway: StreamGatewayOutputPort;
     /**
-     * An output port that provides methods for retrieving environment configuration values.
-     */
-    protected envConfigGateway: EnvConfigGatewayOutputPort;
-    /**
      * A string that represents the base URL of the Rucio server.
      */
     protected rucioHost: string = 'http://rucio-host.com';
@@ -47,17 +43,16 @@ export abstract class BaseStreamableEndpoint<TDTO extends BaseStreamableDTO, TSt
         super({ objectMode: true });
         this.streamAsNDJSON = streamAsNDJSON;
         this.streamingGateway = appContainer.get<StreamGatewayOutputPort>(GATEWAYS.STREAM);
-        this.envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
     }
 
     /**
-     * Initializes the endpoint by retrieving environment configuration values.
+     * Initializes the endpoint by reading the Rucio host from the server configuration.
      * This function MUST be overriden by subclasses to perform additional initialization steps.
      * The overriden function MUST call `super.initialize()` before returning.
      * The overriden function MUST set this.intialized to `true` after performing all initialization steps.
      */
     async initialize(): Promise<void> {
-        this.rucioHost = await this.envConfigGateway.rucioHost();
+        this.rucioHost = getServerEnv().RUCIO_HOST;
     }
 
     /**
@@ -154,10 +149,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
     protected parsedBodyAsText: boolean = false;
     protected url: string = '';
 
-    protected envConfigGateway: EnvConfigGatewayOutputPort;
-
     constructor(parseBodyAsText: boolean = false) {
-        this.envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
         this.parsedBodyAsText = parseBodyAsText;
     }
 
@@ -169,7 +161,7 @@ export abstract class BaseEndpoint<TDTO extends BaseDTO> {
      * @returns A promise that resolves when the endpoint has been initialized.
      */
     async initialize(): Promise<void> {
-        this.rucioHost = await this.envConfigGateway.rucioHost();
+        this.rucioHost = getServerEnv().RUCIO_HOST;
     }
 
     /**

@@ -5,8 +5,15 @@ import { AgGridSetup } from '@/lib/ag-grid-setup';
 import { SessionProvider } from '@/lib/infrastructure/auth/session-provider';
 import { inter, jetbrainsMono } from './fonts';
 import { AnimatedBackground } from '@/component-library/atoms/branding/AnimatedBackground';
+import { connection } from 'next/server';
+import { getRuntimeConfig } from '@/lib/infrastructure/config/runtime-config';
+import { RuntimeConfigProvider } from '@/lib/infrastructure/config/runtime-config-provider';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    // Render at request time so configuration comes from the running container, not from the build
+    await connection();
+    const runtimeConfig = getRuntimeConfig();
+
     return (
         <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
             {/*
@@ -19,11 +26,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 <AnimatedBackground />
                 <AgGridSetup />
-                <SessionProvider>
-                    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                        {children}
-                    </ThemeProvider>
-                </SessionProvider>
+                <RuntimeConfigProvider config={runtimeConfig}>
+                    <SessionProvider>
+                        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                            {children}
+                        </ThemeProvider>
+                    </SessionProvider>
+                </RuntimeConfigProvider>
             </body>
         </html>
     );

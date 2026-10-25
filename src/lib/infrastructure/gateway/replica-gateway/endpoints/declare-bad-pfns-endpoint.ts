@@ -21,7 +21,7 @@ export default class DeclareBadPFNsEndpoint extends BaseEndpoint<DeclareBadPFNsD
 
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/replicas/bad/pfns/`;
 
         const body: { [key: string]: any } = {
