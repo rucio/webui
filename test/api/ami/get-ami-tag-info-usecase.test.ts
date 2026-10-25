@@ -2,7 +2,7 @@ import GetAMITagInfoUseCase from '@/lib/core/use-case/get-ami-tag-info-usecase';
 import { GetAMITagInfoOutputPort } from '@/lib/core/port/primary/get-ami-tag-info-ports';
 import { GetAMITagInfoError, GetAMITagInfoResponse } from '@/lib/core/usecase-models/get-ami-tag-info-usecase-models';
 import AMIGatewayOutputPort from '@/lib/core/port/secondary/ami-gateway-output-port';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type { ConfigReader } from '@/lib/core/entity/app-config';
 import { AMITagInfoDTO } from '@/lib/core/dto/ami-dto';
 import { Signal } from '@/lib/sdk/web';
 
@@ -20,8 +20,8 @@ function makePresenter() {
     return { presenter, calls };
 }
 
-function makeEnv(baseUrl?: string): EnvConfigGatewayOutputPort {
-    return { get: jest.fn(async (key: string) => (key === 'AMI_BASE_URL' ? baseUrl : undefined)) } as unknown as EnvConfigGatewayOutputPort;
+function makeEnv(baseUrl?: string): ConfigReader<string | undefined> {
+    return () => baseUrl;
 }
 
 function makeGateway(impl: (tag: string) => Promise<AMITagInfoDTO>): AMIGatewayOutputPort & { getTagInfo: jest.Mock } {

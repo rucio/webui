@@ -5,12 +5,10 @@ import { auth } from '@/lib/infrastructure/auth/auth';
 import { AuthType } from '@/lib/core/entity/auth-models';
 import type { SessionUser } from '@/types/next-auth';
 import { refreshOidcToken } from '@/lib/infrastructure/auth/oidc-token-refresh-service';
-import appContainer from '@/lib/infrastructure/ioc/container-config';
-import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import { getServerEnv, ServerEnv } from '@/lib/infrastructure/config/env.server';
 
 function getSessionCookieConfig(): { cookieName: string; isSecure: boolean } {
-    const isSecure = process.env.NEXTAUTH_URL?.startsWith('https://') ?? false;
+    const isSecure = getServerEnv().NEXTAUTH_URL?.startsWith('https://') ?? false;
     const cookieName = isSecure ? '__Secure-authjs.session-token' : 'authjs.session-token';
     return { cookieName, isSecure };
 }
@@ -31,11 +29,14 @@ function getSessionCookieConfig(): { cookieName: string; isSecure: boolean } {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
-        const nextAuthSecret = process.env.NEXTAUTH_SECRET;
-        if (!nextAuthSecret) {
-            console.error('[Refresh] NEXTAUTH_SECRET is not configured');
+        let env: ServerEnv;
+        try {
+            env = getServerEnv();
+        } catch (error) {
+            console.error('[Refresh] Invalid server configuration:', error);
             return NextResponse.json({ success: false, error: 'Server configuration error' }, { status: 500 });
         }
+        const nextAuthSecret = env.NEXTAUTH_SECRET;
 
         const session = await auth();
         if (!session?.user?.isLoggedIn) {
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         if (authType === AuthType.OIDC) {
             // Dev-only: force refresh failure to exercise the expired-session redirect path.
-            if (process.env.DEV_FORCE_REFRESH_FAIL === 'true') {
+            if (env.DEV_FORCE_REFRESH_FAIL) {
                 console.log('[Refresh] DEV_FORCE_REFRESH_FAIL is set — returning forced failure');
                 return NextResponse.json({ success: false, error: 'Forced failure (DEV_FORCE_REFRESH_FAIL)' });
             }
@@ -121,9 +122,7 @@ async function handleOIDCRefresh(request: NextRequest, user: SessionUser, nextAu
         return NextResponse.json({ success: false, error: 'No OIDC provider name stored in session' });
     }
 
-    const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
-
-    const result = await refreshOidcToken({ refreshToken, providerName, envConfigGateway });
+    const result = await refreshOidcToken({ refreshToken, providerName, oidcProviders: getServerEnv().oidcProviders });
 
     if (!result.success) {
         return NextResponse.json({ success: false, error: result.error });

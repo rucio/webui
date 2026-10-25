@@ -103,18 +103,23 @@ describe('auth.config.ts jwt() callback', () => {
     // Type assertion: NextAuthConfig.callbacks is defined in authConfig.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const jwtCallback = authConfig.callbacks!.jwt!;
+    const originalEnv = { RUCIO_HOST: process.env.RUCIO_HOST, OIDC_EXPECTED_AUDIENCE_CLAIM: process.env.OIDC_EXPECTED_AUDIENCE_CLAIM };
+
+    afterEach(() => {
+        for (const [key, value] of Object.entries(originalEnv)) {
+            if (value === undefined) delete process.env[key];
+            else process.env[key] = value;
+        }
+    });
 
     beforeEach(() => {
         jest.clearAllMocks();
 
-        // Stub the IoC container so both ENV_CONFIG and ACCOUNT gateways resolve.
+        process.env.OIDC_EXPECTED_AUDIENCE_CLAIM = 'test-audience';
+        process.env.RUCIO_HOST = 'https://rucio.example.com';
+
+        // Stub the IoC container so the ACCOUNT gateway resolves.
         (appContainer.get as jest.Mock).mockImplementation((symbol: symbol) => {
-            if (symbol === GATEWAYS.ENV_CONFIG) {
-                return {
-                    oidcExpectedAudience: jest.fn().mockResolvedValue('test-audience'),
-                    rucioHost: jest.fn().mockResolvedValue('https://rucio.example.com'),
-                };
-            }
             if (symbol === GATEWAYS.ACCOUNT) {
                 return {
                     listAccountAttributes: jest.fn().mockResolvedValue({ attributes: [] }),

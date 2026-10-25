@@ -1,4 +1,5 @@
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type { OIDCProvider } from '@/lib/core/entity/auth-models';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 
 /**
  * Typed output from the OIDC token refresh application service.
@@ -23,11 +24,8 @@ export interface OidcRefreshParams {
     refreshToken: string;
     /** The OIDC provider name as stored in the session (e.g. 'cern'). */
     providerName: string;
-    /**
-     * Injected EnvConfigGateway — resolved by the caller (route handler / composition root)
-     * so this service does not depend on the IoC container directly.
-     */
-    envConfigGateway: EnvConfigGatewayOutputPort;
+    /** The configured OIDC providers, resolved by the caller from the server configuration. */
+    oidcProviders: OIDCProvider[];
 }
 
 /**
@@ -41,7 +39,7 @@ export interface OidcRefreshParams {
  * session cookie (with chunking) through NextAuth's own mechanism.
  */
 export async function refreshOidcToken(params: OidcRefreshParams): Promise<OidcRefreshResult> {
-    const { refreshToken, providerName, envConfigGateway } = params;
+    const { refreshToken, providerName, oidcProviders } = params;
 
     // ── Step 1: Resolve the OIDC provider configuration ──────────────────
     let tokenEndpointUrl: string;
@@ -49,8 +47,7 @@ export async function refreshOidcToken(params: OidcRefreshParams): Promise<OidcR
     let clientSecret: string;
 
     try {
-        const providers = await envConfigGateway.oidcProviders();
-        const provider = providers.find(p => p.name.toLowerCase() === providerName.toLowerCase());
+        const provider = oidcProviders.find(p => p.name.toLowerCase() === providerName.toLowerCase());
 
         if (!provider) {
             console.error(`[OidcRefresh] Provider '${providerName}' not found in env config`);
@@ -110,8 +107,8 @@ export async function refreshOidcToken(params: OidcRefreshParams): Promise<OidcR
     // Dev-only override: shorten the refreshed session's expiry so the
     // SessionMonitor refresh cycle fires repeatedly during testing. The
     // provider's access token remains valid for its real lifetime.
-    const devShortExpiry = process.env.DEV_SHORT_SESSION_SECONDS;
-    const effectiveExpiresIn = devShortExpiry ? Number(devShortExpiry) : expiresIn;
+    const devShortExpiry = getServerEnv().DEV_SHORT_SESSION_SECONDS;
+    const effectiveExpiresIn = devShortExpiry ?? expiresIn;
     const rucioAuthTokenExpires = new Date(Date.now() + effectiveExpiresIn * 1000).toISOString();
 
     return {

@@ -3,7 +3,7 @@ import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { AMITagInfo, GetAMITagInfoRequest, GetAMITagInfoResponse } from '@/lib/core/usecase-models/get-ami-tag-info-usecase-models';
 import { GetAMITagInfoInputPort, type GetAMITagInfoOutputPort } from '@/lib/core/port/primary/get-ami-tag-info-ports';
 import type AMIGatewayOutputPort from '@/lib/core/port/secondary/ami-gateway-output-port';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type { ConfigReader } from '@/lib/core/entity/app-config';
 import { AMITagInfoDTO } from '@/lib/core/dto/ami-dto';
 import { MAX_AMI_TAGS_PER_REQUEST, createAmiTagUrl, isAmiTag, normalizeAmiBaseUrl } from '@/lib/core/utils/ami-tag-utils';
 
@@ -25,7 +25,7 @@ export default class GetAMITagInfoUseCase implements GetAMITagInfoInputPort {
     constructor(
         private readonly presenter: GetAMITagInfoOutputPort,
         private readonly amiGateway: AMIGatewayOutputPort,
-        private readonly envConfigGateway: EnvConfigGatewayOutputPort,
+        private readonly amiBaseUrl: ConfigReader<string | undefined>,
     ) {}
 
     async execute(requestModel: AuthenticatedRequestModel<GetAMITagInfoRequest>): Promise<void> {
@@ -42,7 +42,7 @@ export default class GetAMITagInfoUseCase implements GetAMITagInfoInputPort {
             return;
         }
 
-        const baseUrl = normalizeAmiBaseUrl(await this.envConfigGateway.get('AMI_BASE_URL'));
+        const baseUrl = normalizeAmiBaseUrl(this.amiBaseUrl());
         const results = await Promise.allSettled(tags.map(tag => this.amiGateway.getTagInfo(baseUrl, tag)));
 
         const responseModel: GetAMITagInfoResponse = {

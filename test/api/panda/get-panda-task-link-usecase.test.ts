@@ -1,7 +1,7 @@
 import GetPandaTaskLinkUseCase from '@/lib/core/use-case/get-panda-task-link-usecase';
 import { GetPandaTaskLinkOutputPort } from '@/lib/core/port/primary/get-panda-task-link-ports';
 import { GetPandaTaskLinkError, GetPandaTaskLinkResponse } from '@/lib/core/usecase-models/get-panda-task-link-usecase-models';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type { ConfigReader } from '@/lib/core/entity/app-config';
 import { Signal } from '@/lib/sdk/web';
 
 async function run(taskId: string, baseUrl?: string) {
@@ -15,7 +15,7 @@ async function run(taskId: string, baseUrl?: string) {
             calls.error = model;
         },
     };
-    const env = { get: jest.fn(async (key: string) => (key === 'PANDA_BASE_URL' ? baseUrl : undefined)) } as unknown as EnvConfigGatewayOutputPort;
+    const env: ConfigReader<string | undefined> = () => baseUrl;
     await new GetPandaTaskLinkUseCase(presenter, env).execute({ rucioAuthToken: 't', taskId });
     return calls;
 }

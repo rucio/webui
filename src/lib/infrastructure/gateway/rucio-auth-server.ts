@@ -1,6 +1,7 @@
 import type { UserPassLoginAuthServerDTO } from '@/lib/core/dto/auth-server-dto';
 import AuthServerGatewayOutputPort from '@/lib/core/port/secondary/auth-server-gateway-output-port';
 import { injectable } from 'inversify';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 
 /**
  * Provides an implementation of the {@link AuthServerGatewayOutputPort} interface.
@@ -9,14 +10,14 @@ import { injectable } from 'inversify';
 @injectable()
 class RucioAuthServer implements AuthServerGatewayOutputPort {
     async userpassLogin(username: string, password: string, account: string, vo: string): Promise<UserPassLoginAuthServerDTO> {
+        const authHost = getServerEnv().RUCIO_AUTH_HOST;
         console.log('[LOGIN FLOW 10b] RucioAuthServer userpassLogin started', {
             username,
             account: account || '(none)',
             vo,
-            authHost: process.env.RUCIO_AUTH_HOST,
+            authHost,
         });
 
-        const authHost = process.env.RUCIO_AUTH_HOST;
         const userpassEndpoint = '/auth/userpass';
         const url = authHost + userpassEndpoint;
         let response = null;

@@ -1,8 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from 'next-auth/providers';
 import { OIDCProvider } from '@/lib/core/entity/auth-models';
-import appContainer from '@/lib/infrastructure/ioc/container-config';
-import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 
 /**
  * Profile data returned from OIDC provider
@@ -33,7 +31,7 @@ interface OIDCUser {
  * Converts a Rucio OIDC provider configuration to a NextAuth OAuth provider
  *
  * This function takes the OIDC provider configuration from environment variables
- * (loaded via EnvConfigGateway) and creates a NextAuth-compatible OAuth provider config.
+ * (validated in env.server.ts) and creates a NextAuth-compatible OAuth provider config.
  *
  * @param oidcProvider - OIDC provider configuration from environment
  * @returns NextAuth OAuth provider configuration
@@ -100,7 +98,7 @@ export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider, audience
  * Loads OIDC providers from environment variables and creates NextAuth OAuth providers
  *
  * This function:
- * 1. Uses EnvConfigGateway to load OIDC provider configs from environment
+ * 1. Reads the validated OIDC provider configs from the server configuration
  * 2. Converts each provider to a NextAuth OAuth provider configuration
  * 3. Returns an array of providers ready to be used by NextAuth
  *
@@ -115,24 +113,20 @@ export function createNextAuthOAuthProvider(oidcProvider: OIDCProvider, audience
  */
 export async function loadOIDCProviders(): Promise<OAuthConfig<OIDCProfile>[]> {
     try {
-        // Get the environment config gateway from IoC container
-        const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
+        const env = getServerEnv();
 
         // Check if OIDC is enabled
-        const oidcEnabled = await envConfigGateway.oidcEnabled();
-        if (!oidcEnabled) {
+        if (!env.OIDC_ENABLED) {
             console.log('[OIDC] OIDC is not enabled, skipping provider loading');
             return [];
         }
 
         // Load expected audience claim from environment
-        const audienceClaim = await envConfigGateway.oidcExpectedAudience();
+        const audienceClaim = env.OIDC_EXPECTED_AUDIENCE_CLAIM;
         console.log(`[OIDC] Using audience claim: ${audienceClaim}`);
 
-        // Load OIDC providers from environment variables
-        // This uses the existing EnvConfigGateway.oidcProviders() method
-        // which reads OIDC_PROVIDERS and parses all provider configurations
-        const oidcProviders: OIDCProvider[] = await envConfigGateway.oidcProviders();
+        // Providers listed in OIDC_PROVIDERS, parsed from OIDC_PROVIDER_<NAME>_* variables
+        const oidcProviders: OIDCProvider[] = env.oidcProviders;
 
         console.log(`[OIDC] Loaded ${oidcProviders.length} OIDC provider(s):`, oidcProviders.map(p => p.name).join(', '));
 
@@ -189,8 +183,8 @@ export function loadOIDCProvidersSync(): OAuthConfig<OIDCProfile>[] {
  */
 export async function getIssuerFromEnv(providerName: string): Promise<string> {
     try {
-        const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
-        const issuer = await envConfigGateway.oidcProviderIssuer(providerName);
+        const provider = getServerEnv().oidcProviders.find(candidate => candidate.name.toLowerCase() === providerName.toLowerCase());
+        const issuer = provider?.issuer;
 
         if (issuer) {
             return issuer;

@@ -13,7 +13,7 @@ export default class ListDIDParentsEndpoint extends BaseStreamableEndpoint<ListD
      */
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const encodedScope = encodeURIComponent(this.scope);
         const encodedName = encodeURIComponent(this.name);
         const endpoint = `${rucioHost}/dids/${encodedScope}/${encodedName}/parents`;

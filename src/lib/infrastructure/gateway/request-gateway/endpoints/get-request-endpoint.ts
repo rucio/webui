@@ -11,7 +11,7 @@ export default class GetRequestEndpoint extends BaseEndpoint<RequestDTO> {
      */
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/requests/${encodeURIComponent(this.scope)}/${encodeURIComponent(this.name)}/${encodeURIComponent(this.rse)}`;
         const request: HTTPRequest = {
             method: 'GET',
