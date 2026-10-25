@@ -28,72 +28,70 @@ import {
  * Feature flags (`FEATURE_*`) are owned by the feature registry in `@/lib/core/entity/feature-config`.
  */
 export const serverEnvSchema = clientEnvSchema
-    .merge(
-        z.object({
-            // Rucio servers
-            RUCIO_HOST: requiredUrl,
-            RUCIO_AUTH_HOST: requiredUrl,
-            PARAMS_ENCODING_ENABLED: envBoolean(false),
+    .extend({
+        // Rucio servers
+        RUCIO_HOST: requiredUrl,
+        RUCIO_AUTH_HOST: requiredUrl,
+        PARAMS_ENCODING_ENABLED: envBoolean(false),
 
-            // Auth.js
-            NEXTAUTH_URL: optionalUrl,
-            NEXTAUTH_SECRET: optionalString,
-            AUTH_SECRET: optionalString,
+        // Auth.js
+        NEXTAUTH_URL: optionalUrl,
+        NEXTAUTH_SECRET: optionalString,
+        AUTH_SECRET: optionalString,
 
-            // Login methods
-            ENABLE_USERPASS_LOGIN: envBoolean(true),
-            X509_ENABLED: envBoolean(true),
+        // Login methods
+        ENABLE_USERPASS_LOGIN: envBoolean(true),
+        X509_ENABLED: envBoolean(true),
 
-            // OIDC, see the OIDC_PROVIDER_<NAME>_* variables below
-            OIDC_ENABLED: envBoolean(false),
-            OIDC_PROVIDERS: csvList(),
-            OIDC_EXPECTED_AUDIENCE_CLAIM: stringWithDefault('rucio'),
+        // OIDC, see the OIDC_PROVIDER_<NAME>_* variables below
+        OIDC_ENABLED: envBoolean(false),
+        OIDC_PROVIDERS: csvList(),
+        OIDC_EXPECTED_AUDIENCE_CLAIM: stringWithDefault('rucio'),
 
-            // Multi VO, see the VO_<NAME>_* variables below
-            MULTIVO_ENABLED: envBoolean(false),
-            VO_DEFAULT: stringWithDefault('def'),
-            VO_LIST: csvList(['def']),
+        // Multi VO, see the VO_<NAME>_* variables below
+        MULTIVO_ENABLED: envBoolean(false),
+        VO_DEFAULT: stringWithDefault('def'),
+        VO_LIST: csvList(['def']),
 
-            // TLS towards the Rucio servers. The CA bundle itself is loaded by node via NODE_EXTRA_CA_CERTS.
-            NODE_TLS_REJECT_UNAUTHORIZED: z.preprocess(
-                value => (value === '' ? undefined : value),
-                z.enum(['0', '1'], { errorMap: () => ({ message: 'must be 0 or 1' }) }).optional(),
-            ),
-            SERVER_CA_BUNDLE: optionalString,
-            NODE_EXTRA_CA_CERTS: optionalString,
+        // TLS towards the Rucio servers. The CA bundle itself is loaded by node via NODE_EXTRA_CA_CERTS.
+        NODE_TLS_REJECT_UNAUTHORIZED: z.preprocess(
+            value => (value === '' ? undefined : value),
+            z.enum(['0', '1'], { error: 'must be 0 or 1' }).optional(),
+        ),
+        SERVER_CA_BUNDLE: optionalString,
+        NODE_EXTRA_CA_CERTS: optionalString,
 
-            // Misc
-            PROJECT_URL: optionalString,
-            RULE_ACTIVITY: stringWithDefault('User Subscriptions'),
-            LIST_DIDS_INITIAL_PATTERN: optionalString,
+        // Misc
+        PROJECT_URL: optionalString,
+        RULE_ACTIVITY: stringWithDefault('User Subscriptions'),
+        LIST_DIDS_INITIAL_PATTERN: optionalString,
 
-            // External integrations
-            FEATURE_DDM_DASHBOARD: envBoolean(false),
-            DDM_DASHBOARD_BASE_URL: optionalUrl,
-            AMI_BASE_URL: urlWithDefault('https://atlas-ami.cern.ch'),
-            PANDA_BASE_URL: urlWithDefault('https://bigpanda.cern.ch'),
+        // External integrations
+        FEATURE_DDM_DASHBOARD: envBoolean(false),
+        DDM_DASHBOARD_BASE_URL: optionalUrl,
+        AMI_BASE_URL: urlWithDefault('https://atlas-ami.cern.ch'),
+        PANDA_BASE_URL: urlWithDefault('https://bigpanda.cern.ch'),
 
-            // Development helpers
-            DEV_SHORT_SESSION_SECONDS: z.preprocess(value => (value === '' ? undefined : value), z.coerce.number().int().positive().optional()),
-            DEV_FORCE_REFRESH_FAIL: envBoolean(false),
-        }),
-    )
+        // Development helpers
+        DEV_SHORT_SESSION_SECONDS: z.preprocess(value => (value === '' ? undefined : value), z.coerce.number().int().positive().optional()),
+        DEV_FORCE_REFRESH_FAIL: envBoolean(false),
+    })
     .superRefine((env, ctx) => {
         if (!env.NEXTAUTH_SECRET && !env.AUTH_SECRET) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['NEXTAUTH_SECRET'], message: 'NEXTAUTH_SECRET or AUTH_SECRET is required' });
+            ctx.addIssue({ code: 'custom', path: ['NEXTAUTH_SECRET'], message: 'NEXTAUTH_SECRET or AUTH_SECRET is required' });
         }
         if (env.NODE_TLS_REJECT_UNAUTHORIZED === '1' && !env.SERVER_CA_BUNDLE && !env.NODE_EXTRA_CA_CERTS) {
             ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 path: ['SERVER_CA_BUNDLE'],
                 message: 'SERVER_CA_BUNDLE (or NODE_EXTRA_CA_CERTS) is required when NODE_TLS_REJECT_UNAUTHORIZED=1',
             });
         }
         if (env.OIDC_ENABLED && env.OIDC_PROVIDERS.length === 0) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['OIDC_PROVIDERS'], message: 'is required when OIDC_ENABLED=true' });
+            ctx.addIssue({ code: 'custom', path: ['OIDC_PROVIDERS'], message: 'is required when OIDC_ENABLED=true' });
         }
         if (env.FEATURE_DDM_DASHBOARD && !env.DDM_DASHBOARD_BASE_URL) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['DDM_DASHBOARD_BASE_URL'], message: 'is required when FEATURE_DDM_DASHBOARD=true' });
+            ctx.addIssue({ code: 'custom', path: ['DDM_DASHBOARD_BASE_URL'], message: 'is required when FEATURE_DDM_DASHBOARD=true' });
         }
     });
 
@@ -128,7 +126,7 @@ const voEnvSchema = z
     })
     .superRefine((vo, ctx) => {
         if (vo.OIDC_ENABLED && vo.OIDC_PROVIDERS.length === 0) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['OIDC_PROVIDERS'], message: 'is required when OIDC_ENABLED=true' });
+            ctx.addIssue({ code: 'custom', path: ['OIDC_PROVIDERS'], message: 'is required when OIDC_ENABLED=true' });
         }
     });
 
@@ -169,8 +167,8 @@ function readPrefixed(source: EnvSource, prefix: string, keys: string[]): EnvSou
 /**
  * Re-labels issues from a sub-schema with the full variable name, e.g. `OIDC_PROVIDER_CERN_TOKEN_URL`.
  */
-function prefixIssues(issues: z.ZodIssue[], prefix: string): z.ZodIssue[] {
-    return issues.map(issue => ({ ...issue, path: [`${prefix.toUpperCase()}_${issue.path.join('_')}`] }));
+function prefixIssues(issues: z.core.$ZodIssue[], prefix: string): z.core.$ZodIssue[] {
+    return issues.map(issue => ({ ...issue, path: [`${prefix.toUpperCase()}_${issue.path.map(String).join('_')}`] }));
 }
 
 /**
@@ -187,7 +185,7 @@ function resolveLocalOIDCIconUrl(providerName: string, configuredIconUrl: string
     return fs.existsSync(filePath) ? `/oidc-icons/${fileName}` : null;
 }
 
-function parseOIDCProviders(source: EnvSource, env: BaseServerEnv, issues: z.ZodIssue[]): OIDCProvider[] {
+function parseOIDCProviders(source: EnvSource, env: BaseServerEnv, issues: z.core.$ZodIssue[]): OIDCProvider[] {
     if (!env.OIDC_ENABLED) {
         return [];
     }
@@ -219,7 +217,7 @@ function parseOIDCProviders(source: EnvSource, env: BaseServerEnv, issues: z.Zod
     });
 }
 
-function parseVOs(source: EnvSource, env: BaseServerEnv, oidcProviders: OIDCProvider[], issues: z.ZodIssue[]): VO[] {
+function parseVOs(source: EnvSource, env: BaseServerEnv, oidcProviders: OIDCProvider[], issues: z.core.$ZodIssue[]): VO[] {
     if (!env.MULTIVO_ENABLED) {
         // A single default VO that follows the global OIDC settings
         return [{ name: 'default', shortName: 'def', logoUrl: '', oidcEnabled: env.OIDC_ENABLED, oidcProviders }];
@@ -239,7 +237,7 @@ function parseVOs(source: EnvSource, env: BaseServerEnv, oidcProviders: OIDCProv
                 const provider = oidcProviders.find(candidate => candidate.name.toLowerCase() === providerName.toLowerCase());
                 if (!provider) {
                     issues.push({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: [`${prefix.toUpperCase()}_OIDC_PROVIDERS`],
                         message: `OIDC provider "${providerName}" is not configured in OIDC_PROVIDERS (or OIDC_ENABLED is false)`,
                     });
@@ -260,7 +258,7 @@ function parseVOs(source: EnvSource, env: BaseServerEnv, oidcProviders: OIDCProv
     });
 }
 
-type ParseResult = { success: true; env: ServerEnv } | { success: false; issues: z.ZodIssue[] };
+type ParseResult = { success: true; env: ServerEnv } | { success: false; issues: z.core.$ZodIssue[] };
 
 function tryParse(source: EnvSource): ParseResult {
     // MULTI_VO_ENABLED is the spelling the old env-generator used
@@ -270,7 +268,7 @@ function tryParse(source: EnvSource): ParseResult {
         return { success: false, issues: result.error.issues };
     }
     const base = result.data;
-    const issues: z.ZodIssue[] = [];
+    const issues: z.core.$ZodIssue[] = [];
     const oidcProviders = parseOIDCProviders(source, base, issues);
     const voList = parseVOs(source, base, oidcProviders, issues);
     if (issues.length > 0) {
