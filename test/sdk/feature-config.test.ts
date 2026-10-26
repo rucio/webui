@@ -46,6 +46,33 @@ describe('feature-config registry + resolution', () => {
         expect(isFeatureEnabledInEnv('accounts.manage', { FEATURE_ACCOUNTS: 'false' })).toBe(false);
     });
 
+    const MANAGE_AREAS: [FeatureKey, string][] = [
+        ['accounts.manage.core', 'FEATURE_ACCOUNTS_MANAGE_CORE'],
+        ['accounts.manage.identities', 'FEATURE_ACCOUNTS_MANAGE_IDENTITIES'],
+        ['accounts.manage.attributes', 'FEATURE_ACCOUNTS_MANAGE_ATTRIBUTES'],
+        ['accounts.manage.quotas', 'FEATURE_ACCOUNTS_MANAGE_QUOTAS'],
+    ];
+
+    it.each(MANAGE_AREAS)('enables %s by default and maps it to %s', (key, env) => {
+        expect(resolveFeatureEnabled(key, {})).toBe(true);
+        expect(envKeyForFeature(key)).toBe(env);
+        expect(isFeatureEnabledInEnv(key, { [env]: 'false' })).toBe(false);
+    });
+
+    it.each(MANAGE_AREAS)('disables %s with accounts.manage or accounts', key => {
+        expect(isFeatureEnabledInEnv(key, { FEATURE_ACCOUNTS_MANAGE: 'false' })).toBe(false);
+        expect(isFeatureEnabledInEnv(key, { FEATURE_ACCOUNTS: 'false' })).toBe(false);
+    });
+
+    it('turns one manage area off without touching the others', () => {
+        const set = resolveEnabledSet({ 'accounts.manage.quotas': 'false' });
+        expect(set['accounts.manage.quotas']).toBe(false);
+        expect(set['accounts.manage.core']).toBe(true);
+        expect(set['accounts.manage.identities']).toBe(true);
+        expect(set['accounts.manage.attributes']).toBe(true);
+        expect(set['accounts.manage']).toBe(true);
+    });
+
     it('resolveEnabledSet returns a boolean for every registry key', () => {
         const set = resolveEnabledSet({});
         const keys = Object.keys(FEATURE_REGISTRY) as FeatureKey[];

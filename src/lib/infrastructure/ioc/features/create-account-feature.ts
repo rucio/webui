@@ -39,7 +39,7 @@ export default class CreateAccountFeature extends BaseFeature<
             CreateAccountPresenter,
             false,
             symbols,
-            'accounts.manage',
+            'accounts.manage.core',
         );
     }
 }

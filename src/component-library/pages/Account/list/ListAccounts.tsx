@@ -60,7 +60,7 @@ export const ListAccounts = () => {
     const { update: updateSession } = useSession();
     // Permissions are set up after the session loads: until then, hide Create instead of checking too early.
     const { check, isReady } = usePermissions();
-    const manageEnabled = useFeature('accounts.manage');
+    const manageEnabled = useFeature('accounts.manage.core');
     const canCreate = isReady && manageEnabled && check('account', 'lifecycle');
 
     const { onGridReady, streamingHook, startStreaming, stopStreaming, gridApi } = useTableStreaming<AccountListItemViewModel>();

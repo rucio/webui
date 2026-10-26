@@ -8,7 +8,7 @@ export interface AccountStatusBannerProps {
     status: AccountStatus;
     suspendedAt?: string;
     deletedAt?: string;
-    /** Show the Reactivate button (admins with accounts.manage). */
+    /** Show the Reactivate button (admins, when the area's accounts.manage.* flag is on). */
     canReactivate: boolean;
     onReactivate?: () => void;
     /** A mutation is running: Reactivate is disabled. */

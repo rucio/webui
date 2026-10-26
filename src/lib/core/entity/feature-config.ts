@@ -22,6 +22,15 @@ export const FEATURE_REGISTRY = {
     accounts: { default: true, pages: ['/accounts', '/account/[name]'] },
     // Mutations on the account pages; off for deployments that manage accounts elsewhere (e.g. synced from CRIC)
     'accounts.manage': { default: true, parent: 'accounts', pages: [] },
+    // Each area of account changes can be turned off on its own; all of them need accounts.manage.
+    // Create, edit, suspend/reactivate and delete accounts
+    'accounts.manage.core': { default: true, parent: 'accounts.manage', pages: [] },
+    // Add and remove identities
+    'accounts.manage.identities': { default: true, parent: 'accounts.manage', pages: [] },
+    // Add, edit and delete account attributes
+    'accounts.manage.attributes': { default: true, parent: 'accounts.manage', pages: [] },
+    // Set and remove quotas (account limits)
+    'accounts.manage.quotas': { default: true, parent: 'accounts.manage', pages: [] },
     'dids.metadata': { default: true, pages: [] },
     'dids.mutate': { default: true, pages: [] },
     // ATLAS-only: AMI tag chips on DID views + /api/feature/get-ami-tag-info

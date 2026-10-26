@@ -20,6 +20,26 @@ export interface AccountResource<T> {
     onRetry?: () => void;
 }
 
+/**
+ * Which account changes the viewer may make. Each area needs the Permix account permission
+ * and its accounts.manage.* feature flag, so a deployment can turn areas off one by one.
+ */
+export interface AccountManageAccess {
+    /** Edit email and type, suspend and reactivate (accounts.manage.core). */
+    edit: boolean;
+    /** Delete the account (accounts.manage.core, account lifecycle permission). */
+    delete: boolean;
+    /** Add and remove identities (accounts.manage.identities). */
+    identities: boolean;
+    /** Add, edit and delete attributes (accounts.manage.attributes). */
+    attributes: boolean;
+    /** Set and remove quotas (accounts.manage.quotas). */
+    quotas: boolean;
+}
+
+/** Read-only access: no account changes. */
+export const NO_MANAGE_ACCESS: AccountManageAccess = { edit: false, delete: false, identities: false, attributes: false, quotas: false };
+
 export interface AccountQuotas {
     local: AccountLocalQuota[];
     global: AccountGlobalQuota[];

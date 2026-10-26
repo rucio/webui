@@ -43,7 +43,7 @@ export default class UpdateAccountAttributeFeature extends BaseFeature<
             UpdateAccountAttributePresenter,
             false,
             symbols,
-            'accounts.manage',
+            'accounts.manage.attributes',
         );
     }
 }

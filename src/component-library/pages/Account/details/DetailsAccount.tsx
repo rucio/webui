@@ -14,7 +14,15 @@ import { AccountStatusBadge } from '@/component-library/features/badges/account/
 import { AccountTypeBadge } from '@/component-library/features/badges/account/AccountTypeBadge';
 import { AccountInfo, AccountStatus } from '@/lib/core/entity/rucio';
 import { AccountAttribute, AccountIdentity } from '@/lib/core/entity/account';
-import { AccountLimitTarget, AccountLoadError, AccountQuotas, AccountResource, AccountTab, isTruthyAttributeValue } from './details-account-types';
+import {
+    AccountLimitTarget,
+    AccountLoadError,
+    AccountManageAccess,
+    AccountQuotas,
+    AccountResource,
+    AccountTab,
+    isTruthyAttributeValue,
+} from './details-account-types';
 import { AccountStatusBanner } from './AccountStatusBanner';
 import { DetailsAccountOverview } from './DetailsAccountOverview';
 import { DetailsAccountIdentities } from './DetailsAccountIdentities';
@@ -25,10 +33,8 @@ export interface DetailsAccountProps {
     info: AccountInfo;
     /** The account is the session account ("You" badge). */
     isSelf: boolean;
-    /** Edit, suspend/reactivate and identity, attribute and quota changes (admin with accounts.manage). */
-    canManage: boolean;
-    /** Delete (admin with accounts.manage). */
-    canLifecycle: boolean;
+    /** Which actions to show, per area. */
+    access: AccountManageAccess;
     activeTab: AccountTab;
     onTabChange: (tab: AccountTab) => void;
     identities: AccountResource<AccountIdentity[]>;
@@ -56,7 +62,7 @@ const withCount = (label: string, items?: unknown[]) => (items ? `${label} (${it
  * For a non-ACTIVE account only the Overview tab exists, since Rucio hides the sub-resources.
  */
 export const DetailsAccount = (props: DetailsAccountProps) => {
-    const { info, isSelf, canManage, canLifecycle, identities, attributes, quotas, busy = false } = props;
+    const { info, isSelf, access, identities, attributes, quotas, busy = false } = props;
     const isActive = info.accountStatus === AccountStatus.ACTIVE;
     const isAdmin = isActive && !!attributes.data?.some(a => a.key === 'admin' && isTruthyAttributeValue(a.value));
 
@@ -93,13 +99,13 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
             </header>
 
             <DetailActions>
-                {canManage && (
+                {access.edit && (
                     <Button variant="neutral" size="sm" onClick={props.onEdit} disabled={busy}>
                         <HiOutlinePencil className="mr-1.5 h-4 w-4" aria-hidden="true" />
                         Edit
                     </Button>
                 )}
-                {canManage && (
+                {access.edit && (
                     <Button variant={isActive ? 'neutral' : 'success'} size="sm" onClick={() => props.onSetStatus?.(statusMode)} disabled={busy}>
                         {isActive ? (
                             <HiOutlinePause className="mr-1.5 h-4 w-4" aria-hidden="true" />
@@ -116,7 +122,7 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
                     View rules
                     <HiOutlineExternalLink className="ml-1.5 h-4 w-4" aria-hidden="true" />
                 </Link>
-                {canLifecycle && isActive && (
+                {access.delete && isActive && (
                     <Button variant="error" size="sm" className="ml-auto" onClick={props.onDelete} disabled={busy}>
                         <HiOutlineTrash className="mr-1.5 h-4 w-4" aria-hidden="true" />
                         Delete
@@ -128,7 +134,7 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
                 status={info.accountStatus}
                 suspendedAt={info.suspendedAt}
                 deletedAt={info.deletedAt}
-                canReactivate={canManage}
+                canReactivate={access.edit}
                 onReactivate={() => props.onSetStatus?.('reactivate')}
                 busy={busy}
             />
@@ -147,7 +153,7 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
             {activeTab === 'identities' && (
                 <DetailsAccountIdentities
                     identities={identities}
-                    canManage={canManage}
+                    canManage={access.identities}
                     busy={busy}
                     onAdd={props.onAddIdentity}
                     onDelete={props.onDeleteIdentity}
@@ -156,7 +162,7 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
             {activeTab === 'attributes' && (
                 <DetailsAccountAttributes
                     attributes={attributes}
-                    canManage={canManage}
+                    canManage={access.attributes}
                     busy={busy}
                     onAdd={props.onAddAttribute}
                     onEdit={props.onEditAttribute}
@@ -166,7 +172,7 @@ export const DetailsAccount = (props: DetailsAccountProps) => {
             {activeTab === 'quotas' && (
                 <DetailsAccountQuotas
                     quotas={quotas}
-                    canManage={canManage}
+                    canManage={access.quotas}
                     busy={busy}
                     onSetLimit={props.onSetLimit}
                     onDeleteLimit={props.onDeleteLimit}

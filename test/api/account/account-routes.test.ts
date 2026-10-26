@@ -34,6 +34,20 @@ const MUTATION_ROUTES: [string, string, Handler][] = [
     ['delete-account-limit', 'DELETE', (r: NextRequest) => require('@/app/api/feature/delete-account-limit/route').DELETE(r)],
 ];
 
+// The accounts.manage.* area flag that gates each mutation route.
+const ROUTE_FLAG: Record<string, string> = {
+    'create-account': 'accounts.manage.core',
+    'update-account': 'accounts.manage.core',
+    'delete-account': 'accounts.manage.core',
+    'add-account-attribute': 'accounts.manage.attributes',
+    'update-account-attribute': 'accounts.manage.attributes',
+    'delete-account-attribute': 'accounts.manage.attributes',
+    'add-account-identity': 'accounts.manage.identities',
+    'delete-account-identity': 'accounts.manage.identities',
+    'set-account-limit': 'accounts.manage.quotas',
+    'delete-account-limit': 'accounts.manage.quotas',
+};
+
 const ADMIN_ONLY_READ_ROUTES: [string, Handler][] = [['list-accounts', (r: NextRequest) => require('@/app/api/feature/list-accounts/route').GET(r)]];
 
 const ACCOUNT_READ_ROUTES: [string, Handler][] = [
@@ -72,13 +86,23 @@ describe('account routes: guards', () => {
             expect(mockExecute).not.toHaveBeenCalled();
         });
 
-        it.each(MUTATION_ROUTES)('%s returns 404 when accounts.manage is off', async (name, method, handler) => {
+        it.each(MUTATION_ROUTES)('%s returns 404 when its accounts.manage area flag is off', async (name, method, handler) => {
             asAdmin();
-            isAnyEnabled.mockImplementation(async flags => !flags.includes('accounts.manage'));
+            const flag = ROUTE_FLAG[name];
+            isAnyEnabled.mockImplementation(async flags => !flags.includes(flag));
             const response = await handler(request(name, method));
             expect(response.status).toBe(404);
-            expect(isAnyEnabled).toHaveBeenCalledWith(expect.arrayContaining(['accounts.manage']));
+            expect(isAnyEnabled).toHaveBeenCalledWith([flag]);
             expect(mockExecute).not.toHaveBeenCalled();
+        });
+
+        it.each(MUTATION_ROUTES)('%s ignores the flags of the other areas', async (name, method, handler) => {
+            asAdmin();
+            const flag = ROUTE_FLAG[name];
+            isAnyEnabled.mockImplementation(async flags => flags.includes(flag));
+            const response = await handler(request(name, method));
+            // past the guards the handler validates the (empty) body
+            expect(response.status).toBe(400);
         });
 
         it.each(MUTATION_ROUTES)('%s lets an admin past the guards', async (name, method, handler) => {

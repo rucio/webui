@@ -41,7 +41,7 @@ export default class SetAccountLimitFeature extends BaseFeature<
             SetAccountLimitPresenter,
             false,
             symbols,
-            'accounts.manage',
+            'accounts.manage.quotas',
         );
     }
 }

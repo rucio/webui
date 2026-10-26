@@ -26,7 +26,7 @@ export const IdentityCell = ({ value }: { value: string }) => (
 
 export interface AccountIdentitiesTableProps {
     identities: AccountIdentity[];
-    /** Show the Delete action (admins with accounts.manage). */
+    /** Show the Delete action (admins, when the area's accounts.manage.* flag is on). */
     canManage: boolean;
     onDelete?: (identity: AccountIdentity) => void;
     /** A mutation is running: row actions are disabled. */

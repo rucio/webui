@@ -43,7 +43,7 @@ export default class DeleteAccountLimitFeature extends BaseFeature<
             DeleteAccountLimitPresenter,
             false,
             symbols,
-            'accounts.manage',
+            'accounts.manage.quotas',
         );
     }
 }
