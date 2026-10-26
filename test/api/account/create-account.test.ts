@@ -51,6 +51,15 @@ describe('Feature: CreateAccount', () => {
         return res;
     };
 
+    it('reports a network failure as a 500 without request details', async () => {
+        fetchMock.mockReject(new Error('connect ECONNREFUSED'));
+        const res = await run();
+        expect(res._getStatusCode()).toBe(500);
+        const data = await res._getJSONData();
+        expect(data.status).toBe('error');
+        expect(JSON.stringify(data)).not.toContain('jdoe@example.org');
+    });
+
     it('creates the account and returns its name', async () => {
         let sent: unknown;
         mockRucio(201, undefined, async req => {

@@ -17,7 +17,6 @@ import { AccountLimitLocality, AccountListFilter, AccountUpdateOptions, Identity
 import { AccountType } from '@/lib/core/entity/rucio';
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
-import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { inject, injectable } from 'inversify';
 import GATEWAYS from '../../ioc/ioc-symbols-gateway';
 import CreateAccountEndpoint from './endpoints/create-account-endpoint';
@@ -113,23 +112,23 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
     }
 
     async createAccount(rucioAuthToken: string, account: string, accountType: AccountType, email: string | null): Promise<AccountMutationDTO> {
-        return this.mutate(() => new CreateAccountEndpoint(rucioAuthToken, account, accountType, email));
+        return new CreateAccountEndpoint(rucioAuthToken, account, accountType, email).fetch();
     }
 
     async updateAccount(rucioAuthToken: string, account: string, options: AccountUpdateOptions): Promise<AccountMutationDTO> {
-        return this.mutate(() => new UpdateAccountEndpoint(rucioAuthToken, account, options));
+        return new UpdateAccountEndpoint(rucioAuthToken, account, options).fetch();
     }
 
     async deleteAccount(rucioAuthToken: string, account: string): Promise<AccountMutationDTO> {
-        return this.mutate(() => new DeleteAccountEndpoint(rucioAuthToken, account));
+        return new DeleteAccountEndpoint(rucioAuthToken, account).fetch();
     }
 
     async addAccountAttribute(rucioAuthToken: string, account: string, key: string, value: string): Promise<AccountMutationDTO> {
-        return this.mutate(() => new AddAccountAttributeEndpoint(rucioAuthToken, account, key, value));
+        return new AddAccountAttributeEndpoint(rucioAuthToken, account, key, value).fetch();
     }
 
     async deleteAccountAttribute(rucioAuthToken: string, account: string, key: string): Promise<AccountMutationDTO> {
-        return this.mutate(() => new DeleteAccountAttributeEndpoint(rucioAuthToken, account, key));
+        return new DeleteAccountAttributeEndpoint(rucioAuthToken, account, key).fetch();
     }
 
     async addAccountIdentity(
@@ -141,11 +140,11 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         password?: string,
         isDefault?: boolean,
     ): Promise<AccountMutationDTO> {
-        return this.mutate(() => new AddAccountIdentityEndpoint(rucioAuthToken, account, identity, type, email, password, isDefault));
+        return new AddAccountIdentityEndpoint(rucioAuthToken, account, identity, type, email, password, isDefault).fetch();
     }
 
     async deleteAccountIdentity(rucioAuthToken: string, account: string, identity: string, type: IdentityType): Promise<AccountMutationDTO> {
-        return this.mutate(() => new DeleteAccountIdentityEndpoint(rucioAuthToken, account, identity, type));
+        return new DeleteAccountIdentityEndpoint(rucioAuthToken, account, identity, type).fetch();
     }
 
     async setAccountLimit(
@@ -155,7 +154,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         rseExpression: string,
         bytes: number,
     ): Promise<AccountMutationDTO> {
-        return this.mutate(() => new SetAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression, bytes));
+        return new SetAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression, bytes).fetch();
     }
 
     async deleteAccountLimit(
@@ -164,16 +163,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         locality: AccountLimitLocality,
         rseExpression: string,
     ): Promise<AccountMutationDTO> {
-        return this.mutate(() => new DeleteAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression));
-    }
-
-    /** Runs a mutation endpoint. Errors are reported without request details because identity bodies can contain passwords. */
-    private async mutate(createEndpoint: () => BaseEndpoint<AccountMutationDTO>): Promise<AccountMutationDTO> {
-        try {
-            return await createEndpoint().fetch();
-        } catch (error) {
-            return { status: 'error', errorName: 'Exception', errorMessage: String(error), errorCode: 500 };
-        }
+        return new DeleteAccountLimitEndpoint(rucioAuthToken, account, locality, rseExpression).fetch();
     }
 
     async listAccountsForIdentity(identity: string, identityType: string, rucioAuthToken: string): Promise<ListAccountsForIdentityDTO> {
