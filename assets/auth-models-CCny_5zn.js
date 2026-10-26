@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";var t,n,r;function i(){return(i=e((()=>{t=function(e){return e.x509=`x509`,e.USERPASS=`userpass`,e.OIDC=`oidc`,e}({}),n=function(e){return e.ADMIN=`admin`,e.USER=`user`,e}({}),r={name:`Default`,shortName:`def`,logoUrl:``,oidcEnabled:!1,oidcProviders:[]}})))()}export{i,r as n,n as r,t};

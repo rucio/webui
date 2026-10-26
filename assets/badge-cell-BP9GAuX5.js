@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";var t,n;function r(){return(r=e((()=>{t={display:`flex`},n=`flex justify-center items-center grow m-2`})))()}export{t as n,r,n as t};

@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{i as t,n,r,t as i}from"./HttpResponse-DrkeJQzv.js";var a;function o(){return(o=e((()=>{t(),n(),a=(e,t)=>r.get(e,async({request:e})=>{let{statusCode:n,message:r}=t;return i.json({message:r},{status:n})})})))()}export{o as n,a as t};
