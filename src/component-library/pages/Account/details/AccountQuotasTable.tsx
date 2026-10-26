@@ -135,7 +135,7 @@ export const toQuotaRows = (locality: AccountLimitLocality, quotas: AccountLocal
 export interface AccountQuotasTableProps {
     locality: AccountLimitLocality;
     quotas: AccountLocalQuota[] | AccountGlobalQuota[];
-    /** Show Edit and Remove on rows that have a quota (admins with accounts.manage). */
+    /** Show Edit and Remove on rows that have a quota (admins, when the area's accounts.manage.* flag is on). */
     canManage: boolean;
     /** Edit an existing quota: the dialog is prefilled with these values. */
     onEdit?: (values: AccountLimitTarget & { bytes: number }) => void;

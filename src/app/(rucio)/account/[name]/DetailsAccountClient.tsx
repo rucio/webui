@@ -11,6 +11,7 @@ import { fetchViewModel, sendMutation } from '@/component-library/pages/Account/
 import {
     AccountLimitTarget,
     AccountLoadError,
+    AccountManageAccess,
     AccountQuotas,
     AccountResource,
     AccountTab,
@@ -102,9 +103,19 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
     const { data: session, update: updateSession } = useSession();
     // Permissions are set up after the session loads: until then, show no actions instead of checking too early.
     const { check, isReady } = usePermissions();
-    const manageEnabled = useFeature('accounts.manage');
-    const canManage = isReady && manageEnabled && check('account', 'manage', { account });
-    const canLifecycle = isReady && manageEnabled && check('account', 'lifecycle');
+    const coreEnabled = useFeature('accounts.manage.core');
+    const identitiesEnabled = useFeature('accounts.manage.identities');
+    const attributesEnabled = useFeature('accounts.manage.attributes');
+    const quotasEnabled = useFeature('accounts.manage.quotas');
+    // Permix decides who may change this account; the accounts.manage.* flags decide which areas a deployment allows.
+    const canManage = isReady && check('account', 'manage', { account });
+    const access: AccountManageAccess = {
+        edit: canManage && coreEnabled,
+        delete: isReady && coreEnabled && check('account', 'lifecycle'),
+        identities: canManage && identitiesEnabled,
+        attributes: canManage && attributesEnabled,
+        quotas: canManage && quotasEnabled,
+    };
     const encoded = encodeURIComponent(account);
 
     // Tab state: initialised from ?tab=, mirrored to the URL on every switch.
@@ -341,8 +352,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
             <DetailsAccount
                 info={info}
                 isSelf={account === sessionAccount}
-                canManage={canManage}
-                canLifecycle={canLifecycle}
+                access={access}
                 activeTab={tab}
                 onTabChange={onTabChange}
                 identities={resource(identitiesQuery)}
@@ -361,7 +371,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                 onDeleteLimit={target => openDialog({ kind: 'delete-limit', target })}
             />
 
-            {canManage && (
+            {access.edit && (
                 <>
                     <EditAccountDialog
                         open={isOpen('edit')}
@@ -381,6 +391,10 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                         loading={statusMutation.isPending}
                         error={dialogError}
                     />
+                </>
+            )}
+            {access.identities && (
+                <>
                     <AddIdentityDialog
                         open={isOpen('add-identity')}
                         onOpenChange={open => {
@@ -406,6 +420,10 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                             error={dialogError}
                         />
                     )}
+                </>
+            )}
+            {access.attributes && (
+                <>
                     <AddAccountAttributeDialog
                         open={isOpen('add-attribute')}
                         onOpenChange={onSetOpenChange}
@@ -447,6 +465,10 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                             error={dialogError}
                         />
                     )}
+                </>
+            )}
+            {access.quotas && (
+                <>
                     <SetAccountLimitDialog
                         open={isOpen('set-limit')}
                         onOpenChange={onSetOpenChange}
@@ -478,7 +500,7 @@ export const DetailsAccountClient = ({ account, sessionAccount, initialInfo, ini
                     )}
                 </>
             )}
-            {canLifecycle && (
+            {access.delete && (
                 <DeleteAccountDialog
                     open={isOpen('delete')}
                     onOpenChange={onSetOpenChange}

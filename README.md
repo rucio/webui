@@ -95,7 +95,7 @@ Create a `.env.development.local` file from the template for local development. 
 
 Deployments can enable or disable whole pages, in-page sections, and their API routes with `FEATURE_*` environment variables (or `RUCIO_WEBUI_FEATURE_*` via the env-generator). Unset flags default to enabled for core features, so existing deployments are unaffected. Flags are hierarchical (disabling `FEATURE_RULES` also disables `FEATURE_RULES_CREATE` and `FEATURE_RULES_APPROVE`), and disabled pages/routes return 404 rather than 403 so they appear nonexistent.
 
-Available flags: `FEATURE_RULES`, `FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`, `FEATURE_SUBSCRIPTIONS`, `FEATURE_RSES`, `FEATURE_DIDS_METADATA`, `FEATURE_DIDS_MUTATE`. See the [env-generator README](tools/env-generator/README.md) for the full table.
+Available flags: `FEATURE_RULES`, `FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`, `FEATURE_SUBSCRIPTIONS`, `FEATURE_RSES`, `FEATURE_ACCOUNTS`, `FEATURE_ACCOUNTS_MANAGE`, `FEATURE_ACCOUNTS_MANAGE_CORE`, `FEATURE_ACCOUNTS_MANAGE_IDENTITIES`, `FEATURE_ACCOUNTS_MANAGE_ATTRIBUTES`, `FEATURE_ACCOUNTS_MANAGE_QUOTAS`, `FEATURE_DIDS_METADATA`, `FEATURE_DIDS_MUTATE`. See the [env-generator README](tools/env-generator/README.md) for the full table.
 
 To ensure `git blame` accurately reflects contributions, run:
 

@@ -43,7 +43,7 @@ export default class DeleteAccountIdentityFeature extends BaseFeature<
             DeleteAccountIdentityPresenter,
             false,
             symbols,
-            'accounts.manage',
+            'accounts.manage.identities',
         );
     }
 }

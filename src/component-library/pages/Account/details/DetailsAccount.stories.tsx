@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 import { DetailsAccount, DetailsAccountProps } from './DetailsAccount';
-import { AccountQuotas, AccountTab } from './details-account-types';
+import { AccountManageAccess, AccountQuotas, AccountTab, NO_MANAGE_ACCESS } from './details-account-types';
 import { Toaster } from '@/component-library/atoms/toast/Toaster';
 import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 import { AccountAttribute, AccountIdentity, IdentityType } from '@/lib/core/entity/account';
+
+const FULL_ACCESS: AccountManageAccess = { edit: true, delete: true, identities: true, attributes: true, quotas: true };
 
 const identities: AccountIdentity[] = [
     { identity: 'CN=Jane Doe,OU=Users,DC=example,DC=org', type: IdentityType.X509, email: 'jdoe@example.com' },
@@ -51,8 +53,7 @@ const info: DetailsAccountProps['info'] = {
 const base: DetailsAccountProps = {
     info,
     isSelf: false,
-    canManage: true,
-    canLifecycle: true,
+    access: FULL_ACCESS,
     activeTab: 'overview',
     onTabChange: () => {},
     identities: { data: identities, isLoading: false },
@@ -100,10 +101,14 @@ export const SelfReadOnly: Story = {
     args: {
         ...base,
         isSelf: true,
-        canManage: false,
-        canLifecycle: false,
+        access: NO_MANAGE_ACCESS,
         attributes: { data: [{ key: 'country-ch', value: 'user' }], isLoading: false },
     },
+};
+
+/** A deployment that manages identities and quotas elsewhere (FEATURE_ACCOUNTS_MANAGE_IDENTITIES and _QUOTAS off). */
+export const IdentitiesAndQuotasManagedElsewhere: Story = {
+    args: { ...base, activeTab: 'identities', access: { ...FULL_ACCESS, identities: false, quotas: false } },
 };
 
 export const NoIdentities: Story = {

@@ -1,9 +1,11 @@
 import React from 'react';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { DetailsAccount, DetailsAccountProps } from '@/component-library/pages/Account/details/DetailsAccount';
-import { AccountResource } from '@/component-library/pages/Account/details/details-account-types';
+import { AccountManageAccess, AccountResource, NO_MANAGE_ACCESS } from '@/component-library/pages/Account/details/details-account-types';
 import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 import { AccountAttribute, AccountIdentity, IdentityType } from '@/lib/core/entity/account';
+
+const FULL_ACCESS: AccountManageAccess = { edit: true, delete: true, identities: true, attributes: true, quotas: true };
 
 const EM_DASH = String.fromCharCode(0x2014);
 
@@ -28,8 +30,7 @@ const makeProps = (overrides: Partial<DetailsAccountProps> = {}): DetailsAccount
         updatedAt: '2024-04-01T10:00:00Z',
     },
     isSelf: false,
-    canManage: true,
-    canLifecycle: true,
+    access: FULL_ACCESS,
     activeTab: 'overview',
     onTabChange: jest.fn(),
     identities: ok(identities),
@@ -53,7 +54,7 @@ describe('DetailsAccount', () => {
     });
 
     it('is read-only for a non-admin viewing their own account', () => {
-        render(<DetailsAccount {...makeProps({ isSelf: true, canManage: false, canLifecycle: false, activeTab: 'identities' })} />);
+        render(<DetailsAccount {...makeProps({ isSelf: true, access: NO_MANAGE_ACCESS, activeTab: 'identities' })} />);
         const bar = within(toolbar());
         expect(bar.queryByRole('button')).not.toBeInTheDocument();
         expect(bar.getByRole('link', { name: /View rules/ })).toBeInTheDocument();
@@ -61,8 +62,24 @@ describe('DetailsAccount', () => {
         expect(screen.queryByRole('button', { name: /Add identity/ })).not.toBeInTheDocument();
     });
 
+    it('hides Edit, Suspend and Delete but keeps the tab actions when account changes are off', () => {
+        render(<DetailsAccount {...makeProps({ access: { ...FULL_ACCESS, edit: false, delete: false }, activeTab: 'identities' })} />);
+        expect(within(toolbar()).queryByRole('button')).not.toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Add identity/ })).toBeInTheDocument();
+    });
+
+    it.each([
+        ['identities', 'identities', /Add identity/],
+        ['attributes', 'attributes', /Add attribute/],
+        ['quotas', 'quotas', /Set quota/],
+    ] as const)('hides only the %s actions when that area is off', (area, tab, addButton) => {
+        render(<DetailsAccount {...makeProps({ access: { ...FULL_ACCESS, [area]: false }, activeTab: tab })} />);
+        expect(screen.queryByRole('button', { name: addButton })).not.toBeInTheDocument();
+        expect(within(toolbar()).getByRole('button', { name: /Edit/ })).toBeInTheDocument();
+    });
+
     it('hides the Attributes add button for non-admins', () => {
-        render(<DetailsAccount {...makeProps({ canManage: false, canLifecycle: false, activeTab: 'attributes' })} />);
+        render(<DetailsAccount {...makeProps({ access: NO_MANAGE_ACCESS, activeTab: 'attributes' })} />);
         expect(screen.queryByRole('button', { name: /Add attribute/ })).not.toBeInTheDocument();
     });
 
@@ -96,8 +113,7 @@ describe('DetailsAccount', () => {
                 {...makeProps({
                     info: { ...makeProps().info, accountStatus: AccountStatus.SUSPENDED },
                     isSelf: true,
-                    canManage: false,
-                    canLifecycle: false,
+                    access: NO_MANAGE_ACCESS,
                 })}
             />,
         );
@@ -114,9 +130,7 @@ describe('DetailsAccount', () => {
     });
 
     it('shows the empty identities state without an Add button for a non-admin', () => {
-        render(
-            <DetailsAccount {...makeProps({ identities: ok([]), activeTab: 'identities', canManage: false, canLifecycle: false, isSelf: true })} />,
-        );
+        render(<DetailsAccount {...makeProps({ identities: ok([]), activeTab: 'identities', access: NO_MANAGE_ACCESS, isSelf: true })} />);
         expect(screen.getByText('This account has no identities, so nobody can log in to it.')).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: /Add identity/ })).not.toBeInTheDocument();
     });

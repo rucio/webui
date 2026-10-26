@@ -39,7 +39,7 @@ export default class DeleteAccountFeature extends BaseFeature<
             DeleteAccountPresenter,
             false,
             symbols,
-            'accounts.manage',
+            'accounts.manage.core',
         );
     }
 }

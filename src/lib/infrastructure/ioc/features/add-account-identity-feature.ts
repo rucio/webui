@@ -43,7 +43,7 @@ export default class AddAccountIdentityFeature extends BaseFeature<
             AddAccountIdentityPresenter,
             false,
             symbols,
-            'accounts.manage',
+            'accounts.manage.identities',
         );
     }
 }

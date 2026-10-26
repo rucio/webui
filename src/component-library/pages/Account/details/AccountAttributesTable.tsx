@@ -29,7 +29,7 @@ export const AttributeKeyCell = ({ value }: { value: string }) => {
 
 export interface AccountAttributesTableProps {
     attributes: AccountAttribute[];
-    /** Show the Edit and Delete actions (admins with accounts.manage). */
+    /** Show the Edit and Delete actions (admins, when the area's accounts.manage.* flag is on). */
     canManage: boolean;
     onEdit?: (attribute: AccountAttribute) => void;
     onDelete?: (attribute: AccountAttribute) => void;
