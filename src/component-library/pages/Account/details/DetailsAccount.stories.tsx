@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 import { DetailsAccount, DetailsAccountProps } from './DetailsAccount';
 import { AccountQuotas, AccountTab } from './details-account-types';
-import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
+import { Toaster } from '@/component-library/atoms/toast/Toaster';
 import { AccountStatus, AccountType } from '@/lib/core/entity/rucio';
 import { AccountAttribute, AccountIdentity, IdentityType } from '@/lib/core/entity/account';
 
@@ -69,15 +69,15 @@ const Stateful = (args: DetailsAccountProps) => {
 const meta: Meta<typeof DetailsAccount> = {
     title: 'Components/Pages/Account/Details/DetailsAccount',
     component: DetailsAccount,
-    parameters: { docs: { disable: true } },
     render: args => <Stateful {...args} />,
     decorators: [
         Story => (
-            <ToastedTemplate>
+            <>
                 <div className="p-6">
                     <Story />
                 </div>
-            </ToastedTemplate>
+                <Toaster />
+            </>
         ),
     ],
 };

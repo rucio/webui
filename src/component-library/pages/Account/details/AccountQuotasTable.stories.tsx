@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { AccountQuotasTable } from './AccountQuotasTable';
-import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
+import { Toaster } from '@/component-library/atoms/toast/Toaster';
 
 const meta: Meta<typeof AccountQuotasTable> = {
     title: 'Components/Pages/Account/Details/AccountQuotasTable',
     component: AccountQuotasTable,
-    parameters: { docs: { disable: true } },
     decorators: [
         Story => (
-            <ToastedTemplate>
+            <>
                 <div className="h-96">
                     <Story />
                 </div>
-            </ToastedTemplate>
+                <Toaster />
+            </>
         ),
     ],
 };

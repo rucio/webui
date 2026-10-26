@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { AccountIdentitiesTable } from './AccountIdentitiesTable';
-import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
+import { Toaster } from '@/component-library/atoms/toast/Toaster';
 import { IdentityType } from '@/lib/core/entity/account';
 
 const meta: Meta<typeof AccountIdentitiesTable> = {
     title: 'Components/Pages/Account/Details/AccountIdentitiesTable',
     component: AccountIdentitiesTable,
-    parameters: { docs: { disable: true } },
     decorators: [
         Story => (
-            <ToastedTemplate>
+            <>
                 <div className="h-96">
                     <Story />
                 </div>
-            </ToastedTemplate>
+                <Toaster />
+            </>
         ),
     ],
 };
