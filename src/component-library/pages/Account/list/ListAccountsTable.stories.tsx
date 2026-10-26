@@ -4,7 +4,7 @@ import { ListAccountsTable } from './ListAccountsTable';
 import { AccountListItemViewModel } from '@/lib/infrastructure/data/view-model/account';
 import { AccountType } from '@/lib/core/entity/rucio';
 import { StreamingErrorType, StreamingStatus, UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
-import { ToastedTemplate } from '@/component-library/templates/ToastedTemplate/ToastedTemplate';
+import { Toaster } from '@/component-library/atoms/toast/Toaster';
 
 const rows: AccountListItemViewModel[] = [
     { status: 'success', account: 'jdoe', accountType: AccountType.USER, email: 'jdoe@example.com' },
@@ -26,14 +26,14 @@ const fill = (data: AccountListItemViewModel[]) => (event: GridReadyEvent) => ev
 const meta: Meta<typeof ListAccountsTable> = {
     title: 'Components/Pages/Account/List/ListAccountsTable',
     component: ListAccountsTable,
-    parameters: { docs: { disable: true } },
     decorators: [
         Story => (
-            <ToastedTemplate>
+            <>
                 <div className="h-96">
                     <Story />
                 </div>
-            </ToastedTemplate>
+                <Toaster />
+            </>
         ),
     ],
 };
