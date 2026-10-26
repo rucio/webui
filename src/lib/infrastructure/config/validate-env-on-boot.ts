@@ -1,3 +1,4 @@
+import { envKeyForFeature, findShadowedFeatureFlags, readFeatureEnv } from '@/lib/core/entity/feature-config';
 import { getServerEnv } from './env.server';
 
 /**
@@ -11,5 +12,9 @@ export function validateEnvOnBoot(): void {
     } catch (error) {
         console.error(error instanceof Error ? error.message : error);
         process.exit(1);
+    }
+    // A flag that is on while a parent is off is not an error, but it is most likely a mistake
+    for (const { key, disabledAncestor } of findShadowedFeatureFlags(readFeatureEnv(process.env))) {
+        console.warn(`[config] ${envKeyForFeature(key)} is true but has no effect because ${envKeyForFeature(disabledAncestor)} is false.`);
     }
 }

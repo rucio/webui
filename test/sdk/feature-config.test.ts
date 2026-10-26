@@ -5,6 +5,7 @@ import {
     resolveEnabledSet,
     envKeyForFeature,
     isFeatureEnabledInEnv,
+    findShadowedFeatureFlags,
 } from '@/lib/core/entity/feature-config';
 
 describe('feature-config registry + resolution', () => {
@@ -83,5 +84,28 @@ describe('feature-config registry + resolution', () => {
     it('isFeatureEnabledInEnv reads FEATURE_* env names and cascades a disabled parent', () => {
         expect(isFeatureEnabledInEnv('rules.create', { FEATURE_RULES: 'false' })).toBe(false);
         expect(isFeatureEnabledInEnv('rules.create', {})).toBe(true);
+    });
+});
+
+describe('findShadowedFeatureFlags', () => {
+    it('reports a flag set to true while its parent is false', () => {
+        expect(findShadowedFeatureFlags({ 'accounts.manage': 'false', 'accounts.manage.quotas': 'true' })).toEqual([
+            { key: 'accounts.manage.quotas', disabledAncestor: 'accounts.manage' },
+        ]);
+    });
+
+    it('reports the closest disabled ancestor', () => {
+        expect(findShadowedFeatureFlags({ accounts: 'false', 'accounts.manage': 'true', 'accounts.manage.core': 'true' })).toEqual([
+            { key: 'accounts.manage', disabledAncestor: 'accounts' },
+            { key: 'accounts.manage.core', disabledAncestor: 'accounts' },
+        ]);
+    });
+
+    it('ignores children left at their default and children set to false', () => {
+        expect(findShadowedFeatureFlags({ rules: 'false', 'rules.approve': 'false' })).toEqual([]);
+    });
+
+    it('reports nothing when every ancestor is on', () => {
+        expect(findShadowedFeatureFlags({ rules: 'true', 'rules.create': 'true' })).toEqual([]);
     });
 });
