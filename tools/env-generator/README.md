@@ -55,7 +55,7 @@ The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells 
 | FEATURE_DIDS_PANDA_TASK   | RUCIO_WEBUI_FEATURE_DIDS_PANDA_TASK   | ATLAS only. Show the PanDA task ID parsed from DID names (tid suffix of the Version field, or the task field of file names) on the DID details and DID list side panel, linked to BigPanDA. | true                           | false              |
 | PANDA_BASE_URL            | RUCIO_WEBUI_PANDA_BASE_URL            | Base URL of the BigPanDA monitor used for task links (`/task/?jeditaskid=<id>`). | https://bigpanda.cern.ch       | https://bigpanda.cern.ch |
 
-**Feature flags** gate whole pages, in-page sections, and their API routes per deployment. Unset flags fall back to the defaults above (core features on), so existing deployments are unaffected. Flags are hierarchical: disabling a parent (e.g. `FEATURE_RULES`) also disables its children (`FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`), and `FEATURE_ACCOUNTS_MANAGE=false` turns off every `FEATURE_ACCOUNTS_MANAGE_*` area. Disabled pages and API routes return 404.
+**Feature flags** gate whole pages, in-page sections, and their API routes per deployment. Unset flags fall back to the defaults above (core features on), so existing deployments are unaffected. Flags are hierarchical: disabling a parent (e.g. `FEATURE_RULES`) also disables its children (`FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`), and `FEATURE_ACCOUNTS_MANAGE=false` turns off every `FEATURE_ACCOUNTS_MANAGE_*` area. The generator warns when a flag is set to true while one of its parents is false, since that flag then has no effect. Disabled pages and API routes return 404.
 
 ### NextAuth Configuration
 
