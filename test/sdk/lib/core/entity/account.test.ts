@@ -1,4 +1,4 @@
-import { IDENTITY_TYPES, IdentityType } from './account';
+import { IDENTITY_TYPES, IdentityType } from '@/lib/core/entity/account';
 
 describe('IDENTITY_TYPES', () => {
     it('lists the real Rucio identity types, without UNKNOWN', () => {

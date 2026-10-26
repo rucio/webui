@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPES, AccountType, isKnownAccountType } from './rucio';
+import { ACCOUNT_TYPES, AccountType, isKnownAccountType } from '@/lib/core/entity/rucio';
 
 describe('account types', () => {
     // Mirrors Rucio's AccountType in lib/rucio/db/sqla/constants.py (USER, GROUP, SERVICE).

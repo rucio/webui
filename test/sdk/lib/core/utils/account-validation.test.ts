@@ -15,7 +15,7 @@ import {
     toAttributeValueString,
     toValidationError,
     IDENTITY_TYPE_HINTS,
-} from './account-validation';
+} from '@/lib/core/utils/account-validation';
 import { AccountUpdateOptions, IDENTITY_TYPES } from '@/lib/core/entity/account';
 import { AccountStatus } from '@/lib/core/entity/rucio';
 
