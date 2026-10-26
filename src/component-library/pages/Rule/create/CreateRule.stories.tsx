@@ -48,7 +48,7 @@ const staticRses: RSEAccountUsageLimitViewModel[] = [
     },
     {
         account: '',
-        // ~ 10 TB
+        // 10 TB
         bytes_limit: 10 ** 13,
         bytes_remaining: 10 ** 13,
         files: -1,

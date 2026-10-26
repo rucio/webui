@@ -28,25 +28,11 @@ export const formatDate = (isoString: string): string => {
     return `${year}/${month}/${day}`;
 };
 
-export const formatFileSize = (bytes: number): string => {
-    if (isNaN(bytes)) return DEFAULT_VALUE;
-    if (bytes === 0) return '0 Bytes';
-
-    const sign = bytes < 0 ? '-' : ''; // Check if the number is negative
-    bytes = Math.abs(bytes); // Use the absolute value of the bytes
-
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1000));
-
-    return `${sign}${parseFloat((bytes / Math.pow(1000, i)).toFixed(2))} ${sizes[i]}`;
-};
-
 /**
- * Formats a size in base 10 (1 TB = 10^12 bytes), the convention Rucio uses for quotas
- * and the one the quota dialogs use for input. `formatFileSize` is base 2.
- * Temporary until rucio/webui#856 switches the shared formatter to base 10.
+ * Formats a size in base 10 (1 TB = 10^12 bytes), matching the Rucio CLI's sizefmt
+ * so the WebUI and `rucio` output show the same numbers.
  */
-export const formatDecimalFileSize = (bytes: number): string => {
+export const formatFileSize = (bytes: number): string => {
     if (isNaN(bytes)) return DEFAULT_VALUE;
     if (bytes === 0) return '0 Bytes';
 
@@ -54,6 +40,7 @@ export const formatDecimalFileSize = (bytes: number): string => {
     bytes = Math.abs(bytes);
 
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    // Clamp so sub-byte values stay in Bytes and anything past YB stays in YB
     const i = Math.min(Math.max(Math.floor(Math.log10(bytes) / 3), 0), sizes.length - 1);
 
     return `${sign}${parseFloat((bytes / Math.pow(1000, i)).toFixed(2))} ${sizes[i]}`;

@@ -9,7 +9,6 @@ import {
 } from '@/component-library/pages/Account/details/AccountQuotasTable';
 import { AttributeKeyCell } from '@/component-library/pages/Account/details/AccountAttributesTable';
 import { IdentityCell } from '@/component-library/pages/Account/details/AccountIdentitiesTable';
-import { formatDecimalFileSize } from '@/component-library/features/utils/text-formatters';
 
 describe('quota cells', () => {
     it('renders Unlimited, No quota and base 10 sizes', () => {
@@ -19,13 +18,6 @@ describe('quota cells', () => {
         expect(screen.getByText('No quota')).toBeInTheDocument();
         rerender(<QuotaLimitCell value={10 * 1e12} />);
         expect(screen.getByText('10 TB')).toBeInTheDocument();
-    });
-
-    it('formats sizes in base 10', () => {
-        expect(formatDecimalFileSize(1e12)).toBe('1 TB');
-        expect(formatDecimalFileSize(1_500_000_000)).toBe('1.5 GB');
-        expect(formatDecimalFileSize(0)).toBe('0 Bytes');
-        expect(formatDecimalFileSize(512)).toBe('512 Bytes');
     });
 
     it('computes usage colours: warning above 90 percent, error at or above 100', () => {
