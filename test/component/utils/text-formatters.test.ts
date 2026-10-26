@@ -16,17 +16,33 @@ describe('Text Formatters', () => {
         [null, undefined, 'aaa', 1234567, '', '0-16-2026'].forEach(el => expect(formatDate(String(el))).toBe(DEFAULT_VALUE));
         expect(formatDate(new Date(1234567).toISOString())).toBe('1970/01/01');
         expect(formatDate(new Date('2026-01-01').toISOString())).toBe('2026/01/01');
-        expect(formatDate(new Date('2026-01-01T15:35:45').toISOString())).toBe('2026/01/01');
+        expect(formatDate(new Date('2026-01-01T15:35:45Z').toISOString())).toBe('2026/01/01');
         expect(formatDate(new Date(Date.UTC(2025, 10, 31, 15, 35, 45)).toISOString())).toBe('2025/12/01');
     });
 
     it('formatFileSize', () => {
         ['ijhsdi', undefined, { name: 'sth' }, [1, 2]].forEach(el => expect(formatFileSize(Number(el))).toBe(DEFAULT_VALUE));
         expect(formatFileSize(0)).toBe('0 Bytes');
-        expect(formatFileSize(-1)).toContain('-');
+        expect(formatFileSize(512)).toBe('512 Bytes');
+        expect(formatFileSize(-1)).toBe('-1 Bytes');
+        expect(formatFileSize(-200e9)).toBe('-200 GB');
+    });
+
+    it('formatFileSize uses base 10 like the Rucio CLI', () => {
         expect(formatFileSize(1000)).toBe('1 KB');
-        expect(formatFileSize(2 * Math.pow(10, 12))).toBe('2 TB');
-        expect(formatFileSize(2 * Math.pow(2, 10 * 4))).not.toBe('2TB');
+        expect(formatFileSize(1_500_000_000)).toBe('1.5 GB');
+        expect(formatFileSize(1e12)).toBe('1 TB');
+        expect(formatFileSize(2e12)).toBe('2 TB');
+        // 2 TiB is 2.2 TB in base 10, not 2 TB
+        expect(formatFileSize(2 * Math.pow(2, 40))).toBe('2.2 TB');
+        [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24].forEach((bytes, i) =>
+            expect(formatFileSize(bytes)).toBe(`1 ${['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`),
+        );
+    });
+
+    it('formatFileSize clamps values outside the unit range', () => {
+        expect(formatFileSize(0.5)).toBe('0.5 Bytes');
+        expect(formatFileSize(1e27)).toBe('1000 YB');
     });
 
     it('formatSeconds', () => {

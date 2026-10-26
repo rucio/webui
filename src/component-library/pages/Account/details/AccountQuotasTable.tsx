@@ -10,7 +10,7 @@ import { ClickableCell } from '@/component-library/features/table/cells/Clickabl
 import { ClickableRSECell, ClickableRSEExpressionCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { formatDecimalFileSize } from '@/component-library/features/utils/text-formatters';
+import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import ProgressBar from '@/component-library/atoms/misc/ProgressBar';
 import { byteSizeColumn, compareNullsLast } from '@/component-library/features/table/utils/byte-size';
@@ -67,15 +67,15 @@ export const quotaRemainingValue = (row?: Pick<QuotaRow, 'bytesLimit' | 'bytesUs
 export const QuotaLimitCell = ({ value }: { value: number | null }) => {
     if (value === null) return <NullBadge label="No quota" />;
     if (isUnlimited(value)) return <span>Unlimited</span>;
-    return <span>{formatDecimalFileSize(value)}</span>;
+    return <span>{formatFileSize(value)}</span>;
 };
 
 export const QuotaRemainingCell = ({ data }: { data?: Pick<QuotaRow, 'bytesLimit' | 'bytesUsed' | 'bytesRemaining'> }) => {
     if (!data || data.bytesLimit === null) return <NullBadge label="none" />;
     if (isUnlimited(data.bytesLimit)) return <span>Unlimited</span>;
     const remaining = data.bytesRemaining ?? data.bytesLimit - data.bytesUsed;
-    if (remaining < 0) return <span className="text-base-error-600 dark:text-base-error-400">Over by {formatDecimalFileSize(-remaining)}</span>;
-    return <span>{formatDecimalFileSize(remaining)}</span>;
+    if (remaining < 0) return <span className="text-base-error-600 dark:text-base-error-400">Over by {formatFileSize(-remaining)}</span>;
+    return <span>{formatFileSize(remaining)}</span>;
 };
 
 export const QuotaUsageCell = ({ data }: { data?: Pick<QuotaRow, 'bytesUsed' | 'bytesLimit'> }) => {
@@ -200,7 +200,7 @@ export const buildQuotaColumnDefs = ({ locality, canManage, busy, handlers }: Qu
     byteSizeColumn<QuotaRow>({
         headerName: 'Used',
         getValue: row => row?.bytesUsed,
-        valueFormatter: p => (p.value === null ? '' : formatDecimalFileSize(p.value)),
+        valueFormatter: p => (p.value === null ? '' : formatFileSize(p.value)),
     }),
     byteSizeColumn<QuotaRow>({
         headerName: 'Remaining',

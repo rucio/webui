@@ -10,7 +10,7 @@ import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { AccountLimitLocality } from '@/lib/core/entity/account';
 
-/** Base 10 sizes, matching formatDecimalFileSize and the Rucio CLI's sizefmt. */
+/** Base 10 sizes, matching formatFileSize and the Rucio CLI's sizefmt. */
 export const LIMIT_UNITS = { GB: 1e9, TB: 1e12, PB: 1e15 } as const;
 export type LimitUnit = keyof typeof LIMIT_UNITS;
 

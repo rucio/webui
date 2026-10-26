@@ -3,7 +3,7 @@ import { INumberFilterParams } from 'ag-grid-community';
 /** Rucio marks an unlimited quota with -1 bytes. */
 export const UNLIMITED = -1;
 
-// Base 10 like formatDecimalFileSize and Rucio's CLI sizefmt (1 kB = 1000 B). IEC units (KiB) use 1024.
+// Base 10 like formatFileSize and Rucio's CLI sizefmt (1 kB = 1000 B). IEC units (KiB) use 1024.
 const UNIT_FACTORS: Record<string, number> = {
     '': 1,
     b: 1,
