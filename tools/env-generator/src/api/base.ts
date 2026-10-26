@@ -13,6 +13,19 @@ function parseBoolEnv(value: string | undefined): boolean {
   return normalised === 'true' || normalised === '1' || normalised === 'yes' || normalised === 'on';
 }
 
+/**
+ * Parent of each hierarchical feature flag, as in the webui feature registry
+ * (src/lib/core/entity/feature-config.ts): a flag only takes effect when every ancestor is on.
+ */
+const FEATURE_PARENTS: Record<string, string> = {
+  'FEATURE_RULES_CREATE': 'FEATURE_RULES',
+  'FEATURE_RULES_APPROVE': 'FEATURE_RULES',
+  'FEATURE_ACCOUNTS_MANAGE': 'FEATURE_ACCOUNTS',
+  'FEATURE_ACCOUNTS_MANAGE_CORE': 'FEATURE_ACCOUNTS_MANAGE',
+  'FEATURE_ACCOUNTS_MANAGE_IDENTITIES': 'FEATURE_ACCOUNTS_MANAGE',
+  'FEATURE_ACCOUNTS_MANAGE_ATTRIBUTES': 'FEATURE_ACCOUNTS_MANAGE',
+  'FEATURE_ACCOUNTS_MANAGE_QUOTAS': 'FEATURE_ACCOUNTS_MANAGE',
+}
 
 export type TTemplateGeneratorOutput = {
   status: boolean,
@@ -29,6 +42,8 @@ export type EnvValidationError = {
 
 export class WebUIEnvTemplateCompiler {
   protected engine: Liquid
+  // The variables passed in, before mergeWithDefaults fills in the rest
+  protected readonly explicitVariables: Record<string, string>
 
   constructor(
     protected environmentVariables: Record<string, string>,
@@ -39,6 +54,7 @@ export class WebUIEnvTemplateCompiler {
     const templateDir = `${__dirname}/../templates`
     const templatePath = `${templateDir}/${templateName}.liquid`
     this.environmentVariables = environmentVariables
+    this.explicitVariables = { ...environmentVariables }
 
     if (!existsSync(templatePath)) throw new Error(`templatePath ${templatePath} does not exist`)
     this.engine = new Liquid({
@@ -178,6 +194,13 @@ export class WebUIEnvTemplateCompiler {
     return errors
   }
 
+  /** The closest ancestor of a feature flag that is turned off, if any. */
+  findDisabledAncestor(flag: string): string | undefined {
+    const parent = FEATURE_PARENTS[flag]
+    if (!parent) return undefined
+    return parseBoolEnv(this.environmentVariables[parent]) ? this.findDisabledAncestor(parent) : parent
+  }
+
   validateEnv(prefix: string): EnvValidationError[] {
     console.log('validating environment variables')
     console.log(this.environmentVariables)
@@ -222,6 +245,18 @@ export class WebUIEnvTemplateCompiler {
         })
       }
     }
+
+    // warn when a feature flag is explicitly enabled but a parent flag turns it off anyway
+    Object.keys(FEATURE_PARENTS).forEach((flag) => {
+      if (!parseBoolEnv(this.explicitVariables[flag])) return
+      const disabledAncestor = this.findDisabledAncestor(flag)
+      if (disabledAncestor) {
+        errors.push({
+          type: 'warning',
+          message: `${prefix}${flag} is true but has no effect because ${prefix}${disabledAncestor} is false.`
+        })
+      }
+    })
 
     // External base URLs used by the ATLAS DID features must be http(s) URLs when set
     for (const key of ['AMI_BASE_URL', 'PANDA_BASE_URL']) {
