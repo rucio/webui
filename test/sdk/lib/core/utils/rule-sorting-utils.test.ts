@@ -1,5 +1,5 @@
 import { LockState } from '@/lib/core/entity/rucio';
-import { lockStateComparator } from './rule-sorting-utils';
+import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 
 describe('lockStateComparator', () => {
     describe('with single-character LockState enum values', () => {
