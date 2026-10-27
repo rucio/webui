@@ -24,8 +24,6 @@ export const requiredUrl = z.preprocess(normalize, z.url(invalidUrl));
 
 export const optionalUrl = z.preprocess(normalize, z.url(invalidUrl).optional());
 
-export const urlWithDefault = (fallback: string) => z.preprocess(normalize, z.url(invalidUrl).default(fallback));
-
 /**
  * Parses true/false, 1/0, yes/no and on/off (case-insensitive). Unset or blank falls back to the default;
  * anything else is a validation error rather than being silently read as false.

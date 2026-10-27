@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 import { OIDCProvider, VO } from '@/lib/core/entity/auth-models';
+import { envKeyForFeature, FeatureKey, isFeatureEnabledInEnv } from '@/lib/core/entity/feature-config';
 import { InvalidConfig } from '@/lib/core/exceptions/env-config-exceptions';
 import { clientEnvSchema } from './env.client';
 import {
@@ -14,7 +15,6 @@ import {
     requiredString,
     requiredUrl,
     stringWithDefault,
-    urlWithDefault,
 } from './env-schema-helpers';
 
 /**
@@ -69,8 +69,9 @@ export const serverEnvSchema = clientEnvSchema
         // External integrations
         FEATURE_DDM_DASHBOARD: envBoolean(false),
         DDM_DASHBOARD_BASE_URL: optionalUrl,
-        AMI_BASE_URL: urlWithDefault('https://atlas-ami.cern.ch'),
-        PANDA_BASE_URL: urlWithDefault('https://bigpanda.cern.ch'),
+        // Only validated when their feature is enabled, see validateFeatureBaseUrls
+        AMI_BASE_URL: stringWithDefault('https://atlas-ami.cern.ch'),
+        PANDA_BASE_URL: stringWithDefault('https://bigpanda.cern.ch'),
 
         // Development helpers
         DEV_SHORT_SESSION_SECONDS: z.preprocess(value => (value === '' ? undefined : value), z.coerce.number().int().positive().optional()),
@@ -258,6 +259,28 @@ function parseVOs(source: EnvSource, env: BaseServerEnv, oidcProviders: OIDCProv
     });
 }
 
+/**
+ * Base URLs of optional integrations, checked only when their feature is enabled so that a
+ * deployment which does not use the integration is not blocked by its setting.
+ */
+const FEATURE_BASE_URLS: [FeatureKey, 'AMI_BASE_URL' | 'PANDA_BASE_URL'][] = [
+    ['dids.ami_tags', 'AMI_BASE_URL'],
+    ['dids.panda_task', 'PANDA_BASE_URL'],
+];
+
+function validateFeatureBaseUrls(source: EnvSource, env: BaseServerEnv, issues: z.core.$ZodIssue[]): void {
+    for (const [feature, key] of FEATURE_BASE_URLS) {
+        if (isFeatureEnabledInEnv(feature, source) && !z.url().safeParse(env[key]).success) {
+            issues.push({
+                code: 'custom',
+                path: [key],
+                message: `must be a valid URL when ${envKeyForFeature(feature)} is enabled`,
+                input: env[key],
+            });
+        }
+    }
+}
+
 type ParseResult = { success: true; env: ServerEnv } | { success: false; issues: z.core.$ZodIssue[] };
 
 function tryParse(source: EnvSource): ParseResult {
@@ -271,6 +294,7 @@ function tryParse(source: EnvSource): ParseResult {
     const issues: z.core.$ZodIssue[] = [];
     const oidcProviders = parseOIDCProviders(source, base, issues);
     const voList = parseVOs(source, base, oidcProviders, issues);
+    validateFeatureBaseUrls(source, base, issues);
     if (issues.length > 0) {
         return { success: false, issues };
     }

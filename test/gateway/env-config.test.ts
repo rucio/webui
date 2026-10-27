@@ -93,6 +93,15 @@ describe('server env validation', () => {
         );
     });
 
+    it.each([
+        ['AMI_BASE_URL', 'FEATURE_DIDS_AMI_TAGS'],
+        ['PANDA_BASE_URL', 'FEATURE_DIDS_PANDA_TASK'],
+    ])('only validates %s when %s is enabled', (key, flag) => {
+        expect(parse({ [key]: 'not a url' })[key as 'AMI_BASE_URL' | 'PANDA_BASE_URL']).toBe('not a url');
+        expect(() => parse({ [key]: 'not a url', [flag]: 'true' })).toThrow(`${key}: must be a valid URL when ${flag} is enabled`);
+        expect(() => parse({ [flag]: 'true' })).not.toThrow();
+    });
+
     it('lists every problem in one error', () => {
         expect(() => parseServerEnv({ X509_ENABLED: 'maybe' })).toThrow(/RUCIO_HOST[\s\S]*RUCIO_AUTH_HOST[\s\S]*X509_ENABLED/);
     });
