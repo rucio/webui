@@ -41,6 +41,7 @@ import ListDIDParentsFeature from './features/list-did-parents-feature';
 import ReplicaGatewayOutputPort from '@/lib/core/port/secondary/replica-gateway-output-port';
 import ReplicaGateway from '../gateway/replica-gateway/replica-gateway';
 import ListFileReplicasFeature from './features/list-file-replicas-feature';
+import GetFileReplicasMetalinkFeature from './features/get-file-replicas-metalink-feature';
 import ListDatasetReplicasFeature from './features/list-dataset-replicas-feature';
 import ListDIDContentsFeature from './features/list-did-contents-feature';
 import GetRSEFeature from './features/get-rse-feature';
@@ -127,6 +128,7 @@ const coreFeatures = [
     new ListDIDRulesFeature(appContainer),
     new ListDatasetReplicasFeature(appContainer),
     new ListFileReplicasFeature(appContainer),
+    new GetFileReplicasMetalinkFeature(appContainer),
     new ListSuspiciousReplicasFeature(appContainer),
     new DeclareBadReplicasFeature(appContainer),
     new ListSubscriptionsFeature(appContainer),

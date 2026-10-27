@@ -13,6 +13,7 @@ import {
     RuleMeta,
 } from '@/lib/core/entity/rucio';
 import { BaseViewModel } from '@/lib/sdk/view-models';
+import { ListFileReplicasErrorType } from '@/lib/core/usecase-models/list-file-replicas-usecase-models';
 
 export interface DIDViewModel extends DID, BaseViewModel {}
 
@@ -29,7 +30,10 @@ export interface DIDRulesViewModel extends RuleMeta, BaseViewModel {
 
 export interface DIDDatasetReplicasViewModel extends DIDDatasetReplicas, BaseViewModel {}
 
-export interface FileReplicaStateViewModel extends FileReplicaState, BaseViewModel {}
+export interface FileReplicaStateViewModel extends FileReplicaState, BaseViewModel {
+    /** Typed error discriminator, set when status === 'error' */
+    errorType?: ListFileReplicasErrorType;
+}
 
 export interface FilereplicaStateDViewModel extends FileReplicaStateD, BaseViewModel {}
 
@@ -51,8 +55,17 @@ export function generateEmptyDIDViewModel(): DIDViewModel {
 export function generateEmptyFilereplicaStateViewModel(): FileReplicaStateViewModel {
     return {
         status: 'error',
+        scope: '',
+        name: '',
+        bytes: 0,
+        adler32: '',
         rse: '',
         state: ReplicaState.UNKNOWN,
+        pfn: null,
+        protocol: null,
+        domain: null,
+        priority: null,
+        rseType: null,
     };
 }
 
