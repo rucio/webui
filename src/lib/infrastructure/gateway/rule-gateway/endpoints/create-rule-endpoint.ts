@@ -2,6 +2,7 @@ import { CreateRuleDTO } from '@/lib/core/dto/rule-dto';
 import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { HTTPRequest } from '@/lib/sdk/http';
 import { RuleCreationParameters } from '@/lib/core/entity/rucio';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 
 export default class CreateRuleEndpoint extends BaseEndpoint<CreateRuleDTO> {
     constructor(private readonly rucioAuthToken: string, private readonly params: RuleCreationParameters) {
@@ -10,10 +11,10 @@ export default class CreateRuleEndpoint extends BaseEndpoint<CreateRuleDTO> {
 
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/rules/`;
 
-        this.params.activity = await this.envConfigGateway.ruleActivity();
+        this.params.activity = getServerEnv().RULE_ACTIVITY;
 
         const request: HTTPRequest = {
             method: 'POST',

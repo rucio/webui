@@ -9,7 +9,7 @@ export default class ListRuleReplicaLockStatesEndpoint extends BaseStreamableEnd
 
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/rules/${this.ruleId}/locks`;
         const request: HTTPRequest = {
             method: 'GET',

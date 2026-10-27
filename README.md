@@ -89,13 +89,50 @@ npm install
 
 ### Configuration
 
-Create a `.env.development.local` file from the template for local development. Key variables control Rucio server endpoints, authentication methods, feature toggles, and OIDC provider configuration.
+The WebUI is configured entirely through environment variables, read when the server starts. Nothing is baked in by `next build`, so one build (or container image) can be deployed anywhere by changing its environment and restarting it.
+
+For local development, copy `.env.development.local.template` to `.env.development.local` and adjust it. In production, set the variables in the process environment or in a `.env` file next to the app.
+
+All variables are validated with Zod in [`src/lib/infrastructure/config/env.server.ts`](src/lib/infrastructure/config/env.server.ts), which is the reference for names, defaults and rules. If the configuration is invalid, `next start` stops at boot and lists every problem. During `next build`, missing values are replaced by placeholders, so the app can be built without any deployment configuration.
+
+| Variable | Description | Default |
+|---|---|---|
+| `RUCIO_HOST` | URL of the Rucio server | required |
+| `RUCIO_AUTH_HOST` | URL of the Rucio authentication server | required |
+| `NEXTAUTH_SECRET` (or `AUTH_SECRET`) | Secret used to encrypt the session cookie, e.g. `openssl rand -base64 32` | required |
+| `NEXTAUTH_URL` | Public URL of the WebUI, used by Auth.js (an `https://` URL enables secure cookies) | |
+| `NEXT_PUBLIC_WEBUI_HOST` | Public URL of the WebUI. Handed to the browser at runtime | host of the request |
+| `PROJECT_URL` | Link to your community's website, shown in the header | |
+| `ENABLE_USERPASS_LOGIN` | Offer username/password login | `true` |
+| `X509_ENABLED` | Offer x509 certificate login | `true` |
+| `OIDC_ENABLED` | Offer OIDC login | `false` |
+| `OIDC_PROVIDERS` | Comma separated OIDC provider names, required when OIDC is enabled | |
+| `OIDC_EXPECTED_AUDIENCE_CLAIM` | Expected `aud` claim of OIDC tokens | `rucio` |
+| `MULTIVO_ENABLED` | Enable multi VO | `false` |
+| `VO_LIST` | Comma separated VO short names | `def` |
+| `VO_DEFAULT` | Short name of the default VO | `def` |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | `1` requires `SERVER_CA_BUNDLE` or `NODE_EXTRA_CA_CERTS` to be set | |
+| `SERVER_CA_BUNDLE` / `NODE_EXTRA_CA_CERTS` | CA bundle that verifies the Rucio servers' certificates | |
+| `PARAMS_ENCODING_ENABLED` | Encode URL parameters sent to Rucio (DID names with `/` or `+`) | `false` |
+| `RULE_ACTIVITY` | Activity of rules created in the WebUI | `User Subscriptions` |
+| `LIST_DIDS_INITIAL_PATTERN` | Initial pattern on the DID list page, e.g. `scope:name` | |
+| `FEATURE_DDM_DASHBOARD` / `DDM_DASHBOARD_BASE_URL` | Links to a DDM Grafana dashboard; the URL is required when enabled | `false` |
+| `AMI_BASE_URL` | ATLAS AMI instance for tag links | `https://atlas-ami.cern.ch` |
+| `PANDA_BASE_URL` | BigPanDA monitor for task links | `https://bigpanda.cern.ch` |
+
+Booleans accept `true`/`false`, `1`/`0`, `yes`/`no` and `on`/`off`. Empty values count as unset.
+
+Each provider listed in `OIDC_PROVIDERS` is configured with `OIDC_PROVIDER_<NAME>_<FIELD>`. The required fields are `CLIENT_ID`, `CLIENT_SECRET`, `AUTHORIZATION_URL`, `TOKEN_URL` and `REDIRECT_URL`. The optional fields are `ISSUER`, `USERINFO_URL`, `REFRESH_TOKEN_URL`, `SCOPES`, `ICON_URL` and `LOGOUT_URL`.
+
+When multi VO is enabled, each VO in `VO_LIST` is configured with `VO_<NAME>_<FIELD>`. `NAME` is required. `LOGO` (or `LOGO_URL`), `OIDC_ENABLED` and `OIDC_PROVIDERS` are optional.
+
+Client components never read `process.env`. Browser-safe values are declared in [`env.client.ts`](src/lib/infrastructure/config/env.client.ts), read on the server per request and provided through `RuntimeConfigProvider`. Use `useRuntimeConfig()` to read them.
 
 #### Feature Flags
 
-Deployments can enable or disable whole pages, in-page sections, and their API routes with `FEATURE_*` environment variables (or `RUCIO_WEBUI_FEATURE_*` via the env-generator). Unset flags default to enabled for core features, so existing deployments are unaffected. Flags are hierarchical (disabling `FEATURE_RULES` also disables `FEATURE_RULES_CREATE` and `FEATURE_RULES_APPROVE`), and disabled pages/routes return 404 rather than 403 so they appear nonexistent.
+Deployments can enable or disable whole pages, in-page sections, and their API routes with `FEATURE_*` environment variables. Unset flags default to enabled for core features, so existing deployments are unaffected. Flags are hierarchical (disabling `FEATURE_RULES` also disables `FEATURE_RULES_CREATE` and `FEATURE_RULES_APPROVE`), and disabled pages/routes return 404 rather than 403 so they appear nonexistent.
 
-Available flags: `FEATURE_RULES`, `FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`, `FEATURE_SUBSCRIPTIONS`, `FEATURE_RSES`, `FEATURE_ACCOUNTS`, `FEATURE_ACCOUNTS_MANAGE`, `FEATURE_ACCOUNTS_MANAGE_CORE`, `FEATURE_ACCOUNTS_MANAGE_IDENTITIES`, `FEATURE_ACCOUNTS_MANAGE_ATTRIBUTES`, `FEATURE_ACCOUNTS_MANAGE_QUOTAS`, `FEATURE_DIDS_METADATA`, `FEATURE_DIDS_MUTATE`. See the [env-generator README](tools/env-generator/README.md) for the full table.
+Available flags: `FEATURE_RULES`, `FEATURE_RULES_CREATE`, `FEATURE_RULES_APPROVE`, `FEATURE_SUBSCRIPTIONS`, `FEATURE_RSES`, `FEATURE_ACCOUNTS`, `FEATURE_ACCOUNTS_MANAGE`, `FEATURE_ACCOUNTS_MANAGE_CORE`, `FEATURE_ACCOUNTS_MANAGE_IDENTITIES`, `FEATURE_ACCOUNTS_MANAGE_ATTRIBUTES`, `FEATURE_ACCOUNTS_MANAGE_QUOTAS`, `FEATURE_DIDS_METADATA`, `FEATURE_DIDS_MUTATE` (default `true`), and the ATLAS specific `FEATURE_DIDS_AMI_TAGS` and `FEATURE_DIDS_PANDA_TASK` (default `false`). `FEATURE_ACCOUNTS_MANAGE=false` gives read-only account pages whatever the `FEATURE_ACCOUNTS_MANAGE_*` flags say. The server warns at startup when a flag is set to true while one of its parents is false, since that flag then has no effect. The registry lives in [`src/lib/core/entity/feature-config.ts`](src/lib/core/entity/feature-config.ts).
 
 To ensure `git blame` accurately reflects contributions, run:
 

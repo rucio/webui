@@ -41,7 +41,7 @@ async function putHandler(request: NextRequest) {
             return NextResponse.json(
                 {
                     error: 'Missing required parameters or provided parameters are invalid',
-                    details: params.error.errors,
+                    details: params.error.issues,
                 },
                 { status: 400 },
             );

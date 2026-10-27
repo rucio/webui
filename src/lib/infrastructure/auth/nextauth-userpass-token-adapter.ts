@@ -4,7 +4,7 @@ import { SessionUser } from '@/types/next-auth';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import { voList } from '@/lib/infrastructure/config/config-readers';
 import SetX509LoginSessionUseCase from '@/lib/core/use-case/set-x509-login-session-usecase';
 import {
     SetX509LoginSessionRequest,
@@ -92,11 +92,10 @@ export async function authorizeUserPassToken(
     return new Promise(resolve => {
         (async () => {
             try {
-                const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
                 const rucioAccountGateway = appContainer.get<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT);
 
                 const presenter = new NextAuthUserPassTokenPresenter(resolve, identityAccounts);
-                const useCase = new SetX509LoginSessionUseCase(presenter, envConfigGateway, rucioAccountGateway);
+                const useCase = new SetX509LoginSessionUseCase(presenter, voList, rucioAccountGateway);
 
                 const requestModel: SetX509LoginSessionRequest = {
                     rucioAuthToken,

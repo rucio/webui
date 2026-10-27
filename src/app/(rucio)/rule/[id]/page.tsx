@@ -1,5 +1,5 @@
 import { DetailsRule } from '@/component-library/pages/Rule/details/DetailsRule';
-import { parseBoolEnv } from '@/lib/core/utils/env-utils';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 import { requireFeature } from '@/lib/infrastructure/feature-flags/require-feature';
 
 export const metadata = {
@@ -9,7 +9,7 @@ export const metadata = {
 export default async function PageRule({ params }: { params: Promise<{ id: string }> }) {
     await requireFeature('rules');
     const { id } = await params;
-    const featureDDMDashboard = parseBoolEnv(process.env.FEATURE_DDM_DASHBOARD);
+    const featureDDMDashboard = getServerEnv().FEATURE_DDM_DASHBOARD;
 
     return (
         <main className="min-h-screen bg-neutral-0 dark:bg-neutral-900 transition-colors duration-200">

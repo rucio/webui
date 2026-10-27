@@ -3,19 +3,18 @@ import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 
 import { GetDDMLinkRequest, GetDDMLinkResponse } from '@/lib/core/usecase-models/get-ddm-link-usecase-models';
 import { GetDDMLinkInputPort, type GetDDMLinkOutputPort } from '@/lib/core/port/primary/get-ddm-link-ports';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type { ConfigReader, DDMDashboardSettings } from '@/lib/core/entity/app-config';
 import { createDDMDashboardUrl } from '@/lib/core/utils/ddm-link-utils';
-import { parseBoolEnv } from '@/lib/core/utils/env-utils';
 
 @injectable()
 export default class GetDDMLinkUseCase implements GetDDMLinkInputPort {
-    constructor(private readonly presenter: GetDDMLinkOutputPort, private readonly envConfigGateway: EnvConfigGatewayOutputPort) {}
+    constructor(private readonly presenter: GetDDMLinkOutputPort, private readonly ddmDashboard: ConfigReader<DDMDashboardSettings>) {}
 
     async execute(requestModel: AuthenticatedRequestModel<GetDDMLinkRequest>): Promise<void> {
         const { scope, name, rse } = requestModel;
 
-        const featureFlag = await this.envConfigGateway.get('FEATURE_DDM_DASHBOARD');
-        if (!parseBoolEnv(featureFlag)) {
+        const { enabled, baseUrl } = this.ddmDashboard();
+        if (!enabled) {
             await this.presenter.presentError({
                 status: 'error',
                 message: 'DDM Dashboard feature is disabled',
@@ -26,7 +25,6 @@ export default class GetDDMLinkUseCase implements GetDDMLinkInputPort {
             return;
         }
 
-        const baseUrl = await this.envConfigGateway.get('DDM_DASHBOARD_BASE_URL');
         if (!baseUrl || baseUrl.trim() === '') {
             await this.presenter.presentError({
                 status: 'error',

@@ -2,12 +2,12 @@ import { injectable } from 'inversify';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { GetPandaTaskLinkRequest } from '@/lib/core/usecase-models/get-panda-task-link-usecase-models';
 import { GetPandaTaskLinkInputPort, type GetPandaTaskLinkOutputPort } from '@/lib/core/port/primary/get-panda-task-link-ports';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type { ConfigReader } from '@/lib/core/entity/app-config';
 import { createPandaTaskUrl, isPandaTaskId, normalizePandaBaseUrl } from '@/lib/core/utils/panda-task-utils';
 
 @injectable()
 export default class GetPandaTaskLinkUseCase implements GetPandaTaskLinkInputPort {
-    constructor(private readonly presenter: GetPandaTaskLinkOutputPort, private readonly envConfigGateway: EnvConfigGatewayOutputPort) {}
+    constructor(private readonly presenter: GetPandaTaskLinkOutputPort, private readonly pandaBaseUrl: ConfigReader<string | undefined>) {}
 
     async execute(requestModel: AuthenticatedRequestModel<GetPandaTaskLinkRequest>): Promise<void> {
         const { taskId } = requestModel;
@@ -23,7 +23,7 @@ export default class GetPandaTaskLinkUseCase implements GetPandaTaskLinkInputPor
             return;
         }
 
-        const baseUrl = normalizePandaBaseUrl(await this.envConfigGateway.get('PANDA_BASE_URL'));
+        const baseUrl = normalizePandaBaseUrl(this.pandaBaseUrl());
         await this.presenter.presentSuccess({ status: 'success', taskId, url: createPandaTaskUrl(baseUrl, taskId) });
     }
 }

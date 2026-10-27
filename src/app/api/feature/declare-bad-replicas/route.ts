@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         const params = DeclareBadReplicasSchema.safeParse(body);
         if (!params.success) {
             return NextResponse.json(
-                { error: 'Missing required parameters or provided parameters are invalid', details: params.error.errors },
+                { error: 'Missing required parameters or provided parameters are invalid', details: params.error.issues },
                 { status: 400 },
             );
         }
