@@ -9,7 +9,7 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { RuleState, SubscriptionState } from '@/lib/core/entity/rucio';
 import { badgeCellClasses } from '@/component-library/features/table/cells/badge-cell';
 import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
-import { SubscriptionStateBadge, subscriptionStateString } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
+import { SubscriptionStateBadge } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 
 type ListSubscriptionTableProps = {
@@ -69,8 +69,6 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
             },
             // The cell value is the enum code (e.g. 'A'); filter against the displayed
             // label (e.g. 'Active') so text searches match what the user sees.
-            filterValueGetter: (params: { data?: SubscriptionRuleStatesViewModel }) =>
-                subscriptionStateString[params.data?.subscriptionState ?? SubscriptionState.UNKNOWN],
         },
         {
             headerName: 'OK',
