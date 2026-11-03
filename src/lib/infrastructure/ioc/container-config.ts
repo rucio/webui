@@ -14,8 +14,7 @@ import USECASE_FACTORY from './ioc-symbols-usecase-factory';
 import GATEWAYS from './ioc-symbols-gateway';
 import AuthServerGatewayOutputPort from '@/lib/core/port/secondary/auth-server-gateway-output-port';
 import RucioAuthServer from '@/lib/infrastructure/gateway/rucio-auth-server';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
-import EnvConfigGateway from '../gateway/env-config-gateway';
+import { voList } from '../config/config-readers';
 import FeatureConfigGatewayOutputPort from '@/lib/core/port/secondary/feature-config-gateway-output-port';
 import FeatureConfigGateway from '../gateway/feature-config-gateway';
 import SetX509LoginSessionInputPort from '@/lib/core/port/primary/set-x509-login-session-input-port';
@@ -98,7 +97,6 @@ const appContainer = new Container();
 appContainer.bind<AccountGatewayOutputPort>(GATEWAYS.ACCOUNT).to(RucioAccountGateway);
 appContainer.bind<AuthServerGatewayOutputPort>(GATEWAYS.AUTH_SERVER).to(RucioAuthServer);
 appContainer.bind<DIDGatewayOutputPort>(GATEWAYS.DID).to(RucioDIDGateway);
-appContainer.bind<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG).to(EnvConfigGateway);
 appContainer.bind<FeatureConfigGatewayOutputPort>(GATEWAYS.FEATURE_CONFIG).to(FeatureConfigGateway);
 appContainer.bind<RSEGatewayOutputPort>(GATEWAYS.RSE).to(RSEGateway);
 appContainer.bind<StreamGatewayOutputPort>(GATEWAYS.STREAM).to(StreamingGateway).inRequestScope();
@@ -236,9 +234,8 @@ appContainer
     .bind<interfaces.Factory<SetX509LoginSessionInputPort>>(USECASE_FACTORY.SET_X509_LOGIN_SESSION)
     .toFactory<SetX509LoginSessionUseCase, [RucioSession, NextApiResponse]>(
         (context: interfaces.Context) => (session: RucioSession, response: NextApiResponse) => {
-            const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG);
             const rucioAccountGateway: AccountGatewayOutputPort = appContainer.get(GATEWAYS.ACCOUNT);
-            return new SetX509LoginSessionUseCase(new SetX509LoginSessionPresenter(session, response), envConfigGateway, rucioAccountGateway);
+            return new SetX509LoginSessionUseCase(new SetX509LoginSessionPresenter(session, response), voList, rucioAccountGateway);
         },
     );
 
@@ -250,15 +247,5 @@ appContainer.bind<StreamInputPort<RSEOld>>(INPUT_PORT.STREAM).to(StreamUseCase).
 //         const streamingGateway: StreamGatewayOutputPort = appContainer.get(GATEWAYS.STREAM);
 //         return new StreamUseCase(new StreamPresenter(response), streamingGateway);
 //     });
-
-// appContainer.bind<GetSiteHeaderInputPort>(INPUT_PORT.GET_SITE_HEADER).to(GetSiteHeaderUseCase).inRequestScope();
-// appContainer.bind<GetSiteHeaderControllerParameters>(CONTROLLERS.GET_SITE_HEADER).to(GetSiteHeaderController);
-// appContainer.bind<interfaces.Factory<GetSiteHeaderInputPort>>(USECASE_FACTORY.GET_SITE_HEADER).toFactory<GetSiteHeaderUseCase, [NextApiResponse]>((context: interfaces.Context) =>
-//     (response: NextApiResponse) => {
-//         const envConfigGateway: EnvConfigGatewayOutputPort = appContainer.get(GATEWAYS.ENV_CONFIG)
-//         const presenter = new GetSiteHeaderPresenter(response)
-//         return new GetSiteHeaderUseCase(presenter, envConfigGateway);
-//     }
-// );
 
 export default appContainer;

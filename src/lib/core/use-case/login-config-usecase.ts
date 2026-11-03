@@ -1,19 +1,19 @@
 import { injectable } from 'inversify';
 import { LoginConfigError, LoginConfigResponse } from '../usecase-models/login-config-usecase-models';
 import type { LoginConfigInputPort, LoginConfigOutputPort } from '../port/primary/login-config-ports';
-import type EnvConfigGatewayOutputPort from '../port/secondary/env-config-gateway-output-port';
+import type { ConfigReader, LoginSettings } from '../entity/app-config';
 import { BaseSingleEndpointUseCase } from '@/lib/sdk/usecase';
 import { LoginConfigDTO } from '../dto/login-config-dto';
-import { ConfigNotFound, InvalidConfig } from '../exceptions/env-config-exceptions';
+import { InvalidConfig } from '../exceptions/env-config-exceptions';
 
 @injectable()
 class LoginConfigUseCase
     extends BaseSingleEndpointUseCase<void, LoginConfigResponse, LoginConfigError, LoginConfigDTO>
     implements LoginConfigInputPort
 {
-    constructor(protected presenter: LoginConfigOutputPort, private envConfigGateway: EnvConfigGatewayOutputPort) {
+    constructor(protected presenter: LoginConfigOutputPort, private settings: ConfigReader<LoginSettings>) {
         super(presenter);
-        this.envConfigGateway = envConfigGateway;
+        this.settings = settings;
     }
 
     validateRequestModel(): LoginConfigError | undefined {
@@ -22,31 +22,21 @@ class LoginConfigUseCase
 
     async makeGatewayRequest(requestModel: void): Promise<LoginConfigDTO> {
         try {
-            const config = await Promise.all([
-                this.envConfigGateway.x509Enabled(),
-                this.envConfigGateway.oidcEnabled(),
-                this.envConfigGateway.multiVOEnabled(),
-                this.envConfigGateway.voList(),
-                this.envConfigGateway.oidcProviders(),
-                this.envConfigGateway.rucioAuthHost(),
-                this.envConfigGateway.userpassEnabled(),
-            ]);
+            const settings = this.settings();
             const responseModel: LoginConfigDTO = {
                 status: 'success',
-                x509Enabled: config[0],
-                oidcEnabled: config[1],
-                multiVOEnabled: config[2],
-                voList: config[3],
-                oidcProviders: config[4],
-                rucioAuthHost: config[5],
-                userpassEnabled: config[6],
+                x509Enabled: settings.x509Enabled,
+                oidcEnabled: settings.oidcEnabled,
+                multiVOEnabled: settings.multiVOEnabled,
+                voList: settings.voList,
+                oidcProviders: settings.oidcProviders,
+                rucioAuthHost: settings.rucioAuthHost,
+                userpassEnabled: settings.userpassEnabled,
             };
             return responseModel;
         } catch (error) {
             let type = 'UnknownError';
-            if (error instanceof ConfigNotFound) {
-                type = 'ConfigNotFound';
-            } else if (error instanceof InvalidConfig) {
+            if (error instanceof InvalidConfig) {
                 type = 'InvalidConfig';
             }
             const errorDTO: LoginConfigDTO = {

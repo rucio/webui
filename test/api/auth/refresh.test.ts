@@ -26,14 +26,6 @@ jest.mock('@/lib/infrastructure/auth/oidc-token-refresh-service', () => ({
     refreshOidcToken: jest.fn(),
 }));
 
-// Route resolves EnvConfigGateway from the IoC container and passes it to
-// refreshOidcToken.  Since refreshOidcToken is fully mocked, the gateway
-// value is unused — only need get() to return a non-null object.
-jest.mock('@/lib/infrastructure/ioc/container-config', () => ({
-    __esModule: true,
-    default: { get: jest.fn().mockReturnValue({ oidcProviders: jest.fn().mockResolvedValue([]) }) },
-}));
-
 // ──────────────────────────────────────────────────────────────────────────────
 // Polyfill Response.json for jsdom (NextResponse.json delegates to it).
 // ──────────────────────────────────────────────────────────────────────────────

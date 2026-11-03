@@ -29,7 +29,7 @@ async function postHandler(request: NextRequest) {
     const params = BodySchema.safeParse(body);
     if (!params.success) {
         return NextResponse.json(
-            { status: 'error', errorType: 'validation_error', message: params.error.errors[0]?.message ?? 'Invalid request' },
+            { status: 'error', errorType: 'validation_error', message: params.error.issues[0]?.message ?? 'Invalid request' },
             { status: 400 },
         );
     }

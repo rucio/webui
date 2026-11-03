@@ -52,7 +52,6 @@
     "**/*.stories.ts",
     "**/*.stories.tsx",
     "tools/meow-maker/**/*",
-    "tools/env-generator/**/*",
     "playwright.config.ts",
     "test/**/*",
     ".storybook/**/*",

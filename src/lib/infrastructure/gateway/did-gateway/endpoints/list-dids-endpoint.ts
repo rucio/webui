@@ -32,7 +32,7 @@ export default class ListDIDsEndpoint extends BaseStreamableEndpoint<ListDIDDTO,
     /** @override */
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/dids/${this.scope}/dids/search`;
 
         const queryString = [

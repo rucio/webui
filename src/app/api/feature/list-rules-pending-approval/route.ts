@@ -13,8 +13,8 @@ import { withFeature } from '@/lib/infrastructure/adapters/with-feature';
 const FiltersSchema = z.object({
     scope: z.string().optional(),
     name: z.string().optional(),
-    updated_after: z.string().datetime().optional(),
-    updated_before: z.string().datetime().optional(),
+    updated_after: z.iso.datetime().optional(),
+    updated_before: z.iso.datetime().optional(),
     account: z.string().optional(),
     activity: z.string().optional(),
 });
@@ -39,7 +39,7 @@ async function getHandler(request: NextRequest) {
             return NextResponse.json(
                 {
                     error: 'Invalid query parameters',
-                    details: validationResult.error.errors,
+                    details: validationResult.error.issues,
                 },
                 { status: 400 },
             );

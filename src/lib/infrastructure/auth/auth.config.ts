@@ -16,7 +16,7 @@ import {
 } from './rucio-oidc-helper';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 import type AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
 import { resolveAccountRole } from '@/lib/core/services/resolve-account-role';
 
@@ -47,12 +47,11 @@ function getSessionUserIndex(allUsers: SessionUser[] | undefined, user: SessionU
  * `{name}`, `{name}.0`, `{name}.1`, … . The chunks are concatenated in numeric order.
  */
 async function loadPreviousAllUsers(): Promise<SessionUser[] | undefined> {
-    const secret = process.env.NEXTAUTH_SECRET;
-    if (!secret) return undefined;
-
     try {
+        const env = getServerEnv();
+        const secret = env.NEXTAUTH_SECRET;
         const cookieStore = await cookies();
-        const useSecureCookies = process.env.NEXTAUTH_URL?.startsWith('https://') ?? false;
+        const useSecureCookies = env.NEXTAUTH_URL?.startsWith('https://') ?? false;
         const cookieName = useSecureCookies ? '__Secure-authjs.session-token' : 'authjs.session-token';
 
         // Collect all chunks of the session cookie, sorted by numeric suffix.
@@ -216,9 +215,9 @@ export const authConfig: NextAuthConfig = {
                 // SessionMonitor refresh flow can be exercised without waiting the full
                 // provider-issued lifetime. The OIDC access token itself remains valid
                 // for its real lifetime; only the client-tracked expiry is shortened.
-                const devShortExpiry = process.env.DEV_SHORT_SESSION_SECONDS;
+                const devShortExpiry = getServerEnv().DEV_SHORT_SESSION_SECONDS;
                 const rucioAuthTokenExpires = devShortExpiry
-                    ? new Date(Date.now() + Number(devShortExpiry) * 1000).toISOString()
+                    ? new Date(Date.now() + devShortExpiry * 1000).toISOString()
                     : new Date(account.expires_at! * 1000).toISOString();
 
                 // Decode and validate JWT token claims
@@ -228,8 +227,7 @@ export const authConfig: NextAuthConfig = {
                         // Decode the payload (second part of JWT)
                         const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
                         // Validate audience claim
-                        const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
-                        const expectedAudience = await envConfigGateway.oidcExpectedAudience();
+                        const expectedAudience = getServerEnv().OIDC_EXPECTED_AUDIENCE_CLAIM;
 
                         const validationPassed = validateAudienceClaim(payload, expectedAudience, providerName);
 
@@ -263,8 +261,7 @@ export const authConfig: NextAuthConfig = {
 
                 try {
                     // Get Rucio host from environment config
-                    const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
-                    const rucioHost = await envConfigGateway.rucioHost();
+                    const rucioHost = getServerEnv().RUCIO_HOST;
 
                     console.log(`[OIDC] Looking up Rucio account for identity via API...`);
 
@@ -446,12 +443,12 @@ export const authConfig: NextAuthConfig = {
 
                 // Dev-only: shorten the session expiry so the expiry/redirect flow
                 // can be exercised without waiting for the real Rucio token lifetime.
-                const devShortSeconds = process.env.DEV_SHORT_SESSION_SECONDS;
+                const devShortSeconds = getServerEnv().DEV_SHORT_SESSION_SECONDS;
                 let sessionUser = user as SessionUser;
                 if (devShortSeconds) {
                     sessionUser = {
                         ...sessionUser,
-                        rucioAuthTokenExpires: new Date(Date.now() + Number(devShortSeconds) * 1000).toISOString(),
+                        rucioAuthTokenExpires: new Date(Date.now() + devShortSeconds * 1000).toISOString(),
                     };
                 }
 
@@ -743,7 +740,7 @@ export const authConfig: NextAuthConfig = {
         maxAge: SESSION_MAX_AGE_SECONDS,
     },
 
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: getServerEnv().NEXTAUTH_SECRET,
 
     debug: process.env.NODE_ENV === 'development',
 };

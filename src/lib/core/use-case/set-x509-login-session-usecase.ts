@@ -10,17 +10,17 @@ import { resolveAccountRole } from '../services/resolve-account-role';
 import SetX509LoginSessionInputPort from '../port/primary/set-x509-login-session-input-port';
 import type SetX509LoginSessionOutputPort from '../port/primary/set-x509-login-session-output-port';
 import type AccountGatewayOutputPort from '../port/secondary/account-gateway-output-port';
-import type EnvConfigGatewayOutputPort from '../port/secondary/env-config-gateway-output-port';
+import type { ConfigReader } from '../entity/app-config';
 
 @injectable()
 class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
     constructor(
         private presenter: SetX509LoginSessionOutputPort<any>,
-        private envConfigGateway: EnvConfigGatewayOutputPort,
+        private voList: ConfigReader<VO[]>,
         private rucioAccountGateway: AccountGatewayOutputPort,
     ) {
         this.presenter = presenter;
-        this.envConfigGateway = envConfigGateway;
+        this.voList = voList;
         this.rucioAccountGateway = rucioAccountGateway;
     }
 
@@ -41,8 +41,7 @@ class SetX509LoginSessionUseCase implements SetX509LoginSessionInputPort {
             return;
         }
 
-        const voList: VO[] = await this.envConfigGateway.voList();
-        vo = voList.find(vo => vo.shortName === shortVOName);
+        vo = this.voList().find(vo => vo.shortName === shortVOName);
         if (!vo) {
             const errorModel: SetX509LoginSessionError = {
                 type: 'InvalidVO',

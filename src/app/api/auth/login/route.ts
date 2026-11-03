@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
                 accountsAvailable: undefined,
                 status: 'error' as const,
                 message: error.message || 'Failed to load login configuration',
-                rucioAuthHost: process.env.RUCIO_HOST || '',
+                rucioAuthHost: '',
             };
         },
     };
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
                 accountsAvailable: undefined,
                 status: 'error',
                 message: 'Failed to load login configuration',
-                rucioAuthHost: process.env.RUCIO_HOST || '',
+                rucioAuthHost: '',
             } as LoginViewModel,
             { status: 500 },
         );
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
                 accountsAvailable: undefined,
                 status: 'error',
                 message: 'Internal server error',
-                rucioAuthHost: process.env.RUCIO_HOST || '',
+                rucioAuthHost: '',
             } as LoginViewModel,
             { status: 500 },
         );

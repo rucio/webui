@@ -21,7 +21,7 @@ export default class ListSubscriptionsEndpoint extends BaseStreamableEndpoint<Li
      */
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/subscriptions/${this.account}`;
         const request: HTTPRequest = {
             method: 'GET',

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken, decode } from 'next-auth/jwt';
 import type { SessionUser } from './lib/core/entity/auth-models';
+import { getServerEnv } from './lib/infrastructure/config/env.server';
 
 export const config = {
     matcher: [
@@ -47,7 +48,7 @@ function isTokenExpired(user: SessionUser): boolean {
  * Determine if we should use secure cookies based on NEXTAUTH_URL
  */
 function shouldUseSecureCookies(): boolean {
-    const nextAuthUrl = process.env.NEXTAUTH_URL;
+    const nextAuthUrl = getServerEnv().NEXTAUTH_URL;
     return nextAuthUrl?.startsWith('https://') ?? false;
 }
 
@@ -59,11 +60,12 @@ function getSessionCookieName(): string {
 }
 
 export async function proxy(request: NextRequest) {
-    const publicHost = process.env.NEXT_PUBLIC_WEBUI_HOST || `${request.nextUrl.protocol}//${request.nextUrl.host}`;
-    const cookieName = getSessionCookieName();
-    const secret = process.env.NEXTAUTH_SECRET;
-
     try {
+        const env = getServerEnv();
+        const publicHost = env.NEXT_PUBLIC_WEBUI_HOST || `${request.nextUrl.protocol}//${request.nextUrl.host}`;
+        const cookieName = getSessionCookieName();
+        const secret = env.NEXTAUTH_SECRET;
+
         // Try getToken with explicit parameters
         const token = await getToken({
             req: request,

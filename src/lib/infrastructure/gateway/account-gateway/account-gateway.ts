@@ -16,9 +16,8 @@ import {
 import { AccountLimitLocality, AccountListFilter, AccountUpdateOptions, IdentityType } from '@/lib/core/entity/account';
 import { AccountType } from '@/lib/core/entity/rucio';
 import AccountGatewayOutputPort from '@/lib/core/port/secondary/account-gateway-output-port';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
-import { inject, injectable } from 'inversify';
-import GATEWAYS from '../../ioc/ioc-symbols-gateway';
+import { injectable } from 'inversify';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 import CreateAccountEndpoint from './endpoints/create-account-endpoint';
 import UpdateAccountEndpoint from './endpoints/update-account-endpoint';
 import DeleteAccountEndpoint from './endpoints/delete-account-endpoint';
@@ -39,10 +38,6 @@ import ListAccountsEndpoint from './endpoints/list-accounts-endpoint';
 
 @injectable()
 export default class RucioAccountGateway implements AccountGatewayOutputPort {
-    constructor(@inject(GATEWAYS.ENV_CONFIG) private envConfigGateway: EnvConfigGatewayOutputPort) {
-        this.envConfigGateway = envConfigGateway;
-    }
-
     async getAccountInfo(account: string, rucioAuthToken: string): Promise<AccountInfoDTO> {
         const endpoint: GetAccountInfoEndpoint = new GetAccountInfoEndpoint(rucioAuthToken, account);
         const dto: AccountInfoDTO = await endpoint.fetch();
@@ -169,7 +164,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
     async listAccountsForIdentity(identity: string, identityType: string, rucioAuthToken: string): Promise<ListAccountsForIdentityDTO> {
         let rucioHost: string;
         try {
-            rucioHost = await this.envConfigGateway.rucioHost();
+            rucioHost = getServerEnv().RUCIO_HOST;
         } catch (error: unknown) {
             return { status: 'error', accounts: [], message: 'Rucio host not configured' };
         }
@@ -216,7 +211,7 @@ export default class RucioAccountGateway implements AccountGatewayOutputPort {
         let rucioHost = null;
 
         try {
-            rucioHost = await this.envConfigGateway.rucioHost();
+            rucioHost = getServerEnv().RUCIO_HOST;
         } catch (error: Error | any) {
             return Promise.reject(this.generateErrorResponse(AccountAttributeErrorTypesDTO.RUCIO_HOST_NOT_CONFIGURED, account, error.message));
         }

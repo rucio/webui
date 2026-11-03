@@ -63,6 +63,36 @@ export function resolveFeatureEnabled(key: FeatureKey, rawEnv: Partial<Record<Fe
     return true;
 }
 
+/** A key's own value, ignoring its ancestors: the registry default when unset. */
+function ownFeatureValue(key: FeatureKey, rawEnv: Partial<Record<FeatureKey, string | undefined>>): boolean {
+    const raw = rawEnv[key];
+    return raw === undefined ? FEATURE_REGISTRY[key].default : parseBoolEnv(raw);
+}
+
+/**
+ * Flags explicitly set to true that have no effect because an ancestor is turned off,
+ * e.g. FEATURE_ACCOUNTS_MANAGE_QUOTAS=true with FEATURE_ACCOUNTS_MANAGE=false.
+ * Each is reported with its closest disabled ancestor. Flags left unset are not reported.
+ */
+export function findShadowedFeatureFlags(
+    rawEnv: Partial<Record<FeatureKey, string | undefined>>,
+): { key: FeatureKey; disabledAncestor: FeatureKey }[] {
+    const shadowed: { key: FeatureKey; disabledAncestor: FeatureKey }[] = [];
+    (Object.keys(FEATURE_REGISTRY) as FeatureKey[]).forEach(key => {
+        const raw = rawEnv[key];
+        if (raw === undefined || !parseBoolEnv(raw)) return;
+        let parent = (FEATURE_REGISTRY[key] as FeatureDefinition).parent as FeatureKey | undefined;
+        while (parent) {
+            if (!ownFeatureValue(parent, rawEnv)) {
+                shadowed.push({ key, disabledAncestor: parent });
+                return;
+            }
+            parent = (FEATURE_REGISTRY[parent] as FeatureDefinition).parent as FeatureKey | undefined;
+        }
+    });
+    return shadowed;
+}
+
 /** Resolve every registry key into a flat map. */
 export function resolveEnabledSet(rawEnv: Partial<Record<FeatureKey, string | undefined>>): FeatureFlagMap {
     const result = {} as FeatureFlagMap;

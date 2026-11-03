@@ -7,6 +7,7 @@ import { ComDOMStatusCard } from './comdom-status';
 import ErrorList from './errors';
 import RSEQueryStatus from './rse-query-status';
 import UseComDOMStatusCard from './use-comdom-status';
+import { useRuntimeConfig } from '@/lib/infrastructure/config/runtime-config-provider';
 
 const columnHelper = createColumnHelper<RSEOld>();
 
@@ -44,6 +45,7 @@ const columns: any[] = [
 ];
 
 export default function RSETable() {
+    const { NEXT_PUBLIC_WEBUI_HOST } = useRuntimeConfig();
     const { query, dataSink, status, comDOMStatus, start, stop, pause, resume, clean, pollInterval, errors, resolveError, resolveAllErrors } =
         useComDOM<RSEOld>('mock-rse-query', [], false, Infinity, 50, true);
 
@@ -61,7 +63,7 @@ export default function RSETable() {
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-hidden dark:focus:ring-blue-800"
                 onClick={async () => {
                     const request: HTTPRequest = {
-                        url: new URL(`${process.env.NEXT_PUBLIC_WEBUI_HOST}/api/stream`),
+                        url: new URL('/api/stream', NEXT_PUBLIC_WEBUI_HOST ?? window.location.origin),
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

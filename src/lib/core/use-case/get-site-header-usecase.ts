@@ -3,15 +3,15 @@ import { RucioSession } from '@/lib/infrastructure/auth/session';
 import { GetSiteHeaderError, GetSiteHeaderRequest, GetSiteHeaderResponse } from '../usecase-models/get-site-header-usecase-models';
 import type { User } from '../entity/auth-models';
 import type { GetSiteHeaderInputPort, GetSiteHeaderOutputPort } from '../port/primary/get-site-header-ports';
-import type EnvConfigGatewayOutputPort from '../port/secondary/env-config-gateway-output-port';
+import type { ConfigReader, SiteHeaderSettings } from '../entity/app-config';
 import { BaseUseCase } from '@/lib/sdk/usecase';
 
 @injectable()
 class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHeaderResponse, GetSiteHeaderError> implements GetSiteHeaderInputPort {
-    constructor(protected readonly presenter: GetSiteHeaderOutputPort, private readonly envConfigGateway: EnvConfigGatewayOutputPort) {
+    constructor(protected readonly presenter: GetSiteHeaderOutputPort, private readonly settings: ConfigReader<SiteHeaderSettings>) {
         super(presenter);
         this.presenter = presenter;
-        this.envConfigGateway = envConfigGateway;
+        this.settings = settings;
     }
 
     async generateSiteHeader(session: RucioSession): Promise<void> {
@@ -23,14 +23,11 @@ class GetSiteHeaderUseCase extends BaseUseCase<GetSiteHeaderRequest, GetSiteHead
         const allUsers: User[] = [];
 
         try {
-            projectURL = await this.envConfigGateway.projectURL();
-        } catch (error) {
-            projectURL = undefined;
-        }
-
-        try {
-            rucioAuthHost = await this.envConfigGateway.rucioAuthHost();
+            const settings = this.settings();
+            projectURL = settings.projectUrl;
+            rucioAuthHost = settings.rucioAuthHost;
         } catch {
+            projectURL = undefined;
             rucioAuthHost = '';
         }
 

@@ -1,17 +1,13 @@
 import 'reflect-metadata';
 import StreamGatewayOutputPort from '@/lib/core/port/secondary/stream-gateway-output-port';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { PassThrough, Transform } from 'node:stream';
 import { HTTPRequest, prepareRequestArgs } from '@/lib/sdk/http';
 import { BytesToStringifiedJSONTransform, NewlineDelimittedDataParser } from '@/lib/sdk/stream-transformers';
-import type EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
-import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
 import { webStreamToNodeStream } from '@/lib/infrastructure/adapters/streaming-adapter';
 
 @injectable()
 export default class StreamingGateway implements StreamGatewayOutputPort {
-    constructor(@inject(GATEWAYS.ENV_CONFIG) private envConfigGateway: EnvConfigGatewayOutputPort) {}
-
     private convertChunkBytesToString = new Transform({
         transform(chunk, encoding, callback) {
             callback(null, chunk.toString());

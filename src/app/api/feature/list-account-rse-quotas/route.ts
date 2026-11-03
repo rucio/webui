@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
         const params = RequestSchema.safeParse(body);
         if (!params.success) {
-            return NextResponse.json({ error: 'Invalid parameters', details: params.error.errors }, { status: 400 });
+            return NextResponse.json({ error: 'Invalid parameters', details: params.error.issues }, { status: 400 });
         }
 
         const controller = appContainer.get<BaseController<ListAccountRSEQuotasControllerParameters, void>>(CONTROLLERS.LIST_ACCOUNT_RSE_QUOTAS);

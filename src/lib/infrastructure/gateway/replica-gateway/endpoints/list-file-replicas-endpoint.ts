@@ -15,7 +15,7 @@ export default class ListFileReplicasEndpoint extends BaseStreamableEndpoint<Lis
      */
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/replicas/list`;
         const request: HTTPRequest = {
             method: 'POST',
