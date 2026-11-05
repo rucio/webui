@@ -34,7 +34,9 @@ export interface DIDDTO extends DID, BaseDTO {}
 /**
  * Data Transfer Object for DIDMeta Endpoint
  */
-export interface DIDMetaDTO extends BaseDTO, DIDMeta {}
+export interface DIDMetaDTO extends BaseDTO, DIDMeta {
+    is_opendata: boolean;
+}
 
 /**
  * Data Transfer Object for DIDKeyValuePairs Endpoint
