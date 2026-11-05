@@ -1,16 +1,7 @@
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-
-const stateString: Record<ReplicaState, string> = {
-    [ReplicaState.AVAILABLE]: 'Available',
-    [ReplicaState.BAD]: 'Bad',
-    [ReplicaState.BEING_DELETED]: 'Being Deleted',
-    [ReplicaState.COPYING]: 'Copying',
-    [ReplicaState.TEMPORARY_UNAVAILABLE]: 'Temporary Unavailable',
-    [ReplicaState.UNAVAILABLE]: 'Unavailable',
-    [ReplicaState.UNKNOWN]: 'Unknown',
-};
+import { replicaStateString } from '@/lib/core/entity/state-to-string';
 
 /**
  * Maps replica states to semantic badge variants from the design system.
@@ -35,5 +26,5 @@ const stateVariants: Record<ReplicaState, 'default' | 'success' | 'error' | 'war
 };
 
 export const ReplicaStateBadge = (props: { value: ReplicaState; className?: string }) => {
-    return <Badge value={stateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
+    return <Badge value={replicaStateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
 };

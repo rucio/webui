@@ -10,6 +10,7 @@ import { ReplicaState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
+import { replicaStateString } from '@/lib/core/entity/state-to-string';
 
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;
@@ -17,21 +18,11 @@ type DetailsDIDFileReplicasTableProps = {
     isActive?: boolean;
 };
 
-const ReplicaStateDisplayNames = {
-    [ReplicaState.AVAILABLE]: 'Available',
-    [ReplicaState.UNAVAILABLE]: 'Unavailable',
-    [ReplicaState.COPYING]: 'Copying',
-    [ReplicaState.BEING_DELETED]: 'Being Deleted',
-    [ReplicaState.BAD]: 'Bad',
-    [ReplicaState.TEMPORARY_UNAVAILABLE]: 'Temporary Unavailable',
-    [ReplicaState.UNKNOWN]: 'Unknown',
-};
-
 export const DetailsDIDFileReplicasTable = (props: DetailsDIDFileReplicasTableProps) => {
     const tableRef = useRef<AgGridReact<FileReplicaStateViewModel>>(null);
 
     const replicaStateOptions = Object.values(ReplicaState);
-    const replicaStateValueFormatter = (value: ReplicaState) => ReplicaStateDisplayNames[value];
+    const replicaStateValueFormatter = (value: ReplicaState) => replicaStateString[value];
 
     const [columnDefs] = useState([
         {

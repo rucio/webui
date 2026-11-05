@@ -8,9 +8,10 @@ import { DefaultTextFilterParams } from '@/component-library/features/utils/filt
 import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleStateBadge';
 import { RuleState, SubscriptionState } from '@/lib/core/entity/rucio';
 import { badgeCellClasses } from '@/component-library/features/table/cells/badge-cell';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { SubscriptionStateBadge } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
+import { subscriptionStateString } from '@/lib/core/entity/state-to-string';
+import { ClickableSubscriptionCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type ListSubscriptionTableProps = {
     streamingHook: UseStreamReader<SubscriptionRuleStatesViewModel>;
@@ -18,25 +19,12 @@ type ListSubscriptionTableProps = {
     account: string;
 };
 
-const ClickableName = (props: { value: string; account: string }) => {
-    return <ClickableCell href={`/subscription/${props.account}/${props.value}`}>{props.value}</ClickableCell>;
-};
-
-const SubscriptionStateDisplayName = {
-    [SubscriptionState.ACTIVE]: 'Active',
-    [SubscriptionState.BROKEN]: 'Broken',
-    [SubscriptionState.INACTIVE]: 'Inactive',
-    [SubscriptionState.NEW]: 'New',
-    [SubscriptionState.UPDATED]: 'Updated',
-    [SubscriptionState.UNKNOWN]: 'Unknown',
-};
-
 export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
     const tableRef = useRef<AgGridReact<SubscriptionRuleStatesViewModel>>(null);
     const stateMinWidth = 175;
 
     const subscriptionStateOptions = Object.values(SubscriptionState);
-    const subscriptionStateValueFormatter = (value: SubscriptionState) => SubscriptionStateDisplayName[value];
+    const subscriptionStateValueFormatter = (value: SubscriptionState) => subscriptionStateString[value];
 
     const [columnDefs] = useState([
         {
@@ -45,7 +33,7 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
             flex: 5,
             minWidth: 300,
             pinned: 'left' as const,
-            cellRenderer: ClickableName,
+            cellRenderer: ClickableSubscriptionCell,
             cellRendererParams: {
                 account: props.account,
             },
@@ -67,8 +55,6 @@ export const ListSubscriptionTable = (props: ListSubscriptionTableProps) => {
                 options: subscriptionStateOptions,
                 valueFormatter: subscriptionStateValueFormatter,
             },
-            // The cell value is the enum code (e.g. 'A'); filter against the displayed
-            // label (e.g. 'Active') so text searches match what the user sees.
         },
         {
             headerName: 'OK',
