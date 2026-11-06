@@ -95,8 +95,8 @@ export const SuspiciousReplicasTable = (props: SuspiciousReplicasTableProps) => 
                 sortable: true,
                 cellRenderer: ClickableDIDCell,
                 valueGetter: (params: ValueGetterParams<SuspiciousReplicaViewModel>) => {
-                    return { scope: params.data?.scope, name: params.data?.name }
-                }
+                    return { scope: params.data?.scope, name: params.data?.name };
+                },
             },
             {
                 headerName: 'RSE',

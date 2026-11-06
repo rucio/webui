@@ -4,6 +4,7 @@ import { ClickableCell } from './ClickableCell';
  * Creates a clickable component for RSE which redirects to its own page.
  *
  * @param {string} props.value name of the RSE.
+ *
  * @param {string} [props.className] optional parameter for styling the component.
  *
  * @returns Clickable component for RSE or `null` if name of the RSE is nullable.
@@ -23,6 +24,7 @@ export const ClickableRSECell = (props: { value: string; className?: string }) =
  * * is the real expression with operators, wildcards etc. - then it redirects to RSE search panel with already filtered RSEs based on the expression.
  *
  * @param {string} props.value RSE expression.
+ *
  * @param {string} [props.className] optional parameter for styling the component.
  *
  * @returns Clickable component for RSE expression or `null`if RSE expression is nullable.
@@ -46,6 +48,7 @@ export const ClickableRSEExpressionCell = (props: { value: string; className?: s
  * Creates a clickable component for DID which redirects to its own page.
  *
  * @param {{scope: string, name: string}} props.value object consisting of two values: `scope` and `name`, which store DID's scope and name.
+ *
  * @param {string} [props.className] optional parameter for styling the component.
  *
  * @returns Clickable component for DID or `null` if either `scope` or `name` is nullable.
@@ -65,6 +68,7 @@ export const ClickableDIDCell = (props: { value: { scope: string; name: string }
  * Creates a clickable component for Rule which redirects to its own page.
  *
  * @param {string} props.value ID of a rule.
+ *
  * @param {string} [props.className] optional parameter for styling the component.
  *
  * @returns Clickable component for Rule or `null` if rule's ID is nullable.
@@ -85,6 +89,7 @@ export const accountHref = (name: string) => `/account/${encodeURIComponent(name
  * Creates a clickable component for an Account which redirects to its own page.
  *
  * @param {string} props.value name of the account.
+ *
  * @param {string} [props.className] optional parameter for styling the component.
  *
  * @returns Clickable component for the Account or `null` if the name is nullable.
@@ -102,7 +107,9 @@ export const ClickableAccountCell = (props: { value: string; className?: string 
  * Creates a clickable component for Subscription which redirects to its own page.
  *
  * @param {string} props.value name of the subscription.
+ *
  * @param {string} props.account account to which the subscription belongs.
+ *
  * @param {string} [props.className] optional parameter for styling the component.
  *
  * @returns Clickable component for the Subscription or `null` if either `name ` or `account` is nullable.

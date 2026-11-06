@@ -1,6 +1,6 @@
-import { LockState, ReplicaState, RuleState, SubscriptionState } from "./rucio";
+import { LockState, ReplicaState, RuleState, SubscriptionState } from './rucio';
 
-export const lockStateString: Record<LockState, string > = {
+export const lockStateString: Record<LockState, string> = {
     [LockState.OK]: 'OK',
     [LockState.REPLICATING]: 'Replicating',
     [LockState.STUCK]: 'Stuck',
