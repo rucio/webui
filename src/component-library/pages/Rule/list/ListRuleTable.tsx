@@ -14,6 +14,7 @@ import { NullBadge } from '@/component-library/features/badges/NullBadge';
 import { ruleActivityComparator, remainingLifetimeComparator, ruleStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { ClickableRSEExpressionCell, ClickableDIDCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
+import { ruleStateString } from '@/lib/core/entity/state-to-string';
 
 type ListRuleTableProps = {
     streamingHook: UseStreamReader<RuleViewModel>;
@@ -32,13 +33,13 @@ export const ListRuleTable = (props: ListRuleTableProps) => {
     const tableRef = useRef<AgGridReact<RuleViewModel>>(null);
 
     const stateOptions = Object.values(RuleState);
-    const ruleStateValueFormatter = (value: RuleState) => (value === RuleState.WAITING_APPROVAL ? 'Waiting Approval' : value);
+    const ruleStateValueFormatter = (value: RuleState) => ruleStateString[value];
 
     const [columnDefs] = useState([
         {
             headerName: 'DID',
             valueGetter: (params: ValueGetterParams<RuleViewModel>) => {
-                return [params.data?.scope, params.data?.name];
+                return { scope: params.data?.scope, name: params.data?.name };
             },
             minWidth: 350,
             flex: 2,

@@ -7,11 +7,10 @@ import { UseStreamReader } from '@/lib/infrastructure/hooks/useStreamReader';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { DefaultTextFilterParams, DefaultDateFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { DateCellRenderer } from '@/component-library/features/utils/DateWithTooltip';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { Button } from '@/component-library/atoms/form/button';
 import { HiOutlineBan, HiOutlineExternalLink } from 'react-icons/hi';
 import { SuspiciousReplicaViewModel } from '@/lib/infrastructure/data/view-model/replica';
-import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
+import { ClickableDIDCell, ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type SuspiciousReplicasTableProps = {
     streamingHook: UseStreamReader<SuspiciousReplicaViewModel>;
@@ -59,12 +58,6 @@ const ActionsCell = ({ data, onDeclareBad }: ActionsCellParams) => {
     );
 };
 
-const ClickableDIDName = (props: { data: SuspiciousReplicaViewModel | undefined }) => {
-    if (!props.data) return null;
-    const { scope, name } = props.data;
-    return <ClickableCell href={`/did/${encodeURIComponent(scope)}/${encodeURIComponent(name)}`}>{name}</ClickableCell>;
-};
-
 export const SuspiciousReplicasTable = (props: SuspiciousReplicasTableProps) => {
     const { onDeclareBad, onSelectionChanged, ...tableProps } = props;
     const tableRef = useRef<AgGridReact<SuspiciousReplicaViewModel>>(null);
@@ -100,7 +93,10 @@ export const SuspiciousReplicasTable = (props: SuspiciousReplicasTableProps) => 
                 filter: true,
                 filterParams: DefaultTextFilterParams,
                 sortable: true,
-                cellRenderer: ClickableDIDName,
+                cellRenderer: ClickableDIDCell,
+                valueGetter: (params: ValueGetterParams<SuspiciousReplicaViewModel>) => {
+                    return { scope: params.data?.scope, name: params.data?.name };
+                },
             },
             {
                 headerName: 'RSE',

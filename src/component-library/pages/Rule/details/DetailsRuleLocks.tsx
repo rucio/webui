@@ -17,6 +17,7 @@ import { HiExternalLink } from 'react-icons/hi';
 import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { ClickableRSECell, ClickableDIDCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
+import { lockStateString } from '@/lib/core/entity/state-to-string';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;
@@ -172,24 +173,17 @@ const DDMLinkButton = (props: any) => {
     );
 };
 
-const LockStateDisplayNames: Record<LockState, string> = {
-    [LockState.REPLICATING]: 'Replicating',
-    [LockState.OK]: 'OK',
-    [LockState.STUCK]: 'Stuck',
-    [LockState.UNKNOWN]: 'Unknown',
-};
-
 const DetailsRuleLocksTable = (props: DetailsRuleLocksTableProps) => {
     const tableRef = useRef<AgGridReact<ListRuleReplicaLockStatesViewModel>>(null);
 
     const lockOptions = Object.values(LockState);
-    const lockStateValueFormatter = (value: LockState) => LockStateDisplayNames[value];
+    const lockStateValueFormatter = (value: LockState) => lockStateString[value];
 
     const [columnDefs] = useState([
         {
             headerName: 'DID',
             valueGetter: (params: ValueGetterParams<ListRuleReplicaLockStatesViewModel>) => {
-                return [params.data?.scope, params.data?.name];
+                return { scope: params.data?.scope, name: params.data?.name };
             },
             minWidth: 400,
             flex: 1,

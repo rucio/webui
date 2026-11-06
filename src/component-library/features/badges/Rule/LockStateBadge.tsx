@@ -1,13 +1,7 @@
 import { LockState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-
-const stateString: Record<LockState, string> = {
-    O: 'OK',
-    R: 'Replicating',
-    S: 'Stuck',
-    U: 'Unknown',
-};
+import { lockStateString } from '@/lib/core/entity/state-to-string';
 
 /**
  * Maps lock states to semantic badge variants from the design system.
@@ -26,5 +20,5 @@ const stateVariants: Record<LockState, 'default' | 'success' | 'error' | 'warnin
 };
 
 export const LockStateBadge = (props: { value: LockState; className?: string }) => {
-    return <Badge value={stateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
+    return <Badge value={lockStateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
 };

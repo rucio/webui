@@ -6,7 +6,6 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { HiChevronDown } from 'react-icons/hi';
 import { RegularTable } from '@/component-library/features/table/RegularTable/RegularTable';
 import { ActionCell } from '@/component-library/features/table/cells/ActionCell';
-import { ClickableCell } from '@/component-library/features/table/cells/ClickableCell';
 import { ClickableRSECell, ClickableRSEExpressionCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 import { DefaultTextFilterParams } from '@/component-library/features/utils/filter-parameters';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
@@ -113,12 +112,10 @@ export const ResolvedRsesCell = ({ data }: { data?: Pick<QuotaRow, 'rseExpressio
                 <ul className="flex flex-wrap gap-1">
                     {rses.map(rse => (
                         <li key={rse}>
-                            <ClickableCell
-                                href={`/rse/${encodeURIComponent(rse)}`}
+                            <ClickableRSECell
+                                value={rse}
                                 className="rounded-full bg-neutral-200 dark:bg-neutral-700 px-2 py-0.5 text-xs font-mono text-neutral-900 dark:text-neutral-100"
-                            >
-                                {rse}
-                            </ClickableCell>
+                            />
                         </li>
                     ))}
                 </ul>

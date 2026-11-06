@@ -1,15 +1,7 @@
 import { SubscriptionState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-
-export const subscriptionStateString: Record<SubscriptionState, string> = {
-    [SubscriptionState.ACTIVE]: 'Active',
-    [SubscriptionState.INACTIVE]: 'Inactive',
-    [SubscriptionState.NEW]: 'New',
-    [SubscriptionState.UPDATED]: 'Updated',
-    [SubscriptionState.BROKEN]: 'Broken',
-    [SubscriptionState.UNKNOWN]: 'Unknown',
-};
+import { subscriptionStateString } from '@/lib/core/entity/state-to-string';
 
 /**
  * Maps subscription states to semantic badge variants from the design system.

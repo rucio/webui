@@ -17,6 +17,7 @@ import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/compo
 import { ClickableRSEExpressionCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 import { DateCellRenderer } from '@/component-library/features/utils/DateWithTooltip';
 import { textCellWrapperStyle } from '@/component-library/features/table/cells/text-cell';
+import { ruleStateString } from '@/lib/core/entity/state-to-string';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;
@@ -36,7 +37,7 @@ export const DetailsDIDRulesTable = (props: DetailsDIDRulesTableProps) => {
     const tableRef = useRef<AgGridReact<DIDRulesViewModel>>(null);
 
     const ruleStateOptions = Object.values(RuleState);
-    const ruleStateValueFormatter = (value: RuleState) => (value === RuleState.WAITING_APPROVAL ? 'Waiting Approval' : value);
+    const ruleStateValueFormatter = (value: RuleState) => ruleStateString[value];
 
     const [columnDefs] = useState([
         {

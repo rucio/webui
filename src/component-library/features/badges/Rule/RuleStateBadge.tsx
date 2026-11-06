@@ -1,16 +1,7 @@
 import { RuleState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-
-const stateString: Record<RuleState, string> = {
-    [RuleState.REPLICATING]: 'Replicating',
-    [RuleState.OK]: 'OK',
-    [RuleState.STUCK]: 'Stuck',
-    [RuleState.SUSPENDED]: 'Suspended',
-    [RuleState.WAITING_APPROVAL]: 'Waiting',
-    [RuleState.INJECT]: 'Inject',
-    [RuleState.UNKNOWN]: 'Unknown',
-};
+import { ruleStateString } from '@/lib/core/entity/state-to-string';
 
 /**
  * Maps rule states to semantic badge variants from the design system.
@@ -35,5 +26,5 @@ const stateVariants: Record<RuleState, 'default' | 'success' | 'error' | 'warnin
 };
 
 export const RuleStateBadge = (props: { value: RuleState; className?: string }) => {
-    return <Badge value={stateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
+    return <Badge value={ruleStateString[props.value]} variant={stateVariants[props.value]} className={props.className} />;
 };

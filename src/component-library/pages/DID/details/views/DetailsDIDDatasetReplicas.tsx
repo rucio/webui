@@ -20,16 +20,7 @@ import { DateCellRenderer } from '@/component-library/features/utils/DateWithToo
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { ICellRendererParams, ValueGetterParams } from 'ag-grid-community';
 import { textCellWrapperStyle } from '@/component-library/features/table/cells/text-cell';
-
-const ReplicaStateDisplayNames = {
-    [ReplicaState.AVAILABLE]: 'Available',
-    [ReplicaState.UNAVAILABLE]: 'Unavailable',
-    [ReplicaState.COPYING]: 'Copying',
-    [ReplicaState.BEING_DELETED]: 'Being Deleted',
-    [ReplicaState.BAD]: 'Bad',
-    [ReplicaState.TEMPORARY_UNAVAILABLE]: 'Temporary Unavailable',
-    [ReplicaState.UNKNOWN]: 'Unknown',
-};
+import { replicaStateString } from '@/lib/core/entity/state-to-string';
 
 export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDDatasetReplicasViewModel>();
@@ -43,7 +34,7 @@ export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActiv
     }, [gridApi]);
 
     const replicaStateOptions = Object.values(ReplicaState);
-    const replicaStateValueFormatter = (value: ReplicaState) => ReplicaStateDisplayNames[value];
+    const replicaStateValueFormatter = (value: ReplicaState) => replicaStateString[value];
 
     const [columnDefs] = useState([
         {
