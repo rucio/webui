@@ -30,7 +30,7 @@ function reLogin(request: NextRequest, publicHost: string) {
 }
 
 function initiateLogin(request: NextRequest, publicHost: string) {
-    const loginPage = new URL(`/auth/login?callbackUrl=${request.nextUrl.pathname}`, `${publicHost}`);
+    const loginPage = new URL(`/auth/login?callbackUrl=${encodeURIComponent(request.nextUrl.pathname)}`, publicHost);
     return NextResponse.redirect(loginPage);
 }
 
