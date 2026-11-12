@@ -8,7 +8,6 @@ export interface ListDIDRulesRequest {
 }
 
 export interface ListDIDRulesResponse extends BaseResponseModel, RuleMeta {
-    subscription_id?: string; // used in post-processing pipeline element to fetch subscription details
     subscription_name?: string; // used in post-processing pipeline element to fetch subscription details
     subscription_account?: string; // used in post-processing pipeline element to fetch subscription details
 }
