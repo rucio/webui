@@ -270,7 +270,7 @@ export const DetailsRule = ({ id, featureDDMDashboard }: { id: string; featureDD
 
     return (
         <div className="flex flex-col space-y-6 w-full min-w-0">
-            <header className="mb-2">
+            <header>
                 <div className="overflow-y-hidden overflow-x-auto whitespace-nowrap">
                     <CopyableHeading text={id} />
                 </div>

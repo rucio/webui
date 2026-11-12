@@ -137,7 +137,7 @@ describe('List DID Rules Feature tests', () => {
         console.log(receivedData);
         expect(receivedData.length).toBe(1);
         expect(receivedData[0].id).toBe('dummy_id');
-        expect(receivedData[0].subscription).toEqual(undefined);
+        expect(receivedData[0].subscription).toEqual({ account: 'ddmadmin', name: '*Functional Test' });
         expect(receivedData[0].account).toBe('dummy_account');
     });
 

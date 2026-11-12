@@ -12,6 +12,10 @@ import { RuleStateBadge } from '@/component-library/features/badges/Rule/RuleSta
 import { RuleGroupingBadge } from '@/component-library/features/badges/Rule/RuleGroupingBadge';
 import { RuleNotificationBadge } from '@/component-library/features/badges/Rule/RuleNotificationBadge';
 import { CopyableLinkCell } from '@/component-library/features/table/cells/CopyableCell';
+import { RuleState } from '@/lib/core/entity/rucio';
+import * as Popover from '@radix-ui/react-popover';
+import { cn } from '@/component-library/utils';
+import { popoverVariants, PopoverRow, popoverArrowFill } from '@/component-library/atoms/popover/PopoverUtils';
 
 /**
  * A responsive divider component for rule sections.
@@ -28,20 +32,38 @@ const RuleSectionDivider = () => (
 );
 
 export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
-    const getExpiredField = () => {
-        if (meta.expires_at) {
-            return <DateWithTooltip date={meta.expires_at} />;
-        } else {
-            return <NullBadge />;
-        }
-    };
-
     return (
         <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
             <div className="w-full flex flex-col lg:flex-row lg:gap-8">
                 <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="State">
-                        <RuleStateBadge value={meta.state} />
+                        {meta.state === RuleState.STUCK ?
+                            <Popover.Root>
+                                <Popover.Trigger asChild>
+                                    <button
+                                        type="button"
+                                    >
+                                        <RuleStateBadge value={meta.state} />
+                                    </button>
+                                </Popover.Trigger>
+
+                                <Popover.Portal>
+                                    <Popover.Content
+                                        side="top"
+                                        align="center"
+                                        className={cn('text-xs max-w-[500px]', popoverVariants({ variant: 'error' }))}
+                                    >
+                                        <div className="flex flex-col gap-0.5">
+                                            <PopoverRow label="Stuck at" value={meta.stuck_at ?? 'None'} variant="error" />
+                                            <PopoverRow label="Error" value={meta.error ?? 'None'} variant="error" breakValue="break-all" />
+                                        </div>
+                                        <Popover.Arrow className={popoverArrowFill['error']} />
+                                    </Popover.Content>
+                                </Popover.Portal>
+                            </Popover.Root>
+                            :
+                            <RuleStateBadge value={meta.state} />
+                        }
                     </KeyValueRow>
                     <KeyValueRow name="DID">
                         <div className="flex flex-row gap-2 items-center max-w-[20rem]">
@@ -92,7 +114,9 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     <KeyValueRow name="Updated At">
                         <DateWithTooltip date={meta.updated_at} />
                     </KeyValueRow>
-                    <KeyValueRow name="Expires At">{getExpiredField()}</KeyValueRow>
+                    <KeyValueRow name="Expires At">
+                        {meta.expires_at ? <DateWithTooltip date={meta.expires_at} /> : <NullBadge label="none" />}
+                    </KeyValueRow>
                 </div>
             </div>
             <Divider />
@@ -116,6 +140,46 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                 </div>
                 <RuleSectionDivider />
                 <div className="flex flex-col flex-1 min-w-0">
+                    <KeyValueRow name="Child Rule ID">
+                        {meta.child_rule_id ?
+                            <CopyableLinkCell
+                                text={meta.child_rule_id}
+                                href={`/rule/${encodeURIComponent(meta.child_rule_id)}`}
+                            >
+                                <Field>{meta.child_rule_id}</Field>
+                            </CopyableLinkCell>
+                            :
+                            <NullBadge label="none" />
+                        }
+                    </KeyValueRow>
+                    <KeyValueRow name="Subscription ID">
+                        {meta.subscription_id ?
+                            <CopyableLinkCell
+                                text={meta.subscription_id}
+                                href={`/subscriptions?autoSearch=true`}
+                            >
+                                <Field>{meta.subscription_id}</Field>
+                            </CopyableLinkCell>
+                            :
+                            <NullBadge label="none" />
+                        }
+                    </KeyValueRow>
+                    <KeyValueRow name="Source Replica Expression">
+                        {meta.source_replica_expression ?
+                            <Field>{meta.source_replica_expression}</Field>
+                            :
+                            <NullBadge label="none" />
+                        }
+                    </KeyValueRow>
+                    <KeyValueRow name="Weight">
+                        {meta.weight ? <Field>{meta.weight}</Field> : <NullBadge label="none" />}
+                    </KeyValueRow>
+                    <KeyValueRow name="End Of Life">
+                        {meta.eol_at ? <DateWithTooltip date={meta.eol_at} /> : <NullBadge label="none" />}
+                    </KeyValueRow>
+                </div>
+                <RuleSectionDivider />
+                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Purge Replicas">
                         <Checkbox checked={meta.purge_replicas} />
                     </KeyValueRow>
@@ -125,9 +189,6 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     <KeyValueRow name="Locked">
                         <Checkbox checked={meta.locked} />
                     </KeyValueRow>
-                </div>
-                <RuleSectionDivider />
-                <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Ignore Account Limit">
                         <Checkbox checked={meta.ignore_account_limit} />
                     </KeyValueRow>
