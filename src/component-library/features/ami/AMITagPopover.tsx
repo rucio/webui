@@ -6,25 +6,18 @@ import { HiExternalLink } from 'react-icons/hi';
 import { cn } from '@/component-library/utils';
 import { badgeVariants } from '@/component-library/atoms/misc/Badge';
 import { AMITagInfo } from '@/lib/core/usecase-models/get-ami-tag-info-usecase-models';
-
-const DetailRow = ({ label, value }: { label: string; value?: string }) =>
-    value ? (
-        <div className="flex gap-2">
-            <dt className="min-w-[4.5rem] text-neutral-400 dark:text-neutral-600">{label}</dt>
-            <dd className="font-mono">{value}</dd>
-        </div>
-    ) : null;
+import { popoverArrowFill, popoverVariants, PopoverRow } from '@/component-library/atoms/popover/PopoverUtils';
 
 const AMITagDetails = ({ info }: { info: AMITagInfo }) => {
     if (info.found === false) return <p>Not found in AMI</p>;
     if (info.found === null) return <p>AMI details unavailable</p>;
     return (
-        <div className="flex flex-col gap-1.5 max-w-xs">
+        <div className="flex flex-col gap-1.5">
             <dl className="flex flex-col gap-0.5">
-                <DetailRow label="Step" value={info.productionStep} />
-                <DetailRow label="Release" value={info.baseRelease} />
-                <DetailRow label="Transform" value={info.transformation} />
-                <DetailRow label="Created" value={info.created} />
+                <PopoverRow label="Step" value={info.productionStep} variant="neutral" />
+                <PopoverRow label="Release" value={info.baseRelease} variant="success" />
+                <PopoverRow label="Transform" value={info.transformation} variant="error" />
+                <PopoverRow label="Created" value={info.created} variant="warning" />
             </dl>
             {info.description && <p className="whitespace-normal">{info.description}</p>}
         </div>
@@ -89,15 +82,10 @@ export const AMITagPopover: React.FC<{ info: AMITagInfo }> = ({ info }) => {
                     sideOffset={6}
                     onOpenAutoFocus={e => e.preventDefault()}
                     onCloseAutoFocus={e => e.preventDefault()}
-                    className={cn(
-                        'z-50 px-3 py-2 rounded-md text-xs',
-                        'bg-neutral-800 text-neutral-100',
-                        'dark:bg-neutral-200 dark:text-neutral-900',
-                        'shadow-md',
-                    )}
+                    className={cn('text-xs max-w-xs', popoverVariants({ variant: 'neutral' }))}
                 >
                     <AMITagDetails info={info} />
-                    <Popover.Arrow className="fill-neutral-800 dark:fill-neutral-200" />
+                    <Popover.Arrow className={popoverArrowFill['neutral']} />
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>

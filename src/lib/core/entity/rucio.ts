@@ -174,9 +174,13 @@ export type RSEAccountUsage = {
 export type RuleMeta = {
     account: string;
     activity: string; // VO-specific enums, just show string here.
+    child_rule_id: string | null;
+    comments: string | null;
     copies: number;
     created_at: DateISO;
     did_type: DIDType;
+    eol_at: DateISO | null;
+    error: string | null;
     expires_at: DateISO | null;
     grouping: RuleGrouping;
     id: string;
@@ -188,14 +192,18 @@ export type RuleMeta = {
     locks_stuck_cnt: number;
     name: string;
     notification: RuleNotification;
+    meta: string | null;
     priority: number;
     purge_replicas: boolean;
     rse_expression: string;
     scope: string;
+    source_replica_expression: string | null;
     split_container: boolean;
     state: RuleState;
+    stuck_at: DateISO | null;
+    subscription_id: string | null;
     updated_at: DateISO;
-    comments: string | null;
+    weight: number | null;
 };
 
 export type RulePageLockEntry = {
