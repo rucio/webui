@@ -101,9 +101,9 @@ describe('List DID Rules Feature tests', () => {
         };
 
         const getSubscriptionEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/Id/sample_subscription_007`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/id/sample_subscription_007`,
             method: 'GET',
-            includes: 'subscriptions/Id/sample_subscription_007',
+            includes: 'subscriptions/id/sample_subscription_007',
             response: {
                 status: 200,
                 headers: {
@@ -251,9 +251,9 @@ describe('List DID Rules Feature tests', () => {
         };
 
         const getSubscriptionEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/Id/sample_subscription_007`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/id/sample_subscription_007`,
             method: 'GET',
-            includes: 'subscriptions/Id/sample_subscription_007',
+            includes: 'subscriptions/id/sample_subscription_007',
             response: {
                 status: 404,
                 headers: {

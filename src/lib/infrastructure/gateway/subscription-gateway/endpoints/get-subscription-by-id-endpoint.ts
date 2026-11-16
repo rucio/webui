@@ -10,7 +10,7 @@ export default class GetSubscriptionByIdEndpoint extends BaseEndpoint<Subscripti
 
     async initialize(): Promise<void> {
         await super.initialize();
-        this.url = `${this.rucioHost}/subscriptions/Id/${this.id}`;
+        this.url = `${this.rucioHost}/subscriptions/id/${encodeURIComponent(this.id)}`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,

@@ -37,12 +37,10 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
             <div className="w-full flex flex-col lg:flex-row lg:gap-8">
                 <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="State">
-                        {meta.state === RuleState.STUCK ?
+                        {meta.state === RuleState.STUCK ? (
                             <Popover.Root>
                                 <Popover.Trigger asChild>
-                                    <button
-                                        type="button"
-                                    >
+                                    <button type="button">
                                         <RuleStateBadge value={meta.state} />
                                     </button>
                                 </Popover.Trigger>
@@ -61,9 +59,9 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                                     </Popover.Content>
                                 </Popover.Portal>
                             </Popover.Root>
-                            :
+                        ) : (
                             <RuleStateBadge value={meta.state} />
-                        }
+                        )}
                     </KeyValueRow>
                     <KeyValueRow name="DID">
                         <div className="flex flex-row gap-2 items-center max-w-[20rem]">
@@ -141,42 +139,28 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                 <RuleSectionDivider />
                 <div className="flex flex-col flex-1 min-w-0">
                     <KeyValueRow name="Child Rule ID">
-                        {meta.child_rule_id ?
-                            <CopyableLinkCell
-                                text={meta.child_rule_id}
-                                href={`/rule/${encodeURIComponent(meta.child_rule_id)}`}
-                            >
+                        {meta.child_rule_id ? (
+                            <CopyableLinkCell text={meta.child_rule_id} href={`/rule/${encodeURIComponent(meta.child_rule_id)}`}>
                                 <Field>{meta.child_rule_id}</Field>
                             </CopyableLinkCell>
-                            :
+                        ) : (
                             <NullBadge label="none" />
-                        }
+                        )}
                     </KeyValueRow>
                     <KeyValueRow name="Subscription ID">
-                        {meta.subscription_id ?
-                            <CopyableLinkCell
-                                text={meta.subscription_id}
-                                href={`/subscriptions?autoSearch=true`}
-                            >
+                        {meta.subscription_id ? (
+                            <CopyableLinkCell text={meta.subscription_id} href={`/subscription/id/${encodeURIComponent(meta.subscription_id)}`}>
                                 <Field>{meta.subscription_id}</Field>
                             </CopyableLinkCell>
-                            :
+                        ) : (
                             <NullBadge label="none" />
-                        }
+                        )}
                     </KeyValueRow>
                     <KeyValueRow name="Source Replica Expression">
-                        {meta.source_replica_expression ?
-                            <Field>{meta.source_replica_expression}</Field>
-                            :
-                            <NullBadge label="none" />
-                        }
+                        {meta.source_replica_expression ? <Field>{meta.source_replica_expression}</Field> : <NullBadge label="none" />}
                     </KeyValueRow>
-                    <KeyValueRow name="Weight">
-                        {meta.weight ? <Field>{meta.weight}</Field> : <NullBadge label="none" />}
-                    </KeyValueRow>
-                    <KeyValueRow name="End Of Life">
-                        {meta.eol_at ? <DateWithTooltip date={meta.eol_at} /> : <NullBadge label="none" />}
-                    </KeyValueRow>
+                    <KeyValueRow name="Weight">{meta.weight ? <Field>{meta.weight}</Field> : <NullBadge label="none" />}</KeyValueRow>
+                    <KeyValueRow name="End Of Life">{meta.eol_at ? <DateWithTooltip date={meta.eol_at} /> : <NullBadge label="none" />}</KeyValueRow>
                 </div>
                 <RuleSectionDivider />
                 <div className="flex flex-col flex-1 min-w-0">
