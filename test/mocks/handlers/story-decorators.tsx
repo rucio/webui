@@ -7,6 +7,7 @@ export const getDecoratorWithWorker = (handlers: RequestHandler[]) => {
         const worker = setupWorker(...handlers);
         worker.start({
             onUnhandledRequest: 'bypass',
+            serviceWorker: { url: './mockServiceWorker.js' },
         });
 
         useEffect(() => {
