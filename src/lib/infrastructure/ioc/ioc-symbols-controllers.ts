@@ -33,6 +33,7 @@ const CONTROLLERS = {
     LIST_DID_RULES: Symbol.for('ListDIDRulesController'),
     LIST_DATASET_REPLICAS: Symbol.for('ListDatasetReplicasController'),
     LIST_FILE_REPLICAS: Symbol.for('ListFileReplicasController'),
+    GET_FILE_REPLICAS_METALINK: Symbol.for('GetFileReplicasMetalinkController'),
     LIST_RSES: Symbol.for('ListRSEsController'),
     LIST_SUBSCRIPTIONS: Symbol.for('ListSubscriptionsController'),
     LIST_SUBSCRIPTION_RULE_STATES: Symbol.for('ListSubscriptionRuleStatesController'),

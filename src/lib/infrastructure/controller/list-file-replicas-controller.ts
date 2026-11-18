@@ -11,6 +11,11 @@ export type ListFileReplicasControllerParameters = TAuthenticatedControllerParam
     rucioAuthToken: string;
     scope: string;
     name: string;
+    schemes?: string[];
+    domain?: 'wan' | 'lan' | 'all';
+    rseExpression?: string;
+    allStates?: boolean;
+    clientIp?: string;
 };
 
 @injectable()
@@ -23,6 +28,11 @@ class ListFileReplicasController extends BaseController<ListFileReplicasControll
             rucioAuthToken: parameters.rucioAuthToken,
             scope: parameters.scope,
             name: parameters.name,
+            schemes: parameters.schemes,
+            domain: parameters.domain,
+            rseExpression: parameters.rseExpression,
+            allStates: parameters.allStates,
+            clientIp: parameters.clientIp,
         };
     }
 }
