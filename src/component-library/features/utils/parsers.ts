@@ -4,8 +4,8 @@ export const parseDIDPattern = (pattern: string | null | undefined): { scope: st
     const patternParts = pattern?.split(SCOPE_DELIMITER);
     if (patternParts && patternParts.length >= 2) {
         return {
-            scope: patternParts[0],
-            name: patternParts.slice(1).join(SCOPE_DELIMITER),
+            scope: patternParts[0] || null,
+            name: patternParts.slice(1).join(SCOPE_DELIMITER) || null,
         };
     }
 
