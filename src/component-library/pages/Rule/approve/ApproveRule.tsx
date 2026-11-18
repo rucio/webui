@@ -83,14 +83,6 @@ export const ApproveRule = (props: ApproveRuleProps) => {
 
     return (
         <div className="flex flex-col space-y-6 w-full">
-            {/* Page header */}
-            <header>
-                <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Approve Rules</h1>
-                <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400">
-                    Review and approve or deny replication rules that are waiting for administrator approval.
-                </p>
-            </header>
-
             {/* Tips */}
             <div className="rounded-md bg-base-info-50 dark:bg-base-info-900 text-sm text-base-info-700 dark:text-base-info-200">
                 <button
