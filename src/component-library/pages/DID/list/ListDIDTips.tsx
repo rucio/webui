@@ -1,5 +1,5 @@
 import React from 'react';
-import { HiFilter } from 'react-icons/hi';
+import { HiCog, HiFilter } from 'react-icons/hi';
 
 /**
  * The guidance shown under the DID list page's Tips disclosure.
@@ -29,6 +29,11 @@ export const ListDIDTips = () => (
                     <span className="font-medium">File</span> type directly to include them.
                 </li>
             </ul>
+        </li>
+        <li>
+            <span className="font-medium">Applying DID format:</span> You can either use unified input, where you put{' '}
+            <code className="font-mono">scope:name</code> or open the separated inputs for both of these values by clicking on the{' '}
+            <HiCog className="inline-block align-middle w-4 h-4 shrink-0 mx-0.5" /> icon.
         </li>
         <li>
             <span className="font-medium">Scope:</span> Must be specified, there is no possibility of finding DID without its properly defined scope.
