@@ -66,8 +66,7 @@ export const CreateRuleStageStorageTable: React.FC<StageStorageTableProps> = ({ 
             filter: 'agNumberColumnFilter',
         },
         {
-            headerName: 'Total usage',
-            // TODO: for some reason total expected usage doesn't include the passed DIDs...
+            headerName: 'Total expected usage',
             field: 'used_bytes',
             cellRenderer: (params: ICellRendererParams) => {
                 const item: RSEAccountUsageLimitViewModel = params.data;

@@ -32,6 +32,7 @@ import DIDMetaFeature from './features/did-meta-feature';
 import SubscriptionGatewayOutputPort from '@/lib/core/port/secondary/subscription-gateway-output-port';
 import SubscriptionGateway from '../gateway/subscription-gateway/subscription-gateway';
 import GetSubscriptionFeature from './features/get-subscription-feature';
+import GetSubscriptionByIdFeature from './features/get-subscription-by-id-feature';
 import ListSubscriptionsFeature from './features/list-subscriptions-feature';
 import ListDIDRulesFeature from './features/list-did-rules-feature';
 import DIDKeyValuePairsDataFeature from './features/get-did-keyvaluepairs-feature';
@@ -121,6 +122,7 @@ const coreFeatures = [
     new DIDMetaFeature(appContainer),
     new DIDKeyValuePairsDataFeature(appContainer),
     new GetSubscriptionFeature(appContainer),
+    new GetSubscriptionByIdFeature(appContainer),
     new ListDidsFeature(appContainer),
     new ListDIDContentsFeature(appContainer),
     new ListDIDParentsFeature(appContainer),

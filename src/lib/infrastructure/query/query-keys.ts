@@ -29,6 +29,9 @@ export const QUERY_KEYS = {
 
     /** Root of every account query (info, attributes, identities, quotas); see `accountKeys` */
     ACCOUNT: ['account'] as const,
+
+    /** Subscription detail metadata - used by pages showing subscriptions */
+    SUBSCRIPTION_META: ['subscription-meta'] as const,
 } as const;
 
 /**

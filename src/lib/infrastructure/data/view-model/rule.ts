@@ -143,6 +143,14 @@ export const getEmptyGetRuleViewModel = (): GetRuleViewModel => {
         state: RuleState.UNKNOWN,
         updated_at: '',
         comments: null,
+        error: null,
+        meta: null,
+        subscription_id: null,
+        source_replica_expression: null,
+        weight: null,
+        stuck_at: null,
+        child_rule_id: null,
+        eol_at: null,
     };
 };
 
