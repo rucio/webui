@@ -169,7 +169,6 @@ export type RSEAccountUsage = {
     bytes_limit: number;
 };
 
-// TODO: complete with all the fields
 // copied from deployed rucio UI
 export type RuleMeta = {
     account: string;

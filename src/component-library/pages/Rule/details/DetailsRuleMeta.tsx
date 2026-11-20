@@ -16,6 +16,7 @@ import { RuleState } from '@/lib/core/entity/rucio';
 import * as Popover from '@radix-ui/react-popover';
 import { cn } from '@/component-library/utils';
 import { popoverVariants, PopoverRow, popoverArrowFill } from '@/component-library/atoms/popover/PopoverUtils';
+import { HiInformationCircle } from 'react-icons/hi';
 
 /**
  * A responsive divider component for rule sections.
@@ -35,13 +36,14 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
     return (
         <KeyValueWrapper className="w-full p-6 flex flex-col gap-6">
             <div className="w-full flex flex-col lg:flex-row lg:gap-8">
-                <div className="flex flex-col flex-1 min-w-0">
+                <div className="flex flex-col w-full lg:w-1/3 min-w-0 items-center">
                     <KeyValueRow name="State">
-                        {meta.state === RuleState.STUCK ? (
+                        <RuleStateBadge value={meta.state} />
+                        {meta.state === RuleState.STUCK && (
                             <Popover.Root>
                                 <Popover.Trigger asChild>
                                     <button type="button">
-                                        <RuleStateBadge value={meta.state} />
+                                        <HiInformationCircle className="text-base-error-800 dark:text-base-error-200 h-6 w-6 shrink-0" />
                                     </button>
                                 </Popover.Trigger>
 
@@ -59,8 +61,6 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                                     </Popover.Content>
                                 </Popover.Portal>
                             </Popover.Root>
-                        ) : (
-                            <RuleStateBadge value={meta.state} />
                         )}
                     </KeyValueRow>
                     <KeyValueRow name="DID">
@@ -93,28 +93,53 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                     </KeyValueRow>
                 </div>
                 <RuleSectionDivider />
-                <div className="flex flex-col flex-1 min-w-0">
-                    <KeyValueRow name="Locks OK">
-                        <Field>{meta.locks_ok_cnt}</Field>
-                    </KeyValueRow>
-                    <KeyValueRow name="Locks Replicating">
-                        <Field>{meta.locks_replicating_cnt}</Field>
-                    </KeyValueRow>
-                    <KeyValueRow name="Locks Stuck">
-                        <Field>{meta.locks_stuck_cnt}</Field>
-                    </KeyValueRow>
-                </div>
-                <RuleSectionDivider />
-                <div className="flex flex-col flex-1 min-w-0">
-                    <KeyValueRow name="Created At">
-                        <DateWithTooltip date={meta.created_at} />
-                    </KeyValueRow>
-                    <KeyValueRow name="Updated At">
-                        <DateWithTooltip date={meta.updated_at} />
-                    </KeyValueRow>
-                    <KeyValueRow name="Expires At">
-                        {meta.expires_at ? <DateWithTooltip date={meta.expires_at} /> : <NullBadge label="none" />}
-                    </KeyValueRow>
+                <div className="flex flex-col w-full lg:w-2/3">
+                    <div className="flex flex-col lg:flex-row w-full">
+                        <div className="flex flex-col flex-1 min-w-0">
+                            <KeyValueRow name="Locks OK">
+                                <Field>{meta.locks_ok_cnt}</Field>
+                            </KeyValueRow>
+                            <KeyValueRow name="Locks Replicating">
+                                <Field>{meta.locks_replicating_cnt}</Field>
+                            </KeyValueRow>
+                            <KeyValueRow name="Locks Stuck">
+                                <Field>{meta.locks_stuck_cnt}</Field>
+                            </KeyValueRow>
+                        </div>
+                        <RuleSectionDivider />
+                        <div className="flex flex-col flex-1 min-w-0">
+                            <KeyValueRow name="Created At">
+                                <DateWithTooltip date={meta.created_at} />
+                            </KeyValueRow>
+                            <KeyValueRow name="Updated At">
+                                <DateWithTooltip date={meta.updated_at} />
+                            </KeyValueRow>
+                            <KeyValueRow name="Expires At">
+                                {meta.expires_at ? <DateWithTooltip date={meta.expires_at} /> : <NullBadge label="none" />}
+                            </KeyValueRow>
+                        </div>
+                    </div>
+                    <RuleSectionDivider />
+                    <div className="flex flex-col w-full">
+                        <KeyValueRow name="Child Rule ID">
+                            {meta.child_rule_id ? (
+                                <CopyableLinkCell text={meta.child_rule_id} href={`/rule/${encodeURIComponent(meta.child_rule_id)}`}>
+                                    <Field>{meta.child_rule_id}</Field>
+                                </CopyableLinkCell>
+                            ) : (
+                                <NullBadge label="none" />
+                            )}
+                        </KeyValueRow>
+                        <KeyValueRow name="Subscription ID">
+                            {meta.subscription_id ? (
+                                <CopyableLinkCell text={meta.subscription_id} href={`/subscription/id/${encodeURIComponent(meta.subscription_id)}`}>
+                                    <Field>{meta.subscription_id}</Field>
+                                </CopyableLinkCell>
+                            ) : (
+                                <NullBadge label="none" />
+                            )}
+                        </KeyValueRow>
+                        </div>
                 </div>
             </div>
             <Divider />
@@ -138,24 +163,6 @@ export const DetailsRuleMeta = ({ meta }: { meta: RuleMetaViewModel }) => {
                 </div>
                 <RuleSectionDivider />
                 <div className="flex flex-col flex-1 min-w-0">
-                    <KeyValueRow name="Child Rule ID">
-                        {meta.child_rule_id ? (
-                            <CopyableLinkCell text={meta.child_rule_id} href={`/rule/${encodeURIComponent(meta.child_rule_id)}`}>
-                                <Field>{meta.child_rule_id}</Field>
-                            </CopyableLinkCell>
-                        ) : (
-                            <NullBadge label="none" />
-                        )}
-                    </KeyValueRow>
-                    <KeyValueRow name="Subscription ID">
-                        {meta.subscription_id ? (
-                            <CopyableLinkCell text={meta.subscription_id} href={`/subscription/id/${encodeURIComponent(meta.subscription_id)}`}>
-                                <Field>{meta.subscription_id}</Field>
-                            </CopyableLinkCell>
-                        ) : (
-                            <NullBadge label="none" />
-                        )}
-                    </KeyValueRow>
                     <KeyValueRow name="Source Replica Expression">
                         {meta.source_replica_expression ? <Field>{meta.source_replica_expression}</Field> : <NullBadge label="none" />}
                     </KeyValueRow>
