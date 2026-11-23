@@ -38,7 +38,7 @@ async function listRules(req: NextApiRequest, res: NextApiResponse, rucioAuthTok
     // Validate query parameters against the schema
     const validationResult = RulesFiltersSchema.safeParse(req.query);
     if (!validationResult.success) {
-        res.status(400).json({ error: 'Invalid query parameters', details: validationResult.error.errors });
+        res.status(400).json({ error: 'Invalid query parameters', details: validationResult.error.issues });
         return;
     }
 
