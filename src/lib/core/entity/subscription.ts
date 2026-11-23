@@ -15,23 +15,23 @@ export const SubscriptionFilter = Type.Partial(
     }),
 );
 
+// Type.Optional per property instead of Type.Partial: Partial over this many properties
+// exceeds TypeScript 5's instantiation depth limit with typebox 0.28
 export const SubscriptionReplicationRules = Type.Array(
-    Type.Partial(
-        Type.Object({
-            account: Type.String(),
-            copies: Type.Union([Type.Number(), Type.String()]),
-            rse_expression: Type.String(),
-            grouping: Type.Union([Type.Literal('ALL'), Type.Literal('DATASET'), Type.Literal('NONE')]),
-            weight: Type.Number(),
-            lifetime: Type.Number(),
-            locked: Type.Boolean(),
-            subscription_id: Type.String(),
-            source_replica_expression: Type.String(),
-            activity: Type.String(),
-            purge_replicas: Type.Boolean(),
-            ignore_availability: Type.Boolean(),
-            comment: Type.String(),
-            delay_injection: Type.Boolean(),
-        }),
-    ),
+    Type.Object({
+        account: Type.Optional(Type.String()),
+        copies: Type.Optional(Type.Union([Type.Number(), Type.String()])),
+        rse_expression: Type.Optional(Type.String()),
+        grouping: Type.Optional(Type.Union([Type.Literal('ALL'), Type.Literal('DATASET'), Type.Literal('NONE')])),
+        weight: Type.Optional(Type.Number()),
+        lifetime: Type.Optional(Type.Number()),
+        locked: Type.Optional(Type.Boolean()),
+        subscription_id: Type.Optional(Type.String()),
+        source_replica_expression: Type.Optional(Type.String()),
+        activity: Type.Optional(Type.String()),
+        purge_replicas: Type.Optional(Type.Boolean()),
+        ignore_availability: Type.Optional(Type.Boolean()),
+        comment: Type.Optional(Type.String()),
+        delay_injection: Type.Optional(Type.Boolean()),
+    }),
 );
