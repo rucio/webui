@@ -3,7 +3,15 @@ import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { BaseHttpErrorTypes, HTTPRequest } from '@/lib/sdk/http';
 import { convertToSubscriptionDTO, getEmptySubscriptionDTO, TRucioSubscription } from '../subscription-gateway-utils';
 
+/**
+ * Returns the subscription by its ID.
+ */
 export default class GetSubscriptionByIdEndpoint extends BaseEndpoint<SubscriptionDTO> {
+    /**
+     * Create a new instance of the `GetSubscriptionByIdEndpoint` class.
+     * @param rucioAuthToken A valid rucio auth token.
+     * @param id ID of a searched subscription.
+     */
     constructor(private readonly rucioAuthToken: string, private readonly id: string) {
         super();
     }

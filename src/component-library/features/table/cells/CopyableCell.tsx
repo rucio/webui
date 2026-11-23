@@ -142,6 +142,9 @@ export const CopyableLinkCell = ({ text, href, children, className, showIcon = t
 
     return (
         <div className={cn('flex items-center gap-1', className)}>
+            <div className="cursor-pointer hover:underline" onClick={handleLink} onKeyDown={handleLinkKeyDown} role="button" tabIndex={0}>
+                {children || <span>{text}</span>}
+            </div>
             {showIcon && (
                 <HiOutlineClipboardCopy
                     className="shrink-0 h-4 w-4 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer"
@@ -152,9 +155,6 @@ export const CopyableLinkCell = ({ text, href, children, className, showIcon = t
                     title="Copy to clipboard"
                 />
             )}
-            <div className="cursor-pointer hover:underline" onClick={handleLink} onKeyDown={handleLinkKeyDown} role="button" tabIndex={0}>
-                {children || <span>{text}</span>}
-            </div>
         </div>
     );
 };

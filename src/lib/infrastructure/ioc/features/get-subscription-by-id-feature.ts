@@ -13,7 +13,9 @@ import CONTROLLERS from '../ioc-symbols-controllers';
 import GATEWAYS from '../ioc-symbols-gateway';
 import USECASE_FACTORY from '../ioc-symbols-usecase-factory';
 import INPUT_PORT from '../ioc-symbols-input-port';
+
 import GetSubscriptionByIdUseCase from '@/lib/core/use-case/get-subscription-by-id-usecase';
+
 import GetSubscriptionByIdPresenter from '../../presenter/get-subscription-by-id-presenter';
 
 export default class GetSubscriptionByIdFeature extends BaseFeature<

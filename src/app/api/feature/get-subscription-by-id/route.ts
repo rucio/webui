@@ -6,6 +6,11 @@ import appContainer from '@/lib/infrastructure/ioc/container-config';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * GET /api/feature/get-subscription-by-id
+ * Query params: id
+ * Returns details about a specific subscription.
+ */
 async function getHandler(request: NextRequest) {
     const sessionUser = await getSessionUser();
 

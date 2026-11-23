@@ -8,6 +8,7 @@ import { Checkbox } from '@/component-library/atoms/form/checkbox';
 import { SubscriptionViewModel } from '@/lib/infrastructure/data/view-model/subscriptions';
 import { SubscriptionStateBadge } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
 import { NullBadge } from '@/component-library/features/badges/NullBadge';
+import { CopyableField } from '@/component-library/features/fields/CopyableField';
 
 /**
  * A responsive divider component for subscription sections.
@@ -59,7 +60,7 @@ export const DetailsSubscriptionMeta = ({ meta }: { meta: SubscriptionViewModel 
                             <SubscriptionStateBadge value={meta.state} />
                         </KeyValueRow>
                         <KeyValueRow name="ID">
-                            <Field className="font-mono text-sm">{meta.id}</Field>
+                            <CopyableField text={meta.id} />
                         </KeyValueRow>
                     </div>
                     <SubscriptionSectionDivider />

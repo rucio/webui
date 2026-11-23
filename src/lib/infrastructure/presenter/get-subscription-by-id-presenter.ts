@@ -1,7 +1,11 @@
 import { GetSubscriptionByIdError, GetSubscriptionByIdResponse } from '@/lib/core/usecase-models/get-subscription-by-id-usecase-models';
+import { GetSubscriptionByIdOutputPort } from '@/lib/core/port/primary/get-subscription-by-id-ports';
 import { BasePresenter } from '@/lib/sdk/presenter';
 import { getEmptySubscriptionViewModel, SubscriptionViewModel } from '../data/view-model/subscriptions';
 
+/**
+ * Provides an implementation of the {@link GetSubscriptionByIdOutputPort} interface.
+ */
 export default class GetSubscriptionByIdPresenter extends BasePresenter<
     GetSubscriptionByIdResponse,
     GetSubscriptionByIdError,
