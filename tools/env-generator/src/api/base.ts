@@ -88,7 +88,6 @@ export class WebUIEnvTemplateCompiler {
       'OIDC_ENABLED': 'false',
       'OIDC_EXPECTED_AUDIENCE_CLAIM': 'rucio',
       'ENABLE_SSL': 'false',
-      'PARAMS_ENCODING_ENABLED': 'false',
       'RULE_ACTIVITY': 'User Subscriptions',
       'ENABLE_USERPASS_LOGIN': 'true',
       'X509_ENABLED': 'true',
