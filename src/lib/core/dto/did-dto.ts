@@ -51,9 +51,7 @@ export interface ListDIDRulesDTO extends BaseStreamableDTO {}
 /**
  * Data Transfer Object for individual stream elements of ListDIDRulesEndpoint
  */
-export interface DIDRulesDTO extends RuleMeta, BaseDTO {
-    subscription_id?: string;
-}
+export interface DIDRulesDTO extends RuleMeta, BaseDTO {}
 
 /**
  * Data Transfer Object for ListDIDRulesEndpoint

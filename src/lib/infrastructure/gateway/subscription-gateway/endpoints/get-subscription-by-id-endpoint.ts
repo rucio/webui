@@ -3,14 +3,22 @@ import { BaseEndpoint } from '@/lib/sdk/gateway-endpoints';
 import { BaseHttpErrorTypes, HTTPRequest } from '@/lib/sdk/http';
 import { convertToSubscriptionDTO, getEmptySubscriptionDTO, TRucioSubscription } from '../subscription-gateway-utils';
 
+/**
+ * Returns the subscription by its ID.
+ */
 export default class GetSubscriptionByIdEndpoint extends BaseEndpoint<SubscriptionDTO> {
+    /**
+     * Create a new instance of the `GetSubscriptionByIdEndpoint` class.
+     * @param rucioAuthToken A valid rucio auth token.
+     * @param id ID of a searched subscription.
+     */
     constructor(private readonly rucioAuthToken: string, private readonly id: string) {
         super();
     }
 
     async initialize(): Promise<void> {
         await super.initialize();
-        this.url = `${this.rucioHost}/subscriptions/Id/${this.id}`;
+        this.url = `${this.rucioHost}/subscriptions/id/${encodeURIComponent(this.id)}`;
         const request: HTTPRequest = {
             method: 'GET',
             url: this.url,

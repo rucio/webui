@@ -10,6 +10,7 @@ const INPUT_PORT = {
     GET_RSE_ATTRIBUTES: Symbol.for('GetRSEAttributesInputPort'),
     GET_RSE_PROTOCOLS: Symbol.for('GetRSEProtocolsInputPort'),
     GET_SUBSCRIPTION: Symbol.for('GetSubscriptionInputPort'),
+    GET_SUBSCRIPTION_BY_ID: Symbol.for('GetSubscriptionByIdInputPort'),
     LIST_ACCOUNT_RSE_QUOTAS: Symbol.for('ListAccountRSEQuotasInputPort'),
     LIST_ACCOUNTS: Symbol.for('ListAccountsInputPort'),
     GET_ACCOUNT_QUOTAS: Symbol.for('GetAccountQuotasInputPort'),

@@ -1,8 +1,11 @@
-import { SubscriptionState } from '@/lib/core/entity/rucio';
 import { GetSubscriptionError, GetSubscriptionResponse } from '@/lib/core/usecase-models/get-subscription-usecase-models';
+import { GetSubscriptionOutputPort } from '@/lib/core/port/primary/get-subscription-ports';
 import { BasePresenter } from '@/lib/sdk/presenter';
 import { getEmptySubscriptionViewModel, SubscriptionViewModel } from '../data/view-model/subscriptions';
 
+/**
+ * Provides an implementation of the {@link GetSubscriptionOutputPort} interface.
+ */
 export default class GetSubscriptionPresenter extends BasePresenter<GetSubscriptionResponse, GetSubscriptionError, SubscriptionViewModel> {
     convertResponseModelToViewModel(responseModel: GetSubscriptionResponse): { viewModel: SubscriptionViewModel; status: number } {
         const viewModel: SubscriptionViewModel = {

@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
 import { DetailsSubscriptionSections } from '@/component-library/pages/Subscriptions/details/DetailsSubscriptionSections';
 import { DetailsSubscriptionMeta } from '@/component-library/pages/Subscriptions/details/DetailsSubscriptionMeta';
+import { QUERY_KEYS } from '@/lib/infrastructure/query';
 
 export type DetailsSubscriptionProps = {
     account: string;
@@ -42,7 +43,7 @@ export const DetailsSubscription = ({ account, name }: DetailsSubscriptionProps)
         return null;
     };
 
-    const metaQueryKey = ['subscription-meta', account, name];
+    const metaQueryKey = [...QUERY_KEYS.SUBSCRIPTION_META, account, name];
     const {
         data: meta,
         error: metaError,

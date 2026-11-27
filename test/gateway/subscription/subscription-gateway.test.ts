@@ -40,9 +40,9 @@ describe('SubscriptionGateway', () => {
         };
 
         const getSubscriptionByIdEndpoint: MockEndpoint = {
-            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/Id/bngjsrfdtlkhugrdgflgiu`,
+            url: `${MockRucioServerFactory.RUCIO_HOST}/subscriptions/id/bngjsrfdtlkhugrdgflgiu`,
             method: 'GET',
-            includes: 'subscriptions/Id/bngjsrfdtlkhugrdgflgiu',
+            includes: 'subscriptions/id/bngjsrfdtlkhugrdgflgiu',
             response: {
                 status: 200,
                 headers: {

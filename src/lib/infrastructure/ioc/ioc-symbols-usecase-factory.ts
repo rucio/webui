@@ -12,6 +12,7 @@ const USECASE_FACTORY = {
     GET_RSE_ATTRIBUTES: Symbol.for('Factory<GetRSEAttributesUseCase>'),
     GET_RSE_PROTOCOLS: Symbol.for('Factory<GetRSEProtocolsUseCase>'),
     GET_SUBSCRIPTION: Symbol.for('Factory<GetSubscriptionUseCase>'),
+    GET_SUBSCRIPTION_BY_ID: Symbol.for('Factory<GetSubscrptionByIdUseCase>'),
     LIST_ACCOUNT_RSE_QUOTAS: Symbol.for('Factory<ListAccountRSEQuotasUseCase>'),
     LIST_ACCOUNTS: Symbol.for('Factory<ListAccountsUseCase>'),
     GET_ACCOUNT_QUOTAS: Symbol.for('Factory<GetAccountQuotasUseCase>'),
