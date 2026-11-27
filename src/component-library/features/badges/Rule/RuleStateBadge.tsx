@@ -1,7 +1,7 @@
 import { RuleState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { ruleStateString } from '@/lib/core/entity/state-to-string';
+import { ruleStateString } from '@/lib/core/service/state-to-string';
 
 /**
  * Maps rule states to semantic badge variants from the design system.

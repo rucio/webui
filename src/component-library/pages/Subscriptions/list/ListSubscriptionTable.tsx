@@ -10,7 +10,7 @@ import { RuleState, SubscriptionState } from '@/lib/core/entity/rucio';
 import { badgeCellClasses } from '@/component-library/features/table/cells/badge-cell';
 import { SubscriptionStateBadge } from '@/component-library/features/badges/Subscription/SubscriptionStateBadge';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
-import { subscriptionStateString } from '@/lib/core/entity/state-to-string';
+import { subscriptionStateString } from '@/lib/core/service/state-to-string';
 import { ClickableSubscriptionCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 
 type ListSubscriptionTableProps = {

@@ -17,7 +17,7 @@ import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/compo
 import { ClickableRSEExpressionCell, ClickableRuleIdCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
 import { DateCellRenderer } from '@/component-library/features/utils/DateWithTooltip';
 import { textCellWrapperStyle } from '@/component-library/features/table/cells/text-cell';
-import { ruleStateString } from '@/lib/core/entity/state-to-string';
+import { ruleStateString } from '@/lib/core/service/state-to-string';
 
 type DetailsDIDRulesTableProps = {
     streamingHook: UseStreamReader<DIDRulesViewModel>;

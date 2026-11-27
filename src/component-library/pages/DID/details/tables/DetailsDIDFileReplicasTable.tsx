@@ -10,7 +10,7 @@ import { ReplicaState } from '@/lib/core/entity/rucio';
 import { StreamedTable } from '@/component-library/features/table/StreamedTable/StreamedTable';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { ClickableRSECell } from '@/component-library/features/table/cells/ClickableCellsCollection';
-import { replicaStateString } from '@/lib/core/entity/state-to-string';
+import { replicaStateString } from '@/lib/core/service/state-to-string';
 
 type DetailsDIDFileReplicasTableProps = {
     streamingHook: UseStreamReader<FileReplicaStateViewModel>;

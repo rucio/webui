@@ -1,7 +1,7 @@
 import { LockState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { lockStateString } from '@/lib/core/entity/state-to-string';
+import { lockStateString } from '@/lib/core/service/state-to-string';
 
 /**
  * Maps lock states to semantic badge variants from the design system.

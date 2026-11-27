@@ -17,7 +17,7 @@ import { HiExternalLink } from 'react-icons/hi';
 import { lockStateComparator } from '@/lib/core/utils/rule-sorting-utils';
 import { AgGridMultiSelectFilter, createMultiSelectFilterHandler } from '@/component-library/features/table/filters/AgGridMultiSelectFilter';
 import { ClickableRSECell, ClickableDIDCell } from '@/component-library/features/table/cells/ClickableCellsCollection';
-import { lockStateString } from '@/lib/core/entity/state-to-string';
+import { lockStateString } from '@/lib/core/service/state-to-string';
 
 type DetailsRuleLocksTableProps = {
     streamingHook: UseStreamReader<ListRuleReplicaLockStatesViewModel>;

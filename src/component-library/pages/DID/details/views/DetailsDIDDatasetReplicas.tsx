@@ -20,7 +20,7 @@ import { DateCellRenderer } from '@/component-library/features/utils/DateWithToo
 import { formatFileSize } from '@/component-library/features/utils/text-formatters';
 import { ICellRendererParams, ValueGetterParams } from 'ag-grid-community';
 import { textCellWrapperStyle } from '@/component-library/features/table/cells/text-cell';
-import { replicaStateString } from '@/lib/core/entity/state-to-string';
+import { replicaStateString } from '@/lib/core/service/state-to-string';
 
 export const DetailsDIDDatasetReplicas: DetailsDIDView = ({ scope, name, isActive }: DetailsDIDProps) => {
     const { gridApi, onGridReady, streamingHook, startStreaming, stopStreaming } = useTableStreaming<DIDDatasetReplicasViewModel>();

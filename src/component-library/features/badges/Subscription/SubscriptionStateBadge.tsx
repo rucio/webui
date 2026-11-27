@@ -1,7 +1,7 @@
 import { SubscriptionState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { subscriptionStateString } from '@/lib/core/entity/state-to-string';
+import { subscriptionStateString } from '@/lib/core/service/state-to-string';
 
 /**
  * Maps subscription states to semantic badge variants from the design system.

@@ -1,7 +1,7 @@
 import { ReplicaState } from '@/lib/core/entity/rucio';
 import React from 'react';
 import { Badge } from '@/component-library/atoms/misc/Badge';
-import { replicaStateString } from '@/lib/core/entity/state-to-string';
+import { replicaStateString } from '@/lib/core/service/state-to-string';
 
 /**
  * Maps replica states to semantic badge variants from the design system.
