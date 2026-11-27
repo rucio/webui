@@ -66,7 +66,6 @@ export const ListDID = (props: ListDIDProps) => {
             const SCOPE_DELIMITER = ':';
             const patternParts = props.firstPattern.split(SCOPE_DELIMITER);
             if (patternParts.length === 2) {
-                const [scope, name] = patternParts;
                 const params = new URLSearchParams({
                     query: props.firstPattern,
                     type: props.initialType ?? DIDType.ALL,

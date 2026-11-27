@@ -6,12 +6,12 @@ import { Input } from '@/component-library/atoms/form/input';
 import { SearchButton } from '@/component-library/features/search/SearchButton';
 import { Button } from '@/component-library/atoms/form/button';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
-import { HiFilter } from 'react-icons/hi';
+import { HiCog, HiFilter } from 'react-icons/hi';
 import { DateInput } from '@/component-library/atoms/legacy/input/DateInput/DateInput';
 import { TimeInput } from '@/component-library/atoms/legacy/input/TimeInput/TimeInput';
 import { Alert } from '@/component-library/atoms/feedback/Alert';
+import { parseDIDPattern, SCOPE_DELIMITER } from '../utils/parsers';
 
-const SCOPE_DELIMITER = ':';
 const emptyToastMessage = 'Please specify both scope and name before the search.';
 const delimiterToastMessage = 'Neither scope nor name should contain ":".';
 
@@ -93,8 +93,12 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         }
     }, []);
 
-    const [scope, setScope] = useState<string | null>(initialScope ?? null);
-    const [name, setName] = useState<string | null>(initialName ?? null);
+    const [scopeFromManual, setScopeFromManual] = useState<string | null>(initialScope ?? null);
+    const [nameFromManual, setNameFromManual] = useState<string | null>(initialName ?? null);
+    const [pattern, setPattern] = useState<string | null>(props.initialPattern ?? null);
+
+    const [isManualExpanded, setIsManualExpanded] = useState<boolean>(false);
+    const toggleManual = () => setIsManualExpanded(prev => !prev);
 
     const [type, setType] = useState<DIDType>(props.initialType ?? DIDType.ALL);
     const [limit, setLimit] = useState<string>('');
@@ -109,6 +113,7 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
 
     const scopeInputRef = useRef<HTMLInputElement>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
+    const scopeAndNameInputRef = useRef<HTMLInputElement>(null);
 
     const { toast } = useToast();
 
@@ -132,12 +137,19 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         return true;
     };
 
-    const validateScope = (): boolean => {
-        return validateField(scope, 'scope', scopeInputRef);
+    const validateScopeFromManual = (): boolean => {
+        return validateField(scopeFromManual, 'scope', scopeInputRef);
     };
 
-    const validateName = (): boolean => {
-        return validateField(name, 'name', nameInputRef);
+    const validateNameFromManual = (): boolean => {
+        return validateField(nameFromManual, 'name', nameInputRef);
+    };
+
+    const validateScopeAndName = (scope: string | null, name: string | null) => {
+        if (!validateField(scope, 'scope', scopeAndNameInputRef)) return false;
+        if (!validateField(name, 'name', scopeAndNameInputRef)) return false;
+
+        return true;
     };
 
     const DIDFilterKeys = {
@@ -184,10 +196,27 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
         return true;
     };
 
-    const onSearch = (event: any) => {
+    const onSearch = (event: any, manual: boolean = false) => {
         event.preventDefault();
 
-        if (!validateScope() || !validateName() || !validateDIDFilters(type, DIDFilterKeys, toast)) return;
+        if (!validateDIDFilters(type, DIDFilterKeys, toast)) return;
+
+        let scope: string | null, name: string | null;
+
+        if (manual) {
+            if (!validateScopeFromManual() || !validateNameFromManual()) return;
+            scope = scopeFromManual;
+            name = nameFromManual;
+        } else {
+            const parsed = parseDIDPattern(pattern);
+            scope = parsed.scope;
+            name = parsed.name;
+
+            if (!validateScopeAndName(scope, name) || !validateDIDFilters(type, DIDFilterKeys, toast)) {
+                setIsManualExpanded(true);
+                return;
+            }
+        }
 
         // Call onSearchStart callback if provided
         if (props.onSearchStart && scope && name) {
@@ -290,26 +319,12 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                     </Select>
                     <div className="w-full flex flex-row space-x-2 items-center">
                         <Input
-                            ref={scopeInputRef}
-                            placeholder="scope"
-                            className="max-w-[250px]"
-                            defaultValue={initialScope}
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                setScope(event.target.value);
-                            }}
+                            className="w-full"
+                            ref={scopeAndNameInputRef}
+                            placeholder="scope:name"
+                            defaultValue={props.initialPattern}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setPattern(event.target.value)}
                             onEnterKey={onSearch}
-                            onKeyDown={onScopeArrowDown}
-                        />
-                        <span className="text-neutral-900 dark:text-neutral-100 font-bold">:</span>
-                        <Input
-                            ref={nameInputRef}
-                            placeholder="name"
-                            defaultValue={initialName}
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                setName(event.target.value);
-                            }}
-                            onEnterKey={onSearch}
-                            onKeyDown={onNameArrowDown}
                         />
                         <Button
                             className="px-3"
@@ -318,11 +333,62 @@ export const DIDSearchPanel = (props: SearchPanelProps) => {
                             aria-expanded={isFilterExpanded}
                             aria-label="Toggle filters"
                         >
-                            <HiFilter />
-                            {isFilterExpanded ? <HiChevronUp className="ml-1" /> : <HiChevronDown className="ml-1" />}
+                            <HiFilter className="mr-1" />
+                            {isFilterExpanded ? <HiChevronUp /> : <HiChevronDown />}
+                        </Button>
+                        <Button
+                            className="px-3"
+                            variant="neutral"
+                            onClick={toggleManual}
+                            aria-expanded={isManualExpanded}
+                            aria-label="Toggle manual input"
+                        >
+                            <HiCog className="mr-1" />
+                            {isManualExpanded ? <HiChevronUp /> : <HiChevronDown />}
                         </Button>
                     </div>
                 </div>
+
+                {/* Manual input */}
+                {isManualExpanded && (
+                    <div className="order-2 md:order-3 md:basis-full gap-2 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6">
+                        <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 inline-block mb-2">
+                            Manual scope and name input
+                        </span>
+                        <div className="flex flex-col md:flex-row gap-2 space-y-2">
+                            <div className="flex flex-row flex-1 space-x-2 items-center">
+                                <Input
+                                    ref={scopeInputRef}
+                                    placeholder="scope"
+                                    className="max-w-[250px]"
+                                    defaultValue={initialScope}
+                                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                                        setScopeFromManual(event.target.value);
+                                    }}
+                                    onEnterKey={event => onSearch(event, true)}
+                                    onKeyDown={onScopeArrowDown}
+                                />
+                                <span className="text-neutral-900 dark:text-neutral-100 font-bold">:</span>
+                                <Input
+                                    ref={nameInputRef}
+                                    placeholder="name"
+                                    defaultValue={initialName}
+                                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                                        setNameFromManual(event.target.value);
+                                    }}
+                                    onEnterKey={event => onSearch(event, true)}
+                                    onKeyDown={onNameArrowDown}
+                                />
+                            </div>
+                            <SearchButton
+                                className="order-3 md:order-2 sm:w-full md:w-48"
+                                isRunning={props.isRunning}
+                                onStop={onStop}
+                                onSearch={event => onSearch(event, true)}
+                            />
+                        </div>
+                    </div>
+                )}
 
                 {/* DID filters */}
                 {isFilterExpanded && (
