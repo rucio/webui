@@ -149,7 +149,7 @@ const ApproveRuleTable = (props: ApproveRuleTableProps) => {
         {
             headerName: 'DID',
             valueGetter: (params: ValueGetterParams<ApproveRuleViewModel>) => {
-                return [params.data?.scope, params.data?.name];
+                return { scope: params.data?.scope, name: params.data?.name };
             },
             minWidth: 350,
             flex: 2,

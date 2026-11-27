@@ -29,7 +29,7 @@ export const DetailsDIDSimpleTable = (props: DetailsDIDSimpleTableProps) => {
             headerName: 'Identifier',
             flex: 1,
             valueGetter: (params: ValueGetterParams<ListDIDsViewModel>) => {
-                return [params.data?.scope, params.data?.name];
+                return { scope: params.data?.scope, name: params.data?.name };
             },
             cellRenderer: ClickableDIDCell,
             minWidth: 450,
