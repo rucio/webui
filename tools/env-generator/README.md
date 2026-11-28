@@ -13,15 +13,11 @@ cp .env.template .env.base
 2. Edit the `.env.base` file and add the required environment variables. All the variables **MUST** be prefixed with ` RUCIO*WEBUI*`` The variables should be added in the following format: `export RUCIO*WEBUI*<VARIABLE_NAME>=<VARIABLE_VALUE>`
 
 **NOTE** By default, the rule activity is set to `User Subscription`. This can be changed by setting the `RULE_ACTIVITY` variable in the `.env.base` file.
-**NOTE** In order to support DID schemas that use special characters like "/", a new configuration option has been added to the new webui to enable or disable this functionality.
-In cases where DID schemas use any such special characters, the Apache configuration of the Rucio Server most likely uses `AllowEncodedSlashes` or `AllowEncode` directives.
-The `PARAMS_ENCODING_ENABLED` in the helm chart config of the Rucio WebUI tells the webui to encode the URI parameters when requests are sent out to the rucio server.
 
 | Variable Name             | Full Name                             | Description                                                                                | Example                        | Default            |
 |---------------------------|---------------------------------------|--------------------------------------------------------------------------------------------|--------------------------------|--------------------|
 | RUCIO_HOST                | RUCIO_WEBUI_RUCIO_HOST                | URL for the Rucio Server                                                                   | https://rucio-lb-prod.cern.ch  |                    |
 | RUCIO_AUTH_HOST           | RUCIO_WEBUI_RUCIO_AUTH_HOST           | URL for the Rucio authentication server                                                    | https://rucio-auth-host.ch:443 |                    |
-| PARAMS_ENCODING_ENABLED   | RUCIO_WEBUI_PARAMS_ENCODING_ENABLED   | If your DID schema has special characters like  '/' or '+' in the name, set this to true.  | true                           | false              |
 | HOSTNAME                  | RUCIO_WEBUI_HOSTNAME                  | Public HOSTNAME at which Rucio WebUI will be accessible. It may include port number.       | rucio-ui.cern.ch               |                    |
 | ENABLE_USERPASS_LOGIN     | RUCIO_WEBUI_ENABLE_USERPASS_LOGIN     | Show the Userpass Login option in the WebUI's Login Page                                   | true                           | true               |
 | LIST_DIDS_INITIAL_PATTERN | RUCIO_WEBUI_LIST_DIDS_INITIAL_PATTERN | Configures the placeholder scope and name in the DIDs list page.                           | scope:name                     |                    |

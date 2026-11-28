@@ -218,15 +218,6 @@ class EnvConfigGateway implements EnvConfigGatewayOutputPort {
         return Promise.resolve(undefined);
     }
 
-    async paramsEncodingEnabled(): Promise<boolean> {
-        const value = await this.get('PARAMS_ENCODING_ENABLED');
-        if (value === 'true' || value === 'True' || value === 'TRUE') {
-            return Promise.resolve(true);
-        } else {
-            return Promise.resolve(false);
-        }
-    }
-
     async oidcExpectedAudience(): Promise<string> {
         const value = await this.get('OIDC_EXPECTED_AUDIENCE_CLAIM');
         // Default to "rucio" if not configured
