@@ -1,4 +1,5 @@
 import { BaseViewModel } from '@/lib/sdk/view-models';
+import { GetFileReplicasMetalinkErrorType } from '@/lib/core/usecase-models/get-file-replicas-metalink-usecase-models';
 
 /**
  * ViewModel for a single suspicious replica entry.
@@ -43,4 +44,18 @@ export interface DeclareBadReplicasViewModel extends BaseViewModel {
 export const getEmptyDeclareBadReplicasViewModel = (): DeclareBadReplicasViewModel => ({
     status: 'error',
     notDeclared: [],
+});
+
+/**
+ * ViewModel carrying the metalink4 document of a DID's file replicas, downloaded as a .meta4 file by the UI.
+ */
+export interface FileReplicasMetalinkViewModel extends BaseViewModel {
+    xml: string;
+    /** Typed error discriminator, set when status === 'error' */
+    errorType?: GetFileReplicasMetalinkErrorType;
+}
+
+export const generateEmptyFileReplicasMetalinkViewModel = (): FileReplicasMetalinkViewModel => ({
+    status: 'error',
+    xml: '',
 });

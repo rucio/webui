@@ -18,6 +18,7 @@ export default class ListFileReplicasPresenter
         const errorViewModel: FileReplicaStateViewModel = generateEmptyFilereplicaStateViewModel();
         errorViewModel.status = 'error';
         errorViewModel.message = `${error.name}: ${error.message}`;
+        errorViewModel.errorType = error.errorType ?? 'unknown';
         return errorViewModel;
     }
 
@@ -30,8 +31,8 @@ export default class ListFileReplicasPresenter
         const viewModel: FileReplicaStateViewModel = generateEmptyFilereplicaStateViewModel();
         // gateway errors
         const message = errorModel.message ? errorModel.message.toString() : errorModel.name;
-        const name = errorModel.name ? errorModel.name : '';
         viewModel.message = message;
+        viewModel.errorType = errorModel.errorType ?? 'unknown';
         const errorCode = errorModel.code ? errorModel.code : 500;
         return {
             status: errorCode,
