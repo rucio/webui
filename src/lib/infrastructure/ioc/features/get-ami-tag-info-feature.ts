@@ -7,8 +7,8 @@ import GetAMITagInfoUseCase from '@/lib/core/use-case/get-ami-tag-info-usecase';
 import GetAMITagInfoPresenter from '@/lib/infrastructure/presenter/get-ami-tag-info-presenter';
 import { AMITagInfoViewModel } from '@/lib/infrastructure/data/view-model/ami';
 import AMIGatewayOutputPort from '@/lib/core/port/secondary/ami-gateway-output-port';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
 import GATEWAYS from '@/lib/infrastructure/ioc/ioc-symbols-gateway';
+import { amiBaseUrl } from '@/lib/infrastructure/config/config-readers';
 import CONTROLLERS from '@/lib/infrastructure/ioc/ioc-symbols-controllers';
 import INPUT_PORT from '@/lib/infrastructure/ioc/ioc-symbols-input-port';
 import USECASE_FACTORY from '@/lib/infrastructure/ioc/ioc-symbols-usecase-factory';
@@ -23,7 +23,6 @@ export default class GetAMITagInfoFeature extends BaseFeature<
 > {
     constructor(appContainer: Container) {
         const amiGateway = appContainer.get<AMIGatewayOutputPort>(GATEWAYS.AMI);
-        const envConfigGateway = appContainer.get<EnvConfigGatewayOutputPort>(GATEWAYS.ENV_CONFIG);
         const symbols: IOCSymbols = {
             CONTROLLER: CONTROLLERS.GET_AMI_TAG_INFO,
             USECASE_FACTORY: USECASE_FACTORY.GET_AMI_TAG_INFO,
@@ -33,7 +32,7 @@ export default class GetAMITagInfoFeature extends BaseFeature<
             'GetAMITagInfo',
             GetAMITagInfoController,
             GetAMITagInfoUseCase,
-            [amiGateway, envConfigGateway],
+            [amiGateway, amiBaseUrl],
             GetAMITagInfoPresenter,
             false,
             symbols,

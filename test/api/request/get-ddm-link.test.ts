@@ -9,7 +9,9 @@ import {
     GetDDMLinkResponse,
 } from '@/lib/core/usecase-models/get-ddm-link-usecase-models';
 import { createDDMDashboardUrl } from '@/lib/core/utils/ddm-link-utils';
-import EnvConfigGatewayOutputPort from '@/lib/core/port/secondary/env-config-gateway-output-port';
+import type { ConfigReader, DDMDashboardSettings } from '@/lib/core/entity/app-config';
+import { envBoolean, optionalString } from '@/lib/infrastructure/config/env-schema-helpers';
+import { getServerEnv } from '@/lib/infrastructure/config/env.server';
 import { AuthenticatedRequestModel } from '@/lib/sdk/usecase-models';
 import { Signal } from '@/lib/sdk/web';
 import appContainer from '@/lib/infrastructure/ioc/container-config';
@@ -48,15 +50,20 @@ function makePresenter(): GetDDMLinkOutputPort & {
     };
 }
 
-function makeEnvConfig(overrides: Record<string, string | undefined> = {}): EnvConfigGatewayOutputPort {
+/**
+ * Builds the settings the use case receives from raw env strings, parsed with the same
+ * helpers as the server env schema.
+ */
+function makeEnvConfig(overrides: Record<string, string | undefined> = {}): ConfigReader<DDMDashboardSettings> {
     const config: Record<string, string | undefined> = {
         FEATURE_DDM_DASHBOARD: 'true',
         DDM_DASHBOARD_BASE_URL: 'https://grafana.example.com/d/ddm',
         ...overrides,
     };
-    return {
-        get: jest.fn(async (key: string) => config[key]),
-    } as unknown as EnvConfigGatewayOutputPort;
+    return () => ({
+        enabled: envBoolean(false).parse(config.FEATURE_DDM_DASHBOARD),
+        baseUrl: optionalString.parse(config.DDM_DASHBOARD_BASE_URL),
+    });
 }
 
 const BASE_REQUEST: AuthenticatedRequestModel<GetDDMLinkRequest> = {
@@ -306,24 +313,10 @@ describe('GET DDM link API route test', () => {
         expect(data.errorType).toBe('feature_disabled');
     });
 
-    test('it should return an error view model when the base URL env var is not set', async () => {
+    test('it should reject the configuration when the feature is enabled without a base URL', async () => {
         delete process.env.DDM_DASHBOARD_BASE_URL;
 
-        const { req, res } = await createHttpMocks('/api/feature/get-ddm-link?scope=test&name=file.txt&rse=SITE_DISK', 'GET', {});
-
-        const controller = appContainer.get<BaseController<GetDDMLinkControllerParameters, GetDDMLinkRequest>>(CONTROLLERS.GET_DDM_LINK);
-
-        await controller.execute({
-            rucioAuthToken: MockRucioServerFactory.VALID_RUCIO_TOKEN,
-            response: res as unknown as NextApiResponse,
-            scope: 'test',
-            name: 'file.txt',
-            rse: 'SITE_DISK',
-        });
-
-        const data: DDMLinkViewModel = res._getJSONData();
-        expect(data.status).toBe('error');
-        expect(data.errorType).toBe('config_not_found');
+        expect(() => getServerEnv()).toThrow('DDM_DASHBOARD_BASE_URL');
     });
 
     test('it should still return a success view model even when params are empty strings (route guard validates before controller)', async () => {

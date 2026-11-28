@@ -10,7 +10,7 @@ export default class ListRSEsEndpoint extends BaseStreamableEndpoint<ListRSEsDTO
 
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/rses/`;
         const request: HTTPRequest = {
             method: 'GET',

@@ -19,15 +19,16 @@ const listAccountsForIdentityMock = jest.fn();
 const listAccountAttributesMock = jest.fn();
 const voListMock = jest.fn();
 
+jest.mock('@/lib/infrastructure/config/config-readers', () => ({
+    voList: () => voListMock(),
+}));
+
 jest.mock('@/lib/infrastructure/ioc/container-config', () => {
     const GATEWAYS = jest.requireActual('@/lib/infrastructure/ioc/ioc-symbols-gateway').default;
     return {
         __esModule: true,
         default: {
             get: jest.fn((symbol: symbol) => {
-                if (symbol === GATEWAYS.ENV_CONFIG) {
-                    return { voList: voListMock };
-                }
                 if (symbol === GATEWAYS.ACCOUNT) {
                     return {
                         listAccountAttributes: listAccountAttributesMock,
@@ -52,7 +53,7 @@ const TOKEN = `rucio-${RUCIO_IDENTITY}-suffix`;
 
 beforeEach(() => {
     jest.clearAllMocks();
-    voListMock.mockResolvedValue([VO]);
+    voListMock.mockReturnValue([VO]);
     listAccountAttributesMock.mockResolvedValue({
         account: 'root',
         attributes: [],

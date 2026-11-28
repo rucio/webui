@@ -32,17 +32,11 @@ function makeOIDCProvider(overrides: Partial<OIDCProvider> = {}): OIDCProvider {
     };
 }
 
-function mockEnvConfig(providers: OIDCProvider[]) {
-    return {
-        oidcProviders: jest.fn().mockResolvedValue(providers),
-    };
-}
-
 function makeParams(providers: OIDCProvider[] = [makeOIDCProvider()]) {
     return {
         refreshToken: 'initial-refresh-token',
         providerName: 'cern',
-        envConfigGateway: mockEnvConfig(providers) as any,
+        oidcProviders: providers,
     };
 }
 

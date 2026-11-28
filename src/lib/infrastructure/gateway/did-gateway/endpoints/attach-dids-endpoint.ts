@@ -15,7 +15,7 @@ export default class AttachDIDsEndpoint extends BaseEndpoint<AttachDIDDTO> {
 
     async initialize(): Promise<void> {
         await super.initialize();
-        const rucioHost = await this.envConfigGateway.rucioHost();
+        const rucioHost = this.rucioHost;
         const endpoint = `${rucioHost}/dids/${this.scope}/${this.name}/dids`;
         const request: HTTPRequest = {
             method: 'POST',
